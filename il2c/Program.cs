@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using il2c.ILConveters;
 
 namespace il2c
 {
@@ -19,42 +20,38 @@ namespace il2c
 
     class Program
     {
-        private static readonly Dictionary<ushort, OpCode> opCodes;
+        private static readonly Dictionary<ushort, ILConverter> ilConverters;
 
         static Program()
         {
-            var opCodesType = typeof(OpCodes);
-            var opCodeList = opCodesType.GetFields(
-                BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
-            opCodes = opCodeList
-                .Select(fi => (OpCode)fi.GetValue(null))
-                .Where(opCode => opCode.OpCodeType != OpCodeType.Nternal)
-                .ToDictionary(opCode => (ushort)opCode.Value, opCode => opCode);
+            ilConverters = typeof(ILConverter)
+                .Assembly
+                .GetTypes()
+                .Where(type => type.IsSealed && typeof(ILConverter).IsAssignableFrom(type))
+                .Select(type => (ILConverter) Activator.CreateInstance(type))
+                .ToDictionary(ilc => (ushort) ilc.OpCode.Value);
         }
 
         private sealed class ILData
         {
-            public readonly OpCode OpCode;
+            public readonly ILConverter ILConverter;
             public readonly object Operand;
 
-            public ILData(OpCode opCode)
+            public ILData(ILConverter ilc)
             {
-                this.OpCode = opCode;
+                this.ILConverter = ilc;
                 this.Operand = null;
             }
 
-            public ILData(OpCode opCode, object operand)
+            public ILData(ILConverter ilc, object operand)
             {
-                this.OpCode = opCode;
+                this.ILConverter = ilc;
                 this.Operand = operand;
             }
 
-            public string ToSourceCode()
+            public string Apply(Stack<string> stack)
             {
-                return string.Format(
-                    "{0}{1}",
-                    this.OpCode.Name,
-                    (this.Operand != null) ? (" " + this.Operand) : "");
+                return this.ILConverter.Apply(this.Operand, stack);
             }
         }
 
@@ -66,21 +63,21 @@ namespace il2c
             while (index < ilBytes.Length)
             {
                 var byte0 = ilBytes[index++];
-                if (opCodes.TryGetValue(byte0, out var opCode) == false)
+                if (ilConverters.TryGetValue(byte0, out var ilc) == false)
                 {
                     var byte1 = ilBytes[index++];
                     var word = (ushort)(byte0 << 8 | byte1);
-                    opCode = opCodes[word];
+                    ilc = ilConverters[word];
                 }
 
-                switch (opCode.OperandType)
+                switch (ilc.OpCode.OperandType)
                 {
                     case OperandType.ShortInlineBrTarget:
                         object operand = ilBytes[index++];
-                        yield return new ILData(opCode, operand);
+                        yield return new ILData(ilc, operand);
                         break;
                     default:
-                        yield return new ILData(opCode);
+                        yield return new ILData(ilc);
                         break;
                 }
             }
@@ -118,20 +115,10 @@ namespace il2c
             var stack = new Stack<string>();
             foreach (var ilData in DecodeAndEnumerateOpCodes(mainBody))
             {
-                switch (ilData.OpCode.Name)
+                var sourceCode = ilData.Apply(stack);
+                if (sourceCode != null)
                 {
-                    case "nop":
-                        break;
-                    case "ldc.i4.1":
-                        stack.Push("1");
-                        break;
-                    case "stloc.0":
-                        var data0 = stack.Pop();
-                        Console.WriteLine("local{0} = {1};", 0, data0);
-                        break;
-                    default:
-                        Console.WriteLine(ilData.ToSourceCode());
-                        break;
+                    Console.WriteLine(sourceCode);
                 }
             }
 

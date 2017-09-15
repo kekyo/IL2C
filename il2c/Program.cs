@@ -32,7 +32,33 @@ namespace il2c
                 .ToDictionary(opCode => (ushort)opCode.Value, opCode => opCode);
         }
 
-        private static IEnumerable<Tuple<OpCode, object>> DecodeAndEnumerateOpCodes(MethodBody methodBody)
+        private sealed class ILData
+        {
+            public readonly OpCode OpCode;
+            public readonly object Operand;
+
+            public ILData(OpCode opCode)
+            {
+                this.OpCode = opCode;
+                this.Operand = null;
+            }
+
+            public ILData(OpCode opCode, object operand)
+            {
+                this.OpCode = opCode;
+                this.Operand = operand;
+            }
+
+            public string ToSourceCode()
+            {
+                return string.Format(
+                    "{0}{1}",
+                    this.OpCode.Name,
+                    (this.Operand != null) ? (" " + this.Operand) : "");
+            }
+        }
+
+        private static IEnumerable<ILData> DecodeAndEnumerateOpCodes(MethodBody methodBody)
         {
             var ilBytes = methodBody.GetILAsByteArray();
 
@@ -51,10 +77,10 @@ namespace il2c
                 {
                     case OperandType.ShortInlineBrTarget:
                         object operand = ilBytes[index++];
-                        yield return Tuple.Create(opCode, operand);
+                        yield return new ILData(opCode, operand);
                         break;
                     default:
-                        yield return Tuple.Create(opCode, default(object));
+                        yield return new ILData(opCode);
                         break;
                 }
             }
@@ -89,12 +115,9 @@ namespace il2c
 
             Console.WriteLine();
 
-            foreach (var entry in DecodeAndEnumerateOpCodes(mainBody))
+            foreach (var ilData in DecodeAndEnumerateOpCodes(mainBody))
             {
-                Console.WriteLine(
-                    "{0}{1}",
-                    entry.Item1,
-                    (entry.Item2 != null) ? (" " + entry.Item2) : "");
+                Console.WriteLine(ilData.ToSourceCode());
             }
 
             Console.WriteLine("}");

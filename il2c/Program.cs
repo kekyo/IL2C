@@ -32,11 +32,9 @@ namespace il2c
                 .ToDictionary(opCode => (ushort)opCode.Value, opCode => opCode);
         }
 
-        private static IEnumerable<Tuple<OpCode, object>> DecodeAndEnumerateOpCodes(MethodInfo methodInfo)
+        private static IEnumerable<Tuple<OpCode, object>> DecodeAndEnumerateOpCodes(MethodBody methodBody)
         {
-            var mainBody = methodInfo.GetMethodBody();
-            var locals = mainBody.LocalVariables;
-            var ilBytes = mainBody.GetILAsByteArray();
+            var ilBytes = methodBody.GetILAsByteArray();
 
             var index = 0;
             while (index < ilBytes.Length)
@@ -62,18 +60,44 @@ namespace il2c
             }
         }
 
+        private static string GetCLanguageTypeName(Type type)
+        {
+            return (type == typeof(System.Int32)) ? "int" : type.FullName;
+        }
+
         static void Main(string[] args)
         {
             var testType = typeof(Test);
             var mainMethod = testType.GetMethods().First();
 
-            foreach (var entry in DecodeAndEnumerateOpCodes(mainMethod))
+            var mainBody = mainMethod.GetMethodBody();
+            var locals = mainBody.LocalVariables;
+
+            var returnTypeName =
+                GetCLanguageTypeName(mainMethod.ReturnType);
+
+            Console.WriteLine("{0} {1}(void)", returnTypeName, mainMethod.Name);
+            Console.WriteLine("{");
+
+            foreach (var local in locals)
+            {
+                Console.WriteLine(
+                    "{0} local{1};",
+                    GetCLanguageTypeName(local.LocalType),
+                    local.LocalIndex);                
+            }
+
+            Console.WriteLine();
+
+            foreach (var entry in DecodeAndEnumerateOpCodes(mainBody))
             {
                 Console.WriteLine(
                     "{0}{1}",
                     entry.Item1,
                     (entry.Item2 != null) ? (" " + entry.Item2) : "");
             }
+
+            Console.WriteLine("}");
         }
     }
 }

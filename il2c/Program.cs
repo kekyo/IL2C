@@ -115,9 +115,24 @@ namespace il2c
 
             Console.WriteLine();
 
+            var stack = new Stack<string>();
             foreach (var ilData in DecodeAndEnumerateOpCodes(mainBody))
             {
-                Console.WriteLine(ilData.ToSourceCode());
+                switch (ilData.OpCode.Name)
+                {
+                    case "nop":
+                        break;
+                    case "ldc.i4.1":
+                        stack.Push("1");
+                        break;
+                    case "stloc.0":
+                        var data0 = stack.Pop();
+                        Console.WriteLine("local{0} = {1};", 0, data0);
+                        break;
+                    default:
+                        Console.WriteLine(ilData.ToSourceCode());
+                        break;
+                }
             }
 
             Console.WriteLine("}");

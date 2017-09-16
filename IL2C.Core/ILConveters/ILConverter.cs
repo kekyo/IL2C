@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Reflection.Emit;
 
-namespace il2c.ILConveters
+namespace IL2C.ILConveters
 {
     internal abstract class ILConverter
     {

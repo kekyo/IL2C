@@ -23,7 +23,7 @@ namespace IL2C
                 .ToDictionary(ilc => (ushort) ilc.OpCode.Value);
         }
 
-        private sealed class ILData
+        internal sealed class ILData
         {
             public readonly ILConverter ILConverter;
             public readonly object Operand;
@@ -46,10 +46,8 @@ namespace IL2C
             }
         }
 
-        private static IEnumerable<ILData> DecodeAndEnumerateOpCodes(MethodBody methodBody)
+        internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(byte[] ilBytes)
         {
-            var ilBytes = methodBody.GetILAsByteArray();
-
             var index = 0;
             while (index < ilBytes.Length)
             {
@@ -79,17 +77,23 @@ namespace IL2C
             return (type == typeof(System.Int32)) ? "int" : type.FullName;
         }
 
-        public static void Convert(TextWriter tw, Type testType)
+        public static void Convert(TextWriter tw, MethodInfo method)
         {
-            var mainMethod = testType.GetMethods().First();
+            Convert(tw, method.ReturnType, method.Name, method.GetMethodBody());
+        }
 
-            var mainBody = mainMethod.GetMethodBody();
-            var locals = mainBody.LocalVariables;
+        private static void Convert(
+            TextWriter tw,
+            Type returnType,
+            string methodName,
+            MethodBody body)
+        {
+            var locals = body.LocalVariables;
 
             var returnTypeName =
-                GetCLanguageTypeName(mainMethod.ReturnType);
+                GetCLanguageTypeName(returnType);
 
-            tw.WriteLine("{0} {1}(void)", returnTypeName, mainMethod.Name);
+            tw.WriteLine("{0} {1}(void)", returnTypeName, methodName);
             tw.WriteLine("{");
 
             foreach (var local in locals)
@@ -102,8 +106,10 @@ namespace IL2C
 
             tw.WriteLine();
 
+            var ilBytes = body.GetILAsByteArray();
+
             var stack = new Stack<string>();
-            foreach (var ilData in DecodeAndEnumerateOpCodes(mainBody))
+            foreach (var ilData in DecodeAndEnumerateOpCodes(ilBytes))
             {
                 var sourceCode = ilData.Apply(stack);
                 if (sourceCode != null)

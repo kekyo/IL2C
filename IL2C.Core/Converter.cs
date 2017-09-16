@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -8,11 +9,11 @@ using IL2C.ILConveters;
 
 namespace IL2C
 {
-    public static class Program
+    public static class Converter
     {
         private static readonly Dictionary<ushort, ILConverter> ilConverters;
 
-        static Program()
+        static Converter()
         {
             ilConverters = typeof(ILConverter)
                 .Assembly
@@ -78,7 +79,7 @@ namespace IL2C
             return (type == typeof(System.Int32)) ? "int" : type.FullName;
         }
 
-        public static void Main(Type testType)
+        public static void Convert(TextWriter tw, Type testType)
         {
             var mainMethod = testType.GetMethods().First();
 
@@ -88,18 +89,18 @@ namespace IL2C
             var returnTypeName =
                 GetCLanguageTypeName(mainMethod.ReturnType);
 
-            Console.WriteLine("{0} {1}(void)", returnTypeName, mainMethod.Name);
-            Console.WriteLine("{");
+            tw.WriteLine("{0} {1}(void)", returnTypeName, mainMethod.Name);
+            tw.WriteLine("{");
 
             foreach (var local in locals)
             {
-                Console.WriteLine(
+                tw.WriteLine(
                     "{0} local{1};",
                     GetCLanguageTypeName(local.LocalType),
                     local.LocalIndex);                
             }
 
-            Console.WriteLine();
+            tw.WriteLine();
 
             var stack = new Stack<string>();
             foreach (var ilData in DecodeAndEnumerateOpCodes(mainBody))
@@ -107,11 +108,11 @@ namespace IL2C
                 var sourceCode = ilData.Apply(stack);
                 if (sourceCode != null)
                 {
-                    Console.WriteLine(sourceCode);
+                    tw.WriteLine(sourceCode);
                 }
             }
 
-            Console.WriteLine("}");
+            tw.WriteLine("}");
         }
     }
 }

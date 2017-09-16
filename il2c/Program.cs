@@ -23,7 +23,7 @@ namespace il2c
         {
             var testType = typeof(Test);
 
-            IL2C.Program.Main(testType);
+            IL2C.Converter.Convert(Console.Out, testType);
         }
     }
 }

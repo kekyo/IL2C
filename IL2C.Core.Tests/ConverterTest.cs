@@ -10,14 +10,6 @@ namespace IL2C
     [TestFixture]
     public static class ConverterTest
     {
-        public static int main()
-        {
-            var a = 1;
-            var b = 2;
-            var c = a + b;
-            return c;
-        }
-
         [Test]
         public static void StoreLocalVariableFromConstantTest()
         {
@@ -28,7 +20,7 @@ namespace IL2C
                 0x0a  // IL: stloc.0
             };
 
-            var stack = new Stack<string>();
+            var stack = new Stack<object>();
             var results =
                 IL2C.Converter.DecodeAndEnumerateOpCodes(ilBytes)
                     .Select(ilData => ilData.Apply(stack))
@@ -44,11 +36,19 @@ namespace IL2C
             Assert.AreEqual(0, stack.Count);
         }
 
+        public static long Int64MainBody()
+        {
+            var a = 1L;
+            var b = 2L;
+            var c = a + b;
+            return c;
+        }
+
         [Test]
-        public static void SimpleOverallBySummationTest()
+        public static void SimpleOverallByInt64SummationTest()
         {
             var testType = typeof(ConverterTest);
-            var mainMethod = testType.GetMethod("main");
+            var mainMethod = testType.GetMethod("Int64MainBody");
 
             var tw = new StringWriter();
             IL2C.Converter.Convert(tw, mainMethod);
@@ -56,12 +56,51 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"int main(void)");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine(@"int64_t Int64MainBody(void)");
             expected.WriteLine(@"{");
-            expected.WriteLine(@"int local0;");
-            expected.WriteLine(@"int local1;");
-            expected.WriteLine(@"int local2;");
-            expected.WriteLine(@"int local3;");
+            expected.WriteLine(@"int64_t local0;");
+            expected.WriteLine(@"int64_t local1;");
+            expected.WriteLine(@"int64_t local2;");
+            expected.WriteLine(@"int64_t local3;");
+            expected.WriteLine();
+            expected.WriteLine(@"local0 = 1LL;");
+            expected.WriteLine(@"local1 = 2LL;");
+            expected.WriteLine(@"local2 = local1 + local0;");
+            expected.WriteLine(@"local3 = local2;");
+            expected.WriteLine(@"return local3;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+
+        public static int Int32MainBody()
+        {
+            var a = 1;
+            var b = 2;
+            var c = a + b;
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByIn32SummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("Int32MainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod);
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine(@"int32_t Int32MainBody(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"int32_t local0;");
+            expected.WriteLine(@"int32_t local1;");
+            expected.WriteLine(@"int32_t local2;");
+            expected.WriteLine(@"int32_t local3;");
             expected.WriteLine();
             expected.WriteLine(@"local0 = 1;");
             expected.WriteLine(@"local1 = 2;");

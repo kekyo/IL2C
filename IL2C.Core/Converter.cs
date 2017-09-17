@@ -40,7 +40,7 @@ namespace IL2C
                 this.Operand = operand;
             }
 
-            public string Apply(Stack<string> stack)
+            public string Apply(Stack<object> stack)
             {
                 return this.ILConverter.Apply(this.Operand, stack);
             }
@@ -74,7 +74,15 @@ namespace IL2C
 
         private static string GetCLanguageTypeName(Type type)
         {
-            return (type == typeof(System.Int32)) ? "int" : type.FullName;
+            if (type == typeof(System.Int32))
+            {
+                return "int32_t";
+            }
+            if (type == typeof(System.Int64))
+            {
+                return "int64_t";
+            }
+            return type.FullName;
         }
 
         public static void Convert(TextWriter tw, MethodInfo method)
@@ -93,6 +101,8 @@ namespace IL2C
             var returnTypeName =
                 GetCLanguageTypeName(returnType);
 
+            tw.WriteLine("#include <stdint.h>");
+
             tw.WriteLine("{0} {1}(void)", returnTypeName, methodName);
             tw.WriteLine("{");
 
@@ -108,7 +118,7 @@ namespace IL2C
 
             var ilBytes = body.GetILAsByteArray();
 
-            var stack = new Stack<string>();
+            var stack = new Stack<object>();
             foreach (var ilData in DecodeAndEnumerateOpCodes(ilBytes))
             {
                 var sourceCode = ilData.Apply(stack);

@@ -12,7 +12,7 @@ namespace IL2C.ILConveters
 
         public abstract OpCode OpCode { get; }
 
-        public abstract string Apply(object operand, Stack<object> stack);
+        public abstract string Apply(object operand, ApplyContext context);
     }
 
     internal sealed class NopConverter : ILConverter
@@ -23,7 +23,7 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Nop;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
             return null;
         }
@@ -37,16 +37,16 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Conv_I8;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            var data0 = stack.Pop();
+            var data0 = context.EvaluationStack.Pop();
             if (data0 is int)
             {
-                stack.Push(data0 + "LL");
+                context.EvaluationStack.Push(data0 + "LL");
             }
             else
             {
-                stack.Push("(int64_t)" + data0);
+                context.EvaluationStack.Push("(int64_t)" + data0);
             }
             return null;
         }
@@ -60,9 +60,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldc_I4_1;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push(1);
+            context.EvaluationStack.Push(1);
             return null;
         }
     }
@@ -75,9 +75,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldc_I4_2;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push(2);
+            context.EvaluationStack.Push(2);
             return null;
         }
     }
@@ -90,9 +90,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldc_I4;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push(operand);
+            context.EvaluationStack.Push(operand);
             return null;
         }
     }
@@ -105,9 +105,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldc_I8;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push(operand + "LL");
+            context.EvaluationStack.Push(operand + "LL");
             return null;
         }
     }
@@ -120,9 +120,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Stloc_0;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            var data0 = stack.Pop();
+            var data0 = context.EvaluationStack.Pop();
             return string.Format("local0 = {0};", data0);
         }
     }
@@ -135,9 +135,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Stloc_1;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            var data0 = stack.Pop();
+            var data0 = context.EvaluationStack.Pop();
             return string.Format("local1 = {0};", data0);
         }
     }
@@ -150,9 +150,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Stloc_2;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            var data0 = stack.Pop();
+            var data0 = context.EvaluationStack.Pop();
             return string.Format("local2 = {0};", data0);
         }
     }
@@ -165,9 +165,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Stloc_3;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            var data0 = stack.Pop();
+            var data0 = context.EvaluationStack.Pop();
             return string.Format("local3 = {0};", data0);
         }
     }
@@ -180,9 +180,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldloc_0;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push("local0");
+            context.EvaluationStack.Push("local0");
             return null;
         }
     }
@@ -195,9 +195,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldloc_1;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push("local1");
+            context.EvaluationStack.Push("local1");
             return null;
         }
     }
@@ -210,9 +210,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldloc_2;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push("local2");
+            context.EvaluationStack.Push("local2");
             return null;
         }
     }
@@ -225,9 +225,39 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ldloc_3;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            stack.Push("local3");
+            context.EvaluationStack.Push("local3");
+            return null;
+        }
+    }
+
+    internal sealed class Ldarg_0Converter : ILConverter
+    {
+        public Ldarg_0Converter()
+        {
+        }
+
+        public override OpCode OpCode => OpCodes.Ldarg_0;
+
+        public override string Apply(object operand, ApplyContext context)
+        {
+            context.EvaluationStack.Push(context.Parameters[0].Name);
+            return null;
+        }
+    }
+
+    internal sealed class Ldarg_1Converter : ILConverter
+    {
+        public Ldarg_1Converter()
+        {
+        }
+
+        public override OpCode OpCode => OpCodes.Ldarg_1;
+
+        public override string Apply(object operand, ApplyContext context)
+        {
+            context.EvaluationStack.Push(context.Parameters[1].Name);
             return null;
         }
     }
@@ -240,12 +270,12 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Add;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            var data0 = stack.Pop();
-            var data1 = stack.Pop();
+            var data0 = context.EvaluationStack.Pop();
+            var data1 = context.EvaluationStack.Pop();
             var add = string.Format("{0} + {1}", data0, data1);
-            stack.Push(add);
+            context.EvaluationStack.Push(add);
             return null;
         }
     }
@@ -258,7 +288,7 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Br_S;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
             Debug.Assert(((byte)0).Equals(operand));
             return null;
@@ -273,9 +303,9 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Ret;
 
-        public override string Apply(object operand, Stack<object> stack)
+        public override string Apply(object operand, ApplyContext context)
         {
-            var data0 = stack.Pop();
+            var data0 = context.EvaluationStack.Pop();
             return string.Format("return {0};", data0);
         }
     }

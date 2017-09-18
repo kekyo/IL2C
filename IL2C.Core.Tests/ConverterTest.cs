@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 
@@ -20,10 +21,10 @@ namespace IL2C
                 0x0a  // IL: stloc.0
             };
 
-            var stack = new Stack<object>();
+            var context = new ApplyContext(new ParameterInfo[0]);
             var results =
                 IL2C.Converter.DecodeAndEnumerateOpCodes(ilBytes)
-                    .Select(ilData => ilData.Apply(stack))
+                    .Select(ilData => ilData.Apply(context))
                     .ToArray();
 
             var expected = new[]
@@ -33,7 +34,7 @@ namespace IL2C
             };
 
             Assert.IsTrue(expected.SequenceEqual(results));
-            Assert.AreEqual(0, stack.Count);
+            Assert.AreEqual(0, context.EvaluationStack.Count);
         }
 
         public static long Int64MainBody()
@@ -187,5 +188,43 @@ namespace IL2C
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
+
+        public static int Int32WithArgumentsMainBody(int a, int b)
+        {
+            var c = a + b;
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByIn32WithArgumentsSummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("Int32WithArgumentsMainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod);
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine(@"int32_t Int32WithArgumentsMainBody(int32_t a, int32_t b)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"int32_t local0;");
+            expected.WriteLine(@"int32_t local1;");
+            expected.WriteLine();
+            expected.WriteLine(@"local0 = b + a;");
+            expected.WriteLine(@"local1 = local0;");
+            expected.WriteLine(@"return local1;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+
+
+
+
+
+
     }
 }

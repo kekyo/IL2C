@@ -9,6 +9,17 @@ using IL2C.ILConveters;
 
 namespace IL2C
 {
+    public sealed class ApplyContext
+    {
+        public readonly Stack<object> EvaluationStack = new Stack<object>();
+        public readonly ParameterInfo[] Parameters;
+
+        public ApplyContext(ParameterInfo[] parameters)
+        {
+            this.Parameters = parameters;
+        }
+    }
+
     public static class Converter
     {
         private static readonly Dictionary<ushort, ILConverter> ilConverters;
@@ -40,9 +51,9 @@ namespace IL2C
                 this.Operand = operand;
             }
 
-            public string Apply(Stack<object> stack)
+            public string Apply(ApplyContext context)
             {
-                return this.ILConverter.Apply(this.Operand, stack);
+                return this.ILConverter.Apply(this.Operand, context);
             }
         }
 
@@ -100,13 +111,19 @@ namespace IL2C
 
         public static void Convert(TextWriter tw, MethodInfo method)
         {
-            Convert(tw, method.ReturnType, method.Name, method.GetMethodBody());
+            InternalConvert(
+                tw,
+                method.ReturnType,
+                method.Name,
+                method.GetParameters(),
+                method.GetMethodBody());
         }
 
-        private static void Convert(
+        private static void InternalConvert(
             TextWriter tw,
             Type returnType,
             string methodName,
+            ParameterInfo[] parameters,
             MethodBody body)
         {
             var locals = body.LocalVariables;
@@ -116,7 +133,15 @@ namespace IL2C
 
             tw.WriteLine("#include <stdint.h>");
 
-            tw.WriteLine("{0} {1}(void)", returnTypeName, methodName);
+            var parametersString = string.Join(
+                ", ",
+                parameters.Select(parameter =>
+                    string.Format("{0} {1}", GetCLanguageTypeName(parameter.ParameterType), parameter.Name)));
+
+            tw.WriteLine("{0} {1}({2})",
+                returnTypeName,
+                methodName,
+                (parametersString.Length >= 1) ? parametersString : "void");
             tw.WriteLine("{");
 
             foreach (var local in locals)
@@ -131,10 +156,10 @@ namespace IL2C
 
             var ilBytes = body.GetILAsByteArray();
 
-            var stack = new Stack<object>();
+            var context = new ApplyContext(parameters);
             foreach (var ilData in DecodeAndEnumerateOpCodes(ilBytes))
             {
-                var sourceCode = ilData.Apply(stack);
+                var sourceCode = ilData.Apply(context);
                 if (sourceCode != null)
                 {
                     tw.WriteLine(sourceCode);

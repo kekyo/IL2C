@@ -59,15 +59,28 @@ namespace IL2C
                     ilc = ilConverters[word];
                 }
 
+                object operand;
                 switch (ilc.OpCode.OperandType)
                 {
+                    case OperandType.InlineNone:
+                        yield return new ILData(ilc);
+                        break;
+                    case OperandType.InlineI:
+                        operand = BitConverter.ToInt32(ilBytes, index);
+                        index += sizeof(int);
+                        yield return new ILData(ilc, operand);
+                        break;
+                    case OperandType.InlineI8:
+                        operand = BitConverter.ToInt64(ilBytes, index);
+                        index += sizeof(long);
+                        yield return new ILData(ilc, operand);
+                        break;
                     case OperandType.ShortInlineBrTarget:
-                        object operand = ilBytes[index++];
+                        operand = ilBytes[index++];
                         yield return new ILData(ilc, operand);
                         break;
                     default:
-                        yield return new ILData(ilc);
-                        break;
+                        throw new InvalidOperationException();
                 }
             }
         }

@@ -82,6 +82,36 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal sealed class Ldc_i4Converter : ILConverter
+    {
+        public Ldc_i4Converter()
+        {
+        }
+
+        public override OpCode OpCode => OpCodes.Ldc_I4;
+
+        public override string Apply(object operand, Stack<object> stack)
+        {
+            stack.Push(operand);
+            return null;
+        }
+    }
+
+    internal sealed class Ldc_i8Converter : ILConverter
+    {
+        public Ldc_i8Converter()
+        {
+        }
+
+        public override OpCode OpCode => OpCodes.Ldc_I8;
+
+        public override string Apply(object operand, Stack<object> stack)
+        {
+            stack.Push(operand + "LL");
+            return null;
+        }
+    }
+
     internal sealed class Stloc_0Converter : ILConverter
     {
         public Stloc_0Converter()

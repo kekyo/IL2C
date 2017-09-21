@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.Emit;
 
@@ -13,33 +12,66 @@ namespace IL2C.ILConveters
 
         public abstract OpCode OpCode { get; }
 
-        public virtual ILData GetILData(byte[] ilBytes, ref int index)
-        {
-            object operand;
-            switch (this.OpCode.OperandType)
-            {
-                case OperandType.InlineNone:
-                    return new ILData(this);
-                case OperandType.InlineI:
-                    operand = BitConverter.ToInt32(ilBytes, index);
-                    index += sizeof(int);
-                    return new ILData(this, operand);
-                case OperandType.InlineI8:
-                    operand = BitConverter.ToInt64(ilBytes, index);
-                    index += sizeof(long);
-                    return new ILData(this, operand);
-                case OperandType.ShortInlineBrTarget:
-                    operand = ilBytes[index++];
-                    return new ILData(this, operand);
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
+        public abstract ILData GetILData(byte[] ilBytes, ref int index);
 
         public abstract string Apply(object operand, ApplyContext context);
     }
 
-    internal sealed class NopConverter : ILConverter
+    internal abstract class InlineNoneConverter : ILConverter
+    {
+        protected InlineNoneConverter()
+        {
+        }
+
+        public override ILData GetILData(byte[] ilBytes, ref int index)
+        {
+            return new ILData(this);
+        }
+    }
+
+    internal abstract class InlineIConverter : ILConverter
+    {
+        protected InlineIConverter()
+        {
+        }
+
+        public override ILData GetILData(byte[] ilBytes, ref int index)
+        {
+            var operand = BitConverter.ToInt32(ilBytes, index);
+            index += sizeof(int);
+            return new ILData(this, operand);
+        }
+    }
+
+    internal abstract class InlineI8Converter : ILConverter
+    {
+        protected InlineI8Converter()
+        {
+        }
+
+        public override ILData GetILData(byte[] ilBytes, ref int index)
+        {
+            var operand = BitConverter.ToInt64(ilBytes, index);
+            index += sizeof(long);
+            return new ILData(this, operand);
+        }
+    }
+
+    internal abstract class ShortInlineBrTargetConverter : ILConverter
+    {
+        protected ShortInlineBrTargetConverter()
+        {
+        }
+
+        public override ILData GetILData(byte[] ilBytes, ref int index)
+        {
+            var operand = ilBytes[index];
+            index += sizeof(byte);
+            return new ILData(this, operand);
+        }
+    }
+
+    internal sealed class NopConverter : InlineNoneConverter
     {
         public NopConverter()
         {
@@ -53,7 +85,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Conv_i8Converter : ILConverter
+    internal sealed class Conv_i8Converter : InlineNoneConverter
     {
         public Conv_i8Converter()
         {
@@ -76,7 +108,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldc_i4_1Converter : ILConverter
+    internal sealed class Ldc_i4_1Converter : InlineNoneConverter
     {
         public Ldc_i4_1Converter()
         {
@@ -91,7 +123,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldc_i4_2Converter : ILConverter
+    internal sealed class Ldc_i4_2Converter : InlineNoneConverter
     {
         public Ldc_i4_2Converter()
         {
@@ -106,7 +138,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldc_i4Converter : ILConverter
+    internal sealed class Ldc_i4Converter : InlineIConverter
     {
         public Ldc_i4Converter()
         {
@@ -121,7 +153,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldc_i8Converter : ILConverter
+    internal sealed class Ldc_i8Converter : InlineI8Converter
     {
         public Ldc_i8Converter()
         {
@@ -136,7 +168,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Stloc_0Converter : ILConverter
+    internal sealed class Stloc_0Converter : InlineNoneConverter
     {
         public Stloc_0Converter()
         {
@@ -151,7 +183,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Stloc_1Converter : ILConverter
+    internal sealed class Stloc_1Converter : InlineNoneConverter
     {
         public Stloc_1Converter()
         {
@@ -166,7 +198,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Stloc_2Converter : ILConverter
+    internal sealed class Stloc_2Converter : InlineNoneConverter
     {
         public Stloc_2Converter()
         {
@@ -181,7 +213,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Stloc_3Converter : ILConverter
+    internal sealed class Stloc_3Converter : InlineNoneConverter
     {
         public Stloc_3Converter()
         {
@@ -196,7 +228,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldloc_0Converter : ILConverter
+    internal sealed class Ldloc_0Converter : InlineNoneConverter
     {
         public Ldloc_0Converter()
         {
@@ -211,7 +243,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldloc_1Converter : ILConverter
+    internal sealed class Ldloc_1Converter : InlineNoneConverter
     {
         public Ldloc_1Converter()
         {
@@ -226,7 +258,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldloc_2Converter : ILConverter
+    internal sealed class Ldloc_2Converter : InlineNoneConverter
     {
         public Ldloc_2Converter()
         {
@@ -241,7 +273,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldloc_3Converter : ILConverter
+    internal sealed class Ldloc_3Converter : InlineNoneConverter
     {
         public Ldloc_3Converter()
         {
@@ -256,7 +288,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldarg_0Converter : ILConverter
+    internal sealed class Ldarg_0Converter : InlineNoneConverter
     {
         public Ldarg_0Converter()
         {
@@ -271,7 +303,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Ldarg_1Converter : ILConverter
+    internal sealed class Ldarg_1Converter : InlineNoneConverter
     {
         public Ldarg_1Converter()
         {
@@ -286,7 +318,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class AddConverter : ILConverter
+    internal sealed class AddConverter : InlineNoneConverter
     {
         public AddConverter()
         {
@@ -304,7 +336,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Br_sConverter : ILConverter
+    internal sealed class Br_sConverter : ShortInlineBrTargetConverter
     {
         public Br_sConverter()
         {
@@ -319,7 +351,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class RetConverter : ILConverter
+    internal sealed class RetConverter : InlineNoneConverter
     {
         public RetConverter()
         {

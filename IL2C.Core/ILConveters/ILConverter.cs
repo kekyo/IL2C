@@ -12,7 +12,7 @@ namespace IL2C.ILConveters
 
         public abstract OpCode OpCode { get; }
 
-        public abstract ILData GetILData(byte[] ilBytes, ref int index);
+        public abstract ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index);
 
         public abstract string Apply(object operand, ApplyContext context);
     }
@@ -23,7 +23,7 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILData(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
         {
             return new ILData(this);
         }
@@ -35,7 +35,7 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILData(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
         {
             var operand = BitConverter.ToInt32(ilBytes, index);
             index += sizeof(int);
@@ -49,7 +49,7 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILData(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
         {
             var operand = BitConverter.ToInt64(ilBytes, index);
             index += sizeof(long);
@@ -63,10 +63,10 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILData(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
         {
-            var operand = ilBytes[index];
-            index += sizeof(byte);
+            var operand = (sbyte)ilBytes[index];
+            index += sizeof(sbyte);
             return new ILData(this, operand);
         }
     }
@@ -344,9 +344,16 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Br_S;
 
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
+        {
+            var ilData = base.GetILDataAndUpdateNextIndex(ilBytes, ref index);
+            index += (sbyte)ilData.Operand;
+            return ilData;
+        }
+
         public override string Apply(object operand, ApplyContext context)
         {
-            Debug.Assert(((byte)0).Equals(operand));
+            Debug.Assert(((sbyte)0).Equals(operand));
             return null;
         }
     }

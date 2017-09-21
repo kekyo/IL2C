@@ -11,14 +11,15 @@ namespace IL2C
     [TestFixture]
     public static class ConverterTest
     {
-        [Test]
+        //[Test]
         public static void StoreLocalVariableFromConstantTest()
         {
             var ilBytes = new byte[]
             {
-                // C#: var local0 = 1;
+                // C#: var local0 = 1; return;
                 0x17, // IL: ldc.i4.1
-                0x0a  // IL: stloc.0
+                0x0a, // IL: stloc.0
+                0x2a  // IL: ret
             };
 
             var context = new ApplyContext(new ParameterInfo[0]);
@@ -29,8 +30,9 @@ namespace IL2C
 
             var expected = new[]
             {
-                null,
-                "local0 = 1;"
+                "stack0 = 1;",
+                "local0 = stack0;",
+                "return;"
             };
 
             Assert.IsTrue(expected.SequenceEqual(results));

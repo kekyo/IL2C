@@ -70,9 +70,16 @@ namespace IL2C
                     ilc = ilConverters[word];
                 }
 
-                var ilData = ilc.GetILData(ilBytes, ref index);
+                var ilData = ilc.GetILDataAndUpdateNextIndex(ilBytes, ref index);
                 yield return ilData;
+
+                if (ilc.OpCode == OpCodes.Ret)
+                {
+                    yield break;
+                }
             }
+
+            throw new InvalidOperationException();
         }
 
         private static string GetCLanguageTypeName(Type type)

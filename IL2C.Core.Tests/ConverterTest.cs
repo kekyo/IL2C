@@ -21,10 +21,12 @@ namespace IL2C
                 0x0a, // IL: stloc.0
                 0x2a  // IL: ret
             };
+            var markList = new bool[ilBytes.Length];
+            var pathRemains = new Queue<int>();
 
             var context = new ApplyContext(new ParameterInfo[0]);
             var results =
-                IL2C.Converter.DecodeAndEnumerateOpCodes(ilBytes)
+                IL2C.Converter.DecodeAndEnumerateOpCodes(ilBytes, 0, markList, pathRemains)
                     .Select(ilData => ilData.Apply(context))
                     .ToArray();
 
@@ -37,6 +39,7 @@ namespace IL2C
 
             Assert.IsTrue(expected.SequenceEqual(results));
             Assert.AreEqual(0, context.EvaluationStack.Count);
+            Assert.AreEqual(0, pathRemains.Count);
         }
 
         public static long Int64MainBody()

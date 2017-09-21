@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.Emit;
 
@@ -12,7 +13,7 @@ namespace IL2C.ILConveters
 
         public abstract OpCode OpCode { get; }
 
-        public abstract ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index);
+        public abstract ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains);
 
         public abstract string Apply(object operand, ApplyContext context);
     }
@@ -23,7 +24,7 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
             return new ILData(this);
         }
@@ -35,7 +36,7 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
             var operand = BitConverter.ToInt32(ilBytes, index);
             index += sizeof(int);
@@ -49,24 +50,10 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
             var operand = BitConverter.ToInt64(ilBytes, index);
             index += sizeof(long);
-            return new ILData(this, operand);
-        }
-    }
-
-    internal abstract class ShortInlineBrTargetConverter : ILConverter
-    {
-        protected ShortInlineBrTargetConverter()
-        {
-        }
-
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
-        {
-            var operand = (sbyte)ilBytes[index];
-            index += sizeof(sbyte);
             return new ILData(this, operand);
         }
     }
@@ -336,7 +323,7 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class Br_sConverter : ShortInlineBrTargetConverter
+    internal sealed class Br_sConverter : ILConverter
     {
         public Br_sConverter()
         {
@@ -344,11 +331,11 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Br_S;
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index)
+        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
-            var ilData = base.GetILDataAndUpdateNextIndex(ilBytes, ref index);
-            index += (sbyte)ilData.Operand;
-            return ilData;
+            var operand = (sbyte)ilBytes[index];
+            index += sizeof(sbyte) + operand;
+            return new ILData(this, operand);
         }
 
         public override string Apply(object operand, ApplyContext context)

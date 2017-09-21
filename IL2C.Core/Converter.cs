@@ -57,11 +57,23 @@ namespace IL2C
                 .ToDictionary(ilc => (ushort) ilc.OpCode.Value);
         }
 
-        internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(byte[] ilBytes)
+        internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(
+            byte[] ilBytes,
+            int startIndex,
+            bool[] markList,
+            Queue<int> pathRemains)
         {
-            var index = 0;
+            var index = startIndex;
             while (index < ilBytes.Length)
             {
+                if (markList[index])
+                {
+                    yield break;
+                }
+
+                // Computed.
+                markList[index] = true;
+
                 var byte0 = ilBytes[index++];
                 if (ilConverters.TryGetValue(byte0, out var ilc) == false)
                 {
@@ -70,7 +82,7 @@ namespace IL2C
                     ilc = ilConverters[word];
                 }
 
-                var ilData = ilc.GetILDataAndUpdateNextIndex(ilBytes, ref index);
+                var ilData = ilc.GetILDataAndUpdateNextIndex(ilBytes, ref index, pathRemains);
                 yield return ilData;
 
                 if (ilc.OpCode == OpCodes.Ret)
@@ -141,14 +153,23 @@ namespace IL2C
             tw.WriteLine();
 
             var ilBytes = body.GetILAsByteArray();
-
+            var markList = new bool[ilBytes.Length];
+            var pathRemains = new Queue<int>();
+            pathRemains.Enqueue(0x00);
             var context = new ApplyContext(parameters);
-            foreach (var ilData in DecodeAndEnumerateOpCodes(ilBytes))
+
+            while (pathRemains.Count >= 1)
             {
-                var sourceCode = ilData.Apply(context);
-                if (sourceCode != null)
+                var startIndex = pathRemains.Dequeue();
+
+                foreach (var ilData in DecodeAndEnumerateOpCodes(
+                    ilBytes, startIndex, markList, pathRemains))
                 {
-                    tw.WriteLine(sourceCode);
+                    var sourceCode = ilData.Apply(context);
+                    if (sourceCode != null)
+                    {
+                        tw.WriteLine(sourceCode);
+                    }
                 }
             }
 

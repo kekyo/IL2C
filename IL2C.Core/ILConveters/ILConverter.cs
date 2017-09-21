@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.Emit;
 
@@ -11,6 +12,29 @@ namespace IL2C.ILConveters
         }
 
         public abstract OpCode OpCode { get; }
+
+        public virtual ILData GetILData(byte[] ilBytes, ref int index)
+        {
+            object operand;
+            switch (this.OpCode.OperandType)
+            {
+                case OperandType.InlineNone:
+                    return new ILData(this);
+                case OperandType.InlineI:
+                    operand = BitConverter.ToInt32(ilBytes, index);
+                    index += sizeof(int);
+                    return new ILData(this, operand);
+                case OperandType.InlineI8:
+                    operand = BitConverter.ToInt64(ilBytes, index);
+                    index += sizeof(long);
+                    return new ILData(this, operand);
+                case OperandType.ShortInlineBrTarget:
+                    operand = ilBytes[index++];
+                    return new ILData(this, operand);
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
 
         public abstract string Apply(object operand, ApplyContext context);
     }

@@ -20,6 +20,29 @@ namespace IL2C
         }
     }
 
+    internal sealed class ILData
+    {
+        public readonly ILConverter ILConverter;
+        public readonly object Operand;
+
+        public ILData(ILConverter ilc)
+        {
+            this.ILConverter = ilc;
+            this.Operand = null;
+        }
+
+        public ILData(ILConverter ilc, object operand)
+        {
+            this.ILConverter = ilc;
+            this.Operand = operand;
+        }
+
+        public string Apply(ApplyContext context)
+        {
+            return this.ILConverter.Apply(this.Operand, context);
+        }
+    }
+
     public static class Converter
     {
         private static readonly Dictionary<ushort, ILConverter> ilConverters;
@@ -32,29 +55,6 @@ namespace IL2C
                 .Where(type => type.IsSealed && typeof(ILConverter).IsAssignableFrom(type))
                 .Select(type => (ILConverter) Activator.CreateInstance(type))
                 .ToDictionary(ilc => (ushort) ilc.OpCode.Value);
-        }
-
-        internal sealed class ILData
-        {
-            public readonly ILConverter ILConverter;
-            public readonly object Operand;
-
-            public ILData(ILConverter ilc)
-            {
-                this.ILConverter = ilc;
-                this.Operand = null;
-            }
-
-            public ILData(ILConverter ilc, object operand)
-            {
-                this.ILConverter = ilc;
-                this.Operand = operand;
-            }
-
-            public string Apply(ApplyContext context)
-            {
-                return this.ILConverter.Apply(this.Operand, context);
-            }
         }
 
         internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(byte[] ilBytes)
@@ -70,29 +70,8 @@ namespace IL2C
                     ilc = ilConverters[word];
                 }
 
-                object operand;
-                switch (ilc.OpCode.OperandType)
-                {
-                    case OperandType.InlineNone:
-                        yield return new ILData(ilc);
-                        break;
-                    case OperandType.InlineI:
-                        operand = BitConverter.ToInt32(ilBytes, index);
-                        index += sizeof(int);
-                        yield return new ILData(ilc, operand);
-                        break;
-                    case OperandType.InlineI8:
-                        operand = BitConverter.ToInt64(ilBytes, index);
-                        index += sizeof(long);
-                        yield return new ILData(ilc, operand);
-                        break;
-                    case OperandType.ShortInlineBrTarget:
-                        operand = ilBytes[index++];
-                        yield return new ILData(ilc, operand);
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
+                var ilData = ilc.GetILData(ilBytes, ref index);
+                yield return ilData;
             }
         }
 

@@ -5,6 +5,30 @@ using System.Reflection.Emit;
 
 namespace IL2C.ILConveters
 {
+    internal sealed class DecodeContext
+    {
+        public readonly byte[] ILBytes;
+        public readonly Queue<int> PathRemains = new Queue<int>();
+
+        public DecodeContext(byte[] ilBytes)
+        {
+            this.ILBytes = ilBytes;
+            this.PathRemains.Enqueue(0x00);
+        }
+
+        public int Index { get; private set; }
+
+        public void ForwardIndex(int offset)
+        {
+            this.Index += offset;
+        }
+
+        public void SetIndex(int newIndex)
+        {
+            this.Index = newIndex;
+        }
+    }
+
     internal abstract class ILConverter
     {
         protected ILConverter()
@@ -13,7 +37,7 @@ namespace IL2C.ILConveters
 
         public abstract OpCode OpCode { get; }
 
-        public abstract object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains);
+        public abstract object DecodeOperandAndUpdateNextIndex(DecodeContext context);
 
         public abstract string Apply(object operand, ApplyContext context);
     }
@@ -24,7 +48,7 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(DecodeContext context)
         {
             return null;
         }
@@ -36,10 +60,10 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(DecodeContext context)
         {
-            var operand = BitConverter.ToInt32(ilBytes, index);
-            index += sizeof(int);
+            var operand = BitConverter.ToInt32(context.ILBytes, context.Index);
+            context.ForwardIndex(sizeof(int));
             return operand;
         }
     }
@@ -50,10 +74,10 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(DecodeContext context)
         {
-            var operand = BitConverter.ToInt64(ilBytes, index);
-            index += sizeof(long);
+            var operand = BitConverter.ToInt64(context.ILBytes, context.Index);
+            context.ForwardIndex(sizeof(long));
             return operand;
         }
     }
@@ -331,10 +355,10 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Br_S;
 
-        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(DecodeContext context)
         {
-            var operand = (sbyte)ilBytes[index];
-            index += sizeof(sbyte) + operand;
+            var operand = (sbyte)context.ILBytes[context.Index];
+            context.ForwardIndex(sizeof(sbyte) + operand);
             return operand;
         }
 

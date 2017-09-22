@@ -58,31 +58,29 @@ namespace IL2C
         }
 
         internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(
-            byte[] ilBytes,
-            int startIndex,
-            bool[] markList,
-            Queue<int> pathRemains)
+            DecodeContext context, bool[] markList)
         {
-            var index = startIndex;
-            while (index < ilBytes.Length)
+            while (context.Index < context.ILBytes.Length)
             {
-                if (markList[index])
+                if (markList[context.Index])
                 {
                     yield break;
                 }
 
                 // Computed.
-                markList[index] = true;
+                markList[context.Index] = true;
 
-                var byte0 = ilBytes[index++];
+                var byte0 = context.ILBytes[context.Index];
+                context.ForwardIndex(1);
                 if (ilConverters.TryGetValue(byte0, out var ilc) == false)
                 {
-                    var byte1 = ilBytes[index++];
+                    var byte1 = context.ILBytes[context.Index];
+                    context.ForwardIndex(1);
                     var word = (ushort)(byte0 << 8 | byte1);
                     ilc = ilConverters[word];
                 }
 
-                var operand = ilc.DecodeOperandAndUpdateNextIndex(ilBytes, ref index, pathRemains);
+                var operand = ilc.DecodeOperandAndUpdateNextIndex(context);
                 yield return new ILData(ilc, operand);
 
                 if (ilc.OpCode == OpCodes.Ret)
@@ -154,18 +152,18 @@ namespace IL2C
 
             var ilBytes = body.GetILAsByteArray();
             var markList = new bool[ilBytes.Length];
-            var pathRemains = new Queue<int>();
-            pathRemains.Enqueue(0x00);
-            var context = new ApplyContext(parameters);
 
-            while (pathRemains.Count >= 1)
+            var decodeContext = new DecodeContext(ilBytes);
+            var applyContext = new ApplyContext(parameters);
+            
+            while (decodeContext.PathRemains.Count >= 1)
             {
-                var startIndex = pathRemains.Dequeue();
+                var startIndex = decodeContext.PathRemains.Dequeue();
+                decodeContext.SetIndex(startIndex);
 
-                foreach (var ilData in DecodeAndEnumerateOpCodes(
-                    ilBytes, startIndex, markList, pathRemains))
+                foreach (var ilData in DecodeAndEnumerateOpCodes(decodeContext, markList))
                 {
-                    var sourceCode = ilData.Apply(context);
+                    var sourceCode = ilData.Apply(applyContext);
                     if (sourceCode != null)
                     {
                         tw.WriteLine(sourceCode);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using IL2C.ILConveters;
 using NUnit.Framework;
 
 namespace IL2C
@@ -22,12 +23,12 @@ namespace IL2C
                 0x2a  // IL: ret
             };
             var markList = new bool[ilBytes.Length];
-            var pathRemains = new Queue<int>();
 
-            var context = new ApplyContext(new ParameterInfo[0]);
+            var decodeContext = new DecodeContext(ilBytes);
+            var applyContext = new ApplyContext(new ParameterInfo[0]);
             var results =
-                IL2C.Converter.DecodeAndEnumerateOpCodes(ilBytes, 0, markList, pathRemains)
-                    .Select(ilData => ilData.Apply(context))
+                IL2C.Converter.DecodeAndEnumerateOpCodes(decodeContext, markList)
+                    .Select(ilData => ilData.Apply(applyContext))
                     .ToArray();
 
             var expected = new[]
@@ -38,8 +39,8 @@ namespace IL2C
             };
 
             Assert.IsTrue(expected.SequenceEqual(results));
-            Assert.AreEqual(0, context.EvaluationStack.Count);
-            Assert.AreEqual(0, pathRemains.Count);
+            Assert.AreEqual(0, applyContext.EvaluationStack.Count);
+            Assert.AreEqual(0, decodeContext.PathRemains.Count);
         }
 
         public static long Int64MainBody()

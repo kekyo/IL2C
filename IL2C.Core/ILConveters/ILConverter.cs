@@ -13,7 +13,7 @@ namespace IL2C.ILConveters
 
         public abstract OpCode OpCode { get; }
 
-        public abstract ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains);
+        public abstract object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains);
 
         public abstract string Apply(object operand, ApplyContext context);
     }
@@ -24,9 +24,9 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
-            return new ILData(this);
+            return null;
         }
     }
 
@@ -36,11 +36,11 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
             var operand = BitConverter.ToInt32(ilBytes, index);
             index += sizeof(int);
-            return new ILData(this, operand);
+            return operand;
         }
     }
 
@@ -50,11 +50,11 @@ namespace IL2C.ILConveters
         {
         }
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
             var operand = BitConverter.ToInt64(ilBytes, index);
             index += sizeof(long);
-            return new ILData(this, operand);
+            return operand;
         }
     }
 
@@ -331,11 +331,11 @@ namespace IL2C.ILConveters
 
         public override OpCode OpCode => OpCodes.Br_S;
 
-        public override ILData GetILDataAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
+        public override object DecodeOperandAndUpdateNextIndex(byte[] ilBytes, ref int index, Queue<int> pathRemains)
         {
             var operand = (sbyte)ilBytes[index];
             index += sizeof(sbyte) + operand;
-            return new ILData(this, operand);
+            return operand;
         }
 
         public override string Apply(object operand, ApplyContext context)

@@ -82,8 +82,8 @@ namespace IL2C
                     ilc = ilConverters[word];
                 }
 
-                var ilData = ilc.GetILDataAndUpdateNextIndex(ilBytes, ref index, pathRemains);
-                yield return ilData;
+                var operand = ilc.DecodeOperandAndUpdateNextIndex(ilBytes, ref index, pathRemains);
+                yield return new ILData(ilc, operand);
 
                 if (ilc.OpCode == OpCodes.Ret)
                 {

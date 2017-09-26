@@ -7,7 +7,7 @@
     <ProjectGuid>{0B75BDBB-7768-4BE6-B126-7972600B45A3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IL2C.Core</RootNamespace>
+    <RootNamespace>IL2C</RootNamespace>
     <AssemblyName>IL2C.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -43,8 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILConveters\ILConverter.cs" />
+    <Compile Include="ILConveters\ConvConverters.cs" />
+    <Compile Include="ILConveters\BrConverters.cs" />
+    <Compile Include="ILConveters\ArithmeticalConverters.cs" />
+    <Compile Include="ILConveters\LdargConverter.cs" />
+    <Compile Include="ILConveters\LdlocConverters.cs" />
+    <Compile Include="ILConveters\StlocConverters.cs" />
+    <Compile Include="ILConveters\LdcConverters.cs" />
+    <Compile Include="ILConveters\ILConverters.cs" />
+    <Compile Include="ILConveters\OperandTypeConverters.cs" />
+    <Compile Include="InvalidProgramSequenceException.cs" />
+    <Compile Include="Utilities.cs" />
+    <Compile Include="DecodeContext.cs" />
+    <Compile Include="ILConverter.cs" />
     <Compile Include="Converter.cs" />
+    <Compile Include="ILData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

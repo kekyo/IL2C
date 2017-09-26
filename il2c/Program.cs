@@ -24,7 +24,7 @@ namespace il2c
             var testType = typeof(Test);
             var mainMethod = testType.GetMethod("main");
 
-            IL2C.Converter.Convert(Console.Out, mainMethod);
+            IL2C.Converter.Convert(Console.Out, mainMethod, "    ");
         }
     }
 }

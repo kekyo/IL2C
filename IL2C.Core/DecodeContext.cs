@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -124,6 +123,7 @@ namespace IL2C
         private readonly List<StackInformations> stackInformationsList = new List<StackInformations>();
         private int stackInformationsPosition = -1;
         private readonly Queue<BranchTargetInformation> pathRemains = new Queue<BranchTargetInformation>();
+        private readonly HashSet<string> labelNames = new HashSet<string>();
         #endregion
 
         public DecodeContext(
@@ -260,18 +260,26 @@ namespace IL2C
         }
         #endregion
 
-        #region TargetIndex
-        public int TargetIndex => targetIndex;
-
-        private static string MakeLabel(int targetIndex)
+        #region Label
+        private static string MakeLabelName(int targetIndex)
         {
             return string.Format("L_{0:X4}", targetIndex);
         }
 
-        public string MakeLabel()
+        public string MakeLabelName()
         {
-            return MakeLabel(this.TargetIndex);
+            return MakeLabelName(this.TargetIndex);
         }
+
+        public bool IsInUseLabel(string labelName)
+        {
+            return labelNames.Contains(labelName);
+        }
+        #endregion
+
+        #region TargetIndex
+        public int TargetIndex => targetIndex;
+
 
         public void TransferIndex(int offset)
         {
@@ -350,7 +358,10 @@ namespace IL2C
             pathRemains.Enqueue(new BranchTargetInformation(
                 offset, stackInformationsPosition, stackInformationsList));
 
-            return MakeLabel(offset);
+            var labelName = MakeLabelName(offset);
+            labelNames.Add(labelName);
+
+            return labelName;
         }
 
         public bool TryDequeueNextPath()

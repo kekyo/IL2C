@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace IL2C
 {
@@ -13,7 +12,7 @@ namespace IL2C
         {
             while (true)
             {
-                var labelName = context.MakeLabel();
+                var labelName = context.MakeLabelName();
                 if (context.TryDecode(out var ilc) == false)
                 {
                     break;
@@ -38,6 +37,18 @@ namespace IL2C
                 method.GetParameters(),
                 method.GetMethodBody(),
                 indent);
+        }
+
+        private struct GeneratedSourceCode
+        {
+            public readonly string LabelName;
+            public readonly string SourceCode;
+
+            public GeneratedSourceCode(string labelName, string sourceCode)
+            {
+                this.LabelName = labelName;
+                this.SourceCode = sourceCode;
+            }
         }
 
         private static void InternalConvert(
@@ -84,14 +95,13 @@ namespace IL2C
             var decodeContext = new DecodeContext(
                 methodName, parameters, locals, body.GetILAsByteArray());
 
-            var bodySourceCode = new List<string>();
+            var bodySourceCode = new List<GeneratedSourceCode>();
             while (decodeContext.TryDequeueNextPath())
             {
                 bodySourceCode.AddRange(
                     from ilData in DecodeAndEnumerateOpCodes(decodeContext)
                     let sourceCode = ilData.ILConverter.Apply(ilData.Operand, decodeContext)
-                    where sourceCode != null
-                    select string.Format("{0}: {1};", ilData.LabelName, sourceCode));
+                    select new GeneratedSourceCode(ilData.LabelName, sourceCode));
             }
 
             foreach (var si in decodeContext.ExtractStacks())
@@ -105,9 +115,19 @@ namespace IL2C
 
             tw.WriteLine();
 
-            foreach (var sourceCode in bodySourceCode)
+            foreach (var entry in bodySourceCode)
             {
-                tw.WriteLine(indent + sourceCode);
+                if (decodeContext.IsInUseLabel(entry.LabelName))
+                {
+                    tw.WriteLine("{0}:", entry.LabelName);
+                }
+
+                if (entry.SourceCode != null)
+                {
+                    tw.WriteLine(
+                        "{0}{1};",
+                        indent, entry.SourceCode);
+                }
             }
 
             tw.WriteLine("}");

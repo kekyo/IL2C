@@ -11,12 +11,18 @@ namespace IL2C
     {
         internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(DecodeContext context)
         {
-            while (context.TryDecode(out var ilc))
+            while (true)
             {
-                var operand = ilc.DecodeOperand(context);
-                yield return new ILData(ilc, operand);
+                var labelName = context.MakeLabel();
+                if (context.TryDecode(out var ilc) == false)
+                {
+                    break;
+                }
 
-                if (ilc.OpCode == OpCodes.Ret)
+                var operand = ilc.DecodeOperand(context);
+                yield return new ILData(labelName, ilc, operand);
+
+                if (ilc.IsEndOfPath)
                 {
                     yield break;
                 }
@@ -81,9 +87,11 @@ namespace IL2C
             var bodySourceCode = new List<string>();
             while (decodeContext.TryDequeueNextPath())
             {
-                bodySourceCode.AddRange(DecodeAndEnumerateOpCodes(decodeContext)
-                    .Select(ilData => ilData.ILConverter.Apply(ilData.Operand, decodeContext))
-                    .Where(sourceCode => sourceCode != null));
+                bodySourceCode.AddRange(
+                    from ilData in DecodeAndEnumerateOpCodes(decodeContext)
+                    let sourceCode = ilData.ILConverter.Apply(ilData.Operand, decodeContext)
+                    where sourceCode != null
+                    select string.Format("{0}: {1}", ilData.LabelName, sourceCode));
             }
 
             foreach (var si in decodeContext.ExtractStacks())

@@ -7,6 +7,8 @@ namespace IL2C
     {
         public abstract OpCode OpCode { get; }
 
+        public virtual bool IsEndOfPath => false;
+
         public abstract object DecodeOperand(DecodeContext context);
 
         public abstract string Apply(object operand, DecodeContext context);

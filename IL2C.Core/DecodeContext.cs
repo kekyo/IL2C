@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -55,13 +56,6 @@ namespace IL2C
             {
             }
 
-            public StackInformations Clone()
-            {
-                Debug.Assert(stackInformationPosition >= 0);
-
-                return new StackInformations(position, stackInformations.ToList());
-            }
-
             public string GetOrAdd(Type targetType)
             {
                 var index = stackInformations.FindIndex(si => si.TargetType == targetType);
@@ -100,24 +94,23 @@ namespace IL2C
         private struct BranchTargetInformation
         {
             public readonly int TargetIndex;
-            public readonly int StackInformationsPosition;
-            public readonly List<StackInformations> StackInformationsListSnapshot;
+            public readonly StackInformation[] StackInformationsSnapshot;
 
             public BranchTargetInformation(
-                int index, int position, List<StackInformations> stackInformationsList)
+                int index,
+                int stackInformationsPosition,
+                List<StackInformations> stackInformationsList)
             {
                 this.TargetIndex = index;
-                this.StackInformationsPosition = position;
-                this.StackInformationsListSnapshot = stackInformationsList
-                    .Select(stackInformationList => stackInformationList.Clone())
-                    .ToList();
+                this.StackInformationsSnapshot = stackInformationsList
+                    .Take(stackInformationsPosition)
+                    .Select(stackInformationList => stackInformationList.GetCurrent())
+                    .ToArray();
             }
         }
         #endregion
 
         #region Fields
-        private static readonly List<StackInformations> emptyList = new List<StackInformations>();
-
         public readonly string MethodName;
         public readonly ParameterInfo[] Parameters;
         public readonly IList<LocalVariableInfo> Locals;
@@ -128,16 +121,17 @@ namespace IL2C
         private int pathNumber = 0;
         private readonly int[] decodedPathNumbers;
 
-        private List<StackInformations> stackInformationsList = emptyList;
+        private readonly List<StackInformations> stackInformationsList = new List<StackInformations>();
         private int stackInformationsPosition = -1;
         private readonly Queue<BranchTargetInformation> pathRemains = new Queue<BranchTargetInformation>();
         #endregion
 
         public DecodeContext(
-            string methodName, ParameterInfo[] parameters, IList<LocalVariableInfo> locals, byte[] ilBytes)
+            string methodName,
+            ParameterInfo[] parameters,
+            IList<LocalVariableInfo> locals,
+            byte[] ilBytes)
         {
-            Debug.Assert(emptyList.Count == 0);
-
             if (ilBytes.Length == 0)
             {
                 throw new InvalidProgramSequenceException(
@@ -269,6 +263,16 @@ namespace IL2C
         #region TargetIndex
         public int TargetIndex => targetIndex;
 
+        private static string MakeLabel(int targetIndex)
+        {
+            return string.Format("L_{0:X4}", targetIndex);
+        }
+
+        public string MakeLabel()
+        {
+            return MakeLabel(this.TargetIndex);
+        }
+
         public void TransferIndex(int offset)
         {
             var newIndex = targetIndex + offset;
@@ -337,7 +341,7 @@ namespace IL2C
         #endregion
 
         #region Path
-        public void EnqueueNewPath(int offset)
+        public string EnqueueNewPath(int offset)
         {
             Debug.Assert(pathNumber >= 1);
             Debug.Assert(stackInformationsList != null);
@@ -345,6 +349,8 @@ namespace IL2C
 
             pathRemains.Enqueue(new BranchTargetInformation(
                 offset, stackInformationsPosition, stackInformationsList));
+
+            return MakeLabel(offset);
         }
 
         public bool TryDequeueNextPath()
@@ -362,9 +368,7 @@ namespace IL2C
                     var currentStacks = stackInformationsList
                         .Take(stackInformationsPosition)
                         .Select(si => si.GetCurrent());
-                    var branchTargetStacks = branchTarget.StackInformationsListSnapshot
-                        .Take(branchTarget.StackInformationsPosition)
-                        .Select(si => si.GetCurrent());
+                    var branchTargetStacks = branchTarget.StackInformationsSnapshot;
                     if (currentStacks.SequenceEqual(branchTargetStacks))
                     {
                         continue;
@@ -376,8 +380,14 @@ namespace IL2C
                 targetIndex = branchTarget.TargetIndex;
 
                 // Retreive stack informations.
-                stackInformationsList = branchTarget.StackInformationsListSnapshot;
-                stackInformationsPosition = branchTarget.StackInformationsPosition;
+                for (var index = 0;
+                    index < branchTarget.StackInformationsSnapshot.Length;
+                    index++)
+                {
+                    stackInformationsList[index].GetOrAdd(
+                        branchTarget.StackInformationsSnapshot[index].TargetType);
+                }
+                stackInformationsPosition = branchTarget.StackInformationsSnapshot.Length;
 
                 return true;
             }

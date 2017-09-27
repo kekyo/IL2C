@@ -17,6 +17,8 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ret;
 
+        public override bool IsEndOfPath => true;
+
         public override string Apply(DecodeContext context)
         {
             var si = context.PopStack();

@@ -7,22 +7,20 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Br_S;
 
+        public override bool IsEndOfPath => true;
+
         public override object DecodeOperand(DecodeContext context)
         {
             // ShortInlineBrTarget (signed 8bit)
             var operand = (sbyte)context.FetchByte();
-
-            // TODO: Move into Apply()
-            context.TransferIndex(operand);
-
             return operand;
         }
 
         public override string Apply(object operand, DecodeContext context)
         {
-            // TODO:
-            Debug.Assert(((sbyte)0).Equals(operand));
-            return null;
+            var offset = context.TargetIndex + (sbyte)operand;
+            var labelName = context.EnqueueNewPath(offset);
+            return string.Format("goto {0};", labelName);
         }
     }
 }

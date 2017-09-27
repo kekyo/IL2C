@@ -95,21 +95,6 @@ namespace IL2C
             {
                 return stackInformations;
             }
-
-            public bool Equals(StackInformations rhs)
-            {
-                if (rhs == null)
-                {
-                    return false;
-                }
-
-                return this.stackInformations.SequenceEqual(rhs.stackInformations);
-            }
-
-            public override bool Equals(object rhs)
-            {
-                return this.Equals(rhs as StackInformations);
-            }
         }
 
         private struct BranchTargetInformation
@@ -373,8 +358,14 @@ namespace IL2C
                 // If current position already decoded:
                 if (decodedPathNumbers[branchTarget.TargetIndex] >= 1)
                 {
-                    // Skip if stack structure truly equals.
-                    if (stackInformationsList.SequenceEqual(branchTarget.StackInformationsListSnapshot))
+                    // Skip if stack information equals.
+                    var currentStacks = stackInformationsList
+                        .Take(stackInformationsPosition)
+                        .Select(si => si.GetCurrent());
+                    var branchTargetStacks = branchTarget.StackInformationsListSnapshot
+                        .Take(branchTarget.StackInformationsPosition)
+                        .Select(si => si.GetCurrent());
+                    if (currentStacks.SequenceEqual(branchTargetStacks))
                     {
                         continue;
                     }

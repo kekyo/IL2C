@@ -26,7 +26,7 @@ namespace IL2C.ILConveters
 
             throw new InvalidProgramSequenceException(
                 "Unknown add operation: TargetIndex={0}, Type0={1}, Type1={2}",
-                context.TargetIndex,
+                context.ILByteIndex,
                 si0.TargetType.FullName,
                 si1.TargetType.FullName);
         }

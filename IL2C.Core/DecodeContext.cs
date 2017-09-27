@@ -19,7 +19,8 @@ namespace IL2C
 
         public bool Equals(StackInformation rhs)
         {
-            return this.SymbolName.Equals(rhs.SymbolName) && this.TargetType.Equals(rhs.TargetType);
+            return this.SymbolName.Equals(rhs.SymbolName)
+                && this.TargetType.Equals(rhs.TargetType);
         }
 
         public override bool Equals(object rhs)
@@ -38,70 +39,72 @@ namespace IL2C
     internal sealed class DecodeContext
     {
         #region Private types
-        private sealed class StackInformations
+        private sealed class StackInformationHolder
         {
-            private readonly List<StackInformation> stackInformations;
-            private readonly int position;
-            private int stackInformationPosition = -1;
+            private readonly List<StackInformation> typedStackInformation;
+            private readonly int stackPointer;
+            private int selectedStackInformation = -1;
 
-            private StackInformations(int position, List<StackInformation> stackInformations)
+            private StackInformationHolder(
+                int stackPointer, List<StackInformation> typedStackInformation)
             {
-                this.position = position;
-                this.stackInformations = stackInformations;
+                this.stackPointer = stackPointer;
+                this.typedStackInformation = typedStackInformation;
             }
 
-            public StackInformations(int stackPosition)
-                : this(stackPosition, new List<StackInformation>())
+            public StackInformationHolder(int stackPointer)
+                : this(stackPointer, new List<StackInformation>())
             {
             }
 
             public string GetOrAdd(Type targetType)
             {
-                var index = stackInformations.FindIndex(si => si.TargetType == targetType);
+                var index = typedStackInformation
+                    .FindIndex(si => si.TargetType == targetType);
                 if (index >= 0)
                 {
-                    stackInformationPosition = index;
-                    return stackInformations[index].SymbolName;
+                    selectedStackInformation = index;
+                    return typedStackInformation[index].SymbolName;
                 }
 
                 var symbolName = string.Format(
                     "__stack{0}_{1}",
-                    position,
+                    stackPointer,
                     Utilities.GetCLanguageTypeName(targetType));
 
                 var stackInformation = new StackInformation(symbolName, targetType);
-                stackInformationPosition = stackInformations.Count;
-                stackInformations.Add(stackInformation);
+                selectedStackInformation = typedStackInformation.Count;
+                typedStackInformation.Add(stackInformation);
 
                 return symbolName;
             }
 
             public StackInformation GetCurrent()
             {
-                Debug.Assert(stackInformationPosition >= 0);
-                Debug.Assert(stackInformations.Any());
+                Debug.Assert(selectedStackInformation >= 0);
+                Debug.Assert(typedStackInformation.Any());
 
-                return stackInformations[stackInformationPosition];
+                return typedStackInformation[selectedStackInformation];
             }
 
             public IEnumerable<StackInformation> ExtractStacks()
             {
-                return stackInformations;
+                return typedStackInformation;
             }
         }
 
         private struct BranchTargetInformation
         {
-            public readonly int TargetIndex;
+            public readonly int ILByteIndex;
             public readonly StackInformation[] StackInformationsSnapshot;
 
             public BranchTargetInformation(
-                int index,
+                int ilByteIndex,
                 int stackInformationsPosition,
-                List<StackInformations> stackInformationsList)
+                List<StackInformationHolder> stackInformationHolderList)
             {
-                this.TargetIndex = index;
-                this.StackInformationsSnapshot = stackInformationsList
+                this.ILByteIndex = ilByteIndex;
+                this.StackInformationsSnapshot = stackInformationHolderList
                     .Take(stackInformationsPosition)
                     .Select(stackInformationList => stackInformationList.GetCurrent())
                     .ToArray();
@@ -115,14 +118,17 @@ namespace IL2C
         public readonly IList<LocalVariableInfo> Locals;
 
         private readonly byte[] ilBytes;
-        private int targetIndex = -1;
+        private int ilByteIndex = -1;
 
-        private int pathNumber = 0;
-        private readonly int[] decodedPathNumbers;
+        private int decodingPathNumber = 0;
+        private readonly int[] decodedPathNumbersAtILByteIndex;
 
-        private readonly List<StackInformations> stackInformationsList = new List<StackInformations>();
-        private int stackInformationsPosition = -1;
-        private readonly Queue<BranchTargetInformation> pathRemains = new Queue<BranchTargetInformation>();
+        private readonly List<StackInformationHolder> stackList =
+            new List<StackInformationHolder>();
+        private int stackPointer = -1;
+
+        private readonly Queue<BranchTargetInformation> pathRemains =
+            new Queue<BranchTargetInformation>();
         private readonly HashSet<string> labelNames = new HashSet<string>();
         #endregion
 
@@ -144,50 +150,50 @@ namespace IL2C
             this.Locals = locals;
 
             this.ilBytes = ilBytes;
-            this.decodedPathNumbers = new int[ilBytes.Length];
+            this.decodedPathNumbersAtILByteIndex = new int[ilBytes.Length];
 
             // First valid process is TryDequeueNextPath.
-            this.pathRemains.Enqueue(new BranchTargetInformation(0, 0, new List<StackInformations>()));
+            this.pathRemains.Enqueue(new BranchTargetInformation(0, 0, new List<StackInformationHolder>()));
         }
 
         #region Decode
         public bool TryDecode(out ILConverter ilc)
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
             // Finish if current position already decoded.
-            if (decodedPathNumbers[targetIndex] >= 1)
+            if (decodedPathNumbersAtILByteIndex[ilByteIndex] >= 1)
             {
                 ilc = null;
                 return false;
             }
 
-            decodedPathNumbers[targetIndex] = pathNumber;
+            decodedPathNumbersAtILByteIndex[ilByteIndex] = decodingPathNumber;
 
             // Decode next bytes.
-            var byte0 = ilBytes[targetIndex];
+            var byte0 = ilBytes[ilByteIndex];
             if (Utilities.TryGetILConverter(byte0, out ilc))
             {
-                targetIndex++;
+                ilByteIndex++;
                 return true;
             }
 
-            if (targetIndex >= ilBytes.Length)
+            if (ilByteIndex >= ilBytes.Length)
             {
                 throw new InvalidProgramSequenceException(
                     "End of method body reached: MethodName={0}",
                     this.MethodName);
             }
 
-            targetIndex++;
+            ilByteIndex++;
 
-            var byte1 = ilBytes[targetIndex];
+            var byte1 = ilBytes[ilByteIndex];
             var word = (ushort)(byte0 << 8 | byte1);
             if (Utilities.TryGetILConverter(word, out ilc))
             {
-                targetIndex++;
+                ilByteIndex++;
                 return true;
             }
 
@@ -195,32 +201,32 @@ namespace IL2C
                 "Invalid opcode: MethodName={0}, OpCode={1:X2}, CurrentIndex={2}",
                 this.MethodName,
                 byte0,
-                targetIndex);
+                ilByteIndex);
         }
         #endregion
 
         #region Fetch
         public byte FetchByte()
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
-            if (targetIndex >= ilBytes.Length)
+            if (ilByteIndex >= ilBytes.Length)
             {
                 throw new InvalidProgramSequenceException(
                     "End of method body reached: MethodName={0}",
                     this.MethodName);
             }
 
-            return ilBytes[targetIndex++];
+            return ilBytes[ilByteIndex++];
         }
 
         public ushort FetchUInt16()
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
             var byte0 = this.FetchByte();
             var byte1 = this.FetchByte();
@@ -229,9 +235,9 @@ namespace IL2C
 
         public uint FetchUInt32()
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
             var ushort0 = this.FetchUInt16();
             var ushort1 = this.FetchUInt16();
@@ -245,9 +251,9 @@ namespace IL2C
 
         public ulong FetchUInt64()
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
             var uint0 = this.FetchUInt32();
             var uint1 = this.FetchUInt32();
@@ -261,14 +267,14 @@ namespace IL2C
         #endregion
 
         #region Label
-        private static string MakeLabelName(int targetIndex)
+        private static string MakeLabelName(int index)
         {
-            return string.Format("L_{0:x4}", targetIndex);
+            return string.Format("L_{0:x4}", index);
         }
 
         public string MakeLabelName()
         {
-            return MakeLabelName(this.TargetIndex);
+            return MakeLabelName(ilByteIndex);
         }
 
         public bool IsInUseLabel(string labelName)
@@ -277,21 +283,20 @@ namespace IL2C
         }
         #endregion
 
-        #region TargetIndex
-        public int TargetIndex => targetIndex;
-
+        #region ILByteIndex
+        public int ILByteIndex => ilByteIndex;
 
         public void TransferIndex(int offset)
         {
-            var newIndex = targetIndex + offset;
+            var newIndex = ilByteIndex + offset;
             this.SetIndex(newIndex);
         }
 
         public void SetIndex(int newIndex)
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
             if ((newIndex >= this.ilBytes.Length) || (newIndex < 0))
             {
@@ -299,66 +304,66 @@ namespace IL2C
                     "Invalid branch target: Method={0}, Target={1}, CurrentIndex={2}",
                     this.MethodName,
                     newIndex,
-                    targetIndex);
+                    ilByteIndex);
             }
 
-            targetIndex = newIndex;
+            ilByteIndex = newIndex;
         }
         #endregion
 
         #region Stack
         public string PushStack(Type targetType)
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
-            StackInformations stackInformations;
-            if (stackInformationsPosition >= stackInformationsList.Count)
+            StackInformationHolder stackInformationHolder;
+            if (stackPointer >= stackList.Count)
             {
-                stackInformations = new StackInformations(stackInformationsPosition);
-                stackInformationsList.Add(stackInformations);
+                stackInformationHolder = new StackInformationHolder(stackPointer);
+                stackList.Add(stackInformationHolder);
             }
             else
             {
-                stackInformations = stackInformationsList[stackInformationsPosition];
+                stackInformationHolder = stackList[stackPointer];
             }
 
-            stackInformationsPosition++;
+            stackPointer++;
 
-            return stackInformations.GetOrAdd(targetType);
+            return stackInformationHolder.GetOrAdd(targetType);
         }
 
         public StackInformation PopStack()
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
-            if (stackInformationsPosition <= 0)
+            if (stackPointer <= 0)
             {
                 throw new InvalidProgramSequenceException(
                     "Evaluation stack underflow: Method={0}, CurrentIndex={1}",
                     this.MethodName,
-                    targetIndex);
+                    ilByteIndex);
             }
 
-            stackInformationsPosition--;
-            return stackInformationsList[stackInformationsPosition].GetCurrent();
+            stackPointer--;
+            return stackList[stackPointer].GetCurrent();
         }
         #endregion
 
         #region Path
-        public string EnqueueNewPath(int offset)
+        public string EnqueueNewPath(int branchTargetIndex)
         {
-            Debug.Assert(pathNumber >= 1);
-            Debug.Assert(stackInformationsList != null);
-            Debug.Assert(stackInformationsPosition >= 0);
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
 
             pathRemains.Enqueue(new BranchTargetInformation(
-                offset, stackInformationsPosition, stackInformationsList));
+                branchTargetIndex, stackPointer, stackList));
 
-            var labelName = MakeLabelName(offset);
+            var labelName = MakeLabelName(branchTargetIndex);
             labelNames.Add(labelName);
 
             return labelName;
@@ -373,11 +378,11 @@ namespace IL2C
                 var branchTarget = pathRemains.Dequeue();
 
                 // If current position already decoded:
-                if (decodedPathNumbers[branchTarget.TargetIndex] >= 1)
+                if (decodedPathNumbersAtILByteIndex[branchTarget.ILByteIndex] >= 1)
                 {
                     // Skip if stack information equals.
-                    var currentStacks = stackInformationsList
-                        .Take(stackInformationsPosition)
+                    var currentStacks = stackList
+                        .Take(stackPointer)
                         .Select(si => si.GetCurrent());
                     var branchTargetStacks = branchTarget.StackInformationsSnapshot;
                     if (currentStacks.SequenceEqual(branchTargetStacks))
@@ -387,30 +392,30 @@ namespace IL2C
                 }
 
                 // Start next path.
-                pathNumber++;
-                targetIndex = branchTarget.TargetIndex;
+                decodingPathNumber++;
+                ilByteIndex = branchTarget.ILByteIndex;
 
                 // Retreive stack informations.
                 for (var index = 0;
                     index < branchTarget.StackInformationsSnapshot.Length;
                     index++)
                 {
-                    stackInformationsList[index].GetOrAdd(
+                    stackList[index].GetOrAdd(
                         branchTarget.StackInformationsSnapshot[index].TargetType);
                 }
-                stackInformationsPosition = branchTarget.StackInformationsSnapshot.Length;
+                stackPointer = branchTarget.StackInformationsSnapshot.Length;
 
                 return true;
             }
 
-            targetIndex = -1;
+            ilByteIndex = -1;
             return false;
         }
         #endregion
 
         public IEnumerable<StackInformation> ExtractStacks()
         {
-            return stackInformationsList
+            return stackList
                 .SelectMany(stackInformations => stackInformations.ExtractStacks());
         }
     }

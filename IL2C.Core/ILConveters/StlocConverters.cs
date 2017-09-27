@@ -17,7 +17,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.TargetIndex,
+                    context.ILByteIndex,
                     si.TargetType.FullName,
                     localType.FullName);
             }
@@ -38,7 +38,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.TargetIndex,
+                    context.ILByteIndex,
                     si.TargetType.FullName,
                     localType.FullName);
             }
@@ -59,7 +59,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.TargetIndex,
+                    context.ILByteIndex,
                     si.TargetType.FullName,
                     localType.FullName);
             }
@@ -80,7 +80,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.TargetIndex,
+                    context.ILByteIndex,
                     si.TargetType.FullName,
                     localType.FullName);
             }

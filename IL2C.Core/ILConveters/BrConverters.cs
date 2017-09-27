@@ -18,7 +18,7 @@ namespace IL2C.ILConveters
 
         public override string Apply(object operand, DecodeContext context)
         {
-            var offset = context.TargetIndex + (sbyte)operand;
+            var offset = context.ILByteIndex + (sbyte)operand;
             var labelName = context.EnqueueNewPath(offset);
             return string.Format("goto {0}", labelName);
         }

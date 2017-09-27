@@ -263,7 +263,7 @@ namespace IL2C
         #region Label
         private static string MakeLabelName(int targetIndex)
         {
-            return string.Format("L_{0:X4}", targetIndex);
+            return string.Format("L_{0:x4}", targetIndex);
         }
 
         public string MakeLabelName()

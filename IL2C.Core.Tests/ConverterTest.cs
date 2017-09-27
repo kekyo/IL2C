@@ -57,6 +57,8 @@ namespace IL2C
             expected.WriteLine(@"  local2 = __stack0_int64_t;");
             expected.WriteLine(@"  __stack0_int64_t = local2;");
             expected.WriteLine(@"  local3 = __stack0_int64_t;");
+            expected.WriteLine(@"  goto L_000f;");
+            expected.WriteLine(@"L_000f:");
             expected.WriteLine(@"  __stack0_int64_t = local3;");
             expected.WriteLine(@"  return __stack0_int64_t;");
             expected.WriteLine(@"}");
@@ -106,6 +108,8 @@ namespace IL2C
             expected.WriteLine(@"  local2 = __stack0_int64_t;");
             expected.WriteLine(@"  __stack0_int64_t = local2;");
             expected.WriteLine(@"  local3 = __stack0_int64_t;");
+            expected.WriteLine(@"  goto L_001d;");
+            expected.WriteLine(@"L_001d:");
             expected.WriteLine(@"  __stack0_int64_t = local3;");
             expected.WriteLine(@"  return __stack0_int64_t;");
             expected.WriteLine(@"}");
@@ -155,6 +159,8 @@ namespace IL2C
             expected.WriteLine(@"  local2 = __stack0_int32_t;");
             expected.WriteLine(@"  __stack0_int32_t = local2;");
             expected.WriteLine(@"  local3 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_000d;");
+            expected.WriteLine(@"L_000d:");
             expected.WriteLine(@"  __stack0_int32_t = local3;");
             expected.WriteLine(@"  return __stack0_int32_t;");
             expected.WriteLine(@"}");
@@ -204,6 +210,8 @@ namespace IL2C
             expected.WriteLine(@"  local2 = __stack0_int32_t;");
             expected.WriteLine(@"  __stack0_int32_t = local2;");
             expected.WriteLine(@"  local3 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0015;");
+            expected.WriteLine(@"L_0015:");
             expected.WriteLine(@"  __stack0_int32_t = local3;");
             expected.WriteLine(@"  return __stack0_int32_t;");
             expected.WriteLine(@"}");
@@ -245,6 +253,8 @@ namespace IL2C
             expected.WriteLine(@"  local0 = __stack0_int32_t;");
             expected.WriteLine(@"  __stack0_int32_t = local0;");
             expected.WriteLine(@"  local1 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0009;");
+            expected.WriteLine(@"L_0009:");
             expected.WriteLine(@"  __stack0_int32_t = local1;");
             expected.WriteLine(@"  return __stack0_int32_t;");
             expected.WriteLine(@"}");

@@ -23,6 +23,8 @@ int64_t main(void)
     local2 = __stack0_int64_t;
     __stack0_int64_t = local2;
     local3 = __stack0_int64_t;
+    goto L_000F;
+L_000F:
     __stack0_int64_t = local3;
     return __stack0_int64_t;
 }

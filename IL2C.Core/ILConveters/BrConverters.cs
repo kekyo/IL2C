@@ -20,7 +20,7 @@ namespace IL2C.ILConveters
         {
             var offset = context.TargetIndex + (sbyte)operand;
             var labelName = context.EnqueueNewPath(offset);
-            return string.Format("goto {0};", labelName);
+            return string.Format("goto {0}", labelName);
         }
     }
 }

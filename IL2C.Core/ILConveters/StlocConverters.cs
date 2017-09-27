@@ -22,7 +22,7 @@ namespace IL2C.ILConveters
                     localType.FullName);
             }
 
-            return string.Format("local0 = {0};", si.SymbolName);
+            return string.Format("local0 = {0}", si.SymbolName);
         }
     }
 
@@ -43,7 +43,7 @@ namespace IL2C.ILConveters
                     localType.FullName);
             }
 
-            return string.Format("local1 = {0};", si.SymbolName);
+            return string.Format("local1 = {0}", si.SymbolName);
         }
     }
 
@@ -64,7 +64,7 @@ namespace IL2C.ILConveters
                     localType.FullName);
             }
 
-            return string.Format("local2 = {0};", si.SymbolName);
+            return string.Format("local2 = {0}", si.SymbolName);
         }
     }
 
@@ -85,7 +85,7 @@ namespace IL2C.ILConveters
                     localType.FullName);
             }
 
-            return string.Format("local3 = {0};", si.SymbolName);
+            return string.Format("local3 = {0}", si.SymbolName);
         }
     }
 }

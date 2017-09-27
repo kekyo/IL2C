@@ -16,12 +16,12 @@ namespace IL2C.ILConveters
             if ((si0.TargetType == typeof(int)) && (si1.TargetType == typeof(int)))
             {
                 var resultName = context.PushStack(typeof(int));
-                return string.Format("{0} = {1} + {2};", resultName, si0.SymbolName, si1.SymbolName);
+                return string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName);
             }
             if ((si0.TargetType == typeof(long)) && (si1.TargetType == typeof(long)))
             {
                 var resultName = context.PushStack(typeof(long));
-                return string.Format("{0} = {1} + {2};", resultName, si0.SymbolName, si1.SymbolName);
+                return string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName);
             }
 
             throw new InvalidProgramSequenceException(

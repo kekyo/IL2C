@@ -22,7 +22,7 @@ namespace IL2C.ILConveters
         public override string Apply(DecodeContext context)
         {
             var si = context.PopStack();
-            return string.Format("return {0};", si.SymbolName);
+            return string.Format("return {0}", si.SymbolName);
         }
     }
 }

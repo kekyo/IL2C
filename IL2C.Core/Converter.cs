@@ -91,7 +91,7 @@ namespace IL2C
                     from ilData in DecodeAndEnumerateOpCodes(decodeContext)
                     let sourceCode = ilData.ILConverter.Apply(ilData.Operand, decodeContext)
                     where sourceCode != null
-                    select string.Format("{0}: {1}", ilData.LabelName, sourceCode));
+                    select string.Format("{0}: {1};", ilData.LabelName, sourceCode));
             }
 
             foreach (var si in decodeContext.ExtractStacks())

@@ -10,7 +10,7 @@ namespace IL2C.ILConveters
         {
             var local = context.Locals[0];
             var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local0;", symbolName);
+            return string.Format("{0} = local0", symbolName);
         }
     }
 
@@ -22,7 +22,7 @@ namespace IL2C.ILConveters
         {
             var local = context.Locals[1];
             var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local1;", symbolName);
+            return string.Format("{0} = local1", symbolName);
         }
     }
 
@@ -34,7 +34,7 @@ namespace IL2C.ILConveters
         {
             var local = context.Locals[2];
             var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local2;", symbolName);
+            return string.Format("{0} = local2", symbolName);
         }
     }
 
@@ -46,7 +46,7 @@ namespace IL2C.ILConveters
         {
             var local = context.Locals[3];
             var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local3;", symbolName);
+            return string.Format("{0} = local3", symbolName);
         }
     }
 }

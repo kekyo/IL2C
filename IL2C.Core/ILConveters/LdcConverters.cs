@@ -9,7 +9,7 @@ namespace IL2C.ILConveters
         public override string Apply(DecodeContext context)
         {
             var symbolName = context.PushStack(typeof(int));
-            return string.Format("{0} = 1;", symbolName);
+            return string.Format("{0} = 1", symbolName);
         }
     }
 
@@ -20,7 +20,7 @@ namespace IL2C.ILConveters
         public override string Apply(DecodeContext context)
         {
             var symbolName = context.PushStack(typeof(int));
-            return string.Format("{0} = 2;", symbolName);
+            return string.Format("{0} = 2", symbolName);
         }
     }
 
@@ -31,7 +31,7 @@ namespace IL2C.ILConveters
         public override string Apply(int operand, DecodeContext context)
         {
             var symbolName = context.PushStack(typeof(int));
-            return string.Format("{0} = {1};", symbolName, operand);
+            return string.Format("{0} = {1}", symbolName, operand);
         }
     }
 
@@ -42,7 +42,7 @@ namespace IL2C.ILConveters
         public override string Apply(long operand, DecodeContext context)
         {
             var symbolName = context.PushStack(typeof(long));
-            return string.Format("{0} = {1}LL;", symbolName, operand);
+            return string.Format("{0} = {1}LL", symbolName, operand);
         }
     }
 }

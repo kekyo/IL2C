@@ -10,7 +10,7 @@ namespace IL2C.ILConveters
         {
             var parameter = context.Parameters[0];
             var symbolName = context.PushStack(parameter.ParameterType);
-            return string.Format("{0} = {1};", symbolName, parameter.Name);
+            return string.Format("{0} = {1}", symbolName, parameter.Name);
         }
     }
 
@@ -22,7 +22,7 @@ namespace IL2C.ILConveters
         {
             var parameter = context.Parameters[1];
             var symbolName = context.PushStack(parameter.ParameterType);
-            return string.Format("{0} = {1};", symbolName, parameter.Name);
+            return string.Format("{0} = {1}", symbolName, parameter.Name);
         }
     }
 }

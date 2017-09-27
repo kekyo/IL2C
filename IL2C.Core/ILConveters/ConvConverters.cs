@@ -17,7 +17,7 @@ namespace IL2C.ILConveters
                 return null;
             }
 
-            return string.Format("{0} = (int64_t){1};", resultName, siBefore.SymbolName);
+            return string.Format("{0} = (int64_t){1}", resultName, siBefore.SymbolName);
         }
     }
 }

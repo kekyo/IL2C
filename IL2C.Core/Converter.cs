@@ -12,14 +12,14 @@ namespace IL2C
         {
             while (true)
             {
-                var labelName = context.MakeLabelName();
+                var label = context.MakeLabel();
                 if (context.TryDecode(out var ilc) == false)
                 {
                     break;
                 }
 
                 var operand = ilc.DecodeOperand(context);
-                yield return new ILData(labelName, ilc, operand);
+                yield return new ILData(label, ilc, operand);
 
                 if (ilc.IsEndOfPath)
                 {
@@ -41,12 +41,12 @@ namespace IL2C
 
         private struct GeneratedSourceCode
         {
-            public readonly string LabelName;
+            public readonly Label Label;
             public readonly string SourceCode;
 
-            public GeneratedSourceCode(string labelName, string sourceCode)
+            public GeneratedSourceCode(Label label, string sourceCode)
             {
-                this.LabelName = labelName;
+                this.Label = label;
                 this.SourceCode = sourceCode;
             }
         }
@@ -101,7 +101,7 @@ namespace IL2C
                 bodySourceCode.AddRange(
                     from ilData in DecodeAndEnumerateOpCodes(decodeContext)
                     let sourceCode = ilData.ILConverter.Apply(ilData.Operand, decodeContext)
-                    select new GeneratedSourceCode(ilData.LabelName, sourceCode));
+                    select new GeneratedSourceCode(ilData.Label, sourceCode));
             }
 
             foreach (var si in decodeContext.ExtractStacks())
@@ -117,9 +117,10 @@ namespace IL2C
 
             foreach (var entry in bodySourceCode)
             {
-                if (decodeContext.IsInUseLabel(entry.LabelName))
+                if (decodeContext.TryGetLabelName(
+                    entry.Label, out var labelName))
                 {
-                    tw.WriteLine("{0}:", entry.LabelName);
+                    tw.WriteLine("{0}:", labelName);
                 }
 
                 if (entry.SourceCode != null)

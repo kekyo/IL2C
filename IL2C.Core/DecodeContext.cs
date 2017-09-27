@@ -36,6 +36,16 @@ namespace IL2C
         }
     }
 
+    internal struct Label
+    {
+        public readonly int ILByteIndex;
+
+        public Label(int ilByteIndex)
+        {
+            this.ILByteIndex = ilByteIndex;
+        }
+    }
+
     internal sealed class DecodeContext
     {
         #region Private types
@@ -129,7 +139,8 @@ namespace IL2C
 
         private readonly Queue<BranchTargetInformation> pathRemains =
             new Queue<BranchTargetInformation>();
-        private readonly HashSet<string> labelNames = new HashSet<string>();
+        private readonly Dictionary<int, string> labelNamesByILByteIndex =
+            new Dictionary<int, string>();
         #endregion
 
         public DecodeContext(
@@ -267,19 +278,15 @@ namespace IL2C
         #endregion
 
         #region Label
-        private static string MakeLabelName(int index)
+        public Label MakeLabel()
         {
-            return string.Format("L_{0:x4}", index);
+            return new Label(ilByteIndex);
         }
 
-        public string MakeLabelName()
+        public bool TryGetLabelName(Label label, out string labelName)
         {
-            return MakeLabelName(ilByteIndex);
-        }
-
-        public bool IsInUseLabel(string labelName)
-        {
-            return labelNames.Contains(labelName);
+            return labelNamesByILByteIndex.TryGetValue(
+                label.ILByteIndex, out labelName);
         }
         #endregion
 
@@ -363,8 +370,8 @@ namespace IL2C
             pathRemains.Enqueue(new BranchTargetInformation(
                 branchTargetIndex, stackPointer, stackList));
 
-            var labelName = MakeLabelName(branchTargetIndex);
-            labelNames.Add(labelName);
+            var labelName = string.Format("L_{0:x4}", labelNamesByILByteIndex.Count);
+            labelNamesByILByteIndex.Add(branchTargetIndex, labelName);
 
             return labelName;
         }

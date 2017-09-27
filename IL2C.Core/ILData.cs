@@ -2,13 +2,13 @@
 {
     internal struct ILData
     {
-        public readonly string LabelName;
+        public readonly Label Label;
         public readonly ILConverter ILConverter;
         public readonly object Operand;
 
-        public ILData(string labelName, ILConverter ilc, object operand)
+        public ILData(Label label, ILConverter ilc, object operand)
         {
-            this.LabelName = labelName;
+            this.Label = label;
             this.ILConverter = ilc;
             this.Operand = operand;
         }

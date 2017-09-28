@@ -18,7 +18,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IL2CCLanguageTests.c">
+    <ClCompile Include="Main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetCode.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -32,6 +32,7 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
             expected.WriteLine(@"int64_t Int64MainBody(void)");
@@ -86,6 +87,7 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
             expected.WriteLine(@"int64_t Int64LargeValueMainBody(void)");
@@ -137,6 +139,7 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
             expected.WriteLine(@"int32_t Int32MainBody(void)");
@@ -188,6 +191,7 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
             expected.WriteLine(@"int32_t Int32LargeValueMainBody(void)");
@@ -237,6 +241,7 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
             expected.WriteLine(@"int32_t Int32WithArgumentsMainBody(int32_t a, int32_t b)");
@@ -262,10 +267,65 @@ namespace IL2C
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
 
+        public static int ConditionalBranchMainBody(int a)
+        {
+            if (a > 0)
+            {
+                return a + 1;
+            }
+            else
+            {
+                return a + 2;
+            }
+        }
 
+        [Test]
+        public static void ConditionalBranchTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("ConditionalBranchMainBody");
 
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
 
+            var sourceCode = tw.ToString();
 
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine();
+            expected.WriteLine(@"int32_t ConditionalBranchMainBody(int32_t a)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  bool local0;");
+            expected.WriteLine(@"  int32_t local1;");
+            expected.WriteLine();
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  bool __stack0_bool;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine();
+            expected.WriteLine(@"  __stack0_int32_t = a;");
+            expected.WriteLine(@"  __stack1_int32_t = 0;");
+            expected.WriteLine(@"  __stack0_bool = (__stack0_int32_t > __stack1_int32_t) ? true : false;");
+            expected.WriteLine(@"  local0 = __stack0_bool;");
+            expected.WriteLine(@"  __stack0_bool = local0;");
+            expected.WriteLine(@"  if (__stack0_bool == false) goto L_0000;");
+            expected.WriteLine(@"  __stack0_int32_t = a;");
+            expected.WriteLine(@"  __stack1_int32_t = 1;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  local1 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0001;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = a;");
+            expected.WriteLine(@"  __stack1_int32_t = 2;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  local1 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0001;");
+            expected.WriteLine(@"L_0001:");
+            expected.WriteLine(@"  __stack0_int32_t = local1;");
+            expected.WriteLine(@"  return __stack0_int32_t;");
+            expected.WriteLine(@"}");
 
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
     }
 }

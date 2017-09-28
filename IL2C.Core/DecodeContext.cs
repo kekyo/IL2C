@@ -233,6 +233,11 @@ namespace IL2C
             return ilBytes[ilByteIndex++];
         }
 
+        public sbyte FetchSByte()
+        {
+            return (sbyte) this.FetchByte();
+        }
+
         public ushort FetchUInt16()
         {
             Debug.Assert(decodingPathNumber >= 1);
@@ -370,8 +375,12 @@ namespace IL2C
             pathRemains.Enqueue(new BranchTargetInformation(
                 branchTargetIndex, stackPointer, stackList));
 
-            var labelName = string.Format("L_{0:x4}", labelNamesByILByteIndex.Count);
-            labelNamesByILByteIndex.Add(branchTargetIndex, labelName);
+            if (labelNamesByILByteIndex.TryGetValue(
+                branchTargetIndex, out var labelName) == false)
+            {
+                labelName = string.Format("L_{0:x4}", labelNamesByILByteIndex.Count);
+                labelNamesByILByteIndex.Add(branchTargetIndex, labelName);
+            }
 
             return labelName;
         }

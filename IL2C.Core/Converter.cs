@@ -64,6 +64,7 @@ namespace IL2C
             var returnTypeName =
                 Utilities.GetCLanguageTypeName(returnType);
 
+            tw.WriteLine("#include <stdbool.h>");
             tw.WriteLine("#include <stdint.h>");
 
             tw.WriteLine();

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using IL2C.ILConveters;
-
 namespace IL2C
 {
     internal static class Utilities
@@ -27,6 +25,10 @@ namespace IL2C
 
         public static string GetCLanguageTypeName(Type type)
         {
+            if (type == typeof(System.Boolean))
+            {
+                return "bool";
+            }
             if (type == typeof(System.Int32))
             {
                 return "int32_t";
@@ -36,6 +38,20 @@ namespace IL2C
                 return "int64_t";
             }
             return type.FullName;
+        }
+
+        public static bool IsNumericPrimitive(Type type)
+        {
+            if (type == typeof(System.Int32))
+            {
+                return true;
+            }
+            if (type == typeof(System.Int64))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

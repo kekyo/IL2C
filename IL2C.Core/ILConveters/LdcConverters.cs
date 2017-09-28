@@ -2,6 +2,17 @@
 
 namespace IL2C.ILConveters
 {
+    internal sealed class Ldc_i4_0Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_0;
+
+        public override string Apply(DecodeContext context)
+        {
+            var symbolName = context.PushStack(typeof(int));
+            return string.Format("{0} = 0", symbolName);
+        }
+    }
+
     internal sealed class Ldc_i4_1Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_1;

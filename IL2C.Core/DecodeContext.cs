@@ -124,6 +124,7 @@ namespace IL2C
 
         #region Fields
         public readonly string MethodName;
+        public readonly Type ReturnType;
         public readonly ParameterInfo[] Parameters;
         public readonly IList<LocalVariableInfo> Locals;
 
@@ -145,6 +146,7 @@ namespace IL2C
 
         public DecodeContext(
             string methodName,
+            Type returnType,
             ParameterInfo[] parameters,
             IList<LocalVariableInfo> locals,
             byte[] ilBytes)
@@ -157,6 +159,7 @@ namespace IL2C
             }
 
             this.MethodName = methodName;
+            this.ReturnType = returnType;
             this.Parameters = parameters;
             this.Locals = locals;
 
@@ -209,7 +212,7 @@ namespace IL2C
             }
 
             throw new InvalidProgramSequenceException(
-                "Invalid opcode: MethodName={0}, OpCode={1:X2}, CurrentIndex={2}",
+                "Invalid opcode: MethodName={0}, OpCode={1:x2}, CurrentIndex={2}",
                 this.MethodName,
                 byte0,
                 ilByteIndex);
@@ -329,6 +332,14 @@ namespace IL2C
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
+
+            Debug.Assert(targetType != typeof(ulong));
+            Debug.Assert(targetType != typeof(uint));
+            Debug.Assert(targetType != typeof(byte));
+            Debug.Assert(targetType != typeof(sbyte));
+            Debug.Assert(targetType != typeof(short));
+            Debug.Assert(targetType != typeof(ushort));
+            Debug.Assert(targetType != typeof(bool));
 
             StackInformationHolder stackInformationHolder;
             if (stackPointer >= stackList.Count)

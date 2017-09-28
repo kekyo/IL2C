@@ -1,28 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection.Emit;
+﻿using System.Reflection.Emit;
 
 namespace IL2C.ILConveters
 {
+    internal static class StlocConverterUtilities
+    {
+        public static string Apply(int localIndex, DecodeContext context)
+        {
+            var si = context.PopStack();
+            var localType = context.Locals[localIndex].LocalType;
+            if (localType.IsAssignableFrom(si.TargetType))
+            {
+                return string.Format(
+                    "local{0} = {1}",
+                    localIndex, 
+                    si.SymbolName);
+            }
+
+            if (Utilities.IsNumericPrimitive(si.TargetType))
+            {
+                if (Utilities.IsNumericPrimitive(localType))
+                {
+                    return string.Format(
+                        "local{0} = ({1}){2}",
+                        localIndex,
+                        Utilities.GetCLanguageTypeName(localType),
+                        si.SymbolName);
+                }
+                else if (localType == typeof(bool))
+                {
+                    return string.Format(
+                        "local{0} = {1} ? true : false",
+                        localIndex,
+                        si.SymbolName);
+                }
+            }
+
+            throw new InvalidProgramSequenceException(
+                "Invalid store operation: ILByteIndex={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
+                context.ILByteIndex,
+                si.TargetType.FullName,
+                localType.FullName,
+                localIndex);
+        }
+    }
+
     internal sealed class Stloc_0Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Stloc_0;
 
         public override string Apply(DecodeContext context)
         {
-            var si = context.PopStack();
-            var localType = context.Locals[0].LocalType;
-            if (localType.IsAssignableFrom(si.TargetType) == false)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.ILByteIndex,
-                    si.TargetType.FullName,
-                    localType.FullName);
-            }
-
-            return string.Format("local0 = {0}", si.SymbolName);
+            return StlocConverterUtilities.Apply(0, context);
         }
     }
 
@@ -32,18 +60,7 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
-            var si = context.PopStack();
-            var localType = context.Locals[1].LocalType;
-            if (localType.IsAssignableFrom(si.TargetType) == false)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.ILByteIndex,
-                    si.TargetType.FullName,
-                    localType.FullName);
-            }
-
-            return string.Format("local1 = {0}", si.SymbolName);
+            return StlocConverterUtilities.Apply(1, context);
         }
     }
 
@@ -53,18 +70,7 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
-            var si = context.PopStack();
-            var localType = context.Locals[2].LocalType;
-            if (localType.IsAssignableFrom(si.TargetType) == false)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.ILByteIndex,
-                    si.TargetType.FullName,
-                    localType.FullName);
-            }
-
-            return string.Format("local2 = {0}", si.SymbolName);
+            return StlocConverterUtilities.Apply(2, context);
         }
     }
 
@@ -74,18 +80,7 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
-            var si = context.PopStack();
-            var localType = context.Locals[3].LocalType;
-            if (localType.IsAssignableFrom(si.TargetType) == false)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid store operation: TargetIndex={0}, StackType={1}, LocalType={1}",
-                    context.ILByteIndex,
-                    si.TargetType.FullName,
-                    localType.FullName);
-            }
-
-            return string.Format("local3 = {0}", si.SymbolName);
+            return StlocConverterUtilities.Apply(3, context);
         }
     }
 }

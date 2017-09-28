@@ -22,7 +22,34 @@ namespace IL2C.ILConveters
         public override string Apply(DecodeContext context)
         {
             var si = context.PopStack();
-            return string.Format("return {0}", si.SymbolName);
+            var returnType = context.ReturnType;
+            if (returnType.IsAssignableFrom(si.TargetType))
+            {
+                return string.Format("return {0}", si.SymbolName);
+            }
+
+            if (Utilities.IsNumericPrimitive(si.TargetType))
+            {
+                if (Utilities.IsNumericPrimitive(returnType))
+                {
+                    return string.Format(
+                        "return ({0}){1}",
+                        Utilities.GetCLanguageTypeName(returnType),
+                        si.SymbolName);
+                }
+                else if (returnType == typeof(bool))
+                {
+                    return string.Format(
+                        "return {0} ? true : false",
+                        si.SymbolName);
+                }
+            }
+
+            throw new InvalidProgramSequenceException(
+                "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
+                context.ILByteIndex,
+                si.TargetType.FullName,
+                returnType.FullName);
         }
     }
 }

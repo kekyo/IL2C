@@ -2,15 +2,45 @@
 
 namespace IL2C.ILConveters
 {
+    internal static class LdlocConverterUtilities
+    {
+        public static string Apply(int localIndex, DecodeContext context)
+        {
+            var local = context.Locals[localIndex];
+            var targetType = local.LocalType;
+
+            if (local.LocalType == typeof(bool))
+            {
+                var symbolName = context.PushStack(typeof(int));
+                return string.Format(
+                    "{0} = local{1} ? 1 : 0",
+                    symbolName,
+                    localIndex);
+            }
+            else
+            {
+                if ((local.LocalType == typeof(byte))
+                    || (local.LocalType == typeof(sbyte)))
+                {
+                    targetType = typeof(int);
+                }
+
+                var symbolName = context.PushStack(targetType);
+                return string.Format(
+                    "{0} = local{1}",
+                    symbolName,
+                    localIndex);
+            }
+        }
+    }
+
     internal sealed class Ldloc_0Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldloc_0;
 
         public override string Apply(DecodeContext context)
         {
-            var local = context.Locals[0];
-            var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local0", symbolName);
+            return LdlocConverterUtilities.Apply(0, context);
         }
     }
 
@@ -20,9 +50,7 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
-            var local = context.Locals[1];
-            var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local1", symbolName);
+            return LdlocConverterUtilities.Apply(1, context);
         }
     }
 
@@ -32,9 +60,7 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
-            var local = context.Locals[2];
-            var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local2", symbolName);
+            return LdlocConverterUtilities.Apply(2, context);
         }
     }
 
@@ -44,9 +70,7 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
-            var local = context.Locals[3];
-            var symbolName = context.PushStack(local.LocalType);
-            return string.Format("{0} = local3", symbolName);
+            return LdlocConverterUtilities.Apply(3, context);
         }
     }
 }

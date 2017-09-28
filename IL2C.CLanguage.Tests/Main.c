@@ -3,10 +3,8 @@
 
 int main()
 {
-    auto value = -5;
+    uint8_t result = ByteMainBody();
 
-    auto result = ConditionalBranchMainBody(value);
-
-    auto expected = value + 2;
+    uint8_t expected = 3;
     assert(expected == result);
 }

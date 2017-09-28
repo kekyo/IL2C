@@ -94,7 +94,11 @@ namespace IL2C
             tw.WriteLine();
 
             var decodeContext = new DecodeContext(
-                methodName, parameters, locals, body.GetILAsByteArray());
+                methodName,
+                returnType,
+                parameters,
+                locals,
+                body.GetILAsByteArray());
 
             var bodySourceCode = new List<GeneratedSourceCode>();
             while (decodeContext.TryDequeueNextPath())

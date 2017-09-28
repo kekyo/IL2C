@@ -8,16 +8,30 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
-            var siBefore = context.PopStack();
+            var siFrom = context.PopStack();
             var resultName = context.PushStack(typeof(long));
 
-            // Ignore emit source code if symbol not changed.
-            if (siBefore.SymbolName == resultName)
+            return string.Format("{0} = {1}", resultName, siFrom.SymbolName);
+        }
+    }
+
+    internal sealed class Conv_u1Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Conv_U1;
+
+        public override string Apply(DecodeContext context)
+        {
+            var siFrom = context.PopStack();
+            if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
             {
-                return null;
+                throw new InvalidProgramSequenceException(
+                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
+                    context.ILByteIndex,
+                    siFrom.TargetType.FullName);
             }
 
-            return string.Format("{0} = (int64_t){1}", resultName, siBefore.SymbolName);
+            var resultName = context.PushStack(typeof(int));
+            return string.Format("{0} = (uint8_t){1}", resultName, siFrom.SymbolName);
         }
     }
 }

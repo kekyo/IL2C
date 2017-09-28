@@ -12,6 +12,59 @@ namespace IL2C
     [TestFixture]
     public static class ConverterTest
     {
+        public static byte ByteMainBody()
+        {
+            var a = (byte)1;
+            var b = (byte)2;
+            var c = (byte)(a + b);
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByByteSummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("ByteMainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"uint8_t ByteMainBody(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  uint8_t local0;");
+            expected.WriteLine(@"  uint8_t local1;");
+            expected.WriteLine(@"  uint8_t local2;");
+            expected.WriteLine(@"  uint8_t local3;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  __stack0_int32_t = 1;");
+            expected.WriteLine(@"  local0 = (uint8_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = 2;");
+            expected.WriteLine(@"  local1 = (uint8_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local0;");
+            expected.WriteLine(@"  __stack1_int32_t = local1;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = (uint8_t)__stack0_int32_t;");
+            expected.WriteLine(@"  local2 = (uint8_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local2;");
+            expected.WriteLine(@"  local3 = (uint8_t)__stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = local3;");
+            expected.WriteLine(@"  return (uint8_t)__stack0_int32_t;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+
         public static long Int64MainBody()
         {
             var a = 1L;
@@ -47,10 +100,10 @@ namespace IL2C
             expected.WriteLine(@"  int64_t __stack1_int64_t;");
             expected.WriteLine();
             expected.WriteLine(@"  __stack0_int32_t = 1;");
-            expected.WriteLine(@"  __stack0_int64_t = (int64_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int64_t = __stack0_int32_t;");
             expected.WriteLine(@"  local0 = __stack0_int64_t;");
             expected.WriteLine(@"  __stack0_int32_t = 2;");
-            expected.WriteLine(@"  __stack0_int64_t = (int64_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int64_t = __stack0_int32_t;");
             expected.WriteLine(@"  local1 = __stack0_int64_t;");
             expected.WriteLine(@"  __stack0_int64_t = local0;");
             expected.WriteLine(@"  __stack1_int64_t = local1;");
@@ -300,15 +353,14 @@ namespace IL2C
             expected.WriteLine(@"  int32_t local1;");
             expected.WriteLine();
             expected.WriteLine(@"  int32_t __stack0_int32_t;");
-            expected.WriteLine(@"  bool __stack0_bool;");
             expected.WriteLine(@"  int32_t __stack1_int32_t;");
             expected.WriteLine();
             expected.WriteLine(@"  __stack0_int32_t = a;");
             expected.WriteLine(@"  __stack1_int32_t = 0;");
-            expected.WriteLine(@"  __stack0_bool = (__stack0_int32_t > __stack1_int32_t) ? true : false;");
-            expected.WriteLine(@"  local0 = __stack0_bool;");
-            expected.WriteLine(@"  __stack0_bool = local0;");
-            expected.WriteLine(@"  if (__stack0_bool == false) goto L_0000;");
+            expected.WriteLine(@"  __stack0_int32_t = (__stack0_int32_t > __stack1_int32_t) ? 1 : 0;");
+            expected.WriteLine(@"  local0 = __stack0_int32_t ? true : false;");
+            expected.WriteLine(@"  __stack0_int32_t = local0 ? 1 : 0;");
+            expected.WriteLine(@"  if (__stack0_int32_t == 0) goto L_0000;");
             expected.WriteLine(@"  __stack0_int32_t = a;");
             expected.WriteLine(@"  __stack1_int32_t = 1;");
             expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");

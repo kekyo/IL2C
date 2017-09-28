@@ -29,13 +29,6 @@ namespace IL2C.ILConveters
             var offset = context.ILByteIndex + operand;
             var labelName = context.EnqueueNewPath(offset);
 
-            if (si.TargetType == typeof(bool))
-            {
-                return string.Format(
-                    "if ({0} == false) goto {1}",
-                    si.SymbolName,
-                    labelName);
-            }
             if (Utilities.IsNumericPrimitive(si.TargetType))
             {
                 return string.Format(

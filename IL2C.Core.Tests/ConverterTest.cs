@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using IL2C.ILConveters;
+﻿using System.IO;
 using NUnit.Framework;
 
 namespace IL2C
@@ -12,6 +6,7 @@ namespace IL2C
     [TestFixture]
     public static class ConverterTest
     {
+        #region Byte
         public static byte ByteMainBody()
         {
             var a = (byte)1;
@@ -64,7 +59,9 @@ namespace IL2C
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
+        #endregion
 
+        #region SByte
         public static sbyte SByteMainBody()
         {
             var a = (sbyte)1;
@@ -170,7 +167,214 @@ namespace IL2C
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
+        #endregion
 
+        #region Int16
+        public static short Int16MainBody()
+        {
+            var a = (short)1;
+            var b = (short)2;
+            var c = (short)(a + b);
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByInt16SummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("Int16MainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"int16_t Int16MainBody(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  int16_t local0;");
+            expected.WriteLine(@"  int16_t local1;");
+            expected.WriteLine(@"  int16_t local2;");
+            expected.WriteLine(@"  int16_t local3;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  __stack0_int32_t = 1;");
+            expected.WriteLine(@"  local0 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = 2;");
+            expected.WriteLine(@"  local1 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local0;");
+            expected.WriteLine(@"  __stack1_int32_t = local1;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  local2 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local2;");
+            expected.WriteLine(@"  local3 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = local3;");
+            expected.WriteLine(@"  return (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+        #endregion
+
+        #region Int32
+        public static int Int32MainBody()
+        {
+            var a = 1;
+            var b = 2;
+            var c = a + b;
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByInt32SummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("Int32MainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine();
+            expected.WriteLine(@"int32_t Int32MainBody(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  int32_t local0;");
+            expected.WriteLine(@"  int32_t local1;");
+            expected.WriteLine(@"  int32_t local2;");
+            expected.WriteLine(@"  int32_t local3;");
+            expected.WriteLine();
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine();
+            expected.WriteLine(@"  __stack0_int32_t = 1;");
+            expected.WriteLine(@"  local0 = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = 2;");
+            expected.WriteLine(@"  local1 = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local0;");
+            expected.WriteLine(@"  __stack1_int32_t = local1;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  local2 = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local2;");
+            expected.WriteLine(@"  local3 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = local3;");
+            expected.WriteLine(@"  return __stack0_int32_t;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+
+        public static int Int32LargeValueMainBody()
+        {
+            var a = 12345678;
+            var b = 23456789;
+            var c = a + b;
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByInt32LargeValueSummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("Int32LargeValueMainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine();
+            expected.WriteLine(@"int32_t Int32LargeValueMainBody(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  int32_t local0;");
+            expected.WriteLine(@"  int32_t local1;");
+            expected.WriteLine(@"  int32_t local2;");
+            expected.WriteLine(@"  int32_t local3;");
+            expected.WriteLine();
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine();
+            expected.WriteLine(@"  __stack0_int32_t = 12345678;");
+            expected.WriteLine(@"  local0 = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = 23456789;");
+            expected.WriteLine(@"  local1 = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local0;");
+            expected.WriteLine(@"  __stack1_int32_t = local1;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  local2 = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local2;");
+            expected.WriteLine(@"  local3 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = local3;");
+            expected.WriteLine(@"  return __stack0_int32_t;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+
+        public static int Int32WithArgumentsMainBody(int a, int b)
+        {
+            var c = a + b;
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByInt32WithArgumentsSummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("Int32WithArgumentsMainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine();
+            expected.WriteLine(@"int32_t Int32WithArgumentsMainBody(int32_t a, int32_t b)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  int32_t local0;");
+            expected.WriteLine(@"  int32_t local1;");
+            expected.WriteLine();
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine();
+            expected.WriteLine(@"  __stack0_int32_t = a;");
+            expected.WriteLine(@"  __stack1_int32_t = b;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  local0 = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local0;");
+            expected.WriteLine(@"  local1 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = local1;");
+            expected.WriteLine(@"  return __stack0_int32_t;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+        #endregion
+
+        #region Int64
         public static long Int64MainBody()
         {
             var a = 1L;
@@ -277,155 +481,9 @@ namespace IL2C
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
+        #endregion
 
-        public static int Int32MainBody()
-        {
-            var a = 1;
-            var b = 2;
-            var c = a + b;
-            return c;
-        }
-
-        [Test]
-        public static void SimpleOverallByIn32SummationTest()
-        {
-            var testType = typeof(ConverterTest);
-            var mainMethod = testType.GetMethod("Int32MainBody");
-
-            var tw = new StringWriter();
-            IL2C.Converter.Convert(tw, mainMethod, "  ");
-
-            var sourceCode = tw.ToString();
-
-            var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
-            expected.WriteLine(@"int32_t Int32MainBody(void)");
-            expected.WriteLine(@"{");
-            expected.WriteLine(@"  int32_t local0;");
-            expected.WriteLine(@"  int32_t local1;");
-            expected.WriteLine(@"  int32_t local2;");
-            expected.WriteLine(@"  int32_t local3;");
-            expected.WriteLine();
-            expected.WriteLine(@"  int32_t __stack0_int32_t;");
-            expected.WriteLine(@"  int32_t __stack1_int32_t;");
-            expected.WriteLine();
-            expected.WriteLine(@"  __stack0_int32_t = 1;");
-            expected.WriteLine(@"  local0 = __stack0_int32_t;");
-            expected.WriteLine(@"  __stack0_int32_t = 2;");
-            expected.WriteLine(@"  local1 = __stack0_int32_t;");
-            expected.WriteLine(@"  __stack0_int32_t = local0;");
-            expected.WriteLine(@"  __stack1_int32_t = local1;");
-            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
-            expected.WriteLine(@"  local2 = __stack0_int32_t;");
-            expected.WriteLine(@"  __stack0_int32_t = local2;");
-            expected.WriteLine(@"  local3 = __stack0_int32_t;");
-            expected.WriteLine(@"  goto L_0000;");
-            expected.WriteLine(@"L_0000:");
-            expected.WriteLine(@"  __stack0_int32_t = local3;");
-            expected.WriteLine(@"  return __stack0_int32_t;");
-            expected.WriteLine(@"}");
-
-            Assert.AreEqual(expected.ToString(), sourceCode);
-        }
-
-        public static int Int32LargeValueMainBody()
-        {
-            var a = 12345678;
-            var b = 23456789;
-            var c = a + b;
-            return c;
-        }
-
-        [Test]
-        public static void SimpleOverallByIn32LargeValueSummationTest()
-        {
-            var testType = typeof(ConverterTest);
-            var mainMethod = testType.GetMethod("Int32LargeValueMainBody");
-
-            var tw = new StringWriter();
-            IL2C.Converter.Convert(tw, mainMethod, "  ");
-
-            var sourceCode = tw.ToString();
-
-            var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
-            expected.WriteLine(@"int32_t Int32LargeValueMainBody(void)");
-            expected.WriteLine(@"{");
-            expected.WriteLine(@"  int32_t local0;");
-            expected.WriteLine(@"  int32_t local1;");
-            expected.WriteLine(@"  int32_t local2;");
-            expected.WriteLine(@"  int32_t local3;");
-            expected.WriteLine();
-            expected.WriteLine(@"  int32_t __stack0_int32_t;");
-            expected.WriteLine(@"  int32_t __stack1_int32_t;");
-            expected.WriteLine();
-            expected.WriteLine(@"  __stack0_int32_t = 12345678;");
-            expected.WriteLine(@"  local0 = __stack0_int32_t;");
-            expected.WriteLine(@"  __stack0_int32_t = 23456789;");
-            expected.WriteLine(@"  local1 = __stack0_int32_t;");
-            expected.WriteLine(@"  __stack0_int32_t = local0;");
-            expected.WriteLine(@"  __stack1_int32_t = local1;");
-            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
-            expected.WriteLine(@"  local2 = __stack0_int32_t;");
-            expected.WriteLine(@"  __stack0_int32_t = local2;");
-            expected.WriteLine(@"  local3 = __stack0_int32_t;");
-            expected.WriteLine(@"  goto L_0000;");
-            expected.WriteLine(@"L_0000:");
-            expected.WriteLine(@"  __stack0_int32_t = local3;");
-            expected.WriteLine(@"  return __stack0_int32_t;");
-            expected.WriteLine(@"}");
-
-            Assert.AreEqual(expected.ToString(), sourceCode);
-        }
-
-        public static int Int32WithArgumentsMainBody(int a, int b)
-        {
-            var c = a + b;
-            return c;
-        }
-
-        [Test]
-        public static void SimpleOverallByIn32WithArgumentsSummationTest()
-        {
-            var testType = typeof(ConverterTest);
-            var mainMethod = testType.GetMethod("Int32WithArgumentsMainBody");
-
-            var tw = new StringWriter();
-            IL2C.Converter.Convert(tw, mainMethod, "  ");
-
-            var sourceCode = tw.ToString();
-
-            var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
-            expected.WriteLine(@"int32_t Int32WithArgumentsMainBody(int32_t a, int32_t b)");
-            expected.WriteLine(@"{");
-            expected.WriteLine(@"  int32_t local0;");
-            expected.WriteLine(@"  int32_t local1;");
-            expected.WriteLine();
-            expected.WriteLine(@"  int32_t __stack0_int32_t;");
-            expected.WriteLine(@"  int32_t __stack1_int32_t;");
-            expected.WriteLine();
-            expected.WriteLine(@"  __stack0_int32_t = a;");
-            expected.WriteLine(@"  __stack1_int32_t = b;");
-            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
-            expected.WriteLine(@"  local0 = __stack0_int32_t;");
-            expected.WriteLine(@"  __stack0_int32_t = local0;");
-            expected.WriteLine(@"  local1 = __stack0_int32_t;");
-            expected.WriteLine(@"  goto L_0000;");
-            expected.WriteLine(@"L_0000:");
-            expected.WriteLine(@"  __stack0_int32_t = local1;");
-            expected.WriteLine(@"  return __stack0_int32_t;");
-            expected.WriteLine(@"}");
-
-            Assert.AreEqual(expected.ToString(), sourceCode);
-        }
-
+        #region Conditional branch
         public static int ConditionalBranchMainBody(int a)
         {
             if (a > 0)
@@ -485,5 +543,6 @@ namespace IL2C
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
+        #endregion
     }
 }

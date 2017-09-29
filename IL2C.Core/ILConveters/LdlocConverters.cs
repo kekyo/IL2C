@@ -20,7 +20,8 @@ namespace IL2C.ILConveters
             else
             {
                 if ((local.LocalType == typeof(byte))
-                    || (local.LocalType == typeof(sbyte)))
+                    || (local.LocalType == typeof(sbyte))
+                    || (local.LocalType == typeof(short)))
                 {
                     targetType = typeof(int);
                 }

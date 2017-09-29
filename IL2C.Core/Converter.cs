@@ -30,10 +30,17 @@ namespace IL2C
 
         public static void Convert(TextWriter tw, MethodInfo method, string indent)
         {
+            var type = method.DeclaringType;
+            var fullName = string.Format(
+                "{0}.{1}.{2}",
+                type.Namespace,
+                type.Name,
+                method.Name);
+
             InternalConvert(
                 tw,
                 method.ReturnType,
-                method.Name,
+                fullName,
                 method.GetParameters(),
                 method.GetMethodBody(),
                 indent);
@@ -78,7 +85,7 @@ namespace IL2C
 
             tw.WriteLine("{0} {1}({2})",
                 returnTypeName,
-                methodName,
+                methodName.Replace(".", "_"),
                 (parametersString.Length >= 1) ? parametersString : "void");
             tw.WriteLine("{");
 

@@ -33,6 +33,10 @@ namespace IL2C
             {
                 return "uint8_t";
             }
+            if (type == typeof(System.SByte))
+            {
+                return "int8_t";
+            }
             if (type == typeof(System.Int32))
             {
                 return "int32_t";
@@ -47,6 +51,10 @@ namespace IL2C
         public static bool IsNumericPrimitive(Type type)
         {
             if (type == typeof(System.Byte))
+            {
+                return true;
+            }
+            if (type == typeof(System.SByte))
             {
                 return true;
             }

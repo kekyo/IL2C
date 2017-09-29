@@ -3,8 +3,8 @@
 
 int main()
 {
-    uint8_t result = ByteMainBody();
+    int8_t result = SByteWithMinusMainBody();
 
-    uint8_t expected = 3;
+    int8_t expected = 3;
     assert(expected == result);
 }

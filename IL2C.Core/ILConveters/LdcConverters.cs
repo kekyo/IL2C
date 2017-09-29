@@ -35,11 +35,33 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal sealed class Ldc_i4_5Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_5;
+
+        public override string Apply(DecodeContext context)
+        {
+            var symbolName = context.PushStack(typeof(int));
+            return string.Format("{0} = 5", symbolName);
+        }
+    }
+
     internal sealed class Ldc_i4Converter : InlineI4Converter
     {
         public override OpCode OpCode => OpCodes.Ldc_I4;
 
         public override string Apply(int operand, DecodeContext context)
+        {
+            var symbolName = context.PushStack(typeof(int));
+            return string.Format("{0} = {1}", symbolName, operand);
+        }
+    }
+
+    internal sealed class Ldc_i4_sConverter : ShortInlineI1Converter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_S;
+
+        public override string Apply(sbyte operand, DecodeContext context)
         {
             var symbolName = context.PushStack(typeof(int));
             return string.Format("{0} = {1}", symbolName, operand);

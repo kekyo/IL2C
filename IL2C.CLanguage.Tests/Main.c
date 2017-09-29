@@ -3,8 +3,8 @@
 
 int main()
 {
-    int16_t result = Int16MainBody();
+    uint16_t result = UInt16WithMaxValueMainBody();
 
-    int16_t expected = 3;
+    uint16_t expected = UINT16_MAX - 5 + 2;
     assert(expected == result);
 }

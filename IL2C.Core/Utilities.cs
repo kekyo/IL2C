@@ -41,6 +41,10 @@ namespace IL2C
             {
                 return "int16_t";
             }
+            if (type == typeof(System.UInt16))
+            {
+                return "uint16_t";
+            }
             if (type == typeof(System.Int32))
             {
                 return "int32_t";
@@ -63,6 +67,10 @@ namespace IL2C
                 return true;
             }
             if (type == typeof(System.Int16))
+            {
+                return true;
+            }
+            if (type == typeof(System.UInt16))
             {
                 return true;
             }

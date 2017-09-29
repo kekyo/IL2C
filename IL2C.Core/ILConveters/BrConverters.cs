@@ -40,4 +40,27 @@ namespace IL2C.ILConveters
             throw new InvalidOperationException();
         }
     }
+
+    internal sealed class Brtrue_sConverter : ShortInlineBrTargetConverter
+    {
+        public override OpCode OpCode => OpCodes.Brtrue_S;
+
+        public override string Apply(sbyte operand, DecodeContext context)
+        {
+            var si = context.PopStack();
+
+            var offset = context.ILByteIndex + operand;
+            var labelName = context.EnqueueNewPath(offset);
+
+            if (Utilities.IsNumericPrimitive(si.TargetType))
+            {
+                return string.Format(
+                    "if ({0} != 0) goto {1}",
+                    si.SymbolName,
+                    labelName);
+            }
+
+            throw new InvalidOperationException();
+        }
+    }
 }

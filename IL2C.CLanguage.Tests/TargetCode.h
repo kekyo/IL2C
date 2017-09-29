@@ -1,29 +1,108 @@
-#include <stdbool.h>
+﻿#include <stdbool.h>
 #include <stdint.h>
 
-uint16_t UInt16WithMaxValueMainBody(void)
+uint8_t Add3(uint8_t a, bool isTwo)
 {
-    uint16_t local0;
-    uint16_t local1;
-    uint16_t local2;
-    uint16_t local3;
+    uint8_t local0;
 
     int32_t __stack0_int32_t;
     int32_t __stack1_int32_t;
 
-    __stack0_int32_t = 65530;
-    local0 = (uint16_t)__stack0_int32_t;
-    __stack0_int32_t = 2;
-    local1 = (uint16_t)__stack0_int32_t;
+    __stack0_int32_t = a;
+    __stack1_int32_t = isTwo ? 1 : 0;
+    if (__stack1_int32_t == 0) goto L_0000;
+    __stack1_int32_t = 2;
+    goto L_0001;
+L_0000:
+    __stack1_int32_t = 1;
+L_0001:
+    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
+    __stack0_int32_t = (uint8_t)__stack0_int32_t;
+    local0 = (uint8_t)__stack0_int32_t;
+    goto L_0002;
+L_0002:
     __stack0_int32_t = local0;
-    __stack1_int32_t = local1;
+    return (uint8_t)__stack0_int32_t;
+}
+
+#include <stdbool.h>
+#include <stdint.h>
+
+uint16_t Add4(uint16_t a, bool isTwo)
+{
+    uint16_t local0;
+
+    int32_t __stack0_int32_t;
+    int32_t __stack1_int32_t;
+
+    __stack0_int32_t = a;
+    __stack1_int32_t = isTwo ? 1 : 0;
+    if (__stack1_int32_t != 0) goto L_0000;
+    __stack1_int32_t = 1;
+    goto L_0001;
+L_0000:
+    __stack1_int32_t = 2;
+L_0001:
     __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
     __stack0_int32_t = (uint16_t)__stack0_int32_t;
-    local2 = (uint16_t)__stack0_int32_t;
-    __stack0_int32_t = local2;
-    local3 = (uint16_t)__stack0_int32_t;
-    goto L_0000;
-L_0000:
-    __stack0_int32_t = local3;
+    local0 = (uint16_t)__stack0_int32_t;
+    goto L_0002;
+L_0002:
+    __stack0_int32_t = local0;
     return (uint16_t)__stack0_int32_t;
 }
+
+#include <stdbool.h>
+#include <stdint.h>
+
+int32_t Add1(int32_t a, bool isTwo)
+{
+    int32_t local0;
+
+    int32_t __stack0_int32_t;
+    int32_t __stack1_int32_t;
+
+    __stack0_int32_t = a;
+    __stack1_int32_t = isTwo ? 1 : 0;
+    if (__stack1_int32_t != 0) goto L_0000;
+    __stack1_int32_t = 1;
+    goto L_0001;
+L_0000:
+    __stack1_int32_t = 2;
+L_0001:
+    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
+    local0 = __stack0_int32_t;
+    goto L_0002;
+L_0002:
+    __stack0_int32_t = local0;
+    return __stack0_int32_t;
+}
+
+#include <stdbool.h>
+#include <stdint.h>
+
+int64_t Add2(int64_t a, bool isTwo)
+{
+    int64_t local0;
+
+    int64_t __stack0_int64_t;
+    int32_t __stack1_int32_t;
+    int64_t __stack1_int64_t;
+
+    __stack0_int64_t = a;
+    __stack1_int32_t = isTwo ? 1 : 0;
+    if (__stack1_int32_t != 0) goto L_0000;
+    __stack1_int32_t = 1;
+    goto L_0001;
+L_0000:
+    __stack1_int32_t = 2;
+L_0001:
+    __stack1_int64_t = __stack1_int32_t;
+    __stack0_int64_t = __stack0_int64_t + __stack1_int64_t;
+    local0 = __stack0_int64_t;
+    goto L_0002;
+L_0002:
+    __stack0_int64_t = local0;
+    return __stack0_int64_t;
+}
+

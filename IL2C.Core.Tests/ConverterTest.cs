@@ -222,6 +222,59 @@ namespace IL2C
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
+
+        public static short Int16WithMinusMainBody()
+        {
+            var a = (short)-2;
+            var b = (short)5;
+            var c = (short)(a + b);
+            return c;
+        }
+
+        [Test]
+        public static void SimpleOverallByInt16WithMinusSummationTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("Int16WithMinusMainBody");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"int16_t Int16WithMinusMainBody(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  int16_t local0;");
+            expected.WriteLine(@"  int16_t local1;");
+            expected.WriteLine(@"  int16_t local2;");
+            expected.WriteLine(@"  int16_t local3;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  __stack0_int32_t = -2;");
+            expected.WriteLine(@"  local0 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = 5;");
+            expected.WriteLine(@"  local1 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local0;");
+            expected.WriteLine(@"  __stack1_int32_t = local1;");
+            expected.WriteLine(@"  __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  local2 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  __stack0_int32_t = local2;");
+            expected.WriteLine(@"  local3 = (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = local3;");
+            expected.WriteLine(@"  return (int16_t)__stack0_int32_t;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
         #endregion
 
         #region Int32

@@ -11,9 +11,9 @@ int16_t Int16MainBody(void)
     int32_t __stack0_int32_t;
     int32_t __stack1_int32_t;
 
-    __stack0_int32_t = 1;
+    __stack0_int32_t = -2;
     local0 = (int16_t)__stack0_int32_t;
-    __stack0_int32_t = 2;
+    __stack0_int32_t = 5;
     local1 = (int16_t)__stack0_int32_t;
     __stack0_int32_t = local0;
     __stack1_int32_t = local1;

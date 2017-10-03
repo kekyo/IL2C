@@ -23,33 +23,20 @@ namespace IL2C.ILConveters
         {
             var si = context.PopStack();
             var returnType = context.ReturnType;
-            if (returnType.IsAssignableFrom(si.TargetType))
+
+            var rightExpression = Utilities.GetRightExpression(returnType, si);
+            if (rightExpression == null)
             {
-                return string.Format("return {0}", si.SymbolName);
+                throw new InvalidProgramSequenceException(
+                    "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
+                    context.ILByteIndex,
+                    si.TargetType.FullName,
+                    returnType.FullName);
             }
 
-            if (Utilities.IsNumericPrimitive(si.TargetType))
-            {
-                if (Utilities.IsNumericPrimitive(returnType))
-                {
-                    return string.Format(
-                        "return ({0}){1}",
-                        Utilities.GetCLanguageTypeName(returnType),
-                        si.SymbolName);
-                }
-                else if (returnType == typeof(bool))
-                {
-                    return string.Format(
-                        "return {0} ? true : false",
-                        si.SymbolName);
-                }
-            }
-
-            throw new InvalidProgramSequenceException(
-                "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
-                context.ILByteIndex,
-                si.TargetType.FullName,
-                returnType.FullName);
+            return string.Format(
+                "return {0}",
+                rightExpression);
         }
     }
 }

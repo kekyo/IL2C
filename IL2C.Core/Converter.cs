@@ -30,7 +30,7 @@ namespace IL2C
 
         public static void Convert(TextWriter tw, MethodInfo method, string indent)
         {
-            var methodName = Utilities.GetFullMethodName(method);
+            var methodName = Utilities.GetFullMemberName(method);
             var module = method.DeclaringType.Module;
 
             InternalConvert(

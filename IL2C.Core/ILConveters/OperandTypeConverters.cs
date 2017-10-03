@@ -47,6 +47,15 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal abstract class InlineFieldConverter : ILConverter<int>
+    {
+        public sealed override object DecodeOperand(DecodeContext context)
+        {
+            Debug.Assert(this.OpCode.OperandType == OperandType.InlineField);
+            return context.FetchInt32();
+        }
+    }
+
     internal abstract class ShortInlineBrTargetConverter : ILConverter<sbyte>
     {
         public sealed override object DecodeOperand(DecodeContext context)

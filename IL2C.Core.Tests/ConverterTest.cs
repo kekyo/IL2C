@@ -757,6 +757,34 @@ namespace IL2C
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
+        public struct CallStaticMethodWithFieldReferencedTestType
+        {
+            public static int Field0;
+            public static long Field1;
+        }
+
+        public static long AccessStaticFieldTestMethod()
+        {
+            return CallStaticMethodWithFieldReferencedTestType.Field0 +
+                   CallStaticMethodWithFieldReferencedTestType.Field1;
+        }
+
+        [Test]
+        public static void AccessStaticFieldMethodTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("AccessStaticFieldTestMethod");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
         #endregion
 
     }

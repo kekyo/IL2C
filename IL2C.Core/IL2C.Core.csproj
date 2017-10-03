@@ -48,6 +48,7 @@
     <Compile Include="ILConveters\ConvConverters.cs" />
     <Compile Include="ILConveters\BrConverters.cs" />
     <Compile Include="ILConveters\ArithmeticalConverters.cs" />
+    <Compile Include="ILConveters\LdfldConverters.cs" />
     <Compile Include="ILConveters\LdargConverter.cs" />
     <Compile Include="ILConveters\LdlocConverters.cs" />
     <Compile Include="ILConveters\StlocConverters.cs" />

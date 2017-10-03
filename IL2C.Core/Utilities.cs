@@ -114,9 +114,9 @@ namespace IL2C
             return null;
         }
 
-        public static string GetFullMethodName(MethodInfo method)
+        public static string GetFullMemberName(MemberInfo member)
         {
-            var declaringTypes = method.DeclaringType
+            var declaringTypes = member.DeclaringType
                 .Traverse(current => current.DeclaringType)
                 .Reverse()
                 .ToArray();
@@ -125,7 +125,7 @@ namespace IL2C
                 "{0}.{1}.{2}",
                 declaringTypes.First().Namespace,
                 string.Join(".", declaringTypes.Select(dt => dt.Name)),
-                method.Name);
+                member.Name);
         }
 
         public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next)

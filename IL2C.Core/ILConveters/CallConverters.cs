@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-using IL2C;
-
 namespace IL2C.ILConveters
 {
     internal sealed class CallConverter : InlineMethodConverter
@@ -37,7 +35,7 @@ namespace IL2C.ILConveters
 
                 var resultName = context.PushStack(targetType);
 
-                var methodName = Utilities.GetFullMethodName(method);
+                var methodName = Utilities.GetFullMemberName(method);
                 var functionName = methodName.Replace(".", "_");
 
                 return string.Format(

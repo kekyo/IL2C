@@ -8,39 +8,22 @@ namespace IL2C.ILConveters
         {
             var si = context.PopStack();
             var localType = context.Locals[localIndex].LocalType;
-            if (localType.IsAssignableFrom(si.TargetType))
+
+            var rightExpression = Utilities.GetRightExpression(localType, si);
+            if (rightExpression == null)
             {
-                return string.Format(
-                    "local{0} = {1}",
-                    localIndex, 
-                    si.SymbolName);
+                throw new InvalidProgramSequenceException(
+                    "Invalid store operation: ILByteIndex={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
+                    context.ILByteIndex,
+                    si.TargetType.FullName,
+                    localType.FullName,
+                    localIndex);
             }
 
-            if (Utilities.IsNumericPrimitive(si.TargetType))
-            {
-                if (Utilities.IsNumericPrimitive(localType))
-                {
-                    return string.Format(
-                        "local{0} = ({1}){2}",
-                        localIndex,
-                        Utilities.GetCLanguageTypeName(localType),
-                        si.SymbolName);
-                }
-                else if (localType == typeof(bool))
-                {
-                    return string.Format(
-                        "local{0} = {1} ? true : false",
-                        localIndex,
-                        si.SymbolName);
-                }
-            }
-
-            throw new InvalidProgramSequenceException(
-                "Invalid store operation: ILByteIndex={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
-                context.ILByteIndex,
-                si.TargetType.FullName,
-                localType.FullName,
-                localIndex);
+            return string.Format(
+                "local{0} = {1}",
+                localIndex,
+                rightExpression);
         }
     }
 

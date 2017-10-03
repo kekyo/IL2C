@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILConveters\ConditionalConverters.cs" />
+    <Compile Include="ILConveters\CallConverters.cs" />
     <Compile Include="ILConveters\ConvConverters.cs" />
     <Compile Include="ILConveters\BrConverters.cs" />
     <Compile Include="ILConveters\ArithmeticalConverters.cs" />

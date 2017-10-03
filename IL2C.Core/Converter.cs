@@ -30,19 +30,16 @@ namespace IL2C
 
         public static void Convert(TextWriter tw, MethodInfo method, string indent)
         {
-            var type = method.DeclaringType;
-            var fullName = string.Format(
-                "{0}.{1}.{2}",
-                type.Namespace,
-                type.Name,
-                method.Name);
+            var methodName = Utilities.GetFullMethodName(method);
+            var module = method.DeclaringType.Module;
 
             InternalConvert(
                 tw,
                 method.ReturnType,
-                fullName,
+                methodName,
                 method.GetParameters(),
                 method.GetMethodBody(),
+                module,
                 indent);
         }
 
@@ -64,6 +61,7 @@ namespace IL2C
             string methodName,
             ParameterInfo[] parameters,
             MethodBody body,
+            Module module,
             string indent)
         {
             var locals = body.LocalVariables;
@@ -105,7 +103,8 @@ namespace IL2C
                 returnType,
                 parameters,
                 locals,
-                body.GetILAsByteArray());
+                body.GetILAsByteArray(),
+                module);
 
             var bodySourceCode = new List<GeneratedSourceCode>();
             while (decodeContext.TryDequeueNextPath())

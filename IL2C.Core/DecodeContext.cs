@@ -127,6 +127,7 @@ namespace IL2C
         public readonly Type ReturnType;
         public readonly ParameterInfo[] Parameters;
         public readonly IList<LocalVariableInfo> Locals;
+        public readonly Module Module;
 
         private readonly byte[] ilBytes;
         private int ilByteIndex = -1;
@@ -149,7 +150,8 @@ namespace IL2C
             Type returnType,
             ParameterInfo[] parameters,
             IList<LocalVariableInfo> locals,
-            byte[] ilBytes)
+            byte[] ilBytes,
+            Module module)
         {
             if (ilBytes.Length == 0)
             {
@@ -162,6 +164,7 @@ namespace IL2C
             this.ReturnType = returnType;
             this.Parameters = parameters;
             this.Locals = locals;
+            this.Module = module;
 
             this.ilBytes = ilBytes;
             this.decodedPathNumbersAtILByteIndex = new int[ilBytes.Length];

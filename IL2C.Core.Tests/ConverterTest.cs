@@ -30,7 +30,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
-            expected.WriteLine(@"uint8_t ByteMainBody(void)");
+            expected.WriteLine(@"uint8_t IL2C_ConverterTest_ByteMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  uint8_t local0;");
             expected.WriteLine(@"  uint8_t local1;");
@@ -85,7 +85,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
-            expected.WriteLine(@"int8_t SByteMainBody(void)");
+            expected.WriteLine(@"int8_t IL2C_ConverterTest_SByteMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int8_t local0;");
             expected.WriteLine(@"  int8_t local1;");
@@ -138,7 +138,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
-            expected.WriteLine(@"int8_t SByteWithMinusMainBody(void)");
+            expected.WriteLine(@"int8_t IL2C_ConverterTest_SByteWithMinusMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int8_t local0;");
             expected.WriteLine(@"  int8_t local1;");
@@ -193,7 +193,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
-            expected.WriteLine(@"int16_t Int16MainBody(void)");
+            expected.WriteLine(@"int16_t IL2C_ConverterTest_Int16MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int16_t local0;");
             expected.WriteLine(@"  int16_t local1;");
@@ -246,7 +246,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
-            expected.WriteLine(@"int16_t Int16WithMinusMainBody(void)");
+            expected.WriteLine(@"int16_t IL2C_ConverterTest_Int16WithMinusMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int16_t local0;");
             expected.WriteLine(@"  int16_t local1;");
@@ -301,7 +301,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
-            expected.WriteLine(@"uint16_t UInt16MainBody(void)");
+            expected.WriteLine(@"uint16_t IL2C_ConverterTest_UInt16MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  uint16_t local0;");
             expected.WriteLine(@"  uint16_t local1;");
@@ -356,7 +356,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
-            expected.WriteLine(@"uint16_t UInt16WithMaxValueMainBody(void)");
+            expected.WriteLine(@"uint16_t IL2C_ConverterTest_UInt16WithMaxValueMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  uint16_t local0;");
             expected.WriteLine(@"  uint16_t local1;");
@@ -411,7 +411,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
-            expected.WriteLine(@"int32_t Int32MainBody(void)");
+            expected.WriteLine(@"int32_t IL2C_ConverterTest_Int32MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int32_t local0;");
             expected.WriteLine(@"  int32_t local1;");
@@ -463,7 +463,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
-            expected.WriteLine(@"int32_t Int32LargeValueMainBody(void)");
+            expected.WriteLine(@"int32_t IL2C_ConverterTest_Int32LargeValueMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int32_t local0;");
             expected.WriteLine(@"  int32_t local1;");
@@ -513,7 +513,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
-            expected.WriteLine(@"int32_t Int32WithArgumentsMainBody(int32_t a, int32_t b)");
+            expected.WriteLine(@"int32_t IL2C_ConverterTest_Int32WithArgumentsMainBody(int32_t a, int32_t b)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int32_t local0;");
             expected.WriteLine(@"  int32_t local1;");
@@ -561,7 +561,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
-            expected.WriteLine(@"int64_t Int64MainBody(void)");
+            expected.WriteLine(@"int64_t IL2C_ConverterTest_Int64MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int64_t local0;");
             expected.WriteLine(@"  int64_t local1;");
@@ -616,7 +616,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
-            expected.WriteLine(@"int64_t Int64LargeValueMainBody(void)");
+            expected.WriteLine(@"int64_t IL2C_ConverterTest_Int64LargeValueMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int64_t local0;");
             expected.WriteLine(@"  int64_t local1;");
@@ -674,7 +674,7 @@ namespace IL2C
             expected.WriteLine(@"#include <stdbool.h>");
             expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine();
-            expected.WriteLine(@"int32_t ConditionalBranchMainBody(int32_t a)");
+            expected.WriteLine(@"int32_t IL2C_ConverterTest_ConditionalBranchMainBody(int32_t a)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  bool local0;");
             expected.WriteLine(@"  int32_t local1;");
@@ -707,5 +707,57 @@ namespace IL2C
             Assert.AreEqual(expected.ToString(), sourceCode);
         }
         #endregion
+
+        #region Value types
+        public struct CallStaticMethodTestType
+        {
+            public static int Test(int a, short b)
+            {
+                return a + b;
+            }
+        }
+
+        public static int CallTestMethod()
+        {
+            // call inst?
+            return CallStaticMethodTestType.Test(1, 2);
+        }
+
+        [Test]
+        public static void CallStaticMethodTest()
+        {
+            var testType = typeof(ConverterTest);
+            var mainMethod = testType.GetMethod("CallTestMethod");
+
+            var tw = new StringWriter();
+            IL2C.Converter.Convert(tw, mainMethod, "  ");
+
+            var sourceCode = tw.ToString();
+
+            var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"int32_t IL2C_ConverterTest_CallTestMethod(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  int32_t local0;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int32_t __stack1_int32_t;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  __stack0_int32_t = 1;");
+            expected.WriteLine(@"  __stack1_int32_t = 2;");
+            expected.WriteLine(@"  __stack0_int32_t = IL2C_ConverterTest_CallStaticMethodTestType_Test(__stack0_int32_t, (int16_t)__stack1_int32_t);");
+            expected.WriteLine(@"  local0 = __stack0_int32_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int32_t = local0;");
+            expected.WriteLine(@"  return __stack0_int32_t;");
+            expected.WriteLine(@"}");
+
+            Assert.AreEqual(expected.ToString(), sourceCode);
+        }
+        #endregion
+
     }
 }

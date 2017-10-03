@@ -38,6 +38,15 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal abstract class InlineMethodConverter : ILConverter<int>
+    {
+        public sealed override object DecodeOperand(DecodeContext context)
+        {
+            Debug.Assert(this.OpCode.OperandType == OperandType.InlineMethod);
+            return context.FetchInt32();
+        }
+    }
+
     internal abstract class ShortInlineBrTargetConverter : ILConverter<sbyte>
     {
         public sealed override object DecodeOperand(DecodeContext context)

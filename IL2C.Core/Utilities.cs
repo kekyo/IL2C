@@ -87,7 +87,7 @@ namespace IL2C
             return false;
         }
 
-        public static string GetRightExpression(Type lhsType, StackInformation rhs)
+        public static string GetRightExpression(Type lhsType, SymbolInformation rhs)
         {
             if (lhsType.IsAssignableFrom(rhs.TargetType))
             {

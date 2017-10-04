@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -74,6 +75,52 @@ namespace IL2C
 
             tw.WriteLine();
 
+            var decodeContext = new DecodeContext(
+                methodName,
+                returnType,
+                parameters,
+                locals,
+                body.GetILAsByteArray(),
+                module);
+
+            var bodySourceCode = new List<GeneratedSourceCode>();
+            while (decodeContext.TryDequeueNextPath())
+            {
+                bodySourceCode.AddRange(
+                    from ilData in DecodeAndEnumerateOpCodes(decodeContext)
+                    let sourceCode = ilData.ILConverter.Apply(ilData.Operand, decodeContext)
+                    select new GeneratedSourceCode(ilData.Label, sourceCode));
+            }
+
+            var found = false;
+            foreach (var fi in decodeContext.ExtractStaticFields())
+            {
+                var initializer = string.Empty;
+                if (Utilities.IsNumericPrimitive(fi.FieldType))
+                {
+                    Debug.Assert(fi.IsStatic);
+                    var value = fi.GetValue(null);
+
+                    Debug.Assert(value != null);
+
+                    initializer = (value is long)
+                        ? string.Format(" = {0}LL", value)
+                        : string.Format(" = {0}", value);
+                }
+
+                tw.WriteLine(
+                    "{0} {1}{2};",
+                    Utilities.GetCLanguageTypeName(fi.FieldType),
+                    Utilities.GetFullMemberName(fi).Replace(".", "_"),
+                    initializer);
+                found = true;
+            }
+
+            if (found)
+            {
+                tw.WriteLine();
+            }
+
             var parametersString = string.Join(
                 ", ",
                 parameters.Select(parameter => string.Format(
@@ -93,27 +140,10 @@ namespace IL2C
                     "{0}{1} local{2};",
                     indent,
                     Utilities.GetCLanguageTypeName(local.LocalType),
-                    local.LocalIndex);                
+                    local.LocalIndex);
             }
 
             tw.WriteLine();
-
-            var decodeContext = new DecodeContext(
-                methodName,
-                returnType,
-                parameters,
-                locals,
-                body.GetILAsByteArray(),
-                module);
-
-            var bodySourceCode = new List<GeneratedSourceCode>();
-            while (decodeContext.TryDequeueNextPath())
-            {
-                bodySourceCode.AddRange(
-                    from ilData in DecodeAndEnumerateOpCodes(decodeContext)
-                    let sourceCode = ilData.ILConverter.Apply(ilData.Operand, decodeContext)
-                    select new GeneratedSourceCode(ilData.Label, sourceCode));
-            }
 
             foreach (var si in decodeContext.ExtractStacks())
             {

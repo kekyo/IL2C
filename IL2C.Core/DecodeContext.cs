@@ -6,18 +6,18 @@ using System.Reflection;
 
 namespace IL2C
 {
-    internal struct StackInformation
+    internal struct SymbolInformation
     {
         public readonly string SymbolName;
         public readonly Type TargetType;
 
-        public StackInformation(string symbolName, Type targetType)
+        public SymbolInformation(string symbolName, Type targetType)
         {
             this.SymbolName = symbolName;
             this.TargetType = targetType;
         }
 
-        public bool Equals(StackInformation rhs)
+        public bool Equals(SymbolInformation rhs)
         {
             return this.SymbolName.Equals(rhs.SymbolName)
                 && this.TargetType.Equals(rhs.TargetType);
@@ -25,9 +25,9 @@ namespace IL2C
 
         public override bool Equals(object rhs)
         {
-            if (rhs is StackInformation)
+            if (rhs is SymbolInformation)
             {
-                return this.Equals((StackInformation)rhs);
+                return this.Equals((SymbolInformation)rhs);
             }
             else
             {
@@ -51,19 +51,19 @@ namespace IL2C
         #region Private types
         private sealed class StackInformationHolder
         {
-            private readonly List<StackInformation> typedStackInformation;
+            private readonly List<SymbolInformation> typedStackInformation;
             private readonly int stackPointer;
             private int selectedStackInformation = -1;
 
             private StackInformationHolder(
-                int stackPointer, List<StackInformation> typedStackInformation)
+                int stackPointer, List<SymbolInformation> typedStackInformation)
             {
                 this.stackPointer = stackPointer;
                 this.typedStackInformation = typedStackInformation;
             }
 
             public StackInformationHolder(int stackPointer)
-                : this(stackPointer, new List<StackInformation>())
+                : this(stackPointer, new List<SymbolInformation>())
             {
             }
 
@@ -82,14 +82,14 @@ namespace IL2C
                     stackPointer,
                     Utilities.GetCLanguageTypeName(targetType));
 
-                var stackInformation = new StackInformation(symbolName, targetType);
+                var stackInformation = new SymbolInformation(symbolName, targetType);
                 selectedStackInformation = typedStackInformation.Count;
                 typedStackInformation.Add(stackInformation);
 
                 return symbolName;
             }
 
-            public StackInformation GetCurrent()
+            public SymbolInformation GetCurrent()
             {
                 Debug.Assert(selectedStackInformation >= 0);
                 Debug.Assert(typedStackInformation.Any());
@@ -97,7 +97,7 @@ namespace IL2C
                 return typedStackInformation[selectedStackInformation];
             }
 
-            public IEnumerable<StackInformation> ExtractStacks()
+            public IEnumerable<SymbolInformation> ExtractStacks()
             {
                 return typedStackInformation;
             }
@@ -106,7 +106,7 @@ namespace IL2C
         private struct BranchTargetInformation
         {
             public readonly int ILByteIndex;
-            public readonly StackInformation[] StackInformationsSnapshot;
+            public readonly SymbolInformation[] StackInformationsSnapshot;
 
             public BranchTargetInformation(
                 int ilByteIndex,
@@ -138,6 +138,9 @@ namespace IL2C
         private readonly List<StackInformationHolder> stackList =
             new List<StackInformationHolder>();
         private int stackPointer = -1;
+
+        private readonly HashSet<FieldInfo> staticFields =
+            new HashSet<FieldInfo>();
 
         private readonly Queue<BranchTargetInformation> pathRemains =
             new Queue<BranchTargetInformation>();
@@ -360,7 +363,7 @@ namespace IL2C
             return stackInformationHolder.GetOrAdd(targetType);
         }
 
-        public StackInformation PopStack()
+        public SymbolInformation PopStack()
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
@@ -376,6 +379,15 @@ namespace IL2C
 
             stackPointer--;
             return stackList[stackPointer].GetCurrent();
+        }
+        #endregion
+
+        #region Static field
+        public void AddStaticField(FieldInfo staticField)
+        {
+            Debug.Assert(staticField.IsStatic);
+
+            staticFields.Add(staticField);
         }
         #endregion
 
@@ -441,12 +453,17 @@ namespace IL2C
             ilByteIndex = -1;
             return false;
         }
-        #endregion
+#endregion
 
-        public IEnumerable<StackInformation> ExtractStacks()
+        public IEnumerable<SymbolInformation> ExtractStacks()
         {
             return stackList
                 .SelectMany(stackInformations => stackInformations.ExtractStacks());
+        }
+
+        public IEnumerable<FieldInfo> ExtractStaticFields()
+        {
+            return staticFields;
         }
     }
 }

@@ -759,8 +759,8 @@ namespace IL2C
         }
         public struct CallStaticMethodWithFieldReferencedTestType
         {
-            public static int Field0;
-            public static long Field1;
+            public static int Field0 = 1;
+            public static long Field1 = 2;
         }
 
         public static long AccessStaticFieldTestMethod()

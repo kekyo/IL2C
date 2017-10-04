@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace IL2C.ILConveters
 {
@@ -7,6 +8,10 @@ namespace IL2C.ILConveters
         public static string Apply(int fieldToken, DecodeContext context)
         {
             var field = context.Module.ResolveField(fieldToken);
+            Debug.Assert(field.IsStatic);
+
+            context.AddStaticField(field);
+
             var targetType = field.FieldType;
 
             var fieldName = Utilities.GetFullMemberName(field);

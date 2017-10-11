@@ -73,4 +73,13 @@ namespace IL2C.ILConveters
             return context.FetchSByte();
         }
     }
+
+    internal abstract class ShortInlineVarConverter : ILConverter<byte>
+    {
+        public sealed override object DecodeOperand(DecodeContext context)
+        {
+            Debug.Assert(this.OpCode.OperandType == OperandType.ShortInlineVar);
+            return context.FetchByte();
+        }
+    }
 }

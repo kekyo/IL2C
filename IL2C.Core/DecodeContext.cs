@@ -77,10 +77,11 @@ namespace IL2C
                     return typedStackInformation[index].SymbolName;
                 }
 
+                var typeName = Utilities.GetCLanguageTypeName(targetType);
                 var symbolName = string.Format(
                     "__stack{0}_{1}",
                     stackPointer,
-                    Utilities.GetCLanguageTypeName(targetType));
+                    typeName.Replace('.', '_').Replace("*", "_reference"));
 
                 var stackInformation = new SymbolInformation(symbolName, targetType);
                 selectedStackInformation = typedStackInformation.Count;

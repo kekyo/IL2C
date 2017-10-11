@@ -54,7 +54,14 @@ namespace IL2C
             {
                 return "int64_t";
             }
-            return type.FullName;
+
+            if (type.IsByRef)
+            {
+                var dereferencedType = type.GetElementType();
+                return GetCLanguageTypeName(dereferencedType) + "*";
+            }
+
+            return GetFullMemberName(type);
         }
 
         public static bool IsNumericPrimitive(Type type)
@@ -116,16 +123,31 @@ namespace IL2C
 
         public static string GetFullMemberName(MemberInfo member)
         {
-            var declaringTypes = member.DeclaringType
-                .Traverse(current => current.DeclaringType)
-                .Reverse()
-                .ToArray();
+            if (member.DeclaringType != null)
+            {
+                var declaringTypes = member.DeclaringType
+                    .Traverse(current => current.DeclaringType)
+                    .Reverse()
+                    .ToArray();
 
-            return string.Format(
-                "{0}.{1}.{2}",
-                declaringTypes.First().Namespace,
-                string.Join(".", declaringTypes.Select(dt => dt.Name)),
-                member.Name);
+                return string.Format(
+                    "{0}.{1}.{2}",
+                    declaringTypes.First().Namespace,
+                    string.Join(".", declaringTypes.Select(dt => dt.Name)),
+                    member.Name);
+            }
+            else
+            {
+                var type = member as Type;
+                if (type != null)
+                {
+                    return type.FullName;
+                }
+                else
+                {
+                    return member.Name;
+                }
+            }
         }
 
         public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next)

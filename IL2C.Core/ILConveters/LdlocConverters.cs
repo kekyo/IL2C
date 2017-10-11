@@ -34,6 +34,20 @@ namespace IL2C.ILConveters
                     localIndex);
             }
         }
+
+        public static string ApplyWithAddress(int localIndex, DecodeContext context)
+        {
+            var local = context.Locals[localIndex];
+            var targetType = local.LocalType;
+
+            var managedReferenceType = targetType.MakeByRefType();
+                
+            var symbolName = context.PushStack(managedReferenceType);
+            return string.Format(
+                "{0} = &local{1}",
+                symbolName,
+                localIndex);
+        }
     }
 
     internal sealed class Ldloc_0Converter : InlineNoneConverter
@@ -73,6 +87,24 @@ namespace IL2C.ILConveters
         public override string Apply(DecodeContext context)
         {
             return LdlocConverterUtilities.Apply(3, context);
+        }
+    }
+
+    internal sealed class Ldloca_sConverter : ShortInlineVarConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldloca_S;
+
+        public override string Apply(byte localIndex, DecodeContext context)
+        {
+            if (localIndex > 225)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Index overflow at ldloca.s: ILByteIndex={0}, LocalIndex={1}",
+                    context.ILByteIndex,
+                    localIndex);
+            }
+
+            return LdlocConverterUtilities.ApplyWithAddress(localIndex, context);
         }
     }
 }

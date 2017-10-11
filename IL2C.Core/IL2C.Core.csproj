@@ -51,6 +51,7 @@
     <Compile Include="ILConveters\LdfldConverters.cs" />
     <Compile Include="ILConveters\LdargConverter.cs" />
     <Compile Include="ILConveters\LdlocConverters.cs" />
+    <Compile Include="ILConveters\StfldConverters.cs" />
     <Compile Include="ILConveters\StlocConverters.cs" />
     <Compile Include="ILConveters\LdcConverters.cs" />
     <Compile Include="ILConveters\ILConverters.cs" />

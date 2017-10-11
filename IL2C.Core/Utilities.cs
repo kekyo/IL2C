@@ -26,6 +26,10 @@ namespace IL2C
 
         public static string GetCLanguageTypeName(Type type)
         {
+            if (type == typeof(void))
+            {
+                return "void";
+            }
             if (type == typeof(Boolean))
             {
                 return "bool";

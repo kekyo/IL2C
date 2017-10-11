@@ -22,6 +22,11 @@ namespace IL2C.ILConveters
 
         public override string Apply(DecodeContext context)
         {
+            if (context.ReturnType == typeof(void))
+            {
+                return "return";
+            }
+
             var si = context.PopStack();
             var returnType = context.ReturnType;
 

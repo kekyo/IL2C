@@ -781,7 +781,30 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
+            expected.WriteLine(@"#include <stdbool.h>");
+            expected.WriteLine(@"#include <stdint.h>");
             expected.WriteLine(@"");
+            expected.WriteLine(@"int32_t IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field0 = 1;");
+            expected.WriteLine(@"int64_t IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field1 = 2LL;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"int64_t IL2C_ConverterTest_AccessStaticFieldTestMethod(void)");
+            expected.WriteLine(@"{");
+            expected.WriteLine(@"  int64_t local0;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  int32_t __stack0_int32_t;");
+            expected.WriteLine(@"  int64_t __stack0_int64_t;");
+            expected.WriteLine(@"  int64_t __stack1_int64_t;");
+            expected.WriteLine(@"");
+            expected.WriteLine(@"  __stack0_int32_t = IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field0;");
+            expected.WriteLine(@"  __stack0_int64_t = __stack0_int32_t;");
+            expected.WriteLine(@"  __stack1_int64_t = IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field1;");
+            expected.WriteLine(@"  __stack0_int64_t = __stack0_int64_t + __stack1_int64_t;");
+            expected.WriteLine(@"  local0 = __stack0_int64_t;");
+            expected.WriteLine(@"  goto L_0000;");
+            expected.WriteLine(@"L_0000:");
+            expected.WriteLine(@"  __stack0_int64_t = local0;");
+            expected.WriteLine(@"  return __stack0_int64_t;");
+            expected.WriteLine(@"}");
 
             Assert.AreEqual(expected.ToString(), sourceCode);
         }

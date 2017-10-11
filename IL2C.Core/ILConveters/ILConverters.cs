@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection.Emit;
 
 namespace IL2C.ILConveters
@@ -38,5 +39,41 @@ namespace IL2C.ILConveters
                 "return {0}",
                 rightExpression);
         }
+
+        internal sealed class InitobjConverter : InlineTypeConverter
+        {
+            public override OpCode OpCode => OpCodes.Initobj;
+
+            public override string Apply(int typeToken, DecodeContext context)
+            {
+                try
+                {
+                    var type = context.Module.ResolveType(typeToken);
+
+                    var si = context.PopStack();
+                    if (si.TargetType.IsByRef == false)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid type at stack: ILByteIndex={0}, TokenType={1}, StackType={2}",
+                            context.ILByteIndex,
+                            type.FullName,
+                            si.TargetType.FullName);
+                    }
+
+                    return string.Format(
+                        "memset({0}, 0x00, sizeof({1}))",
+                        si.SymbolName,
+                        Utilities.GetCLanguageTypeName(type));
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid type token: ILByteIndex={0}, Token={1:x2}",
+                        context.ILByteIndex,
+                        typeToken);
+                }
+            }
+        }
+
     }
 }

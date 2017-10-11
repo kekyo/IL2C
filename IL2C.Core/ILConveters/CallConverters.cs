@@ -36,7 +36,7 @@ namespace IL2C.ILConveters
                 var resultName = context.PushStack(targetType);
 
                 var methodName = Utilities.GetFullMemberName(method);
-                var functionName = methodName.Replace(".", "_");
+                var functionName = methodName.ManglingSymbolName();
 
                 return string.Format(
                     "{0} = {1}({2})",

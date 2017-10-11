@@ -111,7 +111,7 @@ namespace IL2C
                 tw.WriteLine(
                     "{0} {1}{2};",
                     Utilities.GetCLanguageTypeName(fi.FieldType),
-                    Utilities.GetFullMemberName(fi).Replace(".", "_"),
+                    Utilities.GetFullMemberName(fi).ManglingSymbolName(),
                     initializer);
                 found = true;
             }
@@ -130,7 +130,7 @@ namespace IL2C
 
             tw.WriteLine("{0} {1}({2})",
                 returnTypeName,
-                methodName.Replace(".", "_"),
+                methodName.ManglingSymbolName(),
                 (parametersString.Length >= 1) ? parametersString : "void");
             tw.WriteLine("{");
 

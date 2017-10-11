@@ -15,7 +15,7 @@ namespace IL2C.ILConveters
             var targetType = field.FieldType;
 
             var fieldName = Utilities.GetFullMemberName(field);
-            var fqFieldName = fieldName.Replace(".", "_");
+            var fqFieldName = fieldName.ManglingSymbolName();
 
             if (targetType == typeof(bool))
             {

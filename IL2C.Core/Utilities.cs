@@ -61,7 +61,7 @@ namespace IL2C
                 return GetCLanguageTypeName(dereferencedType) + "*";
             }
 
-            return GetFullMemberName(type);
+            return GetFullMemberName(type).ManglingSymbolName();
         }
 
         public static bool IsNumericPrimitive(Type type)
@@ -148,6 +148,13 @@ namespace IL2C
                     return member.Name;
                 }
             }
+        }
+
+        public static string ManglingSymbolName(this string rawSymbolName)
+        {
+            return rawSymbolName
+                .Replace('.', '_')
+                .Replace("*", "_reference");
         }
 
         public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next)

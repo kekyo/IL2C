@@ -81,7 +81,7 @@ namespace IL2C
                 var symbolName = string.Format(
                     "__stack{0}_{1}",
                     stackPointer,
-                    typeName.Replace('.', '_').Replace("*", "_reference"));
+                    typeName.ManglingSymbolName());
 
                 var stackInformation = new SymbolInformation(symbolName, targetType);
                 selectedStackInformation = typedStackInformation.Count;

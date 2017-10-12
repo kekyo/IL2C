@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestTargetClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj">

@@ -29,6 +29,17 @@ namespace IL2C
             }
         }
 
+        public static void Convert(TextWriter tw, Type type, string indent)
+        {
+            foreach (var method in type.GetMethods(
+                BindingFlags.Public | BindingFlags.NonPublic |
+                BindingFlags.Static | BindingFlags.DeclaredOnly))
+            {
+                Convert(tw, method, indent);
+                tw.WriteLine();
+            }
+        }
+
         public static void Convert(TextWriter tw, MethodInfo method, string indent)
         {
             var methodName = Utilities.GetFullMemberName(method);

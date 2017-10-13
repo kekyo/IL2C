@@ -34,6 +34,11 @@ namespace IL2C
                 return false;
             }
         }
+
+        public override int GetHashCode()
+        {
+            return this.SymbolName.GetHashCode() ^ this.TargetType.GetHashCode();
+        }
     }
 
     internal struct Label
@@ -141,9 +146,6 @@ namespace IL2C
         private readonly List<StackInformationHolder> stackList =
             new List<StackInformationHolder>();
         private int stackPointer = -1;
-
-        private readonly HashSet<FieldInfo> staticFields =
-            new HashSet<FieldInfo>();
 
         private readonly Queue<BranchTargetInformation> pathRemains =
             new Queue<BranchTargetInformation>();
@@ -389,15 +391,6 @@ namespace IL2C
         }
         #endregion
 
-        #region Static field
-        public void AddStaticField(FieldInfo staticField)
-        {
-            Debug.Assert(staticField.IsStatic);
-
-            staticFields.Add(staticField);
-        }
-        #endregion
-
         #region Path
         public string EnqueueNewPath(int branchTargetIndex)
         {
@@ -482,11 +475,6 @@ namespace IL2C
         {
             return stackList
                 .SelectMany(stackInformations => stackInformations.ExtractStacks());
-        }
-
-        public IEnumerable<FieldInfo> ExtractStaticFields()
-        {
-            return staticFields;
         }
     }
 }

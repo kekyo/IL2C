@@ -65,6 +65,8 @@ namespace IL2C.ILConveters
                             si.TargetType.FullName);
                     }
 
+                    decodeContext.TranslateContext.RegisterIncludeFile("string.h");
+
                     return string.Format(
                         "memset({0}, 0x00, sizeof({1}))",
                         si.SymbolName,

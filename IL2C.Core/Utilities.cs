@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -63,10 +64,10 @@ namespace IL2C
                     .Reverse()
                     .ToArray();
 
-                return string.Format(
+                return String.Format(
                     "{0}.{1}.{2}",
                     declaringTypes.First().Namespace,
-                    string.Join(".", declaringTypes.Select(dt => dt.Name)),
+                    String.Join(".", declaringTypes.Select(dt => dt.Name)),
                     member.Name);
             }
             else
@@ -88,6 +89,55 @@ namespace IL2C
             return rawSymbolName
                 .Replace('.', '_')
                 .Replace("*", "_reference");
+        }
+
+        public static string GetFunctionPrototypeString(
+            string methodName,
+            Type returnType,
+            ParameterInfo[] parameters,
+            TranslateContext translateContext)
+        {
+            var parametersString = String.Join(
+                ", ",
+                parameters.Select(parameter => String.Format(
+                    "{0} {1}",
+                    translateContext.GetCLanguageTypeName(parameter.ParameterType),
+                    parameter.Name)));
+
+            var returnTypeName =
+                translateContext.GetCLanguageTypeName(returnType);
+
+            return String.Format(
+                "{0} {1}({2})",
+                returnTypeName,
+                methodName.ManglingSymbolName(),
+                (parametersString.Length >= 1) ? parametersString : "void");
+        }
+
+        public static string GetStaticFieldPrototypeString(
+            FieldInfo field,
+            bool requireInitializerExpression,
+            TranslateContext translateContext)
+        {
+            var initializer = String.Empty;
+            if (requireInitializerExpression && IsNumericPrimitive(field.FieldType))
+            {
+                // TODO: numericPrimitive and (literal or readonly static) ?
+                Debug.Assert(field.IsStatic);
+                var value = field.GetValue(null);
+
+                Debug.Assert(value != null);
+
+                initializer = (value is long)
+                    ? String.Format(" = {0}LL", value)
+                    : String.Format(" = {0}", value);
+            }
+
+            return string.Format(
+                "{0} {1}{2}",
+                translateContext.GetCLanguageTypeName(field.FieldType),
+                Utilities.GetFullMemberName(field).ManglingSymbolName(),
+                initializer);
         }
 
         public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next)

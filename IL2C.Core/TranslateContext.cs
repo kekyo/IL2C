@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace IL2C
@@ -8,6 +9,8 @@ namespace IL2C
     {
         private readonly Assembly assembly;
         private readonly HashSet<string> includes = new HashSet<string>();
+        private readonly HashSet<FieldInfo> staticFields =
+            new HashSet<FieldInfo>();
 
         public TranslateContext(Assembly assembly)
         {
@@ -101,5 +104,16 @@ namespace IL2C
             return null;
         }
 
+        public void AddStaticField(FieldInfo staticField)
+        {
+            Debug.Assert(staticField.IsStatic);
+
+            staticFields.Add(staticField);
+        }
+
+        public IEnumerable<FieldInfo> ExtractStaticFields()
+        {
+            return staticFields;
+        }
     }
 }

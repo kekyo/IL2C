@@ -13,7 +13,7 @@ namespace IL2C.ILConveters
                 var field = decodeContext.ResolveField(fieldToken);
                 Debug.Assert(field.IsStatic);
 
-                decodeContext.AddStaticField(field);
+                decodeContext.TranslateContext.AddStaticField(field);
 
                 var targetType = field.FieldType;
 

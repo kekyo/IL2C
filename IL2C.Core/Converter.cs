@@ -63,6 +63,41 @@ namespace IL2C
                 twHeader.WriteLine();
             }
 
+            foreach (var field in
+                from type in assembly.GetTypes()
+                where type.IsValueType
+                from field in type.GetFields(
+                    BindingFlags.Public |
+                    BindingFlags.Static | BindingFlags.DeclaredOnly)
+                select field)
+            {
+                twHeader.WriteLine(
+                    "extern {0};",
+                    Utilities.GetStaticFieldPrototypeString(field, false, translateContext));
+            }
+
+            twHeader.WriteLine();
+
+            foreach (var method in
+                from type in assembly.GetTypes()
+                where type.IsClass || type.IsValueType
+                from method in type.GetMethods(
+                    BindingFlags.Public |
+                    BindingFlags.Static | BindingFlags.DeclaredOnly)
+                select method)
+            {
+                var methodName = Utilities.GetFullMemberName(method);
+
+                var functionPrototype = Utilities.GetFunctionPrototypeString(
+                    methodName,
+                    method.ReturnType,
+                    method.GetParameters(),
+                    translateContext);
+
+                twHeader.WriteLine("extern {0};", functionPrototype);
+            }
+
+            twHeader.WriteLine();
             twHeader.WriteLine("#endif");
         }
 
@@ -75,6 +110,23 @@ namespace IL2C
             var assemblyName = assembly.GetName().Name;
 
             twSource.WriteLine("#include \"{0}.h\"", assemblyName);
+            twSource.WriteLine();
+
+            // TODO: prototypes (internal/private types and methods)
+
+            foreach (var field in
+                from type in assembly.GetTypes()
+                where type.IsValueType
+                from field in type.GetFields(
+                    BindingFlags.Public | BindingFlags.NonPublic |
+                    BindingFlags.Static | BindingFlags.DeclaredOnly)
+                select field)
+            {
+                twSource.WriteLine(
+                    "{0};",
+                    Utilities.GetStaticFieldPrototypeString(field, true, translateContext));
+            }
+
             twSource.WriteLine();
 
             foreach (var method in
@@ -132,21 +184,6 @@ namespace IL2C
         public static void ConvertMethod(
             TranslateContext translateContext,
             TextWriter tw,
-            Type type,
-            string indent)
-        {
-            foreach (var method in type.GetMethods(
-                BindingFlags.Public | BindingFlags.NonPublic |
-                BindingFlags.Static | BindingFlags.DeclaredOnly))
-            {
-                ConvertMethod(translateContext, tw, method, indent);
-                tw.WriteLine();
-            }
-        }
-
-        public static void ConvertMethod(
-            TranslateContext translateContext,
-            TextWriter tw,
             MethodInfo method,
             string indent)
         {
@@ -187,9 +224,6 @@ namespace IL2C
         {
             var locals = body.LocalVariables;
 
-            var returnTypeName =
-                translateContext.GetCLanguageTypeName(returnType);
-
             var decodeContext = new DecodeContext(
                 module,
                 methodName,
@@ -208,46 +242,14 @@ namespace IL2C
                     select new GeneratedSourceCode(ilData.Label, sourceCode));
             }
 
-            var found = false;
-            foreach (var fi in decodeContext.ExtractStaticFields())
-            {
-                var initializer = String.Empty;
-                if (Utilities.IsNumericPrimitive(fi.FieldType))
-                {
-                    Debug.Assert(fi.IsStatic);
-                    var value = fi.GetValue(null);
+            tw.WriteLine();
 
-                    Debug.Assert(value != null);
+            var functionPrototype = Utilities.GetFunctionPrototypeString(
+                methodName,
+                returnType,
+                parameters, translateContext);
 
-                    initializer = (value is long)
-                        ? String.Format(" = {0}LL", value)
-                        : String.Format(" = {0}", value);
-                }
-
-                tw.WriteLine(
-                    "{0} {1}{2};",
-                    translateContext.GetCLanguageTypeName(fi.FieldType),
-                    Utilities.GetFullMemberName(fi).ManglingSymbolName(),
-                    initializer);
-                found = true;
-            }
-
-            if (found)
-            {
-                tw.WriteLine();
-            }
-
-            var parametersString = String.Join(
-                ", ",
-                parameters.Select(parameter => String.Format(
-                    "{0} {1}",
-                    translateContext.GetCLanguageTypeName(parameter.ParameterType),
-                    parameter.Name)));
-
-            tw.WriteLine("{0} {1}({2})",
-                returnTypeName,
-                methodName.ManglingSymbolName(),
-                (parametersString.Length >= 1) ? parametersString : "void");
+            tw.WriteLine(functionPrototype);
             tw.WriteLine("{");
 
             foreach (var local in locals)

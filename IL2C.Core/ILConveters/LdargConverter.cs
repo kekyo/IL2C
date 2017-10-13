@@ -4,14 +4,14 @@ namespace IL2C.ILConveters
 {
     internal static class LdargConverterUtilities
     {
-        public static string Apply(int parameterIndex, DecodeContext context)
+        public static string Apply(int parameterIndex, DecodeContext decodeContext)
         {
-            var parameter = context.Parameters[parameterIndex];
+            var parameter = decodeContext.Parameters[parameterIndex];
             var targetType = parameter.ParameterType;
 
             if (targetType == typeof(bool))
             {
-                var symbolName = context.PushStack(typeof(int));
+                var symbolName = decodeContext.PushStack(typeof(int));
                 return string.Format(
                     "{0} = {1} ? 1 : 0",
                     symbolName,
@@ -27,7 +27,7 @@ namespace IL2C.ILConveters
                     targetType = typeof(int);
                 }
 
-                var symbolName = context.PushStack(targetType);
+                var symbolName = decodeContext.PushStack(targetType);
                 return string.Format(
                     "{0} = {1}",
                     symbolName,
@@ -40,9 +40,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldarg_0;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(0, context);
+            return LdargConverterUtilities.Apply(0, decodeContext);
         }
     }
 
@@ -50,9 +50,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldarg_1;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(1, context);
+            return LdargConverterUtilities.Apply(1, decodeContext);
         }
     }
 }

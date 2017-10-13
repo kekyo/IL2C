@@ -7,20 +7,20 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stfld;
 
-        public override string Apply(int fieldToken, DecodeContext context)
+        public override string Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
-                var field = context.Module.ResolveField(fieldToken);
+                var field = decodeContext.TranslateContext.ResolveField(fieldToken);
 
-                var siValue = context.PopStack();
-                var siReference = context.PopStack();
+                var siValue = decodeContext.PopStack();
+                var siReference = decodeContext.PopStack();
 
                 if (siReference.TargetType.IsByRef == false)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid type at stack: ILByteIndex={0}, StackType={1}",
-                        context.ILByteIndex,
+                        decodeContext.ILByteIndex,
                         siReference.TargetType.FullName);
                 }
 
@@ -29,18 +29,19 @@ namespace IL2C.ILConveters
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid managed reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
-                        context.ILByteIndex,
+                        decodeContext.ILByteIndex,
                         siReference.TargetType.FullName,
                         field.DeclaringType.FullName,
                         field.Name);
                 }
 
-                var rightExpression = Utilities.GetRightExpression(field.FieldType, siValue);
+                var rightExpression = decodeContext.TranslateContext.GetRightExpression(
+                    field.FieldType, siValue);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid store operation: ILByteIndex={0}, StackType={1}, FieldType={2}",
-                        context.ILByteIndex,
+                        decodeContext.ILByteIndex,
                         siValue.TargetType.FullName,
                         field.FieldType.FullName);
                 }
@@ -55,7 +56,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid field token: ILByteIndex={0}, Token={1:x2}",
-                    context.ILByteIndex,
+                    decodeContext.ILByteIndex,
                     fieldToken);
             }
         }

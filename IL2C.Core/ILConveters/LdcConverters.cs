@@ -6,9 +6,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_0;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            var symbolName = context.PushStack(typeof(int));
+            var symbolName = decodeContext.PushStack(typeof(int));
             return string.Format("{0} = 0", symbolName);
         }
     }
@@ -17,9 +17,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_1;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            var symbolName = context.PushStack(typeof(int));
+            var symbolName = decodeContext.PushStack(typeof(int));
             return string.Format("{0} = 1", symbolName);
         }
     }
@@ -28,9 +28,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_2;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            var symbolName = context.PushStack(typeof(int));
+            var symbolName = decodeContext.PushStack(typeof(int));
             return string.Format("{0} = 2", symbolName);
         }
     }
@@ -39,9 +39,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_5;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            var symbolName = context.PushStack(typeof(int));
+            var symbolName = decodeContext.PushStack(typeof(int));
             return string.Format("{0} = 5", symbolName);
         }
     }
@@ -50,9 +50,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4;
 
-        public override string Apply(int operand, DecodeContext context)
+        public override string Apply(int operand, DecodeContext decodeContext)
         {
-            var symbolName = context.PushStack(typeof(int));
+            var symbolName = decodeContext.PushStack(typeof(int));
             return string.Format("{0} = {1}", symbolName, operand);
         }
     }
@@ -61,9 +61,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_S;
 
-        public override string Apply(sbyte operand, DecodeContext context)
+        public override string Apply(sbyte operand, DecodeContext decodeContext)
         {
-            var symbolName = context.PushStack(typeof(int));
+            var symbolName = decodeContext.PushStack(typeof(int));
             return string.Format("{0} = {1}", symbolName, operand);
         }
     }
@@ -72,9 +72,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I8;
 
-        public override string Apply(long operand, DecodeContext context)
+        public override string Apply(long operand, DecodeContext decodeContext)
         {
-            var symbolName = context.PushStack(typeof(long));
+            var symbolName = decodeContext.PushStack(typeof(long));
             return string.Format("{0} = {1}LL", symbolName, operand);
         }
     }

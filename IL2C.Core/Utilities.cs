@@ -24,50 +24,6 @@ namespace IL2C
             return ilConverters.TryGetValue(opCodeBytes, out ilc);
         }
 
-        public static string GetCLanguageTypeName(Type type)
-        {
-            if (type == typeof(void))
-            {
-                return "void";
-            }
-            if (type == typeof(Boolean))
-            {
-                return "bool";
-            }
-            if (type == typeof(Byte))
-            {
-                return "uint8_t";
-            }
-            if (type == typeof(SByte))
-            {
-                return "int8_t";
-            }
-            if (type == typeof(Int16))
-            {
-                return "int16_t";
-            }
-            if (type == typeof(UInt16))
-            {
-                return "uint16_t";
-            }
-            if (type == typeof(Int32))
-            {
-                return "int32_t";
-            }
-            if (type == typeof(Int64))
-            {
-                return "int64_t";
-            }
-
-            if (type.IsByRef)
-            {
-                var dereferencedType = type.GetElementType();
-                return GetCLanguageTypeName(dereferencedType) + "*";
-            }
-
-            return GetFullMemberName(type).ManglingSymbolName();
-        }
-
         public static bool IsNumericPrimitive(Type type)
         {
             if (type == typeof(Byte))
@@ -96,33 +52,6 @@ namespace IL2C
             }
 
             return false;
-        }
-
-        public static string GetRightExpression(Type lhsType, SymbolInformation rhs)
-        {
-            if (lhsType.IsAssignableFrom(rhs.TargetType))
-            {
-                return rhs.SymbolName;
-            }
-
-            if (IsNumericPrimitive(rhs.TargetType))
-            {
-                if (IsNumericPrimitive(lhsType))
-                {
-                    return String.Format(
-                        "({0}){1}",
-                        GetCLanguageTypeName(lhsType),
-                        rhs.SymbolName);
-                }
-                else if (lhsType == typeof(bool))
-                {
-                    return String.Format(
-                        "{0} ? true : false",
-                        rhs.SymbolName);
-                }
-            }
-
-            return null;
         }
 
         public static string GetFullMemberName(MemberInfo member)

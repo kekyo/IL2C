@@ -67,7 +67,7 @@ namespace IL2C
             {
             }
 
-            public string GetOrAdd(Type targetType)
+            public string GetOrAdd(Type targetType, TranslateContext translateContext)
             {
                 var index = typedStackInformation
                     .FindIndex(si => si.TargetType == targetType);
@@ -77,7 +77,7 @@ namespace IL2C
                     return typedStackInformation[index].SymbolName;
                 }
 
-                var typeName = Utilities.GetCLanguageTypeName(targetType);
+                var typeName = translateContext.GetCLanguageTypeName(targetType);
                 var symbolName = string.Format(
                     "__stack{0}_{1}",
                     stackPointer,
@@ -128,7 +128,7 @@ namespace IL2C
         public readonly Type ReturnType;
         public readonly ParameterInfo[] Parameters;
         public readonly IList<LocalVariableInfo> Locals;
-        public readonly Module Module;
+        public readonly TranslateContext TranslateContext;
 
         private readonly byte[] ilBytes;
         private int ilByteIndex = -1;
@@ -155,7 +155,7 @@ namespace IL2C
             ParameterInfo[] parameters,
             IList<LocalVariableInfo> locals,
             byte[] ilBytes,
-            Module module)
+            TranslateContext translateContext)
         {
             if (ilBytes.Length == 0)
             {
@@ -168,7 +168,7 @@ namespace IL2C
             this.ReturnType = returnType;
             this.Parameters = parameters;
             this.Locals = locals;
-            this.Module = module;
+            this.TranslateContext = translateContext;
 
             this.ilBytes = ilBytes;
             this.decodedPathNumbersAtILByteIndex = new int[ilBytes.Length];
@@ -361,7 +361,7 @@ namespace IL2C
 
             stackPointer++;
 
-            return stackInformationHolder.GetOrAdd(targetType);
+            return stackInformationHolder.GetOrAdd(targetType, this.TranslateContext);
         }
 
         public SymbolInformation PopStack()
@@ -444,7 +444,8 @@ namespace IL2C
                     index++)
                 {
                     stackList[index].GetOrAdd(
-                        branchTarget.StackInformationsSnapshot[index].TargetType);
+                        branchTarget.StackInformationsSnapshot[index].TargetType,
+                        this.TranslateContext);
                 }
                 stackPointer = branchTarget.StackInformationsSnapshot.Length;
 

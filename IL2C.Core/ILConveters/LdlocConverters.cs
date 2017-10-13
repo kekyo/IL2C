@@ -4,14 +4,14 @@ namespace IL2C.ILConveters
 {
     internal static class LdlocConverterUtilities
     {
-        public static string Apply(int localIndex, DecodeContext context)
+        public static string Apply(int localIndex, DecodeContext decodeContext)
         {
-            var local = context.Locals[localIndex];
+            var local = decodeContext.Locals[localIndex];
             var targetType = local.LocalType;
 
             if (local.LocalType == typeof(bool))
             {
-                var symbolName = context.PushStack(typeof(int));
+                var symbolName = decodeContext.PushStack(typeof(int));
                 return string.Format(
                     "{0} = local{1} ? 1 : 0",
                     symbolName,
@@ -27,7 +27,7 @@ namespace IL2C.ILConveters
                     targetType = typeof(int);
                 }
 
-                var symbolName = context.PushStack(targetType);
+                var symbolName = decodeContext.PushStack(targetType);
                 return string.Format(
                     "{0} = local{1}",
                     symbolName,
@@ -35,14 +35,14 @@ namespace IL2C.ILConveters
             }
         }
 
-        public static string ApplyWithAddress(int localIndex, DecodeContext context)
+        public static string ApplyWithAddress(int localIndex, DecodeContext decodeContext)
         {
-            var local = context.Locals[localIndex];
+            var local = decodeContext.Locals[localIndex];
             var targetType = local.LocalType;
 
             var managedReferenceType = targetType.MakeByRefType();
                 
-            var symbolName = context.PushStack(managedReferenceType);
+            var symbolName = decodeContext.PushStack(managedReferenceType);
             return string.Format(
                 "{0} = &local{1}",
                 symbolName,
@@ -54,9 +54,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_0;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(0, context);
+            return LdlocConverterUtilities.Apply(0, decodeContext);
         }
     }
 
@@ -64,9 +64,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_1;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(1, context);
+            return LdlocConverterUtilities.Apply(1, decodeContext);
         }
     }
 
@@ -74,9 +74,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_2;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(2, context);
+            return LdlocConverterUtilities.Apply(2, decodeContext);
         }
     }
 
@@ -84,9 +84,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_3;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(3, context);
+            return LdlocConverterUtilities.Apply(3, decodeContext);
         }
     }
 
@@ -94,17 +94,17 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloca_S;
 
-        public override string Apply(byte localIndex, DecodeContext context)
+        public override string Apply(byte localIndex, DecodeContext decodeContext)
         {
             if (localIndex > 225)
             {
                 throw new InvalidProgramSequenceException(
                     "Index overflow at ldloca.s: ILByteIndex={0}, LocalIndex={1}",
-                    context.ILByteIndex,
+                    decodeContext.ILByteIndex,
                     localIndex);
             }
 
-            return LdlocConverterUtilities.ApplyWithAddress(localIndex, context);
+            return LdlocConverterUtilities.ApplyWithAddress(localIndex, decodeContext);
         }
     }
 }

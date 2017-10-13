@@ -9,17 +9,17 @@ namespace IL2C
 {
     public static class Converter
     {
-        internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(DecodeContext context)
+        internal static IEnumerable<ILData> DecodeAndEnumerateOpCodes(DecodeContext decodeContext)
         {
             while (true)
             {
-                var label = context.MakeLabel();
-                if (context.TryDecode(out var ilc) == false)
+                var label = decodeContext.MakeLabel();
+                if (decodeContext.TryDecode(out var ilc) == false)
                 {
                     break;
                 }
 
-                var operand = ilc.DecodeOperand(context);
+                var operand = ilc.DecodeOperand(decodeContext);
                 yield return new ILData(label, ilc, operand);
 
                 if (ilc.IsEndOfPath)
@@ -29,29 +29,70 @@ namespace IL2C
             }
         }
 
-        public static void Convert(TextWriter tw, Type type, string indent)
+        public static void ConvertType(
+            TranslateContext translateContext,
+            TextWriter tw,
+            Type type,
+            string indent)
+        {
+            if (type.IsValueType && (type.IsPrimitive == false))
+            {
+                var structName = translateContext.GetCLanguageTypeName(type)
+                    .ManglingSymbolName();
+
+                tw.WriteLine(string.Format(
+                    "typedef struct {0}",
+                    structName));
+
+                tw.WriteLine("{");
+
+                foreach (var field in type.GetFields(
+                    BindingFlags.Public | BindingFlags.NonPublic
+                    | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                {
+                    tw.WriteLine(string.Format(
+                        "{0}{1} {2};",
+                        indent,
+                        translateContext.GetCLanguageTypeName(field.FieldType),
+                        field.Name));
+                }
+
+                tw.WriteLine(string.Format(
+                    "}} {0};",
+                    structName));
+            }
+        }
+
+        public static void ConvertMethod(
+            TranslateContext translateContext,
+            TextWriter tw,
+            Type type,
+            string indent)
         {
             foreach (var method in type.GetMethods(
                 BindingFlags.Public | BindingFlags.NonPublic |
                 BindingFlags.Static | BindingFlags.DeclaredOnly))
             {
-                Convert(tw, method, indent);
+                ConvertMethod(translateContext, tw, method, indent);
                 tw.WriteLine();
             }
         }
 
-        public static void Convert(TextWriter tw, MethodInfo method, string indent)
+        public static void ConvertMethod(
+            TranslateContext translateContext,
+            TextWriter tw,
+            MethodInfo method,
+            string indent)
         {
             var methodName = Utilities.GetFullMemberName(method);
-            var module = method.DeclaringType.Module;
 
             InternalConvert(
+                translateContext,
                 tw,
                 method.ReturnType,
                 methodName,
                 method.GetParameters(),
                 method.GetMethodBody(),
-                module,
                 indent);
         }
 
@@ -68,18 +109,18 @@ namespace IL2C
         }
 
         private static void InternalConvert(
+            TranslateContext translateContext,
             TextWriter tw,
             Type returnType,
             string methodName,
             ParameterInfo[] parameters,
             MethodBody body,
-            Module module,
             string indent)
         {
             var locals = body.LocalVariables;
 
             var returnTypeName =
-                Utilities.GetCLanguageTypeName(returnType);
+                translateContext.GetCLanguageTypeName(returnType);
 
             tw.WriteLine("#include <stdbool.h>");
             tw.WriteLine("#include <stdint.h>");
@@ -92,7 +133,7 @@ namespace IL2C
                 parameters,
                 locals,
                 body.GetILAsByteArray(),
-                module);
+                translateContext);
 
             var bodySourceCode = new List<GeneratedSourceCode>();
             while (decodeContext.TryDequeueNextPath())
@@ -121,7 +162,7 @@ namespace IL2C
 
                 tw.WriteLine(
                     "{0} {1}{2};",
-                    Utilities.GetCLanguageTypeName(fi.FieldType),
+                    translateContext.GetCLanguageTypeName(fi.FieldType),
                     Utilities.GetFullMemberName(fi).ManglingSymbolName(),
                     initializer);
                 found = true;
@@ -136,7 +177,7 @@ namespace IL2C
                 ", ",
                 parameters.Select(parameter => string.Format(
                     "{0} {1}",
-                    Utilities.GetCLanguageTypeName(parameter.ParameterType),
+                    translateContext.GetCLanguageTypeName(parameter.ParameterType),
                     parameter.Name)));
 
             tw.WriteLine("{0} {1}({2})",
@@ -150,7 +191,7 @@ namespace IL2C
                 tw.WriteLine(
                     "{0}{1} local{2};",
                     indent,
-                    Utilities.GetCLanguageTypeName(local.LocalType),
+                    translateContext.GetCLanguageTypeName(local.LocalType),
                     local.LocalIndex);
             }
 
@@ -161,7 +202,7 @@ namespace IL2C
                 tw.WriteLine(
                     "{0}{1} {2};",
                     indent,
-                    Utilities.GetCLanguageTypeName(si.TargetType),
+                    translateContext.GetCLanguageTypeName(si.TargetType),
                     si.SymbolName);
             }
 

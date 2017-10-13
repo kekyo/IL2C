@@ -8,7 +8,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Nop;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
             return null;
         }
@@ -20,22 +20,22 @@ namespace IL2C.ILConveters
 
         public override bool IsEndOfPath => true;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            if (context.ReturnType == typeof(void))
+            if (decodeContext.ReturnType == typeof(void))
             {
                 return "return";
             }
 
-            var si = context.PopStack();
-            var returnType = context.ReturnType;
+            var si = decodeContext.PopStack();
+            var returnType = decodeContext.ReturnType;
 
-            var rightExpression = Utilities.GetRightExpression(returnType, si);
+            var rightExpression = decodeContext.TranslateContext.GetRightExpression(returnType, si);
             if (rightExpression == null)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
-                    context.ILByteIndex,
+                    decodeContext.ILByteIndex,
                     si.TargetType.FullName,
                     returnType.FullName);
             }
@@ -49,18 +49,18 @@ namespace IL2C.ILConveters
         {
             public override OpCode OpCode => OpCodes.Initobj;
 
-            public override string Apply(int typeToken, DecodeContext context)
+            public override string Apply(int typeToken, DecodeContext decodeContext)
             {
                 try
                 {
-                    var type = context.Module.ResolveType(typeToken);
+                    var type = decodeContext.TranslateContext.ResolveType(typeToken);
 
-                    var si = context.PopStack();
+                    var si = decodeContext.PopStack();
                     if (si.TargetType.IsByRef == false)
                     {
                         throw new InvalidProgramSequenceException(
                             "Invalid type at stack: ILByteIndex={0}, TokenType={1}, StackType={2}",
-                            context.ILByteIndex,
+                            decodeContext.ILByteIndex,
                             type.FullName,
                             si.TargetType.FullName);
                     }
@@ -68,13 +68,13 @@ namespace IL2C.ILConveters
                     return string.Format(
                         "memset({0}, 0x00, sizeof({1}))",
                         si.SymbolName,
-                        Utilities.GetCLanguageTypeName(type));
+                        decodeContext.TranslateContext.GetCLanguageTypeName(type));
                 }
                 catch (ArgumentException)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid type token: ILByteIndex={0}, Token={1:x2}",
-                        context.ILByteIndex,
+                        decodeContext.ILByteIndex,
                         typeToken);
                 }
             }

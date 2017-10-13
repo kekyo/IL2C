@@ -4,17 +4,17 @@ namespace IL2C.ILConveters
 {
     internal static class StlocConverterUtilities
     {
-        public static string Apply(int localIndex, DecodeContext context)
+        public static string Apply(int localIndex, DecodeContext decodeContext)
         {
-            var si = context.PopStack();
-            var localType = context.Locals[localIndex].LocalType;
+            var si = decodeContext.PopStack();
+            var localType = decodeContext.Locals[localIndex].LocalType;
 
-            var rightExpression = Utilities.GetRightExpression(localType, si);
+            var rightExpression = decodeContext.TranslateContext.GetRightExpression(localType, si);
             if (rightExpression == null)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid store operation: ILByteIndex={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
-                    context.ILByteIndex,
+                    decodeContext.ILByteIndex,
                     si.TargetType.FullName,
                     localType.FullName,
                     localIndex);
@@ -31,9 +31,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_0;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(0, context);
+            return StlocConverterUtilities.Apply(0, decodeContext);
         }
     }
 
@@ -41,9 +41,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_1;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(1, context);
+            return StlocConverterUtilities.Apply(1, decodeContext);
         }
     }
 
@@ -51,9 +51,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_2;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(2, context);
+            return StlocConverterUtilities.Apply(2, decodeContext);
         }
     }
 
@@ -61,9 +61,9 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_3;
 
-        public override string Apply(DecodeContext context)
+        public override string Apply(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(3, context);
+            return StlocConverterUtilities.Apply(3, decodeContext);
         }
     }
 }

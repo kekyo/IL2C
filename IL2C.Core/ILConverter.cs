@@ -9,19 +9,19 @@ namespace IL2C
 
         public virtual bool IsEndOfPath => false;
 
-        public abstract object DecodeOperand(DecodeContext context);
+        public abstract object DecodeOperand(DecodeContext decodeContext);
 
-        public abstract string Apply(object operand, DecodeContext context);
+        public abstract string Apply(object operand, DecodeContext decodeContext);
     }
 
     internal abstract class ILConverter<T> : ILConverter
     {
-        public sealed override string Apply(object operand, DecodeContext context)
+        public sealed override string Apply(object operand, DecodeContext decodeContext)
         {
             Debug.Assert(operand is T);
-            return this.Apply((T)operand, context);
+            return this.Apply((T)operand, decodeContext);
         }
 
-        public abstract string Apply(T operand, DecodeContext context);
+        public abstract string Apply(T operand, DecodeContext decodeContext);
     }
 }

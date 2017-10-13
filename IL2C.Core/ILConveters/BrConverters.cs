@@ -10,10 +10,10 @@ namespace IL2C.ILConveters
 
         public override bool IsEndOfPath => true;
 
-        public override string Apply(sbyte operand, DecodeContext context)
+        public override string Apply(sbyte operand, DecodeContext decodeContext)
         {
-            var offset = context.ILByteIndex + operand;
-            var labelName = context.EnqueueNewPath(offset);
+            var offset = decodeContext.ILByteIndex + operand;
+            var labelName = decodeContext.EnqueueNewPath(offset);
             return string.Format("goto {0}", labelName);
         }
     }
@@ -22,12 +22,12 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brfalse_S;
 
-        public override string Apply(sbyte operand, DecodeContext context)
+        public override string Apply(sbyte operand, DecodeContext decodeContext)
         {
-            var si = context.PopStack();
+            var si = decodeContext.PopStack();
 
-            var offset = context.ILByteIndex + operand;
-            var labelName = context.EnqueueNewPath(offset);
+            var offset = decodeContext.ILByteIndex + operand;
+            var labelName = decodeContext.EnqueueNewPath(offset);
 
             if (Utilities.IsNumericPrimitive(si.TargetType))
             {
@@ -45,12 +45,12 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brtrue_S;
 
-        public override string Apply(sbyte operand, DecodeContext context)
+        public override string Apply(sbyte operand, DecodeContext decodeContext)
         {
-            var si = context.PopStack();
+            var si = decodeContext.PopStack();
 
-            var offset = context.ILByteIndex + operand;
-            var labelName = context.EnqueueNewPath(offset);
+            var offset = decodeContext.ILByteIndex + operand;
+            var labelName = decodeContext.EnqueueNewPath(offset);
 
             if (Utilities.IsNumericPrimitive(si.TargetType))
             {

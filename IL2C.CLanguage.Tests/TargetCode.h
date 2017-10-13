@@ -1,24 +1,23 @@
 ﻿#include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
-int32_t IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field0 = 1;
-int64_t IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field1 = 2LL;
-
-int64_t IL2C_ConverterTest_AccessStaticFieldTestMethod(void)
+typedef struct IL2C_TestTargetClass_AccessValueTypeFieldTestType
 {
-    int64_t local0;
+    int32_t Value1;
+} IL2C_TestTargetClass_AccessValueTypeFieldTestType;
 
-    int32_t __stack0_int32_t;
-    int64_t __stack0_int64_t;
-    int64_t __stack1_int64_t;
+void IL2C_TestTargetClass_AccessValueTypeFieldMethod(void)
+{
+    IL2C_TestTargetClass_AccessValueTypeFieldTestType local0;
 
-    __stack0_int32_t = IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field0;
-    __stack0_int64_t = __stack0_int32_t;
-    __stack1_int64_t = IL2C_ConverterTest_CallStaticMethodWithFieldReferencedTestType_Field1;
-    __stack0_int64_t = __stack0_int64_t + __stack1_int64_t;
-    local0 = __stack0_int64_t;
-    goto L_0000;
-L_0000:
-    __stack0_int64_t = local0;
-    return __stack0_int64_t;
+    IL2C_TestTargetClass_AccessValueTypeFieldTestType* __stack0_IL2C_TestTargetClass_AccessValueTypeFieldTestType_reference;
+    int32_t __stack1_int32_t;
+
+    __stack0_IL2C_TestTargetClass_AccessValueTypeFieldTestType_reference = &local0;
+    memset(__stack0_IL2C_TestTargetClass_AccessValueTypeFieldTestType_reference, 0x00, sizeof(IL2C_TestTargetClass_AccessValueTypeFieldTestType));
+    __stack0_IL2C_TestTargetClass_AccessValueTypeFieldTestType_reference = &local0;
+    __stack1_int32_t = 123;
+    __stack0_IL2C_TestTargetClass_AccessValueTypeFieldTestType_reference->Value1 = __stack1_int32_t;
+    return;
 }

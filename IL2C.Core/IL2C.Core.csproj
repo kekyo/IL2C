@@ -57,6 +57,7 @@
     <Compile Include="ILConveters\ILConverters.cs" />
     <Compile Include="ILConveters\OperandTypeConverters.cs" />
     <Compile Include="InvalidProgramSequenceException.cs" />
+    <Compile Include="TranslateContext.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="DecodeContext.cs" />
     <Compile Include="ILConverter.cs" />

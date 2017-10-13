@@ -22,9 +22,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"uint8_t IL2C_TestTargetClass_ByteMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  uint8_t local0;");
@@ -71,9 +68,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"int8_t IL2C_TestTargetClass_SByteMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int8_t local0;");
@@ -117,9 +111,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"int8_t IL2C_TestTargetClass_SByteWithMinusMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int8_t local0;");
@@ -166,9 +157,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"int16_t IL2C_TestTargetClass_Int16MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int16_t local0;");
@@ -212,9 +200,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"int16_t IL2C_TestTargetClass_Int16WithMinusMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int16_t local0;");
@@ -261,9 +246,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"uint16_t IL2C_TestTargetClass_UInt16MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  uint16_t local0;");
@@ -307,9 +289,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"uint16_t IL2C_TestTargetClass_UInt16WithMaxValueMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  uint16_t local0;");
@@ -356,9 +335,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
             expected.WriteLine(@"int32_t IL2C_TestTargetClass_Int32MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int32_t local0;");
@@ -401,9 +377,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
             expected.WriteLine(@"int32_t IL2C_TestTargetClass_Int32LargeValueMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int32_t local0;");
@@ -446,9 +419,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
             expected.WriteLine(@"int32_t IL2C_TestTargetClass_Int32WithArgumentsMainBody(int32_t a, int32_t b)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int32_t local0;");
@@ -488,9 +458,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
             expected.WriteLine(@"int64_t IL2C_TestTargetClass_Int64MainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int64_t local0;");
@@ -536,9 +503,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
             expected.WriteLine(@"int64_t IL2C_TestTargetClass_Int64LargeValueMainBody(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int64_t local0;");
@@ -584,9 +548,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine();
             expected.WriteLine(@"int32_t IL2C_TestTargetClass_ConditionalBranchMainBody(int32_t a)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  bool local0;");
@@ -636,9 +597,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"int32_t IL2C_TestTargetClass_CallTestMethod(void)");
             expected.WriteLine(@"{");
             expected.WriteLine(@"  int32_t local0;");
@@ -672,9 +630,6 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var expected = new StringWriter();
-            expected.WriteLine(@"#include <stdbool.h>");
-            expected.WriteLine(@"#include <stdint.h>");
-            expected.WriteLine(@"");
             expected.WriteLine(@"int32_t IL2C_TestTargetClass_CallStaticMethodWithFieldReferencedTestType_Field0 = 1;");
             expected.WriteLine(@"int64_t IL2C_TestTargetClass_CallStaticMethodWithFieldReferencedTestType_Field1 = 2LL;");
             expected.WriteLine(@"");

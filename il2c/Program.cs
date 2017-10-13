@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Text;
 using IL2C;
 
@@ -15,23 +13,44 @@ namespace il2c
         {
             if (args.Length != 2)
             {
-                Console.WriteLine("Usage: il2c.exe <target assembly> <source code>");
+                Console.WriteLine("Usage: il2c.exe <target assembly> <output path>");
                 return 0;
             }
 
             var assemblyPath = args[0];
             var outputPath = args[1];
 
+            if (Directory.Exists(outputPath) == false)
+            {
+                try
+                {
+                    Directory.CreateDirectory(outputPath);
+                }
+                catch
+                {
+                }
+            }
+
             var assembly = Assembly.LoadFrom(assemblyPath);
 
-            using (var fs = new FileStream(outputPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+            foreach (var module in assembly.GetModules())
             {
-                var ms = new MemoryStream();
-                var tw = new StreamWriter(ms, Encoding.UTF8);
+                var moduleFileName = Path.GetFileNameWithoutExtension(module.Name);
 
-                foreach (var module in assembly.GetModules())
+                var filePath = Path.Combine(outputPath, moduleFileName);
+
+                var translateContext = new TranslateContext(module);
+
+                using (var fsSource = new FileStream(
+                    filePath + ".c",
+                    FileMode.Create,
+                    FileAccess.ReadWrite,
+                    FileShare.None))
                 {
-                    var translateContext = new TranslateContext(module);
+                    var twSource = new StreamWriter(fsSource, Encoding.UTF8);
+
+                    twSource.WriteLine("#include \"{0}.h\"", moduleFileName);
+                    twSource.WriteLine();
 
                     foreach (var method in
                         from type in module.GetTypes()
@@ -41,25 +60,56 @@ namespace il2c
                             BindingFlags.Static | BindingFlags.DeclaredOnly)
                         select method)
                     {
-                        IL2C.Converter.ConvertMethod(translateContext, tw, method, "    ");
-                        tw.WriteLine();
+                        IL2C.Converter.ConvertMethod(
+                            translateContext,
+                            twSource,
+                            method,
+                            "    ");
+
+                        twSource.WriteLine();
                     }
+
+                    twSource.Flush();
                 }
 
-                tw.Flush();
+                using (var fsHeader = new FileStream(
+                    filePath + ".h",
+                    FileMode.Create,
+                    FileAccess.ReadWrite,
+                    FileShare.None))
+                {
+                    var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
 
-                var tw2 = new StreamWriter(fs, Encoding.UTF8);
-                tw2.WriteLine("#include <{0}>");    // TODO:n
-                tw2.WriteLine();
-                tw2.WriteLine("typedef struct Hoge {...}"); // TODO: n
-                tw2.WriteLine();
+                    twHeader.WriteLine("#ifndef __MODULE_{0}__", moduleFileName);
+                    twHeader.WriteLine("#define __MODULE_{0}__", moduleFileName);
 
-                tw2.Flush();
+                    twHeader.WriteLine();
 
-                ms.Position = 0;
-                ms.CopyTo(fs);
+                    foreach (var fileName in translateContext.EnumerateRequiredIncludeFileNames())
+                    {
+                        twHeader.WriteLine("#include <{0}>", fileName);
+                    }
 
-                fs.Flush();
+                    twHeader.WriteLine();
+
+                    foreach (var type in
+                        from type in module.GetTypes()
+                        where type.IsValueType
+                        select type)
+                    {
+                        IL2C.Converter.ConvertType(
+                            translateContext,
+                            twHeader,
+                            type,
+                            "    ");
+
+                        twHeader.WriteLine();
+                    }
+
+                    twHeader.WriteLine("#endif");
+
+                    twHeader.Flush();
+                }
             }
 
             return 0;

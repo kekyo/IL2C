@@ -14,6 +14,11 @@ namespace IL2C
             this.module = module;
         }
 
+        public IEnumerable<string> EnumerateRequiredIncludeFileNames()
+        {
+            return includes;
+        }
+
         internal Type ResolveType(int typeToken)
         {
             return module.ResolveType(typeToken);

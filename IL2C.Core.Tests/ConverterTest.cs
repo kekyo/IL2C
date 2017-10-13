@@ -15,7 +15,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("ByteMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -61,7 +61,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("SByteMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -104,7 +104,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("SByteWithMinusMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -150,7 +150,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int16MainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -193,7 +193,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int16WithMinusMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -239,7 +239,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("UInt16MainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -282,7 +282,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("UInt16WithMaxValueMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -328,7 +328,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int32MainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -370,7 +370,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int32LargeValueMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -412,7 +412,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int32WithArgumentsMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -451,7 +451,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int64MainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -496,7 +496,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int64LargeValueMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -541,7 +541,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("ConditionalBranchMainBody");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -590,7 +590,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("CallTestMethod");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -623,7 +623,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("AccessStaticFieldTestMethod");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
             IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
 
@@ -661,7 +661,7 @@ namespace IL2C
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("AccessValueTypeFieldMethod");
 
-            var translateContext = new TranslateContext(testType.Module);
+            var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
 
             var targetType = typeof(TestTargetClass.AccessValueTypeFieldTestType);

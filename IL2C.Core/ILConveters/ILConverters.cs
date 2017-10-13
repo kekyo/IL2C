@@ -53,7 +53,7 @@ namespace IL2C.ILConveters
             {
                 try
                 {
-                    var type = decodeContext.TranslateContext.ResolveType(typeToken);
+                    var type = decodeContext.ResolveType(typeToken);
 
                     var si = decodeContext.PopStack();
                     if (si.TargetType.IsByRef == false)

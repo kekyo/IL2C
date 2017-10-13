@@ -14,7 +14,7 @@ namespace IL2C.ILConveters
         {
             try
             {
-                var method = (MethodInfo)decodeContext.TranslateContext.ResolveMethod(methodToken);
+                var method = (MethodInfo)decodeContext.ResolveMethod(methodToken);
 
                 var parameters = method.GetParameters();
 

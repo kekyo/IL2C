@@ -29,6 +29,72 @@ namespace IL2C
             }
         }
 
+        public static void ConvertToHeader(
+            TextWriter twHeader,
+            Assembly assembly,
+            TranslateContext translateContext,
+            string indent)
+        {
+            var assemblyName = assembly.GetName().Name;
+
+            twHeader.WriteLine("#ifndef __MODULE_{0}__", assemblyName);
+            twHeader.WriteLine("#define __MODULE_{0}__", assemblyName);
+
+            twHeader.WriteLine();
+
+            foreach (var fileName in translateContext.EnumerateRequiredIncludeFileNames())
+            {
+                twHeader.WriteLine("#include <{0}>", fileName);
+            }
+
+            twHeader.WriteLine();
+
+            foreach (var type in
+                from type in assembly.GetTypes()
+                where type.IsValueType
+                select type)
+            {
+                ConvertType(
+                    translateContext,
+                    twHeader,
+                    type,
+                    indent);
+
+                twHeader.WriteLine();
+            }
+
+            twHeader.WriteLine("#endif");
+        }
+
+        public static void ConvertToSourceCode(
+            TextWriter twSource,
+            Assembly assembly,
+            TranslateContext translateContext,
+            string indent)
+        {
+            var assemblyName = assembly.GetName().Name;
+
+            twSource.WriteLine("#include \"{0}.h\"", assemblyName);
+            twSource.WriteLine();
+
+            foreach (var method in
+                from type in assembly.GetTypes()
+                where type.IsClass || type.IsValueType
+                from method in type.GetMethods(
+                    BindingFlags.Public | BindingFlags.NonPublic |
+                    BindingFlags.Static | BindingFlags.DeclaredOnly)
+                select method)
+            {
+                ConvertMethod(
+                    translateContext,
+                    twSource,
+                    method,
+                    indent);
+
+                twSource.WriteLine();
+            }
+        }
+
         public static void ConvertType(
             TranslateContext translateContext,
             TextWriter tw,
@@ -40,7 +106,7 @@ namespace IL2C
                 var structName = translateContext.GetCLanguageTypeName(type)
                     .ManglingSymbolName();
 
-                tw.WriteLine(string.Format(
+                tw.WriteLine(String.Format(
                     "typedef struct {0}",
                     structName));
 
@@ -50,14 +116,14 @@ namespace IL2C
                     BindingFlags.Public | BindingFlags.NonPublic
                     | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                 {
-                    tw.WriteLine(string.Format(
+                    tw.WriteLine(String.Format(
                         "{0}{1} {2};",
                         indent,
                         translateContext.GetCLanguageTypeName(field.FieldType),
                         field.Name));
                 }
 
-                tw.WriteLine(string.Format(
+                tw.WriteLine(String.Format(
                     "}} {0};",
                     structName));
             }
@@ -89,8 +155,9 @@ namespace IL2C
             InternalConvert(
                 translateContext,
                 tw,
-                method.ReturnType,
+                method.Module,
                 methodName,
+                method.ReturnType,
                 method.GetParameters(),
                 method.GetMethodBody(),
                 indent);
@@ -111,8 +178,9 @@ namespace IL2C
         private static void InternalConvert(
             TranslateContext translateContext,
             TextWriter tw,
-            Type returnType,
+            Module module,
             string methodName,
+            Type returnType,
             ParameterInfo[] parameters,
             MethodBody body,
             string indent)
@@ -123,6 +191,7 @@ namespace IL2C
                 translateContext.GetCLanguageTypeName(returnType);
 
             var decodeContext = new DecodeContext(
+                module,
                 methodName,
                 returnType,
                 parameters,
@@ -142,7 +211,7 @@ namespace IL2C
             var found = false;
             foreach (var fi in decodeContext.ExtractStaticFields())
             {
-                var initializer = string.Empty;
+                var initializer = String.Empty;
                 if (Utilities.IsNumericPrimitive(fi.FieldType))
                 {
                     Debug.Assert(fi.IsStatic);
@@ -151,8 +220,8 @@ namespace IL2C
                     Debug.Assert(value != null);
 
                     initializer = (value is long)
-                        ? string.Format(" = {0}LL", value)
-                        : string.Format(" = {0}", value);
+                        ? String.Format(" = {0}LL", value)
+                        : String.Format(" = {0}", value);
                 }
 
                 tw.WriteLine(
@@ -168,9 +237,9 @@ namespace IL2C
                 tw.WriteLine();
             }
 
-            var parametersString = string.Join(
+            var parametersString = String.Join(
                 ", ",
-                parameters.Select(parameter => string.Format(
+                parameters.Select(parameter => String.Format(
                     "{0} {1}",
                     translateContext.GetCLanguageTypeName(parameter.ParameterType),
                     parameter.Name)));

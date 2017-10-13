@@ -10,7 +10,7 @@ namespace IL2C.ILConveters
         {
             try
             {
-                var field = decodeContext.TranslateContext.ResolveField(fieldToken);
+                var field = decodeContext.ResolveField(fieldToken);
                 Debug.Assert(field.IsStatic);
 
                 decodeContext.AddStaticField(field);

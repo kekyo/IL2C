@@ -6,32 +6,17 @@ namespace IL2C
 {
     public sealed class TranslateContext
     {
-        private readonly Module module;
+        private readonly Assembly assembly;
         private readonly HashSet<string> includes = new HashSet<string>();
 
-        public TranslateContext(Module module)
+        public TranslateContext(Assembly assembly)
         {
-            this.module = module;
+            this.assembly = assembly;
         }
 
         public IEnumerable<string> EnumerateRequiredIncludeFileNames()
         {
             return includes;
-        }
-
-        internal Type ResolveType(int typeToken)
-        {
-            return module.ResolveType(typeToken);
-        }
-
-        internal FieldInfo ResolveField(int fieldToken)
-        {
-            return module.ResolveField(fieldToken);
-        }
-
-        internal MethodBase ResolveMethod(int methodToken)
-        {
-            return module.ResolveMethod(methodToken);
         }
 
         internal void RegisterIncludeFile(string includeFileName)

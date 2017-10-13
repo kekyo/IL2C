@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2CBC90EC-5581-452F-8231-086E4553D20E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>il2c</RootNamespace>
+    <RootNamespace>IL2C</RootNamespace>
     <AssemblyName>il2c</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

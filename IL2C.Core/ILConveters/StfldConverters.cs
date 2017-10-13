@@ -11,7 +11,7 @@ namespace IL2C.ILConveters
         {
             try
             {
-                var field = decodeContext.TranslateContext.ResolveField(fieldToken);
+                var field = decodeContext.ResolveField(fieldToken);
 
                 var siValue = decodeContext.PopStack();
                 var siReference = decodeContext.PopStack();

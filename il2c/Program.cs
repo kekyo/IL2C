@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using IL2C;
 
-namespace il2c
+namespace IL2C
 {
     public static class Program
     {
@@ -33,83 +31,34 @@ namespace il2c
 
             var assembly = Assembly.LoadFrom(assemblyPath);
 
-            foreach (var module in assembly.GetModules())
+            var translateContext = new TranslateContext(assembly);
+            var assemblyName = assembly.GetName().Name;
+            var filePath = Path.Combine(outputPath, assemblyName);
+
+            using (var fsSource = new FileStream(
+                filePath + ".c",
+                FileMode.Create,
+                FileAccess.ReadWrite,
+                FileShare.None))
             {
-                var moduleFileName = Path.GetFileNameWithoutExtension(module.Name);
+                var twSource = new StreamWriter(fsSource, Encoding.UTF8);
 
-                var filePath = Path.Combine(outputPath, moduleFileName);
+                Converter.ConvertToSourceCode(twSource, assembly, translateContext, "    ");
 
-                var translateContext = new TranslateContext(module);
+                twSource.Flush();
+            }
 
-                using (var fsSource = new FileStream(
-                    filePath + ".c",
-                    FileMode.Create,
-                    FileAccess.ReadWrite,
-                    FileShare.None))
-                {
-                    var twSource = new StreamWriter(fsSource, Encoding.UTF8);
+            using (var fsHeader = new FileStream(
+                filePath + ".h",
+                FileMode.Create,
+                FileAccess.ReadWrite,
+                FileShare.None))
+            {
+                var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
 
-                    twSource.WriteLine("#include \"{0}.h\"", moduleFileName);
-                    twSource.WriteLine();
+                Converter.ConvertToHeader(twHeader, assembly, translateContext, "    ");
 
-                    foreach (var method in
-                        from type in module.GetTypes()
-                        where type.IsClass || type.IsValueType
-                        from method in type.GetMethods(
-                            BindingFlags.Public | BindingFlags.NonPublic |
-                            BindingFlags.Static | BindingFlags.DeclaredOnly)
-                        select method)
-                    {
-                        IL2C.Converter.ConvertMethod(
-                            translateContext,
-                            twSource,
-                            method,
-                            "    ");
-
-                        twSource.WriteLine();
-                    }
-
-                    twSource.Flush();
-                }
-
-                using (var fsHeader = new FileStream(
-                    filePath + ".h",
-                    FileMode.Create,
-                    FileAccess.ReadWrite,
-                    FileShare.None))
-                {
-                    var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
-
-                    twHeader.WriteLine("#ifndef __MODULE_{0}__", moduleFileName);
-                    twHeader.WriteLine("#define __MODULE_{0}__", moduleFileName);
-
-                    twHeader.WriteLine();
-
-                    foreach (var fileName in translateContext.EnumerateRequiredIncludeFileNames())
-                    {
-                        twHeader.WriteLine("#include <{0}>", fileName);
-                    }
-
-                    twHeader.WriteLine();
-
-                    foreach (var type in
-                        from type in module.GetTypes()
-                        where type.IsValueType
-                        select type)
-                    {
-                        IL2C.Converter.ConvertType(
-                            translateContext,
-                            twHeader,
-                            type,
-                            "    ");
-
-                        twHeader.WriteLine();
-                    }
-
-                    twHeader.WriteLine("#endif");
-
-                    twHeader.Flush();
-                }
+                twHeader.Flush();
             }
 
             return 0;

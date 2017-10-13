@@ -130,6 +130,8 @@ namespace IL2C
         public readonly IList<LocalVariableInfo> Locals;
         public readonly TranslateContext TranslateContext;
 
+        private readonly Module module;
+
         private readonly byte[] ilBytes;
         private int ilByteIndex = -1;
 
@@ -150,6 +152,7 @@ namespace IL2C
         #endregion
 
         public DecodeContext(
+            Module module,
             string methodName,
             Type returnType,
             ParameterInfo[] parameters,
@@ -168,6 +171,9 @@ namespace IL2C
             this.ReturnType = returnType;
             this.Parameters = parameters;
             this.Locals = locals;
+
+            this.module = module;
+
             this.TranslateContext = translateContext;
 
             this.ilBytes = ilBytes;
@@ -455,7 +461,22 @@ namespace IL2C
             ilByteIndex = -1;
             return false;
         }
-#endregion
+        #endregion
+
+        public Type ResolveType(int typeToken)
+        {
+            return module.ResolveType(typeToken);
+        }
+
+        public FieldInfo ResolveField(int fieldToken)
+        {
+            return module.ResolveField(fieldToken);
+        }
+
+        public MethodBase ResolveMethod(int methodToken)
+        {
+            return module.ResolveMethod(methodToken);
+        }
 
         public IEnumerable<SymbolInformation> ExtractStacks()
         {

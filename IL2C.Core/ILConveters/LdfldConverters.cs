@@ -4,9 +4,11 @@ using System.Reflection.Emit;
 
 namespace IL2C.ILConveters
 {
-    internal static class LdfldConverterUtilities
+    internal sealed class LdsfldConverter : InlineFieldConverter
     {
-        public static string Apply(int fieldToken, DecodeContext decodeContext)
+        public override OpCode OpCode => OpCodes.Ldsfld;
+
+        public override string Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
@@ -55,13 +57,91 @@ namespace IL2C.ILConveters
         }
     }
 
-    internal sealed class LdsfldConverter : InlineFieldConverter
+    internal sealed class LdfldConverter : InlineFieldConverter
     {
-        public override OpCode OpCode => OpCodes.Ldsfld;
+        public override OpCode OpCode => OpCodes.Ldfld;
 
         public override string Apply(int fieldToken, DecodeContext decodeContext)
         {
-            return LdfldConverterUtilities.Apply(fieldToken, decodeContext);
+            try
+            {
+                var field = decodeContext.ResolveField(fieldToken);
+
+                var siReference = decodeContext.PopStack();
+
+                var oper = "->";
+                if (siReference.TargetType.IsByRef)
+                {
+                    var dereferencedType = siReference.TargetType.GetElementType();
+                    if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid managed reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
+                            decodeContext.ILByteIndex,
+                            siReference.TargetType.FullName,
+                            field.DeclaringType.FullName,
+                            field.Name);
+                    }
+                }
+                else if (siReference.TargetType.IsValueType)
+                {
+                    if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid managed reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
+                            decodeContext.ILByteIndex,
+                            siReference.TargetType.FullName,
+                            field.DeclaringType.FullName,
+                            field.Name);
+                    }
+
+                    oper = ".";
+                }
+                else
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid type at stack: ILByteIndex={0}, StackType={1}",
+                        decodeContext.ILByteIndex,
+                        siReference.TargetType.FullName);
+                }
+
+                var targetType = field.FieldType;
+                if ((targetType == typeof(byte))
+                    || (targetType == typeof(sbyte))
+                    || (targetType == typeof(short))
+                    || (targetType == typeof(ushort))
+                    || (targetType == typeof(bool)))
+                {
+                    targetType = typeof(int);
+                }
+
+                var rightExpression = decodeContext.TranslateContext.GetRightExpression(
+                    targetType,
+                    field.FieldType,
+                    siReference.SymbolName + oper + field.Name);
+                if (rightExpression == null)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid load operation: ILByteIndex={0}, StackType={1}, FieldType={2}",
+                        decodeContext.ILByteIndex,
+                        targetType.FullName,
+                        field.FieldType.FullName);
+                }
+
+                var resultName = decodeContext.PushStack(targetType);
+
+                return string.Format(
+                    "{0} = {1}",
+                    resultName,
+                    rightExpression);
+            }
+            catch (ArgumentException)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid field token: ILByteIndex={0}, Token={1:x2}",
+                    decodeContext.ILByteIndex,
+                    fieldToken);
+            }
         }
     }
 }

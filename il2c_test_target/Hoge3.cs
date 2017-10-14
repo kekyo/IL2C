@@ -13,10 +13,12 @@ namespace il2c_test_target
 
     public class Hoge4
     {
-        public static void Test4()
+        public static int Test4()
         {
             var hoge3 = new Hoge3();
             hoge3.Value2 = 456;
+
+            return hoge3.Value2;
         }
     }
 }

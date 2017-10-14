@@ -100,6 +100,51 @@ namespace IL2C
                         rhs.SymbolName);
                 }
             }
+            else if (rhs.TargetType == typeof(bool))
+            {
+                if (Utilities.IsNumericPrimitive(lhsType))
+                {
+                    return String.Format(
+                        "{0} ? 1 : 0",
+                        rhs.SymbolName);
+                }
+            }
+
+            return null;
+        }
+
+        internal string GetRightExpression(Type lhsType, Type rhsType, string rhsExpression)
+        {
+            if (lhsType.IsAssignableFrom(rhsType))
+            {
+                return rhsExpression;
+            }
+
+            if (Utilities.IsNumericPrimitive(rhsType))
+            {
+                if (Utilities.IsNumericPrimitive(lhsType))
+                {
+                    return String.Format(
+                        "({0})({1})",
+                        this.GetCLanguageTypeName(lhsType),
+                        rhsExpression);
+                }
+                else if (lhsType == typeof(bool))
+                {
+                    return String.Format(
+                        "({0}) ? true : false",
+                        rhsExpression);
+                }
+            }
+            else if (rhsType == typeof(bool))
+            {
+                if (Utilities.IsNumericPrimitive(lhsType))
+                {
+                    return String.Format(
+                        "({0}) ? 1 : 0",
+                        rhsExpression);
+                }
+            }
 
             return null;
         }

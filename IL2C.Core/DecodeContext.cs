@@ -51,6 +51,18 @@ namespace IL2C
         }
     }
 
+    internal struct Parameter
+    {
+        public readonly string Name;
+        public readonly Type ParameterType;
+
+        public Parameter(string name, Type parameterType)
+        {
+            this.Name = name;
+            this.ParameterType = parameterType;
+        }
+    }
+
     internal sealed class DecodeContext
     {
         #region Private types
@@ -131,7 +143,7 @@ namespace IL2C
         #region Fields
         public readonly string MethodName;
         public readonly Type ReturnType;
-        public readonly ParameterInfo[] Parameters;
+        public readonly Parameter[] Parameters;
         public readonly IList<LocalVariableInfo> Locals;
         public readonly TranslateContext TranslateContext;
 
@@ -157,7 +169,7 @@ namespace IL2C
             Module module,
             string methodName,
             Type returnType,
-            ParameterInfo[] parameters,
+            Parameter[] parameters,
             IList<LocalVariableInfo> locals,
             byte[] ilBytes,
             TranslateContext translateContext)

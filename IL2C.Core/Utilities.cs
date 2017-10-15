@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace IL2C
 {
@@ -23,6 +24,20 @@ namespace IL2C
         public static bool TryGetILConverter(ushort opCodeBytes, out ILConverter ilc)
         {
             return ilConverters.TryGetValue(opCodeBytes, out ilc);
+        }
+
+        public static Parameter[] GetSafeParameters(this MethodBase method)
+        {
+            var parameters = method.GetParameters()
+                .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
+            if (method.IsStatic == false)
+            {
+                parameters = new[] {
+                    new Parameter("__this", method.DeclaringType.MakeByRefType()) }
+                    .Concat(parameters);
+            }
+
+            return parameters.ToArray();
         }
 
         public static bool IsNumericPrimitive(Type type)
@@ -94,7 +109,7 @@ namespace IL2C
         public static string GetFunctionPrototypeString(
             string methodName,
             Type returnType,
-            ParameterInfo[] parameters,
+            Parameter[] parameters,
             TranslateContext translateContext)
         {
             var parametersString = String.Join(

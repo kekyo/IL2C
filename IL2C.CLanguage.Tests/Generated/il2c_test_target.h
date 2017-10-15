@@ -12,7 +12,9 @@ typedef struct il2c_test_target_Hoge3
 
 extern int32_t il2c_test_target_Hoge3_Value1;
 
+extern int32_t il2c_test_target_Hoge3_GetValue2(il2c_test_target_Hoge3* __this, int32_t a, int32_t b);
 extern int32_t il2c_test_target_Hoge4_Test4(void);
+extern int32_t il2c_test_target_Hoge4_Test5(void);
 extern uint8_t il2c_test_target_Hoge2_Add3(uint8_t a, bool isTwo);
 extern uint16_t il2c_test_target_Hoge2_Add4(uint16_t a, bool isTwo);
 extern int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo);

@@ -83,7 +83,7 @@ namespace IL2C
                 where type.IsClass || type.IsValueType
                 from method in type.GetMethods(
                     BindingFlags.Public |
-                    BindingFlags.Static | BindingFlags.DeclaredOnly)
+                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 select method)
             {
                 var methodName = Utilities.GetFullMemberName(method);
@@ -91,7 +91,7 @@ namespace IL2C
                 var functionPrototype = Utilities.GetFunctionPrototypeString(
                     methodName,
                     method.ReturnType,
-                    method.GetParameters(),
+                    method.GetSafeParameters(),
                     translateContext);
 
                 twHeader.WriteLine("extern {0};", functionPrototype);
@@ -134,7 +134,7 @@ namespace IL2C
                 where type.IsClass || type.IsValueType
                 from method in type.GetMethods(
                     BindingFlags.Public | BindingFlags.NonPublic |
-                    BindingFlags.Static | BindingFlags.DeclaredOnly)
+                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 select method)
             {
                 ConvertMethod(
@@ -195,7 +195,7 @@ namespace IL2C
                 method.Module,
                 methodName,
                 method.ReturnType,
-                method.GetParameters(),
+                method.GetSafeParameters(),
                 method.GetMethodBody(),
                 indent);
         }
@@ -218,7 +218,7 @@ namespace IL2C
             Module module,
             string methodName,
             Type returnType,
-            ParameterInfo[] parameters,
+            Parameter[] parameters,
             MethodBody body,
             string indent)
         {
@@ -247,7 +247,8 @@ namespace IL2C
             var functionPrototype = Utilities.GetFunctionPrototypeString(
                 methodName,
                 returnType,
-                parameters, translateContext);
+                parameters,
+                translateContext);
 
             tw.WriteLine(functionPrototype);
             tw.WriteLine("{");

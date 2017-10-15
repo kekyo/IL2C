@@ -63,8 +63,8 @@ Under Apache v2.
   * [.NET Conf 2017 in Tokyo Room B (In japanese)](https://csugjp.connpass.com/event/66004/)
   * [YouTube video](http://bit.ly/2hI1jTb)
 
-* Milestone 2+ informations included the book of "Techbook Fest part 3 - Xamaritans"
-  * [技術書典3 出展情報 - Xamaritans (In japanese)](http://bit.ly/2ycNVzW)
+* Milestone 2+ informations included the book of "Extensive Xamarin - Techbook Fest part 3"
+  * [Extensive Xamarin - Xamaritans (In japanese)](http://bit.ly/2ycNVzW)
 
 ## Overall status
 

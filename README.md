@@ -191,3 +191,16 @@ TODO:
 | Support better C code output via C++ symbol declarations |
 | Support continuous integrations |
 
+## Took pictures on design process
+
+* #6-6: Near milestones
+
+![#6-6: Near milestones](images/IMG_20170917_194810.jpg)
+
+* #6-14: Data flow analysis
+
+![#6-14: Data flow analysis](images/IMG_20170926_225355.jpg)
+
+* Milestone 1: Tested on VC++ and we checked how C compiler's optimizer work.
+
+![Milestone 1: Tested on VC++ and we checked how C compiler's optimizer work](images/il2c1.png)

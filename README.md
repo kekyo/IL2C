@@ -57,7 +57,7 @@ Under Apache v2.
 ## Related informations
 
 * Center CLR video letter: "Tested IL2C on micro:bit and arduino platform #8"
-  * [YouTube video](http://bit.ly/2xGFo9J)
+  * [![Tested IL2C on micro:bit and arduino platform #8](images/microbit.jpg)](http://bit.ly/2xGFo9J)
 
 * Public conference session video: "Making archive IL2C #6-28 at .NET Conf 2017 Tokyo"
   * [.NET Conf 2017 in Tokyo Room B (In japanese)](https://csugjp.connpass.com/event/66004/)
@@ -195,12 +195,12 @@ TODO:
 
 * #6-6: Near milestones
 
-![#6-6: Near milestones](images/IMG_20170917_194810.jpg)
+  ![#6-6: Near milestones](images/IMG_20170917_194810.jpg)
 
 * #6-14: Data flow analysis
 
-![#6-14: Data flow analysis](images/IMG_20170926_225355.jpg)
+  ![#6-14: Data flow analysis](images/IMG_20170926_225355.jpg)
 
 * Milestone 1: Tested on VC++ and we checked how C compiler's optimizer work.
 
-![Milestone 1: Tested on VC++ and we checked how C compiler's optimizer work](images/il2c1.png)
+  ![Milestone 1: Tested on VC++ and we checked how C compiler's optimizer work](images/il2c1.png)

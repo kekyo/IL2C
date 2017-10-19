@@ -39,7 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Hoge3.cs" />
+    <Compile Include="ClassTypeTest.cs" />
+    <Compile Include="ValueTypeTest.cs" />
     <Compile Include="Hoge2.cs" />
     <Compile Include="Hoge1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace il2c_test_target
 {
-    public struct Hoge3
+    public struct ValueTypeTestTarget
     {
         public static int Value1 = 123;
         public int Value2;
@@ -16,11 +16,11 @@ namespace il2c_test_target
         }
     }
 
-    public class Hoge4
+    public class ValueTypeTest
     {
         public static int Test4()
         {
-            var hoge3 = new Hoge3();
+            var hoge3 = new ValueTypeTestTarget();
             hoge3.Value2 = 456;
 
             return hoge3.Value2;
@@ -28,7 +28,7 @@ namespace il2c_test_target
 
         public static int Test5()
         {
-            var hoge3 = new Hoge3();
+            var hoge3 = new ValueTypeTestTarget();
             hoge3.Value2 = 789;
 
             var result = hoge3.GetValue2(123, 456);

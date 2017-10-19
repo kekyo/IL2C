@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace IL2C.ILConveters
@@ -78,6 +80,47 @@ namespace IL2C.ILConveters
                         "Invalid type token: ILByteIndex={0}, Token={1:x2}",
                         decodeContext.ILByteIndex,
                         typeToken);
+                }
+            }
+        }
+
+        internal sealed class NewobjConverter : InlineMethodConverter
+        {
+            public override OpCode OpCode => OpCodes.Newobj;
+
+            public override string Apply(int constructorToken, DecodeContext decodeContext)
+            {
+                try
+                {
+                    var constructor = (ConstructorInfo)decodeContext.ResolveMethod(
+                        constructorToken);
+                    var type = constructor.DeclaringType;
+
+                    var parameters = constructor.GetParameters();
+                    var siParameters = parameters
+                        .Select(parameter => decodeContext.PopStack())
+                        .Reverse()
+                        .ToArray();
+
+                    decodeContext.TranslateContext.RegisterIncludeFile("stdlib.h");
+                    decodeContext.TranslateContext.RegisterIncludeFile("string.h");
+
+                    // Hoge* p = (Hoge)malloc(sizeof(Hoge));
+                    // memset(p, 0, sizeof(Hoge));
+                    // Hoge__ctor(p);
+
+                    //return string.Format(
+                    //    "memset({0}, 0x00, sizeof({1}))",
+                    //    si.SymbolName,
+                    //    decodeContext.TranslateContext.GetCLanguageTypeName(type));
+                    return "TODO:";
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid contructor token: ILByteIndex={0}, Token={1:x2}",
+                        decodeContext.ILByteIndex,
+                        constructorToken);
                 }
             }
         }

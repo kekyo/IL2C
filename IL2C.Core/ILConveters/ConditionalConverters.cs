@@ -6,7 +6,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Cgt;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -15,11 +15,11 @@ namespace IL2C.ILConveters
                 && Utilities.IsNumericPrimitive(si1.TargetType))
             {
                 var resultName = decodeContext.PushStack(typeof(int));
-                return string.Format(
+                return new[] { string.Format(
                     "{0} = ({1} > {2}) ? 1 : 0",
                     resultName,
                     si0.SymbolName,
-                    si1.SymbolName);
+                    si1.SymbolName) };
             }
 
             throw new InvalidProgramSequenceException(

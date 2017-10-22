@@ -8,7 +8,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldsfld;
 
-        public override string Apply(int fieldToken, DecodeContext decodeContext)
+        public override string[] Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
@@ -25,10 +25,10 @@ namespace IL2C.ILConveters
                 if (targetType == typeof(bool))
                 {
                     var symbolName = decodeContext.PushStack(typeof(int));
-                    return string.Format(
+                    return new [] { string.Format(
                         "{0} = {1} ? 1 : 0",
                         symbolName,
-                        fqFieldName);
+                        fqFieldName) };
                 }
                 else
                 {
@@ -41,10 +41,10 @@ namespace IL2C.ILConveters
                     }
 
                     var symbolName = decodeContext.PushStack(targetType);
-                    return string.Format(
+                    return new[] { string.Format(
                         "{0} = {1}",
                         symbolName,
-                        fqFieldName);
+                        fqFieldName) };
                 }
             }
             catch (ArgumentException)
@@ -61,7 +61,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldfld;
 
-        public override string Apply(int fieldToken, DecodeContext decodeContext)
+        public override string[] Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
@@ -77,6 +77,18 @@ namespace IL2C.ILConveters
                     {
                         throw new InvalidProgramSequenceException(
                             "Invalid managed reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
+                            decodeContext.ILByteIndex,
+                            siReference.TargetType.FullName,
+                            field.DeclaringType.FullName,
+                            field.Name);
+                    }
+                }
+                else if (siReference.TargetType.IsClass)
+                {
+                    if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid object reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
                             decodeContext.ILByteIndex,
                             siReference.TargetType.FullName,
                             field.DeclaringType.FullName,
@@ -130,10 +142,10 @@ namespace IL2C.ILConveters
 
                 var resultName = decodeContext.PushStack(targetType);
 
-                return string.Format(
+                return new[] { string.Format(
                     "{0} = {1}",
                     resultName,
-                    rightExpression);
+                    rightExpression) };
             }
             catch (ArgumentException)
             {

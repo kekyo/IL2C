@@ -7,7 +7,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stfld;
 
-        public override string Apply(int fieldToken, DecodeContext decodeContext)
+        public override string[] Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
@@ -16,23 +16,37 @@ namespace IL2C.ILConveters
                 var siValue = decodeContext.PopStack();
                 var siReference = decodeContext.PopStack();
 
-                if (siReference.TargetType.IsByRef == false)
+                if (siReference.TargetType.IsByRef)
+                {
+                    var dereferencedType = siReference.TargetType.GetElementType();
+                    if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid managed reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
+                            decodeContext.ILByteIndex,
+                            siReference.TargetType.FullName,
+                            field.DeclaringType.FullName,
+                            field.Name);
+                    }
+                }
+                else if (siReference.TargetType.IsClass)
+                {
+                    if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid object reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
+                            decodeContext.ILByteIndex,
+                            siReference.TargetType.FullName,
+                            field.DeclaringType.FullName,
+                            field.Name);
+                    }
+                }
+                else
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid type at stack: ILByteIndex={0}, StackType={1}",
                         decodeContext.ILByteIndex,
                         siReference.TargetType.FullName);
-                }
-
-                var dereferencedType = siReference.TargetType.GetElementType();
-                if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Invalid managed reference: ILByteIndex={0}, StackType={1}, FieldName={2}.{3}",
-                        decodeContext.ILByteIndex,
-                        siReference.TargetType.FullName,
-                        field.DeclaringType.FullName,
-                        field.Name);
                 }
 
                 var rightExpression = decodeContext.TranslateContext.GetRightExpression(
@@ -46,11 +60,11 @@ namespace IL2C.ILConveters
                         field.FieldType.FullName);
                 }
 
-                return string.Format(
+                return new[] { string.Format(
                     "{0}->{1} = {2}",
                     siReference.SymbolName,
                     field.Name,
-                    rightExpression);
+                    rightExpression) };
             }
             catch (ArgumentException)
             {

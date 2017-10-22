@@ -4,7 +4,7 @@ namespace IL2C.ILConveters
 {
     internal static class StlocConverterUtilities
     {
-        public static string Apply(int localIndex, DecodeContext decodeContext)
+        public static string[] Apply(int localIndex, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
             var localType = decodeContext.Locals[localIndex].LocalType;
@@ -20,10 +20,10 @@ namespace IL2C.ILConveters
                     localIndex);
             }
 
-            return string.Format(
+            return new[] { string.Format(
                 "local{0} = {1}",
                 localIndex,
-                rightExpression);
+                rightExpression) };
         }
     }
 
@@ -31,7 +31,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_0;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(0, decodeContext);
         }
@@ -41,7 +41,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_1;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(1, decodeContext);
         }
@@ -51,7 +51,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_2;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(2, decodeContext);
         }
@@ -61,7 +61,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stloc_3;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(3, decodeContext);
         }

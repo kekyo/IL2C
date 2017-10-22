@@ -8,11 +8,13 @@ namespace IL2C.ILConveters
 {
     internal sealed class NopConverter : InlineNoneConverter
     {
+        private static readonly string[] empty = new string[0];
+
         public override OpCode OpCode => OpCodes.Nop;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
-            return null;
+            return empty;
         }
     }
 
@@ -22,11 +24,11 @@ namespace IL2C.ILConveters
 
         public override bool IsEndOfPath => true;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             if (decodeContext.ReturnType == typeof(void))
             {
-                return "return";
+                return new [] { "return" };
             }
 
             var si = decodeContext.PopStack();
@@ -42,16 +44,16 @@ namespace IL2C.ILConveters
                     returnType.FullName);
             }
 
-            return string.Format(
+            return new[] { string.Format(
                 "return {0}",
-                rightExpression);
+                rightExpression) };
         }
 
         internal sealed class InitobjConverter : InlineTypeConverter
         {
             public override OpCode OpCode => OpCodes.Initobj;
 
-            public override string Apply(int typeToken, DecodeContext decodeContext)
+            public override string[] Apply(int typeToken, DecodeContext decodeContext)
             {
                 try
                 {
@@ -69,10 +71,10 @@ namespace IL2C.ILConveters
 
                     decodeContext.TranslateContext.RegisterIncludeFile("string.h");
 
-                    return string.Format(
+                    return new[] { string.Format(
                         "memset({0}, 0x00, sizeof({1}))",
                         si.SymbolName,
-                        decodeContext.TranslateContext.GetCLanguageTypeName(type));
+                        decodeContext.TranslateContext.GetCLanguageTypeName(type)) };
                 }
                 catch (ArgumentException)
                 {
@@ -88,7 +90,7 @@ namespace IL2C.ILConveters
         {
             public override OpCode OpCode => OpCodes.Newobj;
 
-            public override string Apply(int constructorToken, DecodeContext decodeContext)
+            public override string[] Apply(int constructorToken, DecodeContext decodeContext)
             {
                 try
                 {
@@ -96,11 +98,27 @@ namespace IL2C.ILConveters
                         constructorToken);
                     var type = constructor.DeclaringType;
 
+                    if (type.IsClass == false)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid new object type: ILByteIndex={0}, Token={1:x2}",
+                            decodeContext.ILByteIndex,
+                            constructorToken);
+                    }
+
                     var parameters = constructor.GetParameters();
-                    var siParameters = parameters
-                        .Select(parameter => decodeContext.PopStack())
+                    var pairParameters = parameters
                         .Reverse()
-                        .ToArray();
+                        .Select(parameter => new Utilities.RightExpressionGivenParameter(
+                            parameter.ParameterType, decodeContext.PopStack()))
+                        .Reverse()
+                        .ToList();
+
+                    var thisSymbolName = decodeContext.PushStack(type);
+
+                    pairParameters.Insert(0,
+                        new Utilities.RightExpressionGivenParameter(
+                            type, new SymbolInformation(thisSymbolName, type)));
 
                     decodeContext.TranslateContext.RegisterIncludeFile("stdlib.h");
                     decodeContext.TranslateContext.RegisterIncludeFile("string.h");
@@ -109,11 +127,31 @@ namespace IL2C.ILConveters
                     // memset(p, 0, sizeof(Hoge));
                     // Hoge__ctor(p);
 
-                    //return string.Format(
-                    //    "memset({0}, 0x00, sizeof({1}))",
-                    //    si.SymbolName,
-                    //    decodeContext.TranslateContext.GetCLanguageTypeName(type));
-                    return "TODO:";
+                    var constructorName = Utilities.GetFullMemberName(constructor)
+                        .ManglingSymbolName();
+                    var typeName = decodeContext.TranslateContext.GetCLanguageTypeName(
+                        type);
+                    var dereferencedTypeName = decodeContext.TranslateContext.GetCLanguageTypeName(
+                        type, true);
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        pairParameters.ToArray(), decodeContext);
+
+                    return new[]
+                    {
+                        string.Format(
+                            "{0} = ({1})malloc(sizeof({1}))",
+                            thisSymbolName,
+                            typeName,
+                            dereferencedTypeName),
+                        string.Format(
+                            "memset({0}, 0x00, sizeof({1}))",
+                            thisSymbolName,
+                            dereferencedTypeName),
+                        string.Format(
+                            "{0}({1})",
+                            constructorName,
+                            parameterString)
+                    };
                 }
                 catch (ArgumentException)
                 {
@@ -124,6 +162,5 @@ namespace IL2C.ILConveters
                 }
             }
         }
-
     }
 }

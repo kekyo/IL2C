@@ -10,11 +10,11 @@ namespace IL2C.ILConveters
 
         public override bool IsEndOfPath => true;
 
-        public override string Apply(sbyte operand, DecodeContext decodeContext)
+        public override string[] Apply(sbyte operand, DecodeContext decodeContext)
         {
             var offset = decodeContext.ILByteIndex + operand;
             var labelName = decodeContext.EnqueueNewPath(offset);
-            return string.Format("goto {0}", labelName);
+            return new[] { string.Format("goto {0}", labelName) };
         }
     }
 
@@ -22,7 +22,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brfalse_S;
 
-        public override string Apply(sbyte operand, DecodeContext decodeContext)
+        public override string[] Apply(sbyte operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
@@ -31,10 +31,10 @@ namespace IL2C.ILConveters
 
             if (Utilities.IsNumericPrimitive(si.TargetType))
             {
-                return string.Format(
+                return new[] { string.Format(
                     "if ({0} == 0) goto {1}",
                     si.SymbolName,
-                    labelName);
+                    labelName) };
             }
 
             throw new InvalidOperationException();
@@ -45,7 +45,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brtrue_S;
 
-        public override string Apply(sbyte operand, DecodeContext decodeContext)
+        public override string[] Apply(sbyte operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
@@ -54,10 +54,10 @@ namespace IL2C.ILConveters
 
             if (Utilities.IsNumericPrimitive(si.TargetType))
             {
-                return string.Format(
+                return new[] { string.Format(
                     "if ({0} != 0) goto {1}",
                     si.SymbolName,
-                    labelName);
+                    labelName) };
             }
 
             throw new InvalidOperationException();

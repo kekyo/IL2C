@@ -203,9 +203,9 @@ namespace IL2C
         private struct GeneratedSourceCode
         {
             public readonly Label Label;
-            public readonly string SourceCode;
+            public readonly string[] SourceCode;
 
-            public GeneratedSourceCode(Label label, string sourceCode)
+            public GeneratedSourceCode(Label label, string[] sourceCode)
             {
                 this.Label = label;
                 this.SourceCode = sourceCode;
@@ -283,11 +283,12 @@ namespace IL2C
                     tw.WriteLine("{0}:", labelName);
                 }
 
-                if (entry.SourceCode != null)
+                foreach (var sourceCode in entry.SourceCode)
                 {
                     tw.WriteLine(
                         "{0}{1};",
-                        indent, entry.SourceCode);
+                        indent,
+                        sourceCode);
                 }
             }
 

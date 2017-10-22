@@ -32,8 +32,10 @@ namespace IL2C
                 .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
             if (method.IsStatic == false)
             {
+                var type = method.DeclaringType;
+                var thisType = type.IsValueType ? type.MakeByRefType() : type;
                 parameters = new[] {
-                    new Parameter("__this", method.DeclaringType.MakeByRefType()) }
+                    new Parameter("__this", thisType) }
                     .Concat(parameters);
             }
 
@@ -155,7 +157,40 @@ namespace IL2C
                 initializer);
         }
 
-        public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next)
+        public struct RightExpressionGivenParameter
+        {
+            public readonly Type TargetType;
+            public readonly SymbolInformation SymbolInformation;
+
+            public RightExpressionGivenParameter(Type targetType, SymbolInformation symbolinformation)
+            {
+                this.TargetType = targetType;
+                this.SymbolInformation = symbolinformation;
+            }
+        }
+
+        public static string GetGivenParameterDeclaration(
+            RightExpressionGivenParameter[] parameters,
+            DecodeContext decodeContext)
+        {
+            return string.Join(", ", parameters.Select(entry =>
+            {
+                var rightExpression =
+                    decodeContext.TranslateContext.GetRightExpression(
+                        entry.TargetType, entry.SymbolInformation);
+                if (rightExpression == null)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid parameter type: ILByteIndex={0}, StackType={1}, ParameterType={2}",
+                        decodeContext.ILByteIndex,
+                        entry.SymbolInformation.TargetType.FullName,
+                        entry.TargetType.FullName);
+                }
+                return rightExpression;
+            }));
+        }
+
+    public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next)
             where T : class
         {
             T current = first;

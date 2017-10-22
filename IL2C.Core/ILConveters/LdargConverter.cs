@@ -4,7 +4,7 @@ namespace IL2C.ILConveters
 {
     internal static class LdargConverterUtilities
     {
-        public static string Apply(int parameterIndex, DecodeContext decodeContext)
+        public static string[] Apply(int parameterIndex, DecodeContext decodeContext)
         {
             var parameter = decodeContext.Parameters[parameterIndex];
             var targetType = parameter.ParameterType;
@@ -12,10 +12,10 @@ namespace IL2C.ILConveters
             if (targetType == typeof(bool))
             {
                 var symbolName = decodeContext.PushStack(typeof(int));
-                return string.Format(
+                return new[] { string.Format(
                     "{0} = {1} ? 1 : 0",
                     symbolName,
-                    parameter.Name);
+                    parameter.Name) };
             }
             else
             {
@@ -28,10 +28,10 @@ namespace IL2C.ILConveters
                 }
 
                 var symbolName = decodeContext.PushStack(targetType);
-                return string.Format(
+                return new[] { string.Format(
                     "{0} = {1}",
                     symbolName,
-                    parameter.Name);
+                    parameter.Name) };
             }
         }
     }
@@ -40,7 +40,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldarg_0;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return LdargConverterUtilities.Apply(0, decodeContext);
         }
@@ -50,7 +50,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldarg_1;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return LdargConverterUtilities.Apply(1, decodeContext);
         }
@@ -60,7 +60,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldarg_2;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return LdargConverterUtilities.Apply(2, decodeContext);
         }

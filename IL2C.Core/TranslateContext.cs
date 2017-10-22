@@ -26,7 +26,8 @@ namespace IL2C
         {
             includes.Add(includeFileName);
         }
-        internal string GetCLanguageTypeName(Type type)
+
+        internal string GetCLanguageTypeName(Type type, bool isDereference = false)
         {
             if (type == typeof(void))
             {
@@ -71,10 +72,21 @@ namespace IL2C
             if (type.IsByRef)
             {
                 var dereferencedType = type.GetElementType();
-                return this.GetCLanguageTypeName(dereferencedType) + "*";
+                return isDereference
+                    ? this.GetCLanguageTypeName(dereferencedType)
+                    : this.GetCLanguageTypeName(dereferencedType) + "*";
             }
 
-            return Utilities.GetFullMemberName(type).ManglingSymbolName();
+            if (type.IsClass)
+            {
+                return isDereference
+                    ? Utilities.GetFullMemberName(type).ManglingSymbolName()
+                    : Utilities.GetFullMemberName(type).ManglingSymbolName() + "*";
+            }
+            else
+            {
+                return Utilities.GetFullMemberName(type).ManglingSymbolName();
+            }
         }
 
         internal string GetRightExpression(Type lhsType, SymbolInformation rhs)

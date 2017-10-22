@@ -11,17 +11,17 @@ namespace IL2C
 
         public abstract object DecodeOperand(DecodeContext decodeContext);
 
-        public abstract string Apply(object operand, DecodeContext decodeContext);
+        public abstract string[] Apply(object operand, DecodeContext decodeContext);
     }
 
     internal abstract class ILConverter<T> : ILConverter
     {
-        public sealed override string Apply(object operand, DecodeContext decodeContext)
+        public sealed override string[] Apply(object operand, DecodeContext decodeContext)
         {
             Debug.Assert(operand is T);
             return this.Apply((T)operand, decodeContext);
         }
 
-        public abstract string Apply(T operand, DecodeContext decodeContext);
+        public abstract string[] Apply(T operand, DecodeContext decodeContext);
     }
 }

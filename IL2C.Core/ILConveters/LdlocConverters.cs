@@ -4,7 +4,7 @@ namespace IL2C.ILConveters
 {
     internal static class LdlocConverterUtilities
     {
-        public static string Apply(int localIndex, DecodeContext decodeContext)
+        public static string[] Apply(int localIndex, DecodeContext decodeContext)
         {
             var local = decodeContext.Locals[localIndex];
             var targetType = local.LocalType;
@@ -12,10 +12,10 @@ namespace IL2C.ILConveters
             if (local.LocalType == typeof(bool))
             {
                 var symbolName = decodeContext.PushStack(typeof(int));
-                return string.Format(
+                return new[] { string.Format(
                     "{0} = local{1} ? 1 : 0",
                     symbolName,
-                    localIndex);
+                    localIndex) };
             }
             else
             {
@@ -28,14 +28,14 @@ namespace IL2C.ILConveters
                 }
 
                 var symbolName = decodeContext.PushStack(targetType);
-                return string.Format(
+                return new[] { string.Format(
                     "{0} = local{1}",
                     symbolName,
-                    localIndex);
+                    localIndex) };
             }
         }
 
-        public static string ApplyWithAddress(int localIndex, DecodeContext decodeContext)
+        public static string[] ApplyWithAddress(int localIndex, DecodeContext decodeContext)
         {
             var local = decodeContext.Locals[localIndex];
             var targetType = local.LocalType;
@@ -43,10 +43,10 @@ namespace IL2C.ILConveters
             var managedReferenceType = targetType.MakeByRefType();
                 
             var symbolName = decodeContext.PushStack(managedReferenceType);
-            return string.Format(
+            return new[] { string.Format(
                 "{0} = &local{1}",
                 symbolName,
-                localIndex);
+                localIndex) };
         }
     }
 
@@ -54,7 +54,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_0;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(0, decodeContext);
         }
@@ -64,7 +64,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_1;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(1, decodeContext);
         }
@@ -74,7 +74,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_2;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(2, decodeContext);
         }
@@ -84,7 +84,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloc_3;
 
-        public override string Apply(DecodeContext decodeContext)
+        public override string[] Apply(DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(3, decodeContext);
         }
@@ -94,7 +94,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloca_S;
 
-        public override string Apply(byte localIndex, DecodeContext decodeContext)
+        public override string[] Apply(byte localIndex, DecodeContext decodeContext)
         {
             if (localIndex > 225)
             {

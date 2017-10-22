@@ -2,19 +2,23 @@
 #define __MODULE_il2c_test_target__
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-typedef struct il2c_test_target_Hoge3
+typedef struct il2c_test_target_ValueTypeTestTarget
 {
     int32_t Value2;
-} il2c_test_target_Hoge3;
+} il2c_test_target_ValueTypeTestTarget;
 
-extern int32_t il2c_test_target_Hoge3_Value1;
+extern int32_t il2c_test_target_ValueTypeTestTarget_Value1;
 
-extern int32_t il2c_test_target_Hoge3_GetValue2(il2c_test_target_Hoge3* __this, int32_t a, int32_t b);
-extern int32_t il2c_test_target_Hoge4_Test4(void);
-extern int32_t il2c_test_target_Hoge4_Test5(void);
+extern int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b);
+extern int32_t il2c_test_target_ClassTypeTest_Test4(void);
+extern int32_t il2c_test_target_ClassTypeTest_Test5(void);
+extern int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTypeTestTarget* __this, int32_t a, int32_t b);
+extern int32_t il2c_test_target_ValueTypeTest_Test4(void);
+extern int32_t il2c_test_target_ValueTypeTest_Test5(void);
 extern uint8_t il2c_test_target_Hoge2_Add3(uint8_t a, bool isTwo);
 extern uint16_t il2c_test_target_Hoge2_Add4(uint16_t a, bool isTwo);
 extern int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo);

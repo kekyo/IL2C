@@ -49,9 +49,10 @@ namespace IL2C
 
             twHeader.WriteLine();
 
+            // Output value type and object reference type.
             foreach (var type in
                 from type in assembly.GetTypes()
-                where type.IsValueType
+                where type.IsValueType || type.IsClass
                 select type)
             {
                 ConvertType(
@@ -150,23 +151,30 @@ namespace IL2C
         public static void ConvertType(
             TranslateContext translateContext,
             TextWriter tw,
-            Type type,
+            Type declaredType,
             string indent)
         {
-            if (type.IsValueType && (type.IsPrimitive == false))
+            if (declaredType.IsPrimitive
+                || !(declaredType.IsValueType || declaredType.IsClass))
             {
-                var structName = translateContext.GetCLanguageTypeName(type)
-                    .ManglingSymbolName();
+                return;
+            }
 
-                tw.WriteLine(String.Format(
-                    "typedef struct {0}",
-                    structName));
+            var structName = translateContext.GetCLanguageTypeName(declaredType, true)
+                .ManglingSymbolName();
 
-                tw.WriteLine("{");
+            tw.WriteLine(String.Format(
+                "typedef struct {0}",
+                structName));
 
-                foreach (var field in type.GetFields(
-                    BindingFlags.Public | BindingFlags.NonPublic
-                    | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+            tw.WriteLine("{");
+
+            var fields = declaredType.GetFields(
+                BindingFlags.Public | BindingFlags.NonPublic
+                | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            if (fields.Length >= 1)
+            {
+                foreach (var field in fields)
                 {
                     tw.WriteLine(String.Format(
                         "{0}{1} {2};",
@@ -174,11 +182,17 @@ namespace IL2C
                         translateContext.GetCLanguageTypeName(field.FieldType),
                         field.Name));
                 }
-
-                tw.WriteLine(String.Format(
-                    "}} {0};",
-                    structName));
             }
+            else
+            {
+                tw.WriteLine(String.Format(
+                    "{0}char __dummy[];",
+                    indent));
+            }
+
+            tw.WriteLine(String.Format(
+                "}} {0};",
+                structName));
         }
 
         public static void ConvertMethod(

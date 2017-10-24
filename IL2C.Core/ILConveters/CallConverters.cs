@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -7,7 +8,7 @@ namespace IL2C.ILConveters
 {
     internal static class CallConverterUtilities
     {
-        public static string[] Apply(MethodInfo method, DecodeContext decodeContext)
+        public static string[] Apply(MethodBase method, DecodeContext decodeContext)
         {
             var parameters = method.GetSafeParameters();
             var pairParameters = parameters
@@ -17,29 +18,40 @@ namespace IL2C.ILConveters
                 .Reverse()
                 .ToArray();
 
-            // TODO: Support void
-
-            var targetType = method.ReturnType;
-            if ((targetType == typeof(byte))
-                || (targetType == typeof(sbyte))
-                || (targetType == typeof(short))
-                || (targetType == typeof(ushort)))
-            {
-                targetType = typeof(int);
-            }
-
-            var resultName = decodeContext.PushStack(targetType);
-
             var methodName = Utilities.GetFullMemberName(method);
             var functionName = methodName.ManglingSymbolName();
             var parameterString =
                 Utilities.GetGivenParameterDeclaration(pairParameters, decodeContext);
 
-            return new[] { string.Format(
-                "{0} = {1}({2})",
-                resultName,
-                functionName,
-                parameterString) };
+            var mi = method as MethodInfo;
+            var targetType = mi?.ReturnType ?? typeof(void);
+            if (targetType != typeof(void))
+            {
+                if ((targetType == typeof(byte))
+                    || (targetType == typeof(sbyte))
+                    || (targetType == typeof(short))
+                    || (targetType == typeof(ushort)))
+                {
+                    targetType = typeof(int);
+                }
+
+                var resultName = decodeContext.PushStack(targetType);
+
+                return new[] { string.Format(
+                    "{0} = {1}({2})",
+                    resultName,
+                    functionName,
+                    parameterString) };
+            }
+            else
+            {
+                Debug.Assert(method is ConstructorInfo);
+
+                return new[] { string.Format(
+                    "{0}({1})",
+                    functionName,
+                    parameterString) };
+            }
         }
     }
 
@@ -51,7 +63,7 @@ namespace IL2C.ILConveters
         {
             try
             {
-                var method = (MethodInfo)decodeContext.ResolveMethod(methodToken);
+                var method = decodeContext.ResolveMethod(methodToken);
 
                 return CallConverterUtilities.Apply(method, decodeContext);
             }

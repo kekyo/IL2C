@@ -1,5 +1,10 @@
 ﻿#include "il2c_test_target.h"
 
+void System_Object__ctor(System_Object* __this)
+{
+    return;
+}
+
 int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 123;
 
 
@@ -22,6 +27,17 @@ int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTyp
 L_0000:
     __stack0_int32_t = local0;
     return __stack0_int32_t;
+}
+
+
+void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this)
+{
+
+    il2c_test_target_ClassTypeTestTarget* __stack0_il2c_test_target_ClassTypeTestTarget_reference;
+
+    __stack0_il2c_test_target_ClassTypeTestTarget_reference = __this;
+    System_Object__ctor(&__stack0_il2c_test_target_ClassTypeTestTarget_reference->__base);
+    return;
 }
 
 
@@ -80,6 +96,17 @@ int32_t il2c_test_target_ClassTypeTest_Test5(void)
 L_0000:
     __stack0_int32_t = local2;
     return __stack0_int32_t;
+}
+
+
+void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this)
+{
+
+    il2c_test_target_ClassTypeTest* __stack0_il2c_test_target_ClassTypeTest_reference;
+
+    __stack0_il2c_test_target_ClassTypeTest_reference = __this;
+    System_Object__ctor(__stack0_il2c_test_target_ClassTypeTest_reference);
+    return;
 }
 
 
@@ -160,6 +187,17 @@ L_0000:
 }
 
 
+void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this)
+{
+
+    il2c_test_target_ValueTypeTest* __stack0_il2c_test_target_ValueTypeTest_reference;
+
+    __stack0_il2c_test_target_ValueTypeTest_reference = __this;
+    System_Object__ctor(__stack0_il2c_test_target_ValueTypeTest_reference);
+    return;
+}
+
+
 uint8_t il2c_test_target_Hoge2_Add3(uint8_t a, bool isTwo)
 {
     uint8_t local0;
@@ -210,6 +248,17 @@ L_0002:
 }
 
 
+void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
+{
+
+    il2c_test_target_Hoge2* __stack0_il2c_test_target_Hoge2_reference;
+
+    __stack0_il2c_test_target_Hoge2_reference = __this;
+    System_Object__ctor(__stack0_il2c_test_target_Hoge2_reference);
+    return;
+}
+
+
 int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
 {
     int32_t local0;
@@ -257,5 +306,16 @@ L_0001:
 L_0002:
     __stack0_int64_t = local0;
     return __stack0_int64_t;
+}
+
+
+void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
+{
+
+    il2c_test_target_Hoge1* __stack0_il2c_test_target_Hoge1_reference;
+
+    __stack0_il2c_test_target_Hoge1_reference = __this;
+    System_Object__ctor(__stack0_il2c_test_target_Hoge1_reference);
+    return;
 }
 

@@ -82,16 +82,21 @@ namespace IL2C
             foreach (var method in
                 from type in assembly.GetTypes()
                 where type.IsClass || type.IsValueType
-                from method in type.GetMethods(
-                    BindingFlags.Public |
-                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                from method in type.GetMembers(
+                    BindingFlags.Public | BindingFlags.NonPublic
+                    | BindingFlags.Static | BindingFlags.Instance
+                    | BindingFlags.DeclaredOnly)
+                    .OfType<MethodBase>()
+                where (method != null)
+                    && ((method is MethodInfo) || !method.IsStatic)
                 select method)
             {
                 var methodName = Utilities.GetFullMemberName(method);
 
+                var mi = method as MethodInfo;
                 var functionPrototype = Utilities.GetFunctionPrototypeString(
                     methodName,
-                    method.ReturnType,
+                    mi?.ReturnType ?? typeof(void),
                     method.GetSafeParameters(),
                     translateContext);
 
@@ -133,9 +138,13 @@ namespace IL2C
             foreach (var method in
                 from type in assembly.GetTypes()
                 where type.IsClass || type.IsValueType
-                from method in type.GetMethods(
-                    BindingFlags.Public | BindingFlags.NonPublic |
-                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                from method in type.GetMembers(
+                    BindingFlags.Public | BindingFlags.NonPublic
+                    | BindingFlags.Static | BindingFlags.Instance
+                    | BindingFlags.DeclaredOnly)
+                    .OfType<MethodBase>()
+                where (method != null) 
+                    && ((method is MethodInfo) || !method.IsStatic)
                 select method)
             {
                 ConvertMethod(
@@ -198,17 +207,18 @@ namespace IL2C
         public static void ConvertMethod(
             TranslateContext translateContext,
             TextWriter tw,
-            MethodInfo method,
+            MethodBase method,
             string indent)
         {
             var methodName = Utilities.GetFullMemberName(method);
+            var mi = method as MethodInfo;
 
             InternalConvert(
                 translateContext,
                 tw,
                 method.Module,
                 methodName,
-                method.ReturnType,
+                mi?.ReturnType ?? typeof(void),
                 method.GetSafeParameters(),
                 method.GetMethodBody(),
                 indent);

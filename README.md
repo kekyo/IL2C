@@ -86,6 +86,7 @@ TODO: Writing...
 | call family | Partial supported | M3
 | ret | Supported | M1
 | initobj | Supported | M3
+| newobj | Partial supported |
 
 TODO:
 
@@ -112,20 +113,23 @@ TODO:
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| System.Object |
+| System.Object | Partial supported |
+| System.ValueType |
 | System.String |
 | System.Decimal |
 | System.Guid |
 | Value types | Partial supported | M3
-| Class types |
+| Class types | Partial supported |
 | Managed reference | Partial supported | M3
 | Unmanaged pointer |
 | Enum types |
 | Delegate types |
 | Interface types |
 | Nested types |
-| Class inherits |
+| Class inherits | Partial supported |
 | Interface implements |
+| Array types |
+| Multi dimensional array types |
 | Closed generic types |
 | Open generic types | (not support) | -
 
@@ -140,6 +144,9 @@ TODO:
 | Virtual method |
 | Interop method (extern static) |
 | Internal method (internal call) |
+| Constructor | Partial supported |
+| Constructor (ValueType) | Partial supported | M3
+| Type initializer |
 | Static property |
 | Instance property |
 | Static event |

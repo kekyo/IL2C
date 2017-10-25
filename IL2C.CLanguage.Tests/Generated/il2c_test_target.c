@@ -1,10 +1,5 @@
 ﻿#include "il2c_test_target.h"
 
-void System_Object__ctor(System_Object* __this)
-{
-    return;
-}
-
 int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 123;
 
 
@@ -36,7 +31,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
     il2c_test_target_ClassTypeTestTarget* __stack0_il2c_test_target_ClassTypeTestTarget_reference;
 
     __stack0_il2c_test_target_ClassTypeTestTarget_reference = __this;
-    System_Object__ctor(&__stack0_il2c_test_target_ClassTypeTestTarget_reference->__base);
+    System_Object__ctor((System_Object*)__stack0_il2c_test_target_ClassTypeTestTarget_reference);
     return;
 }
 
@@ -50,7 +45,7 @@ int32_t il2c_test_target_ClassTypeTest_Test4(void)
     int32_t __stack0_int32_t;
     int32_t __stack1_int32_t;
 
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = (il2c_test_target_ClassTypeTestTarget*)malloc(sizeof(il2c_test_target_ClassTypeTestTarget*));
+    __stack0_il2c_test_target_ClassTypeTestTarget_reference = (il2c_test_target_ClassTypeTestTarget*)malloc(sizeof(il2c_test_target_ClassTypeTestTarget));
     memset(__stack0_il2c_test_target_ClassTypeTestTarget_reference, 0x00, sizeof(il2c_test_target_ClassTypeTestTarget));
     il2c_test_target_ClassTypeTestTarget__ctor(__stack0_il2c_test_target_ClassTypeTestTarget_reference);
     local0 = __stack0_il2c_test_target_ClassTypeTestTarget_reference;
@@ -78,7 +73,7 @@ int32_t il2c_test_target_ClassTypeTest_Test5(void)
     int32_t __stack1_int32_t;
     int32_t __stack2_int32_t;
 
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = (il2c_test_target_ClassTypeTestTarget*)malloc(sizeof(il2c_test_target_ClassTypeTestTarget*));
+    __stack0_il2c_test_target_ClassTypeTestTarget_reference = (il2c_test_target_ClassTypeTestTarget*)malloc(sizeof(il2c_test_target_ClassTypeTestTarget));
     memset(__stack0_il2c_test_target_ClassTypeTestTarget_reference, 0x00, sizeof(il2c_test_target_ClassTypeTestTarget));
     il2c_test_target_ClassTypeTestTarget__ctor(__stack0_il2c_test_target_ClassTypeTestTarget_reference);
     local0 = __stack0_il2c_test_target_ClassTypeTestTarget_reference;
@@ -105,7 +100,7 @@ void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this
     il2c_test_target_ClassTypeTest* __stack0_il2c_test_target_ClassTypeTest_reference;
 
     __stack0_il2c_test_target_ClassTypeTest_reference = __this;
-    System_Object__ctor(__stack0_il2c_test_target_ClassTypeTest_reference);
+    System_Object__ctor((System_Object*)__stack0_il2c_test_target_ClassTypeTest_reference);
     return;
 }
 
@@ -193,7 +188,7 @@ void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this
     il2c_test_target_ValueTypeTest* __stack0_il2c_test_target_ValueTypeTest_reference;
 
     __stack0_il2c_test_target_ValueTypeTest_reference = __this;
-    System_Object__ctor(__stack0_il2c_test_target_ValueTypeTest_reference);
+    System_Object__ctor((System_Object*)__stack0_il2c_test_target_ValueTypeTest_reference);
     return;
 }
 
@@ -254,7 +249,7 @@ void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
     il2c_test_target_Hoge2* __stack0_il2c_test_target_Hoge2_reference;
 
     __stack0_il2c_test_target_Hoge2_reference = __this;
-    System_Object__ctor(__stack0_il2c_test_target_Hoge2_reference);
+    System_Object__ctor((System_Object*)__stack0_il2c_test_target_Hoge2_reference);
     return;
 }
 
@@ -315,7 +310,7 @@ void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
     il2c_test_target_Hoge1* __stack0_il2c_test_target_Hoge1_reference;
 
     __stack0_il2c_test_target_Hoge1_reference = __this;
-    System_Object__ctor(__stack0_il2c_test_target_Hoge1_reference);
+    System_Object__ctor((System_Object*)__stack0_il2c_test_target_Hoge1_reference);
     return;
 }
 

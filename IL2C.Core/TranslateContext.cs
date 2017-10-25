@@ -15,6 +15,8 @@ namespace IL2C
         public TranslateContext(Assembly assembly)
         {
             this.assembly = assembly;
+
+            includes.Add("il2c.h");
         }
 
         public IEnumerable<string> EnumerateRequiredIncludeFileNames()
@@ -91,9 +93,20 @@ namespace IL2C
 
         internal string GetRightExpression(Type lhsType, SymbolInformation rhs)
         {
-            if (lhsType.IsAssignableFrom(rhs.TargetType))
+            if (lhsType == rhs.TargetType)
             {
                 return rhs.SymbolName;
+            }
+
+            if (lhsType.IsAssignableFrom(rhs.TargetType))
+            {
+                Debug.Assert(lhsType.IsClass);
+                Debug.Assert(rhs.TargetType.IsClass);
+
+                return String.Format(
+                    "({0}){1}",
+                    this.GetCLanguageTypeName(lhsType),
+                    rhs.SymbolName);
             }
 
             if (Utilities.IsNumericPrimitive(rhs.TargetType))

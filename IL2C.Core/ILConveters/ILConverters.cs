@@ -116,6 +116,7 @@ namespace IL2C.ILConveters
 
                     var thisSymbolName = decodeContext.PushStack(type);
 
+                    // Insert this reference.
                     pairParameters.Insert(0,
                         new Utilities.RightExpressionGivenParameter(
                             type, new SymbolInformation(thisSymbolName, type)));
@@ -139,7 +140,7 @@ namespace IL2C.ILConveters
                     return new[]
                     {
                         string.Format(
-                            "{0} = ({1})malloc(sizeof({1}))",
+                            "{0} = ({1})malloc(sizeof({2}))",
                             thisSymbolName,
                             typeName,
                             dereferencedTypeName),

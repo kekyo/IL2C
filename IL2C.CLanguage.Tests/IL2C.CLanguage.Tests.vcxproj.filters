@@ -29,5 +29,8 @@
     <ClInclude Include="Generated\il2c_test_target.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="il2c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

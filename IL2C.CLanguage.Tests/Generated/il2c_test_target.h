@@ -1,6 +1,7 @@
 ﻿#ifndef __MODULE_il2c_test_target__
 #define __MODULE_il2c_test_target__
 
+#include <il2c.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +9,6 @@
 
 typedef struct il2c_test_target_ClassTypeTestTarget
 {
-    System_Object __base;
     int32_t Value2;
 } il2c_test_target_ClassTypeTestTarget;
 

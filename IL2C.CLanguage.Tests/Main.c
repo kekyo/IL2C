@@ -4,6 +4,12 @@
 
 int main()
 {
+    int32_t result6 = il2c_test_target_ClassTypeTest_Test4();
+    printf("result6 = %d\n", result6);
+
+    int32_t result7 = il2c_test_target_ClassTypeTest_Test5();
+    printf("result7 = %d\n", result7);
+
     il2c_test_target_ValueTypeTestTarget hoge3;
     hoge3.Value2 = 789;
     int32_t result4 = il2c_test_target_ValueTypeTestTarget_GetValue2(&hoge3, 123, 456);

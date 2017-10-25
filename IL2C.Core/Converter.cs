@@ -178,25 +178,30 @@ namespace IL2C
 
             tw.WriteLine("{");
 
-            var fields = declaredType.GetFields(
-                BindingFlags.Public | BindingFlags.NonPublic
-                | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            if (fields.Length >= 1)
+            if (declaredType.IsClass)
             {
-                foreach (var field in fields)
-                {
-                    tw.WriteLine(String.Format(
-                        "{0}{1} {2};",
-                        indent,
-                        translateContext.GetCLanguageTypeName(field.FieldType),
-                        field.Name));
-                }
+                tw.WriteLine(String.Format("{0}char __dummy;", indent));
             }
-            else
+
+            var stopType = declaredType.IsValueType
+                ? typeof(ValueType) 
+                : typeof(object);
+
+            var fields = declaredType
+                .Traverse(type => type.BaseType)
+                .TakeWhile(type => type != stopType)
+                .Reverse()
+                .SelectMany(type => type.GetFields(
+                    BindingFlags.Public | BindingFlags.NonPublic
+                    | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                .ToArray();
+            foreach (var field in fields)
             {
                 tw.WriteLine(String.Format(
-                    "{0}char __dummy[];",
-                    indent));
+                    "{0}{1} {2};",
+                    indent,
+                    translateContext.GetCLanguageTypeName(field.FieldType),
+                    field.Name));
             }
 
             tw.WriteLine(String.Format(

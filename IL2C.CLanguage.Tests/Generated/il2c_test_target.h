@@ -9,12 +9,13 @@
 
 typedef struct il2c_test_target_ClassTypeTestTarget
 {
+    char __dummy;
     int32_t Value2;
 } il2c_test_target_ClassTypeTestTarget;
 
 typedef struct il2c_test_target_ClassTypeTest
 {
-    char __dummy[];
+    char __dummy;
 } il2c_test_target_ClassTypeTest;
 
 typedef struct il2c_test_target_ValueTypeTestTarget
@@ -24,17 +25,17 @@ typedef struct il2c_test_target_ValueTypeTestTarget
 
 typedef struct il2c_test_target_ValueTypeTest
 {
-    char __dummy[];
+    char __dummy;
 } il2c_test_target_ValueTypeTest;
 
 typedef struct il2c_test_target_Hoge2
 {
-    char __dummy[];
+    char __dummy;
 } il2c_test_target_Hoge2;
 
 typedef struct il2c_test_target_Hoge1
 {
-    char __dummy[];
+    char __dummy;
 } il2c_test_target_Hoge1;
 
 extern int32_t il2c_test_target_ValueTypeTestTarget_Value1;

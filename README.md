@@ -2,7 +2,12 @@
 
 ## What's this?
 
-* IL2C is a project for step-by-step designing and video recording.
+* IL2C is a translator implementation of .NET intermediate language to C language, and the project for step-by-step designing and video recording.
+
+* IL2C's implementation priorities:
+  * Better predictability for runtime cost.
+  * Better code portability.
+
 * Public YouTube recorded videos: ["Making archive IL2C play list"](http://bit.ly/2xtu4MH)
   * "How to create IL2C or same tool of IL2CPP? This video contains pure design process through concept and details."
 

@@ -35,8 +35,50 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
     return;
 }
 
+typedef struct ExecutionContext
+{
+    ExecutionContext* previous;
+    void** target;
+} ExecutionContext;
 
-int32_t il2c_test_target_ClassTypeTest_Test4(void)
+int32_t il2c_test_target_ClassTypeTest_Test4();
+
+
+ExecutionContext* currentContext;
+
+int main()
+{
+    ExecutionContext rootContext;
+    memset(&rootContext, 0, sizeof rootContext);
+
+    currentContext = &rootContext;
+
+    il2c_test_target_ClassTypeTest_Test4();
+
+    /////////////////////////////////////
+    // Execute mark phase
+
+    // TODO: clear gcmark
+
+    // Mark phase
+    ExecutionContext* current = currentContext;
+    while (current != NULL)
+    {
+        uint8_t** target = (uint8_t**)current->target;
+        Common* p = (Common*)(*target - sizeof(Common));
+        if (p != NULL)
+        {
+            // Mark this instance.
+            p->__gcmark = 1;
+        }
+
+        current = current->previous;
+    }
+
+    // TODO: sweep
+}
+
+int32_t il2c_test_target_ClassTypeTest_Test4()
 {
     il2c_test_target_ClassTypeTestTarget* local0;
     int32_t local1;
@@ -45,10 +87,28 @@ int32_t il2c_test_target_ClassTypeTest_Test4(void)
     int32_t __stack0_int32_t;
     int32_t __stack1_int32_t;
 
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = (il2c_test_target_ClassTypeTestTarget*)malloc(sizeof(il2c_test_target_ClassTypeTestTarget));
-    memset(__stack0_il2c_test_target_ClassTypeTestTarget_reference, 0x00, sizeof(il2c_test_target_ClassTypeTestTarget));
+    ExecutionContext* previous = currentContext;
+
+    ExecutionContext local0Context;
+    ExecutionContext __stack0Context;
+
+    local0Context.target = &local0;
+    local0Context.previous = currentContext;
+    currentContext = &local0Context;
+
+    __stack0Context.target = &__stack0_il2c_test_target_ClassTypeTestTarget_reference;
+    __stack0Context.previous = currentContext;
+    currentContext = &__stack0Context;
+
+    uint8_t* p = (uint8_t*)malloc(
+        sizeof(Common) + sizeof(il2c_test_target_ClassTypeTestTarget));
+    memset(p, 0x00, sizeof(Common) + sizeof(il2c_test_target_ClassTypeTestTarget));
+    __stack0_il2c_test_target_ClassTypeTestTarget_reference =
+        (il2c_test_target_ClassTypeTestTarget*)(p + sizeof(Common));
     il2c_test_target_ClassTypeTestTarget__ctor(__stack0_il2c_test_target_ClassTypeTestTarget_reference);
+
     local0 = __stack0_il2c_test_target_ClassTypeTestTarget_reference;
+
     __stack0_il2c_test_target_ClassTypeTestTarget_reference = local0;
     __stack1_int32_t = 456;
     __stack0_il2c_test_target_ClassTypeTestTarget_reference->Value2 = __stack1_int32_t;
@@ -58,6 +118,9 @@ int32_t il2c_test_target_ClassTypeTest_Test4(void)
     goto L_0000;
 L_0000:
     __stack0_int32_t = local1;
+
+    currentContext = previous;
+
     return __stack0_int32_t;
 }
 

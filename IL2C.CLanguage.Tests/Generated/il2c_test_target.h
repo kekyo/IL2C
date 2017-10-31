@@ -7,9 +7,13 @@
 #include <string.h>
 #include <stdbool.h>
 
+typedef struct Common
+{
+    char __gcmark;
+} Common;
+
 typedef struct il2c_test_target_ClassTypeTestTarget
 {
-    char __dummy;
     int32_t Value2;
 } il2c_test_target_ClassTypeTestTarget;
 

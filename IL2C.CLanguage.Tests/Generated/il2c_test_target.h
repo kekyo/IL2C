@@ -7,14 +7,25 @@
 #include <string.h>
 #include <stdbool.h>
 
+typedef struct ExecutionContext
+{
+    ExecutionContext* previous;
+    uint8_t count;
+    void** target[1];
+} ExecutionContext;
+
 typedef struct Common
 {
+    ExecutionContext* previous;
+    uint8_t count;
+    void** target[1];
     char __gcmark;
 } Common;
 
 typedef struct il2c_test_target_ClassTypeTestTarget
 {
     int32_t Value2;
+    System_Uri* OR1;
 } il2c_test_target_ClassTypeTestTarget;
 
 typedef struct il2c_test_target_ClassTypeTest
@@ -25,6 +36,7 @@ typedef struct il2c_test_target_ClassTypeTest
 typedef struct il2c_test_target_ValueTypeTestTarget
 {
     int32_t Value2;
+    System_Uri* OR1;
 } il2c_test_target_ValueTypeTestTarget;
 
 typedef struct il2c_test_target_ValueTypeTest

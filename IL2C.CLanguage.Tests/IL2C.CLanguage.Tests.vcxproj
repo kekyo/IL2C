@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Generated\il2c_test_target.c" />
+    <ClCompile Include="il2c.c" />
     <ClCompile Include="Main.c" />
   </ItemGroup>
   <ItemGroup>

@@ -2,62 +2,39 @@
 #define __MODULE_il2c_test_target__
 
 #include <il2c.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-typedef struct ExecutionContext
-{
-    ExecutionContext* previous;
-    uint8_t count;
-    void** target[1];
-} ExecutionContext;
-
-typedef struct Common
-{
-    ExecutionContext* previous;
-    uint8_t count;
-    void** target[1];
-    char __gcmark;
-} Common;
 
 typedef struct il2c_test_target_ClassTypeTestTarget
 {
     int32_t Value2;
-    System_Uri* OR1;
+    struct il2c_test_target_ClassTypeTestTarget* OR2;
 } il2c_test_target_ClassTypeTestTarget;
+#define __il2c_test_target_ClassTypeTestTarget_SIZEOF__() (sizeof(il2c_test_target_ClassTypeTestTarget))
 
-typedef struct il2c_test_target_ClassTypeTest
-{
-    char __dummy;
-} il2c_test_target_ClassTypeTest;
+typedef struct il2c_test_target_ClassTypeTest il2c_test_target_ClassTypeTest;
+#define __il2c_test_target_ClassTypeTest_SIZEOF__() (0)
 
 typedef struct il2c_test_target_ValueTypeTestTarget
 {
     int32_t Value2;
-    System_Uri* OR1;
 } il2c_test_target_ValueTypeTestTarget;
+#define __il2c_test_target_ValueTypeTestTarget_SIZEOF__() (sizeof(il2c_test_target_ValueTypeTestTarget))
 
-typedef struct il2c_test_target_ValueTypeTest
-{
-    char __dummy;
-} il2c_test_target_ValueTypeTest;
+typedef struct il2c_test_target_ValueTypeTest il2c_test_target_ValueTypeTest;
+#define __il2c_test_target_ValueTypeTest_SIZEOF__() (0)
 
-typedef struct il2c_test_target_Hoge2
-{
-    char __dummy;
-} il2c_test_target_Hoge2;
+typedef struct il2c_test_target_Hoge2 il2c_test_target_Hoge2;
+#define __il2c_test_target_Hoge2_SIZEOF__() (0)
 
-typedef struct il2c_test_target_Hoge1
-{
-    char __dummy;
-} il2c_test_target_Hoge1;
+typedef struct il2c_test_target_Hoge1 il2c_test_target_Hoge1;
+#define __il2c_test_target_Hoge1_SIZEOF__() (0)
 
 extern int32_t il2c_test_target_ValueTypeTestTarget_Value1;
 
 extern int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b);
 extern void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this);
+extern void __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__(void* pReference);
+extern void __il2c_test_target_ClassTypeTestTarget_NEW__(il2c_test_target_ClassTypeTestTarget** ppReference);
+
 extern int32_t il2c_test_target_ClassTypeTest_Test4(void);
 extern int32_t il2c_test_target_ClassTypeTest_Test5(void);
 extern void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this);

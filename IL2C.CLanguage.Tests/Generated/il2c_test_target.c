@@ -1,7 +1,6 @@
 ﻿#include "il2c_test_target.h"
 
 int32_t il2c_test_target_ValueTypeTestTarget_Value1;
-System_Uri* il2c_test_target_ClassTypeTestTarget_OR1 = new System_Uri("...");
 
 
 
@@ -29,80 +28,35 @@ L_0000:
 
 void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this)
 {
-
     il2c_test_target_ClassTypeTestTarget* __stack0_il2c_test_target_ClassTypeTestTarget_reference;
 
     __stack0_il2c_test_target_ClassTypeTestTarget_reference = __this;
+
+    // TODO: omit call System.Object ctor
     System_Object__ctor((System_Object*)__stack0_il2c_test_target_ClassTypeTestTarget_reference);
     return;
 }
 
-int32_t il2c_test_target_ClassTypeTest_Test4();
-
-
-ExecutionContext* currentContext;
-
-void mark_and_sweep()
+// RUNTIME CODE: MARK_HANDLER
+void __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
-    /////////////////////////////////////
-    // Execute mark phase
+    __TRY_MARK_FROM_HANDLER__(((il2c_test_target_ClassTypeTestTarget*)pReference)->OR2);
 
-    // TODO: clear gcmark
-
-    // Mark phase
-    ExecutionContext* current = currentContext;
-    while (current != NULL)
-    {
-        const uint8_t count = current->count;
-        for (uint8_t index = 0; index < count; index++)
-        {
-            uint8_t** target = (uint8_t**)(current->target[index]);
-            Common* p = (Common*)(*target - sizeof(Common));
-            if (p != NULL)
-            {
-                // Mark this instance.
-                p->__gcmark = 1;
-
-                // TODO: recursive mark
-            }
-        }
-
-        current = current->previous;
-    }
-
-    // TODO: sweep
+    // TODO: try tailcall?
+    // TODO: omit call System.Object handler
+    __System_Object_MARK_HANDLER__(pReference);
 }
 
-void initialize_GC()
+// RUNTIME CODE: NEW
+void __il2c_test_target_ClassTypeTestTarget_NEW__(il2c_test_target_ClassTypeTestTarget** ppReference)
 {
-    ExecutionContext rootContext;
-    memset(&rootContext, 0, sizeof rootContext);
-
-    currentContext = &rootContext;
-
-    // Phase 1: Type initializing
-    il2c_test_target_ClassTypeTestTarget_Value1 = 0;
-    il2c_test_target_ClassTypeTestTarget_OR1 = NULL;
-
-    il2c_test_target_ClassTypeTestTarget__cctor();
-
-    // Phase 2: Chain object reference
-    ExecutionContext globalContext;
-    globalContext.count = 1;
-    globalContext.target[0] = &il2c_test_target_ClassTypeTestTarget_OR1;
-
-    globalContext.previous = currentContext;
-    currentContext = &globalContext;
+    __gc_get_uninitialized_object__(
+        (void**)ppReference,
+        __il2c_test_target_ClassTypeTestTarget_SIZEOF__(),
+        __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__);
+    il2c_test_target_ClassTypeTestTarget__ctor(*ppReference);
 }
 
-int main()
-{
-    initialize_GC();
-
-    il2c_test_target_ClassTypeTest_Test4();
-
-    mark_and_sweep();
-}
 
 int32_t il2c_test_target_ClassTypeTest_Test4()
 {
@@ -113,31 +67,28 @@ int32_t il2c_test_target_ClassTypeTest_Test4()
     int32_t __stack0_int32_t;
     int32_t __stack1_int32_t;
 
-    struct
+    ///////////////////////////////////////////
+    // RUNTIME CODE: FRAME
+
+    struct /* EXECUTION_FRAME__ */
     {
-        void* previous;
-        uint8_t count;
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
         il2c_test_target_ClassTypeTestTarget** plocal0;
         il2c_test_target_ClassTypeTestTarget** __pstack0;
-    } functionContext;
+    } __execution_frame__;
 
-    functionContext.count = 2;
-    functionContext.plocal0 = &local0;
-    functionContext.__pstack0 = &__stack0_il2c_test_target_ClassTypeTestTarget_reference;
+    __execution_frame__.targetCount = 2;
+    __execution_frame__.plocal0 = &local0;
+    __execution_frame__.__pstack0 = &__stack0_il2c_test_target_ClassTypeTestTarget_reference;
 
-    functionContext.previous = currentContext;
-    currentContext = (ExecutionContext*)&functionContext;
+    __gc_link_execution_frame__(&__execution_frame__);
+
+    ///////////////////////////////////////////
 
     // IL Body
 
-    // newobj
-    uint8_t* p = (uint8_t*)malloc(
-        sizeof(Common) + sizeof(il2c_test_target_ClassTypeTestTarget));
-    memset(p, 0x00, sizeof(Common) + sizeof(il2c_test_target_ClassTypeTestTarget));
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference =
-        (il2c_test_target_ClassTypeTestTarget*)(p + sizeof(Common));
-    il2c_test_target_ClassTypeTestTarget__ctor(__stack0_il2c_test_target_ClassTypeTestTarget_reference);
-
+    __il2c_test_target_ClassTypeTestTarget_NEW__(&__stack0_il2c_test_target_ClassTypeTestTarget_reference);
 
     local0 = __stack0_il2c_test_target_ClassTypeTestTarget_reference;
 
@@ -151,7 +102,7 @@ int32_t il2c_test_target_ClassTypeTest_Test4()
 L_0000:
     __stack0_int32_t = local1;
 
-    currentContext = functionContext.previous;
+    __gc_unlink_execution_frame__(&__execution_frame__);
 
     return __stack0_int32_t;
 }
@@ -232,19 +183,6 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
     int32_t __stack0_int32_t;
     int32_t __stack1_int32_t;
 
-    struct
-    {
-        void* previous;
-        uint8_t count;
-        System_Uri** target0;
-    } functionContext;
-
-    functionContext.count = 1;
-    functionContext.target0 = &local0.OR1;
-
-    functionContext.previous = currentContext;
-    currentContext = (ExecutionContext*)&functionContext;
-
     // IL Body
 
     // initobj
@@ -260,8 +198,6 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
     goto L_0000;
 L_0000:
     __stack0_int32_t = local1;
-
-    currentContext = functionContext.previous;
 
     return __stack0_int32_t;
 }

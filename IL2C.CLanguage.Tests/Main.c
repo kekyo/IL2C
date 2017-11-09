@@ -4,6 +4,8 @@
 
 int main()
 {
+    __gc_initialize__();
+
     int32_t result6 = il2c_test_target_ClassTypeTest_Test4();
     printf("result6 = %d\n", result6);
 

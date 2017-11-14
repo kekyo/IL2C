@@ -122,7 +122,7 @@ namespace IL2C.ILConveters
                             type, new SymbolInformation(thisSymbolName, type)));
 
                     var dereferencedTypeName = decodeContext.TranslateContext.GetCLanguageTypeName(
-                        type, true);
+                        type, TypeNameFlags.Dereferenced);
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters.ToArray(), decodeContext);
 

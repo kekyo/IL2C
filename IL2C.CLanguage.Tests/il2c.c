@@ -1,3 +1,7 @@
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <il2c.h>
 
 #define GCALLOC(size) malloc(size)
@@ -89,6 +93,14 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
     ((__EXECUTION_FRAME__*)pNewFrame)->pNext = g_pBeginFrame__;
     g_pBeginFrame__ = pNewFrame;
 
+#ifdef _DEBUG
+    __EXECUTION_FRAME__* p = pNewFrame;
+    for (uint8_t index = 0; index < p->targetCount; index++)
+    {
+        assert(*(p->pTargets[index]) == NULL);
+    }
+#endif
+
     assert(g_pTerminator == NULL);
 }
 
@@ -107,6 +119,8 @@ void __gc_clear_gcmark__()
 {
     // Clear header marks.
     __REF_HEADER__* pCurrentHeader = g_pBeginHeader__;
+    assert(pCurrentHeader != NULL);
+
     while (pCurrentHeader != NULL)
     {
         pCurrentHeader->gcMark = GCMARK_NOMARK;
@@ -149,6 +163,7 @@ void __gc_mark_gcmark__()
 void __gc_sweep_garbage__()
 {
     // Sweep garbage if gcmark isn't marked.
+    assert(g_pBeginHeader__ != NULL);
     __REF_HEADER__** ppLastNext = &g_pBeginHeader__->pNext;
     assert(ppLastNext != NULL);
 
@@ -182,8 +197,8 @@ void __gc_initialize__()
 {
     assert(g_pTerminator == NULL);
 
-    g_pBeginFrame__ = (__EXECUTION_FRAME__*)&g_pTerminator;
-    g_pBeginHeader__ = (__REF_HEADER__*)&g_pTerminator;
+    g_pBeginFrame__ = (__EXECUTION_FRAME__*)g_pTerminator;
+    g_pBeginHeader__ = (__REF_HEADER__*)g_pTerminator;
 }
 
 /////////////////////////////////////////////////////////////

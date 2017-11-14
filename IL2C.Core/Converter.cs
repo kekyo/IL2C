@@ -45,39 +45,66 @@ namespace IL2C
                 twHeader.WriteLine("#include <{0}>", fileName);
             }
 
-            twHeader.WriteLine();
-            twHeader.WriteLine("#ifdef __cplusplus");
-            twHeader.WriteLine("extern \"C\" {");
-            twHeader.WriteLine("#endif");
+            var types = assembly.GetTypes()
+                .Where(type => (type.IsValueType || type.IsClass)
+                && (type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamORAssem))
+                .ToArray();
+
+            InternalConvertToPrototypes(
+                twHeader,
+                types,
+                translateContext,
+                indent);
 
             twHeader.WriteLine();
-            twHeader.WriteLine("//////////////////////////////////////////////////////////////////");
-            twHeader.WriteLine("// Types:");
+            twHeader.WriteLine("#endif");
+        }
+
+        private static void InternalConvertToPrototypes(
+            TextWriter tw,
+            Type[] types,
+            TranslateContext translateContext,
+            string indent)
+        {
+            tw.WriteLine();
+            tw.WriteLine("#ifdef __cplusplus");
+            tw.WriteLine("extern \"C\" {");
+            tw.WriteLine("#endif");
+
+            tw.WriteLine();
+            tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+            tw.WriteLine("// Types:");
+            tw.WriteLine();
+
+            // Output prototypes.
+            foreach (var type in types)
+            {
+                var typeName = translateContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced)
+                    .ManglingSymbolName();
+
+                tw.WriteLine(
+                    "typedef struct {0} {0};",
+                    typeName);
+            }
 
             // Output value type and object reference type.
-            foreach (var type in
-                from type in assembly.GetTypes()
-                where type.IsValueType || type.IsClass
-                select type)
+            foreach (var type in types)
             {
-                twHeader.WriteLine();
+                tw.WriteLine();
                 ConvertType(
                     translateContext,
-                    twHeader,
+                    tw,
                     type,
                     indent);
             }
 
-            twHeader.WriteLine();
-            twHeader.WriteLine("//////////////////////////////////////////////////////////////////");
-            twHeader.WriteLine("// Public static fields:");
+            tw.WriteLine();
+            tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+            tw.WriteLine("// Public static fields:");
 
-            foreach (var type in
-                from type in assembly.GetTypes()
-                where type.IsValueType || type.IsClass
-                select type)
+            foreach (var type in types)
             {
-                twHeader.WriteLine();
+                tw.WriteLine();
 
                 foreach (var field in
                     from field in type.GetFields(
@@ -85,28 +112,25 @@ namespace IL2C
                         BindingFlags.Static | BindingFlags.DeclaredOnly)
                     select field)
                 {
-                    twHeader.WriteLine(
+                    tw.WriteLine(
                         "extern {0};",
                         Utilities.GetStaticFieldPrototypeString(field, false, translateContext));
                 }
             }
 
-            twHeader.WriteLine();
-            twHeader.WriteLine("//////////////////////////////////////////////////////////////////");
-            twHeader.WriteLine("// Methods:");
+            tw.WriteLine();
+            tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+            tw.WriteLine("// Methods:");
 
-            foreach (var type in
-                from type in assembly.GetTypes()
-                where type.IsValueType || type.IsClass
-                select type)
+            foreach (var type in types)
             {
-                twHeader.WriteLine();
+                tw.WriteLine();
 
                 foreach (var method in
                     from method in type.GetMembers(
-                        BindingFlags.Public | BindingFlags.NonPublic
-                        | BindingFlags.Static | BindingFlags.Instance
-                        | BindingFlags.DeclaredOnly)
+                            BindingFlags.Public | BindingFlags.NonPublic
+                            | BindingFlags.Static | BindingFlags.Instance
+                            | BindingFlags.DeclaredOnly)
                         .OfType<MethodBase>()
                     where (method is MethodInfo) || !method.IsStatic
                     select method)
@@ -120,37 +144,34 @@ namespace IL2C
                         method.GetSafeParameters(),
                         translateContext);
 
-                    twHeader.WriteLine("extern {0};", functionPrototype);
+                    tw.WriteLine("extern {0};", functionPrototype);
 
                     // Is this instance constructor?
                     // TODO: Type initializer's handlers
                     if (method.IsConstructor && (method.IsStatic == false))
                     {
-                        var typeName = Utilities.GetFullMemberName(type);
+                        var typeName = translateContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced);
 
                         // Write mark handler:
                         var makrHandlerPrototype = string.Format(
-                            "extern __{0}_MARK_HANDLER__(void* pReference);",
+                            "extern void __{0}_MARK_HANDLER__(void* pReference);",
                             typeName);
-                        twHeader.WriteLine(makrHandlerPrototype);
+                        tw.WriteLine(makrHandlerPrototype);
 
                         // Write new:
                         var newPrototype = string.Format(
-                            "extern __{0}_NEW__({0}** ppReference);",
+                            "extern void __{0}_NEW__({0}** ppReference);",
                             typeName);
 
-                        twHeader.WriteLine(newPrototype);
+                        tw.WriteLine(newPrototype);
                     }
                 }
             }
 
-            twHeader.WriteLine();
-            twHeader.WriteLine("#ifdef __cplusplus");
-            twHeader.WriteLine("}");
-            twHeader.WriteLine("#endif");
-
-            twHeader.WriteLine();
-            twHeader.WriteLine("#endif");
+            tw.WriteLine();
+            tw.WriteLine("#ifdef __cplusplus");
+            tw.WriteLine("}");
+            tw.WriteLine("#endif");
         }
 
         public static void ConvertType(
@@ -165,25 +186,15 @@ namespace IL2C
                 return;
             }
 
-            var structName = translateContext.GetCLanguageTypeName(declaredType, true)
+            var structName = translateContext.GetCLanguageTypeName(declaredType, TypeNameFlags.Dereferenced)
                 .ManglingSymbolName();
 
-            tw.WriteLine("////////////////////////////////////////////");
+            tw.WriteLine("////////////////////////////////////////////////////////////");
             tw.WriteLine(
                 "// {0}: {1}",
                 declaredType.IsValueType ? "Struct" : "Class",
                 Utilities.GetFullMemberName(declaredType));
             tw.WriteLine();
-
-            tw.WriteLine(
-                "typedef struct {0}",
-                structName);
-            tw.WriteLine("{");
-
-            if (declaredType.IsClass)
-            {
-                tw.WriteLine("{0}char __dummy;", indent);
-            }
 
             var stopType = declaredType.IsValueType
                 ? typeof(ValueType)
@@ -197,18 +208,38 @@ namespace IL2C
                     BindingFlags.Public | BindingFlags.NonPublic
                     | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                 .ToArray();
-            foreach (var field in fields)
+            if (fields.Length >= 1)
             {
                 tw.WriteLine(
-                    "{0}{1} {2};",
-                    indent,
-                    translateContext.GetCLanguageTypeName(field.FieldType),
-                    field.Name);
-            }
+                    "struct {0}",
+                    structName);
+                tw.WriteLine("{");
 
-            tw.WriteLine(
-                "}} {0};",
-                structName);
+                foreach (var field in fields)
+                {
+                    tw.WriteLine(
+                        "{0}{1} {2};",
+                        indent,
+                        translateContext.GetCLanguageTypeName(field.FieldType),
+                        field.Name);
+                }
+
+                tw.WriteLine("};");
+
+                // Write sizeof:
+                tw.WriteLine();
+                tw.WriteLine(
+                    "#define __{0}_SIZEOF__() (sizeof({0}))",
+                    structName);
+            }
+            else
+            {
+                // Write sizeof:
+                tw.WriteLine();
+                tw.WriteLine(
+                    "#define __{0}_SIZEOF__() (0)",
+                    structName);
+            }
         }
 
         public static void ConvertToSourceCode(
@@ -221,27 +252,24 @@ namespace IL2C
 
             twSource.WriteLine("#include \"{0}.h\"", assemblyName);
 
-            twSource.WriteLine();
-            twSource.WriteLine("#ifdef __cplusplus");
-            twSource.WriteLine("extern \"C\" {");
-            twSource.WriteLine("#endif");
-            twSource.WriteLine();
+            var allTypes = assembly.GetTypes()
+                .Where(type => type.IsValueType || type.IsClass)
+                .ToArray();
+            var types = allTypes
+                .Where(type => !(type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamORAssem))
+                .ToArray();
 
-            // TODO: prototypes (internal/private types and methods)
+            InternalConvertToPrototypes(
+                twSource,
+                types,
+                translateContext,
+                indent);
 
             twSource.WriteLine();
-            twSource.WriteLine("#ifdef __cplusplus");
-            twSource.WriteLine("}");
-            twSource.WriteLine("#endif");
-
-            twSource.WriteLine();
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////");
+            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// Static fields:");
 
-            foreach (var type in
-                from type in assembly.GetTypes()
-                where type.IsClass || type.IsValueType
-                select type)
+            foreach (var type in allTypes)
             {
                 twSource.WriteLine();
 
@@ -258,16 +286,13 @@ namespace IL2C
             }
 
             twSource.WriteLine();
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////");
+            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// Methods:");
 
-            foreach (var type in
-                from type in assembly.GetTypes()
-                where type.IsClass || type.IsValueType
-                select type)
+            foreach (var type in allTypes)
             {
                 twSource.WriteLine();
-                twSource.WriteLine("////////////////////////////////////////////");
+                twSource.WriteLine("////////////////////////////////////////////////////////////");
                 twSource.WriteLine("// Type: {0}", Utilities.GetFullMemberName(type));
 
                 foreach (var method in
@@ -317,29 +342,39 @@ namespace IL2C
                 tw.WriteLine("// Runtime helpers:");
 
                 var type = method.DeclaringType;
-                var typeName = Utilities.GetFullMemberName(type);
-                var baseTypeName = Utilities.GetFullMemberName(type.BaseType);
+                var typeName = translateContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced);
+                var baseTypeName = translateContext.GetCLanguageTypeName(type.BaseType, TypeNameFlags.Dereferenced);
 
                 // Write mark handler:
                 var makrHandlerPrototype = string.Format(
-                    "__{0}_MARK_HANDLER__(void* pReference)",
+                    "void __{0}_MARK_HANDLER__(void* pReference)",
                     typeName);
 
                 tw.WriteLine();
                 tw.WriteLine(makrHandlerPrototype);
                 tw.WriteLine("{");
+
                 foreach (var field in type.GetFields(
                     BindingFlags.Public | BindingFlags.NonPublic
-                    | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                    | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                    .Where(field => field.FieldType.IsValueType == false))
                 {
-                    tw.WriteLine("{0}__TRY_MARK_FROM_HANDLER__((({1}*)pReference)->{2});", indent, typeName, field.Name);
+                    tw.WriteLine(
+                        "{0}__TRY_MARK_FROM_HANDLER__((({1}*)pReference)->{2});",
+                        indent,
+                        typeName,
+                        field.Name);
                 }
-                tw.WriteLine("{0}__{1}_MARK_HANDLER__(pReference);", indent, baseTypeName);
+
+                tw.WriteLine(
+                    "{0}__{1}_MARK_HANDLER__(pReference);",
+                    indent,
+                    baseTypeName);
                 tw.WriteLine("}");
 
                 // Write new:
                 var newPrototype = string.Format(
-                    "__{0}_NEW__({0}** ppReference)",
+                    "void __{0}_NEW__({0}** ppReference)",
                     typeName);
 
                 tw.WriteLine();
@@ -349,6 +384,7 @@ namespace IL2C
                 tw.WriteLine("{0}{0}(void**)ppReference,", indent);
                 tw.WriteLine("{0}{0}__{1}_SIZEOF__(),", indent, typeName);
                 tw.WriteLine("{0}{0}__{1}_MARK_HANDLER__);", indent, typeName);
+                tw.WriteLine("{0}{1}__ctor(*ppReference);", indent, typeName);
                 tw.WriteLine("}");
             }
         }
@@ -413,13 +449,18 @@ namespace IL2C
             tw.WriteLine("{0}// Local variables:", indent);
             tw.WriteLine();
 
+            // Important NULL assigner (p = NULL):
+            //   Because these variables are pointer (of object reference).
+            //   So GC will traverse these variables just setup the stack frame.
+
             foreach (var local in locals)
             {
                 tw.WriteLine(
-                    "{0}{1} local{2};",
+                    "{0}{1} local{2}{3};",
                     indent,
                     translateContext.GetCLanguageTypeName(local.LocalType),
-                    local.LocalIndex);
+                    local.LocalIndex,
+                    local.LocalType.IsValueType ? string.Empty : " = NULL");
             }
 
             tw.WriteLine();
@@ -431,17 +472,18 @@ namespace IL2C
             foreach (var si in stacks)
             {
                 tw.WriteLine(
-                    "{0}{1} {2};",
+                    "{0}{1} {2}{3};",
                     indent,
                     translateContext.GetCLanguageTypeName(si.TargetType),
-                    si.SymbolName);
+                    si.SymbolName,
+                    si.TargetType.IsValueType ? string.Empty : " = NULL");
             }
 
             var frameEntries = locals
-                .Where(local => local.LocalType.IsClass)
+                .Where(local => local.LocalType.IsValueType == false)
                 .Select(local => new { Type = local.LocalType, Name = "local" + local.LocalIndex })
                 .Concat(stacks
-                    .Where(stack => stack.TargetType.IsClass)
+                    .Where(stack => stack.TargetType.IsValueType == false)
                     .Select(stack => new { Type = stack.TargetType, Name = stack.SymbolName }))
                 .ToArray();
 
@@ -449,7 +491,7 @@ namespace IL2C
             {
                 tw.WriteLine();
                 tw.WriteLine("{0}//-------------------", indent);
-                tw.WriteLine("{0}// Runtime helpers: Setup stack frame", indent);
+                tw.WriteLine("{0}// Setup stack frame:", indent);
                 tw.WriteLine();
 
                 tw.WriteLine("{0}struct /* __EXECUTION_FRAME__ */", indent);
@@ -460,25 +502,25 @@ namespace IL2C
                 foreach (var frameEntry in frameEntries)
                 {
                     tw.WriteLine(
-                        "{0}{0}{1}** p{2};",
+                        "{0}{0}{1}* p{2};",
                         indent,
                         translateContext.GetCLanguageTypeName(frameEntry.Type),
                         frameEntry.Name);
                 }
 
-                tw.WriteLine("{0}}} __execution_frame__;", indent);
+                tw.WriteLine("{0}}} __executionFrame__;", indent);
                 tw.WriteLine();
-                tw.WriteLine("{0}__execution_frame__.targetCount = {1};", indent, frameEntries.Length);
+                tw.WriteLine("{0}__executionFrame__.targetCount = {1};", indent, frameEntries.Length);
 
                 foreach (var frameEntry in frameEntries)
                 {
                     tw.WriteLine(
-                        "{0}__execution_frame__.p{1} = &{1};",
+                        "{0}__executionFrame__.p{1} = &{1};",
                         indent,
                         frameEntry.Name);
                 }
 
-                tw.WriteLine("{0}__gc_link_execution_frame__(&__execution_frame__);", indent);
+                tw.WriteLine("{0}__gc_link_execution_frame__(&__executionFrame__);", indent);
             }
 
             tw.WriteLine();
@@ -497,11 +539,11 @@ namespace IL2C
                 foreach (var sourceCode in entry.SourceCode)
                 {
                     // Dirty hack:
-                    if (sourceCode.StartsWith("return ")
+                    if (sourceCode.StartsWith("return")
                         && (frameEntries.Length >= 1))
                     {
                         tw.WriteLine(
-                            "{0}__gc_unlink_execution_frame__(&__execution_frame__);",
+                            "{0}__gc_unlink_execution_frame__(&__executionFrame__);",
                             indent);
                     }
 

@@ -188,6 +188,7 @@ int32_t il2c_test_target_ClassTypeTest_Test4(void)
     __stack0_1 = __stack0_0->Value2;
     local1 = __stack0_1;
     goto L_0000;
+
 L_0000:
     __stack0_1 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);

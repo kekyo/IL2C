@@ -1,17 +1,39 @@
+#ifdef WIN32
+#define _CRTDBG_MAP_ALLOC
+#endif
+
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <il2c.h>
 
+/////////////////////////////////////////////////////////////
+// For platform specifics:
+
 #define GCALLOC(size) malloc(size)
 #define GCFREE(p) free(p)
+
+#ifdef _WIN32
+#include <crtdbg.h>
+#include <intrin.h>
+typedef intptr_t interlock_t;
+#define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchangePointer((void**)p, (void*)v)
+#else
+typedef uint8_t interlock_t;
+static interlock_t INTERLOCKED_EXCHANGE(interlock_t* p, interlock_t v)
+{
+    interlock_t cv = *p;
+    *p = v;
+    return cv;
+}
+#endif
 
 /////////////////////////////////////////////////////////////
 
 // TODO: Support finalizer
-#define GCMARK_NOMARK ((uint8_t)0)
-#define GCMARK_LIVE ((uint8_t)1)
+#define GCMARK_NOMARK ((interlock_t)0)
+#define GCMARK_LIVE ((interlock_t)1)
 
 struct __EXECUTION_FRAME__
 {
@@ -26,14 +48,19 @@ struct __REF_HEADER__
 {
     struct __REF_HEADER__* pNext;
     __MARK_HANDLER__ pMarkHandler;
-    uint8_t gcMark;
+    interlock_t gcMark;
 };
+
+// TODO: Become store to thread local storage
+static __EXECUTION_FRAME__* g_pBeginFrame__ = NULL;
 
 static __REF_HEADER__* g_pBeginHeader__ = NULL;
 
 // Part of "pNext".
-// HACK: Must arrangement structure index 0.
+// HACK: Must arrange structure index to 0.
 static const void* g_pTerminator = NULL;
+
+//////////////////////////
 
 void __gc_get_uninitialized_object__(
     void** ppReference, uint16_t bodySize, __MARK_HANDLER__ pMarkHandler)
@@ -52,17 +79,15 @@ void __gc_get_uninitialized_object__(
     pHeader->pMarkHandler = pMarkHandler;
     pHeader->gcMark = GCMARK_NOMARK;
 
-    // Very important link steps: because cause misread on purpose this instance is living.
-    // 1st: Link from root chain
+    // Very important link steps:
+    //   Because cause misread on purpose this instance is living.
     *ppReference = pReference;
 
-    // TODO: 2nd and 3rd operation must use atomic exchange operator.
-
-    // 2nd: Link chain to next header
-    pHeader->pNext = g_pBeginHeader__;
-
-    // 3rd: Link chain from beginning pointer
-    g_pBeginHeader__ = pHeader;
+    // Critial timing at both lines:
+    //   If interrupt and run gc at between 1st and 2nd lines,
+    //   gc fail collect any objects. (but not corrupt, can collect next timing)
+    __REF_HEADER__* pNext = (__REF_HEADER__*)INTERLOCKED_EXCHANGE(g_pBeginHeader__, pHeader);
+    pHeader->pNext = pNext;
 
     assert(g_pTerminator == NULL);
 }
@@ -83,9 +108,6 @@ void __gc_mark_from_handler__(void* pReference)
 
 //////////////////////////
 
-// TODO: Become store to thread local storage
-static __EXECUTION_FRAME__* g_pBeginFrame__ = NULL;
-
 void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
 {
     assert(pNewFrame != NULL);
@@ -97,7 +119,7 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
     __EXECUTION_FRAME__* p = pNewFrame;
     for (uint8_t index = 0; index < p->targetCount; index++)
     {
-        assert(*(p->pTargets[index]) == NULL);
+        assert(*p->pTargets[index] == NULL);
     }
 #endif
 
@@ -115,7 +137,7 @@ void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
 
 //////////////////////////
 
-void __gc_clear_gcmark__()
+void __gc_step1_clear_gcmark__()
 {
     // Clear header marks.
     __REF_HEADER__* pCurrentHeader = g_pBeginHeader__;
@@ -128,7 +150,7 @@ void __gc_clear_gcmark__()
     }
 }
 
-void __gc_mark_gcmark__()
+void __gc_step2_mark_gcmark__()
 {
     // Mark headers.
     __EXECUTION_FRAME__* pCurrentFrame = g_pBeginFrame__;
@@ -145,12 +167,11 @@ void __gc_mark_gcmark__()
                 continue;
             }
 
-            // Marking process.
+            // Marking process. TODO: InterlockedExchange
             __REF_HEADER__* pHeader = (__REF_HEADER__*)*ppReference - 1;
-            if (pHeader->gcMark == GCMARK_NOMARK)
+            interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+            if (currentMark == GCMARK_NOMARK)
             {
-                pHeader->gcMark = GCMARK_LIVE;
-
                 assert(pHeader->pMarkHandler != NULL);
                 pHeader->pMarkHandler(*ppReference);
             }
@@ -160,56 +181,65 @@ void __gc_mark_gcmark__()
     }
 }
 
-void __gc_sweep_garbage__()
+void __gc_step3_sweep_garbage__()
 {
     // Sweep garbage if gcmark isn't marked.
-    assert(g_pBeginHeader__ != NULL);
-    __REF_HEADER__** ppLastNext = &g_pBeginHeader__->pNext;
-    assert(ppLastNext != NULL);
-
-    while (1)
+    __REF_HEADER__** ppUnlinkTarget = &g_pBeginHeader__;
+    __REF_HEADER__* pCurrentHeader = g_pBeginHeader__;
+    while (pCurrentHeader != NULL)
     {
-        __REF_HEADER__* pCurrentHeader = (*ppLastNext)->pNext;
-        if (pCurrentHeader == NULL)
-        {
-            break;
-        }
-
         __REF_HEADER__* pNext = pCurrentHeader->pNext;
         if (pCurrentHeader->gcMark != GCMARK_LIVE)
         {
             // Very important link steps: because cause misread on purpose this instance is living.
-            (*ppLastNext)->pNext = pNext;
+            *ppUnlinkTarget = pNext;
 
             // Heap discarded
             GCFREE(pCurrentHeader);
+
+            pCurrentHeader = pNext;
         }
         else
         {
-            ppLastNext = &pCurrentHeader->pNext;
+            ppUnlinkTarget = &pCurrentHeader->pNext;
+            pCurrentHeader = pNext;
         }
 
         assert(g_pTerminator == NULL);
     }
 }
 
+//////////////////////////
+
+void __gc_collect__()
+{
+    __gc_step1_clear_gcmark__();
+    __gc_step2_mark_gcmark__();
+    __gc_step3_sweep_garbage__();
+}
+
 void __gc_initialize__()
 {
+#ifdef _WIN32
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
+#endif
+
     assert(g_pTerminator == NULL);
 
     g_pBeginFrame__ = (__EXECUTION_FRAME__*)g_pTerminator;
     g_pBeginHeader__ = (__REF_HEADER__*)g_pTerminator;
 }
 
+void __gc_shutdown__()
+{
+    __gc_collect__();
+
+#ifdef _WIN32
+    _CrtDumpMemoryLeaks();
+#endif
+}
+
 /////////////////////////////////////////////////////////////
-
-void System_Object__ctor(System_Object* __this)
-{
-}
-
-void __System_Object_MARK_HANDLER__(void* pReference)
-{
-}
 
 void __System_Object_NEW__(System_Object** ppReference)
 {

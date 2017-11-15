@@ -30,4 +30,6 @@ int main()
 
     uint8_t result2 = il2c_test_target_Hoge2_Add3(10, false); // 10 + 1
     printf("result2 = %d\n", result2);
+
+    __gc_shutdown__();
 }

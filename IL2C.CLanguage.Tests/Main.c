@@ -4,8 +4,12 @@
 
 int main()
 {
+    __gc_initialize__();
+
     int32_t result6 = il2c_test_target_ClassTypeTest_Test4();
     printf("result6 = %d\n", result6);
+
+    __gc_collect__();
 
     int32_t result7 = il2c_test_target_ClassTypeTest_Test5();
     printf("result7 = %d\n", result7);
@@ -26,4 +30,6 @@ int main()
 
     uint8_t result2 = il2c_test_target_Hoge2_Add3(10, false); // 10 + 1
     printf("result2 = %d\n", result2);
+
+    __gc_shutdown__();
 }

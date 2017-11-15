@@ -121,36 +121,16 @@ namespace IL2C.ILConveters
                         new Utilities.RightExpressionGivenParameter(
                             type, new SymbolInformation(thisSymbolName, type)));
 
-                    decodeContext.TranslateContext.RegisterIncludeFile("stdlib.h");
-                    decodeContext.TranslateContext.RegisterIncludeFile("string.h");
-
-                    // Hoge* p = (Hoge)malloc(sizeof(Hoge));
-                    // memset(p, 0, sizeof(Hoge));
-                    // Hoge__ctor(p);
-
-                    var constructorName = Utilities.GetFullMemberName(constructor)
-                        .ManglingSymbolName();
-                    var typeName = decodeContext.TranslateContext.GetCLanguageTypeName(
-                        type);
                     var dereferencedTypeName = decodeContext.TranslateContext.GetCLanguageTypeName(
-                        type, true);
+                        type, TypeNameFlags.Dereferenced);
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters.ToArray(), decodeContext);
 
                     return new[]
                     {
                         string.Format(
-                            "{0} = ({1})malloc(sizeof({2}))",
-                            thisSymbolName,
-                            typeName,
-                            dereferencedTypeName),
-                        string.Format(
-                            "memset({0}, 0x00, sizeof({1}))",
-                            thisSymbolName,
-                            dereferencedTypeName),
-                        string.Format(
-                            "{0}({1})",
-                            constructorName,
+                            "__{0}_NEW__(&{1})",
+                            dereferencedTypeName,
                             parameterString)
                     };
                 }

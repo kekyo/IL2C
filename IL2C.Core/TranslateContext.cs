@@ -5,6 +5,14 @@ using System.Reflection;
 
 namespace IL2C
 {
+    [Flags]
+    internal enum TypeNameFlags
+    {
+        Strict = 0,
+        Dereferenced = 1,
+        StructPrefix = 2
+    }
+
     public sealed class TranslateContext
     {
         private readonly Assembly assembly;
@@ -29,7 +37,7 @@ namespace IL2C
             includes.Add(includeFileName);
         }
 
-        internal string GetCLanguageTypeName(Type type, bool isDereference = false)
+        internal string GetCLanguageTypeName(Type type, TypeNameFlags flags = TypeNameFlags.Strict)
         {
             if (type == typeof(void))
             {
@@ -74,20 +82,27 @@ namespace IL2C
             if (type.IsByRef)
             {
                 var dereferencedType = type.GetElementType();
-                return isDereference
-                    ? this.GetCLanguageTypeName(dereferencedType)
-                    : this.GetCLanguageTypeName(dereferencedType) + "*";
-            }
-
-            if (type.IsClass)
-            {
-                return isDereference
-                    ? Utilities.GetFullMemberName(type).ManglingSymbolName()
-                    : Utilities.GetFullMemberName(type).ManglingSymbolName() + "*";
+                var name = this.GetCLanguageTypeName(dereferencedType);
+                return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
+                    ? name : (name + "*");
             }
             else
             {
-                return Utilities.GetFullMemberName(type).ManglingSymbolName();
+                var name = Utilities.GetFullMemberName(type).ManglingSymbolName();
+                if ((flags & TypeNameFlags.StructPrefix) == TypeNameFlags.StructPrefix)
+                {
+                    name = "struct " + name;
+                }
+
+                if (type.IsClass)
+                {
+                    return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
+                        ? name : (name + "*");
+                }
+                else
+                {
+                    return name;
+                }
             }
         }
 

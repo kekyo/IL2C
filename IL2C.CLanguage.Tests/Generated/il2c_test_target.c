@@ -1,431 +1,781 @@
 ﻿#include "il2c_test_target.h"
 
-int32_t il2c_test_target_ValueTypeTestTarget_Value1;
-System_Uri* il2c_test_target_ClassTypeTestTarget_OR1 = new System_Uri("...");
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//////////////////////////////////////////////////////////////////////////////////
+// Types:
 
 
+//////////////////////////////////////////////////////////////////////////////////
+// Public static fields:
+
+//////////////////////////////////////////////////////////////////////////////////
+// Methods:
+
+#ifdef __cplusplus
+}
+#endif
+
+//////////////////////////////////////////////////////////////////////////////////
+// Static fields:
+
+int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 123;
+il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1;
+
+
+int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 123;
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// Methods:
+
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.ClassTypeTestTarget
+
+///////////////////////////////////////
+// il2c_test_target.ClassTypeTestTarget.GetValue2
 
 int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b)
 {
+    //-------------------
+    // Local variables:
+
     int32_t local0;
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_il2c_test_target_ClassTypeTestTarget_reference;
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = __this;
-    __stack0_int32_t = __stack0_il2c_test_target_ClassTypeTestTarget_reference->Value2;
-    __stack1_int32_t = a;
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    __stack1_int32_t = b;
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    local0 = __stack0_int32_t;
+    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    __stack0_1 = __stack0_0->Value2;
+    __stack1_0 = a;
+    __stack0_1 = __stack0_1 + __stack1_0;
+    __stack1_0 = b;
+    __stack0_1 = __stack0_1 + __stack1_0;
+    local0 = __stack0_1;
     goto L_0000;
 L_0000:
-    __stack0_int32_t = local0;
-    return __stack0_int32_t;
+    __stack0_1 = local0;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
 }
 
+///////////////////////////////////////
+// il2c_test_target.ClassTypeTestTarget..ctor
 
 void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this)
 {
+    //-------------------
+    // Local variables:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_il2c_test_target_ClassTypeTestTarget_reference;
 
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = __this;
-    System_Object__ctor((System_Object*)__stack0_il2c_test_target_ClassTypeTestTarget_reference);
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    System_Object__ctor((System_Object*)__stack0_0);
+    __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
 
-int32_t il2c_test_target_ClassTypeTest_Test4();
+//////////////////////
+// Runtime helpers:
 
-
-ExecutionContext* currentContext;
-
-void mark_and_sweep()
+void __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
-    /////////////////////////////////////
-    // Execute mark phase
-
-    // TODO: clear gcmark
-
-    // Mark phase
-    ExecutionContext* current = currentContext;
-    while (current != NULL)
-    {
-        const uint8_t count = current->count;
-        for (uint8_t index = 0; index < count; index++)
-        {
-            uint8_t** target = (uint8_t**)(current->target[index]);
-            Common* p = (Common*)(*target - sizeof(Common));
-            if (p != NULL)
-            {
-                // Mark this instance.
-                p->__gcmark = 1;
-
-                // TODO: recursive mark
-            }
-        }
-
-        current = current->previous;
-    }
-
-    // TODO: sweep
+    __TRY_MARK_FROM_HANDLER__(((il2c_test_target_ClassTypeTestTarget*)pReference)->OR2);
+    __System_Object_MARK_HANDLER__(pReference);
 }
 
-void initialize_GC()
+void __il2c_test_target_ClassTypeTestTarget_NEW__(il2c_test_target_ClassTypeTestTarget** ppReference)
 {
-    ExecutionContext rootContext;
-    memset(&rootContext, 0, sizeof rootContext);
-
-    currentContext = &rootContext;
-
-    // Phase 1: Type initializing
-    il2c_test_target_ClassTypeTestTarget_Value1 = 0;
-    il2c_test_target_ClassTypeTestTarget_OR1 = NULL;
-
-    il2c_test_target_ClassTypeTestTarget__cctor();
-
-    // Phase 2: Chain object reference
-    ExecutionContext globalContext;
-    globalContext.count = 1;
-    globalContext.target[0] = &il2c_test_target_ClassTypeTestTarget_OR1;
-
-    globalContext.previous = currentContext;
-    currentContext = &globalContext;
+    __gc_get_uninitialized_object__(
+        (void**)ppReference,
+        __il2c_test_target_ClassTypeTestTarget_SIZEOF__(),
+        __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__);
+    il2c_test_target_ClassTypeTestTarget__ctor(*ppReference);
 }
 
-int main()
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.ClassTypeTest
+
+///////////////////////////////////////
+// il2c_test_target.ClassTypeTest.Test4
+
+int32_t il2c_test_target_ClassTypeTest_Test4(void)
 {
-    initialize_GC();
+    //-------------------
+    // Local variables:
 
-    il2c_test_target_ClassTypeTest_Test4();
-
-    mark_and_sweep();
-}
-
-int32_t il2c_test_target_ClassTypeTest_Test4()
-{
-    il2c_test_target_ClassTypeTestTarget* local0;
+    il2c_test_target_ClassTypeTestTarget* local0 = NULL;
     int32_t local1;
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_il2c_test_target_ClassTypeTestTarget_reference;
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    struct
+    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
     {
-        void* previous;
-        uint8_t count;
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
         il2c_test_target_ClassTypeTestTarget** plocal0;
-        il2c_test_target_ClassTypeTestTarget** __pstack0;
-    } functionContext;
+        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
 
-    functionContext.count = 2;
-    functionContext.plocal0 = &local0;
-    functionContext.__pstack0 = &__stack0_il2c_test_target_ClassTypeTestTarget_reference;
+    __executionFrame__.targetCount = 2;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
 
-    functionContext.previous = currentContext;
-    currentContext = (ExecutionContext*)&functionContext;
+    //-------------------
+    // IL body:
 
-    // IL Body
-
-    // newobj
-    uint8_t* p = (uint8_t*)malloc(
-        sizeof(Common) + sizeof(il2c_test_target_ClassTypeTestTarget));
-    memset(p, 0x00, sizeof(Common) + sizeof(il2c_test_target_ClassTypeTestTarget));
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference =
-        (il2c_test_target_ClassTypeTestTarget*)(p + sizeof(Common));
-    il2c_test_target_ClassTypeTestTarget__ctor(__stack0_il2c_test_target_ClassTypeTestTarget_reference);
-
-
-    local0 = __stack0_il2c_test_target_ClassTypeTestTarget_reference;
-
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = local0;
-    __stack1_int32_t = 456;
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference->Value2 = __stack1_int32_t;
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = local0;
-    __stack0_int32_t = __stack0_il2c_test_target_ClassTypeTestTarget_reference->Value2;
-    local1 = __stack0_int32_t;
+    __il2c_test_target_ClassTypeTestTarget_NEW__(&__stack0_0);
+    local0 = __stack0_0;
+    __stack0_0 = local0;
+    __stack1_0 = 456;
+    __stack0_0->Value2 = __stack1_0;
+    __stack0_0 = local0;
+    __stack0_1 = __stack0_0->Value2;
+    local1 = __stack0_1;
     goto L_0000;
+
 L_0000:
-    __stack0_int32_t = local1;
-
-    currentContext = functionContext.previous;
-
-    return __stack0_int32_t;
+    __stack0_1 = local1;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
 }
 
+///////////////////////////////////////
+// il2c_test_target.ClassTypeTest.Test5
 
 int32_t il2c_test_target_ClassTypeTest_Test5(void)
 {
-    il2c_test_target_ClassTypeTestTarget* local0;
+    //-------------------
+    // Local variables:
+
+    il2c_test_target_ClassTypeTestTarget* local0 = NULL;
     int32_t local1;
     int32_t local2;
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_il2c_test_target_ClassTypeTestTarget_reference;
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
-    int32_t __stack2_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = (il2c_test_target_ClassTypeTestTarget*)malloc(sizeof(il2c_test_target_ClassTypeTestTarget));
-    memset(__stack0_il2c_test_target_ClassTypeTestTarget_reference, 0x00, sizeof(il2c_test_target_ClassTypeTestTarget));
-    il2c_test_target_ClassTypeTestTarget__ctor(__stack0_il2c_test_target_ClassTypeTestTarget_reference);
-    local0 = __stack0_il2c_test_target_ClassTypeTestTarget_reference;
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = local0;
-    __stack1_int32_t = 789;
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference->Value2 = __stack1_int32_t;
-    __stack0_il2c_test_target_ClassTypeTestTarget_reference = local0;
-    __stack1_int32_t = 123;
-    __stack2_int32_t = 456;
-    __stack0_int32_t = il2c_test_target_ClassTypeTestTarget_GetValue2(__stack0_il2c_test_target_ClassTypeTestTarget_reference, __stack1_int32_t, __stack2_int32_t);
-    local1 = __stack0_int32_t;
-    __stack0_int32_t = local1;
-    local2 = __stack0_int32_t;
+    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+    int32_t __stack2_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ClassTypeTestTarget** plocal0;
+        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 2;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __il2c_test_target_ClassTypeTestTarget_NEW__(&__stack0_0);
+    local0 = __stack0_0;
+    __stack0_0 = local0;
+    __stack1_0 = 789;
+    __stack0_0->Value2 = __stack1_0;
+    __stack0_0 = local0;
+    __stack1_0 = 123;
+    __stack2_0 = 456;
+    __stack0_1 = il2c_test_target_ClassTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
+    local1 = __stack0_1;
+    __stack0_1 = local1;
+    local2 = __stack0_1;
     goto L_0000;
 L_0000:
-    __stack0_int32_t = local2;
-    return __stack0_int32_t;
+    __stack0_1 = local2;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
 }
 
+///////////////////////////////////////
+// il2c_test_target.ClassTypeTest..ctor
 
 void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this)
 {
+    //-------------------
+    // Local variables:
 
-    il2c_test_target_ClassTypeTest* __stack0_il2c_test_target_ClassTypeTest_reference;
 
-    __stack0_il2c_test_target_ClassTypeTest_reference = __this;
-    System_Object__ctor((System_Object*)__stack0_il2c_test_target_ClassTypeTest_reference);
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_ClassTypeTest* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ClassTypeTest** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    System_Object__ctor((System_Object*)__stack0_0);
+    __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
 
+//////////////////////
+// Runtime helpers:
+
+void __il2c_test_target_ClassTypeTest_MARK_HANDLER__(void* pReference)
+{
+    __System_Object_MARK_HANDLER__(pReference);
+}
+
+void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppReference)
+{
+    __gc_get_uninitialized_object__(
+        (void**)ppReference,
+        __il2c_test_target_ClassTypeTest_SIZEOF__(),
+        __il2c_test_target_ClassTypeTest_MARK_HANDLER__);
+    il2c_test_target_ClassTypeTest__ctor(*ppReference);
+}
+
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.ValueTypeTestTarget
+
+///////////////////////////////////////
+// il2c_test_target.ValueTypeTestTarget.GetValue2
 
 int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTypeTestTarget* __this, int32_t a, int32_t b)
 {
+    //-------------------
+    // Local variables:
+
     int32_t local0;
 
-    il2c_test_target_ValueTypeTestTarget* __stack0_il2c_test_target_ValueTypeTestTarget_reference;
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference = __this;
-    __stack0_int32_t = __stack0_il2c_test_target_ValueTypeTestTarget_reference->Value2;
-    __stack1_int32_t = a;
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    __stack1_int32_t = b;
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    local0 = __stack0_int32_t;
+    il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    __stack0_1 = __stack0_0->Value2;
+    __stack1_0 = a;
+    __stack0_1 = __stack0_1 + __stack1_0;
+    __stack1_0 = b;
+    __stack0_1 = __stack0_1 + __stack1_0;
+    local0 = __stack0_1;
     goto L_0000;
 L_0000:
-    __stack0_int32_t = local0;
-    return __stack0_int32_t;
+    __stack0_1 = local0;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.ValueTypeTest
+
+///////////////////////////////////////
+// il2c_test_target.ValueTypeTest.Test4
 
 int32_t il2c_test_target_ValueTypeTest_Test4(void)
 {
+    //-------------------
+    // Local variables:
+
     il2c_test_target_ValueTypeTestTarget local0;
     int32_t local1;
 
-    il2c_test_target_ValueTypeTestTarget* __stack0_il2c_test_target_ValueTypeTestTarget_reference;
-    il2c_test_target_ValueTypeTestTarget __stack0_il2c_test_target_ValueTypeTestTarget;
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    struct
+    il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
+    il2c_test_target_ValueTypeTestTarget __stack0_1;
+    int32_t __stack0_2;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
     {
-        void* previous;
-        uint8_t count;
-        System_Uri** target0;
-    } functionContext;
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
 
-    functionContext.count = 1;
-    functionContext.target0 = &local0.OR1;
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
 
-    functionContext.previous = currentContext;
-    currentContext = (ExecutionContext*)&functionContext;
+    //-------------------
+    // IL body:
 
-    // IL Body
-
-    // initobj
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference = &local0;
-    memset(__stack0_il2c_test_target_ValueTypeTestTarget_reference, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference = &local0;
-
-    __stack1_int32_t = 456;
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference->Value2 = __stack1_int32_t;
-    __stack0_il2c_test_target_ValueTypeTestTarget = local0;
-    __stack0_int32_t = __stack0_il2c_test_target_ValueTypeTestTarget.Value2;
-    local1 = __stack0_int32_t;
+    __stack0_0 = &local0;
+    memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
+    __stack0_0 = &local0;
+    __stack1_0 = 456;
+    __stack0_0->Value2 = __stack1_0;
+    __stack0_1 = local0;
+    __stack0_2 = __stack0_1.Value2;
+    local1 = __stack0_2;
     goto L_0000;
 L_0000:
-    __stack0_int32_t = local1;
-
-    currentContext = functionContext.previous;
-
-    return __stack0_int32_t;
+    __stack0_2 = local1;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_2;
 }
 
+///////////////////////////////////////
+// il2c_test_target.ValueTypeTest.Test5
 
 int32_t il2c_test_target_ValueTypeTest_Test5(void)
 {
+    //-------------------
+    // Local variables:
+
     il2c_test_target_ValueTypeTestTarget local0;
     int32_t local1;
     int32_t local2;
 
-    il2c_test_target_ValueTypeTestTarget* __stack0_il2c_test_target_ValueTypeTestTarget_reference;
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
-    int32_t __stack2_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference = &local0;
-    memset(__stack0_il2c_test_target_ValueTypeTestTarget_reference, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference = &local0;
-    __stack1_int32_t = 789;
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference->Value2 = __stack1_int32_t;
-    __stack0_il2c_test_target_ValueTypeTestTarget_reference = &local0;
-    __stack1_int32_t = 123;
-    __stack2_int32_t = 456;
-    __stack0_int32_t = il2c_test_target_ValueTypeTestTarget_GetValue2(__stack0_il2c_test_target_ValueTypeTestTarget_reference, __stack1_int32_t, __stack2_int32_t);
-    local1 = __stack0_int32_t;
-    __stack0_int32_t = local1;
-    local2 = __stack0_int32_t;
+    il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+    int32_t __stack2_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = &local0;
+    memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
+    __stack0_0 = &local0;
+    __stack1_0 = 789;
+    __stack0_0->Value2 = __stack1_0;
+    __stack0_0 = &local0;
+    __stack1_0 = 123;
+    __stack2_0 = 456;
+    __stack0_1 = il2c_test_target_ValueTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
+    local1 = __stack0_1;
+    __stack0_1 = local1;
+    local2 = __stack0_1;
     goto L_0000;
 L_0000:
-    __stack0_int32_t = local2;
-    return __stack0_int32_t;
+    __stack0_1 = local2;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
 }
 
+///////////////////////////////////////
+// il2c_test_target.ValueTypeTest..ctor
 
 void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this)
 {
+    //-------------------
+    // Local variables:
 
-    il2c_test_target_ValueTypeTest* __stack0_il2c_test_target_ValueTypeTest_reference;
 
-    __stack0_il2c_test_target_ValueTypeTest_reference = __this;
-    System_Object__ctor((System_Object*)__stack0_il2c_test_target_ValueTypeTest_reference);
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_ValueTypeTest* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ValueTypeTest** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    System_Object__ctor((System_Object*)__stack0_0);
+    __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
 
+//////////////////////
+// Runtime helpers:
+
+void __il2c_test_target_ValueTypeTest_MARK_HANDLER__(void* pReference)
+{
+    __System_Object_MARK_HANDLER__(pReference);
+}
+
+void __il2c_test_target_ValueTypeTest_NEW__(il2c_test_target_ValueTypeTest** ppReference)
+{
+    __gc_get_uninitialized_object__(
+        (void**)ppReference,
+        __il2c_test_target_ValueTypeTest_SIZEOF__(),
+        __il2c_test_target_ValueTypeTest_MARK_HANDLER__);
+    il2c_test_target_ValueTypeTest__ctor(*ppReference);
+}
+
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.Hoge2
+
+///////////////////////////////////////
+// il2c_test_target.Hoge2.Add3
 
 uint8_t il2c_test_target_Hoge2_Add3(uint8_t a, bool isTwo)
 {
+    //-------------------
+    // Local variables:
+
     uint8_t local0;
 
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_int32_t = a;
-    __stack1_int32_t = isTwo ? 1 : 0;
-    if (__stack1_int32_t != 0) goto L_0000;
-    __stack1_int32_t = 1;
+    int32_t __stack0_0;
+    int32_t __stack1_0;
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = a;
+    __stack1_0 = isTwo ? 1 : 0;
+    if (__stack1_0 != 0) goto L_0000;
+    __stack1_0 = 1;
     goto L_0001;
 L_0000:
-    __stack1_int32_t = 2;
+    __stack1_0 = 2;
 L_0001:
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    __stack0_int32_t = (uint8_t)__stack0_int32_t;
-    local0 = (uint8_t)__stack0_int32_t;
+    __stack0_0 = __stack0_0 + __stack1_0;
+    __stack0_0 = (uint8_t)__stack0_0;
+    local0 = (uint8_t)__stack0_0;
     goto L_0002;
 L_0002:
-    __stack0_int32_t = local0;
-    return (uint8_t)__stack0_int32_t;
+    __stack0_0 = local0;
+    return (uint8_t)__stack0_0;
 }
 
+///////////////////////////////////////
+// il2c_test_target.Hoge2.Add4
 
 uint16_t il2c_test_target_Hoge2_Add4(uint16_t a, bool isTwo)
 {
+    //-------------------
+    // Local variables:
+
     uint16_t local0;
 
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_int32_t = a;
-    __stack1_int32_t = isTwo ? 1 : 0;
-    if (__stack1_int32_t != 0) goto L_0000;
-    __stack1_int32_t = 1;
+    int32_t __stack0_0;
+    int32_t __stack1_0;
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = a;
+    __stack1_0 = isTwo ? 1 : 0;
+    if (__stack1_0 != 0) goto L_0000;
+    __stack1_0 = 1;
     goto L_0001;
 L_0000:
-    __stack1_int32_t = 2;
+    __stack1_0 = 2;
 L_0001:
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    __stack0_int32_t = (uint16_t)__stack0_int32_t;
-    local0 = (uint16_t)__stack0_int32_t;
+    __stack0_0 = __stack0_0 + __stack1_0;
+    __stack0_0 = (uint16_t)__stack0_0;
+    local0 = (uint16_t)__stack0_0;
     goto L_0002;
 L_0002:
-    __stack0_int32_t = local0;
-    return (uint16_t)__stack0_int32_t;
+    __stack0_0 = local0;
+    return (uint16_t)__stack0_0;
 }
 
+///////////////////////////////////////
+// il2c_test_target.Hoge2..ctor
 
 void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
 {
+    //-------------------
+    // Local variables:
 
-    il2c_test_target_Hoge2* __stack0_il2c_test_target_Hoge2_reference;
 
-    __stack0_il2c_test_target_Hoge2_reference = __this;
-    System_Object__ctor((System_Object*)__stack0_il2c_test_target_Hoge2_reference);
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_Hoge2* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_Hoge2** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    System_Object__ctor((System_Object*)__stack0_0);
+    __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
 
+//////////////////////
+// Runtime helpers:
+
+void __il2c_test_target_Hoge2_MARK_HANDLER__(void* pReference)
+{
+    __System_Object_MARK_HANDLER__(pReference);
+}
+
+void __il2c_test_target_Hoge2_NEW__(il2c_test_target_Hoge2** ppReference)
+{
+    __gc_get_uninitialized_object__(
+        (void**)ppReference,
+        __il2c_test_target_Hoge2_SIZEOF__(),
+        __il2c_test_target_Hoge2_MARK_HANDLER__);
+    il2c_test_target_Hoge2__ctor(*ppReference);
+}
+
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.Hoge1
+
+///////////////////////////////////////
+// il2c_test_target.Hoge1.Add1
 
 int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
 {
+    //-------------------
+    // Local variables:
+
     int32_t local0;
 
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_int32_t = a;
-    __stack1_int32_t = isTwo ? 1 : 0;
-    if (__stack1_int32_t != 0) goto L_0000;
-    __stack1_int32_t = 1;
+    int32_t __stack0_0;
+    int32_t __stack1_0;
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = a;
+    __stack1_0 = isTwo ? 1 : 0;
+    if (__stack1_0 != 0) goto L_0000;
+    __stack1_0 = 1;
     goto L_0001;
 L_0000:
-    __stack1_int32_t = 2;
+    __stack1_0 = 2;
 L_0001:
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    local0 = __stack0_int32_t;
+    __stack0_0 = __stack0_0 + __stack1_0;
+    local0 = __stack0_0;
     goto L_0002;
 L_0002:
-    __stack0_int32_t = local0;
-    return __stack0_int32_t;
+    __stack0_0 = local0;
+    return __stack0_0;
 }
 
+///////////////////////////////////////
+// il2c_test_target.Hoge1.Add2
 
 int64_t il2c_test_target_Hoge1_Add2(int64_t a, bool isTwo)
 {
+    //-------------------
+    // Local variables:
+
     int64_t local0;
 
-    int64_t __stack0_int64_t;
-    int32_t __stack1_int32_t;
-    int64_t __stack1_int64_t;
+    //-------------------
+    // Evaluation stacks:
 
-    __stack0_int64_t = a;
-    __stack1_int32_t = isTwo ? 1 : 0;
-    if (__stack1_int32_t != 0) goto L_0000;
-    __stack1_int32_t = 1;
+    int64_t __stack0_0;
+    int32_t __stack1_0;
+    int64_t __stack1_1;
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = a;
+    __stack1_0 = isTwo ? 1 : 0;
+    if (__stack1_0 != 0) goto L_0000;
+    __stack1_0 = 1;
     goto L_0001;
 L_0000:
-    __stack1_int32_t = 2;
+    __stack1_0 = 2;
 L_0001:
-    __stack1_int64_t = __stack1_int32_t;
-    __stack0_int64_t = __stack0_int64_t + __stack1_int64_t;
-    local0 = __stack0_int64_t;
+    __stack1_1 = __stack1_0;
+    __stack0_0 = __stack0_0 + __stack1_1;
+    local0 = __stack0_0;
     goto L_0002;
 L_0002:
-    __stack0_int64_t = local0;
-    return __stack0_int64_t;
+    __stack0_0 = local0;
+    return __stack0_0;
 }
 
+///////////////////////////////////////
+// il2c_test_target.Hoge1..ctor
 
 void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
 {
+    //-------------------
+    // Local variables:
 
-    il2c_test_target_Hoge1* __stack0_il2c_test_target_Hoge1_reference;
 
-    __stack0_il2c_test_target_Hoge1_reference = __this;
-    System_Object__ctor((System_Object*)__stack0_il2c_test_target_Hoge1_reference);
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_Hoge1* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_Hoge1** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    System_Object__ctor((System_Object*)__stack0_0);
+    __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
 
+//////////////////////
+// Runtime helpers:
+
+void __il2c_test_target_Hoge1_MARK_HANDLER__(void* pReference)
+{
+    __System_Object_MARK_HANDLER__(pReference);
+}
+
+void __il2c_test_target_Hoge1_NEW__(il2c_test_target_Hoge1** ppReference)
+{
+    __gc_get_uninitialized_object__(
+        (void**)ppReference,
+        __il2c_test_target_Hoge1_SIZEOF__(),
+        __il2c_test_target_Hoge1_MARK_HANDLER__);
+    il2c_test_target_Hoge1__ctor(*ppReference);
+}

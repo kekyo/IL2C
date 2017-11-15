@@ -177,9 +177,9 @@ TODO:
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| Referenced instance handler |
+| Referenced instance handler | Partial supported | 
 | Value type boxed instance handler |
-| Collect unused instance (GC) |
+| Collect unused instance (GC) | Partial supported |
 | Heap compaction (GC) |
 | Monitor lock features |
 | Platform invoke (P/Invoke) |

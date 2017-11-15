@@ -24,6 +24,9 @@
     <ClCompile Include="Generated\il2c_test_target.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="il2c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generated\il2c_test_target.h">

@@ -9,7 +9,7 @@ namespace il2c_test_target
     {
         public static int Value1 = 123;
         public int Value2;
-        public Uri OR1;
+        //public ClassTypeTestTarget OR2;
 
         public int GetValue2(int a, int b)
         {

@@ -17,14 +17,31 @@
 #ifdef _WIN32
 #include <crtdbg.h>
 #include <intrin.h>
-typedef intptr_t interlock_t;
-#define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchangePointer((void**)p, (void*)v)
+typedef long interlock_t;
+#define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchange((long*)p, (long)v)
+#define INTERLOCKED_EXCHANGE_POINTER(p, v) (intptr_t)_InterlockedExchangePointer((void**)p, (void*)v)
+#define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (intptr_t)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
 #else
 typedef uint8_t interlock_t;
 static interlock_t INTERLOCKED_EXCHANGE(interlock_t* p, interlock_t v)
 {
     interlock_t cv = *p;
     *p = v;
+    return cv;
+}
+static intptr_t INTERLOCKED_EXCHANGE_POINTER(intptr_t* p, intptr_t v)
+{
+    intptr_t cv = *p;
+    *p = v;
+    return cv;
+}
+static intptr_t INTERLOCKED_COMPARE_EXCHANGE_POINTER(intptr_t volatile* p, intptr_t v, intptr_t c)
+{
+    intptr_t cv = *p;
+    if (cv == c)
+    {
+        *p = v;
+    }
     return cv;
 }
 #endif
@@ -80,14 +97,25 @@ void __gc_get_uninitialized_object__(
     pHeader->gcMark = GCMARK_NOMARK;
 
     // Very important link steps:
-    //   Because cause misread on purpose this instance is living.
+    //   Because cause misread on purpose this instance is living by concurrent gc's.
     *ppReference = pReference;
 
-    // Critial timing at both lines:
-    //   If interrupt and run gc at between 1st and 2nd lines,
-    //   gc fail collect any objects. (but not corrupt, can collect next timing)
-    __REF_HEADER__* pNext = (__REF_HEADER__*)INTERLOCKED_EXCHANGE(g_pBeginHeader__, pHeader);
-    pHeader->pNext = pNext;
+    // Safe link both headers.
+    while (1)
+    {
+        // (1)
+        __REF_HEADER__* pNext = g_pBeginHeader__;
+        // (2)
+        pHeader->pNext = pNext;
+        // (3)
+        if ((__REF_HEADER__*)INTERLOCKED_COMPARE_EXCHANGE_POINTER(
+            &g_pBeginHeader__,
+            pHeader,
+            pNext) == pNext)
+        {
+            break;
+        }
+    }
 
     assert(g_pTerminator == NULL);
 }
@@ -97,10 +125,9 @@ void __gc_mark_from_handler__(void* pReference)
     assert(pReference != NULL);
 
     __REF_HEADER__* pHeader = (__REF_HEADER__*)pReference - 1;
-    if (pHeader->gcMark == GCMARK_NOMARK)
+    interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+    if (currentMark == GCMARK_NOMARK)
     {
-        pHeader->gcMark = GCMARK_LIVE;
-
         assert(pHeader->pMarkHandler != NULL);
         pHeader->pMarkHandler(pReference);
     }
@@ -167,7 +194,7 @@ void __gc_step2_mark_gcmark__()
                 continue;
             }
 
-            // Marking process. TODO: InterlockedExchange
+            // Marking process.
             __REF_HEADER__* pHeader = (__REF_HEADER__*)*ppReference - 1;
             interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
             if (currentMark == GCMARK_NOMARK)

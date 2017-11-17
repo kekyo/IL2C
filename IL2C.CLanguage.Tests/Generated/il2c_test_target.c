@@ -25,6 +25,7 @@ int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 123;
 il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1;
 
 
+
 int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 123;
 
 
@@ -304,6 +305,71 @@ void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppR
         __il2c_test_target_ClassTypeTest_SIZEOF__(),
         __il2c_test_target_ClassTypeTest_MARK_HANDLER__);
     il2c_test_target_ClassTypeTest__ctor(*ppReference);
+}
+
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.PInvokeTest
+
+///////////////////////////////////////
+// il2c_test_target.PInvokeTest.PInvokeTestFunc (P/Invoke)
+
+int64_t il2c_test_target_PInvokeTest_PInvokeTestFunc(int32_t a, uint8_t b)
+{
+    return PInvokeTestFunc(a, b);
+}
+
+///////////////////////////////////////
+// il2c_test_target.PInvokeTest..ctor
+
+void il2c_test_target_PInvokeTest__ctor(il2c_test_target_PInvokeTest* __this)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_PInvokeTest* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_PInvokeTest** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    System_Object__ctor((System_Object*)__stack0_0);
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return;
+}
+
+//////////////////////
+// Runtime helpers:
+
+void __il2c_test_target_PInvokeTest_MARK_HANDLER__(void* pReference)
+{
+    __System_Object_MARK_HANDLER__(pReference);
+}
+
+void __il2c_test_target_PInvokeTest_NEW__(il2c_test_target_PInvokeTest** ppReference)
+{
+    __gc_get_uninitialized_object__(
+        (void**)ppReference,
+        __il2c_test_target_PInvokeTest_SIZEOF__(),
+        __il2c_test_target_PInvokeTest_MARK_HANDLER__);
+    il2c_test_target_PInvokeTest__ctor(*ppReference);
 }
 
 ////////////////////////////////////////////////////////////

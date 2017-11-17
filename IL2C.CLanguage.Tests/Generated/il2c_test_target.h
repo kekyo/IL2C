@@ -15,6 +15,7 @@ extern "C" {
 
 typedef struct il2c_test_target_ClassTypeTestTarget il2c_test_target_ClassTypeTestTarget;
 typedef struct il2c_test_target_ClassTypeTest il2c_test_target_ClassTypeTest;
+typedef struct il2c_test_target_PInvokeTest il2c_test_target_PInvokeTest;
 typedef struct il2c_test_target_ValueTypeTestTarget il2c_test_target_ValueTypeTestTarget;
 typedef struct il2c_test_target_ValueTypeTest il2c_test_target_ValueTypeTest;
 typedef struct il2c_test_target_Hoge2 il2c_test_target_Hoge2;
@@ -36,6 +37,12 @@ struct il2c_test_target_ClassTypeTestTarget
 
 
 #define __il2c_test_target_ClassTypeTest_SIZEOF__() (0)
+
+////////////////////////////////////////////////////////////
+// Class: il2c_test_target.PInvokeTest
+
+
+#define __il2c_test_target_PInvokeTest_SIZEOF__() (0)
 
 ////////////////////////////////////////////////////////////
 // Struct: il2c_test_target.ValueTypeTestTarget
@@ -72,6 +79,7 @@ extern int32_t il2c_test_target_ClassTypeTestTarget_Value1;
 extern il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1;
 
 
+
 extern int32_t il2c_test_target_ValueTypeTestTarget_Value1;
 
 
@@ -90,6 +98,11 @@ extern int32_t il2c_test_target_ClassTypeTest_Test5(void);
 extern void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this);
 extern void __il2c_test_target_ClassTypeTest_MARK_HANDLER__(void* pReference);
 extern void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppReference);
+
+extern int64_t il2c_test_target_PInvokeTest_PInvokeTestFunc(int32_t a, uint8_t b);
+extern void il2c_test_target_PInvokeTest__ctor(il2c_test_target_PInvokeTest* __this);
+extern void __il2c_test_target_PInvokeTest_MARK_HANDLER__(void* pReference);
+extern void __il2c_test_target_PInvokeTest_NEW__(il2c_test_target_PInvokeTest** ppReference);
 
 extern int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTypeTestTarget* __this, int32_t a, int32_t b);
 

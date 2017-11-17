@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace IL2C
 {
@@ -248,8 +249,12 @@ namespace IL2C
             TranslateContext translateContext,
             string indent)
         {
-            var assemblyName = assembly.GetName().Name;
+            foreach (var fileName in translateContext.EnumerateRequiredPrivateIncludeFileNames())
+            {
+                twSource.WriteLine("#include <{0}>", fileName);
+            }
 
+            var assemblyName = assembly.GetName().Name;
             twSource.WriteLine("#include \"{0}.h\"", assemblyName);
 
             var allTypes = assembly.GetTypes()
@@ -323,15 +328,39 @@ namespace IL2C
             var mi = method as MethodInfo;
 
             // Write method body:
-            InternalConvert(
-                translateContext,
-                tw,
-                method.Module,
-                methodName,
-                mi?.ReturnType ?? typeof(void),
-                method.GetSafeParameters(),
-                method.GetMethodBody(),
-                indent);
+            var body = method.GetMethodBody();
+            if (body != null)
+            {
+                InternalConvert(
+                    translateContext,
+                    tw,
+                    method.Module,
+                    methodName,
+                    mi?.ReturnType ?? typeof(void),
+                    method.GetSafeParameters(),
+                    body,
+                    indent);
+            }
+            else if ((method.Attributes & MethodAttributes.PinvokeImpl) == MethodAttributes.PinvokeImpl)
+            {
+                var dllImportAttribute = method.GetCustomAttribute<DllImportAttribute>();
+                if (dllImportAttribute == null)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Missing DllImport attribute at P/Invoke entry: Method={0}",
+                        methodName);
+                }
+
+                InternalConvert(
+                    translateContext,
+                    tw,
+                    methodName,
+                    mi?.ReturnType ?? typeof(void),
+                    method.GetSafeParameters(),
+                    method.Name,
+                    dllImportAttribute,
+                    indent);
+            }
 
             // Is this instance constructor?
             // TODO: Type initializer's handlers
@@ -552,6 +581,52 @@ namespace IL2C
                         indent,
                         sourceCode);
                 }
+            }
+
+            tw.WriteLine("}");
+        }
+
+        private static void InternalConvert(
+            TranslateContext translateContext,
+            TextWriter tw,
+            string methodName,
+            Type returnType,
+            Parameter[] parameters,
+            string targetName,
+            DllImportAttribute dllImportAttribute,
+            string indent)
+        {
+            // TODO: Switch DllImport.Value include direction to library direction.
+            translateContext.RegisterPrivateIncludeFile(dllImportAttribute.Value);
+
+            var functionPrototype = Utilities.GetFunctionPrototypeString(
+                methodName,
+                returnType,
+                parameters,
+                translateContext);
+
+            tw.WriteLine();
+            tw.WriteLine("///////////////////////////////////////");
+            tw.WriteLine("// {0} (P/Invoke)", methodName);
+            tw.WriteLine();
+
+            tw.WriteLine(functionPrototype);
+            tw.WriteLine("{");
+
+            var realTargetName = string.IsNullOrWhiteSpace(dllImportAttribute.EntryPoint)
+                ? targetName
+                : dllImportAttribute.EntryPoint;
+            var arguments = string.Join(
+                ", ",
+                parameters.Select(parameter => parameter.Name));
+
+            if (returnType != typeof(void))
+            {
+                tw.WriteLine("{0}return {1}({2});", indent, realTargetName, arguments);
+            }
+            else
+            {
+                tw.WriteLine("{0}{1}({2});", indent, realTargetName, arguments);
             }
 
             tw.WriteLine("}");

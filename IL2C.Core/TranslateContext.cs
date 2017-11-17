@@ -17,6 +17,7 @@ namespace IL2C
     {
         private readonly Assembly assembly;
         private readonly HashSet<string> includes = new HashSet<string>();
+        private readonly HashSet<string> privateIncludes = new HashSet<string>();
         private readonly HashSet<FieldInfo> staticFields =
             new HashSet<FieldInfo>();
 
@@ -32,9 +33,19 @@ namespace IL2C
             return includes;
         }
 
+        public IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames()
+        {
+            return privateIncludes;
+        }
+
         internal void RegisterIncludeFile(string includeFileName)
         {
             includes.Add(includeFileName);
+        }
+
+        internal void RegisterPrivateIncludeFile(string includeFileName)
+        {
+            privateIncludes.Add(includeFileName);
         }
 
         internal string GetCLanguageTypeName(Type type, TypeNameFlags flags = TypeNameFlags.Strict)

@@ -63,7 +63,15 @@ namespace IL2C
             {
                 return true;
             }
+            if (type == typeof(UInt32))
+            {
+                return true;
+            }
             if (type == typeof(Int64))
+            {
+                return true;
+            }
+            if (type == typeof(UInt64))
             {
                 return true;
             }

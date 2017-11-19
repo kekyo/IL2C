@@ -84,10 +84,20 @@ namespace IL2C
                 this.RegisterIncludeFile("stdint.h");
                 return "int32_t";
             }
+            if (type == typeof(UInt32))
+            {
+                this.RegisterIncludeFile("stdint.h");
+                return "uint32_t";
+            }
             if (type == typeof(Int64))
             {
                 this.RegisterIncludeFile("stdint.h");
                 return "int64_t";
+            }
+            if (type == typeof(UInt64))
+            {
+                this.RegisterIncludeFile("stdint.h");
+                return "uint64_t";
             }
 
             if (type.IsByRef)

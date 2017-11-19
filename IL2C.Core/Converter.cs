@@ -607,7 +607,7 @@ namespace IL2C
 
             tw.WriteLine();
             tw.WriteLine("///////////////////////////////////////");
-            tw.WriteLine("// {0} (P/Invoke)", methodName);
+            tw.WriteLine("// P/Invoke: {0}", methodName);
             tw.WriteLine();
 
             tw.WriteLine(functionPrototype);

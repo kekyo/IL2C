@@ -1,27 +1,23 @@
-#ifdef WIN32
-#define _CRTDBG_MAP_ALLOC
-#endif
-
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <il2c.h>
-
 /////////////////////////////////////////////////////////////
 // For platform specifics:
 
-#define GCALLOC(size) malloc(size)
-#define GCFREE(p) free(p)
-
 #ifdef _WIN32
+
+#define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #include <intrin.h>
+
+#define GCALLOC malloc
+#define GCFREE free
+
 typedef long interlock_t;
+
 #define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchange((long*)p, (long)v)
 #define INTERLOCKED_EXCHANGE_POINTER(p, v) (intptr_t)_InterlockedExchangePointer((void**)p, (void*)v)
 #define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (intptr_t)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
+
 #else
+
 typedef uint8_t interlock_t;
 static interlock_t INTERLOCKED_EXCHANGE(interlock_t* p, interlock_t v)
 {
@@ -44,7 +40,16 @@ static intptr_t INTERLOCKED_COMPARE_EXCHANGE_POINTER(intptr_t volatile* p, intpt
     }
     return cv;
 }
+
+#define GCALLOC(size) malloc(size)
+#define GCFREE(p) free(p)
 #endif
+
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <il2c.h>
 
 /////////////////////////////////////////////////////////////
 

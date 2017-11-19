@@ -311,11 +311,19 @@ void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppR
 // Type: il2c_test_target.PInvokeTest
 
 ///////////////////////////////////////
-// il2c_test_target.PInvokeTest.PInvokeTestFunc (P/Invoke)
+// P/Invoke: il2c_test_target.PInvokeTest.GetCurrentProcessId
 
-int64_t il2c_test_target_PInvokeTest_PInvokeTestFunc(int32_t a, uint8_t b)
+uint32_t il2c_test_target_PInvokeTest_GetCurrentProcessId(void)
 {
-    return PInvokeTestFunc(a, b);
+    return GetCurrentProcessId();
+}
+
+///////////////////////////////////////
+// P/Invoke: il2c_test_target.PInvokeTest.GetCurrentThreadId
+
+uint32_t il2c_test_target_PInvokeTest_GetCurrentThreadId(void)
+{
+    return GetCurrentThreadId();
 }
 
 ///////////////////////////////////////

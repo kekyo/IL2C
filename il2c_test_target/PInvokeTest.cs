@@ -8,7 +8,10 @@ namespace il2c_test_target
 {
     public class PInvokeTest
     {
-        [DllImport("PInvoke.h")]
-        public static extern long PInvokeTestFunc(int a, byte b);
+        [DllImport("windows.h")]
+        public static extern uint GetCurrentProcessId();
+
+        [DllImport("windows.h")]
+        public static extern uint GetCurrentThreadId();
     }
 }

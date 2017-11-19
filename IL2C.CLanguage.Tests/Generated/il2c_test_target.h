@@ -99,7 +99,8 @@ extern void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest*
 extern void __il2c_test_target_ClassTypeTest_MARK_HANDLER__(void* pReference);
 extern void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppReference);
 
-extern int64_t il2c_test_target_PInvokeTest_PInvokeTestFunc(int32_t a, uint8_t b);
+extern uint32_t il2c_test_target_PInvokeTest_GetCurrentProcessId(void);
+extern uint32_t il2c_test_target_PInvokeTest_GetCurrentThreadId(void);
 extern void il2c_test_target_PInvokeTest__ctor(il2c_test_target_PInvokeTest* __this);
 extern void __il2c_test_target_PInvokeTest_MARK_HANDLER__(void* pReference);
 extern void __il2c_test_target_PInvokeTest_NEW__(il2c_test_target_PInvokeTest** ppReference);

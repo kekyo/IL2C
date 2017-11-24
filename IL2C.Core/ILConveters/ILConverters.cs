@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
     internal sealed class NopConverter : InlineNoneConverter
     {
         private static readonly string[] empty = new string[0];
+        private static readonly Func<IExtractContext, string[]> emptyFunc = _ => empty;
 
         public override OpCode OpCode => OpCodes.Nop;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return empty;
+            return emptyFunc;
         }
     }
 
@@ -24,36 +25,41 @@ namespace IL2C.ILConveters
 
         public override bool IsEndOfPath => true;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             if (decodeContext.ReturnType == typeof(void))
             {
-                return new [] { "return" };
+                return _ => new [] { "return" };
             }
 
             var si = decodeContext.PopStack();
             var returnType = decodeContext.ReturnType;
 
-            var rightExpression = decodeContext.TranslateContext.GetRightExpression(returnType, si);
-            if (rightExpression == null)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
-                    decodeContext.ILByteIndex,
-                    si.TargetType.FullName,
-                    returnType.FullName);
-            }
+            decodeContext.prepareContext.RegisterType(returnType);
 
-            return new[] { string.Format(
-                "return {0}",
-                rightExpression) };
+            return lookupper =>
+            {
+                var rightExpression = lookupper.GetRightExpression(returnType, si);
+                if (rightExpression == null)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
+                        decodeContext.ILByteIndex,
+                        si.TargetType.FullName,
+                        returnType.FullName);
+                }
+
+                return new[] { string.Format(
+                    "return {0}",
+                    rightExpression) };
+            };
         }
 
         internal sealed class InitobjConverter : InlineTypeConverter
         {
             public override OpCode OpCode => OpCodes.Initobj;
 
-            public override string[] Apply(int typeToken, DecodeContext decodeContext)
+            public override Func<IExtractContext, string[]> Apply(int typeToken, DecodeContext decodeContext)
             {
                 try
                 {
@@ -69,12 +75,17 @@ namespace IL2C.ILConveters
                             si.TargetType.FullName);
                     }
 
-                    decodeContext.TranslateContext.RegisterIncludeFile("string.h");
+                    decodeContext.prepareContext.RegisterIncludeFile("string.h");
 
-                    return new[] { string.Format(
-                        "memset({0}, 0x00, sizeof({1}))",
-                        si.SymbolName,
-                        decodeContext.TranslateContext.GetCLanguageTypeName(type)) };
+                    return lookupper =>
+                    {
+                        var typeName = lookupper.GetCLanguageTypeName(type);
+
+                        return new[] { string.Format(
+                            "memset({0}, 0x00, sizeof({1}))",
+                            si.SymbolName,
+                            typeName) };
+                    };
                 }
                 catch (ArgumentException)
                 {
@@ -90,7 +101,7 @@ namespace IL2C.ILConveters
         {
             public override OpCode OpCode => OpCodes.Newobj;
 
-            public override string[] Apply(int constructorToken, DecodeContext decodeContext)
+            public override Func<IExtractContext, string[]> Apply(int constructorToken, DecodeContext decodeContext)
             {
                 try
                 {
@@ -121,17 +132,20 @@ namespace IL2C.ILConveters
                         new Utilities.RightExpressionGivenParameter(
                             type, new SymbolInformation(thisSymbolName, type)));
 
-                    var dereferencedTypeName = decodeContext.TranslateContext.GetCLanguageTypeName(
-                        type, TypeNameFlags.Dereferenced);
-                    var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters.ToArray(), decodeContext);
+                    var ilByteIndex = decodeContext.ILByteIndex;
 
-                    return new[]
+                    return lookupper =>
                     {
-                        string.Format(
+                        var parameterString = Utilities.GetGivenParameterDeclaration(
+                            pairParameters.ToArray(), lookupper, ilByteIndex);
+
+                        var dereferencedTypeName = lookupper.GetCLanguageTypeName(
+                            type, TypeNameFlags.Dereferenced);
+
+                        return new[] { string.Format(
                             "__{0}_NEW__(&{1})",
                             dereferencedTypeName,
-                            parameterString)
+                            parameterString) };
                     };
                 }
                 catch (ArgumentException)

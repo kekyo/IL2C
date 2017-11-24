@@ -3,66 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using IL2C.ILConveters;
 
-namespace IL2C
+namespace IL2C.Translators
 {
-    internal struct SymbolInformation
-    {
-        public readonly string SymbolName;
-        public readonly Type TargetType;
-
-        public SymbolInformation(string symbolName, Type targetType)
-        {
-            this.SymbolName = symbolName;
-            this.TargetType = targetType;
-        }
-
-        public bool Equals(SymbolInformation rhs)
-        {
-            return this.SymbolName.Equals(rhs.SymbolName)
-                && this.TargetType.Equals(rhs.TargetType);
-        }
-
-        public override bool Equals(object rhs)
-        {
-            if (rhs is SymbolInformation)
-            {
-                return this.Equals((SymbolInformation)rhs);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            return this.SymbolName.GetHashCode() ^ this.TargetType.GetHashCode();
-        }
-    }
-
-    internal struct Label
-    {
-        public readonly int ILByteIndex;
-
-        public Label(int ilByteIndex)
-        {
-            this.ILByteIndex = ilByteIndex;
-        }
-    }
-
-    internal struct Parameter
-    {
-        public readonly string Name;
-        public readonly Type ParameterType;
-
-        public Parameter(string name, Type parameterType)
-        {
-            this.Name = name;
-            this.ParameterType = parameterType;
-        }
-    }
-
     internal sealed class DecodeContext
     {
         #region Private types
@@ -84,7 +28,7 @@ namespace IL2C
             {
             }
 
-            public string GetOrAdd(Type targetType, TranslateContext translateContext)
+            public string GetOrAdd(Type targetType)
             {
                 var index = typedStackInformation
                     .FindIndex(si => si.TargetType == targetType);
@@ -143,8 +87,8 @@ namespace IL2C
         public readonly string MethodName;
         public readonly Type ReturnType;
         public readonly Parameter[] Parameters;
-        public readonly IList<LocalVariableInfo> Locals;
-        public readonly TranslateContext TranslateContext;
+        public readonly LocalVariableInfo[] Locals;
+        public readonly IPrepareContext prepareContext;
 
         private readonly Module module;
 
@@ -157,11 +101,10 @@ namespace IL2C
         private readonly List<StackInformationHolder> stackList =
             new List<StackInformationHolder>();
         private int stackPointer = -1;
-
+        private readonly Dictionary<int, string> labelNames = 
+            new Dictionary<int, string>();
         private readonly Queue<BranchTargetInformation> pathRemains =
             new Queue<BranchTargetInformation>();
-        private readonly Dictionary<int, string> labelNamesByILByteIndex =
-            new Dictionary<int, string>();
         #endregion
 
         public DecodeContext(
@@ -169,9 +112,9 @@ namespace IL2C
             string methodName,
             Type returnType,
             Parameter[] parameters,
-            IList<LocalVariableInfo> locals,
+            LocalVariableInfo[] locals,
             byte[] ilBytes,
-            TranslateContext translateContext)
+            IPrepareContext prepareContext)
         {
             if (ilBytes.Length == 0)
             {
@@ -187,7 +130,7 @@ namespace IL2C
 
             this.module = module;
 
-            this.TranslateContext = translateContext;
+            this.prepareContext = prepareContext;
 
             this.ilBytes = ilBytes;
             this.decodedPathNumbersAtILByteIndex = new int[ilBytes.Length];
@@ -316,12 +259,6 @@ namespace IL2C
         {
             return new Label(ilByteIndex);
         }
-
-        public bool TryGetLabelName(Label label, out string labelName)
-        {
-            return labelNamesByILByteIndex.TryGetValue(
-                label.ILByteIndex, out labelName);
-        }
         #endregion
 
         #region ILByteIndex
@@ -380,7 +317,7 @@ namespace IL2C
 
             stackPointer++;
 
-            return stackInformationHolder.GetOrAdd(targetType, this.TranslateContext);
+            return stackInformationHolder.GetOrAdd(targetType);
         }
 
         public SymbolInformation PopStack()
@@ -412,11 +349,11 @@ namespace IL2C
             pathRemains.Enqueue(new BranchTargetInformation(
                 branchTargetIndex, stackPointer, stackList));
 
-            if (labelNamesByILByteIndex.TryGetValue(
+            if (labelNames.TryGetValue(
                 branchTargetIndex, out var labelName) == false)
             {
-                labelName = string.Format("L_{0:x4}", labelNamesByILByteIndex.Count);
-                labelNamesByILByteIndex.Add(branchTargetIndex, labelName);
+                labelName = string.Format("L_{0:x4}", labelNames.Count);
+                labelNames.Add(branchTargetIndex, labelName);
             }
 
             return labelName;
@@ -453,9 +390,8 @@ namespace IL2C
                     index < branchTarget.StackInformationsSnapshot.Length;
                     index++)
                 {
-                    stackList[index].GetOrAdd(
-                        branchTarget.StackInformationsSnapshot[index].TargetType,
-                        this.TranslateContext);
+                    stackList[index]
+                        .GetOrAdd(branchTarget.StackInformationsSnapshot[index].TargetType);
                 }
                 stackPointer = branchTarget.StackInformationsSnapshot.Length;
 
@@ -467,6 +403,7 @@ namespace IL2C
         }
         #endregion
 
+        #region Resolvers
         public Type ResolveType(int typeToken)
         {
             return module.ResolveType(typeToken);
@@ -481,11 +418,19 @@ namespace IL2C
         {
             return module.ResolveMethod(methodToken);
         }
+        #endregion
 
+        #region Extractors
         public IEnumerable<SymbolInformation> ExtractStacks()
         {
             return stackList
                 .SelectMany(stackInformations => stackInformations.ExtractStacks());
         }
+
+        public IReadOnlyDictionary<int, string> ExtractLabelNames()
+        {
+            return labelNames;
+        }
+        #endregion
     }
 }

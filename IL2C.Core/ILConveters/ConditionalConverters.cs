@@ -1,4 +1,6 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -6,7 +8,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Cgt;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -15,7 +17,7 @@ namespace IL2C.ILConveters
                 && Utilities.IsNumericPrimitive(si1.TargetType))
             {
                 var resultName = decodeContext.PushStack(typeof(int));
-                return new[] { string.Format(
+                return _ => new[] { string.Format(
                     "{0} = ({1} > {2}) ? 1 : 0",
                     resultName,
                     si0.SymbolName,

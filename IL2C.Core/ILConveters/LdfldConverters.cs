@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -8,14 +9,14 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldsfld;
 
-        public override string[] Apply(int fieldToken, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
                 var field = decodeContext.ResolveField(fieldToken);
                 Debug.Assert(field.IsStatic);
 
-                decodeContext.TranslateContext.AddStaticField(field);
+                decodeContext.prepareContext.RegisterStaticField(field);
 
                 var targetType = field.FieldType;
 
@@ -25,7 +26,7 @@ namespace IL2C.ILConveters
                 if (targetType == typeof(bool))
                 {
                     var symbolName = decodeContext.PushStack(typeof(int));
-                    return new [] { string.Format(
+                    return _ => new [] { string.Format(
                         "{0} = {1} ? 1 : 0",
                         symbolName,
                         fqFieldName) };
@@ -41,7 +42,7 @@ namespace IL2C.ILConveters
                     }
 
                     var symbolName = decodeContext.PushStack(targetType);
-                    return new[] { string.Format(
+                    return _ => new[] { string.Format(
                         "{0} = {1}",
                         symbolName,
                         fqFieldName) };
@@ -61,7 +62,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldfld;
 
-        public override string[] Apply(int fieldToken, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
@@ -127,25 +128,28 @@ namespace IL2C.ILConveters
                     targetType = typeof(int);
                 }
 
-                var rightExpression = decodeContext.TranslateContext.GetRightExpression(
-                    targetType,
-                    field.FieldType,
-                    siReference.SymbolName + oper + field.Name);
-                if (rightExpression == null)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Invalid load operation: ILByteIndex={0}, StackType={1}, FieldType={2}",
-                        decodeContext.ILByteIndex,
-                        targetType.FullName,
-                        field.FieldType.FullName);
-                }
-
                 var resultName = decodeContext.PushStack(targetType);
 
-                return new[] { string.Format(
-                    "{0} = {1}",
-                    resultName,
-                    rightExpression) };
+                return lookupper =>
+                {
+                    var rightExpression = lookupper.GetRightExpression(
+                        targetType,
+                        field.FieldType,
+                        siReference.SymbolName + oper + field.Name);
+                    if (rightExpression == null)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid load operation: ILByteIndex={0}, StackType={1}, FieldType={2}",
+                            decodeContext.ILByteIndex,
+                            targetType.FullName,
+                            field.FieldType.FullName);
+                    }
+
+                    return new[] { string.Format(
+                        "{0} = {1}",
+                        resultName,
+                        rightExpression) };
+                };
             }
             catch (ArgumentException)
             {

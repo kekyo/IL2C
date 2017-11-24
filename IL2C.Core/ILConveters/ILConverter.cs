@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection.Emit;
+using IL2C.Translators;
 
-namespace IL2C
+namespace IL2C.ILConveters
 {
     internal abstract class ILConverter
     {
@@ -11,17 +13,17 @@ namespace IL2C
 
         public abstract object DecodeOperand(DecodeContext decodeContext);
 
-        public abstract string[] Apply(object operand, DecodeContext decodeContext);
+        public abstract Func<IExtractContext, string[]> Apply(object operand, DecodeContext decodeContext);
     }
 
     internal abstract class ILConverter<T> : ILConverter
     {
-        public sealed override string[] Apply(object operand, DecodeContext decodeContext)
+        public sealed override Func<IExtractContext, string[]> Apply(object operand, DecodeContext decodeContext)
         {
             Debug.Assert(operand is T);
             return this.Apply((T)operand, decodeContext);
         }
 
-        public abstract string[] Apply(T operand, DecodeContext decodeContext);
+        public abstract Func<IExtractContext, string[]> Apply(T operand, DecodeContext decodeContext);
     }
 }

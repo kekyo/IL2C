@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -7,7 +8,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Stfld;
 
-        public override string[] Apply(int fieldToken, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(int fieldToken, DecodeContext decodeContext)
         {
             try
             {
@@ -49,22 +50,25 @@ namespace IL2C.ILConveters
                         siReference.TargetType.FullName);
                 }
 
-                var rightExpression = decodeContext.TranslateContext.GetRightExpression(
-                    field.FieldType, siValue);
-                if (rightExpression == null)
+                return lookupper =>
                 {
-                    throw new InvalidProgramSequenceException(
-                        "Invalid store operation: ILByteIndex={0}, StackType={1}, FieldType={2}",
-                        decodeContext.ILByteIndex,
-                        siValue.TargetType.FullName,
-                        field.FieldType.FullName);
-                }
+                    var rightExpression = lookupper.GetRightExpression(
+                        field.FieldType, siValue);
+                    if (rightExpression == null)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid store operation: ILByteIndex={0}, StackType={1}, FieldType={2}",
+                            decodeContext.ILByteIndex,
+                            siValue.TargetType.FullName,
+                            field.FieldType.FullName);
+                    }
 
-                return new[] { string.Format(
-                    "{0}->{1} = {2}",
-                    siReference.SymbolName,
-                    field.Name,
-                    rightExpression) };
+                    return new[] { string.Format(
+                        "{0}->{1} = {2}",
+                        siReference.SymbolName,
+                        field.Name,
+                        rightExpression) };
+                };
             }
             catch (ArgumentException)
             {

@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
     internal static class CallConverterUtilities
     {
-        public static string[] Apply(MethodBase method, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(MethodBase method, DecodeContext decodeContext)
         {
             var parameters = method.GetSafeParameters();
             var pairParameters = parameters
@@ -20,8 +21,6 @@ namespace IL2C.ILConveters
 
             var methodName = Utilities.GetFullMemberName(method);
             var functionName = methodName.ManglingSymbolName();
-            var parameterString =
-                Utilities.GetGivenParameterDeclaration(pairParameters, decodeContext);
 
             var mi = method as MethodInfo;
             var targetType = mi?.ReturnType ?? typeof(void);
@@ -36,21 +35,40 @@ namespace IL2C.ILConveters
                 }
 
                 var resultName = decodeContext.PushStack(targetType);
+                var ilByteIndex = decodeContext.ILByteIndex;
 
-                return new[] { string.Format(
-                    "{0} = {1}({2})",
-                    resultName,
-                    functionName,
-                    parameterString) };
+                return lookupper =>
+                {
+                    var parameterString =
+                        Utilities.GetGivenParameterDeclaration(pairParameters, lookupper, ilByteIndex);
+                    return new[]
+                    {
+                        string.Format(
+                            "{0} = {1}({2})",
+                            resultName,
+                            functionName,
+                            parameterString)
+                    };
+                };
             }
             else
             {
                 Debug.Assert(method is ConstructorInfo);
 
-                return new[] { string.Format(
-                    "{0}({1})",
-                    functionName,
-                    parameterString) };
+                var ilByteIndex = decodeContext.ILByteIndex;
+
+                return lookupper =>
+                {
+                    var parameterString =
+                        Utilities.GetGivenParameterDeclaration(pairParameters, lookupper, ilByteIndex);
+                    return new[]
+                    {
+                        string.Format(
+                            "{0}({1})",
+                            functionName,
+                            parameterString)
+                    };
+                };
             }
         }
     }
@@ -59,7 +77,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Call;
 
-        public override string[] Apply(int methodToken, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(int methodToken, DecodeContext decodeContext)
         {
             try
             {
@@ -81,7 +99,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Callvirt;
 
-        public override string[] Apply(int methodToken, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(int methodToken, DecodeContext decodeContext)
         {
             try
             {

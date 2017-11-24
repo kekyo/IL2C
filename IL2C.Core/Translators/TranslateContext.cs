@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace IL2C
+namespace IL2C.Translators
 {
     [Flags]
     internal enum TypeNameFlags
@@ -13,42 +13,142 @@ namespace IL2C
         StructPrefix = 2
     }
 
-    public sealed class TranslateContext
+    internal interface IPrepareContext
     {
-        private readonly Assembly assembly;
+        void RegisterIncludeFile(string includeFileName);
+        void RegisterPrivateIncludeFile(string includeFileName);
+        void RegisterType(Type type);
+        void RegisterStaticField(FieldInfo staticField);
+    }
+
+    internal interface IExtractContext
+    {
+        Assembly Assembly { get; }
+
+        string GetCLanguageTypeName(Type type, TypeNameFlags flags = TypeNameFlags.Strict);
+        string GetRightExpression(Type lhsType, SymbolInformation rhs);
+        string GetRightExpression(Type lhsType, Type rhsType, string rhsExpression);
+        IEnumerable<string> EnumerateRequiredIncludeFileNames();
+        IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();
+        IEnumerable<FieldInfo> ExtractStaticFields();
+    }
+
+    public sealed class TranslateContext : IPrepareContext, IExtractContext
+    {
         private readonly HashSet<string> includes = new HashSet<string>();
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
-        private readonly HashSet<FieldInfo> staticFields =
-            new HashSet<FieldInfo>();
+        private readonly HashSet<FieldInfo> staticFields = new HashSet<FieldInfo>();
 
         public TranslateContext(Assembly assembly)
         {
-            this.assembly = assembly;
+            this.Assembly = assembly;
 
             includes.Add("il2c.h");
         }
 
-        public IEnumerable<string> EnumerateRequiredIncludeFileNames()
-        {
-            return includes;
-        }
-
-        public IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames()
-        {
-            return privateIncludes;
-        }
-
-        internal void RegisterIncludeFile(string includeFileName)
+        #region IPrepareContext
+        private void RegisterIncludeFile(string includeFileName)
         {
             includes.Add(includeFileName);
         }
 
-        internal void RegisterPrivateIncludeFile(string includeFileName)
+        void IPrepareContext.RegisterIncludeFile(string includeFileName)
+        {
+            this.RegisterIncludeFile(includeFileName);
+        }
+
+        private void RegisterPrivateIncludeFile(string includeFileName)
         {
             privateIncludes.Add(includeFileName);
         }
 
-        internal string GetCLanguageTypeName(Type type, TypeNameFlags flags = TypeNameFlags.Strict)
+        void IPrepareContext.RegisterPrivateIncludeFile(string includeFileName)
+        {
+            this.RegisterPrivateIncludeFile(includeFileName);
+        }
+
+        private void RegisterType(Type type)
+        {
+            if (type == typeof(Boolean))
+            {
+                this.RegisterIncludeFile("stdbool.h");
+            }
+            else if (type == typeof(Byte))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type == typeof(SByte))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type == typeof(Int16))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type == typeof(UInt16))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type == typeof(Int32))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type == typeof(UInt32))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type == typeof(Int64))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type == typeof(UInt64))
+            {
+                this.RegisterIncludeFile("stdint.h");
+            }
+            else if (type.IsByRef)
+            {
+                var dereferencedType = type.GetElementType();
+                this.RegisterType(dereferencedType);
+            }
+        }
+
+        void IPrepareContext.RegisterType(Type type)
+        {
+            this.RegisterType(type);
+        }
+
+        private void RegisterStaticField(FieldInfo staticField)
+        {
+            Debug.Assert(staticField.IsStatic);
+
+            staticFields.Add(staticField);
+        }
+
+        void IPrepareContext.RegisterStaticField(FieldInfo staticField)
+        {
+            this.RegisterStaticField(staticField);
+        }
+        #endregion
+
+        #region IExtractContext
+        public Assembly Assembly { get; }
+
+        IEnumerable<string> IExtractContext.EnumerateRequiredIncludeFileNames()
+        {
+            return includes;
+        }
+
+        IEnumerable<string> IExtractContext.EnumerateRequiredPrivateIncludeFileNames()
+        {
+            return privateIncludes;
+        }
+
+        IEnumerable<FieldInfo> IExtractContext.ExtractStaticFields()
+        {
+            return staticFields;
+        }
+
+        private string GetCLanguageTypeName(Type type, TypeNameFlags flags = TypeNameFlags.Strict)
         {
             if (type == typeof(void))
             {
@@ -56,47 +156,38 @@ namespace IL2C
             }
             if (type == typeof(Boolean))
             {
-                this.RegisterIncludeFile("stdbool.h");
                 return "bool";
             }
             if (type == typeof(Byte))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "uint8_t";
             }
             if (type == typeof(SByte))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "int8_t";
             }
             if (type == typeof(Int16))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "int16_t";
             }
             if (type == typeof(UInt16))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "uint16_t";
             }
             if (type == typeof(Int32))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "int32_t";
             }
             if (type == typeof(UInt32))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "uint32_t";
             }
             if (type == typeof(Int64))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "int64_t";
             }
             if (type == typeof(UInt64))
             {
-                this.RegisterIncludeFile("stdint.h");
                 return "uint64_t";
             }
 
@@ -127,7 +218,12 @@ namespace IL2C
             }
         }
 
-        internal string GetRightExpression(Type lhsType, SymbolInformation rhs)
+        string IExtractContext.GetCLanguageTypeName(Type type, TypeNameFlags flags)
+        {
+            return this.GetCLanguageTypeName(type, flags);
+        }
+
+        private string GetRightExpression(Type lhsType, SymbolInformation rhs)
         {
             if (lhsType == rhs.TargetType)
             {
@@ -174,7 +270,12 @@ namespace IL2C
             return null;
         }
 
-        internal string GetRightExpression(Type lhsType, Type rhsType, string rhsExpression)
+        string IExtractContext.GetRightExpression(Type lhsType, SymbolInformation rhs)
+        {
+            return this.GetRightExpression(lhsType, rhs);
+        }
+
+        private string GetRightExpression(Type lhsType, Type rhsType, string rhsExpression)
         {
             if (lhsType.IsAssignableFrom(rhsType))
             {
@@ -210,16 +311,10 @@ namespace IL2C
             return null;
         }
 
-        public void AddStaticField(FieldInfo staticField)
+        string IExtractContext.GetRightExpression(Type lhsType, Type rhsType, string rhsExpression)
         {
-            Debug.Assert(staticField.IsStatic);
-
-            staticFields.Add(staticField);
+            return this.GetRightExpression(lhsType, rhsType, rhsExpression);
         }
-
-        public IEnumerable<FieldInfo> ExtractStaticFields()
-        {
-            return staticFields;
-        }
+        #endregion
     }
 }

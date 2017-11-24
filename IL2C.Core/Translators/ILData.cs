@@ -1,4 +1,6 @@
-﻿namespace IL2C
+﻿using IL2C.ILConveters;
+
+namespace IL2C.Translators
 {
     internal struct ILData
     {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using IL2C.ILConveters;
+using IL2C.Translators;
 
 namespace IL2C
 {
@@ -33,8 +35,10 @@ namespace IL2C
             {
                 var type = method.DeclaringType;
                 var thisType = type.IsValueType ? type.MakeByRefType() : type;
-                parameters = new[] {
-                    new Parameter("__this", thisType) }
+                parameters = new[]
+                    {
+                        new Parameter("__this", thisType)
+                    }
                     .Concat(parameters);
             }
 
@@ -119,17 +123,17 @@ namespace IL2C
             string methodName,
             Type returnType,
             Parameter[] parameters,
-            TranslateContext translateContext)
+            IExtractContext extractContext)
         {
             var parametersString = String.Join(
                 ", ",
                 parameters.Select(parameter => String.Format(
                     "{0} {1}",
-                    translateContext.GetCLanguageTypeName(parameter.ParameterType),
+                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
                     parameter.Name)));
 
             var returnTypeName =
-                translateContext.GetCLanguageTypeName(returnType);
+                extractContext.GetCLanguageTypeName(returnType);
 
             return String.Format(
                 "{0} {1}({2})",
@@ -141,25 +145,32 @@ namespace IL2C
         public static string GetStaticFieldPrototypeString(
             FieldInfo field,
             bool requireInitializerExpression,
-            TranslateContext translateContext)
+            IExtractContext extractContext)
         {
             var initializer = String.Empty;
-            if (requireInitializerExpression && IsNumericPrimitive(field.FieldType))
+            if (requireInitializerExpression)
             {
-                // TODO: numericPrimitive and (literal or readonly static) ?
-                Debug.Assert(field.IsStatic);
-                var value = field.GetValue(null);
+                if (IsNumericPrimitive(field.FieldType))
+                {
+                    // TODO: numericPrimitive and (literal or readonly static) ?
+                    Debug.Assert(field.IsStatic);
+                    var value = field.GetValue(null);
 
-                Debug.Assert(value != null);
+                    Debug.Assert(value != null);
 
-                initializer = (value is long)
-                    ? String.Format(" = {0}LL", value)
-                    : String.Format(" = {0}", value);
+                    initializer = (value is long)
+                        ? String.Format(" = {0}LL", value)
+                        : String.Format(" = {0}", value);
+                }
+                else if (field.FieldType.IsClass)
+                {
+                    initializer = " = NULL";
+                }
             }
 
             return string.Format(
                 "{0} {1}{2}",
-                translateContext.GetCLanguageTypeName(field.FieldType),
+                extractContext.GetCLanguageTypeName(field.FieldType),
                 Utilities.GetFullMemberName(field).ManglingSymbolName(),
                 initializer);
         }
@@ -178,18 +189,18 @@ namespace IL2C
 
         public static string GetGivenParameterDeclaration(
             RightExpressionGivenParameter[] parameters,
-            DecodeContext decodeContext)
+            IExtractContext extractContext,
+            int ilByteIndex)
         {
             return string.Join(", ", parameters.Select(entry =>
             {
-                var rightExpression =
-                    decodeContext.TranslateContext.GetRightExpression(
-                        entry.TargetType, entry.SymbolInformation);
+                var rightExpression = extractContext.GetRightExpression(
+                    entry.TargetType, entry.SymbolInformation);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid parameter type: ILByteIndex={0}, StackType={1}, ParameterType={2}",
-                        decodeContext.ILByteIndex,
+                        ilByteIndex,
                         entry.SymbolInformation.TargetType.FullName,
                         entry.TargetType.FullName);
                 }
@@ -197,14 +208,40 @@ namespace IL2C
             }));
         }
 
-    public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next)
+        public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next, bool invokeNextFirst = false)
             where T : class
         {
             T current = first;
-            while (current != null)
+            if (invokeNextFirst)
             {
-                yield return current;
-                current = next(current);
+                if (current != null)
+                {
+                    while (true)
+                    {
+                        current = next(current);
+                        if (current == null)
+                        {
+                            break;
+                        }
+                        yield return current;
+                    }
+                }
+            }
+            else
+            {
+                while (current != null)
+                {
+                    yield return current;
+                    current = next(current);
+                }
+            }
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        {
+            foreach (var value in enumerable)
+            {
+                action(value);
             }
         }
     }

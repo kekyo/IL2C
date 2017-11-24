@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -11,13 +13,13 @@ namespace IL2C.ILConveters
             return null;
         }
 
-        public sealed override string[] Apply(object operand, DecodeContext decodeContext)
+        public sealed override Func<IExtractContext, string[]> Apply(object operand, DecodeContext decodeContext)
         {
             Debug.Assert(operand == null);
             return this.Apply(decodeContext);
         }
 
-        public abstract string[] Apply(DecodeContext decodeContext);
+        public abstract Func<IExtractContext, string[]> Apply(DecodeContext decodeContext);
     }
 
     internal abstract class InlineI4Converter : ILConverter<int>

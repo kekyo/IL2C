@@ -1,4 +1,6 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -6,10 +8,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_0;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = 0", symbolName) };
+            return _ => new[] { string.Format("{0} = 0", symbolName) };
         }
     }
 
@@ -17,10 +19,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_1;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = 1", symbolName) };
+            return _ => new[] { string.Format("{0} = 1", symbolName) };
         }
     }
 
@@ -28,10 +30,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_2;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = 2", symbolName) };
+            return _ => new[] { string.Format("{0} = 2", symbolName) };
         }
     }
 
@@ -39,10 +41,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_5;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = 5", symbolName) };
+            return _ => new[] { string.Format("{0} = 5", symbolName) };
         }
     }
 
@@ -50,10 +52,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4;
 
-        public override string[] Apply(int operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(int operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = {1}", symbolName, operand) };
+            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
         }
     }
 
@@ -61,10 +63,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_S;
 
-        public override string[] Apply(sbyte operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = {1}", symbolName, operand) };
+            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
         }
     }
 
@@ -72,10 +74,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldc_I8;
 
-        public override string[] Apply(long operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(long operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(typeof(long));
-            return new[] { string.Format("{0} = {1}LL", symbolName, operand) };
+            return _ => new[] { string.Format("{0} = {1}LL", symbolName, operand) };
         }
     }
 }

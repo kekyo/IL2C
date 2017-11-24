@@ -1,4 +1,5 @@
-﻿#include "il2c_test_target.h"
+﻿#include <windows.h>
+#include "il2c_test_target.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,7 +23,7 @@ extern "C" {
 // Static fields:
 
 int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 123;
-il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1;
+il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1 = NULL;
 
 
 
@@ -38,7 +39,7 @@ int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 123;
 // Type: il2c_test_target.ClassTypeTestTarget
 
 ///////////////////////////////////////
-// il2c_test_target.ClassTypeTestTarget.GetValue2
+// GetValue2
 
 int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b)
 {
@@ -86,7 +87,7 @@ L_0000:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.ClassTypeTestTarget..ctor
+// .ctor
 
 void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this)
 {
@@ -144,7 +145,7 @@ void __il2c_test_target_ClassTypeTestTarget_NEW__(il2c_test_target_ClassTypeTest
 // Type: il2c_test_target.ClassTypeTest
 
 ///////////////////////////////////////
-// il2c_test_target.ClassTypeTest.Test4
+// Test4
 
 int32_t il2c_test_target_ClassTypeTest_Test4(void)
 {
@@ -196,7 +197,7 @@ L_0000:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.ClassTypeTest.Test5
+// Test5
 
 int32_t il2c_test_target_ClassTypeTest_Test5(void)
 {
@@ -254,7 +255,7 @@ L_0000:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.ClassTypeTest..ctor
+// .ctor
 
 void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this)
 {
@@ -311,7 +312,7 @@ void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppR
 // Type: il2c_test_target.PInvokeTest
 
 ///////////////////////////////////////
-// P/Invoke: il2c_test_target.PInvokeTest.GetCurrentProcessId
+// P/Invoke: GetCurrentProcessId
 
 uint32_t il2c_test_target_PInvokeTest_GetCurrentProcessId(void)
 {
@@ -319,7 +320,7 @@ uint32_t il2c_test_target_PInvokeTest_GetCurrentProcessId(void)
 }
 
 ///////////////////////////////////////
-// P/Invoke: il2c_test_target.PInvokeTest.GetCurrentThreadId
+// P/Invoke: GetCurrentThreadId
 
 uint32_t il2c_test_target_PInvokeTest_GetCurrentThreadId(void)
 {
@@ -327,7 +328,7 @@ uint32_t il2c_test_target_PInvokeTest_GetCurrentThreadId(void)
 }
 
 ///////////////////////////////////////
-// il2c_test_target.PInvokeTest..ctor
+// .ctor
 
 void il2c_test_target_PInvokeTest__ctor(il2c_test_target_PInvokeTest* __this)
 {
@@ -384,7 +385,7 @@ void __il2c_test_target_PInvokeTest_NEW__(il2c_test_target_PInvokeTest** ppRefer
 // Type: il2c_test_target.ValueTypeTestTarget
 
 ///////////////////////////////////////
-// il2c_test_target.ValueTypeTestTarget.GetValue2
+// GetValue2
 
 int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTypeTestTarget* __this, int32_t a, int32_t b)
 {
@@ -435,7 +436,7 @@ L_0000:
 // Type: il2c_test_target.ValueTypeTest
 
 ///////////////////////////////////////
-// il2c_test_target.ValueTypeTest.Test4
+// Test4
 
 int32_t il2c_test_target_ValueTypeTest_Test4(void)
 {
@@ -486,7 +487,7 @@ L_0000:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.ValueTypeTest.Test5
+// Test5
 
 int32_t il2c_test_target_ValueTypeTest_Test5(void)
 {
@@ -542,7 +543,7 @@ L_0000:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.ValueTypeTest..ctor
+// .ctor
 
 void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this)
 {
@@ -599,7 +600,7 @@ void __il2c_test_target_ValueTypeTest_NEW__(il2c_test_target_ValueTypeTest** ppR
 // Type: il2c_test_target.Hoge2
 
 ///////////////////////////////////////
-// il2c_test_target.Hoge2.Add3
+// Add3
 
 uint8_t il2c_test_target_Hoge2_Add3(uint8_t a, bool isTwo)
 {
@@ -635,7 +636,7 @@ L_0002:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.Hoge2.Add4
+// Add4
 
 uint16_t il2c_test_target_Hoge2_Add4(uint16_t a, bool isTwo)
 {
@@ -671,7 +672,7 @@ L_0002:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.Hoge2..ctor
+// .ctor
 
 void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
 {
@@ -728,7 +729,7 @@ void __il2c_test_target_Hoge2_NEW__(il2c_test_target_Hoge2** ppReference)
 // Type: il2c_test_target.Hoge1
 
 ///////////////////////////////////////
-// il2c_test_target.Hoge1.Add1
+// Add1
 
 int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
 {
@@ -763,7 +764,7 @@ L_0002:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.Hoge1.Add2
+// Add2
 
 int64_t il2c_test_target_Hoge1_Add2(int64_t a, bool isTwo)
 {
@@ -800,7 +801,7 @@ L_0002:
 }
 
 ///////////////////////////////////////
-// il2c_test_target.Hoge1..ctor
+// .ctor
 
 void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
 {

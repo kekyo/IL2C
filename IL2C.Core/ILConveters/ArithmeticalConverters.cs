@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -7,7 +9,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Add;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -16,12 +18,12 @@ namespace IL2C.ILConveters
             if ((si0.TargetType == typeof(int)) && (si1.TargetType == typeof(int)))
             {
                 var resultName = decodeContext.PushStack(typeof(int));
-                return new[] { string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
+                return _ => new[] { string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
             if ((si0.TargetType == typeof(long)) && (si1.TargetType == typeof(long)))
             {
                 var resultName = decodeContext.PushStack(typeof(long));
-                return new[] { string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
+                return _ => new[] { string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
             throw new InvalidProgramSequenceException(

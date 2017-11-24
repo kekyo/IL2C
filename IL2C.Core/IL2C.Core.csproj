@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Translators\AssemblyWriter.cs" />
     <Compile Include="ILConveters\ConditionalConverters.cs" />
     <Compile Include="ILConveters\CallConverters.cs" />
     <Compile Include="ILConveters\ConvConverters.cs" />
@@ -57,12 +58,12 @@
     <Compile Include="ILConveters\ILConverters.cs" />
     <Compile Include="ILConveters\OperandTypeConverters.cs" />
     <Compile Include="InvalidProgramSequenceException.cs" />
-    <Compile Include="TranslateContext.cs" />
+    <Compile Include="Translators\TranslateContext.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="DecodeContext.cs" />
-    <Compile Include="ILConverter.cs" />
-    <Compile Include="Converter.cs" />
-    <Compile Include="ILData.cs" />
+    <Compile Include="Translators\DecodeContext.cs" />
+    <Compile Include="ILConveters\ILConverter.cs" />
+    <Compile Include="Translators\AssemblyPreparer.cs" />
+    <Compile Include="Translators\ILData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

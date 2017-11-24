@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using IL2C.Translators;
 using NUnit.Framework;
 
 namespace IL2C
@@ -17,7 +19,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -63,7 +67,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -106,7 +112,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -152,7 +160,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -195,7 +205,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -241,7 +253,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -284,7 +298,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -330,7 +346,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -372,7 +390,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -414,7 +434,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -453,7 +475,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -498,7 +522,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -543,7 +569,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -592,7 +620,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -625,7 +655,9 @@ namespace IL2C
 
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 
@@ -658,6 +690,8 @@ namespace IL2C
         [Test]
         public static void AccessValueTypeFieldTest()
         {
+            Assert.Fail("TODO:");
+
             var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("AccessValueTypeFieldMethod");
 
@@ -665,9 +699,9 @@ namespace IL2C
             var tw = new StringWriter();
 
             var targetType = typeof(TestTargetClass.AccessValueTypeFieldTestType);
-            IL2C.Converter.ConvertType(translateContext, tw, targetType, "  ");
 
-            IL2C.Converter.ConvertMethod(translateContext, tw, mainMethod, "  ");
+            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
 

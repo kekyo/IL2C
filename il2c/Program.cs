@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using IL2C.Translators;
 
 namespace IL2C
 {
@@ -30,8 +31,9 @@ namespace IL2C
             }
 
             var assembly = Assembly.LoadFrom(assemblyPath);
-
             var translateContext = new TranslateContext(assembly);
+            var prepared = AssemblyPreparer.Prepare(translateContext);
+            
             var assemblyName = assembly.GetName().Name;
             var filePath = Path.Combine(outputPath, assemblyName);
 
@@ -42,9 +44,7 @@ namespace IL2C
                 FileShare.None))
             {
                 var twSource = new StreamWriter(fsSource, Encoding.UTF8);
-
-                Converter.ConvertToSourceCode(twSource, assembly, translateContext, "    ");
-
+                AssemblyWriter.WriteSourceCode(twSource, translateContext, prepared, "    ");
                 twSource.Flush();
             }
 
@@ -55,9 +55,7 @@ namespace IL2C
                 FileShare.None))
             {
                 var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
-
-                Converter.ConvertToHeader(twHeader, assembly, translateContext, "    ");
-
+                AssemblyWriter.WriteHeader(twHeader, translateContext, "    ");
                 twHeader.Flush();
             }
 

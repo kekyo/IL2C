@@ -1,4 +1,6 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -6,12 +8,12 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Conv_I8;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
             var resultName = decodeContext.PushStack(typeof(long));
 
-            return new[] { string.Format("{0} = {1}", resultName, siFrom.SymbolName) };
+            return _ => new[] { string.Format("{0} = {1}", resultName, siFrom.SymbolName) };
         }
     }
 
@@ -19,7 +21,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Conv_U1;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
             if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
@@ -31,7 +33,7 @@ namespace IL2C.ILConveters
             }
 
             var resultName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = (uint8_t){1}", resultName, siFrom.SymbolName) };
+            return _ => new[] { string.Format("{0} = (uint8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
 
@@ -39,7 +41,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Conv_I1;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
             if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
@@ -51,7 +53,7 @@ namespace IL2C.ILConveters
             }
 
             var resultName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
+            return _ => new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
 
@@ -59,7 +61,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Conv_I2;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
             if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
@@ -71,7 +73,7 @@ namespace IL2C.ILConveters
             }
 
             var resultName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = (int16_t){1}", resultName, siFrom.SymbolName) };
+            return _ => new[] { string.Format("{0} = (int16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
 
@@ -79,7 +81,7 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Conv_U2;
 
-        public override string[] Apply(DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
             if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
@@ -91,7 +93,7 @@ namespace IL2C.ILConveters
             }
 
             var resultName = decodeContext.PushStack(typeof(int));
-            return new[] { string.Format("{0} = (uint16_t){1}", resultName, siFrom.SymbolName) };
+            return _ => new[] { string.Format("{0} = (uint16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
 }

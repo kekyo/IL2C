@@ -365,6 +365,62 @@ namespace IL2C.Translators
             tw.WriteLine("}");
         }
 
+        private static void InternalConvertTypeHelper(
+            TextWriter tw,
+            IExtractContext extractContext,
+            Type type,
+            string indent)
+        {
+            tw.WriteLine();
+            tw.WriteLine("//////////////////////");
+            tw.WriteLine("// Runtime helpers:");
+
+            var typeName = extractContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced);
+            var baseTypeName = extractContext.GetCLanguageTypeName(type.BaseType, TypeNameFlags.Dereferenced);
+
+            // Write mark handler:
+            var makrHandlerPrototype = string.Format(
+                "void __{0}_MARK_HANDLER__(void* pReference)",
+                typeName);
+
+            tw.WriteLine();
+            tw.WriteLine(makrHandlerPrototype);
+            tw.WriteLine("{");
+
+            foreach (var field in type.GetFields(
+                    BindingFlags.Public | BindingFlags.NonPublic
+                    | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Where(field => field.FieldType.IsValueType == false))
+            {
+                tw.WriteLine(
+                    "{0}__TRY_MARK_FROM_HANDLER__((({1}*)pReference)->{2});",
+                    indent,
+                    typeName,
+                    field.Name);
+            }
+
+            tw.WriteLine(
+                "{0}__{1}_MARK_HANDLER__(pReference);",
+                indent,
+                baseTypeName);
+            tw.WriteLine("}");
+
+            // Write new:
+            var newPrototype = string.Format(
+                "void __{0}_NEW__({0}** ppReference)",
+                typeName);
+
+            tw.WriteLine();
+            tw.WriteLine(newPrototype);
+            tw.WriteLine("{");
+            tw.WriteLine("{0}__gc_get_uninitialized_object__(", indent);
+            tw.WriteLine("{0}{0}(void**)ppReference,", indent);
+            tw.WriteLine("{0}{0}__{1}_SIZEOF__(),", indent, typeName);
+            tw.WriteLine("{0}{0}__{1}_MARK_HANDLER__);", indent, typeName);
+            tw.WriteLine("{0}{1}__ctor(*ppReference);", indent, typeName);
+            tw.WriteLine("}");
+        }
+
         internal static void InternalConvertFromMethod(
             TextWriter tw,
             IExtractContext extractContext,
@@ -406,55 +462,11 @@ namespace IL2C.Translators
             // TODO: Type initializer's handlers
             if (method.IsConstructor && (method.IsStatic == false))
             {
-                tw.WriteLine();
-                tw.WriteLine("//////////////////////");
-                tw.WriteLine("// Runtime helpers:");
-
-                var type = method.DeclaringType;
-                var typeName = extractContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced);
-                var baseTypeName = extractContext.GetCLanguageTypeName(type.BaseType, TypeNameFlags.Dereferenced);
-
-                // Write mark handler:
-                var makrHandlerPrototype = string.Format(
-                    "void __{0}_MARK_HANDLER__(void* pReference)",
-                    typeName);
-
-                tw.WriteLine();
-                tw.WriteLine(makrHandlerPrototype);
-                tw.WriteLine("{");
-
-                foreach (var field in type.GetFields(
-                    BindingFlags.Public | BindingFlags.NonPublic
-                    | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                    .Where(field => field.FieldType.IsValueType == false))
-                {
-                    tw.WriteLine(
-                        "{0}__TRY_MARK_FROM_HANDLER__((({1}*)pReference)->{2});",
-                        indent,
-                        typeName,
-                        field.Name);
-                }
-
-                tw.WriteLine(
-                    "{0}__{1}_MARK_HANDLER__(pReference);",
-                    indent,
-                    baseTypeName);
-                tw.WriteLine("}");
-
-                // Write new:
-                var newPrototype = string.Format(
-                    "void __{0}_NEW__({0}** ppReference)",
-                    typeName);
-
-                tw.WriteLine();
-                tw.WriteLine(newPrototype);
-                tw.WriteLine("{");
-                tw.WriteLine("{0}__gc_get_uninitialized_object__(", indent);
-                tw.WriteLine("{0}{0}(void**)ppReference,", indent);
-                tw.WriteLine("{0}{0}__{1}_SIZEOF__(),", indent, typeName);
-                tw.WriteLine("{0}{0}__{1}_MARK_HANDLER__);", indent, typeName);
-                tw.WriteLine("{0}{1}__ctor(*ppReference);", indent, typeName);
-                tw.WriteLine("}");
+                InternalConvertTypeHelper(
+                    tw,
+                    extractContext,
+                    method.DeclaringType,
+                    indent);
             }
         }
 

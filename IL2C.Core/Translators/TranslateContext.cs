@@ -5,34 +5,6 @@ using System.Reflection;
 
 namespace IL2C.Translators
 {
-    [Flags]
-    internal enum TypeNameFlags
-    {
-        Strict = 0,
-        Dereferenced = 1,
-        StructPrefix = 2
-    }
-
-    internal interface IPrepareContext
-    {
-        void RegisterIncludeFile(string includeFileName);
-        void RegisterPrivateIncludeFile(string includeFileName);
-        void RegisterType(Type type);
-        void RegisterStaticField(FieldInfo staticField);
-    }
-
-    internal interface IExtractContext
-    {
-        Assembly Assembly { get; }
-
-        string GetCLanguageTypeName(Type type, TypeNameFlags flags = TypeNameFlags.Strict);
-        string GetRightExpression(Type lhsType, SymbolInformation rhs);
-        string GetRightExpression(Type lhsType, Type rhsType, string rhsExpression);
-        IEnumerable<string> EnumerateRequiredIncludeFileNames();
-        IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();
-        IEnumerable<FieldInfo> ExtractStaticFields();
-    }
-
     public sealed class TranslateContext : IPrepareContext, IExtractContext
     {
         private readonly HashSet<string> includes = new HashSet<string>();

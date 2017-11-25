@@ -1,133 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using IL2C.ILConveters;
+using IL2C.Translators;
 
-namespace IL2C.Translators
+namespace IL2C
 {
-    public struct Label
-    {
-        public readonly int ILByteIndex;
-
-        public Label(int ilByteIndex)
-        {
-            this.ILByteIndex = ilByteIndex;
-        }
-    }
-
-    public struct Parameter
-    {
-        public readonly string Name;
-        public readonly Type ParameterType;
-
-        public Parameter(string name, Type parameterType)
-        {
-            this.Name = name;
-            this.ParameterType = parameterType;
-        }
-    }
-
-    public struct PreparedOpCode
-    {
-        public readonly Label Label;
-        internal readonly Func<IExtractContext, string[]> Generator;
-
-        internal PreparedOpCode(Label label, Func<IExtractContext, string[]> generator)
-        {
-            this.Label = label;
-            this.Generator = generator;
-        }
-    }
-
-    public struct SymbolInformation
-    {
-        public readonly string SymbolName;
-        public readonly Type TargetType;
-
-        internal SymbolInformation(string symbolName, Type targetType)
-        {
-            this.SymbolName = symbolName;
-            this.TargetType = targetType;
-        }
-
-        public bool Equals(SymbolInformation rhs)
-        {
-            return this.SymbolName.Equals(rhs.SymbolName)
-                && this.TargetType.Equals(rhs.TargetType);
-        }
-
-        public override bool Equals(object rhs)
-        {
-            if (rhs is SymbolInformation)
-            {
-                return this.Equals((SymbolInformation)rhs);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            return this.SymbolName.GetHashCode() ^ this.TargetType.GetHashCode();
-        }
-    }
-
-    public sealed class PreparedFunction
-    {
-        public readonly string MethodName;
-        public readonly string RawMethodName;
-        public readonly Type ReturnType;
-        public readonly Parameter[] Parameters;
-        public readonly PreparedOpCode[] PreparedOpCodes;
-        public readonly LocalVariableInfo[] LocalVariables;
-        public readonly SymbolInformation[] Stacks;
-
-        private readonly IReadOnlyDictionary<int, string> labelNames;
-
-        internal PreparedFunction(
-            string methodName,
-            string rawMethodName,
-            Type returnType,
-            Parameter[] parameters,
-            PreparedOpCode[] preparedOpCodes,
-            LocalVariableInfo[] localVariables,
-            SymbolInformation[] stacks,
-            IReadOnlyDictionary<int, string> labelNames)
-        {
-            this.MethodName = methodName;
-            this.RawMethodName = rawMethodName;
-            this.ReturnType = returnType;
-            this.Parameters = parameters;
-            this.PreparedOpCodes = preparedOpCodes;
-            this.LocalVariables = localVariables;
-            this.Stacks = stacks;
-            this.labelNames = labelNames;
-        }
-
-        internal PreparedFunction(
-            string methodName,
-            string rawMethodName,
-            Type returnType,
-            Parameter[] parameters)
-            : this(methodName, rawMethodName, returnType, parameters, null, null, null, null)
-        {
-        }
-
-        public bool TryGetLabelName(Label label, out string labelName)
-        {
-            Debug.Assert(labelNames != null);
-
-            return labelNames.TryGetValue(label.ILByteIndex, out labelName);
-        }
-    }
-
     public static class AssemblyPreparer
     {
-        private static IEnumerable<ILData> DecodeAndEnumerateOpCodes(
+        private struct ILBody
+        {
+            public readonly Label Label;
+            public readonly ILConverter ILConverter;
+            public readonly object Operand;
+
+            public ILBody(Label label, ILConverter ilc, object operand)
+            {
+                this.Label = label;
+                this.ILConverter = ilc;
+                this.Operand = operand;
+            }
+        }
+
+        private static IEnumerable<ILBody> DecodeAndEnumerateILBodies(
             DecodeContext decodeContext)
         {
             while (true)
@@ -139,7 +36,7 @@ namespace IL2C.Translators
                 }
 
                 var operand = ilc.DecodeOperand(decodeContext);
-                yield return new ILData(label, ilc, operand);
+                yield return new ILBody(label, ilc, operand);
 
                 if (ilc.IsEndOfPath)
                 {
@@ -171,9 +68,9 @@ namespace IL2C.Translators
             var preparedOpCodes = decodeContext
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
-                    from ilData in DecodeAndEnumerateOpCodes(dc)
-                    let generator = ilData.ILConverter.Apply(ilData.Operand, dc)
-                    select new PreparedOpCode(ilData.Label, generator))
+                    from ilBody in DecodeAndEnumerateILBodies(dc)
+                    let generator = ilBody.ILConverter.Apply(ilBody.Operand, dc)
+                    select new PreparedILBody(ilBody.Label, generator))
                 .ToArray();
 
             var stacks = decodeContext

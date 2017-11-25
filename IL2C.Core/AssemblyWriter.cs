@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using IL2C.Translators;
 
-namespace IL2C.Translators
+namespace IL2C
 {
     public static class AssemblyWriter
     {
@@ -295,7 +296,7 @@ namespace IL2C.Translators
             tw.WriteLine("{0}// IL body:", indent);
             tw.WriteLine();
 
-            foreach (var preparedOpCode in preparedFunction.PreparedOpCodes)
+            foreach (var preparedOpCode in preparedFunction.PreparedILBodies)
             {
                 if (preparedFunction.TryGetLabelName(
                     preparedOpCode.Label, out var labelName))
@@ -432,7 +433,7 @@ namespace IL2C.Translators
             var preparedFunction = preparedFunctions[method];
 
             // Write method body:
-            if (preparedFunction.PreparedOpCodes != null)
+            if (preparedFunction.PreparedILBodies != null)
             {
                 InternalConvertFromFunction(
                     tw,

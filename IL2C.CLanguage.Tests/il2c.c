@@ -10,11 +10,16 @@
 #define GCALLOC malloc
 #define GCFREE free
 
+#include <stdint.h>
+
 typedef long interlock_t;
 
 #else
 
-typedef unsigned char interlock_t;
+#include <stdint.h>
+
+typedef uint8_t interlock_t;
+
 static interlock_t _InterlockedExchange(interlock_t* p, interlock_t v)
 {
     interlock_t cv = *p;
@@ -80,10 +85,6 @@ static __EXECUTION_FRAME__* g_pBeginFrame__ = NULL;
 
 static __REF_HEADER__* g_pBeginHeader__ = NULL;
 
-// Part of "pNext".
-// HACK: Must arrange structure index to 0.
-static const void* g_pTerminator = NULL;
-
 //////////////////////////
 
 void __gc_get_uninitialized_object__(
@@ -93,7 +94,8 @@ void __gc_get_uninitialized_object__(
     assert(pMarkHandler != NULL);
 
     __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
-    void* pReference = pHeader + 1;
+    void* pReference = ((uint8_t*)pHeader)
+        + sizeof(__REF_HEADER__);
     if (bodySize >= 1)
     {
         memset(pReference, 0, bodySize);
@@ -123,15 +125,14 @@ void __gc_get_uninitialized_object__(
             break;
         }
     }
-
-    assert(g_pTerminator == NULL);
 }
 
 void __gc_mark_from_handler__(void* pReference)
 {
     assert(pReference != NULL);
 
-    __REF_HEADER__* pHeader = (__REF_HEADER__*)pReference - 1;
+    __REF_HEADER__* pHeader = (__REF_HEADER__*)
+        (((uint8_t*)pReference) - sizeof(__REF_HEADER__));
     interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
     if (currentMark == GCMARK_NOMARK)
     {
@@ -150,14 +151,15 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
     g_pBeginFrame__ = (__EXECUTION_FRAME__*)pNewFrame;
 
 #ifdef _DEBUG
-    __EXECUTION_FRAME__* p = pNewFrame;
-    for (uint8_t index = 0; index < p->targetCount; index++)
     {
-        assert(*p->pTargets[index] == NULL);
+        __EXECUTION_FRAME__* p = (__EXECUTION_FRAME__*)pNewFrame;
+        uint8_t index;
+        for (index = 0; index < p->targetCount; index++)
+        {
+            assert(*p->pTargets[index] == NULL);
+        }
     }
 #endif
-
-    assert(g_pTerminator == NULL);
 }
 
 void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
@@ -165,8 +167,6 @@ void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
     assert(pFrame != NULL);
 
     g_pBeginFrame__ = ((__EXECUTION_FRAME__*)pFrame)->pNext;
-
-    assert(g_pTerminator == NULL);
 }
 
 //////////////////////////
@@ -175,8 +175,6 @@ void __gc_step1_clear_gcmark__()
 {
     // Clear header marks.
     __REF_HEADER__* pCurrentHeader = g_pBeginHeader__;
-    assert(pCurrentHeader != NULL);
-
     while (pCurrentHeader != NULL)
     {
         pCurrentHeader->gcMark = GCMARK_NOMARK;
@@ -203,7 +201,8 @@ void __gc_step2_mark_gcmark__()
             }
 
             // Marking process.
-            __REF_HEADER__* pHeader = (__REF_HEADER__*)*ppReference - 1;
+            __REF_HEADER__* pHeader = (__REF_HEADER__*)
+                (((uint8_t*)*ppReference) - sizeof(__REF_HEADER__));
             interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
             if (currentMark == GCMARK_NOMARK)
             {
@@ -239,8 +238,6 @@ void __gc_step3_sweep_garbage__()
             ppUnlinkTarget = &pCurrentHeader->pNext;
             pCurrentHeader = pNext;
         }
-
-        assert(g_pTerminator == NULL);
     }
 }
 
@@ -259,10 +256,8 @@ void __gc_initialize__()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
 #endif
 
-    assert(g_pTerminator == NULL);
-
-    g_pBeginFrame__ = (__EXECUTION_FRAME__*)g_pTerminator;
-    g_pBeginHeader__ = (__REF_HEADER__*)g_pTerminator;
+    g_pBeginFrame__ = NULL;
+    g_pBeginHeader__ = NULL;
 }
 
 void __gc_shutdown__()

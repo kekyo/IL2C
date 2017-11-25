@@ -6,6 +6,16 @@ using System.Text;
 
 namespace il2c_test_target
 {
+#if _WIN32
+    public class Win32
+    {
+        [DllImport("windows.h")]
+        public static extern int GetCurrentProcessId();
+
+        [DllImport("windows.h")]
+        public static extern int GetCurrentThreadId();
+    }
+#else
     public class Wio
     {
         [DllImport("WioLTE.h", EntryPoint = "Wio.Init")]
@@ -75,5 +85,6 @@ namespace il2c_test_target
             Wio.delay(INTERVAL);
         }
     }
+#endif
 #endif
 }

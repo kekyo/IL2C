@@ -1,4 +1,4 @@
-﻿#include <WioLTE.h>
+﻿#include <windows.h>
 #include "il2c_test_target.h"
 
 #ifdef __cplusplus
@@ -309,36 +309,28 @@ void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppR
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.Wio
+// Type: il2c_test_target.Win32
 
 ///////////////////////////////////////
-// P/Invoke: Init
+// P/Invoke: GetCurrentProcessId
 
-void il2c_test_target_Wio_Init(void)
+int32_t il2c_test_target_Win32_GetCurrentProcessId(void)
 {
-    Wio.Init();
+    return GetCurrentProcessId();
 }
 
 ///////////////////////////////////////
-// P/Invoke: LedSetRGB
+// P/Invoke: GetCurrentThreadId
 
-void il2c_test_target_Wio_LedSetRGB(int32_t r, int32_t g, int32_t b)
+int32_t il2c_test_target_Win32_GetCurrentThreadId(void)
 {
-    Wio.LedSetRGB(r, g, b);
-}
-
-///////////////////////////////////////
-// P/Invoke: delay
-
-void il2c_test_target_Wio_delay(int32_t milliseconds)
-{
-    delay(milliseconds);
+    return GetCurrentThreadId();
 }
 
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_Wio__ctor(il2c_test_target_Wio* __this)
+void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this)
 {
     //-------------------
     // Local variables:
@@ -347,7 +339,7 @@ void il2c_test_target_Wio__ctor(il2c_test_target_Wio* __this)
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_Wio* __stack0_0 = NULL;
+    il2c_test_target_Win32* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -356,7 +348,7 @@ void il2c_test_target_Wio__ctor(il2c_test_target_Wio* __this)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_Wio** p__stack0_0;
+        il2c_test_target_Win32** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -375,18 +367,18 @@ void il2c_test_target_Wio__ctor(il2c_test_target_Wio* __this)
 //////////////////////
 // Runtime helpers:
 
-void __il2c_test_target_Wio_MARK_HANDLER__(void* pReference)
+void __il2c_test_target_Win32_MARK_HANDLER__(void* pReference)
 {
     __System_Object_MARK_HANDLER__(pReference);
 }
 
-void __il2c_test_target_Wio_NEW__(il2c_test_target_Wio** ppReference)
+void __il2c_test_target_Win32_NEW__(il2c_test_target_Win32** ppReference)
 {
     __gc_get_uninitialized_object__(
         (void**)ppReference,
-        __il2c_test_target_Wio_SIZEOF__(),
-        __il2c_test_target_Wio_MARK_HANDLER__);
-    il2c_test_target_Wio__ctor(*ppReference);
+        __il2c_test_target_Win32_SIZEOF__(),
+        __il2c_test_target_Win32_MARK_HANDLER__);
+    il2c_test_target_Win32__ctor(*ppReference);
 }
 
 ////////////////////////////////////////////////////////////

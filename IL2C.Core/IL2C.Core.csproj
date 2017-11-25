@@ -1,70 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0B75BDBB-7768-4BE6-B126-7972600B45A3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IL2C</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <AssemblyName>IL2C.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <RootNamespace>IL2C</RootNamespace>
+    <Description>A translator implementation of .NET intermediate language to C language.</Description>
+    <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
+    <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
+    <VersionPrefix>0.3.1</VersionPrefix>
+    <Company>Kouji Matsui (@kozy_kekyo)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Translators\AssemblyWriter.cs" />
-    <Compile Include="ILConveters\ConditionalConverters.cs" />
-    <Compile Include="ILConveters\CallConverters.cs" />
-    <Compile Include="ILConveters\ConvConverters.cs" />
-    <Compile Include="ILConveters\BrConverters.cs" />
-    <Compile Include="ILConveters\ArithmeticalConverters.cs" />
-    <Compile Include="ILConveters\LdfldConverters.cs" />
-    <Compile Include="ILConveters\LdargConverter.cs" />
-    <Compile Include="ILConveters\LdlocConverters.cs" />
-    <Compile Include="ILConveters\StfldConverters.cs" />
-    <Compile Include="ILConveters\StlocConverters.cs" />
-    <Compile Include="ILConveters\LdcConverters.cs" />
-    <Compile Include="ILConveters\ILConverters.cs" />
-    <Compile Include="ILConveters\OperandTypeConverters.cs" />
-    <Compile Include="InvalidProgramSequenceException.cs" />
-    <Compile Include="Translators\TranslateContext.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="Translators\DecodeContext.cs" />
-    <Compile Include="ILConveters\ILConverter.cs" />
-    <Compile Include="Translators\AssemblyPreparer.cs" />
-    <Compile Include="Translators\ILData.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

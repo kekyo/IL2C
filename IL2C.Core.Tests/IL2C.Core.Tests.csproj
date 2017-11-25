@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IL2C</RootNamespace>
     <AssemblyName>IL2C.Core.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -39,11 +39,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConverterTest.cs" />
@@ -51,16 +47,16 @@
     <Compile Include="TestTargetClass.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj">
-      <Project>{0b75bdbb-7768-4be6-b126-7972600b45a3}</Project>
-      <Name>IL2C.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj">
+      <Project>{678efb0e-bc0a-4749-ad48-079f98d9468d}</Project>
+      <Name>IL2C.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

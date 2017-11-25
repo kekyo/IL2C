@@ -16,6 +16,21 @@ namespace il2c_test_target
         public static extern int GetCurrentThreadId();
     }
 #else
+    public class Arduino
+    {
+        //[DllImport("Arduino.h", EntryPoint = "pinMode")]
+        //public static extern int PinMode(byte pin, byte mode);
+
+        [DllImport("Arduino.h", EntryPoint = "digitalRead")]
+        public static extern int DigitalRead(byte pin);
+
+        [DllImport("Arduino.h", EntryPoint = "digitalWrite")]
+        public static extern void DigitalWrite(byte pin, byte val);
+
+        [DllImport("Arduino.h", EntryPoint = "delay")]
+        public static extern void Delay(int milliseconds);
+    }
+
     public class Wio
     {
         [DllImport("WioLTE.h", EntryPoint = "Wio.Init")]
@@ -23,9 +38,6 @@ namespace il2c_test_target
 
         [DllImport("WioLTE.h", EntryPoint = "Wio.LedSetRGB")]
         public static extern void LedSetRGB(int r, int g, int b);
-
-        [DllImport("WioLTE.h")]
-        public static extern void delay(int milliseconds);
     }
 
 #if false

@@ -15,7 +15,8 @@ extern "C" {
 
 typedef struct il2c_test_target_ClassTypeTestTarget il2c_test_target_ClassTypeTestTarget;
 typedef struct il2c_test_target_ClassTypeTest il2c_test_target_ClassTypeTest;
-typedef struct il2c_test_target_Win32 il2c_test_target_Win32;
+typedef struct il2c_test_target_Arduino il2c_test_target_Arduino;
+typedef struct il2c_test_target_Wio il2c_test_target_Wio;
 typedef struct il2c_test_target_ValueTypeTestTarget il2c_test_target_ValueTypeTestTarget;
 typedef struct il2c_test_target_ValueTypeTest il2c_test_target_ValueTypeTest;
 typedef struct il2c_test_target_Hoge2 il2c_test_target_Hoge2;
@@ -39,10 +40,16 @@ struct il2c_test_target_ClassTypeTestTarget
 #define __il2c_test_target_ClassTypeTest_SIZEOF__() (0)
 
 ////////////////////////////////////////////////////////////
-// Class: il2c_test_target.Win32
+// Class: il2c_test_target.Arduino
 
 
-#define __il2c_test_target_Win32_SIZEOF__() (0)
+#define __il2c_test_target_Arduino_SIZEOF__() (0)
+
+////////////////////////////////////////////////////////////
+// Class: il2c_test_target.Wio
+
+
+#define __il2c_test_target_Wio_SIZEOF__() (0)
 
 ////////////////////////////////////////////////////////////
 // Struct: il2c_test_target.ValueTypeTestTarget
@@ -80,6 +87,7 @@ extern il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarge
 
 
 
+
 extern int32_t il2c_test_target_ValueTypeTestTarget_Value1;
 
 
@@ -99,11 +107,18 @@ extern void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest*
 extern void __il2c_test_target_ClassTypeTest_MARK_HANDLER__(void* pReference);
 extern void __il2c_test_target_ClassTypeTest_NEW__(il2c_test_target_ClassTypeTest** ppReference);
 
-extern int32_t il2c_test_target_Win32_GetCurrentProcessId(void);
-extern int32_t il2c_test_target_Win32_GetCurrentThreadId(void);
-extern void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this);
-extern void __il2c_test_target_Win32_MARK_HANDLER__(void* pReference);
-extern void __il2c_test_target_Win32_NEW__(il2c_test_target_Win32** ppReference);
+extern int32_t il2c_test_target_Arduino_DigitalRead(uint8_t pin);
+extern void il2c_test_target_Arduino_DigitalWrite(uint8_t pin, uint8_t val);
+extern void il2c_test_target_Arduino_Delay(int32_t milliseconds);
+extern void il2c_test_target_Arduino__ctor(il2c_test_target_Arduino* __this);
+extern void __il2c_test_target_Arduino_MARK_HANDLER__(void* pReference);
+extern void __il2c_test_target_Arduino_NEW__(il2c_test_target_Arduino** ppReference);
+
+extern void il2c_test_target_Wio_Init(void);
+extern void il2c_test_target_Wio_LedSetRGB(int32_t r, int32_t g, int32_t b);
+extern void il2c_test_target_Wio__ctor(il2c_test_target_Wio* __this);
+extern void __il2c_test_target_Wio_MARK_HANDLER__(void* pReference);
+extern void __il2c_test_target_Wio_NEW__(il2c_test_target_Wio** ppReference);
 
 extern int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTypeTestTarget* __this, int32_t a, int32_t b);
 

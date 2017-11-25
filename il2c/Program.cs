@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using IL2C.Translators;
 
 namespace IL2C
 {

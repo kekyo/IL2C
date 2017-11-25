@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using IL2C.Translators;
 
-namespace IL2C.Translators
+namespace IL2C
 {
     public sealed class TranslateContext : IPrepareContext, IExtractContext
     {
@@ -17,6 +18,8 @@ namespace IL2C.Translators
 
             includes.Add("il2c.h");
         }
+
+        public Assembly Assembly { get; }
 
         #region IPrepareContext
         private void RegisterIncludeFile(string includeFileName)
@@ -103,8 +106,6 @@ namespace IL2C.Translators
         #endregion
 
         #region IExtractContext
-        public Assembly Assembly { get; }
-
         IEnumerable<string> IExtractContext.EnumerateRequiredIncludeFileNames()
         {
             return includes;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using Mono.Cecil;
 
 namespace IL2C.Translators
 {
@@ -7,7 +6,7 @@ namespace IL2C.Translators
     {
         void RegisterIncludeFile(string includeFileName);
         void RegisterPrivateIncludeFile(string includeFileName);
-        void RegisterType(Type type);
-        void RegisterStaticField(FieldInfo staticField);
+        void RegisterType(TypeReference type);
+        void RegisterStaticField(FieldDefinition staticField);
     }
 }

@@ -16,4 +16,8 @@
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.10.0-beta7" />
+  </ItemGroup>
+
 </Project>

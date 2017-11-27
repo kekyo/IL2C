@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection.Emit;
 using IL2C.Translators;
+using Mono.Cecil.Rocks;
 
 namespace IL2C.ILConveters
 {
@@ -9,11 +10,11 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
         {
             var local = decodeContext.Locals[localIndex];
-            var targetType = local.LocalType;
+            var targetType = local.VariableType;
 
-            if (local.LocalType == typeof(bool))
+            if (targetType.MemberEquals(CecilHelper.BooleanType))
             {
-                var symbolName = decodeContext.PushStack(typeof(int));
+                var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = local{1} ? 1 : 0",
                     symbolName,
@@ -21,14 +22,7 @@ namespace IL2C.ILConveters
             }
             else
             {
-                if ((local.LocalType == typeof(byte))
-                    || (local.LocalType == typeof(sbyte))
-                    || (local.LocalType == typeof(short))
-                    || (local.LocalType == typeof(ushort)))
-                {
-                    targetType = typeof(int);
-                }
-
+                targetType = Utilities.GetStackableType(targetType);
                 var symbolName = decodeContext.PushStack(targetType);
                 return _ => new[] { string.Format(
                     "{0} = local{1}",
@@ -40,9 +34,8 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> ApplyWithAddress(int localIndex, DecodeContext decodeContext)
         {
             var local = decodeContext.Locals[localIndex];
-            var targetType = local.LocalType;
-
-            var managedReferenceType = targetType.MakeByRefType();
+            var targetType = local.VariableType;
+            var managedReferenceType = targetType.MakeByReferenceType();
                 
             var symbolName = decodeContext.PushStack(managedReferenceType);
             return _ => new[] { string.Format(

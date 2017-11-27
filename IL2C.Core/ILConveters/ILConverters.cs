@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -27,7 +28,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            if (decodeContext.ReturnType == typeof(void))
+            if (decodeContext.ReturnType.MemberEquals(CecilHelper.VoidType))
             {
                 return _ => new [] { "return" };
             }
@@ -37,6 +38,8 @@ namespace IL2C.ILConveters
 
             decodeContext.prepareContext.RegisterType(returnType);
 
+            var ilByteIndex = decodeContext.ILByteIndex;
+
             return lookupper =>
             {
                 var rightExpression = lookupper.GetRightExpression(returnType, si);
@@ -44,7 +47,7 @@ namespace IL2C.ILConveters
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
-                        decodeContext.ILByteIndex,
+                        ilByteIndex,
                         si.TargetType.FullName,
                         returnType.FullName);
                 }
@@ -66,7 +69,7 @@ namespace IL2C.ILConveters
                     var type = decodeContext.ResolveType(typeToken);
 
                     var si = decodeContext.PopStack();
-                    if (si.TargetType.IsByRef == false)
+                    if (si.TargetType.IsByReference == false)
                     {
                         throw new InvalidProgramSequenceException(
                             "Invalid type at stack: ILByteIndex={0}, TokenType={1}, StackType={2}",
@@ -105,8 +108,15 @@ namespace IL2C.ILConveters
             {
                 try
                 {
-                    var constructor = (ConstructorInfo)decodeContext.ResolveMethod(
-                        constructorToken);
+                    var constructor = decodeContext.ResolveMethod(constructorToken);
+                    if (constructor.IsConstructor)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Invalid new object constructor: ILByteIndex={0}, Token={1:x2}",
+                            decodeContext.ILByteIndex,
+                            constructorToken);
+                    }
+
                     var type = constructor.DeclaringType;
 
                     if (type.IsClass == false)
@@ -117,8 +127,7 @@ namespace IL2C.ILConveters
                             constructorToken);
                     }
 
-                    var parameters = constructor.GetParameters();
-                    var pairParameters = parameters
+                    var pairParameters = constructor.Parameters
                         .Reverse()
                         .Select(parameter => new Utilities.RightExpressionGivenParameter(
                             parameter.ParameterType, decodeContext.PopStack()))

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 namespace IL2C.Translators
 {
     public sealed class PreparedFunction
     {
         public readonly string MethodName;
         public readonly string RawMethodName;
-        public readonly Type ReturnType;
+        public readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
         public readonly PreparedILBody[] PreparedILBodies;
-        public readonly LocalVariableInfo[] LocalVariables;
+        public readonly VariableDefinition[] LocalVariables;
         public readonly SymbolInformation[] Stacks;
 
         private readonly IReadOnlyDictionary<int, string> labelNames;
@@ -20,10 +23,10 @@ namespace IL2C.Translators
         internal PreparedFunction(
             string methodName,
             string rawMethodName,
-            Type returnType,
+            TypeReference returnType,
             Parameter[] parameters,
             PreparedILBody[] preparedILBodies,
-            LocalVariableInfo[] localVariables,
+            VariableDefinition[] localVariables,
             SymbolInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames)
         {
@@ -40,7 +43,7 @@ namespace IL2C.Translators
         internal PreparedFunction(
             string methodName,
             string rawMethodName,
-            Type returnType,
+            TypeReference returnType,
             Parameter[] parameters)
             : this(methodName, rawMethodName, returnType, parameters, null, null, null, null)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -17,7 +18,7 @@ namespace IL2C.ILConveters
                 var siValue = decodeContext.PopStack();
                 var siReference = decodeContext.PopStack();
 
-                if (siReference.TargetType.IsByRef)
+                if (siReference.TargetType.IsByReference)
                 {
                     var dereferencedType = siReference.TargetType.GetElementType();
                     if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
@@ -30,7 +31,7 @@ namespace IL2C.ILConveters
                             field.Name);
                     }
                 }
-                else if (siReference.TargetType.IsClass)
+                else if (siReference.TargetType.IsClass())
                 {
                     if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                     {
@@ -50,6 +51,8 @@ namespace IL2C.ILConveters
                         siReference.TargetType.FullName);
                 }
 
+                var ilByteIndex = decodeContext.ILByteIndex;
+
                 return lookupper =>
                 {
                     var rightExpression = lookupper.GetRightExpression(
@@ -58,7 +61,7 @@ namespace IL2C.ILConveters
                     {
                         throw new InvalidProgramSequenceException(
                             "Invalid store operation: ILByteIndex={0}, StackType={1}, FieldType={2}",
-                            decodeContext.ILByteIndex,
+                            ilByteIndex,
                             siValue.TargetType.FullName,
                             field.FieldType.FullName);
                     }

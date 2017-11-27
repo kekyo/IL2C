@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection.Emit;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -15,14 +15,16 @@ namespace IL2C.ILConveters
             var si0 = decodeContext.PopStack();
 
             // https://msdn.microsoft.com/en-us/library/system.reflection.emit.opcodes.add(v=vs.100).aspx
-            if ((si0.TargetType == typeof(int)) && (si1.TargetType == typeof(int)))
+            if ((CecilHelper.Int32Type.MemberEquals(si0.TargetType))
+                && (CecilHelper.Int32Type.MemberEquals(si1.TargetType)))
             {
-                var resultName = decodeContext.PushStack(typeof(int));
+                var resultName = decodeContext.PushStack(CecilHelper.Int32Type);
                 return _ => new[] { string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
-            if ((si0.TargetType == typeof(long)) && (si1.TargetType == typeof(long)))
+            if ((CecilHelper.Int64Type.MemberEquals(si0.TargetType))
+                && (CecilHelper.Int64Type.MemberEquals(si1.TargetType)))
             {
-                var resultName = decodeContext.PushStack(typeof(long));
+                var resultName = decodeContext.PushStack(CecilHelper.Int64Type);
                 return _ => new[] { string.Format("{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 

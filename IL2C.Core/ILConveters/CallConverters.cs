@@ -3,13 +3,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+
+using Mono.Cecil;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
     internal static class CallConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(MethodBase method, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(MethodDefinition method, DecodeContext decodeContext)
         {
             var parameters = method.GetSafeParameters();
             var pairParameters = parameters
@@ -19,20 +22,12 @@ namespace IL2C.ILConveters
                 .Reverse()
                 .ToArray();
 
-            var methodName = Utilities.GetFullMemberName(method);
+            var methodName = method.GetFullMemberName();
             var functionName = methodName.ManglingSymbolName();
 
-            var mi = method as MethodInfo;
-            var targetType = mi?.ReturnType ?? typeof(void);
-            if (targetType != typeof(void))
+            if (method.ReturnType != null)
             {
-                if ((targetType == typeof(byte))
-                    || (targetType == typeof(sbyte))
-                    || (targetType == typeof(short))
-                    || (targetType == typeof(ushort)))
-                {
-                    targetType = typeof(int);
-                }
+                var targetType = Utilities.GetStackableType(method.ReturnType);
 
                 var resultName = decodeContext.PushStack(targetType);
                 var ilByteIndex = decodeContext.ILByteIndex;
@@ -53,7 +48,7 @@ namespace IL2C.ILConveters
             }
             else
             {
-                Debug.Assert(method is ConstructorInfo);
+                Debug.Assert(method.IsConstructor);
 
                 var ilByteIndex = decodeContext.ILByteIndex;
 
@@ -103,7 +98,7 @@ namespace IL2C.ILConveters
         {
             try
             {
-                var method = (MethodInfo)decodeContext.ResolveMethod(methodToken);
+                var method = decodeContext.ResolveMethod(methodToken);
                 if (method.IsStatic)
                 {
                     throw new InvalidProgramSequenceException(

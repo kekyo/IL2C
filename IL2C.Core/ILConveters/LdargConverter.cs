@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -11,9 +12,9 @@ namespace IL2C.ILConveters
             var parameter = decodeContext.Parameters[parameterIndex];
             var targetType = parameter.ParameterType;
 
-            if (targetType == typeof(bool))
+            if (targetType.MemberEquals(CecilHelper.BooleanType))
             {
-                var symbolName = decodeContext.PushStack(typeof(int));
+                var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = {1} ? 1 : 0",
                     symbolName,
@@ -21,14 +22,7 @@ namespace IL2C.ILConveters
             }
             else
             {
-                if ((targetType == typeof(byte))
-                    || (targetType == typeof(sbyte))
-                    || (targetType == typeof(short))
-                    || (targetType == typeof(ushort)))
-                {
-                    targetType = typeof(int);
-                }
-
+                targetType = Utilities.GetStackableType(targetType);
                 var symbolName = decodeContext.PushStack(targetType);
                 return _ => new[] { string.Format(
                     "{0} = {1}",

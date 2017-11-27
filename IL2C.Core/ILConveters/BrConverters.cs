@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection.Emit;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -30,7 +30,7 @@ namespace IL2C.ILConveters
             var offset = decodeContext.ILByteIndex + operand;
             var labelName = decodeContext.EnqueueNewPath(offset);
 
-            if (Utilities.IsNumericPrimitive(si.TargetType))
+            if (si.TargetType.IsNumericPrimitive())
             {
                 return _ => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -53,7 +53,7 @@ namespace IL2C.ILConveters
             var offset = decodeContext.ILByteIndex + operand;
             var labelName = decodeContext.EnqueueNewPath(offset);
 
-            if (Utilities.IsNumericPrimitive(si.TargetType))
+            if (si.TargetType.IsNumericPrimitive())
             {
                 return _ => new[] { string.Format(
                     "if ({0} != 0) goto {1}",

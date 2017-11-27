@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -9,7 +10,9 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            var localType = decodeContext.Locals[localIndex].LocalType;
+            var localType = decodeContext.Locals[localIndex].VariableType;
+
+            var ilByteIndex = decodeContext.ILByteIndex;
 
             return lookupper =>
             {
@@ -18,7 +21,7 @@ namespace IL2C.ILConveters
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid store operation: ILByteIndex={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
-                        decodeContext.ILByteIndex,
+                        ilByteIndex,
                         si.TargetType.FullName,
                         localType.FullName,
                         localIndex);

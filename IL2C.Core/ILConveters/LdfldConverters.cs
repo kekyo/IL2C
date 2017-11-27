@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection.Emit;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -20,12 +21,12 @@ namespace IL2C.ILConveters
 
                 var targetType = field.FieldType;
 
-                var fieldName = Utilities.GetFullMemberName(field);
+                var fieldName = field.GetFullMemberName();
                 var fqFieldName = fieldName.ManglingSymbolName();
 
-                if (targetType == typeof(bool))
+                if (targetType.MemberEquals(CecilHelper.BooleanType))
                 {
-                    var symbolName = decodeContext.PushStack(typeof(int));
+                    var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
                     return _ => new [] { string.Format(
                         "{0} = {1} ? 1 : 0",
                         symbolName,
@@ -33,14 +34,7 @@ namespace IL2C.ILConveters
                 }
                 else
                 {
-                    if ((targetType == typeof(byte))
-                        || (targetType == typeof(sbyte))
-                        || (targetType == typeof(short))
-                        || (targetType == typeof(ushort)))
-                    {
-                        targetType = typeof(int);
-                    }
-
+                    targetType = Utilities.GetStackableType(targetType);
                     var symbolName = decodeContext.PushStack(targetType);
                     return _ => new[] { string.Format(
                         "{0} = {1}",
@@ -71,7 +65,7 @@ namespace IL2C.ILConveters
                 var siReference = decodeContext.PopStack();
 
                 var oper = "->";
-                if (siReference.TargetType.IsByRef)
+                if (siReference.TargetType.IsByReference)
                 {
                     var dereferencedType = siReference.TargetType.GetElementType();
                     if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
@@ -84,7 +78,7 @@ namespace IL2C.ILConveters
                             field.Name);
                     }
                 }
-                else if (siReference.TargetType.IsClass)
+                else if (siReference.TargetType.IsClass())
                 {
                     if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                     {
@@ -119,15 +113,7 @@ namespace IL2C.ILConveters
                 }
 
                 var targetType = field.FieldType;
-                if ((targetType == typeof(byte))
-                    || (targetType == typeof(sbyte))
-                    || (targetType == typeof(short))
-                    || (targetType == typeof(ushort))
-                    || (targetType == typeof(bool)))
-                {
-                    targetType = typeof(int);
-                }
-
+                targetType = Utilities.GetStackableType(targetType);
                 var resultName = decodeContext.PushStack(targetType);
 
                 return lookupper =>

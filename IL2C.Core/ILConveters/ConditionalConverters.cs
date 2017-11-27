@@ -13,10 +13,10 @@ namespace IL2C.ILConveters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            if (Utilities.IsNumericPrimitive(si0.TargetType)
-                && Utilities.IsNumericPrimitive(si1.TargetType))
+            if (si0.TargetType.IsNumericPrimitive()
+                && si1.TargetType.IsNumericPrimitive())
             {
-                var resultName = decodeContext.PushStack(typeof(int));
+                var resultName = decodeContext.PushStack(CecilHelper.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = ({1} > {2}) ? 1 : 0",
                     resultName,

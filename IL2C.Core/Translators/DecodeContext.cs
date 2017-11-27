@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 using IL2C.ILConveters;
 
 namespace IL2C.Translators
@@ -28,7 +31,7 @@ namespace IL2C.Translators
             {
             }
 
-            public string GetOrAdd(Type targetType)
+            public string GetOrAdd(TypeReference targetType)
             {
                 var index = typedStackInformation
                     .FindIndex(si => si.TargetType == targetType);
@@ -85,12 +88,10 @@ namespace IL2C.Translators
 
         #region Fields
         public readonly string MethodName;
-        public readonly Type ReturnType;
+        public readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
-        public readonly LocalVariableInfo[] Locals;
+        public readonly VariableDefinition[] Locals;
         public readonly IPrepareContext prepareContext;
-
-        private readonly Module module;
 
         private readonly byte[] ilBytes;
         private int ilByteIndex = -1;
@@ -108,12 +109,11 @@ namespace IL2C.Translators
         #endregion
 
         public DecodeContext(
-            Module module,
             string methodName,
-            Type returnType,
+            TypeReference returnType,
             Parameter[] parameters,
-            LocalVariableInfo[] locals,
-            byte[] ilBytes,
+            VariableDefinition[] locals,
+            Instruction[] ilBytes,
             IPrepareContext prepareContext)
         {
             if (ilBytes.Length == 0)
@@ -128,11 +128,10 @@ namespace IL2C.Translators
             this.Parameters = parameters;
             this.Locals = locals;
 
-            this.module = module;
-
             this.prepareContext = prepareContext;
 
-            this.ilBytes = ilBytes;
+            //TODO:CECIL
+            //this.ilBytes = ilBytes;
             this.decodedPathNumbersAtILByteIndex = new int[ilBytes.Length];
 
             // First valid process is TryDequeueNextPath.
@@ -290,19 +289,21 @@ namespace IL2C.Translators
         #endregion
 
         #region Stack
-        public string PushStack(Type targetType)
+        public string PushStack(TypeReference targetType)
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            Debug.Assert(targetType != typeof(ulong));
-            Debug.Assert(targetType != typeof(uint));
-            Debug.Assert(targetType != typeof(byte));
-            Debug.Assert(targetType != typeof(sbyte));
-            Debug.Assert(targetType != typeof(short));
-            Debug.Assert(targetType != typeof(ushort));
-            Debug.Assert(targetType != typeof(bool));
+            Debug.Assert(!CecilHelper.UInt64Type.Equals(targetType));
+            Debug.Assert(!CecilHelper.UInt32Type.Equals(targetType));
+
+            Debug.Assert(!CecilHelper.ByteType.Equals(targetType));
+            Debug.Assert(!CecilHelper.SByteType.Equals(targetType));
+            Debug.Assert(!CecilHelper.Int16Type.Equals(targetType));
+            Debug.Assert(!CecilHelper.UInt16Type.Equals(targetType));
+
+            Debug.Assert(!CecilHelper.BooleanType.Equals(targetType));
 
             StackInformationHolder stackInformationHolder;
             if (stackPointer >= stackList.Count)
@@ -404,19 +405,19 @@ namespace IL2C.Translators
         #endregion
 
         #region Resolvers
-        public Type ResolveType(int typeToken)
+        public TypeReference ResolveType(int typeToken)
         {
-            return module.ResolveType(typeToken);
+            return null; // TODO: Remove
         }
 
-        public FieldInfo ResolveField(int fieldToken)
+        public FieldDefinition ResolveField(int fieldToken)
         {
-            return module.ResolveField(fieldToken);
+            return null; // TODO: Remove
         }
 
-        public MethodBase ResolveMethod(int methodToken)
+        public MethodDefinition ResolveMethod(int methodToken)
         {
-            return module.ResolveMethod(methodToken);
+            return null; // TODO: Remove
         }
         #endregion
 

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-using IL2C.ILConveters;
-using IL2C.Translators;
-
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
+using IL2C.ILConveters;
+using IL2C.Translators;
 
 namespace IL2C
 {
@@ -32,14 +32,23 @@ namespace IL2C
         {
             while (true)
             {
-                var label = decodeContext.MakeLabel();
-                if (decodeContext.TryDecode(out var ilc) == false)
+                // TODO: Make simplist with Cecil's Instruction type.
+                if (decodeContext.MoveNext() == false)
                 {
                     break;
                 }
 
-                var operand = ilc.DecodeOperand(decodeContext);
-                yield return new ILBody(label, ilc, operand);
+                var instruction = decodeContext.Current;
+                if (Utilities.TryGetILConverter(instruction.OpCode, out var ilc) == false)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid opcode: MethodName={0}, OpCode={1}, Offset={2}",
+                        decodeContext.MethodName,
+                        instruction.OpCode.Name,
+                        instruction.Offset);
+                }
+
+                yield return new ILBody(new Label(instruction.Offset), ilc, instruction.Operand);
 
                 if (ilc.IsEndOfPath)
                 {
@@ -59,6 +68,7 @@ namespace IL2C
             var localVariables = body.Variables.ToArray();
 
             var decodeContext = new DecodeContext(
+                body.Method.Module,
                 methodName,
                 returnType,
                 parameters,
@@ -160,7 +170,7 @@ namespace IL2C
                 method.Body);
         }
 
-        internal static IReadOnlyDictionary<MethodDefinition, PreparedFunction> Prepare(
+        internal static PreparedFunctions Prepare(
             TranslateContext translateContext,
             Func<MethodDefinition, bool> predict)
         {
@@ -182,16 +192,17 @@ namespace IL2C
                 .ForEach(field => prepareContext.RegisterType(field.FieldType));
 
             // Construct result.
-            return allTypes
+            return new PreparedFunctions(allTypes
                 .SelectMany(type => type.Methods)
                 .Where(predict)
-                .ToDictionary(method => method, method => PrepareMethod(prepareContext, method));
+                .ToDictionary(method => method, method => PrepareMethod(prepareContext, method)));
         }
 
-        public static IReadOnlyDictionary<MethodDefinition, PreparedFunction> Prepare(
-            TranslateContext translateContext)
+        public static PreparedFunctions Prepare(TranslateContext translateContext)
         {
-            return Prepare(translateContext, method => (method.IsConstructor == false) || (method.IsStatic == false));
+            return Prepare(
+                translateContext,
+                method => (method.IsConstructor == false) || (method.IsStatic == false));
         }
     }
 }

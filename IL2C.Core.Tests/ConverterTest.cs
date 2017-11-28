@@ -20,7 +20,8 @@ namespace IL2C
             var translateContext = new TranslateContext(testType.Assembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method == "IL2C.TestTargetClass.ByteMainBody");
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();

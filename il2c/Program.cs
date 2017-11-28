@@ -29,11 +29,10 @@ namespace IL2C
                 }
             }
 
-            var assembly = Assembly.LoadFrom(assemblyPath);
-            var translateContext = new TranslateContext(assembly);
+            var translateContext = new TranslateContext(assemblyPath);
             var prepared = AssemblyPreparer.Prepare(translateContext);
             
-            var assemblyName = assembly.GetName().Name;
+            var assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
             var filePath = Path.Combine(outputPath, assemblyName);
 
             using (var fsSource = new FileStream(

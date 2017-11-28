@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 
 using IL2C.ILConveters;
@@ -13,7 +14,7 @@ namespace IL2C
 {
     internal static class Utilities
     {
-        private static readonly Dictionary<ushort, ILConverter> ilConverters;
+        private static readonly Dictionary<OpCode, ILConverter> ilConverters;
 
         static Utilities()
         {
@@ -21,13 +22,13 @@ namespace IL2C
                 .Assembly
                 .GetTypes()
                 .Where(type => type.IsSealed && typeof(ILConverter).IsAssignableFrom(type))
-                .Select(type => (ILConverter) Activator.CreateInstance(type))
-                .ToDictionary(ilc => (ushort) ilc.OpCode.Value);
+                .Select(type => (ILConverter)Activator.CreateInstance(type))
+                .ToDictionary(ilc => ilc.OpCode);
         }
 
-        public static bool TryGetILConverter(ushort opCodeBytes, out ILConverter ilc)
+        public static bool TryGetILConverter(OpCode opCode, out ILConverter ilc)
         {
-            return ilConverters.TryGetValue(opCodeBytes, out ilc);
+            return ilConverters.TryGetValue(opCode, out ilc);
         }
 
         public static TypeReference GetStackableType(TypeReference type)
@@ -155,7 +156,7 @@ namespace IL2C
         public static string GetGivenParameterDeclaration(
             RightExpressionGivenParameter[] parameters,
             IExtractContext extractContext,
-            int ilByteIndex)
+            int offset)
         {
             return string.Join(", ", parameters.Select(entry =>
             {
@@ -164,8 +165,8 @@ namespace IL2C
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid parameter type: ILByteIndex={0}, StackType={1}, ParameterType={2}",
-                        ilByteIndex,
+                        "Invalid parameter type: Offset={0}, StackType={1}, ParameterType={2}",
+                        offset,
                         entry.SymbolInformation.TargetType.FullName,
                         entry.TargetType.FullName);
                 }

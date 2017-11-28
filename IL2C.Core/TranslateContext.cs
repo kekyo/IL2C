@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Mono.Cecil;
 
 using IL2C.Translators;
+using System.Reflection;
 
 namespace IL2C
 {
@@ -40,6 +41,13 @@ namespace IL2C
         private readonly HashSet<string> includes = new HashSet<string>();
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
         private readonly HashSet<FieldDefinition> staticFields = new HashSet<FieldDefinition>();
+
+        public TranslateContext(Assembly assembly)
+        {
+            this.Assembly = AssemblyDefinition.ReadAssembly(assembly.Location);
+
+            includes.Add("il2c.h");
+        }
 
         public TranslateContext(string assemblyPath)
         {

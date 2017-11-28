@@ -6,8 +6,6 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using IL2C.ILConveters;
-
 namespace IL2C.Translators
 {
     internal sealed class DecodeContext
@@ -69,15 +67,15 @@ namespace IL2C.Translators
 
         private struct BranchTargetInformation
         {
-            public readonly int ILByteIndex;
+            public readonly int Offset;
             public readonly SymbolInformation[] StackInformationsSnapshot;
 
             public BranchTargetInformation(
-                int ilByteIndex,
+                int offset,
                 int stackInformationsPosition,
                 List<StackInformationHolder> stackInformationHolderList)
             {
-                this.ILByteIndex = ilByteIndex;
+                this.Offset = offset;
                 this.StackInformationsSnapshot = stackInformationHolderList
                     .Take(stackInformationsPosition)
                     .Select(stackInformationList => stackInformationList.GetCurrent())
@@ -87,17 +85,19 @@ namespace IL2C.Translators
         #endregion
 
         #region Fields
+        public readonly ModuleDefinition Module;
         public readonly string MethodName;
         public readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
         public readonly VariableDefinition[] Locals;
         public readonly IPrepareContext prepareContext;
 
-        private readonly byte[] ilBytes;
-        private int ilByteIndex = -1;
+        private readonly SortedDictionary<int, Instruction> instructions;
+        private int nextOffset = -1;
 
         private int decodingPathNumber = 0;
-        private readonly int[] decodedPathNumbersAtILByteIndex;
+        private readonly Dictionary<int, int> decodedPathNumbersAtOffset =
+            new Dictionary<int, int>();
 
         private readonly List<StackInformationHolder> stackList =
             new List<StackInformationHolder>();
@@ -109,20 +109,17 @@ namespace IL2C.Translators
         #endregion
 
         public DecodeContext(
+            ModuleDefinition module,
             string methodName,
             TypeReference returnType,
             Parameter[] parameters,
             VariableDefinition[] locals,
-            Instruction[] ilBytes,
+            Instruction[] instructions,
             IPrepareContext prepareContext)
         {
-            if (ilBytes.Length == 0)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Method body is empty: MethodName={0}",
-                    methodName);
-            }
+            Debug.Assert(instructions.Length >= 1);
 
+            this.Module = module;
             this.MethodName = methodName;
             this.ReturnType = returnType;
             this.Parameters = parameters;
@@ -130,161 +127,59 @@ namespace IL2C.Translators
 
             this.prepareContext = prepareContext;
 
-            //TODO:CECIL
-            //this.ilBytes = ilBytes;
-            this.decodedPathNumbersAtILByteIndex = new int[ilBytes.Length];
+            this.instructions = new SortedDictionary<int, Instruction>();
+            instructions.ForEach(instruction => this.instructions.Add(instruction.Offset, instruction));
 
             // First valid process is TryDequeueNextPath.
             this.pathRemains.Enqueue(new BranchTargetInformation(0, 0, new List<StackInformationHolder>()));
         }
 
-        #region Decode
-        public bool TryDecode(out ILConverter ilc)
+        #region Instruction
+        public bool MoveNext()
         {
-            Debug.Assert(decodingPathNumber >= 1);
-            Debug.Assert(stackList != null);
-            Debug.Assert(stackPointer >= 0);
-
             // Finish if current position already decoded.
-            if (decodedPathNumbersAtILByteIndex[ilByteIndex] >= 1)
+            if (decodedPathNumbersAtOffset.TryGetValue(nextOffset, out var pathNumber))
             {
-                ilc = null;
+                this.Current = null;
                 return false;
             }
+            decodedPathNumbersAtOffset.Add(nextOffset, decodingPathNumber);
 
-            decodedPathNumbersAtILByteIndex[ilByteIndex] = decodingPathNumber;
-
-            // Decode next bytes.
-            var byte0 = ilBytes[ilByteIndex];
-            if (Utilities.TryGetILConverter(byte0, out ilc))
-            {
-                ilByteIndex++;
-                return true;
-            }
-
-            if (ilByteIndex >= ilBytes.Length)
+            if (instructions.TryGetValue(nextOffset, out var instruction) == false)
             {
                 throw new InvalidProgramSequenceException(
                     "End of method body reached: MethodName={0}",
                     this.MethodName);
             }
+            this.Current = instruction;
 
-            ilByteIndex++;
-
-            var byte1 = ilBytes[ilByteIndex];
-            var word = (ushort)(byte0 << 8 | byte1);
-            if (Utilities.TryGetILConverter(word, out ilc))
-            {
-                ilByteIndex++;
-                return true;
-            }
-
-            throw new InvalidProgramSequenceException(
-                "Invalid opcode: MethodName={0}, OpCode={1:x2}, CurrentIndex={2}",
-                this.MethodName,
-                byte0,
-                ilByteIndex);
+            nextOffset = instruction.Offset + instruction.GetSize();
+            return true;
         }
-        #endregion
 
-        #region Fetch
-        public byte FetchByte()
+        public Instruction Current { get; private set; }
+
+        public int CalculateByRelativeOffset(int offsetValue)
+        {
+            return nextOffset + offsetValue;
+        }
+
+        public void SetOffset(int newOffset)
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            if (ilByteIndex >= ilBytes.Length)
+            if (instructions.ContainsKey(newOffset) == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "End of method body reached: MethodName={0}",
-                    this.MethodName);
-            }
-
-            return ilBytes[ilByteIndex++];
-        }
-
-        public sbyte FetchSByte()
-        {
-            return (sbyte) this.FetchByte();
-        }
-
-        public ushort FetchUInt16()
-        {
-            Debug.Assert(decodingPathNumber >= 1);
-            Debug.Assert(stackList != null);
-            Debug.Assert(stackPointer >= 0);
-
-            var byte0 = this.FetchByte();
-            var byte1 = this.FetchByte();
-            return (ushort)((((ushort)byte1) << 8) | byte0);
-        }
-
-        public uint FetchUInt32()
-        {
-            Debug.Assert(decodingPathNumber >= 1);
-            Debug.Assert(stackList != null);
-            Debug.Assert(stackPointer >= 0);
-
-            var ushort0 = this.FetchUInt16();
-            var ushort1 = this.FetchUInt16();
-            return (uint)((((uint)ushort1) << 16) | ushort0);
-        }
-
-        public int FetchInt32()
-        {
-            return (int)this.FetchUInt32();
-        }
-
-        public ulong FetchUInt64()
-        {
-            Debug.Assert(decodingPathNumber >= 1);
-            Debug.Assert(stackList != null);
-            Debug.Assert(stackPointer >= 0);
-
-            var uint0 = this.FetchUInt32();
-            var uint1 = this.FetchUInt32();
-            return (ulong)((((ulong)uint1) << 32) | uint0);
-        }
-
-        public long FetchInt64()
-        {
-            return (long)this.FetchUInt64();
-        }
-        #endregion
-
-        #region Label
-        public Label MakeLabel()
-        {
-            return new Label(ilByteIndex);
-        }
-        #endregion
-
-        #region ILByteIndex
-        public int ILByteIndex => ilByteIndex;
-
-        public void TransferIndex(int offset)
-        {
-            var newIndex = ilByteIndex + offset;
-            this.SetIndex(newIndex);
-        }
-
-        public void SetIndex(int newIndex)
-        {
-            Debug.Assert(decodingPathNumber >= 1);
-            Debug.Assert(stackList != null);
-            Debug.Assert(stackPointer >= 0);
-
-            if ((newIndex >= this.ilBytes.Length) || (newIndex < 0))
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid branch target: Method={0}, Target={1}, CurrentIndex={2}",
+                    "Invalid branch target: Method={0}, Target={1}, CurrentOffset={2}",
                     this.MethodName,
-                    newIndex,
-                    ilByteIndex);
+                    newOffset,
+                    this.Current.Offset);
             }
 
-            ilByteIndex = newIndex;
+            nextOffset = newOffset;
         }
         #endregion
 
@@ -332,7 +227,7 @@ namespace IL2C.Translators
                 throw new InvalidProgramSequenceException(
                     "Evaluation stack underflow: Method={0}, CurrentIndex={1}",
                     this.MethodName,
-                    ilByteIndex);
+                    nextOffset);
             }
 
             stackPointer--;
@@ -341,20 +236,20 @@ namespace IL2C.Translators
         #endregion
 
         #region Path
-        public string EnqueueNewPath(int branchTargetIndex)
+        public string EnqueueNewPath(int targetOffset)
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
             pathRemains.Enqueue(new BranchTargetInformation(
-                branchTargetIndex, stackPointer, stackList));
+                targetOffset, stackPointer, stackList));
 
             if (labelNames.TryGetValue(
-                branchTargetIndex, out var labelName) == false)
+                targetOffset, out var labelName) == false)
             {
                 labelName = string.Format("L_{0:x4}", labelNames.Count);
-                labelNames.Add(branchTargetIndex, labelName);
+                labelNames.Add(targetOffset, labelName);
             }
 
             return labelName;
@@ -369,7 +264,7 @@ namespace IL2C.Translators
                 var branchTarget = pathRemains.Dequeue();
 
                 // If current position already decoded:
-                if (decodedPathNumbersAtILByteIndex[branchTarget.ILByteIndex] >= 1)
+                if (decodedPathNumbersAtOffset.TryGetValue(branchTarget.Offset, out var pathNumber))
                 {
                     // Skip if stack information equals.
                     var currentStacks = stackList
@@ -384,7 +279,7 @@ namespace IL2C.Translators
 
                 // Start next path.
                 decodingPathNumber++;
-                ilByteIndex = branchTarget.ILByteIndex;
+                nextOffset = branchTarget.Offset;
 
                 // Retreive stack informations.
                 for (var index = 0;
@@ -399,25 +294,8 @@ namespace IL2C.Translators
                 return true;
             }
 
-            ilByteIndex = -1;
+            nextOffset = -1;
             return false;
-        }
-        #endregion
-
-        #region Resolvers
-        public TypeReference ResolveType(int typeToken)
-        {
-            return null; // TODO: Remove
-        }
-
-        public FieldDefinition ResolveField(int fieldToken)
-        {
-            return null; // TODO: Remove
-        }
-
-        public MethodDefinition ResolveMethod(int methodToken)
-        {
-            return null; // TODO: Remove
         }
         #endregion
 

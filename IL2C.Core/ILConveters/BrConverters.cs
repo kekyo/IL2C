@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
 
 using IL2C.Translators;
 
@@ -13,8 +14,9 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
         {
-            var offset = decodeContext.ILByteIndex + operand;
-            var labelName = decodeContext.EnqueueNewPath(offset);
+            var newOffset = decodeContext.CalculateByRelativeOffset(operand);
+            var labelName = decodeContext.EnqueueNewPath(newOffset);
+
             return _ => new[] { string.Format("goto {0}", labelName) };
         }
     }
@@ -27,8 +29,8 @@ namespace IL2C.ILConveters
         {
             var si = decodeContext.PopStack();
 
-            var offset = decodeContext.ILByteIndex + operand;
-            var labelName = decodeContext.EnqueueNewPath(offset);
+            var newOffset = decodeContext.CalculateByRelativeOffset(operand);
+            var labelName = decodeContext.EnqueueNewPath(newOffset);
 
             if (si.TargetType.IsNumericPrimitive())
             {
@@ -50,8 +52,8 @@ namespace IL2C.ILConveters
         {
             var si = decodeContext.PopStack();
 
-            var offset = decodeContext.ILByteIndex + operand;
-            var labelName = decodeContext.EnqueueNewPath(offset);
+            var newOffset = decodeContext.CalculateByRelativeOffset(operand);
+            var labelName = decodeContext.EnqueueNewPath(newOffset);
 
             if (si.TargetType.IsNumericPrimitive())
             {

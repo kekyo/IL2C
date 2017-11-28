@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -25,8 +27,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown cgt operation: ILByteIndex={0}, Type0={1}, Type1={2}",
-                decodeContext.ILByteIndex,
+                "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
+                decodeContext.Current.Offset,
                 si0.TargetType.FullName,
                 si1.TargetType.FullName);
         }

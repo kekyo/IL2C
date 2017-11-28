@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 using IL2C.Translators;
 
@@ -12,7 +11,8 @@ namespace IL2C.ILConveters
 {
     internal static class CallConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(MethodDefinition method, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            MethodDefinition method, DecodeContext decodeContext)
         {
             var parameters = method.GetSafeParameters();
             var pairParameters = parameters
@@ -30,12 +30,12 @@ namespace IL2C.ILConveters
                 var targetType = Utilities.GetStackableType(method.ReturnType);
 
                 var resultName = decodeContext.PushStack(targetType);
-                var ilByteIndex = decodeContext.ILByteIndex;
+                var offset = decodeContext.Current.Offset;
 
                 return lookupper =>
                 {
-                    var parameterString =
-                        Utilities.GetGivenParameterDeclaration(pairParameters, lookupper, ilByteIndex);
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        pairParameters, lookupper, offset);
                     return new[]
                     {
                         string.Format(
@@ -50,12 +50,12 @@ namespace IL2C.ILConveters
             {
                 Debug.Assert(method.IsConstructor);
 
-                var ilByteIndex = decodeContext.ILByteIndex;
+                var offset = decodeContext.Current.Offset;
 
                 return lookupper =>
                 {
-                    var parameterString =
-                        Utilities.GetGivenParameterDeclaration(pairParameters, lookupper, ilByteIndex);
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        pairParameters, lookupper, offset);
                     return new[]
                     {
                         string.Format(
@@ -72,21 +72,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Call;
 
-        public override Func<IExtractContext, string[]> Apply(int methodToken, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            MethodDefinition method, DecodeContext decodeContext)
         {
-            try
-            {
-                var method = decodeContext.ResolveMethod(methodToken);
-
-                return CallConverterUtilities.Apply(method, decodeContext);
-            }
-            catch (ArgumentException)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid method token: ILByteIndex={0}, Token={1:x2}",
-                    decodeContext.ILByteIndex,
-                    methodToken);
-            }
+            return CallConverterUtilities.Apply(method, decodeContext);
         }
     }
 
@@ -94,30 +83,20 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Callvirt;
 
-        public override Func<IExtractContext, string[]> Apply(int methodToken, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            MethodDefinition method, DecodeContext decodeContext)
         {
-            try
-            {
-                var method = decodeContext.ResolveMethod(methodToken);
-                if (method.IsStatic)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Invalid method token (static): ILByteIndex={0}, Token={1:x2}",
-                        decodeContext.ILByteIndex,
-                        methodToken);
-                }
-
-                // TODO: Support virtual method
-
-                return CallConverterUtilities.Apply(method, decodeContext);
-            }
-            catch (ArgumentException)
+            if (method.IsStatic)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid method token: ILByteIndex={0}, Token={1:x2}",
-                    decodeContext.ILByteIndex,
-                    methodToken);
+                    "Invalid method token (static): Offset={0}, Method={1}",
+                    decodeContext.Current.Offset,
+                    method.GetFullMemberName());
             }
+
+            // TODO: Support virtual method
+
+            return CallConverterUtilities.Apply(method, decodeContext);
         }
     }
 }

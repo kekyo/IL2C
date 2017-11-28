@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Reflection.Emit;
-using IL2C.Translators;
+
+using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
+
+using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
@@ -94,8 +96,8 @@ namespace IL2C.ILConveters
             if (localIndex > 225)
             {
                 throw new InvalidProgramSequenceException(
-                    "Index overflow at ldloca.s: ILByteIndex={0}, LocalIndex={1}",
-                    decodeContext.ILByteIndex,
+                    "Index overflow at ldloca.s: Offset={0}, LocalIndex={1}",
+                    decodeContext.Current.Offset,
                     localIndex);
             }
 

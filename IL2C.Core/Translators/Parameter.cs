@@ -5,12 +5,14 @@ namespace IL2C.Translators
     public struct Parameter
     {
         public readonly string Name;
-        public readonly TypeReference ParameterType;
+        internal readonly TypeReference ParameterType;
 
-        public Parameter(string name, TypeReference parameterType)
+        internal Parameter(string name, TypeReference parameterType)
         {
             this.Name = name;
             this.ParameterType = parameterType;
         }
+
+        public string ParameterTypeName => this.ParameterType.GetFullMemberName();
     }
 }

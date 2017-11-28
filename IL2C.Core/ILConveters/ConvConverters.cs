@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
 
 using IL2C.Translators;
 
@@ -29,7 +30,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 
@@ -49,7 +50,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 
@@ -69,7 +70,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 
@@ -89,7 +90,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 

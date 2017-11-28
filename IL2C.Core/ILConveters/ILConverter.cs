@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
 
 using IL2C.Translators;
 
@@ -11,8 +12,6 @@ namespace IL2C.ILConveters
         public abstract OpCode OpCode { get; }
 
         public virtual bool IsEndOfPath => false;
-
-        public abstract object DecodeOperand(DecodeContext decodeContext);
 
         public abstract Func<IExtractContext, string[]> Apply(object operand, DecodeContext decodeContext);
     }

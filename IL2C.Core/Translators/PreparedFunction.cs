@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -11,12 +10,12 @@ namespace IL2C.Translators
     public sealed class PreparedFunction
     {
         public readonly string MethodName;
-        public readonly string RawMethodName;
-        public readonly TypeReference ReturnType;
+        internal readonly string RawMethodName;
+        internal readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
-        public readonly PreparedILBody[] PreparedILBodies;
-        public readonly VariableDefinition[] LocalVariables;
-        public readonly SymbolInformation[] Stacks;
+        internal readonly PreparedILBody[] PreparedILBodies;
+        internal readonly VariableDefinition[] LocalVariables;
+        internal readonly SymbolInformation[] Stacks;
 
         private readonly IReadOnlyDictionary<int, string> labelNames;
 
@@ -49,11 +48,13 @@ namespace IL2C.Translators
         {
         }
 
+        public string ReturnTypeName => this.ReturnType.GetFullMemberName();
+
         public bool TryGetLabelName(Label label, out string labelName)
         {
             Debug.Assert(labelNames != null);
 
-            return labelNames.TryGetValue(label.ILByteIndex, out labelName);
+            return labelNames.TryGetValue(label.Offset, out labelName);
         }
     }
 }

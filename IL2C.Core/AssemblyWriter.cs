@@ -416,12 +416,12 @@ namespace IL2C
         internal static void InternalConvertFromMethod(
             TextWriter tw,
             IExtractContext extractContext,
-            IReadOnlyDictionary<MethodDefinition, PreparedFunction> preparedFunctions,
+            PreparedFunctions preparedFunctions,
             MethodDefinition method,
             string indent)
         {
             var methodName = method.GetFullMemberName();
-            var preparedFunction = preparedFunctions[method];
+            var preparedFunction = preparedFunctions.Functions[method];
 
             // Write method body:
             if (preparedFunction.PreparedILBodies != null)
@@ -499,7 +499,7 @@ namespace IL2C
         public static void WriteSourceCode(
             TextWriter twSource,
             TranslateContext translateContext,
-            IReadOnlyDictionary<MethodDefinition, PreparedFunction> preparedFunctions,
+            PreparedFunctions preparedFunctions,
             string indent)
         {
             IExtractContext extractContext = translateContext;

@@ -23,13 +23,13 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // Static fields:
 
-int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 123;
+int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 0;
 il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1 = NULL;
 
 
 
 
-int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 123;
+int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 0;
 
 
 
@@ -533,8 +533,9 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
     // Evaluation stacks:
 
     il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
-    il2c_test_target_ValueTypeTestTarget __stack0_1;
-    int32_t __stack0_2;
+    il2c_test_target_ValueTypeTestTarget* __stack0_1 = NULL;
+    il2c_test_target_ValueTypeTestTarget __stack0_2;
+    int32_t __stack0_3;
     int32_t __stack1_0;
 
     //-------------------
@@ -545,10 +546,12 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
@@ -556,17 +559,17 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
 
     __stack0_0 = &local0;
     memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
-    __stack0_0 = &local0;
+    __stack0_1 = &local0;
     __stack1_0 = 456;
-    __stack0_0->Value2 = __stack1_0;
-    __stack0_1 = local0;
-    __stack0_2 = __stack0_1.Value2;
-    local1 = __stack0_2;
+    __stack0_1->Value2 = __stack1_0;
+    __stack0_2 = local0;
+    __stack0_3 = __stack0_2.Value2;
+    local1 = __stack0_3;
     goto L_0000;
 L_0000:
-    __stack0_2 = local1;
+    __stack0_3 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);
-    return __stack0_2;
+    return __stack0_3;
 }
 
 ///////////////////////////////////////
@@ -585,7 +588,9 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
     // Evaluation stacks:
 
     il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
-    int32_t __stack0_1;
+    il2c_test_target_ValueTypeTestTarget* __stack0_1 = NULL;
+    il2c_test_target_ValueTypeTestTarget* __stack0_2 = NULL;
+    int32_t __stack0_3;
     int32_t __stack1_0;
     int32_t __stack2_0;
 
@@ -597,10 +602,14 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_1;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_2;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 3;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
+    __executionFrame__.p__stack0_2 = &__stack0_2;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
@@ -608,21 +617,21 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
 
     __stack0_0 = &local0;
     memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
-    __stack0_0 = &local0;
+    __stack0_1 = &local0;
     __stack1_0 = 789;
-    __stack0_0->Value2 = __stack1_0;
-    __stack0_0 = &local0;
+    __stack0_1->Value2 = __stack1_0;
+    __stack0_2 = &local0;
     __stack1_0 = 123;
     __stack2_0 = 456;
-    __stack0_1 = il2c_test_target_ValueTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
-    local1 = __stack0_1;
-    __stack0_1 = local1;
-    local2 = __stack0_1;
+    __stack0_3 = il2c_test_target_ValueTypeTestTarget_GetValue2(__stack0_2, __stack1_0, __stack2_0);
+    local1 = __stack0_3;
+    __stack0_3 = local1;
+    local2 = __stack0_3;
     goto L_0000;
 L_0000:
-    __stack0_1 = local2;
+    __stack0_3 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
-    return __stack0_1;
+    return __stack0_3;
 }
 
 ///////////////////////////////////////

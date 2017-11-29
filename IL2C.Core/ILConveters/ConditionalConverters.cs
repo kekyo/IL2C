@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -13,10 +15,10 @@ namespace IL2C.ILConveters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            if (Utilities.IsNumericPrimitive(si0.TargetType)
-                && Utilities.IsNumericPrimitive(si1.TargetType))
+            if (si0.TargetType.IsNumericPrimitive()
+                && si1.TargetType.IsNumericPrimitive())
             {
-                var resultName = decodeContext.PushStack(typeof(int));
+                var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
                 return _ => new[] { string.Format(
                     "{0} = ({1} > {2}) ? 1 : 0",
                     resultName,
@@ -25,8 +27,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown cgt operation: ILByteIndex={0}, Type0={1}, Type1={2}",
-                decodeContext.ILByteIndex,
+                "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
+                decodeContext.Current.Offset,
                 si0.TargetType.FullName,
                 si1.TargetType.FullName);
         }

@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -11,7 +13,7 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            var resultName = decodeContext.PushStack(typeof(long));
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt64Type());
 
             return _ => new[] { string.Format("{0} = {1}", resultName, siFrom.SymbolName) };
         }
@@ -24,15 +26,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
+            if (siFrom.TargetType.IsNumericPrimitive() == false)
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(typeof(int));
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (uint8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -44,15 +46,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
+            if (siFrom.TargetType.IsNumericPrimitive() == false)
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(typeof(int));
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -64,15 +66,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
+            if (siFrom.TargetType.IsNumericPrimitive() == false)
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(typeof(int));
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (int16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -84,15 +86,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (Utilities.IsNumericPrimitive(siFrom.TargetType) == false)
+            if (siFrom.TargetType.IsNumericPrimitive() == false)
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.ILByteIndex,
+                    decodeContext.Current.Offset,
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(typeof(int));
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (uint16_t){1}", resultName, siFrom.SymbolName) };
         }
     }

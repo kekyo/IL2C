@@ -1,19 +1,23 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
 {
     internal static class LdlocConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            int localIndex, DecodeContext decodeContext)
         {
             var local = decodeContext.Locals[localIndex];
-            var targetType = local.LocalType;
+            var targetType = local.VariableType;
 
-            if (local.LocalType == typeof(bool))
+            if (targetType.IsBooleanType())
             {
-                var symbolName = decodeContext.PushStack(typeof(int));
+                var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
                 return _ => new[] { string.Format(
                     "{0} = local{1} ? 1 : 0",
                     symbolName,
@@ -21,14 +25,7 @@ namespace IL2C.ILConveters
             }
             else
             {
-                if ((local.LocalType == typeof(byte))
-                    || (local.LocalType == typeof(sbyte))
-                    || (local.LocalType == typeof(short))
-                    || (local.LocalType == typeof(ushort)))
-                {
-                    targetType = typeof(int);
-                }
-
+                targetType = targetType.GetStackableType();
                 var symbolName = decodeContext.PushStack(targetType);
                 return _ => new[] { string.Format(
                     "{0} = local{1}",
@@ -37,18 +34,17 @@ namespace IL2C.ILConveters
             }
         }
 
-        public static Func<IExtractContext, string[]> ApplyWithAddress(int localIndex, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            VariableReference local, DecodeContext decodeContext)
         {
-            var local = decodeContext.Locals[localIndex];
-            var targetType = local.LocalType;
-
-            var managedReferenceType = targetType.MakeByRefType();
+            var targetType = local.VariableType;
+            var managedReferenceType = targetType.MakeByReferenceType();
                 
             var symbolName = decodeContext.PushStack(managedReferenceType);
             return _ => new[] { string.Format(
                 "{0} = &local{1}",
                 symbolName,
-                localIndex) };
+                local.Index) };
         }
     }
 
@@ -96,17 +92,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloca_S;
 
-        public override Func<IExtractContext, string[]> Apply(byte localIndex, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            VariableReference operand, DecodeContext decodeContext)
         {
-            if (localIndex > 225)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Index overflow at ldloca.s: ILByteIndex={0}, LocalIndex={1}",
-                    decodeContext.ILByteIndex,
-                    localIndex);
-            }
-
-            return LdlocConverterUtilities.ApplyWithAddress(localIndex, decodeContext);
+            return LdlocConverterUtilities.Apply(operand, decodeContext);
         }
     }
 }

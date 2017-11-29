@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -11,10 +12,11 @@ namespace IL2C.ILConveters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
         {
-            var offset = decodeContext.ILByteIndex + operand;
-            var labelName = decodeContext.EnqueueNewPath(offset);
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
+
             return _ => new[] { string.Format("goto {0}", labelName) };
         }
     }
@@ -23,14 +25,14 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brfalse_S;
 
-        public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
-            var offset = decodeContext.ILByteIndex + operand;
-            var labelName = decodeContext.EnqueueNewPath(offset);
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (Utilities.IsNumericPrimitive(si.TargetType))
+            if (si.TargetType.IsNumericPrimitive())
             {
                 return _ => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -46,14 +48,14 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brtrue_S;
 
-        public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
-            var offset = decodeContext.ILByteIndex + operand;
-            var labelName = decodeContext.EnqueueNewPath(offset);
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (Utilities.IsNumericPrimitive(si.TargetType))
+            if (si.TargetType.IsNumericPrimitive())
             {
                 return _ => new[] { string.Format(
                     "if ({0} != 0) goto {1}",

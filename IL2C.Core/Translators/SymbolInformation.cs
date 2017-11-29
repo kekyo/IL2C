@@ -1,17 +1,20 @@
 ﻿using System;
+using Mono.Cecil;
 
 namespace IL2C.Translators
 {
     public struct SymbolInformation
     {
         public readonly string SymbolName;
-        public readonly Type TargetType;
+        internal readonly TypeReference TargetType;
 
-        internal SymbolInformation(string symbolName, Type targetType)
+        internal SymbolInformation(string symbolName, TypeReference targetType)
         {
             this.SymbolName = symbolName;
             this.TargetType = targetType;
         }
+
+        public string TypeName => this.TargetType.GetFullMemberName();
 
         public bool Equals(SymbolInformation rhs)
         {

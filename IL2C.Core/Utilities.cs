@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
+
 using IL2C.ILConveters;
 using IL2C.Translators;
 
@@ -10,7 +14,7 @@ namespace IL2C
 {
     internal static class Utilities
     {
-        private static readonly Dictionary<ushort, ILConverter> ilConverters;
+        private static readonly Dictionary<OpCode, ILConverter> ilConverters;
 
         static Utilities()
         {
@@ -18,23 +22,37 @@ namespace IL2C
                 .Assembly
                 .GetTypes()
                 .Where(type => type.IsSealed && typeof(ILConverter).IsAssignableFrom(type))
-                .Select(type => (ILConverter) Activator.CreateInstance(type))
-                .ToDictionary(ilc => (ushort) ilc.OpCode.Value);
+                .Select(type => (ILConverter)Activator.CreateInstance(type))
+                .ToDictionary(ilc => ilc.OpCode);
         }
 
-        public static bool TryGetILConverter(ushort opCodeBytes, out ILConverter ilc)
+        public static bool TryGetILConverter(OpCode opCode, out ILConverter ilc)
         {
-            return ilConverters.TryGetValue(opCodeBytes, out ilc);
+            return ilConverters.TryGetValue(opCode, out ilc);
         }
 
-        public static Parameter[] GetSafeParameters(this MethodBase method)
+        public static TypeReference GetStackableType(this TypeReference type)
         {
-            var parameters = method.GetParameters()
-                .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
-            if (method.IsStatic == false)
+            if (type.IsByteType()
+                || type.IsSByteType()
+                || type.IsInt16Type()
+                || type.IsUInt16Type()
+                || type.IsBooleanType())
             {
-                var type = method.DeclaringType;
-                var thisType = type.IsValueType ? type.MakeByRefType() : type;
+                return type.GetSafeInt32Type();
+            }
+
+            return type;
+        }
+
+        public static Parameter[] GetSafeParameters(this MethodReference method)
+        {
+            var parameters = method.Parameters
+                .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
+            if (method.HasThis)
+            {
+                TypeReference type = method.DeclaringType;
+                var thisType = type.IsValueType ? type.MakeByReferenceType() : type;
                 parameters = new[]
                     {
                         new Parameter("__this", thisType)
@@ -43,73 +61,6 @@ namespace IL2C
             }
 
             return parameters.ToArray();
-        }
-
-        public static bool IsNumericPrimitive(Type type)
-        {
-            if (type == typeof(Byte))
-            {
-                return true;
-            }
-            if (type == typeof(SByte))
-            {
-                return true;
-            }
-            if (type == typeof(Int16))
-            {
-                return true;
-            }
-            if (type == typeof(UInt16))
-            {
-                return true;
-            }
-            if (type == typeof(Int32))
-            {
-                return true;
-            }
-            if (type == typeof(UInt32))
-            {
-                return true;
-            }
-            if (type == typeof(Int64))
-            {
-                return true;
-            }
-            if (type == typeof(UInt64))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static string GetFullMemberName(MemberInfo member)
-        {
-            if (member.DeclaringType != null)
-            {
-                var declaringTypes = member.DeclaringType
-                    .Traverse(current => current.DeclaringType)
-                    .Reverse()
-                    .ToArray();
-
-                return String.Format(
-                    "{0}.{1}.{2}",
-                    declaringTypes.First().Namespace,
-                    String.Join(".", declaringTypes.Select(dt => dt.Name)),
-                    member.Name);
-            }
-            else
-            {
-                var type = member as Type;
-                if (type != null)
-                {
-                    return type.FullName;
-                }
-                else
-                {
-                    return member.Name;
-                }
-            }
         }
 
         public static string ManglingSymbolName(this string rawSymbolName)
@@ -121,7 +72,7 @@ namespace IL2C
 
         public static string GetFunctionPrototypeString(
             string methodName,
-            Type returnType,
+            TypeReference returnType,
             Parameter[] parameters,
             IExtractContext extractContext)
         {
@@ -143,26 +94,27 @@ namespace IL2C
         }
 
         public static string GetStaticFieldPrototypeString(
-            FieldInfo field,
+            FieldReference field,
             bool requireInitializerExpression,
             IExtractContext extractContext)
         {
             var initializer = String.Empty;
             if (requireInitializerExpression)
             {
-                if (IsNumericPrimitive(field.FieldType))
+                if (field.FieldType.IsNumericPrimitive())
                 {
                     // TODO: numericPrimitive and (literal or readonly static) ?
-                    Debug.Assert(field.IsStatic);
-                    var value = field.GetValue(null);
+                    var fieldDefinition = field.Resolve();
+                    Debug.Assert(fieldDefinition.IsStatic);
+                    var value = fieldDefinition.HasConstant ? fieldDefinition.Constant : 0;
 
                     Debug.Assert(value != null);
 
-                    initializer = (value is long)
+                    initializer = fieldDefinition.FieldType.IsInt64Type()
                         ? String.Format(" = {0}LL", value)
                         : String.Format(" = {0}", value);
                 }
-                else if (field.FieldType.IsClass)
+                else if (field.FieldType.IsValueType == false)
                 {
                     initializer = " = NULL";
                 }
@@ -171,16 +123,17 @@ namespace IL2C
             return string.Format(
                 "{0} {1}{2}",
                 extractContext.GetCLanguageTypeName(field.FieldType),
-                Utilities.GetFullMemberName(field).ManglingSymbolName(),
+                field.GetFullMemberName().ManglingSymbolName(),
                 initializer);
         }
 
         public struct RightExpressionGivenParameter
         {
-            public readonly Type TargetType;
+            public readonly TypeReference TargetType;
             public readonly SymbolInformation SymbolInformation;
 
-            public RightExpressionGivenParameter(Type targetType, SymbolInformation symbolinformation)
+            public RightExpressionGivenParameter(
+                TypeReference targetType, SymbolInformation symbolinformation)
             {
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;
@@ -190,7 +143,7 @@ namespace IL2C
         public static string GetGivenParameterDeclaration(
             RightExpressionGivenParameter[] parameters,
             IExtractContext extractContext,
-            int ilByteIndex)
+            int offset)
         {
             return string.Join(", ", parameters.Select(entry =>
             {
@@ -199,8 +152,8 @@ namespace IL2C
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid parameter type: ILByteIndex={0}, StackType={1}, ParameterType={2}",
-                        ilByteIndex,
+                        "Invalid parameter type: Offset={0}, StackType={1}, ParameterType={2}",
+                        offset,
                         entry.SymbolInformation.TargetType.FullName,
                         entry.TargetType.FullName);
                 }

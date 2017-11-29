@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 using IL2C.ILConveters;
 using IL2C.Translators;
 
@@ -29,14 +31,23 @@ namespace IL2C
         {
             while (true)
             {
-                var label = decodeContext.MakeLabel();
-                if (decodeContext.TryDecode(out var ilc) == false)
+                // TODO: Make simplist with Cecil's Instruction type.
+                if (decodeContext.MoveNext() == false)
                 {
                     break;
                 }
 
-                var operand = ilc.DecodeOperand(decodeContext);
-                yield return new ILBody(label, ilc, operand);
+                var instruction = decodeContext.Current;
+                if (Utilities.TryGetILConverter(instruction.OpCode, out var ilc) == false)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid opcode: MethodName={0}, OpCode={1}, Offset={2}",
+                        decodeContext.MethodName,
+                        instruction.OpCode.Name,
+                        instruction.Offset);
+                }
+
+                yield return new ILBody(new Label(instruction.Offset), ilc, instruction.Operand);
 
                 if (ilc.IsEndOfPath)
                 {
@@ -47,25 +58,24 @@ namespace IL2C
 
         private static PreparedFunction PrepareMethod(
             IPrepareContext prepareContext,
-            Module module,
             string methodName,
             string rawMethodName,
-            Type returnType,
+            TypeReference returnType,
             Parameter[] parameters,
             MethodBody body)
         {
-            var localVariables = body.LocalVariables.ToArray();
+            var localVariables = body.Variables.ToArray();
 
             var decodeContext = new DecodeContext(
-                module,
+                body.Method.Module,
                 methodName,
                 returnType,
                 parameters,
                 localVariables,
-                body.GetILAsByteArray(),
+                body.Instructions.ToArray(),
                 prepareContext);
 
-            var preparedOpCodes = decodeContext
+            var preparedILBodies = decodeContext
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
@@ -85,7 +95,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
-                preparedOpCodes,
+                preparedILBodies,
                 localVariables,
                 stacks,
                 labelNames);
@@ -95,12 +105,19 @@ namespace IL2C
             IPrepareContext prepareContext,
             string methodName,
             string rawMethodName,
-            Type returnType,
+            TypeReference returnType,
             Parameter[] parameters,
-            DllImportAttribute dllImportAttribute)
+            PInvokeInfo pinvokeInfo)
         {
             // TODO: Switch DllImport.Value include direction to library direction.
-            prepareContext.RegisterPrivateIncludeFile(dllImportAttribute.Value);
+            if (string.IsNullOrWhiteSpace(pinvokeInfo.Module.Name))
+            {
+                throw new InvalidProgramSequenceException(
+                    "Not given DllImport attribute argument. Name={0}",
+                    methodName);
+            }
+
+            prepareContext.RegisterPrivateIncludeFile(pinvokeInfo.Module.Name);
 
             return new PreparedFunction(
                 methodName,
@@ -111,33 +128,19 @@ namespace IL2C
 
         private static PreparedFunction PrepareMethod(
             IPrepareContext prepareContext,
-            MethodBase method)
+            MethodDefinition method)
         {
-            var methodName = Utilities.GetFullMemberName(method);
-            var mi = method as MethodInfo;
-            var returnType = mi?.ReturnType ?? typeof(void);
+            var methodName = method.GetFullMemberName();
+            var returnType = method.ReturnType?.Resolve() ?? method.GetSafeVoidType();
             var parameters = method.GetSafeParameters();
 
             prepareContext.RegisterType(returnType);
             parameters.ForEach(parameter => prepareContext.RegisterType(parameter.ParameterType));
 
-            var body = method.GetMethodBody();
-            if (body != null)
+            if (method.IsPInvokeImpl)
             {
-                return PrepareMethod(
-                    prepareContext,
-                    method.Module,
-                    methodName,
-                    method.Name,
-                    returnType,
-                    parameters,
-                    body);
-            }
-            else if ((method.Attributes & MethodAttributes.PinvokeImpl)
-                == MethodAttributes.PinvokeImpl)
-            {
-                var dllImportAttribute = method.GetCustomAttribute<DllImportAttribute>();
-                if (dllImportAttribute == null)
+                var pinvokeInfo = method.PInvokeInfo;
+                if (pinvokeInfo == null)
                 {
                     throw new InvalidProgramSequenceException(
                         "Missing DllImport attribute at P/Invoke entry: Method={0}",
@@ -150,54 +153,54 @@ namespace IL2C
                     method.Name,
                     returnType,
                     parameters,
-                    dllImportAttribute);
+                    pinvokeInfo);
             }
-            else
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid method: Method={0}",
-                    methodName);
-            }
+
+            return PrepareMethod(
+                prepareContext,
+                methodName,
+                method.Name,
+                returnType,
+                parameters,
+                method.Body);
         }
 
-        internal static IReadOnlyDictionary<MethodBase, PreparedFunction> Prepare(
+        internal static PreparedFunctions Prepare(
             TranslateContext translateContext,
-            Func<MethodBase, bool> predict)
+            Func<MethodDefinition, bool> predict)
         {
             IPrepareContext prepareContext = translateContext;
 
-            var allTypes = translateContext.Assembly.GetTypes()
-                .Where(type => type.IsValueType || type.IsClass)
+            var allTypes = translateContext.Assembly.Modules
+                .SelectMany(module => module.Types)
+                .Where(type => type.IsValidDefinition())
                 .ToArray();
             var types = allTypes
-                .Where(type => !(type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamORAssem))
+                .Where(type => !(type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly))
                 .ToArray();
 
             // Lookup type references.
             types.ForEach(prepareContext.RegisterType);
 
             // Lookup fields.
-            types.SelectMany(type => type.GetFields(
-                    BindingFlags.Public | BindingFlags.NonPublic
-                    | BindingFlags.Static | BindingFlags.Instance
-                    | BindingFlags.DeclaredOnly))
+            types.SelectMany(type => type.Fields)
                 .ForEach(field => prepareContext.RegisterType(field.FieldType));
 
             // Construct result.
-            return allTypes
-                .SelectMany(type => type.GetMembers(
-                    BindingFlags.Public | BindingFlags.NonPublic
-                    | BindingFlags.Static | BindingFlags.Instance
-                    | BindingFlags.DeclaredOnly))
-                .OfType<MethodBase>()
+            return new PreparedFunctions(allTypes
+                .SelectMany(type => type.Methods)
                 .Where(predict)
-                .ToDictionary(method => method, method => PrepareMethod(prepareContext, method));
+                .ToDictionary(
+                    method => method,
+                    method => PrepareMethod(prepareContext, method),
+                    CecilHelper.MemberReferenceComparer<MethodDefinition>.Instance));
         }
 
-        public static IReadOnlyDictionary<MethodBase, PreparedFunction> Prepare(
-            TranslateContext translateContext)
+        public static PreparedFunctions Prepare(TranslateContext translateContext)
         {
-            return Prepare(translateContext, method => method is MethodInfo || !method.IsStatic);
+            return Prepare(
+                translateContext,
+                method => !method.IsConstructor || !method.IsStatic);
         }
     }
 }

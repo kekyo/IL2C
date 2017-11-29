@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -9,11 +11,11 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> Apply(int parameterIndex, DecodeContext decodeContext)
         {
             var parameter = decodeContext.Parameters[parameterIndex];
-            var targetType = parameter.ParameterType;
+            var targetType = parameter.ParameterType.GetStackableType();
+            var symbolName = decodeContext.PushStack(targetType);
 
-            if (targetType == typeof(bool))
+            if (parameter.ParameterType.IsBooleanType())
             {
-                var symbolName = decodeContext.PushStack(typeof(int));
                 return _ => new[] { string.Format(
                     "{0} = {1} ? 1 : 0",
                     symbolName,
@@ -21,15 +23,6 @@ namespace IL2C.ILConveters
             }
             else
             {
-                if ((targetType == typeof(byte))
-                    || (targetType == typeof(sbyte))
-                    || (targetType == typeof(short))
-                    || (targetType == typeof(ushort)))
-                {
-                    targetType = typeof(int);
-                }
-
-                var symbolName = decodeContext.PushStack(targetType);
                 return _ => new[] { string.Format(
                     "{0} = {1}",
                     symbolName,

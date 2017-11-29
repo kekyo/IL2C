@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Mono.Cecil;
 
 namespace IL2C.Translators
 {
     public struct Parameter
     {
         public readonly string Name;
-        public readonly Type ParameterType;
+        internal readonly TypeReference ParameterType;
 
-        public Parameter(string name, Type parameterType)
+        internal Parameter(string name, TypeReference parameterType)
         {
             this.Name = name;
             this.ParameterType = parameterType;
         }
+
+        public string ParameterTypeName => this.ParameterType.GetFullMemberName();
     }
 }

@@ -2,11 +2,11 @@
 {
     public struct Label
     {
-        public readonly int ILByteIndex;
+        public readonly int Offset;
 
-        public Label(int ilByteIndex)
+        public Label(int offset)
         {
-            this.ILByteIndex = ilByteIndex;
+            this.Offset = offset;
         }
     }
 }

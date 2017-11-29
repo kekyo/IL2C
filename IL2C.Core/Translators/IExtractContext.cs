@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
+using Mono.Cecil;
 
 namespace IL2C.Translators
 {
     internal interface IExtractContext
     {
-        Assembly Assembly { get; }
+        AssemblyDefinition Assembly { get; }
 
-        string GetCLanguageTypeName(Type type, TypeNameFlags flags = TypeNameFlags.Strict);
-        string GetRightExpression(Type lhsType, SymbolInformation rhs);
-        string GetRightExpression(Type lhsType, Type rhsType, string rhsExpression);
+        string GetCLanguageTypeName(TypeReference type, TypeNameFlags flags = TypeNameFlags.Strict);
+        string GetRightExpression(TypeReference lhsType, SymbolInformation rhs);
+        string GetRightExpression(TypeReference lhsType, TypeReference rhsType, string rhsExpression);
         IEnumerable<string> EnumerateRequiredIncludeFileNames();
         IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();
-        IEnumerable<FieldInfo> ExtractStaticFields();
+        IEnumerable<FieldReference> ExtractStaticFields();
     }
 }

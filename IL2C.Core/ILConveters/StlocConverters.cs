@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -9,7 +11,9 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            var localType = decodeContext.Locals[localIndex].LocalType;
+            var localType = decodeContext.Locals[localIndex].VariableType;
+
+            var offset = decodeContext.Current.Offset;
 
             return lookupper =>
             {
@@ -17,8 +21,8 @@ namespace IL2C.ILConveters
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid store operation: ILByteIndex={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
-                        decodeContext.ILByteIndex,
+                        "Invalid store operation: Offset={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
+                        offset,
                         si.TargetType.FullName,
                         localType.FullName,
                         localIndex);

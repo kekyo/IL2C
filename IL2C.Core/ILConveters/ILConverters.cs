@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
+
+using Mono.Cecil.Cil;
+
 using IL2C.Translators;
+using Mono.Cecil;
 
 namespace IL2C.ILConveters
 {
@@ -27,7 +29,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            if (decodeContext.ReturnType == typeof(void))
+            if (decodeContext.ReturnType.IsVoidType())
             {
                 return _ => new [] { "return" };
             }
@@ -37,14 +39,16 @@ namespace IL2C.ILConveters
 
             decodeContext.prepareContext.RegisterType(returnType);
 
+            var offset = decodeContext.Current.Offset;
+
             return lookupper =>
             {
                 var rightExpression = lookupper.GetRightExpression(returnType, si);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid return operation: ILByteIndex={0}, StackType={1}, ReturnType={2}",
-                        decodeContext.ILByteIndex,
+                        "Invalid return operation: Offset={0}, StackType={1}, ReturnType={2}",
+                        offset,
                         si.TargetType.FullName,
                         returnType.FullName);
                 }
@@ -59,41 +63,30 @@ namespace IL2C.ILConveters
         {
             public override OpCode OpCode => OpCodes.Initobj;
 
-            public override Func<IExtractContext, string[]> Apply(int typeToken, DecodeContext decodeContext)
+            public override Func<IExtractContext, string[]> Apply(
+                TypeReference type, DecodeContext decodeContext)
             {
-                try
-                {
-                    var type = decodeContext.ResolveType(typeToken);
-
-                    var si = decodeContext.PopStack();
-                    if (si.TargetType.IsByRef == false)
-                    {
-                        throw new InvalidProgramSequenceException(
-                            "Invalid type at stack: ILByteIndex={0}, TokenType={1}, StackType={2}",
-                            decodeContext.ILByteIndex,
-                            type.FullName,
-                            si.TargetType.FullName);
-                    }
-
-                    decodeContext.prepareContext.RegisterIncludeFile("string.h");
-
-                    return lookupper =>
-                    {
-                        var typeName = lookupper.GetCLanguageTypeName(type);
-
-                        return new[] { string.Format(
-                            "memset({0}, 0x00, sizeof({1}))",
-                            si.SymbolName,
-                            typeName) };
-                    };
-                }
-                catch (ArgumentException)
+                var si = decodeContext.PopStack();
+                if (si.TargetType.IsByReference == false)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid type token: ILByteIndex={0}, Token={1:x2}",
-                        decodeContext.ILByteIndex,
-                        typeToken);
+                        "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
+                        decodeContext.Current.Offset,
+                        type.FullName,
+                        si.TargetType.FullName);
                 }
+
+                decodeContext.prepareContext.RegisterIncludeFile("string.h");
+
+                return lookupper =>
+                {
+                    var typeName = lookupper.GetCLanguageTypeName(type);
+
+                    return new[] { string.Format(
+                        "memset({0}, 0x00, sizeof({1}))",
+                        si.SymbolName,
+                        typeName) };
+                };
             }
         }
 
@@ -101,60 +94,57 @@ namespace IL2C.ILConveters
         {
             public override OpCode OpCode => OpCodes.Newobj;
 
-            public override Func<IExtractContext, string[]> Apply(int constructorToken, DecodeContext decodeContext)
+            public override Func<IExtractContext, string[]> Apply(
+                MethodReference method, DecodeContext decodeContext)
             {
-                try
-                {
-                    var constructor = (ConstructorInfo)decodeContext.ResolveMethod(
-                        constructorToken);
-                    var type = constructor.DeclaringType;
-
-                    if (type.IsClass == false)
-                    {
-                        throw new InvalidProgramSequenceException(
-                            "Invalid new object type: ILByteIndex={0}, Token={1:x2}",
-                            decodeContext.ILByteIndex,
-                            constructorToken);
-                    }
-
-                    var parameters = constructor.GetParameters();
-                    var pairParameters = parameters
-                        .Reverse()
-                        .Select(parameter => new Utilities.RightExpressionGivenParameter(
-                            parameter.ParameterType, decodeContext.PopStack()))
-                        .Reverse()
-                        .ToList();
-
-                    var thisSymbolName = decodeContext.PushStack(type);
-
-                    // Insert this reference.
-                    pairParameters.Insert(0,
-                        new Utilities.RightExpressionGivenParameter(
-                            type, new SymbolInformation(thisSymbolName, type)));
-
-                    var ilByteIndex = decodeContext.ILByteIndex;
-
-                    return lookupper =>
-                    {
-                        var parameterString = Utilities.GetGivenParameterDeclaration(
-                            pairParameters.ToArray(), lookupper, ilByteIndex);
-
-                        var dereferencedTypeName = lookupper.GetCLanguageTypeName(
-                            type, TypeNameFlags.Dereferenced);
-
-                        return new[] { string.Format(
-                            "__{0}_NEW__(&{1})",
-                            dereferencedTypeName,
-                            parameterString) };
-                    };
-                }
-                catch (ArgumentException)
+                var md = method.Resolve();
+                if (md.IsConstructor == false)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid contructor token: ILByteIndex={0}, Token={1:x2}",
-                        decodeContext.ILByteIndex,
-                        constructorToken);
+                        "Invalid new object constructor: Offset={0}, Method={1}",
+                        decodeContext.Current.Offset,
+                        md.GetFullMemberName());
                 }
+
+                var type = md.DeclaringType;
+
+                if (type.IsValueType)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid new object type: Offset={0}, Method={1}",
+                        decodeContext.Current.Offset,
+                        md.GetFullMemberName());
+                }
+
+                var pairParameters = md.Parameters
+                    .Reverse()
+                    .Select(parameter => new Utilities.RightExpressionGivenParameter(
+                        parameter.ParameterType, decodeContext.PopStack()))
+                    .Reverse()
+                    .ToList();
+
+                var thisSymbolName = decodeContext.PushStack(type);
+
+                // Insert this reference.
+                pairParameters.Insert(0,
+                    new Utilities.RightExpressionGivenParameter(
+                        type, new SymbolInformation(thisSymbolName, type)));
+
+                var offset = decodeContext.Current.Offset;
+
+                return lookupper =>
+                {
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        pairParameters.ToArray(), lookupper, offset);
+
+                    var dereferencedTypeName = lookupper.GetCLanguageTypeName(
+                        type, TypeNameFlags.Dereferenced);
+
+                    return new[] { string.Format(
+                        "__{0}_NEW__(&{1})",
+                        dereferencedTypeName,
+                        parameterString) };
+                };
             }
         }
     }

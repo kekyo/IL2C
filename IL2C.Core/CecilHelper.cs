@@ -8,6 +8,34 @@ namespace IL2C
 {
     internal static class CecilHelper
     {
+        #region MemberReferenceComparer
+        public sealed class MemberReferenceComparer<T> : IEqualityComparer<T>, IComparer<T>
+            where T : MemberReference
+        {
+            private MemberReferenceComparer()
+            {
+            }
+
+            public int Compare(T x, T y)
+            {
+                return StringComparer.InvariantCulture.Compare(x.FullName, y.FullName);
+            }
+
+            public bool Equals(T x, T y)
+            {
+                return StringComparer.InvariantCulture.Equals(x.FullName, y.FullName);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                return StringComparer.InvariantCulture.GetHashCode(obj.FullName);
+            }
+
+            public static readonly MemberReferenceComparer<T> Instance = new MemberReferenceComparer<T>();
+        }
+        #endregion
+
+        #region Fields
         private static readonly HashSet<string> primitiveTypes = new HashSet<string>
         {
             typeof(byte).FullName,
@@ -32,7 +60,9 @@ namespace IL2C
         internal static readonly TypeDefinition UInt32Type;
         internal static readonly TypeDefinition Int64Type;
         internal static readonly TypeDefinition UInt64Type;
+        #endregion
 
+        #region Type initializer
         static CecilHelper()
         {
             var mscorlib = ModuleDefinition.ReadModule(typeof(object).Module.FullyQualifiedName);
@@ -51,6 +81,7 @@ namespace IL2C
             Int64Type = mscorlib.GetType(typeof(long).FullName);
             UInt64Type = mscorlib.GetType(typeof(ulong).FullName);
         }
+        #endregion
 
         private static T ResolveIf<T>(MemberReference reference)
             where T : IMemberDefinition
@@ -63,49 +94,14 @@ namespace IL2C
             return (T)definition;
         }
 
-        public static bool MemberEquals<T, U>(this T lhs, U rhs)
-            where T : MemberReference
-            where U : MemberReference
+        public static bool MemberEquals(this MemberReference lhs, MemberReference rhs)
         {
             if (object.ReferenceEquals(lhs, rhs))
             {
                 return true;
             }
 
-            var lhsDefinition = ResolveIf<IMemberDefinition>(lhs);
-            var rhsDefinition = ResolveIf<IMemberDefinition>(rhs);
-
-            return object.ReferenceEquals(lhsDefinition, rhsDefinition);
-        }
-
-        public static bool IsClass(this TypeReference type)
-        {
-            var typeDefinition = type as TypeDefinition;
-            if (typeDefinition == null)
-            {
-                typeDefinition = typeDefinition.Resolve();
-            }
-            return typeDefinition.IsClass;
-        }
-
-        public static bool IsInterface(this TypeReference type)
-        {
-            var typeDefinition = type as TypeDefinition;
-            if (typeDefinition == null)
-            {
-                typeDefinition = typeDefinition.Resolve();
-            }
-            return typeDefinition.IsInterface;
-        }
-
-        public static bool IsReference(this TypeReference type)
-        {
-            var typeDefinition = type as TypeDefinition;
-            if (typeDefinition == null)
-            {
-                typeDefinition = typeDefinition.Resolve();
-            }
-            return typeDefinition.IsClass || typeDefinition.IsInterface;
+            return lhs.FullName == rhs.FullName;
         }
 
         public static bool IsNumericPrimitive(this TypeReference type)

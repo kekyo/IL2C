@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 using Mono.Cecil;
 
@@ -44,7 +42,7 @@ namespace IL2C
                 .Traverse(type => type.BaseType?.Resolve())
                 .TakeWhile(type => type != stopType)
                 .Reverse()
-                .SelectMany(type => type.Fields.Where(field => field.IsStatic == false))
+                .SelectMany(type => type.Fields.Where(field => !field.IsStatic))
                 .ToArray();
             if (instanceFields.Length >= 1)
             {
@@ -141,7 +139,7 @@ namespace IL2C
                 tw.WriteLine();
 
                 type.Methods
-                    .Where(method => (method.IsConstructor == false) || (method.IsStatic == false))
+                    .Where(method => !method.IsConstructor || !method.IsStatic)
                     .ForEach(method =>
                     {
                         var methodName = method.GetFullMemberName();
@@ -156,7 +154,7 @@ namespace IL2C
 
                         // Is this instance constructor?
                         // TODO: Type initializer's handlers
-                        if (method.IsConstructor && (method.IsStatic == false))
+                        if (method.IsConstructor && !method.IsStatic)
                         {
                             var typeName = extractContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced);
 
@@ -219,7 +217,7 @@ namespace IL2C
                     indent,
                     extractContext.GetCLanguageTypeName(local.VariableType),
                     local.Index,
-                    local.VariableType.IsReference() ? " = NULL" : string.Empty);
+                    local.VariableType.IsValueType ? string.Empty : " = NULL");
             });
 
             tw.WriteLine();
@@ -234,14 +232,14 @@ namespace IL2C
                     indent,
                     extractContext.GetCLanguageTypeName(si.TargetType),
                     si.SymbolName,
-                    si.TargetType.IsReference() ? " = NULL" : string.Empty);
+                    si.TargetType.IsValueType ? string.Empty : " = NULL");
             });
 
             var frameEntries = locals
-                .Where(local => local.VariableType.IsReference())
+                .Where(local => local.VariableType.IsValueType == false)
                 .Select(local => new { Type = local.VariableType, Name = "local" + local.Index })
                 .Concat(preparedFunction.Stacks
-                    .Where(stack => stack.TargetType.IsReference())
+                    .Where(stack => stack.TargetType.IsValueType == false)
                     .Select(stack => new { Type = stack.TargetType, Name = stack.SymbolName }))
                 .ToArray();
 
@@ -320,7 +318,7 @@ namespace IL2C
             TextWriter tw,
             IExtractContext extractContext,
             PreparedFunction preparedFunction,
-            CustomAttribute dllImportAttribute,
+            PInvokeInfo pinvokeInfo,
             string indent)
         {
             var functionPrototype = Utilities.GetFunctionPrototypeString(
@@ -337,22 +335,17 @@ namespace IL2C
             tw.WriteLine(functionPrototype);
             tw.WriteLine("{");
 
-            var entryPoint = dllImportAttribute.Properties
-                .First(prop => prop.Name == "EntryPoint");
-            var realTargetName = string.IsNullOrWhiteSpace(entryPoint.Argument.Value as string)
-                ? preparedFunction.RawMethodName
-                : (string)entryPoint.Argument.Value;
             var arguments = string.Join(
                 ", ",
                 preparedFunction.Parameters.Select(parameter => parameter.Name));
 
             if (preparedFunction.ReturnType.MemberEquals(CecilHelper.VoidType) == false)
             {
-                tw.WriteLine("{0}return {1}({2});", indent, realTargetName, arguments);
+                tw.WriteLine("{0}return {1}({2});", indent, pinvokeInfo.EntryPoint, arguments);
             }
             else
             {
-                tw.WriteLine("{0}{1}({2});", indent, realTargetName, arguments);
+                tw.WriteLine("{0}{1}({2});", indent, pinvokeInfo.EntryPoint, arguments);
             }
 
             tw.WriteLine("}");
@@ -381,7 +374,7 @@ namespace IL2C
             tw.WriteLine("{");
 
             type.Fields
-                .Where(field => !field.IsStatic && field.FieldType.IsReference())
+                .Where(field => !field.IsStatic && !field.FieldType.IsValueType)
                 .ForEach(field =>
                 {
                     tw.WriteLine(
@@ -434,10 +427,8 @@ namespace IL2C
             }
             else if (method.IsPInvokeImpl)
             {
-                var dllImportAttribute = method.CustomAttributes
-                    .FirstOrDefault(a => a.AttributeType.FullName ==
-                        "System.Runtime.InteropServices.DllImportAttribute");
-                if (dllImportAttribute == null)
+                var pinvokeInfo = method.PInvokeInfo;
+                if (pinvokeInfo == null)
                 {
                     throw new InvalidProgramSequenceException(
                         "Missing DllImport attribute at P/Invoke entry: Method={0}",
@@ -448,13 +439,13 @@ namespace IL2C
                     tw,
                     extractContext,
                     preparedFunction,
-                    dllImportAttribute,
+                    pinvokeInfo,
                     indent);
             }
 
             // Is this instance constructor?
             // TODO: Type initializer's handlers
-            if (method.IsConstructor && (method.IsStatic == false))
+            if (method.IsConstructor && !method.IsStatic)
             {
                 InternalConvertTypeHelper(
                     tw,
@@ -482,6 +473,7 @@ namespace IL2C
 
             var types = extractContext.Assembly.Modules
                 .SelectMany(module => module.Types)
+                // All types exclude privates
                 .Where(type => (type.IsValueType || type.IsClass)
                     && (type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly))
                 .ToArray();
@@ -514,6 +506,8 @@ namespace IL2C
                 .SelectMany(module => module.Types)
                 .Where(type => type.IsValueType || type.IsClass)
                 .ToArray();
+
+            // All types exclude publics and internals (for file scope prototypes)
             var types = allTypes
                 .Where(type => !(type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly))
                 .ToArray();
@@ -531,6 +525,8 @@ namespace IL2C
             allTypes.ForEach(type =>
             {
                 twSource.WriteLine();
+
+                // All static fields
                 type.Fields
                     .Where(field => field.IsStatic)
                     .ForEach(field => twSource.WriteLine(
@@ -548,8 +544,9 @@ namespace IL2C
                 twSource.WriteLine("////////////////////////////////////////////////////////////");
                 twSource.WriteLine("// Type: {0}", type.GetFullMemberName());
 
+                // All methods and constructor exclude type initializer
                 type.Methods
-                    .Where(method => (method.IsConstructor == false) || method.IsStatic)
+                    .Where(method => !method.IsConstructor || !method.IsStatic)
                     .ForEach(method =>
                     {
                         InternalConvertFromMethod(

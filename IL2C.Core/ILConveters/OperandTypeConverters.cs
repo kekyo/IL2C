@@ -27,19 +27,19 @@ namespace IL2C.ILConveters
     {
     }
 
-    internal abstract class InlineMethodConverter : ILConverter<MethodDefinition>
+    internal abstract class InlineMethodConverter : ILConverter<MethodReference>
     {
     }
 
-    internal abstract class InlineFieldConverter : ILConverter<FieldDefinition>
+    internal abstract class InlineFieldConverter : ILConverter<FieldReference>
     {
     }
 
-    internal abstract class InlineTypeConverter : ILConverter<TypeDefinition>
+    internal abstract class InlineTypeConverter : ILConverter<TypeReference>
     {
     }
 
-    internal abstract class ShortInlineBrTargetConverter : ILConverter<sbyte>
+    internal abstract class ShortInlineBrTargetConverter : ILConverter<Instruction>
     {
     }
 
@@ -47,7 +47,7 @@ namespace IL2C.ILConveters
     {
     }
 
-    internal abstract class ShortInlineVarConverter : ILConverter<byte>
+    internal abstract class ShortInlineVarConverter : ILConverter<VariableReference>
     {
     }
 }

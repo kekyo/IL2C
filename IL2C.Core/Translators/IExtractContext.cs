@@ -12,6 +12,6 @@ namespace IL2C.Translators
         string GetRightExpression(TypeReference lhsType, TypeReference rhsType, string rhsExpression);
         IEnumerable<string> EnumerateRequiredIncludeFileNames();
         IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();
-        IEnumerable<FieldDefinition> ExtractStaticFields();
+        IEnumerable<FieldReference> ExtractStaticFields();
     }
 }

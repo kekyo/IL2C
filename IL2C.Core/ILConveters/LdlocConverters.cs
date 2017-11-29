@@ -9,7 +9,8 @@ namespace IL2C.ILConveters
 {
     internal static class LdlocConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            int localIndex, DecodeContext decodeContext)
         {
             var local = decodeContext.Locals[localIndex];
             var targetType = local.VariableType;
@@ -33,9 +34,9 @@ namespace IL2C.ILConveters
             }
         }
 
-        public static Func<IExtractContext, string[]> ApplyWithAddress(int localIndex, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            VariableReference local, DecodeContext decodeContext)
         {
-            var local = decodeContext.Locals[localIndex];
             var targetType = local.VariableType;
             var managedReferenceType = targetType.MakeByReferenceType();
                 
@@ -43,7 +44,7 @@ namespace IL2C.ILConveters
             return _ => new[] { string.Format(
                 "{0} = &local{1}",
                 symbolName,
-                localIndex) };
+                local.Index) };
         }
     }
 
@@ -91,17 +92,10 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Ldloca_S;
 
-        public override Func<IExtractContext, string[]> Apply(byte localIndex, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            VariableReference operand, DecodeContext decodeContext)
         {
-            if (localIndex > 225)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Index overflow at ldloca.s: Offset={0}, LocalIndex={1}",
-                    decodeContext.Current.Offset,
-                    localIndex);
-            }
-
-            return LdlocConverterUtilities.ApplyWithAddress(localIndex, decodeContext);
+            return LdlocConverterUtilities.Apply(operand, decodeContext);
         }
     }
 }

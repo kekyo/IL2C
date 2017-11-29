@@ -119,15 +119,15 @@ namespace IL2C
                     // TODO: numericPrimitive and (literal or readonly static) ?
                     var fieldDefinition = field.Resolve();
                     Debug.Assert(fieldDefinition.IsStatic);
-                    var value = fieldDefinition.Constant;
+                    var value = fieldDefinition.HasConstant ? fieldDefinition.Constant : 0;
 
                     Debug.Assert(value != null);
 
-                    initializer = (value is long)
+                    initializer = (fieldDefinition.MemberEquals(CecilHelper.Int64Type))
                         ? String.Format(" = {0}LL", value)
                         : String.Format(" = {0}", value);
                 }
-                else if (field.FieldType.Resolve().IsClass)
+                else if (field.FieldType.IsValueType == false)
                 {
                     initializer = " = NULL";
                 }

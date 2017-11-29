@@ -9,12 +9,21 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // Types:
 
+typedef struct <Module> <Module>;
+
+////////////////////////////////////////////////////////////
+// Class: <Module>
+
+
+#define __<Module>_SIZEOF__() (0)
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:
 
+
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
+
 
 #ifdef __cplusplus
 }
@@ -23,19 +32,23 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // Static fields:
 
-int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 123;
+
+int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 0;
 il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1 = NULL;
 
 
 
 
-int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 123;
+int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 0;
 
 
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
+
+////////////////////////////////////////////////////////////
+// Type: <Module>
 
 ////////////////////////////////////////////////////////////
 // Type: il2c_test_target.ClassTypeTestTarget
@@ -55,6 +68,7 @@ int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTyp
 
     il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
+    int32_t __stack0_2;
     int32_t __stack1_0;
 
     //-------------------
@@ -77,10 +91,10 @@ int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTyp
     __stack0_0 = __this;
     __stack0_1 = __stack0_0->Value2;
     __stack1_0 = a;
-    __stack0_1 = __stack0_1 + __stack1_0;
+    __stack0_2 = __stack0_1 + __stack1_0;
     __stack1_0 = b;
-    __stack0_1 = __stack0_1 + __stack1_0;
-    local0 = __stack0_1;
+    __stack0_2 = __stack0_2 + __stack1_0;
+    local0 = __stack0_2;
     goto L_0000;
 L_0000:
     __stack0_1 = local0;
@@ -101,6 +115,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
     // Evaluation stacks:
 
     il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    void __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -110,17 +125,19 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        void* p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     __stack0_0 = __this;
-    System_Object__ctor((System_Object*)__stack0_0);
+    __stack0_1 = System_Object__ctor((System_Object*)__stack0_0);
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -269,6 +286,7 @@ void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this
     // Evaluation stacks:
 
     il2c_test_target_ClassTypeTest* __stack0_0 = NULL;
+    void __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -278,17 +296,19 @@ void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_ClassTypeTest** p__stack0_0;
+        void* p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     __stack0_0 = __this;
-    System_Object__ctor((System_Object*)__stack0_0);
+    __stack0_1 = System_Object__ctor((System_Object*)__stack0_0);
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -350,6 +370,7 @@ void il2c_test_target_Arduino__ctor(il2c_test_target_Arduino* __this)
     // Evaluation stacks:
 
     il2c_test_target_Arduino* __stack0_0 = NULL;
+    void __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -359,17 +380,19 @@ void il2c_test_target_Arduino__ctor(il2c_test_target_Arduino* __this)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_Arduino** p__stack0_0;
+        void* p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     __stack0_0 = __this;
-    System_Object__ctor((System_Object*)__stack0_0);
+    __stack0_1 = System_Object__ctor((System_Object*)__stack0_0);
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -423,6 +446,7 @@ void il2c_test_target_Wio__ctor(il2c_test_target_Wio* __this)
     // Evaluation stacks:
 
     il2c_test_target_Wio* __stack0_0 = NULL;
+    void __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -432,17 +456,19 @@ void il2c_test_target_Wio__ctor(il2c_test_target_Wio* __this)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_Wio** p__stack0_0;
+        void* p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     __stack0_0 = __this;
-    System_Object__ctor((System_Object*)__stack0_0);
+    __stack0_1 = System_Object__ctor((System_Object*)__stack0_0);
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -482,6 +508,7 @@ int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTyp
 
     il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
+    int32_t __stack0_2;
     int32_t __stack1_0;
 
     //-------------------
@@ -504,10 +531,10 @@ int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTyp
     __stack0_0 = __this;
     __stack0_1 = __stack0_0->Value2;
     __stack1_0 = a;
-    __stack0_1 = __stack0_1 + __stack1_0;
+    __stack0_2 = __stack0_1 + __stack1_0;
     __stack1_0 = b;
-    __stack0_1 = __stack0_1 + __stack1_0;
-    local0 = __stack0_1;
+    __stack0_2 = __stack0_2 + __stack1_0;
+    local0 = __stack0_2;
     goto L_0000;
 L_0000:
     __stack0_1 = local0;
@@ -533,8 +560,9 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
     // Evaluation stacks:
 
     il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
-    il2c_test_target_ValueTypeTestTarget __stack0_1;
-    int32_t __stack0_2;
+    il2c_test_target_ValueTypeTestTarget* __stack0_1 = NULL;
+    il2c_test_target_ValueTypeTestTarget __stack0_2;
+    int32_t __stack0_3;
     int32_t __stack1_0;
 
     //-------------------
@@ -545,10 +573,12 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
@@ -556,17 +586,17 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
 
     __stack0_0 = &local0;
     memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
-    __stack0_0 = &local0;
+    __stack0_1 = &local0;
     __stack1_0 = 456;
-    __stack0_0->Value2 = __stack1_0;
-    __stack0_1 = local0;
-    __stack0_2 = __stack0_1.Value2;
-    local1 = __stack0_2;
+    __stack0_1->Value2 = __stack1_0;
+    __stack0_2 = local0;
+    __stack0_3 = __stack0_2.Value2;
+    local1 = __stack0_3;
     goto L_0000;
 L_0000:
-    __stack0_2 = local1;
+    __stack0_3 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);
-    return __stack0_2;
+    return __stack0_3;
 }
 
 ///////////////////////////////////////
@@ -585,7 +615,9 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
     // Evaluation stacks:
 
     il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
-    int32_t __stack0_1;
+    il2c_test_target_ValueTypeTestTarget* __stack0_1 = NULL;
+    il2c_test_target_ValueTypeTestTarget* __stack0_2 = NULL;
+    int32_t __stack0_3;
     int32_t __stack1_0;
     int32_t __stack2_0;
 
@@ -597,10 +629,14 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_1;
+        il2c_test_target_ValueTypeTestTarget** p__stack0_2;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 3;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
+    __executionFrame__.p__stack0_2 = &__stack0_2;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
@@ -608,21 +644,21 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
 
     __stack0_0 = &local0;
     memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
-    __stack0_0 = &local0;
+    __stack0_1 = &local0;
     __stack1_0 = 789;
-    __stack0_0->Value2 = __stack1_0;
-    __stack0_0 = &local0;
+    __stack0_1->Value2 = __stack1_0;
+    __stack0_2 = &local0;
     __stack1_0 = 123;
     __stack2_0 = 456;
-    __stack0_1 = il2c_test_target_ValueTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
-    local1 = __stack0_1;
-    __stack0_1 = local1;
-    local2 = __stack0_1;
+    __stack0_3 = il2c_test_target_ValueTypeTestTarget_GetValue2(__stack0_2, __stack1_0, __stack2_0);
+    local1 = __stack0_3;
+    __stack0_3 = local1;
+    local2 = __stack0_3;
     goto L_0000;
 L_0000:
-    __stack0_1 = local2;
+    __stack0_3 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
-    return __stack0_1;
+    return __stack0_3;
 }
 
 ///////////////////////////////////////
@@ -638,6 +674,7 @@ void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this
     // Evaluation stacks:
 
     il2c_test_target_ValueTypeTest* __stack0_0 = NULL;
+    void __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -647,17 +684,19 @@ void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_ValueTypeTest** p__stack0_0;
+        void* p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     __stack0_0 = __this;
-    System_Object__ctor((System_Object*)__stack0_0);
+    __stack0_1 = System_Object__ctor((System_Object*)__stack0_0);
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -767,6 +806,7 @@ void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
     // Evaluation stacks:
 
     il2c_test_target_Hoge2* __stack0_0 = NULL;
+    void __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -776,17 +816,19 @@ void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_Hoge2** p__stack0_0;
+        void* p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     __stack0_0 = __this;
-    System_Object__ctor((System_Object*)__stack0_0);
+    __stack0_1 = System_Object__ctor((System_Object*)__stack0_0);
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -825,6 +867,7 @@ int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
     // Evaluation stacks:
 
     int32_t __stack0_0;
+    int32_t __stack0_1;
     int32_t __stack1_0;
 
     //-------------------
@@ -838,8 +881,8 @@ int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
 L_0000:
     __stack1_0 = 2;
 L_0001:
-    __stack0_0 = __stack0_0 + __stack1_0;
-    local0 = __stack0_0;
+    __stack0_1 = __stack0_0 + __stack1_0;
+    local0 = __stack0_1;
     goto L_0002;
 L_0002:
     __stack0_0 = local0;
@@ -860,6 +903,7 @@ int64_t il2c_test_target_Hoge1_Add2(int64_t a, bool isTwo)
     // Evaluation stacks:
 
     int64_t __stack0_0;
+    int64_t __stack0_1;
     int32_t __stack1_0;
     int64_t __stack1_1;
 
@@ -875,8 +919,8 @@ L_0000:
     __stack1_0 = 2;
 L_0001:
     __stack1_1 = __stack1_0;
-    __stack0_0 = __stack0_0 + __stack1_1;
-    local0 = __stack0_0;
+    __stack0_1 = __stack0_0 + __stack1_1;
+    local0 = __stack0_1;
     goto L_0002;
 L_0002:
     __stack0_0 = local0;
@@ -896,6 +940,7 @@ void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
     // Evaluation stacks:
 
     il2c_test_target_Hoge1* __stack0_0 = NULL;
+    void __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -905,17 +950,19 @@ void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         il2c_test_target_Hoge1** p__stack0_0;
+        void* p__stack0_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 1;
+    __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     __stack0_0 = __this;
-    System_Object__ctor((System_Object*)__stack0_0);
+    __stack0_1 = System_Object__ctor((System_Object*)__stack0_0);
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }

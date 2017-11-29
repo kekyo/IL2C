@@ -12,7 +12,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Stfld;
 
         public override Func<IExtractContext, string[]> Apply(
-            FieldDefinition field, DecodeContext decodeContext)
+            FieldReference field, DecodeContext decodeContext)
         {
             var siValue = decodeContext.PopStack();
             var siReference = decodeContext.PopStack();
@@ -29,7 +29,7 @@ namespace IL2C.ILConveters
                         field.GetFullMemberName());
                 }
             }
-            else if (siReference.TargetType.IsClass())
+            else if (siReference.TargetType.IsValueType == false)
             {
                 if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                 {

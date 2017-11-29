@@ -13,9 +13,9 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldsfld;
 
         public override Func<IExtractContext, string[]> Apply(
-            FieldDefinition field, DecodeContext decodeContext)
+            FieldReference field, DecodeContext decodeContext)
         {
-            Debug.Assert(field.IsStatic);
+            Debug.Assert(field.Resolve().IsStatic);
 
             decodeContext.prepareContext.RegisterStaticField(field);
 
@@ -49,7 +49,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldfld;
 
         public override Func<IExtractContext, string[]> Apply(
-            FieldDefinition field, DecodeContext decodeContext)
+            FieldReference field, DecodeContext decodeContext)
         {
             var siReference = decodeContext.PopStack();
 
@@ -66,7 +66,7 @@ namespace IL2C.ILConveters
                         field.GetFullMemberName());
                 }
             }
-            else if (siReference.TargetType.IsClass())
+            else if (siReference.TargetType.IsValueType == false)
             {
                 if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                 {

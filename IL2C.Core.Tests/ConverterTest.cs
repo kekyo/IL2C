@@ -1,27 +1,38 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using IL2C.Translators;
+using System.Linq;
+using System.Reflection;
+
 using NUnit.Framework;
+using Mono.Cecil;
 
 namespace IL2C
 {
     [TestFixture]
     public static class ConverterTest
     {
+        private static readonly Assembly testTypeAssembly = typeof(TestTargetClass).Assembly;
+        private static readonly TypeDefinition testType =
+            AssemblyDefinition.ReadAssembly(testTypeAssembly.Location).MainModule.Types
+            .First(type => type.FullName == typeof(TestTargetClass).FullName);
+
+        private static MethodDefinition GetMethod(this TypeDefinition type, string methodName)
+        {
+            return type.Methods.First(method => method.Name == methodName);
+        }
         #region Byte
 
         [Test]
         public static void SimpleOverallByByteSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("ByteMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
             var prepared = AssemblyPreparer.Prepare(
-                translateContext, method => method == "IL2C.TestTargetClass.ByteMainBody");
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -63,13 +74,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallBySByteSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("SByteMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -108,13 +119,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallBySByteWithMinusSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("SByteWithMinusMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -156,13 +167,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByInt16SummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int16MainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -201,13 +212,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByInt16WithMinusSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int16WithMinusMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -249,13 +260,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByUInt16SummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("UInt16MainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -294,13 +305,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByUInt16WithMaxValueSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("UInt16WithMaxValueMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -342,13 +353,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByInt32SummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int32MainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -386,13 +397,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByInt32LargeValueSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int32LargeValueMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -430,13 +441,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByInt32WithArgumentsSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int32WithArgumentsMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -471,13 +482,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByInt64SummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int64MainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -518,13 +529,13 @@ namespace IL2C
         [Test]
         public static void SimpleOverallByInt64LargeValueSummationTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("Int64LargeValueMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -565,13 +576,13 @@ namespace IL2C
         [Test]
         public static void ConditionalBranchTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("ConditionalBranchMainBody");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -616,13 +627,13 @@ namespace IL2C
         [Test]
         public static void CallStaticMethodTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("CallTestMethod");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -651,13 +662,13 @@ namespace IL2C
         [Test]
         public static void AccessStaticFieldMethodTest()
         {
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("AccessStaticFieldTestMethod");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();
@@ -693,15 +704,15 @@ namespace IL2C
         {
             Assert.Fail("TODO:");
 
-            var testType = typeof(TestTargetClass);
             var mainMethod = testType.GetMethod("AccessValueTypeFieldMethod");
 
-            var translateContext = new TranslateContext(testType.Assembly);
+            var translateContext = new TranslateContext(testTypeAssembly);
             var tw = new StringWriter();
 
             var targetType = typeof(TestTargetClass.AccessValueTypeFieldTestType);
 
-            var prepared = AssemblyPreparer.Prepare(translateContext, method => method == mainMethod);
+            var prepared = AssemblyPreparer.Prepare(
+                translateContext, method => method.MemberEquals(mainMethod));
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, mainMethod, "  ");
 
             var sourceCode = tw.ToString();

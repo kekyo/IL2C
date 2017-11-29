@@ -12,10 +12,10 @@ namespace IL2C.ILConveters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
         {
-            var newOffset = decodeContext.CalculateByRelativeOffset(operand);
-            var labelName = decodeContext.EnqueueNewPath(newOffset);
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
             return _ => new[] { string.Format("goto {0}", labelName) };
         }
@@ -25,12 +25,12 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brfalse_S;
 
-        public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
-            var newOffset = decodeContext.CalculateByRelativeOffset(operand);
-            var labelName = decodeContext.EnqueueNewPath(newOffset);
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
             if (si.TargetType.IsNumericPrimitive())
             {
@@ -48,12 +48,12 @@ namespace IL2C.ILConveters
     {
         public override OpCode OpCode => OpCodes.Brtrue_S;
 
-        public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
-            var newOffset = decodeContext.CalculateByRelativeOffset(operand);
-            var labelName = decodeContext.EnqueueNewPath(newOffset);
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
             if (si.TargetType.IsNumericPrimitive())
             {

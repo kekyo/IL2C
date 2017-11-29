@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 using Mono.Cecil;
 
 using IL2C.Translators;
-using System.Reflection;
 
 namespace IL2C
 {
@@ -40,18 +41,24 @@ namespace IL2C
 
         private readonly HashSet<string> includes = new HashSet<string>();
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
-        private readonly HashSet<FieldDefinition> staticFields = new HashSet<FieldDefinition>();
+        private readonly Dictionary<string, FieldReference> staticFields =
+            new Dictionary<string, FieldReference>();
 
         public TranslateContext(Assembly assembly)
+            : this(assembly.Location)
         {
-            this.Assembly = AssemblyDefinition.ReadAssembly(assembly.Location);
-
             includes.Add("il2c.h");
         }
 
         public TranslateContext(string assemblyPath)
         {
-            this.Assembly = AssemblyDefinition.ReadAssembly(assemblyPath);
+            var resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
+            var parameter = new ReaderParameters
+            {
+                AssemblyResolver = resolver
+            };
+
+            this.Assembly = AssemblyDefinition.ReadAssembly(assemblyPath, parameter);
 
             includes.Add("il2c.h");
         }
@@ -97,14 +104,14 @@ namespace IL2C
             this.RegisterType(type);
         }
 
-        private void RegisterStaticField(FieldDefinition staticField)
+        private void RegisterStaticField(FieldReference staticField)
         {
-            Debug.Assert(staticField.IsStatic);
+            Debug.Assert(staticField.Resolve().IsStatic);
 
-            staticFields.Add(staticField);
+            staticFields.Add(staticField.FullName, staticField);
         }
 
-        void IPrepareContext.RegisterStaticField(FieldDefinition staticField)
+        void IPrepareContext.RegisterStaticField(FieldReference staticField)
         {
             this.RegisterStaticField(staticField);
         }
@@ -121,9 +128,9 @@ namespace IL2C
             return privateIncludes;
         }
 
-        IEnumerable<FieldDefinition> IExtractContext.ExtractStaticFields()
+        IEnumerable<FieldReference> IExtractContext.ExtractStaticFields()
         {
-            return staticFields;
+            return staticFields.Values;
         }
 
         private string GetCLanguageTypeName(TypeReference type, TypeNameFlags flags = TypeNameFlags.Strict)
@@ -148,7 +155,7 @@ namespace IL2C
                     name = "struct " + name;
                 }
 
-                if (type.IsReference())
+                if (type.IsValueType == false)
                 {
                     return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
                         ? name : (name + "*");

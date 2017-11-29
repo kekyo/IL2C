@@ -108,19 +108,17 @@ namespace IL2C
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
-            CustomAttribute dllImportAttribute)
+            PInvokeInfo pinvokeInfo)
         {
             // TODO: Switch DllImport.Value include direction to library direction.
-            var value = (dllImportAttribute.ConstructorArguments
-                .Select(argument => argument.Value as string).FirstOrDefault());
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(pinvokeInfo.Module.Name))
             {
                 throw new InvalidProgramSequenceException(
                     "Not given DllImport attribute argument. Name={0}",
                     methodName);
             }
 
-            prepareContext.RegisterPrivateIncludeFile(value);
+            prepareContext.RegisterPrivateIncludeFile(pinvokeInfo.Module.Name);
 
             return new PreparedFunction(
                 methodName,
@@ -142,10 +140,8 @@ namespace IL2C
 
             if (method.IsPInvokeImpl)
             {
-                var dllImportAttribute = method.CustomAttributes
-                    .FirstOrDefault(attribute =>
-                    attribute.AttributeType.FullName == typeof(DllImportAttribute).FullName);
-                if (dllImportAttribute == null)
+                var pinvokeInfo = method.PInvokeInfo;
+                if (pinvokeInfo == null)
                 {
                     throw new InvalidProgramSequenceException(
                         "Missing DllImport attribute at P/Invoke entry: Method={0}",
@@ -158,7 +154,7 @@ namespace IL2C
                     method.Name,
                     returnType,
                     parameters,
-                    dllImportAttribute);
+                    pinvokeInfo);
             }
 
             return PrepareMethod(
@@ -195,7 +191,10 @@ namespace IL2C
             return new PreparedFunctions(allTypes
                 .SelectMany(type => type.Methods)
                 .Where(predict)
-                .ToDictionary(method => method, method => PrepareMethod(prepareContext, method)));
+                .ToDictionary(
+                    method => method,
+                    method => PrepareMethod(prepareContext, method),
+                    CecilHelper.MemberReferenceComparer<MethodDefinition>.Instance));
         }
 
         public static PreparedFunctions Prepare(TranslateContext translateContext)

@@ -64,7 +64,7 @@ namespace IL2C.ILConveters
             public override OpCode OpCode => OpCodes.Initobj;
 
             public override Func<IExtractContext, string[]> Apply(
-                TypeDefinition type, DecodeContext decodeContext)
+                TypeReference type, DecodeContext decodeContext)
             {
                 var si = decodeContext.PopStack();
                 if (si.TargetType.IsByReference == false)
@@ -95,27 +95,28 @@ namespace IL2C.ILConveters
             public override OpCode OpCode => OpCodes.Newobj;
 
             public override Func<IExtractContext, string[]> Apply(
-                MethodDefinition method, DecodeContext decodeContext)
+                MethodReference method, DecodeContext decodeContext)
             {
-                if (method.IsConstructor == false)
+                var md = method.Resolve();
+                if (md.IsConstructor == false)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid new object constructor: Offset={0}, Method={1}",
                         decodeContext.Current.Offset,
-                        method.GetFullMemberName());
+                        md.GetFullMemberName());
                 }
 
-                var type = method.DeclaringType;
+                var type = md.DeclaringType;
 
-                if (type.IsClass == false)
+                if (type.IsValueType)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid new object type: Offset={0}, Method={1}",
                         decodeContext.Current.Offset,
-                        method.GetFullMemberName());
+                        md.GetFullMemberName());
                 }
 
-                var pairParameters = method.Parameters
+                var pairParameters = md.Parameters
                     .Reverse()
                     .Select(parameter => new Utilities.RightExpressionGivenParameter(
                         parameter.ParameterType, decodeContext.PopStack()))

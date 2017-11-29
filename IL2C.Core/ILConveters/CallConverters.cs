@@ -12,7 +12,7 @@ namespace IL2C.ILConveters
     internal static class CallConverterUtilities
     {
         public static Func<IExtractContext, string[]> Apply(
-            MethodDefinition method, DecodeContext decodeContext)
+            MethodReference method, DecodeContext decodeContext)
         {
             var parameters = method.GetSafeParameters();
             var pairParameters = parameters
@@ -48,7 +48,7 @@ namespace IL2C.ILConveters
             }
             else
             {
-                Debug.Assert(method.IsConstructor);
+                Debug.Assert(method.Resolve().IsConstructor);
 
                 var offset = decodeContext.Current.Offset;
 
@@ -73,7 +73,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Call;
 
         public override Func<IExtractContext, string[]> Apply(
-            MethodDefinition method, DecodeContext decodeContext)
+            MethodReference method, DecodeContext decodeContext)
         {
             return CallConverterUtilities.Apply(method, decodeContext);
         }
@@ -84,19 +84,21 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Callvirt;
 
         public override Func<IExtractContext, string[]> Apply(
-            MethodDefinition method, DecodeContext decodeContext)
+            MethodReference method, DecodeContext decodeContext)
         {
-            if (method.IsStatic)
+            var md = method.Resolve();
+
+            if (md.IsStatic)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid method token (static): Offset={0}, Method={1}",
                     decodeContext.Current.Offset,
-                    method.GetFullMemberName());
+                    md.GetFullMemberName());
             }
 
             // TODO: Support virtual method
 
-            return CallConverterUtilities.Apply(method, decodeContext);
+            return CallConverterUtilities.Apply(md, decodeContext);
         }
     }
 }

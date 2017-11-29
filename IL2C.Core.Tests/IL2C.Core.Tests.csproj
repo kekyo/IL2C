@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net45</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <AssemblyName>IL2C.Core.Tests</AssemblyName>
@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
-    <packagereference Include="NUnit3TestAdapter" Version="3.9.0"></packagereference>
+    <packagereference Include="NUnit3TestAdapter" Version="3.9.0" />
     <PackageReference Include="Mono.Cecil" Version="0.10.0-beta7" />
   </ItemGroup>
 

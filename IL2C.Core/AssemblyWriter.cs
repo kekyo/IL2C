@@ -35,8 +35,8 @@ namespace IL2C
             tw.WriteLine();
 
             var stopType = declaredType.IsValueType
-                ? CecilHelper.ValueTypeType
-                : CecilHelper.ObjectType;
+                ? declaredType.GetSafeValueTypeType()
+                : declaredType.GetSafeObjectType();
 
             var instanceFields = declaredType
                 .Traverse(type => type.BaseType?.Resolve())
@@ -146,7 +146,7 @@ namespace IL2C
 
                         var functionPrototype = Utilities.GetFunctionPrototypeString(
                             methodName,
-                            method.ReturnType?.Resolve() ?? CecilHelper.VoidType,
+                            method.ReturnType?.Resolve() ?? method.GetSafeVoidType(),
                             method.GetSafeParameters(),
                             extractContext);
 
@@ -339,13 +339,13 @@ namespace IL2C
                 ", ",
                 preparedFunction.Parameters.Select(parameter => parameter.Name));
 
-            if (preparedFunction.ReturnType.MemberEquals(CecilHelper.VoidType) == false)
+            if (preparedFunction.ReturnType.IsVoidType())
             {
-                tw.WriteLine("{0}return {1}({2});", indent, pinvokeInfo.EntryPoint, arguments);
+                tw.WriteLine("{0}{1}({2});", indent, pinvokeInfo.EntryPoint, arguments);
             }
             else
             {
-                tw.WriteLine("{0}{1}({2});", indent, pinvokeInfo.EntryPoint, arguments);
+                tw.WriteLine("{0}return {1}({2});", indent, pinvokeInfo.EntryPoint, arguments);
             }
 
             tw.WriteLine("}");
@@ -504,7 +504,7 @@ namespace IL2C
 
             var allTypes = extractContext.Assembly.Modules
                 .SelectMany(module => module.Types)
-                .Where(type => type.IsValueType || type.IsClass)
+                .Where(type => type.IsValidDefinition())
                 .ToArray();
 
             // All types exclude publics and internals (for file scope prototypes)

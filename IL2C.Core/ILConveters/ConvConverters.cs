@@ -13,7 +13,7 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            var resultName = decodeContext.PushStack(CecilHelper.Int64Type);
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt64Type());
 
             return _ => new[] { string.Format("{0} = {1}", resultName, siFrom.SymbolName) };
         }
@@ -34,7 +34,7 @@ namespace IL2C.ILConveters
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (uint8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -54,7 +54,7 @@ namespace IL2C.ILConveters
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -74,7 +74,7 @@ namespace IL2C.ILConveters
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (int16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -94,7 +94,7 @@ namespace IL2C.ILConveters
                     siFrom.TargetType.FullName);
             }
 
-            var resultName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = (uint16_t){1}", resultName, siFrom.SymbolName) };
         }
     }

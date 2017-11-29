@@ -31,28 +31,15 @@ namespace IL2C
             return ilConverters.TryGetValue(opCode, out ilc);
         }
 
-        public static TypeReference GetStackableType(TypeReference type)
+        public static TypeReference GetStackableType(this TypeReference type)
         {
-            if (type.MemberEquals(CecilHelper.ByteType)
-                || type.MemberEquals(CecilHelper.SByteType)
-                || type.MemberEquals(CecilHelper.Int16Type)
-                || type.MemberEquals(CecilHelper.UInt16Type)
-                || type.MemberEquals(CecilHelper.BooleanType))
+            if (type.IsByteType()
+                || type.IsSByteType()
+                || type.IsInt16Type()
+                || type.IsUInt16Type()
+                || type.IsBooleanType())
             {
-                return CecilHelper.Int32Type;
-            }
-
-            return type;
-        }
-
-        public static TypeDefinition GetStackableType(TypeDefinition type)
-        {
-            if (type.MemberEquals(CecilHelper.ByteType)
-                || type.MemberEquals(CecilHelper.SByteType)
-                || type.MemberEquals(CecilHelper.Int16Type)
-                || type.MemberEquals(CecilHelper.UInt16Type))
-            {
-                return CecilHelper.Int32Type;
+                return type.GetSafeInt32Type();
             }
 
             return type;
@@ -123,7 +110,7 @@ namespace IL2C
 
                     Debug.Assert(value != null);
 
-                    initializer = (fieldDefinition.MemberEquals(CecilHelper.Int64Type))
+                    initializer = fieldDefinition.FieldType.IsInt64Type()
                         ? String.Format(" = {0}LL", value)
                         : String.Format(" = {0}", value);
                 }

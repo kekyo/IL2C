@@ -29,7 +29,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            if (decodeContext.ReturnType.MemberEquals(CecilHelper.VoidType))
+            if (decodeContext.ReturnType.IsVoidType())
             {
                 return _ => new [] { "return" };
             }

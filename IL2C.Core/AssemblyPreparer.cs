@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -76,7 +75,7 @@ namespace IL2C
                 body.Instructions.ToArray(),
                 prepareContext);
 
-            var preparedOpCodes = decodeContext
+            var preparedILBodies = decodeContext
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
@@ -96,7 +95,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
-                preparedOpCodes,
+                preparedILBodies,
                 localVariables,
                 stacks,
                 labelNames);
@@ -132,7 +131,7 @@ namespace IL2C
             MethodDefinition method)
         {
             var methodName = method.GetFullMemberName();
-            var returnType = method.ReturnType?.Resolve() ?? CecilHelper.VoidType;
+            var returnType = method.ReturnType?.Resolve() ?? method.GetSafeVoidType();
             var parameters = method.GetSafeParameters();
 
             prepareContext.RegisterType(returnType);
@@ -174,7 +173,7 @@ namespace IL2C
 
             var allTypes = translateContext.Assembly.Modules
                 .SelectMany(module => module.Types)
-                .Where(type => type.IsValueType || type.IsClass)
+                .Where(type => type.IsValidDefinition())
                 .ToArray();
             var types = allTypes
                 .Where(type => !(type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly))
@@ -201,7 +200,7 @@ namespace IL2C
         {
             return Prepare(
                 translateContext,
-                method => (method.IsConstructor == false) || (method.IsStatic == false));
+                method => !method.IsConstructor || !method.IsStatic);
         }
     }
 }

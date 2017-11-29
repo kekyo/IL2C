@@ -25,28 +25,7 @@ namespace IL2C.ILConveters
             var methodName = method.GetFullMemberName();
             var functionName = methodName.ManglingSymbolName();
 
-            if (method.ReturnType != null)
-            {
-                var targetType = Utilities.GetStackableType(method.ReturnType);
-
-                var resultName = decodeContext.PushStack(targetType);
-                var offset = decodeContext.Current.Offset;
-
-                return lookupper =>
-                {
-                    var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters, lookupper, offset);
-                    return new[]
-                    {
-                        string.Format(
-                            "{0} = {1}({2})",
-                            resultName,
-                            functionName,
-                            parameterString)
-                    };
-                };
-            }
-            else
+            if (method.ReturnType.IsVoidType())
             {
                 Debug.Assert(method.Resolve().IsConstructor);
 
@@ -60,6 +39,27 @@ namespace IL2C.ILConveters
                     {
                         string.Format(
                             "{0}({1})",
+                            functionName,
+                            parameterString)
+                    };
+                };
+            }
+            else
+            {
+                var targetType = method.ReturnType.GetStackableType();
+
+                var resultName = decodeContext.PushStack(targetType);
+                var offset = decodeContext.Current.Offset;
+
+                return lookupper =>
+                {
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        pairParameters, lookupper, offset);
+                    return new[]
+                    {
+                        string.Format(
+                            "{0} = {1}({2})",
+                            resultName,
                             functionName,
                             parameterString)
                     };

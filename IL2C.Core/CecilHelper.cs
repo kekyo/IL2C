@@ -47,40 +47,6 @@ namespace IL2C
             typeof(long).FullName,
             typeof(ulong).FullName,
         };
-
-        internal static readonly TypeDefinition VoidType;
-        internal static readonly TypeDefinition ObjectType;
-        internal static readonly TypeDefinition ValueTypeType;
-        internal static readonly TypeDefinition BooleanType;
-        internal static readonly TypeDefinition ByteType;
-        internal static readonly TypeDefinition SByteType;
-        internal static readonly TypeDefinition Int16Type;
-        internal static readonly TypeDefinition UInt16Type;
-        internal static readonly TypeDefinition Int32Type;
-        internal static readonly TypeDefinition UInt32Type;
-        internal static readonly TypeDefinition Int64Type;
-        internal static readonly TypeDefinition UInt64Type;
-        #endregion
-
-        #region Type initializer
-        static CecilHelper()
-        {
-            var mscorlib = ModuleDefinition.ReadModule(typeof(object).Module.FullyQualifiedName);
-
-            VoidType = mscorlib.GetType(typeof(void).FullName);
-            ObjectType = mscorlib.GetType(typeof(object).FullName);
-            ValueTypeType = mscorlib.GetType(typeof(ValueType).FullName);
-
-            BooleanType = mscorlib.GetType(typeof(bool).FullName);
-            ByteType = mscorlib.GetType(typeof(byte).FullName);
-            SByteType = mscorlib.GetType(typeof(sbyte).FullName);
-            Int16Type = mscorlib.GetType(typeof(short).FullName);
-            UInt16Type = mscorlib.GetType(typeof(ushort).FullName);
-            Int32Type = mscorlib.GetType(typeof(int).FullName);
-            UInt32Type = mscorlib.GetType(typeof(uint).FullName);
-            Int64Type = mscorlib.GetType(typeof(long).FullName);
-            UInt64Type = mscorlib.GetType(typeof(ulong).FullName);
-        }
         #endregion
 
         private static T ResolveIf<T>(MemberReference reference)
@@ -102,6 +68,11 @@ namespace IL2C
             }
 
             return lhs.FullName == rhs.FullName;
+        }
+
+        public static bool IsValidDefinition(this TypeDefinition type)
+        {
+            return (type.IsValueType || type.IsClass) && (type.BaseType != null);
         }
 
         public static bool IsNumericPrimitive(this TypeReference type)
@@ -166,5 +137,191 @@ namespace IL2C
                 }
             }
         }
+
+        #region Type system safed references
+        public static TypeReference GetSafeVoidType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Void;
+        }
+
+        public static TypeReference GetSafeObjectType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Object;
+        }
+
+        public static TypeReference GetSafeValueTypeType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Object.Module.GetType("System.ValueType");
+        }
+
+        public static TypeReference GetSafeBooleanType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Boolean;
+        }
+
+        public static TypeReference GetSafeByteType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Byte;
+        }
+
+        public static TypeReference GetSafeSByteType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.SByte;
+        }
+
+        public static TypeReference GetSafeInt16Type(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Int16;
+        }
+
+        public static TypeReference GetSafeUInt16Type(this MemberReference member)
+        {
+            return member.Module.TypeSystem.UInt16;
+        }
+
+        public static TypeReference GetSafeInt32Type(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Int32;
+        }
+
+        public static TypeReference GetSafeUInt32Type(this MemberReference member)
+        {
+            return member.Module.TypeSystem.UInt32;
+        }
+
+        public static TypeReference GetSafeInt64Type(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Int64;
+        }
+
+        public static TypeReference GetSafeUInt64Type(this MemberReference member)
+        {
+            return member.Module.TypeSystem.UInt64;
+        }
+
+        ///
+
+        public static TypeReference GetSafeVoidType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Void;
+        }
+
+        public static TypeReference GetSafeObjectType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Object;
+        }
+
+        public static TypeReference GetSafeValueTypeType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Object.Module.GetType("System.ValueType");
+        }
+
+        public static TypeReference GetSafeBooleanType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Boolean;
+        }
+
+        public static TypeReference GetSafeByteType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Byte;
+        }
+
+        public static TypeReference GetSafeSByteType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.SByte;
+        }
+
+        public static TypeReference GetSafeInt16Type(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Int16;
+        }
+
+        public static TypeReference GetSafeUInt16Type(this ModuleDefinition module)
+        {
+            return module.TypeSystem.UInt16;
+        }
+
+        public static TypeReference GetSafeInt32Type(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Int32;
+        }
+
+        public static TypeReference GetSafeUInt32Type(this ModuleDefinition module)
+        {
+            return module.TypeSystem.UInt32;
+        }
+
+        public static TypeReference GetSafeInt64Type(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Int64;
+        }
+
+        public static TypeReference GetSafeUInt64Type(this ModuleDefinition module)
+        {
+            return module.TypeSystem.UInt64;
+        }
+        #endregion
+
+        #region Type system safed "is" operators
+        public static bool IsVoidType(this TypeReference type)
+        {
+            return type.GetSafeVoidType().MemberEquals(type);
+        }
+
+        public static bool IsObjectType(this TypeReference type)
+        {
+            return type.GetSafeObjectType().MemberEquals(type);
+        }
+
+        public static bool IsValueTypeType(this TypeReference type)
+        {
+            return type.GetSafeValueTypeType().MemberEquals(type);
+        }
+
+        public static bool IsBooleanType(this TypeReference type)
+        {
+            return type.GetSafeBooleanType().MemberEquals(type);
+        }
+
+        public static bool IsByteType(this TypeReference type)
+        {
+            return type.GetSafeByteType().MemberEquals(type);
+        }
+
+        public static bool IsSByteType(this TypeReference type)
+        {
+            return type.GetSafeSByteType().MemberEquals(type);
+        }
+
+        public static bool IsInt16Type(this TypeReference type)
+        {
+            return type.GetSafeInt16Type().MemberEquals(type);
+        }
+
+        public static bool IsUInt16Type(this TypeReference type)
+        {
+            return type.GetSafeUInt16Type().MemberEquals(type);
+        }
+
+        public static bool IsInt32Type(this TypeReference type)
+        {
+            return type.GetSafeInt32Type().MemberEquals(type);
+        }
+
+        public static bool IsUInt32Type(this TypeReference type)
+        {
+            return type.GetSafeUInt32Type().MemberEquals(type);
+        }
+
+        public static bool IsInt64Type(this TypeReference type)
+        {
+            return type.GetSafeInt64Type().MemberEquals(type);
+        }
+
+        public static bool IsUInt64Type(this TypeReference type)
+        {
+            return type.GetSafeUInt64Type().MemberEquals(type);
+        }
+        #endregion
     }
 }

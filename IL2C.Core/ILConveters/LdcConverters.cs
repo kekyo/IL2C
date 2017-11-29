@@ -12,7 +12,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = 0", symbolName) };
         }
     }
@@ -23,7 +23,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = 1", symbolName) };
         }
     }
@@ -34,7 +34,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = 2", symbolName) };
         }
     }
@@ -45,7 +45,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = 5", symbolName) };
         }
     }
@@ -56,7 +56,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(int operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
         }
     }
@@ -67,7 +67,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
         }
     }
@@ -78,7 +78,7 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(long operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(CecilHelper.Int64Type);
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt64Type());
             return _ => new[] { string.Format("{0} = {1}LL", symbolName, operand) };
         }
     }

@@ -18,7 +18,7 @@ namespace IL2C.ILConveters
             if (si0.TargetType.IsNumericPrimitive()
                 && si1.TargetType.IsNumericPrimitive())
             {
-                var resultName = decodeContext.PushStack(CecilHelper.Int32Type);
+                var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
                 return _ => new[] { string.Format(
                     "{0} = ({1} > {2}) ? 1 : 0",
                     resultName,

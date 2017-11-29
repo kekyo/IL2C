@@ -11,11 +11,11 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> Apply(int parameterIndex, DecodeContext decodeContext)
         {
             var parameter = decodeContext.Parameters[parameterIndex];
-            var targetType = parameter.ParameterType;
+            var targetType = parameter.ParameterType.GetStackableType();
+            var symbolName = decodeContext.PushStack(targetType);
 
-            if (targetType.MemberEquals(CecilHelper.BooleanType))
+            if (parameter.ParameterType.IsBooleanType())
             {
-                var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = {1} ? 1 : 0",
                     symbolName,
@@ -23,8 +23,6 @@ namespace IL2C.ILConveters
             }
             else
             {
-                targetType = Utilities.GetStackableType(targetType);
-                var symbolName = decodeContext.PushStack(targetType);
                 return _ => new[] { string.Format(
                     "{0} = {1}",
                     symbolName,

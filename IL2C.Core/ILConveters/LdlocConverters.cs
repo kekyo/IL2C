@@ -15,9 +15,9 @@ namespace IL2C.ILConveters
             var local = decodeContext.Locals[localIndex];
             var targetType = local.VariableType;
 
-            if (targetType.MemberEquals(CecilHelper.BooleanType))
+            if (targetType.IsBooleanType())
             {
-                var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
+                var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
                 return _ => new[] { string.Format(
                     "{0} = local{1} ? 1 : 0",
                     symbolName,
@@ -25,7 +25,7 @@ namespace IL2C.ILConveters
             }
             else
             {
-                targetType = Utilities.GetStackableType(targetType);
+                targetType = targetType.GetStackableType();
                 var symbolName = decodeContext.PushStack(targetType);
                 return _ => new[] { string.Format(
                     "{0} = local{1}",

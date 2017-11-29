@@ -199,14 +199,14 @@ namespace IL2C
                         this.GetCLanguageTypeName(lhsType),
                         rhs.SymbolName);
                 }
-                else if (CecilHelper.BooleanType.MemberEquals(lhsType))
+                else if (lhsType.IsBooleanType())
                 {
                     return String.Format(
                         "{0} ? true : false",
                         rhs.SymbolName);
                 }
             }
-            else if (CecilHelper.BooleanType.MemberEquals(rhs.TargetType))
+            else if (rhs.TargetType.IsBooleanType())
             {
                 if (lhsType.IsNumericPrimitive())
                 {
@@ -224,7 +224,8 @@ namespace IL2C
             return this.GetRightExpression(lhsType, rhs);
         }
 
-        private string GetRightExpression(TypeReference lhsType, TypeReference rhsType, string rhsExpression)
+        private string GetRightExpression(
+            TypeReference lhsType, TypeReference rhsType, string rhsExpression)
         {
             if (lhsType.IsAssignableFrom(rhsType))
             {
@@ -240,14 +241,14 @@ namespace IL2C
                         this.GetCLanguageTypeName(lhsType),
                         rhsExpression);
                 }
-                else if (CecilHelper.BooleanType.MemberEquals(lhsType))
+                else if (lhsType.IsBooleanType())
                 {
                     return String.Format(
                         "({0}) ? true : false",
                         rhsExpression);
                 }
             }
-            else if (CecilHelper.BooleanType.MemberEquals(lhsType))
+            else if (lhsType.IsBooleanType())
             {
                 if (lhsType.IsNumericPrimitive())
                 {
@@ -260,7 +261,8 @@ namespace IL2C
             return null;
         }
 
-        string IExtractContext.GetRightExpression(TypeReference lhsType, TypeReference rhsType, string rhsExpression)
+        string IExtractContext.GetRightExpression(
+            TypeReference lhsType, TypeReference rhsType, string rhsExpression)
         {
             return this.GetRightExpression(lhsType, rhsType, rhsExpression);
         }

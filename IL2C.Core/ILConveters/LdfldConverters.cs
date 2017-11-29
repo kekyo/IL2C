@@ -19,14 +19,14 @@ namespace IL2C.ILConveters
 
             decodeContext.prepareContext.RegisterStaticField(field);
 
-            var targetType = field.FieldType;
-
             var fieldName = field.GetFullMemberName();
             var fqFieldName = fieldName.ManglingSymbolName();
 
-            if (targetType.MemberEquals(CecilHelper.BooleanType))
+            var targetType = field.FieldType.GetStackableType();
+            var symbolName = decodeContext.PushStack(targetType);
+
+            if (field.FieldType.IsBooleanType())
             {
-                var symbolName = decodeContext.PushStack(CecilHelper.Int32Type);
                 return _ => new [] { string.Format(
                     "{0} = {1} ? 1 : 0",
                     symbolName,
@@ -34,8 +34,6 @@ namespace IL2C.ILConveters
             }
             else
             {
-                targetType = Utilities.GetStackableType(targetType);
-                var symbolName = decodeContext.PushStack(targetType);
                 return _ => new[] { string.Format(
                     "{0} = {1}",
                     symbolName,
@@ -66,8 +64,11 @@ namespace IL2C.ILConveters
                         field.GetFullMemberName());
                 }
             }
-            else if (siReference.TargetType.IsValueType == false)
+            else if (!siReference.TargetType.IsValueType)
             {
+                Debug.Assert(siReference.TargetType.Resolve().IsClass
+                    || siReference.TargetType.Resolve().IsInterface);
+
                 if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                 {
                     throw new InvalidProgramSequenceException(
@@ -77,8 +78,10 @@ namespace IL2C.ILConveters
                         field.GetFullMemberName());
                 }
             }
-            else if (siReference.TargetType.IsValueType)
+            else if (!siReference.TargetType.IsPrimitive)
             {
+                Debug.Assert(siReference.TargetType.IsValueType);
+
                 if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                 {
                     throw new InvalidProgramSequenceException(
@@ -98,8 +101,7 @@ namespace IL2C.ILConveters
                     siReference.TargetType.FullName);
             }
 
-            var targetType = field.FieldType;
-            targetType = Utilities.GetStackableType(targetType);
+            var targetType = field.FieldType.GetStackableType();
             var resultName = decodeContext.PushStack(targetType);
 
             var offset = decodeContext.Current.Offset;

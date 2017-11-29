@@ -190,15 +190,15 @@ namespace IL2C.Translators
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            Debug.Assert(!CecilHelper.UInt64Type.Equals(targetType));
-            Debug.Assert(!CecilHelper.UInt32Type.Equals(targetType));
+            Debug.Assert(!targetType.IsUInt64Type());
+            Debug.Assert(!targetType.IsUInt32Type());
 
-            Debug.Assert(!CecilHelper.ByteType.Equals(targetType));
-            Debug.Assert(!CecilHelper.SByteType.Equals(targetType));
-            Debug.Assert(!CecilHelper.Int16Type.Equals(targetType));
-            Debug.Assert(!CecilHelper.UInt16Type.Equals(targetType));
+            Debug.Assert(!targetType.IsByteType());
+            Debug.Assert(!targetType.IsSByteType());
+            Debug.Assert(!targetType.IsInt16Type());
+            Debug.Assert(!targetType.IsUInt16Type());
 
-            Debug.Assert(!CecilHelper.BooleanType.Equals(targetType));
+            Debug.Assert(!targetType.IsBooleanType());
 
             StackInformationHolder stackInformationHolder;
             if (stackPointer >= stackList.Count)

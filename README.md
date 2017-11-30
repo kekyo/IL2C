@@ -216,3 +216,7 @@ TODO:
 * Milestone 1: Tested on VC++ and we checked how C compiler's optimizer work.
 
   ![Milestone 1: Tested on VC++ and we checked how C compiler's optimizer work](images/il2c1.png)
+
+* #6-48: How works mark-and-sweep garbage collection on translated code.
+
+  ![#6-48: How works mark-and-sweep garbage collection on translated code](images/IMG_20171130_200549.jpg)

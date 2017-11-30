@@ -35,23 +35,23 @@ int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
 {
     int32_t local0;
 
-    int32_t __stack0_int32_t;
-    int32_t __stack1_int32_t;
+    int32_t __stack0_0;
+    int32_t __stack1_0;
 
-    __stack0_int32_t = a;
-    __stack1_int32_t = isTwo ? 1 : 0;
-    if (__stack1_int32_t != 0) goto L_0000;
-    __stack1_int32_t = 1;
+    __stack0_0 = a;
+    __stack1_0 = isTwo ? 1 : 0;
+    if (__stack1_0 != 0) goto L_0000;
+    __stack1_0 = 1;
     goto L_0001;
 L_0000:
-    __stack1_int32_t = 2;
+    __stack1_0 = 2;
 L_0001:
-    __stack0_int32_t = __stack0_int32_t + __stack1_int32_t;
-    local0 = __stack0_int32_t;
+    __stack0_0 = __stack0_0 + __stack1_0;
+    local0 = __stack0_0;
     goto L_0002;
 L_0002:
-    __stack0_int32_t = local0;
-    return __stack0_int32_t;
+    __stack0_0 = local0;
+    return __stack0_0;
 }
 ```
 
@@ -147,7 +147,7 @@ TODO:
 | Static method | Partial supported | M3
 | Instance method | Partial supported | M3
 | Virtual method |
-| Interop method (extern static) |
+| Interop method (extern static) | Partial supported |
 | Internal method (internal call) |
 | Constructor | Partial supported |
 | Constructor (ValueType) | Partial supported | M3
@@ -162,7 +162,7 @@ TODO:
 | Issue | Status | Milestone
 |:---|:---|:---|
 | Value type scopes | Partial supported | M3
-| Class type scopes |
+| Class type scopes | Partial supported |
 | Enum type scopes |
 | Delegate type scopes |
 | Interface type scopes |
@@ -182,7 +182,7 @@ TODO:
 | Collect unused instance (GC) | Partial supported |
 | Heap compaction (GC) |
 | Monitor lock features |
-| Platform invoke (P/Invoke) |
+| Platform invoke (P/Invoke) | Partial supported |
 | Can handle unsafe pointers |
 | Can handle marshaling features (Marshal) |
 
@@ -195,8 +195,8 @@ TODO:
 | MSBuild (new/.NET Core CLI) |
 | Platform independent core library |
 | Host platform on .NET 4.5 | Supported | M1
-| Host platform on .NET Core 1 |
-| Host platform on .NET Core 2 |
+| Host platform on .NET Core 1 | (not support) | -
+| Host platform on .NET Core 2 | Partial supported |
 | Host platform on mono |
 | Support C99 compilers | Supported | M1
 | Support non C99 (ANSI) compilers |

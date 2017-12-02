@@ -288,6 +288,30 @@ void __gc_shutdown__()
 }
 
 /////////////////////////////////////////////////////////////
+// Boxing related functions
+
+System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type)
+{
+    void* pBoxed;
+    __gc_get_uninitialized_object__(&pBoxed, type);
+    memcpy(pBoxed, pValue, type->bodySize);
+    return (System_Object*)pBoxed;
+}
+
+void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type)
+{
+    __REF_HEADER__* pHeader = (__REF_HEADER__*)
+        (((uint8_t*)pObject) - sizeof(__REF_HEADER__));
+    if (pHeader->type != type)
+    {
+        // new InvalidCastException();
+        assert(0);
+    }
+
+    return pObject;
+}
+
+/////////////////////////////////////////////////////////////
 // Basic type informations
 
 static void __Dummy_MARK_HANDLER__(void* pReference)
@@ -299,27 +323,34 @@ static const __RUNTIME_TYPE_DEF__ __System_Object_RUNTIME_TYPE_DEF__ = {
 __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__ = &__System_Object_RUNTIME_TYPE_DEF__;
 
 static const __RUNTIME_TYPE_DEF__ __System_Byte_RUNTIME_TYPE_DEF__ = {
-    "System.Byte", sizeof(uint8_t), __Dummy_MARK_HANDLER__ };
+    "System.Byte", sizeof(System_Byte), __Dummy_MARK_HANDLER__ };
 __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;
 
 static const __RUNTIME_TYPE_DEF__ __System_SByte_RUNTIME_TYPE_DEF__ = {
-    "System.SByte", sizeof(int8_t), __Dummy_MARK_HANDLER__ };
+    "System.SByte", sizeof(System_SByte), __Dummy_MARK_HANDLER__ };
 __RUNTIME_TYPE__ __System_SByte_RUNTIME_TYPE__ = &__System_SByte_RUNTIME_TYPE_DEF__;
 
+static const __RUNTIME_TYPE_DEF__ __System_Int16_RUNTIME_TYPE_DEF__ = {
+    "System.Int16", sizeof(System_Int16), __Dummy_MARK_HANDLER__ };
+__RUNTIME_TYPE__ __System_Int16_RUNTIME_TYPE__ = &__System_Int16_RUNTIME_TYPE_DEF__;
+
+static const __RUNTIME_TYPE_DEF__ __System_UInt16_RUNTIME_TYPE_DEF__ = {
+    "System.UInt16", sizeof(System_UInt16), __Dummy_MARK_HANDLER__ };
+__RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__ = &__System_UInt16_RUNTIME_TYPE_DEF__;
+
 static const __RUNTIME_TYPE_DEF__ __System_Int32_RUNTIME_TYPE_DEF__ = {
-    "System.Int32", sizeof(int32_t), __Dummy_MARK_HANDLER__ };
+    "System.Int32", sizeof(System_Int32), __Dummy_MARK_HANDLER__ };
 __RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__ = &__System_Int32_RUNTIME_TYPE_DEF__;
 
+static const __RUNTIME_TYPE_DEF__ __System_UInt32_RUNTIME_TYPE_DEF__ = {
+    "System.UInt32", sizeof(System_UInt32), __Dummy_MARK_HANDLER__ };
+__RUNTIME_TYPE__ __System_UInt32_RUNTIME_TYPE__ = &__System_UInt32_RUNTIME_TYPE_DEF__;
+
 static const __RUNTIME_TYPE_DEF__ __System_Int64_RUNTIME_TYPE_DEF__ = {
-    "System.Int64", sizeof(int64_t), __Dummy_MARK_HANDLER__ };
+    "System.Int64", sizeof(System_Int64), __Dummy_MARK_HANDLER__ };
 __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__ = &__System_Int64_RUNTIME_TYPE_DEF__;
 
-/////////////////////////////////////////////////////////////
+static const __RUNTIME_TYPE_DEF__ __System_UInt64_RUNTIME_TYPE_DEF__ = {
+    "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
+__RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
 
-System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type)
-{
-    void* pBoxed;
-    __gc_get_uninitialized_object__(&pBoxed, type);
-    memcpy(pBoxed, pValue, type->bodySize);
-    return (System_Object*)pBoxed;
-}

@@ -41,9 +41,9 @@ namespace IL2C.ILConveters
 
             var offset = decodeContext.Current.Offset;
 
-            return lookupper =>
+            return extractContext =>
             {
-                var rightExpression = lookupper.GetRightExpression(returnType, si);
+                var rightExpression = extractContext.GetRightExpression(returnType, si);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
@@ -78,9 +78,9 @@ namespace IL2C.ILConveters
 
                 decodeContext.prepareContext.RegisterIncludeFile("string.h");
 
-                return lookupper =>
+                return extractContext =>
                 {
-                    var typeName = lookupper.GetCLanguageTypeName(type);
+                    var typeName = extractContext.GetCLanguageTypeName(type);
 
                     return new[] { string.Format(
                         "memset({0}, 0x00, sizeof({1}))",
@@ -131,12 +131,12 @@ namespace IL2C.ILConveters
 
                 var offset = decodeContext.Current.Offset;
 
-                return lookupper =>
+                return extractContext =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters.ToArray(), lookupper, offset);
+                        pairParameters.ToArray(), extractContext, offset);
 
-                    var dereferencedTypeName = lookupper.GetCLanguageTypeName(
+                    var dereferencedTypeName = extractContext.GetCLanguageTypeName(
                         type, TypeNameFlags.Dereferenced);
 
                     return new[] { string.Format(
@@ -146,37 +146,6 @@ namespace IL2C.ILConveters
                         parameterString) };
                 };
             }
-        }
-    }
-
-    internal sealed class BoxConverter : InlineTypeConverter
-    {
-        public override OpCode OpCode => OpCodes.Box;
-
-        public override Func<IExtractContext, string[]> Apply(
-            TypeReference operand, DecodeContext decodeContext)
-        {
-            var si = decodeContext.PopStack();
-            if (!si.TargetType.IsValueType || !si.TargetType.MemberEquals(operand))
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                    decodeContext.Current.Offset,
-                    operand.FullName,
-                    si.TargetType.FullName);
-            }
-
-            var symbolName = decodeContext.PushStack(
-                decodeContext.Module.GetSafeObjectType());
-
-            return _ =>
-            {
-                return new[] { string.Format(
-                    "{0} = __box__(&{1}, __typeof__({2}))",
-                    symbolName,
-                    si.SymbolName,
-                    si.TargetType.GetFullMemberName().ManglingSymbolName()) };
-            };
         }
     }
 }

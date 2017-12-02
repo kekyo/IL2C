@@ -50,9 +50,9 @@ namespace IL2C.ILConveters
 
             var offset = decodeContext.Current.Offset;
 
-            return lookupper =>
+            return extractContext =>
             {
-                var rightExpression = lookupper.GetRightExpression(
+                var rightExpression = extractContext.GetRightExpression(
                     field.FieldType, siValue);
                 if (rightExpression == null)
                 {

@@ -106,9 +106,9 @@ namespace IL2C.ILConveters
 
             var offset = decodeContext.Current.Offset;
 
-            return lookupper =>
+            return extractContext =>
             {
-                var rightExpression = lookupper.GetRightExpression(
+                var rightExpression = extractContext.GetRightExpression(
                     targetType,
                     field.FieldType,
                     siReference.SymbolName + oper + field.Name);

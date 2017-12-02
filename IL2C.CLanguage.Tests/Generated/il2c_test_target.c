@@ -27,6 +27,7 @@ int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 0;
 il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1 = NULL;
 
 
+int32_t il2c_test_target_BoxingTest_x = 0;
 
 
 
@@ -317,12 +318,14 @@ void il2c_test_target_BoxingTest_BoxingInt32(int32_t a)
     // Local variables:
 
     System_Object* local0 = NULL;
+    int32_t local1;
 
     //-------------------
     // Evaluation stacks:
 
     int32_t __stack0_0;
     System_Object* __stack0_1 = NULL;
+    int32_t __stack0_2;
 
     //-------------------
     // Setup stack frame:
@@ -346,6 +349,9 @@ void il2c_test_target_BoxingTest_BoxingInt32(int32_t a)
     __stack0_0 = a;
     __stack0_1 = __box__(&__stack0_0, __typeof__(System_Int32));
     local0 = __stack0_1;
+    __stack0_1 = local0;
+    __stack0_2 = *((int32_t*)__unbox__(__stack0_1, __typeof__(System_Int32)));
+    local1 = __stack0_2;
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }

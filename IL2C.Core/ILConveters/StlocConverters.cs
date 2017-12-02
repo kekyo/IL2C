@@ -15,9 +15,9 @@ namespace IL2C.ILConveters
 
             var offset = decodeContext.Current.Offset;
 
-            return lookupper =>
+            return extractContext =>
             {
-                var rightExpression = lookupper.GetRightExpression(localType, si);
+                var rightExpression = extractContext.GetRightExpression(localType, si);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(

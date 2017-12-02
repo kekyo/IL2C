@@ -25,7 +25,7 @@ typedef struct __RUNTIME_TYPE_DEF__
     const __MARK_HANDLER__ pMarkHandler;
 } __RUNTIME_TYPE_DEF__;
 
-typedef const __RUNTIME_TYPE_DEF__ const* __RUNTIME_TYPE__;
+typedef const __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
 
 #define __typeof__(typeName) (__##typeName##_RUNTIME_TYPE__)
 #define __sizeof__(typeName) (__typeof__(typeName)->bodySize)
@@ -66,6 +66,7 @@ extern __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
 // Boxing related declarations
 
 extern System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type);
+extern void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type);
 
 /////////////////////////////////////////////////////////////
 // Primitive types
@@ -85,8 +86,14 @@ extern __RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__;
 typedef int32_t System_Int32;
 extern __RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__;
 
+typedef uint32_t System_UInt32;
+extern __RUNTIME_TYPE__ __System_UInt32_RUNTIME_TYPE__;
+
 typedef int64_t System_Int64;
 extern __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
+
+typedef uint64_t System_UInt64;
+extern __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
 
 #ifdef __cplusplus
 }

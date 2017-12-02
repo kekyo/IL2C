@@ -31,10 +31,10 @@ namespace IL2C.ILConveters
 
                 var offset = decodeContext.Current.Offset;
 
-                return lookupper =>
+                return extractContext =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters, lookupper, offset);
+                        pairParameters, extractContext, offset);
                     return new[]
                     {
                         string.Format(
@@ -51,10 +51,10 @@ namespace IL2C.ILConveters
                 var resultName = decodeContext.PushStack(targetType);
                 var offset = decodeContext.Current.Offset;
 
-                return lookupper =>
+                return extractContext =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters, lookupper, offset);
+                        pairParameters, extractContext, offset);
                     return new[]
                     {
                         string.Format(

@@ -12,6 +12,7 @@ namespace IL2C
 {
     public sealed class TranslateContext : IPrepareContext, IExtractContext
     {
+        #region  Fields
         private static readonly Dictionary<string, string> predefinedIncludeHints = new Dictionary<string, string>
         {
             { typeof(bool).FullName, "stdbool.h" },
@@ -43,7 +44,9 @@ namespace IL2C
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
         private readonly Dictionary<string, FieldReference> staticFields =
             new Dictionary<string, FieldReference>();
+        #endregion
 
+        #region Constructors
         public TranslateContext(Assembly assembly)
             : this(assembly.Location)
         {
@@ -62,6 +65,7 @@ namespace IL2C
 
             includes.Add("il2c.h");
         }
+        #endregion
 
         public AssemblyDefinition Assembly { get; }
 

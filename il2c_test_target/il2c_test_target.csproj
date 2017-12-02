@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassTypeTest.cs" />
+    <Compile Include="BoxingTest.cs" />
     <Compile Include="PInvokeTest.cs" />
     <Compile Include="ValueTypeTest.cs" />
     <Compile Include="Hoge2.cs" />

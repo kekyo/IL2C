@@ -98,7 +98,7 @@ namespace IL2C.ILConveters
                 MethodReference method, DecodeContext decodeContext)
             {
                 var md = method.Resolve();
-                if (md.IsConstructor == false)
+                if (!md.IsConstructor)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid new object constructor: Offset={0}, Method={1}",
@@ -107,7 +107,6 @@ namespace IL2C.ILConveters
                 }
 
                 var type = md.DeclaringType;
-
                 if (type.IsValueType)
                 {
                     throw new InvalidProgramSequenceException(
@@ -141,11 +140,43 @@ namespace IL2C.ILConveters
                         type, TypeNameFlags.Dereferenced);
 
                     return new[] { string.Format(
-                        "__{0}_NEW__(&{1})",
+                        "__new__(&{0}, {1})({2})",
+                        thisSymbolName,
                         dereferencedTypeName,
                         parameterString) };
                 };
             }
+        }
+    }
+
+    internal sealed class BoxConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Box;
+
+        public override Func<IExtractContext, string[]> Apply(
+            TypeReference operand, DecodeContext decodeContext)
+        {
+            var si = decodeContext.PopStack();
+            if (!si.TargetType.IsValueType || !si.TargetType.MemberEquals(operand))
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
+                    decodeContext.Current.Offset,
+                    operand.FullName,
+                    si.TargetType.FullName);
+            }
+
+            var symbolName = decodeContext.PushStack(
+                decodeContext.Module.GetSafeObjectType());
+
+            return _ =>
+            {
+                return new[] { string.Format(
+                    "{0} = __box__(&{1}, __typeof__({2}))",
+                    symbolName,
+                    si.SymbolName,
+                    si.TargetType.GetFullMemberName().ManglingSymbolName()) };
+            };
         }
     }
 }

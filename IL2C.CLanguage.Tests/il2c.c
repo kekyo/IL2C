@@ -76,7 +76,7 @@ typedef void(*__MARK_HANDLER__)(void*);
 struct __REF_HEADER__
 {
     struct __REF_HEADER__* pNext;
-    __MARK_HANDLER__ pMarkHandler;
+    __RUNTIME_TYPE__ type;
     interlock_t gcMark;
 };
 
@@ -87,22 +87,38 @@ static __REF_HEADER__* g_pBeginHeader__ = NULL;
 
 //////////////////////////
 
-void __gc_get_uninitialized_object__(
-    void** ppReference, uint16_t bodySize, __MARK_HANDLER__ pMarkHandler)
+void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
 {
     assert(ppReference != NULL);
-    assert(pMarkHandler != NULL);
+    assert(type != NULL);
 
-    __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
+    __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + type->bodySize);
+    if (pHeader == NULL)
+    {
+        while (1)
+        {
+            __gc_collect__();
+
+            pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + type->bodySize);
+            if (pHeader != NULL)
+            {
+                break;
+            }
+
+            // throw NotEnoughMemoryException();
+            assert(0);
+        }
+    }
+
     void* pReference = ((uint8_t*)pHeader)
         + sizeof(__REF_HEADER__);
-    if (bodySize >= 1)
+    if (type->bodySize >= 1)
     {
-        memset(pReference, 0, bodySize);
+        memset(pReference, 0, type->bodySize);
     }
 
     pHeader->pNext = NULL;
-    pHeader->pMarkHandler = pMarkHandler;
+    pHeader->type = type;
     pHeader->gcMark = GCMARK_NOMARK;
 
     // Very important link steps:
@@ -136,8 +152,9 @@ void __gc_mark_from_handler__(void* pReference)
     interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
     if (currentMark == GCMARK_NOMARK)
     {
-        assert(pHeader->pMarkHandler != NULL);
-        pHeader->pMarkHandler(pReference);
+        assert(pHeader->type != NULL);
+        assert(pHeader->type->pMarkHandler != NULL);
+        pHeader->type->pMarkHandler(pReference);
     }
 }
 
@@ -206,8 +223,9 @@ void __gc_step2_mark_gcmark__()
             interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
             if (currentMark == GCMARK_NOMARK)
             {
-                assert(pHeader->pMarkHandler != NULL);
-                pHeader->pMarkHandler(*ppReference);
+                assert(pHeader->type != NULL);
+                assert(pHeader->type->pMarkHandler != NULL);
+                pHeader->type->pMarkHandler(*ppReference);
             }
         }
 
@@ -271,9 +289,17 @@ void __gc_shutdown__()
 
 /////////////////////////////////////////////////////////////
 
-void __System_Object_NEW__(System_Object** ppReference)
+static void __System_Object_MARK_HANDLER__(void* pReference)
 {
-    __gc_get_uninitialized_object__(
-        (void**)ppReference, 0, __System_Object_MARK_HANDLER__);
-    System_Object__ctor(*ppReference);
+}
+
+static const __RUNTIME_TYPE_DEF__ __System_Object_RUNTIME_TYPE_DEF__ = {
+    "System.Object", 0, __System_Object_MARK_HANDLER__ };
+__RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__ = &__System_Object_RUNTIME_TYPE_DEF__;
+
+/////////////////////////////////////////////////////////////
+
+System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type)
+{
+    return NULL; // TODO:
 }

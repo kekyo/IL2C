@@ -27,6 +27,9 @@ namespace IL2C
                 TypeNameFlags.Dereferenced)
                 .ManglingSymbolName();
 
+            var rawTypeName = declaredType
+                .GetFullMemberName().ManglingSymbolName();
+
             tw.WriteLine("////////////////////////////////////////////////////////////");
             tw.WriteLine(
                 "// {0}: {1}",
@@ -34,13 +37,8 @@ namespace IL2C
                 declaredType.GetFullMemberName());
             tw.WriteLine();
 
-            var stopType = declaredType.IsValueType
-                ? declaredType.GetSafeValueTypeType()
-                : declaredType.GetSafeObjectType();
-
             var instanceFields = declaredType
                 .Traverse(type => type.BaseType?.Resolve())
-                .TakeWhile(type => type != stopType)
                 .Reverse()
                 .SelectMany(type => type.Fields.Where(field => !field.IsStatic))
                 .ToArray();
@@ -59,21 +57,14 @@ namespace IL2C
                         field.Name));
 
                 tw.WriteLine("};");
+            }
 
-                // Write sizeof:
-                tw.WriteLine();
-                tw.WriteLine(
-                    "#define __{0}_SIZEOF__() (sizeof({0}))",
-                    structName);
-            }
-            else
-            {
-                // Write sizeof:
-                tw.WriteLine();
-                tw.WriteLine(
-                    "#define __{0}_SIZEOF__() (0)",
-                    structName);
-            }
+            // Write mark handler:
+            tw.WriteLine();
+            var makrHandlerPrototype = string.Format(
+                "extern __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__;",
+                rawTypeName);
+            tw.WriteLine(makrHandlerPrototype);
         }
 
         private static void InternalConvertToPrototypes(
@@ -151,26 +142,6 @@ namespace IL2C
                             extractContext);
 
                         tw.WriteLine("extern {0};", functionPrototype);
-
-                        // Is this instance constructor?
-                        // TODO: Type initializer's handlers
-                        if (method.IsConstructor && !method.IsStatic)
-                        {
-                            var typeName = extractContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced);
-
-                            // Write mark handler:
-                            var makrHandlerPrototype = string.Format(
-                                "extern void __{0}_MARK_HANDLER__(void* pReference);",
-                                typeName);
-                            tw.WriteLine(makrHandlerPrototype);
-
-                            // Write new:
-                            var newPrototype = string.Format(
-                                "extern void __{0}_NEW__({0}** ppReference);",
-                                typeName);
-
-                            tw.WriteLine(newPrototype);
-                        }
                     });
             });
 
@@ -354,26 +325,27 @@ namespace IL2C
         private static void InternalConvertTypeHelper(
             TextWriter tw,
             IExtractContext extractContext,
-            TypeDefinition type,
+            TypeDefinition declaredType,
             string indent)
         {
             tw.WriteLine();
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// Runtime helpers:");
 
-            var typeName = extractContext.GetCLanguageTypeName(type, TypeNameFlags.Dereferenced);
-            var baseTypeName = extractContext.GetCLanguageTypeName(type.BaseType, TypeNameFlags.Dereferenced);
+            var rawTypeName = declaredType.GetFullMemberName().ManglingSymbolName();
+            var typeName = extractContext.GetCLanguageTypeName(declaredType, TypeNameFlags.Dereferenced);
+            var rawBaseTypeName = declaredType.BaseType.GetFullMemberName().ManglingSymbolName();
 
             // Write mark handler:
             var makrHandlerPrototype = string.Format(
-                "void __{0}_MARK_HANDLER__(void* pReference)",
-                typeName);
+                "static void __{0}_MARK_HANDLER__(void* pReference)",
+                rawTypeName);
 
             tw.WriteLine();
             tw.WriteLine(makrHandlerPrototype);
             tw.WriteLine("{");
 
-            type.Fields
+            declaredType.Fields
                 .Where(field => !field.IsStatic && !field.FieldType.IsValueType)
                 .ForEach(field =>
                 {
@@ -385,25 +357,46 @@ namespace IL2C
                 });
 
             tw.WriteLine(
-                "{0}__{1}_MARK_HANDLER__(pReference);",
+                "{0}__typeof__({1})->pMarkHandler(pReference);",
                 indent,
-                baseTypeName);
+                rawBaseTypeName);
             tw.WriteLine("}");
 
-            // Write new:
-            var newPrototype = string.Format(
-                "void __{0}_NEW__({0}** ppReference)",
-                typeName);
-
+            // Write runtime type information
             tw.WriteLine();
-            tw.WriteLine(newPrototype);
-            tw.WriteLine("{");
-            tw.WriteLine("{0}__gc_get_uninitialized_object__(", indent);
-            tw.WriteLine("{0}{0}(void**)ppReference,", indent);
-            tw.WriteLine("{0}{0}__{1}_SIZEOF__(),", indent, typeName);
-            tw.WriteLine("{0}{0}__{1}_MARK_HANDLER__);", indent, typeName);
-            tw.WriteLine("{0}{1}__ctor(*ppReference);", indent, typeName);
-            tw.WriteLine("}");
+            tw.WriteLine(
+                "static const __RUNTIME_TYPE_DEF__ __{0}_RUNTIME_TYPE_DEF__ = {{",
+                rawTypeName);
+
+            tw.WriteLine(
+                "{0}\"{1}\",",
+                indent,
+                declaredType.GetFullMemberName());
+            var instanceFields = declaredType
+                .Traverse(type => type.BaseType?.Resolve())
+                .SelectMany(type => type.Fields.Where(field => !field.IsStatic));
+            if (instanceFields.Any())
+            {
+                tw.WriteLine(
+                    "{0}sizeof({1}),",
+                    indent,
+                    typeName);
+            }
+            else
+            {
+                // HACK: C language can't resolve empty structure size.
+                tw.WriteLine(
+                    "{0}0,",
+                    indent);
+            }
+            tw.WriteLine(
+                "{0}__{1}_MARK_HANDLER__ }};",
+                indent,
+                rawTypeName);
+
+            tw.WriteLine(
+                "__RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ = &__{0}_RUNTIME_TYPE_DEF__;",
+                rawTypeName);
         }
 
         internal static void InternalConvertFromMethod(

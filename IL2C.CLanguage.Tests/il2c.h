@@ -67,6 +67,27 @@ extern __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
 
 extern System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type);
 
+/////////////////////////////////////////////////////////////
+// Primitive types
+
+typedef uint8_t System_Byte;
+extern __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
+
+typedef int8_t System_SByte;
+extern __RUNTIME_TYPE__ __System_SByte_RUNTIME_TYPE__;
+
+typedef int16_t System_Int16;
+extern __RUNTIME_TYPE__ __System_Int16_RUNTIME_TYPE__;
+
+typedef uint16_t System_UInt16;
+extern __RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__;
+
+typedef int32_t System_Int32;
+extern __RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__;
+
+typedef int64_t System_Int64;
+extern __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
+
 #ifdef __cplusplus
 }
 #endif

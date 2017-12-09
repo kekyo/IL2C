@@ -120,7 +120,7 @@ TODO:
 |:---|:---|:---|
 | System.Object | Partial supported |
 | System.ValueType |
-| System.String |
+| System.String | Partial supported |
 | System.Decimal |
 | System.Guid |
 | Value types | Partial supported | M3
@@ -178,7 +178,7 @@ TODO:
 | Issue | Status | Milestone
 |:---|:---|:---|
 | Referenced instance handler | Partial supported | 
-| Value type boxed instance handler |
+| Value type boxed instance handler | Partial supported |
 | Collect unused instance (GC) | Partial supported |
 | Heap compaction (GC) |
 | Monitor lock features |

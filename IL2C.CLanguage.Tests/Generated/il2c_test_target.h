@@ -107,7 +107,6 @@ extern int32_t il2c_test_target_ValueTypeTestTarget_Value1;
 extern void il2c_test_target_StringTest_LiteralString(void);
 extern System_String* il2c_test_target_StringTest_InOutString(System_String* a);
 extern System_String* il2c_test_target_StringTest_LiteralCombinedString(void);
-extern void il2c_test_target_StringTest_OutputDebugString(System_String* message);
 extern void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __this);
 
 extern int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b);
@@ -122,6 +121,7 @@ extern void il2c_test_target_BoxingTest__ctor(il2c_test_target_BoxingTest* __thi
 
 extern int32_t il2c_test_target_Win32_GetCurrentProcessId(void);
 extern int32_t il2c_test_target_Win32_GetCurrentThreadId(void);
+extern void il2c_test_target_Win32_OutputDebugString(System_String* message);
 extern void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this);
 
 extern int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTypeTestTarget* __this, int32_t a, int32_t b);

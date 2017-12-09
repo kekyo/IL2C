@@ -14,6 +14,9 @@ namespace il2c_test_target
 
         [DllImport("windows.h")]
         public static extern int GetCurrentThreadId();
+
+        [DllImport("windows.h", EntryPoint = "OutputDebugStringA")]
+        public static extern void OutputDebugString(string message);
     }
 #else
     public class Arduino
@@ -29,6 +32,9 @@ namespace il2c_test_target
 
         [DllImport("Arduino.h", EntryPoint = "delay")]
         public static extern void Delay(int milliseconds);
+
+        [DllImport("Arduino.h", EntryPoint = "SerialUSB.println")]
+        public static extern void PrintLn(string message);
     }
 
     public class Wio

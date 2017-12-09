@@ -24,10 +24,5 @@ namespace il2c_test_target
             string b = "DEF";
             return a + b;
         }
-
-#if _WIN32
-        [DllImport("windows.h", EntryPoint="OutputDebugStringA")]
-        public static extern void OutputDebugString(string message);
-#endif
     }
 }

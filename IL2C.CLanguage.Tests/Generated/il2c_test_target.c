@@ -1,6 +1,12 @@
 ﻿#include <windows.h>
 #include "il2c_test_target.h"
 
+//////////////////////////////////////////////////////////////////////////////////
+// Const strings:
+
+__define_const_string__(__string0, "ABC");
+__define_const_string__(__string1, "DEF");
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -18,12 +24,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-//////////////////////////////////////////////////////////////////////////////////
-// Const strings:
-
-__define_const_string__(__string0, "ABC");
-__define_const_string__(__string1, "DEF");
 
 //////////////////////////////////////////////////////////////////////////////////
 // Static fields:
@@ -186,14 +186,6 @@ L_0000:
     __stack0_0 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
     return __stack0_0;
-}
-
-///////////////////////////////////////
-// P/Invoke: OutputDebugString
-
-void il2c_test_target_StringTest_OutputDebugString(System_String* message)
-{
-    OutputDebugStringA(message->pString);
 }
 
 ///////////////////////////////////////
@@ -632,6 +624,14 @@ int32_t il2c_test_target_Win32_GetCurrentProcessId(void)
 int32_t il2c_test_target_Win32_GetCurrentThreadId(void)
 {
     return GetCurrentThreadId();
+}
+
+///////////////////////////////////////
+// P/Invoke: OutputDebugString
+
+void il2c_test_target_Win32_OutputDebugString(System_String* message)
+{
+    OutputDebugStringA(message->pString);
 }
 
 ///////////////////////////////////////

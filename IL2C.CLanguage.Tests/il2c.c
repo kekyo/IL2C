@@ -3,7 +3,8 @@
 
 #ifdef _WIN32
 
-#define _CRTDBG_MAP_ALLOC
+#define _CRT_SECURE_NO_WARNINGS 1
+#define _CRTDBG_MAP_ALLOC 1
 #include <crtdbg.h>
 #include <intrin.h>
 
@@ -13,6 +14,20 @@
 #include <stdint.h>
 
 typedef long interlock_t;
+
+#include <windows.h>
+
+#ifdef _DEBUG
+#define DEBUG_WRITE(step, message) { \
+    char buffer[256]; \
+    strcpy(buffer, step); \
+    strcat(buffer, ": "); \
+    strcat(buffer, message); \
+    strcat(buffer, "\r\n"); \
+    OutputDebugStringA(buffer); }
+#else
+#define DEBUG_WRITE(step, message)
+#endif
 
 #else
 
@@ -46,6 +61,9 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #define GCALLOC(size) malloc(size)
 #define GCFREE(p) free(p)
+
+#define DEBUG_WRITE(step, message)
+
 #endif
 
 #define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchange((interlock_t*)p, (interlock_t)v)
@@ -240,6 +258,9 @@ void __gc_step2_mark_gcmark__()
             {
                 assert(pHeader->type != NULL);
                 assert(pHeader->type->pMarkHandler != NULL);
+
+                DEBUG_WRITE("__gc_step2_mark_gcmark__", pHeader->type->pTypeName);
+
                 pHeader->type->pMarkHandler(*ppReference);
             }
         }
@@ -260,6 +281,8 @@ void __gc_step3_sweep_garbage__()
         {
             // Very important link steps: because cause misread on purpose this instance is living.
             *ppUnlinkTarget = pNext;
+
+            DEBUG_WRITE("__gc_step3_sweep_garbage__", pCurrentHeader->type->pTypeName);
 
             // Heap discarded
             GCFREE(pCurrentHeader);

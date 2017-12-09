@@ -18,7 +18,7 @@ int main()
             System_String* pString1 = il2c_test_target_StringTest_InOutString(hoge);
             printf("pString1 = %s", pString1->pString);
 
-            il2c_test_target_StringTest_OutputDebugString(hoge);
+            il2c_test_target_Win32_OutputDebugString(hoge);
 
             System_String* pString2 = il2c_test_target_StringTest_LiteralCombinedString();
             printf("pString2 = %s", pString2->pString);

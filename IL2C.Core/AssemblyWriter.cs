@@ -495,6 +495,21 @@ namespace IL2C
             var assemblyName = extractContext.Assembly.Name.Name;
             twSource.WriteLine("#include \"{0}.h\"", assemblyName);
 
+            twSource.WriteLine();
+            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+            twSource.WriteLine("// Const strings:");
+            twSource.WriteLine();
+
+            extractContext.ExtractConstStrings()
+                .ForEach(kv =>
+                {
+                    var escaped = Utilities.GetEscapedCString(kv.Value);
+                    twSource.WriteLine(
+                        "__define_const_string__({0}, \"{1}\");",
+                        kv.Key,
+                        escaped);
+                });
+
             var allTypes = extractContext.Assembly.Modules
                 .SelectMany(module => module.Types)
                 .Where(type => type.IsValidDefinition())
@@ -510,21 +525,6 @@ namespace IL2C
                 types,
                 extractContext,
                 indent);
-
-            twSource.WriteLine();
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// Const strings:");
-            twSource.WriteLine();
-
-            extractContext.ExtractConstStrings()
-                .ForEach(kv =>
-                {
-                    var escaped = Utilities.GetEscapedCString(kv.Value);
-                    twSource.WriteLine(
-                        "__define_const_string__({0}, \"{1}\");",
-                        kv.Key,
-                        escaped);
-                });
 
             twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");

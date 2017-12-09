@@ -90,7 +90,7 @@ namespace IL2C.Translators
         public readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
         public readonly VariableDefinition[] Locals;
-        public readonly IPrepareContext prepareContext;
+        public readonly IPrepareContext PrepareContext;
 
         private readonly SortedDictionary<int, Instruction> instructions;
         private int nextOffset = -1;
@@ -125,7 +125,7 @@ namespace IL2C.Translators
             this.Parameters = parameters;
             this.Locals = locals;
 
-            this.prepareContext = prepareContext;
+            this.PrepareContext = prepareContext;
 
             this.instructions = new SortedDictionary<int, Instruction>();
             instructions.ForEach(instruction => this.instructions.Add(instruction.Offset, instruction));

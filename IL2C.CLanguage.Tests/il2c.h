@@ -7,6 +7,12 @@
 extern "C" {
 #endif
 
+#ifdef _WIN32
+typedef long interlock_t;
+#else
+typedef uint8_t interlock_t;
+#endif
+
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
 
@@ -18,14 +24,14 @@ typedef struct __REF_HEADER__ __REF_HEADER__;
 
 typedef void(*__MARK_HANDLER__)(void*);
 
-typedef struct __RUNTIME_TYPE_DEF__
+typedef const struct __RUNTIME_TYPE_DEF__
 {
     const char* pTypeName;
-    const uint16_t bodySize;
-    const __MARK_HANDLER__ pMarkHandler;
+    uint16_t bodySize;
+    __MARK_HANDLER__ pMarkHandler;
 } __RUNTIME_TYPE_DEF__;
 
-typedef const __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
+typedef __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
 
 #define __typeof__(typeName) (__##typeName##_RUNTIME_TYPE__)
 #define __sizeof__(typeName) (__typeof__(typeName)->bodySize)
@@ -60,7 +66,7 @@ static void System_Object__ctor(System_Object* __this)
 {
 }
 
-extern __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
 
 /////////////////////////////////////////////////////////////
 // Boxing related declarations
@@ -72,28 +78,57 @@ extern void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type);
 // Primitive types
 
 typedef uint8_t System_Byte;
-extern __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
 
 typedef int8_t System_SByte;
-extern __RUNTIME_TYPE__ __System_SByte_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_SByte_RUNTIME_TYPE__;
 
 typedef int16_t System_Int16;
-extern __RUNTIME_TYPE__ __System_Int16_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_Int16_RUNTIME_TYPE__;
 
 typedef uint16_t System_UInt16;
-extern __RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__;
 
 typedef int32_t System_Int32;
-extern __RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__;
 
 typedef uint32_t System_UInt32;
-extern __RUNTIME_TYPE__ __System_UInt32_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_UInt32_RUNTIME_TYPE__;
 
 typedef int64_t System_Int64;
-extern __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
 
 typedef uint64_t System_UInt64;
-extern __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
+
+/////////////////////////////////////////////////////////////
+// System.String
+
+typedef struct System_String
+{
+    const char* pString;
+} System_String;
+
+extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
+
+// Binary layout compatible: __REF_HEADER__ + System_String.
+typedef const struct __CONST_STRING__
+{
+    void* _0;
+    __RUNTIME_TYPE__ __stringType;
+    interlock_t _1;
+    const char* __pString;
+} __CONST_STRING__;
+
+extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
+
+#define __define_const_string__(name, pString) \
+    static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pString }; \
+    static System_String* const name = ((System_String*)&(__##name##_const_string__.__pString))
+
+extern void __new_string__(System_String** ppReference, const char* pString);
+
+extern System_String* System_String_Concat(System_String* str0, System_String* str1);
 
 #ifdef __cplusplus
 }

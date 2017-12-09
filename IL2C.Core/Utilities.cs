@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -29,6 +30,57 @@ namespace IL2C
         public static bool TryGetILConverter(OpCode opCode, out ILConverter ilc)
         {
             return ilConverters.TryGetValue(opCode, out ilc);
+        }
+
+        public static string GetEscapedCString(string value)
+        {
+            var encoded = Encoding.UTF8.GetBytes(value);
+
+            var sb = new StringBuilder();
+            
+            var index = 0;
+            while (index < encoded.Length)
+            {
+                var ch = (char)encoded[index++];
+                switch (ch)
+                {
+                    case '"':
+                    case '\\':
+                        sb.Append('\\');
+                        sb.Append(ch);
+                        break;
+                    case '\a':
+                        sb.Append("\\a");
+                        break;
+                    case '\b':
+                        sb.Append("\\b");
+                        break;
+                    case '\n':
+                        sb.Append("\\n");
+                        break;
+                    case '\r':
+                        sb.Append("\\r");
+                        break;
+                    case '\f':
+                        sb.Append("\\f");
+                        break;
+                    case '\v':
+                        sb.Append("\\v");
+                        break;
+                    default:
+                        if (char.IsControl(ch))
+                        {
+                            sb.AppendFormat("\\x{0:x2}", (byte)ch);
+                        }
+                        else
+                        {
+                            sb.Append(ch);
+                        }
+                        break;                
+                }
+            }
+
+            return sb.ToString();
         }
 
         public static TypeReference GetStackableType(this TypeReference type)
@@ -61,6 +113,18 @@ namespace IL2C
             }
 
             return parameters.ToArray();
+        }
+
+        public static string GetMarshaledInExpression(this Parameter parameter)
+        {
+            if (parameter.ParameterType.IsStringType())
+            {
+                return string.Format("{0}->pString", parameter.Name);
+            }
+            else
+            {
+                return parameter.Name;
+            }
         }
 
         public static string ManglingSymbolName(this string rawSymbolName)

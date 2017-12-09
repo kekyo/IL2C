@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
-using Mono.Cecil;
 
 namespace IL2C.ILConveters
 {
@@ -37,7 +37,7 @@ namespace IL2C.ILConveters
             var si = decodeContext.PopStack();
             var returnType = decodeContext.ReturnType;
 
-            decodeContext.prepareContext.RegisterType(returnType);
+            decodeContext.PrepareContext.RegisterType(returnType);
 
             var offset = decodeContext.Current.Offset;
 
@@ -76,7 +76,7 @@ namespace IL2C.ILConveters
                         si.TargetType.FullName);
                 }
 
-                decodeContext.prepareContext.RegisterIncludeFile("string.h");
+                decodeContext.PrepareContext.RegisterIncludeFile("string.h");
 
                 return extractContext =>
                 {
@@ -144,6 +144,29 @@ namespace IL2C.ILConveters
                         thisSymbolName,
                         dereferencedTypeName,
                         parameterString) };
+                };
+            }
+        }
+
+        internal sealed class LdstrConverter : InlineStringConverter
+        {
+            public override OpCode OpCode => OpCodes.Ldstr;
+
+            public override Func<IExtractContext, string[]> Apply(
+                string operand, DecodeContext decodeContext)
+            {
+                var symbolName = decodeContext.PushStack(
+                    decodeContext.Module.GetSafeStringType());
+                var constStringName = decodeContext.PrepareContext
+                    .RegisterConstString(operand);
+
+                return extractContext =>
+                {
+                    return new[] { string.Format(
+                        "{0} = {1} /* \"{2}\" */",
+                        symbolName,
+                        constStringName,
+                        operand) };
                 };
             }
         }

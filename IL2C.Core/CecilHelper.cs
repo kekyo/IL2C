@@ -199,6 +199,11 @@ namespace IL2C
             return member.Module.TypeSystem.UInt64;
         }
 
+        public static TypeReference GetSafeStringType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.String;
+        }
+
         ///
 
         public static TypeReference GetSafeVoidType(this ModuleDefinition module)
@@ -259,6 +264,11 @@ namespace IL2C
         public static TypeReference GetSafeUInt64Type(this ModuleDefinition module)
         {
             return module.TypeSystem.UInt64;
+        }
+
+        public static TypeReference GetSafeStringType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.String;
         }
         #endregion
 
@@ -321,6 +331,11 @@ namespace IL2C
         public static bool IsUInt64Type(this TypeReference type)
         {
             return type.GetSafeUInt64Type().MemberEquals(type);
+        }
+
+        public static bool IsStringType(this TypeReference type)
+        {
+            return type.GetSafeStringType().MemberEquals(type);
         }
         #endregion
     }

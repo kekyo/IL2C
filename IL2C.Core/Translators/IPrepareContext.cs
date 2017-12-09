@@ -8,5 +8,6 @@ namespace IL2C.Translators
         void RegisterPrivateIncludeFile(string includeFileName);
         void RegisterType(TypeReference type);
         void RegisterStaticField(FieldReference staticField);
+        string RegisterConstString(string operand);
     }
 }

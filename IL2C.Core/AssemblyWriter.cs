@@ -62,7 +62,7 @@ namespace IL2C
             // Write mark handler:
             tw.WriteLine();
             var makrHandlerPrototype = string.Format(
-                "extern __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__;",
+                "extern const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__;",
                 rawTypeName);
             tw.WriteLine(makrHandlerPrototype);
         }
@@ -308,7 +308,7 @@ namespace IL2C
 
             var arguments = string.Join(
                 ", ",
-                preparedFunction.Parameters.Select(parameter => parameter.Name));
+                preparedFunction.Parameters.Select(parameter => parameter.GetMarshaledInExpression()));
 
             if (preparedFunction.ReturnType.IsVoidType())
             {
@@ -365,7 +365,7 @@ namespace IL2C
             // Write runtime type information
             tw.WriteLine();
             tw.WriteLine(
-                "static const __RUNTIME_TYPE_DEF__ __{0}_RUNTIME_TYPE_DEF__ = {{",
+                "static __RUNTIME_TYPE_DEF__ __{0}_RUNTIME_TYPE_DEF__ = {{",
                 rawTypeName);
 
             tw.WriteLine(
@@ -395,7 +395,7 @@ namespace IL2C
                 rawTypeName);
 
             tw.WriteLine(
-                "__RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ = &__{0}_RUNTIME_TYPE_DEF__;",
+                "const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ = &__{0}_RUNTIME_TYPE_DEF__;",
                 rawTypeName);
         }
 
@@ -510,6 +510,21 @@ namespace IL2C
                 types,
                 extractContext,
                 indent);
+
+            twSource.WriteLine();
+            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+            twSource.WriteLine("// Const strings:");
+            twSource.WriteLine();
+
+            extractContext.ExtractConstStrings()
+                .ForEach(kv =>
+                {
+                    var escaped = Utilities.GetEscapedCString(kv.Value);
+                    twSource.WriteLine(
+                        "__define_const_string__({0}, \"{1}\");",
+                        kv.Key,
+                        escaped);
+                });
 
             twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");

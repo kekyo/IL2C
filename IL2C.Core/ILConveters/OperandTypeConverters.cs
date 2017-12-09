@@ -39,6 +39,10 @@ namespace IL2C.ILConveters
     {
     }
 
+    internal abstract class InlineStringConverter : ILConverter<string>
+    {
+    }
+
     internal abstract class ShortInlineBrTargetConverter : ILConverter<Instruction>
     {
     }

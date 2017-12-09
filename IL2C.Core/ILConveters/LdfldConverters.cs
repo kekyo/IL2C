@@ -17,7 +17,7 @@ namespace IL2C.ILConveters
         {
             Debug.Assert(field.Resolve().IsStatic);
 
-            decodeContext.prepareContext.RegisterStaticField(field);
+            decodeContext.PrepareContext.RegisterStaticField(field);
 
             var fieldName = field.GetFullMemberName();
             var fqFieldName = fieldName.ManglingSymbolName();

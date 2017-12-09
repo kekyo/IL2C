@@ -87,19 +87,17 @@ static __REF_HEADER__* g_pBeginHeader__ = NULL;
 
 //////////////////////////
 
-void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
+static void __gc_get_uninitialized_object_internal__(
+    void** ppReference, __RUNTIME_TYPE__ type, size_t bodySize)
 {
-    assert(ppReference != NULL);
-    assert(type != NULL);
-
-    __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + type->bodySize);
+    __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
     if (pHeader == NULL)
     {
         while (1)
         {
             __gc_collect__();
 
-            pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + type->bodySize);
+            pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
             if (pHeader != NULL)
             {
                 break;
@@ -112,9 +110,9 @@ void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
 
     void* pReference = ((uint8_t*)pHeader)
         + sizeof(__REF_HEADER__);
-    if (type->bodySize >= 1)
+    if (bodySize >= 1)
     {
-        memset(pReference, 0, type->bodySize);
+        memset(pReference, 0, bodySize);
     }
 
     pHeader->pNext = NULL;
@@ -140,6 +138,23 @@ void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
         {
             break;
         }
+    }
+}
+
+void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
+{
+    assert(ppReference != NULL);
+    assert(type != NULL);
+
+    if (type->bodySize == UINT16_MAX)
+    {
+        // String or Array:
+        // throw new InvalidProgramException();
+        assert(0);
+    }
+    else
+    {
+        __gc_get_uninitialized_object_internal__(ppReference, type, type->bodySize);
     }
 }
 
@@ -318,39 +333,97 @@ static void __Dummy_MARK_HANDLER__(void* pReference)
 {
 }
 
-static const __RUNTIME_TYPE_DEF__ __System_Object_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_Object_RUNTIME_TYPE_DEF__ = {
     "System.Object", 0, __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__ = &__System_Object_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__ = &__System_Object_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_Byte_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_Byte_RUNTIME_TYPE_DEF__ = {
     "System.Byte", sizeof(System_Byte), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_SByte_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_SByte_RUNTIME_TYPE_DEF__ = {
     "System.SByte", sizeof(System_SByte), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_SByte_RUNTIME_TYPE__ = &__System_SByte_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_SByte_RUNTIME_TYPE__ = &__System_SByte_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_Int16_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_Int16_RUNTIME_TYPE_DEF__ = {
     "System.Int16", sizeof(System_Int16), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_Int16_RUNTIME_TYPE__ = &__System_Int16_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_Int16_RUNTIME_TYPE__ = &__System_Int16_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_UInt16_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_UInt16_RUNTIME_TYPE_DEF__ = {
     "System.UInt16", sizeof(System_UInt16), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__ = &__System_UInt16_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__ = &__System_UInt16_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_Int32_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_Int32_RUNTIME_TYPE_DEF__ = {
     "System.Int32", sizeof(System_Int32), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__ = &__System_Int32_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__ = &__System_Int32_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_UInt32_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_UInt32_RUNTIME_TYPE_DEF__ = {
     "System.UInt32", sizeof(System_UInt32), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_UInt32_RUNTIME_TYPE__ = &__System_UInt32_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_UInt32_RUNTIME_TYPE__ = &__System_UInt32_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_Int64_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_Int64_RUNTIME_TYPE_DEF__ = {
     "System.Int64", sizeof(System_Int64), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__ = &__System_Int64_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__ = &__System_Int64_RUNTIME_TYPE_DEF__;
 
-static const __RUNTIME_TYPE_DEF__ __System_UInt64_RUNTIME_TYPE_DEF__ = {
+static __RUNTIME_TYPE_DEF__ __System_UInt64_RUNTIME_TYPE_DEF__ = {
     "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
-__RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
+const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
 
+/////////////////////////////////////////////////////////////
+// System.String
+
+__RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__ = {
+    "System.String", UINT16_MAX, __Dummy_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__ = &__System_String_RUNTIME_TYPE_DEF__;
+
+static char* __new_string_internal__(System_String** ppReference, size_t size)
+{
+    size_t bodySize = sizeof(System_String) + size;
+    __gc_get_uninitialized_object_internal__(
+        (void**)ppReference,
+        __System_String_RUNTIME_TYPE__,
+        bodySize);
+    char* pBody = (char*)(((uint8_t*)*ppReference) + sizeof(System_String));
+    (*ppReference)->pString = pBody;
+    return pBody;
+}
+
+void __new_string__(System_String** ppReference, const char* pString)
+{
+    size_t size = strlen(pString) + 1;
+    char* pBody = __new_string_internal__(ppReference, size);
+    memcpy(pBody, pString, size);
+}
+
+System_String* System_String_Concat(System_String* str0, System_String* str1)
+{
+    //-------------------
+    // Local variables:
+
+    System_String* local0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        System_String** plocal0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.plocal0 = &local0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+
+    size_t str0Size = strlen(str0->pString);
+    size_t str1Size = strlen(str1->pString);
+
+    char* pBody = __new_string_internal__(&local0, str0Size + str1Size + 1);
+    memcpy(pBody, str0->pString, str0Size);
+    memcpy(pBody + str0Size, str1->pString, str1Size + 1);
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return local0;
+}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 using Mono.Cecil;
@@ -24,6 +25,7 @@ namespace IL2C
             { typeof(uint).FullName, "stdint.h" },
             { typeof(long).FullName, "stdint.h" },
             { typeof(ulong).FullName, "stdint.h" },
+            { typeof(string).FullName, "string.h" }
         };
 
         private static readonly Dictionary<string, string> predefinedCTypeNames = new Dictionary<string, string>
@@ -37,13 +39,15 @@ namespace IL2C
             { typeof(int).FullName, "int32_t" },
             { typeof(uint).FullName, "uint32_t" },
             { typeof(long).FullName, "int64_t" },
-            { typeof(ulong).FullName, "uint64_t" },
+            { typeof(ulong).FullName, "uint64_t" }
         };
 
         private readonly HashSet<string> includes = new HashSet<string>();
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
         private readonly Dictionary<string, FieldReference> staticFields =
             new Dictionary<string, FieldReference>();
+        private readonly Dictionary<string, string> constStrings =
+            new Dictionary<string, string>();
         #endregion
 
         #region Constructors
@@ -119,6 +123,22 @@ namespace IL2C
         {
             this.RegisterStaticField(staticField);
         }
+
+        private string RegisterConstString(string str)
+        {
+            if (!constStrings.TryGetValue(str, out var symbolName))
+            {
+                symbolName = string.Format("__string{0}", constStrings.Count);
+                constStrings.Add(str, symbolName);
+            }
+
+            return symbolName;
+        }
+
+        string IPrepareContext.RegisterConstString(string str)
+        {
+            return this.RegisterConstString(str);
+        }
         #endregion
 
         #region IExtractContext
@@ -137,7 +157,8 @@ namespace IL2C
             return staticFields.Values;
         }
 
-        private string GetCLanguageTypeName(TypeReference type, TypeNameFlags flags = TypeNameFlags.Strict)
+        private string GetCLanguageTypeName(
+            TypeReference type, TypeNameFlags flags = TypeNameFlags.Strict)
         {
             if (predefinedCTypeNames.TryGetValue(type.FullName, out var cTypeName))
             {
@@ -159,7 +180,7 @@ namespace IL2C
                     name = "struct " + name;
                 }
 
-                if (type.IsValueType == false)
+                if (!type.IsValueType)
                 {
                     return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
                         ? name : (name + "*");
@@ -269,6 +290,17 @@ namespace IL2C
             TypeReference lhsType, TypeReference rhsType, string rhsExpression)
         {
             return this.GetRightExpression(lhsType, rhsType, rhsExpression);
+        }
+
+        private IEnumerable<KeyValuePair<string, string>> ExtractConstStrings()
+        {
+            return constStrings
+                .Select(kv => new KeyValuePair<string, string>(kv.Value, kv.Key));
+        }
+
+        IEnumerable<KeyValuePair<string, string>> IExtractContext.ExtractConstStrings()
+        {
+            return this.ExtractConstStrings();
         }
         #endregion
     }

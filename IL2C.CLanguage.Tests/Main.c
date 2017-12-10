@@ -2,7 +2,7 @@
 
 #include "Generated/il2c_test_target.h"
 
-__define_const_string__(hoge, "Hoge\r\n");
+__DEFINE_CONST_STRING__(hoge, "Hoge\r\n");
 
 int main()
 {

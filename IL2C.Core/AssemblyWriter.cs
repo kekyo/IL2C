@@ -435,17 +435,6 @@ namespace IL2C
                     pinvokeInfo,
                     indent);
             }
-
-            // Is this instance constructor?
-            // TODO: Type initializer's handlers
-            if (method.IsConstructor && !method.IsStatic)
-            {
-                InternalConvertTypeHelper(
-                    tw,
-                    extractContext,
-                    method.DeclaringType,
-                    indent);
-            }
         }
 
         public static void WriteHeader(
@@ -505,7 +494,7 @@ namespace IL2C
                 {
                     var escaped = Utilities.GetEscapedCString(kv.Value);
                     twSource.WriteLine(
-                        "__define_const_string__({0}, \"{1}\");",
+                        "__DEFINE_CONST_STRING__({0}, \"{1}\");",
                         kv.Key,
                         escaped);
                 });
@@ -551,6 +540,12 @@ namespace IL2C
                 twSource.WriteLine();
                 twSource.WriteLine("////////////////////////////////////////////////////////////");
                 twSource.WriteLine("// Type: {0}", type.GetFullMemberName());
+
+                InternalConvertTypeHelper(
+                    twSource,
+                    extractContext,
+                    type,
+                    indent);
 
                 // All methods and constructor exclude type initializer
                 type.Methods

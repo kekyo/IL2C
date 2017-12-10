@@ -4,8 +4,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Const strings:
 
-__define_const_string__(__string0, "ABC");
-__define_const_string__(__string1, "DEF");
+__DEFINE_CONST_STRING__(__string0, "ABC");
+__DEFINE_CONST_STRING__(__string1, "DEF");
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,6 +46,20 @@ int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 0;
 
 ////////////////////////////////////////////////////////////
 // Type: il2c_test_target.StringTest
+
+//////////////////////
+// Runtime helpers:
+
+static void __il2c_test_target_StringTest_MARK_HANDLER__(void* pReference)
+{
+    __typeof__(System_Object)->pMarkHandler(pReference);
+}
+
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_StringTest_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.StringTest",
+    0,
+    __il2c_test_target_StringTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_StringTest_RUNTIME_TYPE__ = &__il2c_test_target_StringTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // LiteralString
@@ -225,22 +239,23 @@ void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __this)
     return;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.ClassTypeTestTarget
+
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_StringTest_MARK_HANDLER__(void* pReference)
+static void __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
+    __TRY_MARK_FROM_HANDLER__(((il2c_test_target_ClassTypeTestTarget*)pReference)->OR2);
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_StringTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.StringTest",
-    0,
-    __il2c_test_target_StringTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_StringTest_RUNTIME_TYPE__ = &__il2c_test_target_StringTest_RUNTIME_TYPE_DEF__;
-
-////////////////////////////////////////////////////////////
-// Type: il2c_test_target.ClassTypeTestTarget
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.ClassTypeTestTarget",
+    sizeof(il2c_test_target_ClassTypeTestTarget),
+    __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE__ = &__il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // GetValue2
@@ -327,23 +342,22 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
     return;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.ClassTypeTest
+
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
+static void __il2c_test_target_ClassTypeTest_MARK_HANDLER__(void* pReference)
 {
-    __TRY_MARK_FROM_HANDLER__(((il2c_test_target_ClassTypeTestTarget*)pReference)->OR2);
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.ClassTypeTestTarget",
-    sizeof(il2c_test_target_ClassTypeTestTarget),
-    __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE__ = &__il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
-
-////////////////////////////////////////////////////////////
-// Type: il2c_test_target.ClassTypeTest
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.ClassTypeTest",
+    0,
+    __il2c_test_target_ClassTypeTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_ClassTypeTest_RUNTIME_TYPE__ = &__il2c_test_target_ClassTypeTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Test4
@@ -492,22 +506,22 @@ void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this
     return;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.BoxingTest
+
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_ClassTypeTest_MARK_HANDLER__(void* pReference)
+static void __il2c_test_target_BoxingTest_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.ClassTypeTest",
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_BoxingTest_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.BoxingTest",
     0,
-    __il2c_test_target_ClassTypeTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_ClassTypeTest_RUNTIME_TYPE__ = &__il2c_test_target_ClassTypeTest_RUNTIME_TYPE_DEF__;
-
-////////////////////////////////////////////////////////////
-// Type: il2c_test_target.BoxingTest
+    __il2c_test_target_BoxingTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_BoxingTest_RUNTIME_TYPE__ = &__il2c_test_target_BoxingTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // BoxingInt32
@@ -593,22 +607,22 @@ void il2c_test_target_BoxingTest__ctor(il2c_test_target_BoxingTest* __this)
     return;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.Win32
+
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_BoxingTest_MARK_HANDLER__(void* pReference)
+static void __il2c_test_target_Win32_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_BoxingTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.BoxingTest",
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_Win32_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.Win32",
     0,
-    __il2c_test_target_BoxingTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_BoxingTest_RUNTIME_TYPE__ = &__il2c_test_target_BoxingTest_RUNTIME_TYPE_DEF__;
-
-////////////////////////////////////////////////////////////
-// Type: il2c_test_target.Win32
+    __il2c_test_target_Win32_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_Win32_RUNTIME_TYPE__ = &__il2c_test_target_Win32_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // P/Invoke: GetCurrentProcessId
@@ -671,22 +685,23 @@ void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this)
     return;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.ValueTypeTestTarget
+
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_Win32_MARK_HANDLER__(void* pReference)
+static void __il2c_test_target_ValueTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(System_Object)->pMarkHandler(pReference);
+    __TRY_MARK_FROM_HANDLER__(((il2c_test_target_ValueTypeTestTarget*)pReference)->OR2);
+    __typeof__(System_ValueType)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_Win32_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.Win32",
-    0,
-    __il2c_test_target_Win32_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_Win32_RUNTIME_TYPE__ = &__il2c_test_target_Win32_RUNTIME_TYPE_DEF__;
-
-////////////////////////////////////////////////////////////
-// Type: il2c_test_target.ValueTypeTestTarget
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.ValueTypeTestTarget",
+    sizeof(il2c_test_target_ValueTypeTestTarget),
+    __il2c_test_target_ValueTypeTestTarget_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_ValueTypeTestTarget_RUNTIME_TYPE__ = &__il2c_test_target_ValueTypeTestTarget_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // GetValue2
@@ -738,6 +753,20 @@ L_0000:
 
 ////////////////////////////////////////////////////////////
 // Type: il2c_test_target.ValueTypeTest
+
+//////////////////////
+// Runtime helpers:
+
+static void __il2c_test_target_ValueTypeTest_MARK_HANDLER__(void* pReference)
+{
+    __typeof__(System_Object)->pMarkHandler(pReference);
+}
+
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.ValueTypeTest",
+    0,
+    __il2c_test_target_ValueTypeTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_ValueTypeTest_RUNTIME_TYPE__ = &__il2c_test_target_ValueTypeTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Test4
@@ -892,22 +921,22 @@ void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this
     return;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.Hoge2
+
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_ValueTypeTest_MARK_HANDLER__(void* pReference)
+static void __il2c_test_target_Hoge2_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.ValueTypeTest",
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_Hoge2_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.Hoge2",
     0,
-    __il2c_test_target_ValueTypeTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_ValueTypeTest_RUNTIME_TYPE__ = &__il2c_test_target_ValueTypeTest_RUNTIME_TYPE_DEF__;
-
-////////////////////////////////////////////////////////////
-// Type: il2c_test_target.Hoge2
+    __il2c_test_target_Hoge2_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_Hoge2_RUNTIME_TYPE__ = &__il2c_test_target_Hoge2_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Add3
@@ -1018,22 +1047,22 @@ void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
     return;
 }
 
+////////////////////////////////////////////////////////////
+// Type: il2c_test_target.Hoge1
+
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_Hoge2_MARK_HANDLER__(void* pReference)
+static void __il2c_test_target_Hoge1_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_Hoge2_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.Hoge2",
+static __RUNTIME_TYPE_DEF__ __il2c_test_target_Hoge1_RUNTIME_TYPE_DEF__ = {
+    "il2c_test_target.Hoge1",
     0,
-    __il2c_test_target_Hoge2_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_Hoge2_RUNTIME_TYPE__ = &__il2c_test_target_Hoge2_RUNTIME_TYPE_DEF__;
-
-////////////////////////////////////////////////////////////
-// Type: il2c_test_target.Hoge1
+    __il2c_test_target_Hoge1_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __il2c_test_target_Hoge1_RUNTIME_TYPE__ = &__il2c_test_target_Hoge1_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Add1
@@ -1143,17 +1172,3 @@ void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
-
-//////////////////////
-// Runtime helpers:
-
-static void __il2c_test_target_Hoge1_MARK_HANDLER__(void* pReference)
-{
-    __typeof__(System_Object)->pMarkHandler(pReference);
-}
-
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_Hoge1_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.Hoge1",
-    0,
-    __il2c_test_target_Hoge1_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_Hoge1_RUNTIME_TYPE__ = &__il2c_test_target_Hoge1_RUNTIME_TYPE_DEF__;

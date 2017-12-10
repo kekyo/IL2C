@@ -360,6 +360,10 @@ static __RUNTIME_TYPE_DEF__ __System_Object_RUNTIME_TYPE_DEF__ = {
     "System.Object", 0, __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__ = &__System_Object_RUNTIME_TYPE_DEF__;
 
+static __RUNTIME_TYPE_DEF__ __System_ValueType_RUNTIME_TYPE_DEF__ = {
+    "System.ValueType", 0, __Dummy_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __System_ValueType_RUNTIME_TYPE__ = &__System_ValueType_RUNTIME_TYPE_DEF__;
+
 static __RUNTIME_TYPE_DEF__ __System_Byte_RUNTIME_TYPE_DEF__ = {
     "System.Byte", sizeof(System_Byte), __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;

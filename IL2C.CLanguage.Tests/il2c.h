@@ -69,6 +69,17 @@ static void System_Object__ctor(System_Object* __this)
 extern const __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
 
 /////////////////////////////////////////////////////////////
+// System.ValueType
+
+typedef struct System_ValueType System_ValueType;
+
+static void System_ValueType__ctor(System_ValueType* __this)
+{
+}
+
+extern const __RUNTIME_TYPE__ __System_ValueType_RUNTIME_TYPE__;
+
+/////////////////////////////////////////////////////////////
 // Boxing related declarations
 
 extern System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type);
@@ -122,7 +133,7 @@ typedef const struct __CONST_STRING__
 
 extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
 
-#define __define_const_string__(name, pString) \
+#define __DEFINE_CONST_STRING__(name, pString) \
     static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pString }; \
     static System_String* const name = ((System_String*)&(__##name##_const_string__.__pString))
 

@@ -64,6 +64,7 @@ extern const __RUNTIME_TYPE__ __il2c_test_target_Win32_RUNTIME_TYPE__;
 struct il2c_test_target_ValueTypeTestTarget
 {
     int32_t Value2;
+    il2c_test_target_ClassTypeTestTarget* OR2;
 };
 
 extern const __RUNTIME_TYPE__ __il2c_test_target_ValueTypeTestTarget_RUNTIME_TYPE__;

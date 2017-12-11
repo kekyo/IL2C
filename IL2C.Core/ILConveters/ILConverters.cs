@@ -121,6 +121,7 @@ namespace IL2C.ILConveters
                         parameter.ParameterType, decodeContext.PopStack()))
                     .Reverse()
                     .ToList();
+                var overloadIndex = method.GetMethodOverloadIndex();
 
                 var thisSymbolName = decodeContext.PushStack(type);
 
@@ -139,11 +140,23 @@ namespace IL2C.ILConveters
                     var dereferencedTypeName = extractContext.GetCLanguageTypeName(
                         type, TypeNameFlags.Dereferenced);
 
-                    return new[] { string.Format(
-                        "__new__(&{0}, {1})({2})",
-                        thisSymbolName,
-                        dereferencedTypeName,
-                        parameterString) };
+                    if (overloadIndex >= 1)
+                    {
+                        return new[] { string.Format(
+                            "__new_ovl__(&{0}, {1}, {2})({3})",
+                            thisSymbolName,
+                            dereferencedTypeName,
+                            overloadIndex,
+                            parameterString) };
+                    }
+                    else
+                    {
+                        return new[] { string.Format(
+                            "__new__(&{0}, {1})({2})",
+                            thisSymbolName,
+                            dereferencedTypeName,
+                            parameterString) };
+                    }
                 };
             }
         }

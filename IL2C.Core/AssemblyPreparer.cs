@@ -130,7 +130,8 @@ namespace IL2C
             IPrepareContext prepareContext,
             MethodDefinition method)
         {
-            var methodName = method.GetFullMemberName();
+            var methodName = method.GetFullMemberName(MethodNameTypes.Index)
+                .ManglingSymbolName();
             var returnType = method.ReturnType?.Resolve() ?? method.GetSafeVoidType();
             var parameters = method.GetSafeParameters();
 

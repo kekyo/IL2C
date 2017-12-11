@@ -111,7 +111,7 @@ extern System_String* il2c_test_target_StringTest_LiteralCombinedString(void);
 extern void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __this);
 
 extern void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this);
-extern void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this, int32_t value);
+extern void il2c_test_target_ClassTypeTestTarget__ctor_1(il2c_test_target_ClassTypeTestTarget* __this, int32_t value);
 extern int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b);
 
 extern int32_t il2c_test_target_ClassTypeTest_Test4(void);

@@ -71,6 +71,7 @@ namespace IL2C
             TextWriter tw,
             TypeDefinition[] types,
             IExtractContext extractContext,
+            PreparedFunctions preparedFunctions,
             string indent)
         {
             tw.WriteLine();
@@ -133,12 +134,12 @@ namespace IL2C
                     .Where(method => !method.IsConstructor || !method.IsStatic)
                     .ForEach(method =>
                     {
-                        var methodName = method.GetFullMemberName();
+                        var preparedFunction = preparedFunctions.Functions[method];
 
                         var functionPrototype = Utilities.GetFunctionPrototypeString(
-                            methodName,
-                            method.ReturnType?.Resolve() ?? method.GetSafeVoidType(),
-                            method.GetSafeParameters(),
+                            preparedFunction.MethodName,
+                            preparedFunction.ReturnType,
+                            preparedFunction.Parameters,
                             extractContext);
 
                         tw.WriteLine("extern {0};", functionPrototype);
@@ -440,6 +441,7 @@ namespace IL2C
         public static void WriteHeader(
             TextWriter twHeader,
             TranslateContext translateContext,
+            PreparedFunctions preparedFunctions,
             string indent)
         {
             IExtractContext extractContext = translateContext;
@@ -464,6 +466,7 @@ namespace IL2C
                 twHeader,
                 types,
                 extractContext,
+                preparedFunctions,
                 indent);
 
             twHeader.WriteLine();
@@ -513,6 +516,7 @@ namespace IL2C
                 twSource,
                 types,
                 extractContext,
+                preparedFunctions,
                 indent);
 
             twSource.WriteLine();

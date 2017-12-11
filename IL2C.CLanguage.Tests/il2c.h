@@ -55,7 +55,11 @@ extern void __gc_mark_from_handler__(void* pReference);
 
 #define __new__(ppReference, typeName) \
     __gc_get_uninitialized_object__((void**)ppReference, __typeof__(typeName)); \
-    typeName##__ctor/* (...) */
+    typeName##__ctor
+
+#define __new_ovl__(ppReference, typeName, overloadIndex) \
+    __gc_get_uninitialized_object__((void**)ppReference, __typeof__(typeName)); \
+    typeName##__ctor_##overloadIndex
 
 /////////////////////////////////////////////////////////////
 // System.Object

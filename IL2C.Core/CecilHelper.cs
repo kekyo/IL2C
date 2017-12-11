@@ -6,6 +6,14 @@ using Mono.Cecil;
 
 namespace IL2C
 {
+    internal enum MethodNameTypes
+    {
+        Nothing,
+        Full,
+        Types,
+        Index
+    }
+
     internal static class CecilHelper
     {
         #region MemberReferenceComparer
@@ -109,22 +117,26 @@ namespace IL2C
             return false;
         }
 
-        public static string GetFullMemberName(this MemberReference member)
+        public static int GetMethodOverloadIndex(this MethodReference method)
         {
-            if (member.DeclaringType != null)
+            var declaringType = method.DeclaringType.Resolve();
+            if (declaringType.Methods.Count < 2)
             {
-                var declaringTypes = member.DeclaringType
-                    .Traverse(current => current.DeclaringType)
-                    .Reverse()
-                    .ToArray();
-
-                return String.Format(
-                    "{0}.{1}.{2}",
-                    declaringTypes.First().Namespace,
-                    String.Join(".", declaringTypes.Select(dt => dt.Name)),
-                    member.Name);
+                return 0;
             }
-            else
+
+            var found = declaringType.Methods
+                .Where(m => m.Name == method.Name)
+                .OrderBy(m => m.Parameters.Count)
+                .Select((m, i) => new {m, i})
+                .First(e => e.m.MemberEquals(method));
+            return found.i;
+        }
+
+        public static string GetFullMemberName(
+            this MemberReference member, MethodNameTypes nameType = MethodNameTypes.Nothing)
+        {
+            if (member.DeclaringType == null)
             {
                 var type = member as TypeReference;
                 if (type != null)
@@ -136,6 +148,60 @@ namespace IL2C
                     return member.Name;
                 }
             }
+
+            var declaringTypes = member.DeclaringType
+                    .Traverse(current => current.DeclaringType)
+                    .Reverse()
+                    .ToArray();
+
+            var method = member as MethodReference;
+            if (method != null)
+            {
+                switch (nameType)
+                {
+                    case MethodNameTypes.Full:
+                        return String.Format(
+                            "{0}.{1}.{2}({3})",
+                            declaringTypes.First().Namespace,
+                            string.Join(".", declaringTypes.Select(dt => dt.Name)),
+                            method.Name,
+                            string.Join(
+                                ", ",
+                                method.Parameters.Select(parameter => string.Format(
+                                    "{0} {1}",
+                                    parameter.ParameterType.GetFullMemberName(),
+                                    parameter.Name))));
+
+                    case MethodNameTypes.Types:
+                        return String.Format(
+                            "{0}.{1}.{2}({3})",
+                            declaringTypes.First().Namespace,
+                            string.Join(".", declaringTypes.Select(dt => dt.Name)),
+                            method.Name,
+                            string.Join(
+                                ", ",
+                                method.Parameters.Select(parameter => parameter.ParameterType.GetFullMemberName())));
+
+                    case MethodNameTypes.Index:
+                        var index = method.GetMethodOverloadIndex();
+                        if (index >= 1)
+                        {
+                            return String.Format(
+                                "{0}.{1}.{2}@{3}",
+                                declaringTypes.First().Namespace,
+                                string.Join(".", declaringTypes.Select(dt => dt.Name)),
+                                method.Name,
+                                index);
+                        }
+                        break;
+                }
+            }
+
+            return String.Format(
+                "{0}.{1}.{2}",
+                declaringTypes.First().Namespace,
+                string.Join(".", declaringTypes.Select(dt => dt.Name)),
+                member.Name);
         }
 
         #region Type system safed references

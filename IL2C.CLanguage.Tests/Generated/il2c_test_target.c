@@ -297,7 +297,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this, int32_t value)
+void il2c_test_target_ClassTypeTestTarget__ctor_1(il2c_test_target_ClassTypeTestTarget* __this, int32_t value)
 {
     //-------------------
     // Local variables:
@@ -547,7 +547,7 @@ int32_t il2c_test_target_ClassTypeTest_Test6(void)
     // IL body:
 
     __stack0_0 = 123;
-    __new__(&__stack0_1, il2c_test_target_ClassTypeTestTarget)(__stack0_1, __stack0_0);
+    __new_ovl__(&__stack0_1, il2c_test_target_ClassTypeTestTarget, 1)(__stack0_1, __stack0_0);
     local0 = __stack0_1;
     __stack0_1 = local0;
     __stack0_0 = __stack0_1->Value2;

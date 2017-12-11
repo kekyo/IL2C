@@ -53,7 +53,7 @@ namespace IL2C
                 FileShare.None))
             {
                 var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
-                AssemblyWriter.WriteHeader(twHeader, translateContext, "    ");
+                AssemblyWriter.WriteHeader(twHeader, translateContext, prepared, "    ");
                 twHeader.Flush();
             }
 

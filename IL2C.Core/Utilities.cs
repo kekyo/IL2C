@@ -15,6 +15,7 @@ namespace IL2C
 {
     internal static class Utilities
     {
+        private static readonly char[] replaceChars = { '.', '@' };
         private static readonly Dictionary<OpCode, ILConverter> ilConverters;
 
         static Utilities()
@@ -129,9 +130,13 @@ namespace IL2C
 
         public static string ManglingSymbolName(this string rawSymbolName)
         {
-            return rawSymbolName
-                .Replace('.', '_')
-                .Replace("*", "_reference");
+            var sb = new StringBuilder(rawSymbolName);
+            foreach (var ch in replaceChars)
+            {
+                sb.Replace(ch, '_');
+            }
+            sb.Replace("*", "_reference");
+            return sb.ToString();
         }
 
         public static string GetFunctionPrototypeString(

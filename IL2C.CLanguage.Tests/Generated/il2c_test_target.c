@@ -193,7 +193,7 @@ System_String* il2c_test_target_StringTest_LiteralCombinedString(void)
     local1 = __stack0_0;
     __stack0_0 = local0;
     __stack1_0 = local1;
-    __stack0_0 = System_String_Concat(__stack0_0, __stack1_0);
+    __stack0_0 = System_String_Concat_6(__stack0_0, __stack1_0);
     local2 = __stack0_0;
     goto L_0000;
 L_0000:
@@ -383,6 +383,56 @@ L_0000:
     return __stack0_1;
 }
 
+///////////////////////////////////////
+// GetValue2
+
+int32_t il2c_test_target_ClassTypeTestTarget_GetValue2_1(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b, int32_t c)
+{
+    //-------------------
+    // Local variables:
+
+    int32_t local0;
+
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    __stack0_1 = __stack0_0->Value2;
+    __stack1_0 = a;
+    __stack0_1 = __stack0_1 + __stack1_0;
+    __stack1_0 = b;
+    __stack0_1 = __stack0_1 + __stack1_0;
+    __stack1_0 = c;
+    __stack0_1 = __stack0_1 + __stack1_0;
+    local0 = __stack0_1;
+    goto L_0000;
+L_0000:
+    __stack0_1 = local0;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
 ////////////////////////////////////////////////////////////
 // Type: il2c_test_target.ClassTypeTest
 
@@ -514,6 +564,66 @@ L_0000:
 // Test6
 
 int32_t il2c_test_target_ClassTypeTest_Test6(void)
+{
+    //-------------------
+    // Local variables:
+
+    il2c_test_target_ClassTypeTestTarget* local0 = NULL;
+    int32_t local1;
+    int32_t local2;
+
+    //-------------------
+    // Evaluation stacks:
+
+    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+    int32_t __stack2_0;
+    int32_t __stack3_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        il2c_test_target_ClassTypeTestTarget** plocal0;
+        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 2;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __new__(&__stack0_0, il2c_test_target_ClassTypeTestTarget)(__stack0_0);
+    local0 = __stack0_0;
+    __stack0_0 = local0;
+    __stack1_0 = 789;
+    __stack0_0->Value2 = __stack1_0;
+    __stack0_0 = local0;
+    __stack1_0 = 123;
+    __stack2_0 = 456;
+    __stack3_0 = 789;
+    __stack0_1 = il2c_test_target_ClassTypeTestTarget_GetValue2_1(__stack0_0, __stack1_0, __stack2_0, __stack3_0);
+    local1 = __stack0_1;
+    __stack0_1 = local1;
+    local2 = __stack0_1;
+    goto L_0000;
+L_0000:
+    __stack0_1 = local2;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+///////////////////////////////////////
+// Test7
+
+int32_t il2c_test_target_ClassTypeTest_Test7(void)
 {
     //-------------------
     // Local variables:

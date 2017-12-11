@@ -8,7 +8,7 @@ int main()
 {
     __gc_initialize__();
 
-    //while (1)
+    while (1)
     {
         int index;
         for (index = 0; index < 100; index++)

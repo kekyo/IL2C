@@ -22,7 +22,7 @@ namespace IL2C.ILConveters
                 .Reverse()
                 .ToArray();
 
-            var methodName = method.GetFullMemberName();
+            var methodName = method.GetFullMemberName(MethodNameTypes.Index);
             var functionName = methodName.ManglingSymbolName();
 
             if (method.ReturnType.IsVoidType())

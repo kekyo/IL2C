@@ -422,7 +422,7 @@ void __new_string__(System_String** ppReference, const char* pString)
     memcpy(pBody, pString, size);
 }
 
-System_String* System_String_Concat(System_String* str0, System_String* str1)
+System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 {
     //-------------------
     // Local variables:

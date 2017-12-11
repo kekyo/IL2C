@@ -143,7 +143,7 @@ extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
 
 extern void __new_string__(System_String** ppReference, const char* pString);
 
-extern System_String* System_String_Concat(System_String* str0, System_String* str1);
+extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
 
 #ifdef __cplusplus
 }

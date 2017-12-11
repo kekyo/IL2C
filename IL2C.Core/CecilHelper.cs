@@ -117,6 +117,28 @@ namespace IL2C
             return false;
         }
 
+        private static IOrderedEnumerable<MethodDefinition> OrderByParameters(
+            this IEnumerable<MethodDefinition> methods)
+        {
+            var ms = methods.ToArray();
+            var maxParameterCount = ms.Max(m => m.Parameters.Count);
+
+            var expr = ms.OrderBy(m => m.Parameters.Count);
+            for (var index = 0; index < maxParameterCount; index++)
+            {
+                // HACK: C# captured inner incremented value.
+                var i = index;
+
+                // TODO: Improve human predictivity.
+                expr = expr.ThenBy(m =>
+                    m.Parameters.ElementAtOrDefault(i)
+                        ?.ParameterType.GetFullMemberName()
+                        ??string.Empty);
+            }
+
+            return expr;
+        }
+
         public static int GetMethodOverloadIndex(this MethodReference method)
         {
             var declaringType = method.DeclaringType.Resolve();
@@ -127,7 +149,7 @@ namespace IL2C
 
             var found = declaringType.Methods
                 .Where(m => m.Name == method.Name)
-                .OrderBy(m => m.Parameters.Count)
+                .OrderByParameters()     // Stable by overload types.
                 .Select((m, i) => new {m, i})
                 .First(e => e.m.MemberEquals(method));
             return found.i;

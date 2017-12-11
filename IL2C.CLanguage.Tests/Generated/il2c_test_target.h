@@ -113,10 +113,12 @@ extern void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __thi
 extern void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this);
 extern void il2c_test_target_ClassTypeTestTarget__ctor_1(il2c_test_target_ClassTypeTestTarget* __this, int32_t value);
 extern int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b);
+extern int32_t il2c_test_target_ClassTypeTestTarget_GetValue2_1(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b, int32_t c);
 
 extern int32_t il2c_test_target_ClassTypeTest_Test4(void);
 extern int32_t il2c_test_target_ClassTypeTest_Test5(void);
 extern int32_t il2c_test_target_ClassTypeTest_Test6(void);
+extern int32_t il2c_test_target_ClassTypeTest_Test7(void);
 extern void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this);
 
 extern void il2c_test_target_BoxingTest_BoxingInt32(int32_t a);

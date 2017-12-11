@@ -60,4 +60,14 @@ namespace IL2C.ILConveters
             return LdargConverterUtilities.Apply(2, decodeContext);
         }
     }
+
+    internal sealed class Ldarg_3Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldarg_3;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdargConverterUtilities.Apply(3, decodeContext);
+        }
+    }
 }

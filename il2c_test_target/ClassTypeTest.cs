@@ -13,6 +13,15 @@ namespace il2c_test_target
         public int Value2;
         public ClassTypeTestTarget OR2;
 
+        public ClassTypeTestTarget()
+        {
+        }
+
+        public ClassTypeTestTarget(int value)
+        {
+            this.Value2 = value;
+        }
+
         public int GetValue2(int a, int b)
         {
             return this.Value2 + a + b;
@@ -36,6 +45,12 @@ namespace il2c_test_target
 
             var result = hoge3.GetValue2(123, 456);
             return result;
+        }
+        public static int Test6()
+        {
+            var hoge3 = new ClassTypeTestTarget(123);
+
+            return hoge3.Value2;
         }
     }
 }

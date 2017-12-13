@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3E38B68E-3502-4916-8F07-EDCC8C8125FA}</ProjectGuid>
+    <ProjectGuid>{B6732D24-B141-4FE5-B8B7-BF886B3DC386}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>il2c_test_target</RootNamespace>
-    <AssemblyName>il2c_test_target</AssemblyName>
+    <RootNamespace>WioLTE.Code</RootNamespace>
+    <AssemblyName>WioLTE.Code</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -38,14 +38,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StringTest.cs" />
-    <Compile Include="ClassTypeTest.cs" />
-    <Compile Include="BoxingTest.cs" />
-    <Compile Include="PInvokeTest.cs" />
-    <Compile Include="ValueTypeTest.cs" />
-    <Compile Include="Hoge2.cs" />
-    <Compile Include="Hoge1.cs" />
+    <Compile Include="Arduino.cs" />
+    <Compile Include="Wio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)il2c\$(OutDir)il2c.exe" "$(TargetPath)" "$(ProjectDir)..\Arduino\il2c"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

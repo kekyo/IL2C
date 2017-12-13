@@ -1,5 +1,5 @@
 ﻿#include <windows.h>
-#include "il2c_test_target.h"
+#include "Win32.Code.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 // Const strings:
@@ -29,14 +29,14 @@ extern "C" {
 // Static fields:
 
 
-int32_t il2c_test_target_ClassTypeTestTarget_Value1 = 0;
-il2c_test_target_ClassTypeTestTarget* il2c_test_target_ClassTypeTestTarget_OR1 = NULL;
+int32_t Win32_Code_ClassTypeTestTarget_Value1 = 0;
+Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1 = NULL;
 
 
-int32_t il2c_test_target_BoxingTest_x = 0;
+int32_t Win32_Code_BoxingTest_x = 0;
 
 
-int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 0;
+int32_t Win32_Code_ValueTypeTestTarget_Value1 = 0;
 
 
 
@@ -45,26 +45,26 @@ int32_t il2c_test_target_ValueTypeTestTarget_Value1 = 0;
 // Methods:
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.StringTest
+// Type: Win32.Code.StringTest
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_StringTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_StringTest_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_StringTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.StringTest",
+static __RUNTIME_TYPE_DEF__ __Win32_Code_StringTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.StringTest",
     0,
-    __il2c_test_target_StringTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_StringTest_RUNTIME_TYPE__ = &__il2c_test_target_StringTest_RUNTIME_TYPE_DEF__;
+    __Win32_Code_StringTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE__ = &__Win32_Code_StringTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // LiteralString
 
-void il2c_test_target_StringTest_LiteralString(void)
+void Win32_Code_StringTest_LiteralString(void)
 {
     //-------------------
     // Local variables:
@@ -104,7 +104,7 @@ void il2c_test_target_StringTest_LiteralString(void)
 ///////////////////////////////////////
 // InOutString
 
-System_String* il2c_test_target_StringTest_InOutString(System_String* a)
+System_String* Win32_Code_StringTest_InOutString(System_String* a)
 {
     //-------------------
     // Local variables:
@@ -147,7 +147,7 @@ L_0000:
 ///////////////////////////////////////
 // LiteralCombinedString
 
-System_String* il2c_test_target_StringTest_LiteralCombinedString(void)
+System_String* Win32_Code_StringTest_LiteralCombinedString(void)
 {
     //-------------------
     // Local variables:
@@ -205,7 +205,7 @@ L_0000:
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __this)
+void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this)
 {
     //-------------------
     // Local variables:
@@ -214,7 +214,7 @@ void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __this)
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_StringTest* __stack0_0 = NULL;
+    Win32_Code_StringTest* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -223,7 +223,7 @@ void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __this)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_StringTest** p__stack0_0;
+        Win32_Code_StringTest** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -240,27 +240,27 @@ void il2c_test_target_StringTest__ctor(il2c_test_target_StringTest* __this)
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.ClassTypeTestTarget
+// Type: Win32.Code.ClassTypeTestTarget
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
-    __TRY_MARK_FROM_HANDLER__(((il2c_test_target_ClassTypeTestTarget*)pReference)->OR2);
+    __TRY_MARK_FROM_HANDLER__(((Win32_Code_ClassTypeTestTarget*)pReference)->OR2);
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.ClassTypeTestTarget",
-    sizeof(il2c_test_target_ClassTypeTestTarget),
-    __il2c_test_target_ClassTypeTestTarget_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE__ = &__il2c_test_target_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
+static __RUNTIME_TYPE_DEF__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ClassTypeTestTarget",
+    sizeof(Win32_Code_ClassTypeTestTarget),
+    __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE__ = &__Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTarget* __this)
+void Win32_Code_ClassTypeTestTarget__ctor(Win32_Code_ClassTypeTestTarget* __this)
 {
     //-------------------
     // Local variables:
@@ -269,7 +269,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -278,7 +278,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -297,7 +297,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor(il2c_test_target_ClassTypeTestTa
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_ClassTypeTestTarget__ctor_1(il2c_test_target_ClassTypeTestTarget* __this, int32_t value)
+void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* __this, int32_t value)
 {
     //-------------------
     // Local variables:
@@ -306,7 +306,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor_1(il2c_test_target_ClassTypeTest
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack1_0;
 
     //-------------------
@@ -316,7 +316,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor_1(il2c_test_target_ClassTypeTest
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -338,7 +338,7 @@ void il2c_test_target_ClassTypeTestTarget__ctor_1(il2c_test_target_ClassTypeTest
 ///////////////////////////////////////
 // GetValue2
 
-int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b)
+int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget* __this, int32_t a, int32_t b)
 {
     //-------------------
     // Local variables:
@@ -348,7 +348,7 @@ int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTyp
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
     int32_t __stack1_0;
 
@@ -359,7 +359,7 @@ int32_t il2c_test_target_ClassTypeTestTarget_GetValue2(il2c_test_target_ClassTyp
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -386,7 +386,7 @@ L_0000:
 ///////////////////////////////////////
 // GetValue2
 
-int32_t il2c_test_target_ClassTypeTestTarget_GetValue2_1(il2c_test_target_ClassTypeTestTarget* __this, int32_t a, int32_t b, int32_t c)
+int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarget* __this, int32_t a, int32_t b, int32_t c)
 {
     //-------------------
     // Local variables:
@@ -396,7 +396,7 @@ int32_t il2c_test_target_ClassTypeTestTarget_GetValue2_1(il2c_test_target_ClassT
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
     int32_t __stack1_0;
 
@@ -407,7 +407,7 @@ int32_t il2c_test_target_ClassTypeTestTarget_GetValue2_1(il2c_test_target_ClassT
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -434,37 +434,37 @@ L_0000:
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.ClassTypeTest
+// Type: Win32.Code.ClassTypeTest
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_ClassTypeTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_ClassTypeTest_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.ClassTypeTest",
+static __RUNTIME_TYPE_DEF__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ClassTypeTest",
     0,
-    __il2c_test_target_ClassTypeTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_ClassTypeTest_RUNTIME_TYPE__ = &__il2c_test_target_ClassTypeTest_RUNTIME_TYPE_DEF__;
+    __Win32_Code_ClassTypeTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE__ = &__Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Test4
 
-int32_t il2c_test_target_ClassTypeTest_Test4(void)
+int32_t Win32_Code_ClassTypeTest_Test4(void)
 {
     //-------------------
     // Local variables:
 
-    il2c_test_target_ClassTypeTestTarget* local0 = NULL;
+    Win32_Code_ClassTypeTestTarget* local0 = NULL;
     int32_t local1;
 
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
     int32_t __stack1_0;
 
@@ -475,8 +475,8 @@ int32_t il2c_test_target_ClassTypeTest_Test4(void)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** plocal0;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        Win32_Code_ClassTypeTestTarget** plocal0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 2;
@@ -487,7 +487,7 @@ int32_t il2c_test_target_ClassTypeTest_Test4(void)
     //-------------------
     // IL body:
 
-    __new__(&__stack0_0, il2c_test_target_ClassTypeTestTarget)(__stack0_0);
+    __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
     local0 = __stack0_0;
     __stack0_0 = local0;
     __stack1_0 = 456;
@@ -505,19 +505,19 @@ L_0000:
 ///////////////////////////////////////
 // Test5
 
-int32_t il2c_test_target_ClassTypeTest_Test5(void)
+int32_t Win32_Code_ClassTypeTest_Test5(void)
 {
     //-------------------
     // Local variables:
 
-    il2c_test_target_ClassTypeTestTarget* local0 = NULL;
+    Win32_Code_ClassTypeTestTarget* local0 = NULL;
     int32_t local1;
     int32_t local2;
 
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
     int32_t __stack1_0;
     int32_t __stack2_0;
@@ -529,8 +529,8 @@ int32_t il2c_test_target_ClassTypeTest_Test5(void)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** plocal0;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        Win32_Code_ClassTypeTestTarget** plocal0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 2;
@@ -541,7 +541,7 @@ int32_t il2c_test_target_ClassTypeTest_Test5(void)
     //-------------------
     // IL body:
 
-    __new__(&__stack0_0, il2c_test_target_ClassTypeTestTarget)(__stack0_0);
+    __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
     local0 = __stack0_0;
     __stack0_0 = local0;
     __stack1_0 = 789;
@@ -549,7 +549,7 @@ int32_t il2c_test_target_ClassTypeTest_Test5(void)
     __stack0_0 = local0;
     __stack1_0 = 123;
     __stack2_0 = 456;
-    __stack0_1 = il2c_test_target_ClassTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
+    __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
     local1 = __stack0_1;
     __stack0_1 = local1;
     local2 = __stack0_1;
@@ -563,19 +563,19 @@ L_0000:
 ///////////////////////////////////////
 // Test6
 
-int32_t il2c_test_target_ClassTypeTest_Test6(void)
+int32_t Win32_Code_ClassTypeTest_Test6(void)
 {
     //-------------------
     // Local variables:
 
-    il2c_test_target_ClassTypeTestTarget* local0 = NULL;
+    Win32_Code_ClassTypeTestTarget* local0 = NULL;
     int32_t local1;
     int32_t local2;
 
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
     int32_t __stack1_0;
     int32_t __stack2_0;
@@ -588,8 +588,8 @@ int32_t il2c_test_target_ClassTypeTest_Test6(void)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** plocal0;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_0;
+        Win32_Code_ClassTypeTestTarget** plocal0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 2;
@@ -600,7 +600,7 @@ int32_t il2c_test_target_ClassTypeTest_Test6(void)
     //-------------------
     // IL body:
 
-    __new__(&__stack0_0, il2c_test_target_ClassTypeTestTarget)(__stack0_0);
+    __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
     local0 = __stack0_0;
     __stack0_0 = local0;
     __stack1_0 = 789;
@@ -609,7 +609,7 @@ int32_t il2c_test_target_ClassTypeTest_Test6(void)
     __stack1_0 = 123;
     __stack2_0 = 456;
     __stack3_0 = 789;
-    __stack0_1 = il2c_test_target_ClassTypeTestTarget_GetValue2_1(__stack0_0, __stack1_0, __stack2_0, __stack3_0);
+    __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2_1(__stack0_0, __stack1_0, __stack2_0, __stack3_0);
     local1 = __stack0_1;
     __stack0_1 = local1;
     local2 = __stack0_1;
@@ -623,19 +623,19 @@ L_0000:
 ///////////////////////////////////////
 // Test7
 
-int32_t il2c_test_target_ClassTypeTest_Test7(void)
+int32_t Win32_Code_ClassTypeTest_Test7(void)
 {
     //-------------------
     // Local variables:
 
-    il2c_test_target_ClassTypeTestTarget* local0 = NULL;
+    Win32_Code_ClassTypeTestTarget* local0 = NULL;
     int32_t local1;
 
     //-------------------
     // Evaluation stacks:
 
     int32_t __stack0_0;
-    il2c_test_target_ClassTypeTestTarget* __stack0_1 = NULL;
+    Win32_Code_ClassTypeTestTarget* __stack0_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -644,8 +644,8 @@ int32_t il2c_test_target_ClassTypeTest_Test7(void)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTestTarget** plocal0;
-        il2c_test_target_ClassTypeTestTarget** p__stack0_1;
+        Win32_Code_ClassTypeTestTarget** plocal0;
+        Win32_Code_ClassTypeTestTarget** p__stack0_1;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 2;
@@ -657,7 +657,7 @@ int32_t il2c_test_target_ClassTypeTest_Test7(void)
     // IL body:
 
     __stack0_0 = 123;
-    __new_ovl__(&__stack0_1, il2c_test_target_ClassTypeTestTarget, 1)(__stack0_1, __stack0_0);
+    __new_ovl__(&__stack0_1, Win32_Code_ClassTypeTestTarget, 1)(__stack0_1, __stack0_0);
     local0 = __stack0_1;
     __stack0_1 = local0;
     __stack0_0 = __stack0_1->Value2;
@@ -672,7 +672,7 @@ L_0000:
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this)
+void Win32_Code_ClassTypeTest__ctor(Win32_Code_ClassTypeTest* __this)
 {
     //-------------------
     // Local variables:
@@ -681,7 +681,7 @@ void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ClassTypeTest* __stack0_0 = NULL;
+    Win32_Code_ClassTypeTest* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -690,7 +690,7 @@ void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ClassTypeTest** p__stack0_0;
+        Win32_Code_ClassTypeTest** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -707,26 +707,26 @@ void il2c_test_target_ClassTypeTest__ctor(il2c_test_target_ClassTypeTest* __this
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.BoxingTest
+// Type: Win32.Code.BoxingTest
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_BoxingTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_BoxingTest_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_BoxingTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.BoxingTest",
+static __RUNTIME_TYPE_DEF__ __Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.BoxingTest",
     0,
-    __il2c_test_target_BoxingTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_BoxingTest_RUNTIME_TYPE__ = &__il2c_test_target_BoxingTest_RUNTIME_TYPE_DEF__;
+    __Win32_Code_BoxingTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_BoxingTest_RUNTIME_TYPE__ = &__Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // BoxingInt32
 
-void il2c_test_target_BoxingTest_BoxingInt32(int32_t a)
+void Win32_Code_BoxingTest_BoxingInt32(int32_t a)
 {
     //-------------------
     // Local variables:
@@ -773,7 +773,7 @@ void il2c_test_target_BoxingTest_BoxingInt32(int32_t a)
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_BoxingTest__ctor(il2c_test_target_BoxingTest* __this)
+void Win32_Code_BoxingTest__ctor(Win32_Code_BoxingTest* __this)
 {
     //-------------------
     // Local variables:
@@ -782,7 +782,7 @@ void il2c_test_target_BoxingTest__ctor(il2c_test_target_BoxingTest* __this)
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_BoxingTest* __stack0_0 = NULL;
+    Win32_Code_BoxingTest* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -791,7 +791,7 @@ void il2c_test_target_BoxingTest__ctor(il2c_test_target_BoxingTest* __this)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_BoxingTest** p__stack0_0;
+        Win32_Code_BoxingTest** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -808,26 +808,26 @@ void il2c_test_target_BoxingTest__ctor(il2c_test_target_BoxingTest* __this)
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.Win32
+// Type: Win32.Code.Win32
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_Win32_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_Win32_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_Win32_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.Win32",
+static __RUNTIME_TYPE_DEF__ __Win32_Code_Win32_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.Win32",
     0,
-    __il2c_test_target_Win32_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_Win32_RUNTIME_TYPE__ = &__il2c_test_target_Win32_RUNTIME_TYPE_DEF__;
+    __Win32_Code_Win32_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE__ = &__Win32_Code_Win32_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // P/Invoke: GetCurrentProcessId
 
-int32_t il2c_test_target_Win32_GetCurrentProcessId(void)
+int32_t Win32_Code_Win32_GetCurrentProcessId(void)
 {
     return GetCurrentProcessId();
 }
@@ -835,7 +835,7 @@ int32_t il2c_test_target_Win32_GetCurrentProcessId(void)
 ///////////////////////////////////////
 // P/Invoke: GetCurrentThreadId
 
-int32_t il2c_test_target_Win32_GetCurrentThreadId(void)
+int32_t Win32_Code_Win32_GetCurrentThreadId(void)
 {
     return GetCurrentThreadId();
 }
@@ -843,7 +843,7 @@ int32_t il2c_test_target_Win32_GetCurrentThreadId(void)
 ///////////////////////////////////////
 // P/Invoke: OutputDebugString
 
-void il2c_test_target_Win32_OutputDebugString(System_String* message)
+void Win32_Code_Win32_OutputDebugString(System_String* message)
 {
     OutputDebugStringA(message->pString);
 }
@@ -851,7 +851,7 @@ void il2c_test_target_Win32_OutputDebugString(System_String* message)
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this)
+void Win32_Code_Win32__ctor(Win32_Code_Win32* __this)
 {
     //-------------------
     // Local variables:
@@ -860,7 +860,7 @@ void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this)
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_Win32* __stack0_0 = NULL;
+    Win32_Code_Win32* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -869,7 +869,7 @@ void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_Win32** p__stack0_0;
+        Win32_Code_Win32** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -886,27 +886,27 @@ void il2c_test_target_Win32__ctor(il2c_test_target_Win32* __this)
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.ValueTypeTestTarget
+// Type: Win32.Code.ValueTypeTestTarget
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_ValueTypeTestTarget_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
-    __TRY_MARK_FROM_HANDLER__(((il2c_test_target_ValueTypeTestTarget*)pReference)->OR2);
+    __TRY_MARK_FROM_HANDLER__(((Win32_Code_ValueTypeTestTarget*)pReference)->OR2);
     __typeof__(System_ValueType)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.ValueTypeTestTarget",
-    sizeof(il2c_test_target_ValueTypeTestTarget),
-    __il2c_test_target_ValueTypeTestTarget_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_ValueTypeTestTarget_RUNTIME_TYPE__ = &__il2c_test_target_ValueTypeTestTarget_RUNTIME_TYPE_DEF__;
+static __RUNTIME_TYPE_DEF__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ValueTypeTestTarget",
+    sizeof(Win32_Code_ValueTypeTestTarget),
+    __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE__ = &__Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // GetValue2
 
-int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTypeTestTarget* __this, int32_t a, int32_t b)
+int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget* __this, int32_t a, int32_t b)
 {
     //-------------------
     // Local variables:
@@ -916,7 +916,7 @@ int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTyp
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ValueTypeTestTarget* __stack0_0 = NULL;
     int32_t __stack0_1;
     int32_t __stack1_0;
 
@@ -927,7 +927,7 @@ int32_t il2c_test_target_ValueTypeTestTarget_GetValue2(il2c_test_target_ValueTyp
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ValueTypeTestTarget** p__stack0_0;
+        Win32_Code_ValueTypeTestTarget** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -952,39 +952,39 @@ L_0000:
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.ValueTypeTest
+// Type: Win32.Code.ValueTypeTest
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_ValueTypeTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_ValueTypeTest_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.ValueTypeTest",
+static __RUNTIME_TYPE_DEF__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ValueTypeTest",
     0,
-    __il2c_test_target_ValueTypeTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_ValueTypeTest_RUNTIME_TYPE__ = &__il2c_test_target_ValueTypeTest_RUNTIME_TYPE_DEF__;
+    __Win32_Code_ValueTypeTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE__ = &__Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Test4
 
-int32_t il2c_test_target_ValueTypeTest_Test4(void)
+int32_t Win32_Code_ValueTypeTest_Test4(void)
 {
     //-------------------
     // Local variables:
 
-    il2c_test_target_ValueTypeTestTarget local0;
+    Win32_Code_ValueTypeTestTarget local0;
     int32_t local1;
 
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
-    il2c_test_target_ValueTypeTestTarget* __stack0_1 = NULL;
-    il2c_test_target_ValueTypeTestTarget __stack0_2;
+    Win32_Code_ValueTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ValueTypeTestTarget* __stack0_1 = NULL;
+    Win32_Code_ValueTypeTestTarget __stack0_2;
     int32_t __stack0_3;
     int32_t __stack1_0;
 
@@ -995,8 +995,8 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ValueTypeTestTarget** p__stack0_0;
-        il2c_test_target_ValueTypeTestTarget** p__stack0_1;
+        Win32_Code_ValueTypeTestTarget** p__stack0_0;
+        Win32_Code_ValueTypeTestTarget** p__stack0_1;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 2;
@@ -1008,7 +1008,7 @@ int32_t il2c_test_target_ValueTypeTest_Test4(void)
     // IL body:
 
     __stack0_0 = &local0;
-    memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
+    memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
     __stack0_1 = &local0;
     __stack1_0 = 456;
     __stack0_1->Value2 = __stack1_0;
@@ -1025,21 +1025,21 @@ L_0000:
 ///////////////////////////////////////
 // Test5
 
-int32_t il2c_test_target_ValueTypeTest_Test5(void)
+int32_t Win32_Code_ValueTypeTest_Test5(void)
 {
     //-------------------
     // Local variables:
 
-    il2c_test_target_ValueTypeTestTarget local0;
+    Win32_Code_ValueTypeTestTarget local0;
     int32_t local1;
     int32_t local2;
 
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ValueTypeTestTarget* __stack0_0 = NULL;
-    il2c_test_target_ValueTypeTestTarget* __stack0_1 = NULL;
-    il2c_test_target_ValueTypeTestTarget* __stack0_2 = NULL;
+    Win32_Code_ValueTypeTestTarget* __stack0_0 = NULL;
+    Win32_Code_ValueTypeTestTarget* __stack0_1 = NULL;
+    Win32_Code_ValueTypeTestTarget* __stack0_2 = NULL;
     int32_t __stack0_3;
     int32_t __stack1_0;
     int32_t __stack2_0;
@@ -1051,9 +1051,9 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ValueTypeTestTarget** p__stack0_0;
-        il2c_test_target_ValueTypeTestTarget** p__stack0_1;
-        il2c_test_target_ValueTypeTestTarget** p__stack0_2;
+        Win32_Code_ValueTypeTestTarget** p__stack0_0;
+        Win32_Code_ValueTypeTestTarget** p__stack0_1;
+        Win32_Code_ValueTypeTestTarget** p__stack0_2;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 3;
@@ -1066,14 +1066,14 @@ int32_t il2c_test_target_ValueTypeTest_Test5(void)
     // IL body:
 
     __stack0_0 = &local0;
-    memset(__stack0_0, 0x00, sizeof(il2c_test_target_ValueTypeTestTarget));
+    memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
     __stack0_1 = &local0;
     __stack1_0 = 789;
     __stack0_1->Value2 = __stack1_0;
     __stack0_2 = &local0;
     __stack1_0 = 123;
     __stack2_0 = 456;
-    __stack0_3 = il2c_test_target_ValueTypeTestTarget_GetValue2(__stack0_2, __stack1_0, __stack2_0);
+    __stack0_3 = Win32_Code_ValueTypeTestTarget_GetValue2(__stack0_2, __stack1_0, __stack2_0);
     local1 = __stack0_3;
     __stack0_3 = local1;
     local2 = __stack0_3;
@@ -1087,7 +1087,7 @@ L_0000:
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this)
+void Win32_Code_ValueTypeTest__ctor(Win32_Code_ValueTypeTest* __this)
 {
     //-------------------
     // Local variables:
@@ -1096,7 +1096,7 @@ void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_ValueTypeTest* __stack0_0 = NULL;
+    Win32_Code_ValueTypeTest* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -1105,7 +1105,7 @@ void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_ValueTypeTest** p__stack0_0;
+        Win32_Code_ValueTypeTest** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -1122,26 +1122,26 @@ void il2c_test_target_ValueTypeTest__ctor(il2c_test_target_ValueTypeTest* __this
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.Hoge2
+// Type: Win32.Code.Hoge2
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_Hoge2_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_Hoge2_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_Hoge2_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.Hoge2",
+static __RUNTIME_TYPE_DEF__ __Win32_Code_Hoge2_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.Hoge2",
     0,
-    __il2c_test_target_Hoge2_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_Hoge2_RUNTIME_TYPE__ = &__il2c_test_target_Hoge2_RUNTIME_TYPE_DEF__;
+    __Win32_Code_Hoge2_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_Hoge2_RUNTIME_TYPE__ = &__Win32_Code_Hoge2_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Add3
 
-uint8_t il2c_test_target_Hoge2_Add3(uint8_t a, bool isTwo)
+uint8_t Win32_Code_Hoge2_Add3(uint8_t a, bool isTwo)
 {
     //-------------------
     // Local variables:
@@ -1177,7 +1177,7 @@ L_0002:
 ///////////////////////////////////////
 // Add4
 
-uint16_t il2c_test_target_Hoge2_Add4(uint16_t a, bool isTwo)
+uint16_t Win32_Code_Hoge2_Add4(uint16_t a, bool isTwo)
 {
     //-------------------
     // Local variables:
@@ -1213,7 +1213,7 @@ L_0002:
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
+void Win32_Code_Hoge2__ctor(Win32_Code_Hoge2* __this)
 {
     //-------------------
     // Local variables:
@@ -1222,7 +1222,7 @@ void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_Hoge2* __stack0_0 = NULL;
+    Win32_Code_Hoge2* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -1231,7 +1231,7 @@ void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_Hoge2** p__stack0_0;
+        Win32_Code_Hoge2** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
@@ -1248,26 +1248,26 @@ void il2c_test_target_Hoge2__ctor(il2c_test_target_Hoge2* __this)
 }
 
 ////////////////////////////////////////////////////////////
-// Type: il2c_test_target.Hoge1
+// Type: Win32.Code.Hoge1
 
 //////////////////////
 // Runtime helpers:
 
-static void __il2c_test_target_Hoge1_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_Hoge1_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __il2c_test_target_Hoge1_RUNTIME_TYPE_DEF__ = {
-    "il2c_test_target.Hoge1",
+static __RUNTIME_TYPE_DEF__ __Win32_Code_Hoge1_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.Hoge1",
     0,
-    __il2c_test_target_Hoge1_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __il2c_test_target_Hoge1_RUNTIME_TYPE__ = &__il2c_test_target_Hoge1_RUNTIME_TYPE_DEF__;
+    __Win32_Code_Hoge1_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_Hoge1_RUNTIME_TYPE__ = &__Win32_Code_Hoge1_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // Add1
 
-int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
+int32_t Win32_Code_Hoge1_Add1(int32_t a, bool isTwo)
 {
     //-------------------
     // Local variables:
@@ -1302,7 +1302,7 @@ L_0002:
 ///////////////////////////////////////
 // Add2
 
-int64_t il2c_test_target_Hoge1_Add2(int64_t a, bool isTwo)
+int64_t Win32_Code_Hoge1_Add2(int64_t a, bool isTwo)
 {
     //-------------------
     // Local variables:
@@ -1339,7 +1339,7 @@ L_0002:
 ///////////////////////////////////////
 // .ctor
 
-void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
+void Win32_Code_Hoge1__ctor(Win32_Code_Hoge1* __this)
 {
     //-------------------
     // Local variables:
@@ -1348,7 +1348,7 @@ void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
     //-------------------
     // Evaluation stacks:
 
-    il2c_test_target_Hoge1* __stack0_0 = NULL;
+    Win32_Code_Hoge1* __stack0_0 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -1357,7 +1357,7 @@ void il2c_test_target_Hoge1__ctor(il2c_test_target_Hoge1* __this)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        il2c_test_target_Hoge1** p__stack0_0;
+        Win32_Code_Hoge1** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;

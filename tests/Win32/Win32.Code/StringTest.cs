@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace il2c_test_target
+namespace Win32.Code
 {
     public class StringTest
     {

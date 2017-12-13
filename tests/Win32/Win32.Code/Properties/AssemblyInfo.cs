@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("il2c_test_target")]
+[assembly: AssemblyTitle("Win32.Code")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("il2c_test_target")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Kouji Matsui")]
+[assembly: AssemblyProduct("IL2C")]
+[assembly: AssemblyCopyright("Copyright (c) 2017 Kouji Matsui")]
+[assembly: AssemblyTrademark("IL2C")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible

@@ -8,6 +8,8 @@
 
 ## How to load and run
 
+TODO: Currently, I broke my WioLTE :( so can't check these code...
+
 1. Before you have to setup and test WioLTE environments: https://github.com/SeeedJP/WioLTEforArduino/wiki/Setup-ja
 2. Store il2c directory to arduino's user directory (usually $HOME/Documents/Arduino/libraries/)
 3. Run Arduino IDE

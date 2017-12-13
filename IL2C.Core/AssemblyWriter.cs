@@ -447,9 +447,10 @@ namespace IL2C
             IExtractContext extractContext = translateContext;
 
             var assemblyName = extractContext.Assembly.Name.Name;
+            var safeSymbolName = assemblyName.Replace('.', '_').Replace('-', '_');
 
-            twHeader.WriteLine("#ifndef __MODULE_{0}__", assemblyName);
-            twHeader.WriteLine("#define __MODULE_{0}__", assemblyName);
+            twHeader.WriteLine("#ifndef __MODULE_{0}__", safeSymbolName);
+            twHeader.WriteLine("#define __MODULE_{0}__", safeSymbolName);
             twHeader.WriteLine();
 
             extractContext.EnumerateRequiredIncludeFileNames()

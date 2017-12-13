@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace il2c_test_target
+namespace Win32.Code
 {
     public class Hoge1
     {

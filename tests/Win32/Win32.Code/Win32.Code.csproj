@@ -4,39 +4,33 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2CBC90EC-5581-452F-8231-086E4553D20E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>IL2C</RootNamespace>
-    <AssemblyName>il2c</AssemblyName>
+    <ProjectGuid>{3E38B68E-3502-4916-8F07-EDCC8C8125FA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Win32.Code</RootNamespace>
+    <AssemblyName>Win32.Code</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <ProjectView>ProjectFiles</ProjectView>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;_WIN32</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <StartArguments>..\..\..\tests\Win32\Win32.Code\bin\Debug\Win32.Code.dll ..\..\..\tests\Win32\Win32.Target\Generated</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;_WIN32</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <StartArguments>..\..\..\tests\Win32\Win32.Code\bin\Release\Win32.Code.dll ..\..\..\tests\Win32\Win32.Target\Generated</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,17 +38,17 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="StringTest.cs" />
+    <Compile Include="ClassTypeTest.cs" />
+    <Compile Include="BoxingTest.cs" />
+    <Compile Include="PInvokeTest.cs" />
+    <Compile Include="ValueTypeTest.cs" />
+    <Compile Include="Hoge2.cs" />
+    <Compile Include="Hoge1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj">
-      <Project>{678efb0e-bc0a-4749-ad48-079f98d9468d}</Project>
-      <Name>IL2C.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)il2c\$(OutDir)il2c.exe" "$(TargetPath)" "$(ProjectDir)..\Win32.Target\Generated"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

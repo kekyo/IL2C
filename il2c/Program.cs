@@ -18,6 +18,8 @@ namespace IL2C
             var assemblyPath = args[0];
             var outputPath = args[1];
 
+            Console.WriteLine("il2c: Translating assembly \"{0}\".", Path.GetFileName(assemblyPath));
+
             if (Directory.Exists(outputPath) == false)
             {
                 try

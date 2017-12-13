@@ -54,6 +54,8 @@ namespace IL2C
             typeof(uint).FullName,
             typeof(long).FullName,
             typeof(ulong).FullName,
+            typeof(IntPtr).FullName,
+            typeof(UIntPtr).FullName
         };
         #endregion
 

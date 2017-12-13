@@ -25,7 +25,9 @@ namespace IL2C
             { typeof(uint).FullName, "stdint.h" },
             { typeof(long).FullName, "stdint.h" },
             { typeof(ulong).FullName, "stdint.h" },
-            { typeof(string).FullName, "string.h" }
+            { typeof(string).FullName, "string.h" },
+            { typeof(IntPtr).FullName, "stdint.h" },
+            { typeof(UIntPtr).FullName, "stdint.h" }
         };
 
         private static readonly Dictionary<string, string> predefinedCTypeNames = new Dictionary<string, string>
@@ -39,7 +41,9 @@ namespace IL2C
             { typeof(int).FullName, "int32_t" },
             { typeof(uint).FullName, "uint32_t" },
             { typeof(long).FullName, "int64_t" },
-            { typeof(ulong).FullName, "uint64_t" }
+            { typeof(ulong).FullName, "uint64_t" },
+            { typeof(IntPtr).FullName, "intptr_t" },
+            { typeof(UIntPtr).FullName, "uintptr_t" }
         };
 
         private readonly HashSet<string> includes = new HashSet<string>();

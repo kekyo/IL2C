@@ -1,6 +1,8 @@
 #include <wdm.h>
 #include "Generated/WDM.Code.h"
 
+#pragma warning(disable: 4065)
+
 typedef struct WDM_Code_DeviceExtension
 {
     // DIRTY HACK: __EXECUTION_FRAME__

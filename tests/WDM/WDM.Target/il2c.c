@@ -10,6 +10,7 @@
 
 typedef long interlock_t;
 
+#define GCASSERT ASSERT
 #define GCALLOC(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define GCFREE(p) ExFreePoolWithTag(p, 0x11231123UL)
 
@@ -32,10 +33,12 @@ typedef long interlock_t;
 #include <crtdbg.h>
 #include <intrin.h>
 
+#define GCASSERT assert
 #define GCALLOC malloc
 #define GCFREE free
 
 #include <stdint.h>
+#include <assert.h>
 
 typedef long interlock_t;
 
@@ -56,6 +59,7 @@ typedef long interlock_t;
 #else
 
 #include <stdint.h>
+#include <assert.h>
 
 typedef uint8_t interlock_t;
 
@@ -83,6 +87,7 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
     return cv;
 }
 
+#define GCASSERT assert
 #define GCALLOC(size) malloc(size)
 #define GCFREE(p) free(p)
 
@@ -94,7 +99,6 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 #define INTERLOCKED_EXCHANGE_POINTER(p, v) (void*)_InterlockedExchangePointer((void**)p, (void*)v)
 #define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (void*)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -146,7 +150,7 @@ static void __gc_get_uninitialized_object_internal__(
             }
 
             // throw NotEnoughMemoryException();
-            assert(0);
+            GCASSERT(0);
         }
     }
 
@@ -185,14 +189,14 @@ static void __gc_get_uninitialized_object_internal__(
 
 void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
 {
-    assert(ppReference != NULL);
-    assert(type != NULL);
+    GCASSERT(ppReference != NULL);
+    GCASSERT(type != NULL);
 
     if (type->bodySize == UINT16_MAX)
     {
         // String or Array:
         // throw new InvalidProgramException();
-        assert(0);
+        GCASSERT(0);
     }
     else
     {
@@ -202,15 +206,15 @@ void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
 
 void __gc_mark_from_handler__(void* pReference)
 {
-    assert(pReference != NULL);
+    GCASSERT(pReference != NULL);
 
     __REF_HEADER__* pHeader = (__REF_HEADER__*)
         (((uint8_t*)pReference) - sizeof(__REF_HEADER__));
     interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
     if (currentMark == GCMARK_NOMARK)
     {
-        assert(pHeader->type != NULL);
-        assert(pHeader->type->pMarkHandler != NULL);
+        GCASSERT(pHeader->type != NULL);
+        GCASSERT(pHeader->type->pMarkHandler != NULL);
         pHeader->type->pMarkHandler(pReference);
     }
 }
@@ -219,7 +223,7 @@ void __gc_mark_from_handler__(void* pReference)
 
 void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
 {
-    assert(pNewFrame != NULL);
+    GCASSERT(pNewFrame != NULL);
 
     ((__EXECUTION_FRAME__*)pNewFrame)->pNext = g_pBeginFrame__;
     g_pBeginFrame__ = (__EXECUTION_FRAME__*)pNewFrame;
@@ -230,7 +234,7 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
         uint8_t index;
         for (index = 0; index < p->targetCount; index++)
         {
-            assert(*p->pTargets[index] == NULL);
+            GCASSERT(*p->pTargets[index] == NULL);
         }
     }
 #endif
@@ -238,7 +242,7 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
 
 void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
 {
-    assert(pFrame != NULL);
+    GCASSERT(pFrame != NULL);
 
     g_pBeginFrame__ = ((__EXECUTION_FRAME__*)pFrame)->pNext;
 }
@@ -267,7 +271,7 @@ void __gc_step2_mark_gcmark__()
         for (index = 0; index < pCurrentFrame->targetCount; index++)
         {
             void** ppReference = pCurrentFrame->pTargets[index];
-            assert(ppReference != NULL);
+            GCASSERT(ppReference != NULL);
 
             if (*ppReference == NULL)
             {
@@ -280,8 +284,8 @@ void __gc_step2_mark_gcmark__()
             interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
             if (currentMark == GCMARK_NOMARK)
             {
-                assert(pHeader->type != NULL);
-                assert(pHeader->type->pMarkHandler != NULL);
+                GCASSERT(pHeader->type != NULL);
+                GCASSERT(pHeader->type->pMarkHandler != NULL);
 
                 DEBUG_WRITE("__gc_step2_mark_gcmark__", pHeader->type->pTypeName);
 
@@ -367,7 +371,7 @@ void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type)
     if (pHeader->type != type)
     {
         // new InvalidCastException();
-        assert(0);
+        GCASSERT(0);
     }
 
     return pObject;

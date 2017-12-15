@@ -38,7 +38,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HelloDriver.cs" />
+    <Compile Include="InterceptCDRomDevice.cs" />
     <Compile Include="Wdm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

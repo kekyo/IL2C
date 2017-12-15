@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace WDM.Code
 {
-    public sealed class HelloDriver
+    public sealed class InterceptCDRomDevice
     {
-        public HelloDriver()
+        public InterceptCDRomDevice()
         {
             Wdm.DbgPrint("Hello driver constructor called!!");
         }
 
-        public uint Read(IntPtr pIrp, IntPtr pStackLocation)
+        public uint ReadCompleted(IntPtr pIrp)
         {
             return 0; // STATUS_SUCCESS
         }

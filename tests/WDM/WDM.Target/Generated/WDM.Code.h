@@ -12,14 +12,14 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // Types:
 
-typedef struct WDM_Code_HelloDriver WDM_Code_HelloDriver;
+typedef struct WDM_Code_InterceptCDRomDevice WDM_Code_InterceptCDRomDevice;
 typedef struct WDM_Code_Wdm WDM_Code_Wdm;
 
 ////////////////////////////////////////////////////////////
-// Class: WDM.Code.HelloDriver
+// Class: WDM.Code.InterceptCDRomDevice
 
 
-extern const __RUNTIME_TYPE__ __WDM_Code_HelloDriver_RUNTIME_TYPE__;
+extern const __RUNTIME_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: WDM.Code.Wdm
@@ -35,8 +35,8 @@ extern const __RUNTIME_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE__;
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
 
-extern void WDM_Code_HelloDriver__ctor(WDM_Code_HelloDriver* __this);
-extern uint32_t WDM_Code_HelloDriver_Read(WDM_Code_HelloDriver* __this, intptr_t pIrp, intptr_t pStackLocation);
+extern void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this);
+extern uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pIrp);
 
 extern void WDM_Code_Wdm_DbgPrint(System_String* message);
 extern void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message);

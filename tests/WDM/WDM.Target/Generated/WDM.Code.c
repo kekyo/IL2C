@@ -33,26 +33,26 @@ extern "C" {
 // Methods:
 
 ////////////////////////////////////////////////////////////
-// Type: WDM.Code.HelloDriver
+// Type: WDM.Code.InterceptCDRomDevice
 
 //////////////////////
 // Runtime helpers:
 
-static void __WDM_Code_HelloDriver_MARK_HANDLER__(void* pReference)
+static void __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __WDM_Code_HelloDriver_RUNTIME_TYPE_DEF__ = {
-    "WDM.Code.HelloDriver",
+static __RUNTIME_TYPE_DEF__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__ = {
+    "WDM.Code.InterceptCDRomDevice",
     0,
-    __WDM_Code_HelloDriver_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __WDM_Code_HelloDriver_RUNTIME_TYPE__ = &__WDM_Code_HelloDriver_RUNTIME_TYPE_DEF__;
+    __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ = &__WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // .ctor
 
-void WDM_Code_HelloDriver__ctor(WDM_Code_HelloDriver* __this)
+void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this)
 {
     //-------------------
     // Local variables:
@@ -61,7 +61,7 @@ void WDM_Code_HelloDriver__ctor(WDM_Code_HelloDriver* __this)
     //-------------------
     // Evaluation stacks:
 
-    WDM_Code_HelloDriver* __stack0_0 = NULL;
+    WDM_Code_InterceptCDRomDevice* __stack0_0 = NULL;
     System_String* __stack0_1 = NULL;
 
     //-------------------
@@ -71,7 +71,7 @@ void WDM_Code_HelloDriver__ctor(WDM_Code_HelloDriver* __this)
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
-        WDM_Code_HelloDriver** p__stack0_0;
+        WDM_Code_InterceptCDRomDevice** p__stack0_0;
         System_String** p__stack0_1;
     } __executionFrame__;
 
@@ -92,9 +92,9 @@ void WDM_Code_HelloDriver__ctor(WDM_Code_HelloDriver* __this)
 }
 
 ///////////////////////////////////////
-// Read
+// ReadCompleted
 
-uint32_t WDM_Code_HelloDriver_Read(WDM_Code_HelloDriver* __this, intptr_t pIrp, intptr_t pStackLocation)
+uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pIrp)
 {
     //-------------------
     // Local variables:

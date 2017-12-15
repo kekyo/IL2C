@@ -23,6 +23,8 @@ static NTSTATUS WDM_Code_ReadCompleted(DEVICE_OBJECT* pDeviceObject, IRP* pIrp, 
 
     auto pDeviceExtension =
         static_cast<WDM_Code_DeviceExtension*>(pDeviceObject->DeviceExtension);
+    auto pIoStackLocation =
+        IoGetCurrentIrpStackLocation(pIrp);
     auto pInterceptCDRomDevice =
         pDeviceExtension->pInterceptCDRomDevice;
 
@@ -31,9 +33,33 @@ static NTSTATUS WDM_Code_ReadCompleted(DEVICE_OBJECT* pDeviceObject, IRP* pIrp, 
         IoMarkIrpPending(pIrp);
     }
 
-    return WDM_Code_InterceptCDRomDevice_ReadCompleted(
+    if (!NT_SUCCESS(pIrp->IoStatus.Status))
+    {
+        return pIrp->IoStatus.Status;
+    }
+
+    intptr_t pBuffer = 0;
+    uint32_t offset = 0;
+    uint32_t size = pIoStackLocation->Parameters.Read.Length;
+
+    if (pIrp->MdlAddress != nullptr)
+    {
+        pBuffer = reinterpret_cast<uintptr_t>(
+            MmGetSystemAddressForMdlSafe(pIrp->MdlAddress, HighPagePriority));
+        offset = MmGetMdlByteOffset(pIrp->MdlAddress);
+    }
+    else if (pIrp->AssociatedIrp.SystemBuffer != nullptr)
+    {
+        pBuffer = reinterpret_cast<uintptr_t>(pIrp->AssociatedIrp.SystemBuffer);
+    }
+
+    NTSTATUS status = WDM_Code_InterceptCDRomDevice_ReadCompleted(
         pInterceptCDRomDevice,
-        reinterpret_cast<intptr_t>(pIrp));
+        pBuffer,
+        offset,
+        size);
+
+    return status;
 }
 
 static NTSTATUS WDM_Code_Dispatch(DEVICE_OBJECT* pDeviceObject, IRP* pIrp)

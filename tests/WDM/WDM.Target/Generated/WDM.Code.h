@@ -36,7 +36,7 @@ extern const __RUNTIME_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE__;
 // Methods:
 
 extern void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this);
-extern uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pIrp);
+extern uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pBuffer, uint32_t offset, uint32_t size);
 
 extern void WDM_Code_Wdm_DbgPrint(System_String* message);
 extern void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message);

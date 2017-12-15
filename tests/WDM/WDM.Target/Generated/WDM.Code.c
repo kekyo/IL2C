@@ -94,7 +94,7 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this)
 ///////////////////////////////////////
 // ReadCompleted
 
-uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pIrp)
+uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pBuffer, uint32_t offset, uint32_t size)
 {
     //-------------------
     // Local variables:

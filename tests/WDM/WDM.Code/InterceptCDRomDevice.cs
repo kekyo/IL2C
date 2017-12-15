@@ -13,7 +13,7 @@ namespace WDM.Code
             Wdm.DbgPrint("Hello driver constructor called!!");
         }
 
-        public uint ReadCompleted(IntPtr pIrp)
+        public uint ReadCompleted(IntPtr pBuffer, uint offset, uint size)
         {
             return 0; // STATUS_SUCCESS
         }

@@ -19,11 +19,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="WDM.Target.inf">
-      <Filter>Driver Files</Filter>
-    </Inf>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Generated\WDM.Code.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -47,5 +42,15 @@
     <ClInclude Include="stdbool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Inf Include="WDM_Target.inf">
+      <Filter>Driver Files</Filter>
+    </Inf>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="setup.bat">
+      <Filter>Driver Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

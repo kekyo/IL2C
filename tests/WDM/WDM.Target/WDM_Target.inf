@@ -1,0 +1,56 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; WDM_Target.inf
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%ManufacturerName%
+DriverVer=12/15/2017,0.0.1.1
+CatalogFile=WDM_Target.cat
+
+[SourceDisksNames]
+1 = %WDM_Target.MediaDesc%
+
+[SourceDisksFiles]
+WDM_Target.sys = 1
+
+[DestinationDirs]
+DefaultDestDir = 12	; DIRID_DRIVERS
+
+[DefaultInstall.NT$ARCH$]
+CopyFiles = @WDM_Target.sys
+AddReg = WDM_Target_AddReg
+ 
+[WDM_Target_AddReg]
+HKLM, System\CurrentControlSet\Control\Class\{4d36e965-e325-11ce-bfc1-08002be10318}, UpperFilters, 0x00010008, WDM_Target
+
+[DefaultInstall.NT$ARCH$.Services]
+AddService = WDM_Target, , WDM_Target_Service_Inst, WDM_Target_EventLog_Inst
+
+[WDM_Target_Service_Inst]
+DisplayName    = %WDM_Target.SvcDesc%
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_DEMAND_START%
+ErrorControl   = %SERVICE_ERROR_IGNORE%
+ServiceBinary  = %12%\WDM_Target.sys
+
+[WDM_Target_EventLog_Inst]
+AddReg = WDM_Target_EventLog_AddReg
+
+[WDM_Target_EventLog_AddReg]
+HKR,,EventMessageFile, %REG_EXPAND_SZ%,"%%SystemRoot%%\System32\IoLogMsg.dll;%%SystemRoot%%\System32\drivers\WDM_Target.sys"
+HKR,,TypesSupported, %REG_DWORD%, 7
+
+[Strings]
+ManufacturerName = "Kouji Matsui"
+DiskName = "IL2C WDM.Target Source Disk"
+
+WDM_Target.SvcDesc = "IL2C WDM.Target Proof of code driver"
+WDM_Target.MediaDesc = "IL2C WDM.Target Proof of code driver Disc"
+
+SERVICE_KERNEL_DRIVER = 1
+SERVICE_DEMAND_START  = 3
+SERVICE_ERROR_IGNORE  = 0
+REG_EXPAND_SZ         = 0x00020000
+REG_DWORD             = 0x00010001

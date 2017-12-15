@@ -1,4 +1,5 @@
 #include <wdm.h>
+#include <intrin.h>
 #include "Generated/WDM.Code.h"
 
 #pragma warning(disable: 4065)
@@ -14,9 +15,10 @@ typedef struct WDM_Code_DeviceExtension
     WDM_Code_HelloDriver* pHelloDriver;
 } WDM_Code_DeviceExtension;
 
-static NTSTATUS WDM_Code_Dispatch(IRP* pIrp, IO_STACK_LOCATION* pIoStackLocation)
+static NTSTATUS WDM_Code_Dispatch(DEVICE_OBJECT* pDeviceObject, IRP* pIrp)
 {
-    auto pDeviceObject = pIoStackLocation->DeviceObject;
+    auto pIoStackLocation =
+        IoGetCurrentIrpStackLocation(pIrp);
     auto pDeviceExtension =
         static_cast<WDM_Code_DeviceExtension*>(pDeviceObject->DeviceExtension);
 
@@ -44,13 +46,17 @@ static NTSTATUS WDM_Code_AddDevice(
 {
     PAGED_CODE();
 
+#ifdef DBG
+    __debugbreak();
+#endif
+
     DEVICE_OBJECT *pDeviceObject = nullptr;
     auto status = IoCreateDevice(
         pDriverObject,
         sizeof(WDM_Code_DeviceExtension),
         nullptr,
-        pPhysicalDeviceObject->DeviceType,
-        pPhysicalDeviceObject->Characteristics,
+        FILE_DEVICE_UNKNOWN,
+        0,
         FALSE,
         &pDeviceObject);
     if (!NT_SUCCESS(status))
@@ -82,7 +88,13 @@ static NTSTATUS WDM_Code_AddDevice(
         (pDeviceExtension->pHelloDriver);
 
     pDeviceObject->Flags =
-        pDeviceExtension->pLowerDeviceObject->Flags & ~DO_DEVICE_INITIALIZING;
+        pDeviceExtension->pLowerDeviceObject->Flags;
+    pDeviceObject->DeviceType =
+        pDeviceExtension->pLowerDeviceObject->DeviceType;
+    pDeviceObject->Characteristics =
+        pDeviceExtension->pLowerDeviceObject->Characteristics;
+
+    pDeviceObject->Flags &= ~DO_DEVICE_INITIALIZING;
 
     return STATUS_SUCCESS;
 }
@@ -101,6 +113,10 @@ extern "C" NTSTATUS DriverEntry(
     PAGED_CODE();
 
     DbgPrint("WDM_Code_DriverEntry(): %wZ", pRegistryPath);
+
+#ifdef DBG
+    __debugbreak();
+#endif
 
     __gc_initialize__();
 

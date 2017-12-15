@@ -42,6 +42,7 @@
     <Configuration>Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">Win32</Platform>
     <RootNamespace>WDM_Target</RootNamespace>
+    <WindowsTargetPlatformVersion>$(LatestTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -110,27 +111,51 @@
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
+    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
+    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>WDM_Target</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -189,7 +214,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Inf Include="WDM.Target.inf" />
+    <Inf Include="WDM_Target.inf" />
   </ItemGroup>
   <ItemGroup>
     <FilesToPackage Include="$(TargetPath)" />
@@ -204,6 +229,9 @@
     <ClInclude Include="il2c.h" />
     <ClInclude Include="stdbool.h" />
     <ClInclude Include="stdint.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="setup.bat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

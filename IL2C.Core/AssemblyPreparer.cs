@@ -65,6 +65,7 @@ namespace IL2C
             MethodBody body)
         {
             var localVariables = body.Variables.ToArray();
+            localVariables.ForEach(local => prepareContext.RegisterType(local.VariableType));
 
             var decodeContext = new DecodeContext(
                 body.Method.Module,

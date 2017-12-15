@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
-using Mono.Cecil;
 
 namespace IL2C.ILConveters
 {
@@ -25,20 +25,10 @@ namespace IL2C.ILConveters
             var targetType = field.FieldType.GetStackableType();
             var symbolName = decodeContext.PushStack(targetType);
 
-            if (field.FieldType.IsBooleanType())
-            {
-                return _ => new [] { string.Format(
-                    "{0} = {1} ? 1 : 0",
-                    symbolName,
-                    fqFieldName) };
-            }
-            else
-            {
-                return _ => new[] { string.Format(
-                    "{0} = {1}",
-                    symbolName,
-                    fqFieldName) };
-            }
+            return extractContext => new [] { string.Format(
+                "{0} = {1}",
+                symbolName,
+                extractContext.GetRightExpression(targetType, field.FieldType, fqFieldName)) };
         }
     }
 

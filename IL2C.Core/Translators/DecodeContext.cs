@@ -190,8 +190,9 @@ namespace IL2C.Translators
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            Debug.Assert(!targetType.IsUInt64Type());
             Debug.Assert(!targetType.IsUInt32Type());
+            Debug.Assert(!targetType.IsUInt64Type());
+            Debug.Assert(!targetType.IsUIntPtrType());
 
             Debug.Assert(!targetType.IsByteType());
             Debug.Assert(!targetType.IsSByteType());

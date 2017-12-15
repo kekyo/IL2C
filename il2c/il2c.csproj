@@ -25,7 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <StartArguments>..\..\..\tests\Win32\Win32.Code\bin\Debug\Win32.Code.dll ..\..\..\tests\Win32\Win32.Target\Generated</StartArguments>
+    <StartArguments>..\..\..\tests\WDM\WDM.Code\bin\Debug\WDM.Code.dll ..\..\..\tests\WDM\WDM.Target\Generated</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,7 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <StartArguments>..\..\..\tests\Win32\Win32.Code\bin\Release\Win32.Code.dll ..\..\..\tests\Win32\Win32.Target\Generated</StartArguments>
+    <StartArguments>..\..\..\tests\WDM\WDM.Code\bin\Release\WDM.Code.dll ..\..\..\tests\WDM\WDM.Target\Generated</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

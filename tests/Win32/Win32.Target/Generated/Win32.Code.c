@@ -1157,8 +1157,8 @@ uint8_t Win32_Code_Hoge2_Add3(uint8_t a, bool isTwo)
     //-------------------
     // IL body:
 
-    __stack0_0 = a;
-    __stack1_0 = isTwo ? 1 : 0;
+    __stack0_0 = (int32_t)(a);
+    __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
     __stack1_0 = 1;
     goto L_0001;
@@ -1193,8 +1193,8 @@ uint16_t Win32_Code_Hoge2_Add4(uint16_t a, bool isTwo)
     //-------------------
     // IL body:
 
-    __stack0_0 = a;
-    __stack1_0 = isTwo ? 1 : 0;
+    __stack0_0 = (int32_t)(a);
+    __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
     __stack1_0 = 1;
     goto L_0001;
@@ -1284,7 +1284,7 @@ int32_t Win32_Code_Hoge1_Add1(int32_t a, bool isTwo)
     // IL body:
 
     __stack0_0 = a;
-    __stack1_0 = isTwo ? 1 : 0;
+    __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
     __stack1_0 = 1;
     goto L_0001;
@@ -1320,14 +1320,14 @@ int64_t Win32_Code_Hoge1_Add2(int64_t a, bool isTwo)
     // IL body:
 
     __stack0_0 = a;
-    __stack1_0 = isTwo ? 1 : 0;
+    __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
     __stack1_0 = 1;
     goto L_0001;
 L_0000:
     __stack1_0 = 2;
 L_0001:
-    __stack1_1 = __stack1_0;
+    __stack1_1 = (int64_t)__stack1_0;
     __stack0_0 = __stack0_0 + __stack1_1;
     local0 = __stack0_0;
     goto L_0002;

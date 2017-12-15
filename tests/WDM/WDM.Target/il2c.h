@@ -2,6 +2,7 @@
 #define __IL2C_H__
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -92,6 +93,12 @@ extern void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type);
 /////////////////////////////////////////////////////////////
 // Primitive types
 
+typedef intptr_t System_IntPtr;
+extern const __RUNTIME_TYPE__ __System_IntPtr_RUNTIME_TYPE__;
+
+typedef uint8_t System_Byte;
+extern const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
+
 typedef uint8_t System_Byte;
 extern const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
 
@@ -115,6 +122,18 @@ extern const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
 
 typedef uint64_t System_UInt64;
 extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
+
+extern const System_IntPtr System_IntPtr_Zero;
+
+static System_IntPtr System_IntPtr_op_Addition(System_IntPtr lhs, int32_t rhs)
+{
+    return lhs + rhs;
+}
+
+static bool System_IntPtr_op_Inequality(System_IntPtr lhs, System_IntPtr rhs)
+{
+    return lhs != rhs;
+}
 
 /////////////////////////////////////////////////////////////
 // System.String

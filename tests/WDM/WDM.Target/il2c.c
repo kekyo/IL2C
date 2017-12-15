@@ -392,6 +392,10 @@ static __RUNTIME_TYPE_DEF__ __System_ValueType_RUNTIME_TYPE_DEF__ = {
     "System.ValueType", 0, __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_ValueType_RUNTIME_TYPE__ = &__System_ValueType_RUNTIME_TYPE_DEF__;
 
+static __RUNTIME_TYPE_DEF__ __System_IntPtr_RUNTIME_TYPE_DEF__ = {
+    "System.IntPtr", sizeof(System_IntPtr), __Dummy_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __System_IntPtr_RUNTIME_TYPE__ = &__System_IntPtr_RUNTIME_TYPE_DEF__;
+
 static __RUNTIME_TYPE_DEF__ __System_Byte_RUNTIME_TYPE_DEF__ = {
     "System.Byte", sizeof(System_Byte), __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;
@@ -423,6 +427,8 @@ const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__ = &__System_Int64_RUNTIME_T
 static __RUNTIME_TYPE_DEF__ __System_UInt64_RUNTIME_TYPE_DEF__ = {
     "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
+
+const System_IntPtr System_IntPtr_Zero = 0;
 
 /////////////////////////////////////////////////////////////
 // System.String

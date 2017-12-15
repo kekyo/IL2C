@@ -169,7 +169,7 @@ namespace IL2C
                 return cTypeName;
             }
 
-            if (type.IsByReference)
+            if (type.IsByReference || type.IsPointer)
             {
                 var dereferencedType = type.GetElementType();
                 var name = this.GetCLanguageTypeName(dereferencedType);
@@ -234,6 +234,7 @@ namespace IL2C
                         "{0} ? true : false",
                         rhs.SymbolName);
                 }
+
             }
             else if (rhs.TargetType.IsBooleanType())
             {
@@ -241,6 +242,16 @@ namespace IL2C
                 {
                     return String.Format(
                         "{0} ? 1 : 0",
+                        rhs.SymbolName);
+                }
+            }
+            else if (rhs.TargetType.IsPointer)
+            {
+                if (lhsType.IsPointer)
+                {
+                    return String.Format(
+                        "({0}){1}",
+                        this.GetCLanguageTypeName(lhsType),
                         rhs.SymbolName);
                 }
             }
@@ -277,12 +288,22 @@ namespace IL2C
                         rhsExpression);
                 }
             }
-            else if (lhsType.IsBooleanType())
+            else if (rhsType.IsBooleanType())
             {
                 if (lhsType.IsNumericPrimitive())
                 {
                     return String.Format(
                         "({0}) ? 1 : 0",
+                        rhsExpression);
+                }
+            }
+            else if (rhsType.IsPointer)
+            {
+                if (lhsType.IsPointer)
+                {
+                    return String.Format(
+                        "({0}){1}",
+                        this.GetCLanguageTypeName(lhsType),
                         rhsExpression);
                 }
             }

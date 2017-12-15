@@ -1,4 +1,5 @@
 ﻿#include <wdm.h>
+#include <memmem.h>
 #include "WDM.Code.h"
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -45,14 +46,14 @@ static void __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__(void* pReference)
 
 static __RUNTIME_TYPE_DEF__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__ = {
     "WDM.Code.InterceptCDRomDevice",
-    0,
+    sizeof(WDM_Code_InterceptCDRomDevice),
     __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ = &__WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // .ctor
 
-void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this)
+void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this, intptr_t pFrom, intptr_t pTo, int32_t size)
 {
     //-------------------
     // Local variables:
@@ -63,6 +64,8 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this)
 
     WDM_Code_InterceptCDRomDevice* __stack0_0 = NULL;
     System_String* __stack0_1 = NULL;
+    intptr_t __stack1_0;
+    int32_t __stack1_1;
 
     //-------------------
     // Setup stack frame:
@@ -87,6 +90,15 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this)
     System_Object__ctor((System_Object*)__stack0_0);
     __stack0_1 = __string0 /* "Hello driver constructor called!!" */;
     WDM_Code_Wdm_DbgPrint(__stack0_1);
+    __stack0_0 = __this;
+    __stack1_0 = pFrom;
+    __stack0_0->pFrom = __stack1_0;
+    __stack0_0 = __this;
+    __stack1_0 = pTo;
+    __stack0_0->pTo = __stack1_0;
+    __stack0_0 = __this;
+    __stack1_1 = size;
+    __stack0_0->size = __stack1_1;
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -94,27 +106,80 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this)
 ///////////////////////////////////////
 // ReadCompleted
 
-uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pBuffer, uint32_t offset, uint32_t size)
+uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pBuffer, int32_t offset, int32_t size)
 {
     //-------------------
     // Local variables:
 
-    uint32_t local0;
+    intptr_t local0;
+    bool local1;
+    uint32_t local2;
 
     //-------------------
     // Evaluation stacks:
 
-    int32_t __stack0_0;
+    intptr_t __stack0_0;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+    intptr_t __stack1_1;
+    WDM_Code_InterceptCDRomDevice* __stack1_2 = NULL;
+    WDM_Code_InterceptCDRomDevice* __stack2_0 = NULL;
+    intptr_t __stack2_1;
+    int32_t __stack2_2;
+    WDM_Code_InterceptCDRomDevice* __stack3_0 = NULL;
+    int32_t __stack3_1;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        WDM_Code_InterceptCDRomDevice** p__stack1_2;
+        WDM_Code_InterceptCDRomDevice** p__stack2_0;
+        WDM_Code_InterceptCDRomDevice** p__stack3_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 3;
+    __executionFrame__.p__stack1_2 = &__stack1_2;
+    __executionFrame__.p__stack2_0 = &__stack2_0;
+    __executionFrame__.p__stack3_0 = &__stack3_0;
+    __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
-    __stack0_0 = 0;
-    local0 = (uint32_t)__stack0_0;
-    goto L_0000;
-L_0000:
+    __stack0_0 = pBuffer;
+    __stack1_0 = offset;
+    __stack0_0 = System_IntPtr_op_Addition(__stack0_0, __stack1_0);
+    __stack1_0 = size;
+    __stack2_0 = __this;
+    __stack2_1 = __stack2_0->pFrom;
+    __stack3_0 = __this;
+    __stack3_1 = __stack3_0->size;
+    __stack0_0 = WDM_Code_Wdm_memmem(__stack0_0, __stack1_0, __stack2_1, __stack3_1);
+    local0 = __stack0_0;
     __stack0_0 = local0;
-    return (uint32_t)__stack0_0;
+    __stack1_1 = System_IntPtr_Zero;
+    __stack0_1 = System_IntPtr_op_Inequality(__stack0_0, __stack1_1);
+    local1 = __stack0_1 ? true : false;
+    __stack0_1 = local1;
+    if (__stack0_1 == 0) goto L_0000;
+    __stack0_0 = local0;
+    __stack1_2 = __this;
+    __stack1_1 = __stack1_2->pTo;
+    __stack2_0 = __this;
+    __stack2_2 = __stack2_0->size;
+    WDM_Code_Wdm_memcpy(__stack0_0, __stack1_1, __stack2_2);
+L_0000:
+    __stack0_1 = 0;
+    local2 = (uint32_t)__stack0_1;
+    goto L_0001;
+L_0001:
+    __stack0_1 = local2;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return (uint32_t)__stack0_1;
 }
 
 ////////////////////////////////////////////////////////////
@@ -148,6 +213,22 @@ void WDM_Code_Wdm_DbgPrint(System_String* message)
 void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message)
 {
     DbgPrintEx(componentId, level, message->pString);
+}
+
+///////////////////////////////////////
+// P/Invoke: memmem
+
+intptr_t WDM_Code_Wdm_memmem(intptr_t p1, int32_t s1, intptr_t p2, int32_t s2)
+{
+    return __memmem(p1, s1, p2, s2);
+}
+
+///////////////////////////////////////
+// P/Invoke: memcpy
+
+void WDM_Code_Wdm_memcpy(intptr_t pDest, intptr_t pSource, int32_t size)
+{
+    __memcpy(pDest, pSource, size);
 }
 
 ///////////////////////////////////////

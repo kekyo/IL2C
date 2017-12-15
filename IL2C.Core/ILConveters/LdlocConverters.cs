@@ -12,38 +12,21 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> Apply(
             int localIndex, DecodeContext decodeContext)
         {
-            var local = decodeContext.Locals[localIndex];
-            var targetType = local.VariableType;
-
-            if (targetType.IsBooleanType())
-            {
-                var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
-                return _ => new[] { string.Format(
-                    "{0} = local{1} ? 1 : 0",
-                    symbolName,
-                    localIndex) };
-            }
-            else
-            {
-                targetType = targetType.GetStackableType();
-                var symbolName = decodeContext.PushStack(targetType);
-                return _ => new[] { string.Format(
-                    "{0} = local{1}",
-                    symbolName,
-                    localIndex) };
-            }
+            return Apply(decodeContext.Locals[localIndex], decodeContext);
         }
 
         public static Func<IExtractContext, string[]> Apply(
-            VariableReference local, DecodeContext decodeContext)
+            VariableReference local, DecodeContext decodeContext, bool isReference = false)
         {
-            var targetType = local.VariableType;
-            var managedReferenceType = targetType.MakeByReferenceType();
+            var targetType = local.VariableType.GetStackableType();
+            targetType = isReference ? targetType.MakeByReferenceType() : targetType;
                 
-            var symbolName = decodeContext.PushStack(managedReferenceType);
-            return _ => new[] { string.Format(
-                "{0} = &local{1}",
+            var symbolName = decodeContext.PushStack(targetType);
+
+            return extractContext => new[] { string.Format(
+                "{0} = {1}local{2}",
                 symbolName,
+                isReference ? "&" : string.Empty,
                 local.Index) };
         }
     }
@@ -88,6 +71,17 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal sealed class Ldloc_SConverter : ShortInlineVarConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldloc_S;
+
+        public override Func<IExtractContext, string[]> Apply(
+            VariableReference operand, DecodeContext decodeContext)
+        {
+            return LdlocConverterUtilities.Apply(operand, decodeContext);
+        }
+    }
+
     internal sealed class Ldloca_sConverter : ShortInlineVarConverter
     {
         public override OpCode OpCode => OpCodes.Ldloca_S;
@@ -95,7 +89,7 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(
             VariableReference operand, DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(operand, decodeContext);
+            return LdlocConverterUtilities.Apply(operand, decodeContext, true);
         }
     }
 }

@@ -174,9 +174,9 @@ namespace IL2C
             }
 
             var declaringTypes = member.DeclaringType
-                    .Traverse(current => current.DeclaringType)
-                    .Reverse()
-                    .ToArray();
+                .Traverse(current => current.DeclaringType)
+                .Reverse()
+                .ToArray();
 
             var method = member as MethodReference;
             if (method != null)
@@ -242,6 +242,16 @@ namespace IL2C
         public static TypeReference GetSafeValueTypeType(this MemberReference member)
         {
             return member.Module.TypeSystem.Object.Module.GetType("System.ValueType");
+        }
+
+        public static TypeReference GetSafeIntPtrType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.IntPtr;
+        }
+
+        public static TypeReference GetSafeUIntPtrType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.UIntPtr;
         }
 
         public static TypeReference GetSafeBooleanType(this MemberReference member)
@@ -311,6 +321,16 @@ namespace IL2C
             return module.TypeSystem.Object.Module.GetType("System.ValueType");
         }
 
+        public static TypeReference GetSafeIntPtrType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.IntPtr;
+        }
+
+        public static TypeReference GetSafeUIntPtrType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.UIntPtr;
+        }
+
         public static TypeReference GetSafeBooleanType(this ModuleDefinition module)
         {
             return module.TypeSystem.Boolean;
@@ -378,6 +398,15 @@ namespace IL2C
             return type.GetSafeValueTypeType().MemberEquals(type);
         }
 
+        public static bool IsIntPtrType(this TypeReference type)
+        {
+            return type.GetSafeIntPtrType().MemberEquals(type);
+        }
+
+        public static bool IsUIntPtrType(this TypeReference type)
+        {
+            return type.GetSafeUIntPtrType().MemberEquals(type);
+        }
         public static bool IsBooleanType(this TypeReference type)
         {
             return type.GetSafeBooleanType().MemberEquals(type);

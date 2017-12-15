@@ -6,7 +6,7 @@ Signature="$WINDOWS NT$"
 Class=System
 ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
 Provider=%ManufacturerName%
-DriverVer=12/15/2017,0.0.1.1
+DriverVer=12/14/2017,0.0.1.1
 CatalogFile=WDM_Target.cat
 
 [SourceDisksNames]

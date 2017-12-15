@@ -8,10 +8,10 @@ namespace IL2C.ILConveters
 {
     internal static class StlocConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(VariableReference local, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            var localType = decodeContext.Locals[localIndex].VariableType;
+            var localType = local.VariableType;
 
             var offset = decodeContext.Current.Offset;
 
@@ -25,14 +25,19 @@ namespace IL2C.ILConveters
                         offset,
                         si.TargetType.FullName,
                         localType.FullName,
-                        localIndex);
+                        local.Index);
                 }
 
                 return new[] { string.Format(
                     "local{0} = {1}",
-                    localIndex,
+                    local.Index,
                     rightExpression) };
             };
+        }
+
+        public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
+        {
+            return Apply(decodeContext.Locals[localIndex], decodeContext);
         }
     }
 
@@ -73,6 +78,17 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(3, decodeContext);
+        }
+    }
+
+    internal sealed class Stloc_SConverter : ShortInlineVarConverter
+    {
+        public override OpCode OpCode => OpCodes.Stloc_S;
+
+        public override Func<IExtractContext, string[]> Apply(
+            VariableReference operand, DecodeContext decodeContext)
+        {
+            return StlocConverterUtilities.Apply(operand, decodeContext);
         }
     }
 }

@@ -96,6 +96,16 @@ namespace IL2C
                 return type.GetSafeInt32Type();
             }
 
+            if (type.IsUInt64Type())
+            {
+                return type.GetSafeInt64Type();
+            }
+
+            if (type.IsUIntPtrType())
+            {
+                return type.GetSafeIntPtrType();
+            }
+
             return type;
         }
 
@@ -136,6 +146,9 @@ namespace IL2C
             {
                 sb.Replace(ch, '_');
             }
+
+            Debug.Assert(!rawSymbolName.Contains("*"));
+
             sb.Replace("*", "_reference");
             return sb.ToString();
         }

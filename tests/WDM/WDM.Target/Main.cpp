@@ -4,6 +4,11 @@
 
 #pragma warning(disable: 4065)
 
+static const char* pFrom = "Microsoft ";
+static const char* pTo = "BABELBABEL";
+
+/////////////////////////////////////////////////////////////
+
 typedef struct WDM_Code_DeviceExtension
 {
     // DIRTY HACK: __EXECUTION_FRAME__
@@ -44,13 +49,13 @@ static NTSTATUS WDM_Code_ReadCompleted(DEVICE_OBJECT* pDeviceObject, IRP* pIrp, 
 
     if (pIrp->MdlAddress != nullptr)
     {
-        pBuffer = reinterpret_cast<uintptr_t>(
+        pBuffer = reinterpret_cast<intptr_t>(
             MmGetSystemAddressForMdlSafe(pIrp->MdlAddress, HighPagePriority));
         offset = MmGetMdlByteOffset(pIrp->MdlAddress);
     }
     else if (pIrp->AssociatedIrp.SystemBuffer != nullptr)
     {
-        pBuffer = reinterpret_cast<uintptr_t>(pIrp->AssociatedIrp.SystemBuffer);
+        pBuffer = reinterpret_cast<intptr_t>(pIrp->AssociatedIrp.SystemBuffer);
     }
 
     NTSTATUS status = WDM_Code_InterceptCDRomDevice_ReadCompleted(
@@ -98,10 +103,6 @@ static NTSTATUS WDM_Code_AddDevice(
 {
     PAGED_CODE();
 
-#ifdef DBG
-    __debugbreak();
-#endif
-
     DEVICE_OBJECT *pDeviceObject = nullptr;
     auto status = IoCreateDevice(
         pDriverObject,
@@ -133,7 +134,9 @@ static NTSTATUS WDM_Code_AddDevice(
 
     // new InterceptCDRomDevice();
     __new__(&pDeviceExtension->pInterceptCDRomDevice, WDM_Code_InterceptCDRomDevice)
-        (pDeviceExtension->pInterceptCDRomDevice);
+        (pDeviceExtension->pInterceptCDRomDevice,
+            reinterpret_cast<intptr_t>(pFrom),
+            reinterpret_cast<intptr_t>(pTo), 10);
 
     //////////////////////////////////////////
     // Initialize device object.
@@ -168,10 +171,6 @@ extern "C" NTSTATUS DriverEntry(
     PAGED_CODE();
 
     DbgPrint("WDM_Code_DriverEntry(): %wZ", pRegistryPath);
-
-#ifdef DBG
-    __debugbreak();
-#endif
 
     __gc_initialize__();
 

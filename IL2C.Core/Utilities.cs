@@ -280,5 +280,10 @@ namespace IL2C
                 action(value);
             }
         }
+
+        public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
+        {
+            return dict.TryGetValue(key, out var value) ? value : defaultValue;
+        }
     }
 }

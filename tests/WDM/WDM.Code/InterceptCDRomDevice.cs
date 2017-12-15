@@ -10,7 +10,7 @@ namespace WDM.Code
 
         public InterceptCDRomDevice(IntPtr pFrom, IntPtr pTo, int size)
         {
-            Wdm.DbgPrint("Hello driver constructor called!!");
+            Wdm.DbgPrint("Hello driver constructor called!!\r\n");
 
             this.pFrom = pFrom;
             this.pTo = pTo;
@@ -22,6 +22,8 @@ namespace WDM.Code
             var result = Wdm.memmem(pBuffer + offset, size, pFrom, this.size);
             if (result != IntPtr.Zero)
             {
+                Wdm.DbgPrint("Draw BABEL!!\r\n");
+
                 Wdm.memcpy(result, pTo, this.size);
             }
 

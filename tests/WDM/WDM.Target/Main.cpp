@@ -103,6 +103,9 @@ static NTSTATUS WDM_Code_AddDevice(
 {
     PAGED_CODE();
 
+    DbgPrint("WDM_Code: AddDevice(): PDO: %wZ\r\n",
+        &pPhysicalDeviceObject->DriverObject->DriverName);
+
     DEVICE_OBJECT *pDeviceObject = nullptr;
     auto status = IoCreateDevice(
         pDriverObject,
@@ -144,6 +147,9 @@ static NTSTATUS WDM_Code_AddDevice(
     pDeviceExtension->pLowerDeviceObject =
         IoAttachDeviceToDeviceStack(pDeviceObject, pPhysicalDeviceObject);
 
+    DbgPrint("WDM_Code: AddDevice(): LDO: %wZ\r\n",
+        &pDeviceExtension->pLowerDeviceObject->DriverObject->DriverName);
+
     pDeviceObject->Flags =
         pDeviceExtension->pLowerDeviceObject->Flags;
     pDeviceObject->DeviceType =
@@ -170,7 +176,11 @@ extern "C" NTSTATUS DriverEntry(
 {
     PAGED_CODE();
 
-    DbgPrint("WDM_Code_DriverEntry(): %wZ", pRegistryPath);
+#ifdef DBG
+    __debugbreak();
+#endif
+
+    DbgPrint("WDM_Code: DriverEntry(): Path: %wZ\r\n", pRegistryPath);
 
     __gc_initialize__();
 

@@ -56,6 +56,8 @@ namespace IL2C
             }
         }
 
+        private static readonly SequencePoint[] empty = new SequencePoint[0];
+
         private static PreparedFunction PrepareMethod(
             IPrepareContext prepareContext,
             string methodName,
@@ -76,12 +78,21 @@ namespace IL2C
                 body.Instructions.ToArray(),
                 prepareContext);
 
+            var sequencePoints =
+                (from sp in body.Method.DebugInformation.SequencePoints
+                 group sp by sp.Offset into g
+                 let sps = g.Where(sp => !sp.IsHidden).ToArray()
+                 where sps.Length >= 1
+                 select new { g.Key, sps })
+                .ToDictionary(g => g.Key, g => g.sps);
+
             var preparedILBodies = decodeContext
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
+                    let sps = sequencePoints.UnsafeGetValue(ilBody.Label.Offset, empty)
                     let generator = ilBody.ILConverter.Apply(ilBody.Operand, dc)
-                    select new PreparedILBody(ilBody.Label, generator))
+                    select new PreparedILBody(ilBody.Label, generator, sps))
                 .ToArray();
 
             var stacks = decodeContext

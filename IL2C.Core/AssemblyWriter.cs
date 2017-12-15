@@ -258,6 +258,16 @@ namespace IL2C
 
             preparedFunction.PreparedILBodies.ForEach(ilBody =>
             {
+                if (ilBody.SequencePoints.Any())
+                {
+                    var sp = ilBody.SequencePoints.First();
+
+                    tw.WriteLine(
+                        "#line {0} \"{1}\"",
+                        sp.StartLine,
+                        sp.Document.Url.Replace("\\", "\\\\"));
+                }
+
                 if (preparedFunction.TryGetLabelName(
                     ilBody.Label, out var labelName))
                 {

@@ -8,6 +8,7 @@ using System.Reflection;
 using Mono.Cecil;
 
 using IL2C.Translators;
+using Mono.Cecil.Pdb;
 
 namespace IL2C
 {
@@ -66,7 +67,8 @@ namespace IL2C
             var resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
             var parameter = new ReaderParameters
             {
-                AssemblyResolver = resolver
+                AssemblyResolver = resolver,
+                ReadSymbols = true
             };
 
             this.Assembly = AssemblyDefinition.ReadAssembly(assemblyPath, parameter);

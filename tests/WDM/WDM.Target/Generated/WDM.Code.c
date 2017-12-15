@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Const strings:
 
-__DEFINE_CONST_STRING__(__string0, "Hello driver constructor called!!");
+__DEFINE_CONST_STRING__(__string0, "Hello driver constructor called!!\r\n");
+__DEFINE_CONST_STRING__(__string1, "Draw BABEL!!\r\n");
 
 #ifdef __cplusplus
 extern "C" {
@@ -86,19 +87,27 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this, 
     //-------------------
     // IL body:
 
+#line 11 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __stack0_0 = __this;
     System_Object__ctor((System_Object*)__stack0_0);
-    __stack0_1 = __string0 /* "Hello driver constructor called!!" */;
+#line 12 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+#line 13 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+    __stack0_1 = __string0 /* "Hello driver constructor called!!
+" */;
     WDM_Code_Wdm_DbgPrint(__stack0_1);
+#line 15 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __stack0_0 = __this;
     __stack1_0 = pFrom;
     __stack0_0->pFrom = __stack1_0;
+#line 16 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __stack0_0 = __this;
     __stack1_0 = pTo;
     __stack0_0->pTo = __stack1_0;
+#line 17 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __stack0_0 = __this;
     __stack1_1 = size;
     __stack0_0->size = __stack1_1;
+#line 18 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -120,6 +129,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
 
     intptr_t __stack0_0;
     int32_t __stack0_1;
+    System_String* __stack0_2 = NULL;
     int32_t __stack1_0;
     intptr_t __stack1_1;
     WDM_Code_InterceptCDRomDevice* __stack1_2 = NULL;
@@ -136,12 +146,14 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     {
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
+        System_String** p__stack0_2;
         WDM_Code_InterceptCDRomDevice** p__stack1_2;
         WDM_Code_InterceptCDRomDevice** p__stack2_0;
         WDM_Code_InterceptCDRomDevice** p__stack3_0;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 3;
+    __executionFrame__.targetCount = 4;
+    __executionFrame__.p__stack0_2 = &__stack0_2;
     __executionFrame__.p__stack1_2 = &__stack1_2;
     __executionFrame__.p__stack2_0 = &__stack2_0;
     __executionFrame__.p__stack3_0 = &__stack3_0;
@@ -150,6 +162,8 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     //-------------------
     // IL body:
 
+#line 21 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+#line 22 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __stack0_0 = pBuffer;
     __stack1_0 = offset;
     __stack0_0 = System_IntPtr_op_Addition(__stack0_0, __stack1_0);
@@ -160,22 +174,32 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     __stack3_1 = __stack3_0->size;
     __stack0_0 = WDM_Code_Wdm_memmem(__stack0_0, __stack1_0, __stack2_1, __stack3_1);
     local0 = __stack0_0;
+#line 23 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __stack0_0 = local0;
     __stack1_1 = System_IntPtr_Zero;
     __stack0_1 = System_IntPtr_op_Inequality(__stack0_0, __stack1_1);
     local1 = __stack0_1 ? true : false;
     __stack0_1 = local1;
     if (__stack0_1 == 0) goto L_0000;
+#line 24 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+#line 25 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+    __stack0_2 = __string1 /* "Draw BABEL!!
+" */;
+    WDM_Code_Wdm_DbgPrint(__stack0_2);
+#line 27 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     __stack0_0 = local0;
     __stack1_2 = __this;
     __stack1_1 = __stack1_2->pTo;
     __stack2_0 = __this;
     __stack2_2 = __stack2_0->size;
     WDM_Code_Wdm_memcpy(__stack0_0, __stack1_1, __stack2_2);
+#line 28 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+#line 30 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
 L_0000:
     __stack0_1 = 0;
     local2 = (uint32_t)__stack0_1;
     goto L_0001;
+#line 31 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
 L_0001:
     __stack0_1 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);

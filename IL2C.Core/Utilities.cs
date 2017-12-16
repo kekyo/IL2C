@@ -90,9 +90,20 @@ namespace IL2C
                 || type.IsSByteType()
                 || type.IsInt16Type()
                 || type.IsUInt16Type()
+                || type.IsUInt32Type()
                 || type.IsBooleanType())
             {
                 return type.GetSafeInt32Type();
+            }
+
+            if (type.IsUInt64Type())
+            {
+                return type.GetSafeInt64Type();
+            }
+
+            if (type.IsUIntPtrType())
+            {
+                return type.GetSafeIntPtrType();
             }
 
             return type;
@@ -135,6 +146,9 @@ namespace IL2C
             {
                 sb.Replace(ch, '_');
             }
+
+            Debug.Assert(!rawSymbolName.Contains("*"));
+
             sb.Replace("*", "_reference");
             return sb.ToString();
         }
@@ -265,6 +279,11 @@ namespace IL2C
             {
                 action(value);
             }
+        }
+
+        public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
+        {
+            return dict.TryGetValue(key, out var value) ? value : defaultValue;
         }
     }
 }

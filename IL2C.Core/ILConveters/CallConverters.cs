@@ -27,8 +27,6 @@ namespace IL2C.ILConveters
 
             if (method.ReturnType.IsVoidType())
             {
-                Debug.Assert(method.Resolve().IsConstructor);
-
                 var offset = decodeContext.Current.Offset;
 
                 return extractContext =>

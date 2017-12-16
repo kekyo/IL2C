@@ -208,10 +208,10 @@ namespace IL2C
             });
 
             var frameEntries = locals
-                .Where(local => local.VariableType.IsValueType == false)
+                .Where(local => !local.VariableType.IsValueType && !local.VariableType.IsPointer)
                 .Select(local => new { Type = local.VariableType, Name = "local" + local.Index })
                 .Concat(preparedFunction.Stacks
-                    .Where(stack => stack.TargetType.IsValueType == false)
+                    .Where(stack => !stack.TargetType.IsValueType && !stack.TargetType.IsPointer)
                     .Select(stack => new { Type = stack.TargetType, Name = stack.SymbolName }))
                 .ToArray();
 
@@ -258,6 +258,16 @@ namespace IL2C
 
             preparedFunction.PreparedILBodies.ForEach(ilBody =>
             {
+                if (ilBody.SequencePoints.Any())
+                {
+                    var sp = ilBody.SequencePoints.First();
+
+                    tw.WriteLine(
+                        "#line {0} \"{1}\"",
+                        sp.StartLine,
+                        sp.Document.Url.Replace("\\", "\\\\"));
+                }
+
                 if (preparedFunction.TryGetLabelName(
                     ilBody.Label, out var labelName))
                 {

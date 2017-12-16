@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -9,14 +10,24 @@ namespace IL2C
     {
         public static int Main(string[] args)
         {
-            if (args.Length != 2)
+            if (args.Length < 2)
             {
                 Console.WriteLine("Usage: il2c.exe <target assembly> <output path>");
                 return 0;
             }
 
-            var assemblyPath = args[0];
-            var outputPath = args[1];
+            var options = args
+                .Where(arg => arg.StartsWith("--"))
+                .Select(arg => arg.Substring(2))
+                .ToArray();
+            var paths = args
+                .Where(arg => !arg.StartsWith("--"))
+                .ToArray();
+
+            var enableCpp = options.Contains("cpp");
+
+            var assemblyPath = paths[0];
+            var outputPath = paths[1];
 
             Console.WriteLine("il2c: Translating assembly \"{0}\".", Path.GetFileName(assemblyPath));
 

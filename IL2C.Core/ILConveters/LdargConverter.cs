@@ -14,20 +14,10 @@ namespace IL2C.ILConveters
             var targetType = parameter.ParameterType.GetStackableType();
             var symbolName = decodeContext.PushStack(targetType);
 
-            if (parameter.ParameterType.IsBooleanType())
-            {
-                return _ => new[] { string.Format(
-                    "{0} = {1} ? 1 : 0",
-                    symbolName,
-                    parameter.Name) };
-            }
-            else
-            {
-                return _ => new[] { string.Format(
-                    "{0} = {1}",
-                    symbolName,
-                    parameter.Name) };
-            }
+            return extractContext => new[] { string.Format(
+                "{0} = {1}",
+                symbolName,
+                extractContext.GetRightExpression(targetType, parameter.ParameterType, parameter.Name)) };
         }
     }
 

@@ -8,6 +8,7 @@ using System.Reflection;
 using Mono.Cecil;
 
 using IL2C.Translators;
+using Mono.Cecil.Pdb;
 
 namespace IL2C
 {
@@ -25,7 +26,9 @@ namespace IL2C
             { typeof(uint).FullName, "stdint.h" },
             { typeof(long).FullName, "stdint.h" },
             { typeof(ulong).FullName, "stdint.h" },
-            { typeof(string).FullName, "string.h" }
+            { typeof(string).FullName, "string.h" },
+            { typeof(IntPtr).FullName, "stdint.h" },
+            { typeof(UIntPtr).FullName, "stdint.h" }
         };
 
         private static readonly Dictionary<string, string> predefinedCTypeNames = new Dictionary<string, string>
@@ -39,7 +42,9 @@ namespace IL2C
             { typeof(int).FullName, "int32_t" },
             { typeof(uint).FullName, "uint32_t" },
             { typeof(long).FullName, "int64_t" },
-            { typeof(ulong).FullName, "uint64_t" }
+            { typeof(ulong).FullName, "uint64_t" },
+            { typeof(IntPtr).FullName, "intptr_t" },
+            { typeof(UIntPtr).FullName, "uintptr_t" }
         };
 
         private readonly HashSet<string> includes = new HashSet<string>();
@@ -62,7 +67,8 @@ namespace IL2C
             var resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
             var parameter = new ReaderParameters
             {
-                AssemblyResolver = resolver
+                AssemblyResolver = resolver,
+                ReadSymbols = true
             };
 
             this.Assembly = AssemblyDefinition.ReadAssembly(assemblyPath, parameter);
@@ -165,7 +171,7 @@ namespace IL2C
                 return cTypeName;
             }
 
-            if (type.IsByReference)
+            if (type.IsByReference || type.IsPointer)
             {
                 var dereferencedType = type.GetElementType();
                 var name = this.GetCLanguageTypeName(dereferencedType);
@@ -230,6 +236,7 @@ namespace IL2C
                         "{0} ? true : false",
                         rhs.SymbolName);
                 }
+
             }
             else if (rhs.TargetType.IsBooleanType())
             {
@@ -237,6 +244,16 @@ namespace IL2C
                 {
                     return String.Format(
                         "{0} ? 1 : 0",
+                        rhs.SymbolName);
+                }
+            }
+            else if (rhs.TargetType.IsPointer)
+            {
+                if (lhsType.IsPointer)
+                {
+                    return String.Format(
+                        "({0}){1}",
+                        this.GetCLanguageTypeName(lhsType),
                         rhs.SymbolName);
                 }
             }
@@ -273,12 +290,22 @@ namespace IL2C
                         rhsExpression);
                 }
             }
-            else if (lhsType.IsBooleanType())
+            else if (rhsType.IsBooleanType())
             {
                 if (lhsType.IsNumericPrimitive())
                 {
                     return String.Format(
                         "({0}) ? 1 : 0",
+                        rhsExpression);
+                }
+            }
+            else if (rhsType.IsPointer)
+            {
+                if (lhsType.IsPointer)
+                {
+                    return String.Format(
+                        "({0}){1}",
+                        this.GetCLanguageTypeName(lhsType),
                         rhsExpression);
                 }
             }

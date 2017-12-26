@@ -46,6 +46,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)il2c\$(OutDir)il2c.exe" "$(TargetPath)" "$(ProjectDir)..\WDM.Target\Generated"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)IL2C\$(OutDir)net45\IL2C.exe" "$(TargetPath)" "$(ProjectDir)..\WDM.Target\Generated"</PostBuildEvent>
   </PropertyGroup>
 </Project>

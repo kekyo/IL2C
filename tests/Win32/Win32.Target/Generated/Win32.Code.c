@@ -95,8 +95,11 @@ void Win32_Code_StringTest_LiteralString(void)
     //-------------------
     // IL body:
 
+#line 12 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     __stack0_0 = __string0 /* "ABC" */;
     local0 = __stack0_0;
+#line 14 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -135,9 +138,12 @@ System_String* Win32_Code_StringTest_InOutString(System_String* a)
     //-------------------
     // IL body:
 
+#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     __stack0_0 = a;
     local0 = __stack0_0;
     goto L_0000;
+#line 19 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
 L_0000:
     __stack0_0 = local0;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -187,15 +193,20 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
     //-------------------
     // IL body:
 
+#line 22 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     __stack0_0 = __string0 /* "ABC" */;
     local0 = __stack0_0;
+#line 24 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     __stack0_0 = __string1 /* "DEF" */;
     local1 = __stack0_0;
+#line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     __stack0_0 = local0;
     __stack1_0 = local1;
     __stack0_0 = System_String_Concat_6(__stack0_0, __stack1_0);
     local2 = __stack0_0;
     goto L_0000;
+#line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
 L_0000:
     __stack0_0 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -288,8 +299,11 @@ void Win32_Code_ClassTypeTestTarget__ctor(Win32_Code_ClassTypeTestTarget* __this
     //-------------------
     // IL body:
 
+#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = __this;
     System_Object__ctor((System_Object*)__stack0_0);
+#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -326,11 +340,15 @@ void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* __th
     //-------------------
     // IL body:
 
+#line 20 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = __this;
     System_Object__ctor((System_Object*)__stack0_0);
+#line 21 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 22 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = __this;
     __stack1_0 = value;
     __stack0_0->Value2 = __stack1_0;
+#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -369,6 +387,8 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget*
     //-------------------
     // IL body:
 
+#line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 27 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = __this;
     __stack0_1 = __stack0_0->Value2;
     __stack1_0 = a;
@@ -377,6 +397,7 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget*
     __stack0_1 = __stack0_1 + __stack1_0;
     local0 = __stack0_1;
     goto L_0000;
+#line 28 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 L_0000:
     __stack0_1 = local0;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -417,6 +438,8 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarge
     //-------------------
     // IL body:
 
+#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 32 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = __this;
     __stack0_1 = __stack0_0->Value2;
     __stack1_0 = a;
@@ -427,6 +450,7 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarge
     __stack0_1 = __stack0_1 + __stack1_0;
     local0 = __stack0_1;
     goto L_0000;
+#line 33 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 L_0000:
     __stack0_1 = local0;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -487,15 +511,20 @@ int32_t Win32_Code_ClassTypeTest_Test4(void)
     //-------------------
     // IL body:
 
+#line 39 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 40 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
     local0 = __stack0_0;
+#line 41 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
     __stack1_0 = 456;
     __stack0_0->Value2 = __stack1_0;
+#line 43 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
     __stack0_1 = __stack0_0->Value2;
     local1 = __stack0_1;
     goto L_0000;
+#line 44 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 L_0000:
     __stack0_1 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -541,19 +570,25 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
     //-------------------
     // IL body:
 
+#line 47 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 48 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
     local0 = __stack0_0;
+#line 49 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
     __stack1_0 = 789;
     __stack0_0->Value2 = __stack1_0;
+#line 51 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
     __stack1_0 = 123;
     __stack2_0 = 456;
     __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
     local1 = __stack0_1;
+#line 52 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_1 = local1;
     local2 = __stack0_1;
     goto L_0000;
+#line 53 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 L_0000:
     __stack0_1 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -600,20 +635,26 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
     //-------------------
     // IL body:
 
+#line 56 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 57 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
     local0 = __stack0_0;
+#line 58 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
     __stack1_0 = 789;
     __stack0_0->Value2 = __stack1_0;
+#line 60 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
     __stack1_0 = 123;
     __stack2_0 = 456;
     __stack3_0 = 789;
     __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2_1(__stack0_0, __stack1_0, __stack2_0, __stack3_0);
     local1 = __stack0_1;
+#line 61 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_1 = local1;
     local2 = __stack0_1;
     goto L_0000;
+#line 62 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 L_0000:
     __stack0_1 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -656,13 +697,17 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
     //-------------------
     // IL body:
 
+#line 65 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 66 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = 123;
     __new_ovl__(&__stack0_1, Win32_Code_ClassTypeTestTarget, 1)(__stack0_1, __stack0_0);
     local0 = __stack0_1;
+#line 68 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_1 = local0;
     __stack0_0 = __stack0_1->Value2;
     local1 = __stack0_0;
     goto L_0000;
+#line 69 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 L_0000:
     __stack0_0 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -760,12 +805,16 @@ void Win32_Code_BoxingTest_BoxingInt32(int32_t a)
     //-------------------
     // IL body:
 
+#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
+#line 14 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
     __stack0_0 = a;
     __stack0_1 = __box__(&__stack0_0, __typeof__(System_Int32));
     local0 = __stack0_1;
+#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
     __stack0_1 = local0;
     __stack0_2 = *((int32_t*)__unbox__(__stack0_1, __typeof__(System_Int32)));
     local1 = __stack0_2;
+#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
@@ -937,6 +986,8 @@ int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget*
     //-------------------
     // IL body:
 
+#line 15 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_0 = __this;
     __stack0_1 = __stack0_0->Value2;
     __stack1_0 = a;
@@ -945,6 +996,7 @@ int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget*
     __stack0_1 = __stack0_1 + __stack1_0;
     local0 = __stack0_1;
     goto L_0000;
+#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
 L_0000:
     __stack0_1 = local0;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -1007,15 +1059,20 @@ int32_t Win32_Code_ValueTypeTest_Test4(void)
     //-------------------
     // IL body:
 
+#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 24 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_0 = &local0;
     memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
+#line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_1 = &local0;
     __stack1_0 = 456;
     __stack0_1->Value2 = __stack1_0;
+#line 27 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_2 = local0;
     __stack0_3 = __stack0_2.Value2;
     local1 = __stack0_3;
     goto L_0000;
+#line 28 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
 L_0000:
     __stack0_3 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -1065,19 +1122,25 @@ int32_t Win32_Code_ValueTypeTest_Test5(void)
     //-------------------
     // IL body:
 
+#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 32 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_0 = &local0;
     memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
+#line 33 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_1 = &local0;
     __stack1_0 = 789;
     __stack0_1->Value2 = __stack1_0;
+#line 35 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_2 = &local0;
     __stack1_0 = 123;
     __stack2_0 = 456;
     __stack0_3 = Win32_Code_ValueTypeTestTarget_GetValue2(__stack0_2, __stack1_0, __stack2_0);
     local1 = __stack0_3;
+#line 36 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     __stack0_3 = local1;
     local2 = __stack0_3;
     goto L_0000;
+#line 37 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
 L_0000:
     __stack0_3 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -1157,6 +1220,8 @@ uint8_t Win32_Code_Hoge2_Add3(uint8_t a, bool isTwo)
     //-------------------
     // IL body:
 
+#line 11 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
+#line 12 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
     __stack0_0 = (int32_t)(a);
     __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
@@ -1169,6 +1234,7 @@ L_0001:
     __stack0_0 = (uint8_t)__stack0_0;
     local0 = (uint8_t)__stack0_0;
     goto L_0002;
+#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
 L_0002:
     __stack0_0 = local0;
     return (uint8_t)__stack0_0;
@@ -1193,6 +1259,8 @@ uint16_t Win32_Code_Hoge2_Add4(uint16_t a, bool isTwo)
     //-------------------
     // IL body:
 
+#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
+#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
     __stack0_0 = (int32_t)(a);
     __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
@@ -1205,6 +1273,7 @@ L_0001:
     __stack0_0 = (uint16_t)__stack0_0;
     local0 = (uint16_t)__stack0_0;
     goto L_0002;
+#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
 L_0002:
     __stack0_0 = local0;
     return (uint16_t)__stack0_0;
@@ -1283,6 +1352,8 @@ int32_t Win32_Code_Hoge1_Add1(int32_t a, bool isTwo)
     //-------------------
     // IL body:
 
+#line 11 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
+#line 12 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
     __stack0_0 = a;
     __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
@@ -1294,6 +1365,7 @@ L_0001:
     __stack0_0 = __stack0_0 + __stack1_0;
     local0 = __stack0_0;
     goto L_0002;
+#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
 L_0002:
     __stack0_0 = local0;
     return __stack0_0;
@@ -1319,6 +1391,8 @@ int64_t Win32_Code_Hoge1_Add2(int64_t a, bool isTwo)
     //-------------------
     // IL body:
 
+#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
+#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
     __stack0_0 = a;
     __stack1_0 = (isTwo) ? 1 : 0;
     if (__stack1_0 != 0) goto L_0000;
@@ -1331,6 +1405,7 @@ L_0001:
     __stack0_0 = __stack0_0 + __stack1_1;
     local0 = __stack0_0;
     goto L_0002;
+#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
 L_0002:
     __stack0_0 = local0;
     return __stack0_0;

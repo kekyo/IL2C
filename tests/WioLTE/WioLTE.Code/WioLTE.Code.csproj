@@ -44,6 +44,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)il2c\$(OutDir)il2c.exe" "$(TargetPath)" "$(ProjectDir)..\Arduino\il2c"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)IL2C\$(OutDir)net45\IL2C.exe" "$(TargetPath)" "$(ProjectDir)..\Arduino\il2c"</PostBuildEvent>
   </PropertyGroup>
 </Project>

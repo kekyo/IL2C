@@ -12,7 +12,7 @@ namespace IL2C
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: il2c.exe <target assembly> <output path>");
+                Console.WriteLine("Usage: IL2C.exe <target assembly> <output path>");
                 return 0;
             }
 
@@ -49,7 +49,7 @@ namespace IL2C
             var filePath = Path.Combine(outputPath, assemblyName);
 
             using (var fsSource = new FileStream(
-                filePath + ".c",
+                filePath + (enableCpp ? ".cpp" : ".c"),
                 FileMode.Create,
                 FileAccess.ReadWrite,
                 FileShare.None))

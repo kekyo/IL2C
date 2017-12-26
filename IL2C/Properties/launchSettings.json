@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "IL2C": {
+      "commandName": "Project",
+      "commandLineArgs": "\"$(ProjectDir)..\\tests\\Win32\\Win32.Code\\bin\\$(ConfigurationName)\\netstandard2.0\\Win32.Code.dll\" \"$(ProjectDir)..\\tests\\Win32\\Win32.Target\\Generated\""
+    }
+  }
+}

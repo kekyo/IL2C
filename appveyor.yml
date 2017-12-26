@@ -5,4 +5,5 @@ environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 before_build:
 - cmd: dotnet restore
-  
+build:
+  project: il2c.sln

@@ -196,7 +196,7 @@ TODO:
 | Platform independent core library |
 | Host platform on .NET 4.5 | Supported | M1
 | Host platform on .NET Core 1 | (not support) | -
-| Host platform on .NET Core 2 | Partial supported |
+| Host platform on .NET Core 2 | Supported |
 | Host platform on mono |
 | Support C99 compilers | Supported | M1
 | Support non C99 (ANSI) compilers |

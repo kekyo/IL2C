@@ -17,7 +17,7 @@ namespace WDM.Code
             this.size = size;
         }
 
-        public unsafe uint ReadCompleted(IntPtr pBuffer, int offset, int size)
+        public uint ReadCompleted(IntPtr pBuffer, int offset, int size)
         {
             var result = Wdm.memmem(pBuffer + offset, size, pFrom, this.size);
             if (result != IntPtr.Zero)

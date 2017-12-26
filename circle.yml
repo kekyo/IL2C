@@ -9,5 +9,5 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
     steps:
       - checkout
-      - run: dotnet restore
+      - run: dotnet restore il2c.sln
       - run: dotnet build il2c.sln

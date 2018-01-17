@@ -10,7 +10,7 @@ namespace Win32.Code
         [DllImport("windows.h")]
         public static extern int GetCurrentThreadId();
 
-        [DllImport("windows.h", EntryPoint = "OutputDebugStringA")]
+        [DllImport("windows.h", EntryPoint = "OutputDebugStringW")]
         public static extern void OutputDebugString(string message);
     }
 }

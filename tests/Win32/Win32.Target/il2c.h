@@ -128,11 +128,11 @@ typedef struct System_String
 extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
 
 // Binary layout compatible: __REF_HEADER__ + System_String.
-typedef const struct __CONST_STRING__
+typedef struct __CONST_STRING__
 {
-    void* _0;
-    __RUNTIME_TYPE__ __stringType;
-    interlock_t _1;
+    const void* _0;
+	const __RUNTIME_TYPE__ __stringType;
+	const interlock_t _1;
     const wchar_t* __pString;
 } __CONST_STRING__;
 

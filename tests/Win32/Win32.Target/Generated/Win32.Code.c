@@ -952,7 +952,7 @@ int32_t Win32_Code_Win32_GetCurrentThreadId(void)
 
 void Win32_Code_Win32_OutputDebugString(System_String* message)
 {
-    OutputDebugStringA(message->pString);
+    OutputDebugStringW(message->pString);
 }
 
 ///////////////////////////////////////

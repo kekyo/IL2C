@@ -36,10 +36,13 @@ typedef long interlock_t;
 
 typedef uint8_t interlock_t;
 
-static interlock_t _InterlockedExchange(interlock_t* p, interlock_t v)
+static interlock_t _InterlockedCompareExchange(interlock_t* p, interlock_t v, interlock_t c)
 {
-    interlock_t cv = *p;
-    *p = v;
+	interlock_t cv = *p;
+	if (cv == c)
+	{
+		*p = v;
+	}
     return cv;
 }
 
@@ -67,7 +70,7 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #endif
 
-#define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchange((interlock_t*)p, (interlock_t)v)
+#define INTERLOCKED_COMPARE_EXCHANGE(p, v, c) (interlock_t)_InterlockedCompareExchange((interlock_t*)p, (interlock_t)v, (interlock_t)c)
 #define INTERLOCKED_EXCHANGE_POINTER(p, v) (void*)_InterlockedExchangePointer((void**)p, (void*)v)
 #define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (void*)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
 
@@ -80,8 +83,8 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 /////////////////////////////////////////////////////////////
 
 // TODO: Support finalizer
-#define GCMARK_NOMARK ((interlock_t)0)
-#define GCMARK_LIVE ((interlock_t)1)
+#define GCMARK_NOMARK ((interlock_t)1)
+#define GCMARK_LIVE ((interlock_t)0)
 
 struct __EXECUTION_FRAME__
 {
@@ -183,7 +186,7 @@ void __gc_mark_from_handler__(void* pReference)
 
     __REF_HEADER__* pHeader = (__REF_HEADER__*)
         (((uint8_t*)pReference) - sizeof(__REF_HEADER__));
-    interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+    interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
         assert(pHeader->type != NULL);
@@ -216,6 +219,8 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
 void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
 {
     assert(pFrame != NULL);
+
+	__gc_collect__();
 
     g_pBeginFrame__ = ((__EXECUTION_FRAME__*)pFrame)->pNext;
 }
@@ -254,7 +259,7 @@ void __gc_step2_mark_gcmark__()
             // Marking process.
             __REF_HEADER__* pHeader = (__REF_HEADER__*)
                 (((uint8_t*)*ppReference) - sizeof(__REF_HEADER__));
-            interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+            interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {
                 assert(pHeader->type != NULL);
@@ -418,7 +423,7 @@ static wchar_t* __new_string_internal__(System_String** ppReference, uint32_t si
 
 void __new_string__(System_String** ppReference, const wchar_t* pString)
 {
-	uint32_t size = (wcslen(pString) + 1) * sizeof(wchar_t);
+	uint32_t size = (uint32_t)(wcslen(pString) + 1) * sizeof(wchar_t);
 	wchar_t* pBody = __new_string_internal__(ppReference, size);
     memcpy(pBody, pString, size);
 }
@@ -446,8 +451,8 @@ System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 
     //-------------------
 
-    uint32_t str0Size = wcslen(str0->pString) * sizeof(wchar_t);
-	uint32_t str1Size = wcslen(str1->pString) * sizeof(wchar_t);
+    uint32_t str0Size = (uint32_t)wcslen(str0->pString) * sizeof(wchar_t);
+	uint32_t str1Size = (uint32_t)wcslen(str1->pString) * sizeof(wchar_t);
 
     wchar_t* pBody = __new_string_internal__(&local0, str0Size + str1Size + sizeof(wchar_t));
     memcpy(pBody, str0->pString, str0Size);

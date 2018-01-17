@@ -46,13 +46,6 @@ static interlock_t _InterlockedCompareExchange(interlock_t* p, interlock_t v, in
     return cv;
 }
 
-static void* _InterlockedExchangePointer(void** p, void* v)
-{
-    void* cv = *p;
-    *p = v;
-    return cv;
-}
-
 static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 {
     void* cv = *p;
@@ -71,7 +64,6 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 #endif
 
 #define INTERLOCKED_COMPARE_EXCHANGE(p, v, c) (interlock_t)_InterlockedCompareExchange((interlock_t*)p, (interlock_t)v, (interlock_t)c)
-#define INTERLOCKED_EXCHANGE_POINTER(p, v) (void*)_InterlockedExchangePointer((void**)p, (void*)v)
 #define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (void*)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
 
 #include <assert.h>
@@ -441,11 +433,11 @@ System_String* System_String_Substring(System_String* __this, int32_t startIndex
 		return __this;
 	}
 
-	int32_t length = wcslen(__this->pBody);
+	int32_t length = (int32_t)wcslen(__this->pBody);
 	// TODO: IndexOutOfRangeException
 	assert(startIndex < length);
 
-	int32_t newSize = (length - startIndex + 1) * sizeof(wchar_t);
+	uint32_t newSize = (length - startIndex + 1) * sizeof(wchar_t);
 	System_String* pString = __new_string_internal__(newSize);
 	memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
 

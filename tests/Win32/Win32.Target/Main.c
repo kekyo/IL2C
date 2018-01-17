@@ -2,7 +2,7 @@
 
 #include "Generated/Win32.Code.h"
 
-__DEFINE_CONST_STRING__(hoge, "Hoge\r\n");
+__DEFINE_CONST_STRING__(hoge, L"Hoge\r\n");
 
 int main()
 {
@@ -16,12 +16,12 @@ int main()
             Win32_Code_StringTest_LiteralString();
 
             System_String* pString1 = Win32_Code_StringTest_InOutString(hoge);
-            printf("pString1 = %s", pString1->pString);
+            printf("pString1 = %ls", pString1->pString);
 
             Win32_Code_Win32_OutputDebugString(hoge);
 
             System_String* pString2 = Win32_Code_StringTest_LiteralCombinedString();
-            printf("pString2 = %s", pString2->pString);
+            printf("pString2 = %ls", pString2->pString);
 
             int32_t result6 = Win32_Code_ClassTypeTest_Test4();
             printf("result6 = %d\n", result6);

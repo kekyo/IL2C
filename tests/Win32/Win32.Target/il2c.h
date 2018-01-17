@@ -2,6 +2,7 @@
 #define __IL2C_H__
 
 #include <stdint.h>
+#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -121,7 +122,7 @@ extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
 
 typedef struct System_String
 {
-    const char* pString;
+    const wchar_t* pString;
 } System_String;
 
 extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
@@ -132,7 +133,7 @@ typedef const struct __CONST_STRING__
     void* _0;
     __RUNTIME_TYPE__ __stringType;
     interlock_t _1;
-    const char* __pString;
+    const wchar_t* __pString;
 } __CONST_STRING__;
 
 extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
@@ -141,7 +142,7 @@ extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
     static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pString }; \
     static System_String* const name = ((System_String*)&(__##name##_const_string__.__pString))
 
-extern void __new_string__(System_String** ppReference, const char* pString);
+extern void __new_string__(System_String** ppReference, const wchar_t* pString);
 
 extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
 

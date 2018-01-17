@@ -508,7 +508,7 @@ namespace IL2C
                 {
                     var escaped = Utilities.GetEscapedCString(kv.Value);
                     twSource.WriteLine(
-                        "__DEFINE_CONST_STRING__({0}, \"{1}\");",
+                        "__DEFINE_CONST_STRING__({0}, L\"{1}\");",
                         kv.Key,
                         escaped);
                 });

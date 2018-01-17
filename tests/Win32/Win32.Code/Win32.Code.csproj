@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
-    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" "$(OutDir)Win32.Code.dll" "..\..\..\..\Win32.Target\Generated"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" "$(OutDir)Win32.Code.dll" "..\..\..\..\..\Win32.Target\Generated"</PostBuildEvent>
   </PropertyGroup>
 
 </Project>

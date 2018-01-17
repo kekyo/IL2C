@@ -12,6 +12,7 @@
 #define GCFREE free
 
 #include <stdint.h>
+#include <wchar.h>
 
 typedef long interlock_t;
 
@@ -106,7 +107,7 @@ static __REF_HEADER__* g_pBeginHeader__ = NULL;
 //////////////////////////
 
 static void __gc_get_uninitialized_object_internal__(
-    void** ppReference, __RUNTIME_TYPE__ type, size_t bodySize)
+    void** ppReference, __RUNTIME_TYPE__ type, uint32_t bodySize)
 {
     __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
     if (pHeader == NULL)
@@ -403,22 +404,22 @@ __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__ = {
     "System.String", UINT16_MAX, __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__ = &__System_String_RUNTIME_TYPE_DEF__;
 
-static char* __new_string_internal__(System_String** ppReference, size_t size)
+static wchar_t* __new_string_internal__(System_String** ppReference, uint32_t size)
 {
-    size_t bodySize = sizeof(System_String) + size;
+	uint32_t bodySize = sizeof(System_String) + size;
     __gc_get_uninitialized_object_internal__(
         (void**)ppReference,
         __System_String_RUNTIME_TYPE__,
         bodySize);
-    char* pBody = (char*)(((uint8_t*)*ppReference) + sizeof(System_String));
+	wchar_t* pBody = (wchar_t*)(((uint8_t*)*ppReference) + sizeof(System_String));
     (*ppReference)->pString = pBody;
     return pBody;
 }
 
-void __new_string__(System_String** ppReference, const char* pString)
+void __new_string__(System_String** ppReference, const wchar_t* pString)
 {
-    size_t size = strlen(pString) + 1;
-    char* pBody = __new_string_internal__(ppReference, size);
+	uint32_t size = (wcslen(pString) + 1) * sizeof(wchar_t);
+	wchar_t* pBody = __new_string_internal__(ppReference, size);
     memcpy(pBody, pString, size);
 }
 
@@ -445,12 +446,12 @@ System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 
     //-------------------
 
-    size_t str0Size = strlen(str0->pString);
-    size_t str1Size = strlen(str1->pString);
+    uint32_t str0Size = wcslen(str0->pString) * sizeof(wchar_t);
+	uint32_t str1Size = wcslen(str1->pString) * sizeof(wchar_t);
 
-    char* pBody = __new_string_internal__(&local0, str0Size + str1Size + 1);
+    wchar_t* pBody = __new_string_internal__(&local0, str0Size + str1Size + sizeof(wchar_t));
     memcpy(pBody, str0->pString, str0Size);
-    memcpy(pBody + str0Size, str1->pString, str1Size + 1);
+    memcpy(((uint8_t*)pBody) + str0Size, str1->pString, str1Size + sizeof(wchar_t));
     __gc_unlink_execution_frame__(&__executionFrame__);
     return local0;
 }

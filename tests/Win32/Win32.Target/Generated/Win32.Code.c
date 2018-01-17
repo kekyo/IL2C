@@ -4,8 +4,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Const strings:
 
-__DEFINE_CONST_STRING__(__string0, "ABC");
-__DEFINE_CONST_STRING__(__string1, "DEF");
+__DEFINE_CONST_STRING__(__string0, L"ABC");
+__DEFINE_CONST_STRING__(__string1, L"DEF");
 
 #ifdef __cplusplus
 extern "C" {

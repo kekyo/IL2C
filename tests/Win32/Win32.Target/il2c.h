@@ -38,31 +38,6 @@ typedef __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
 #define __sizeof__(typeName) (__typeof__(typeName)->bodySize)
 
 /////////////////////////////////////////////////////////////
-// Garbage collector related declarations
-
-extern void __gc_initialize__();
-extern void __gc_shutdown__();
-
-extern void __gc_collect__();
-
-extern void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type);
-
-extern void __gc_link_execution_frame__(/* __EXECUTION_FRAME__* */ void* pNewFrame);
-extern void __gc_unlink_execution_frame__(/* __EXECUTION_FRAME__* */ void* pFrame);
-
-extern void __gc_mark_from_handler__(void* pReference);
-#define __TRY_MARK_FROM_HANDLER__(pReference) \
-    if ((pReference) != NULL) __gc_mark_from_handler__(pReference)
-
-#define __new__(ppReference, typeName) \
-    __gc_get_uninitialized_object__((void**)ppReference, __typeof__(typeName)); \
-    typeName##__ctor
-
-#define __new_ovl__(ppReference, typeName, overloadIndex) \
-    __gc_get_uninitialized_object__((void**)ppReference, __typeof__(typeName)); \
-    typeName##__ctor_##overloadIndex
-
-/////////////////////////////////////////////////////////////
 // System.Object
 
 typedef struct System_Object System_Object;
@@ -72,6 +47,23 @@ static void System_Object__ctor(System_Object* __this)
 }
 
 extern const __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
+
+/////////////////////////////////////////////////////////////
+// Garbage collector related declarations
+
+extern void __gc_initialize__();
+extern void __gc_shutdown__();
+
+extern void __gc_collect__();
+
+extern void* __gc_get_uninitialized_object__(__RUNTIME_TYPE__ type);
+
+extern void __gc_link_execution_frame__(/* __EXECUTION_FRAME__* */ void* pNewFrame);
+extern void __gc_unlink_execution_frame__(/* __EXECUTION_FRAME__* */ void* pFrame);
+
+extern void __gc_mark_from_handler__(void* pReference);
+#define __TRY_MARK_FROM_HANDLER__(pReference) \
+    if ((pReference) != NULL) __gc_mark_from_handler__(pReference)
 
 /////////////////////////////////////////////////////////////
 // System.ValueType
@@ -122,7 +114,7 @@ extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
 
 typedef struct System_String
 {
-    const wchar_t* pString;
+    const wchar_t* pBody;
 } System_String;
 
 extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
@@ -142,7 +134,7 @@ extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
     static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pString }; \
     static System_String* const name = ((System_String*)&(__##name##_const_string__.__pString))
 
-extern void __new_string__(System_String** ppReference, const wchar_t* pString);
+extern System_String* __new_string__(const wchar_t* pString);
 
 extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
 

@@ -135,6 +135,7 @@ extern void Win32_Code_Win32__ctor(Win32_Code_Win32* __this);
 extern void Win32_Code_StringTest_LiteralString(void);
 extern System_String* Win32_Code_StringTest_InOutString(System_String* a);
 extern System_String* Win32_Code_StringTest_LiteralCombinedString(void);
+extern System_String* Win32_Code_StringTest_LiteralSubstring(void);
 extern void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this);
 
 extern int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget* __this, int32_t a, int32_t b);

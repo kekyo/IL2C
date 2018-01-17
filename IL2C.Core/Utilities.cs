@@ -131,7 +131,7 @@ namespace IL2C
         {
             if (parameter.ParameterType.IsStringType())
             {
-                return string.Format("{0}->pString", parameter.Name);
+                return string.Format("{0}->pBody", parameter.Name);
             }
             else
             {

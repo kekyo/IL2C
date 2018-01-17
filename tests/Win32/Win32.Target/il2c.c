@@ -430,3 +430,24 @@ System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 
     return pString;
 }
+
+System_String* System_String_Substring(System_String* __this, int32_t startIndex)
+{
+	// TODO: IndexOutOfRangeException
+	assert(startIndex >= 0);
+
+	if (startIndex == 0)
+	{
+		return __this;
+	}
+
+	int32_t length = wcslen(__this->pBody);
+	// TODO: IndexOutOfRangeException
+	assert(startIndex < length);
+
+	int32_t newSize = (length - startIndex + 1) * sizeof(wchar_t);
+	System_String* pString = __new_string_internal__(newSize);
+	memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
+
+	return pString;
+}

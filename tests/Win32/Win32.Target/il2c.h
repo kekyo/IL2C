@@ -125,18 +125,19 @@ typedef struct __CONST_STRING__
     const void* _0;
 	const __RUNTIME_TYPE__ __stringType;
 	const interlock_t _1;
-    const wchar_t* __pString;
+    const wchar_t* __pBody;
 } __CONST_STRING__;
 
 extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
 
-#define __DEFINE_CONST_STRING__(name, pString) \
-    static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pString }; \
-    static System_String* const name = ((System_String*)&(__##name##_const_string__.__pString))
+#define __DEFINE_CONST_STRING__(name, pBody) \
+    static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pBody }; \
+    static System_String* const name = ((System_String*)&(__##name##_const_string__.__pBody))
 
 extern System_String* __new_string__(const wchar_t* pString);
 
 extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
+extern System_String* System_String_Substring(System_String* __this, int32_t startIndex);
 
 #ifdef __cplusplus
 }

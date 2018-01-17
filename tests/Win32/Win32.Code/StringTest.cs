@@ -24,5 +24,11 @@ namespace Win32.Code
             string b = "DEF";
             return a + b;
         }
+
+        public static string LiteralSubstring()
+        {
+            string a = "ABCDEFGHIJKLMN";
+            return a.Substring(3);
+        }
     }
 }

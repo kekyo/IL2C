@@ -6,6 +6,7 @@
 
 __DEFINE_CONST_STRING__(__string0, L"ABC");
 __DEFINE_CONST_STRING__(__string1, L"DEF");
+__DEFINE_CONST_STRING__(__string2, L"ABCDEFGHIJKLMN");
 
 #ifdef __cplusplus
 extern "C" {
@@ -1161,6 +1162,64 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
 #line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
 L_0000:
     __stack0_0 = local2;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_0;
+}
+
+///////////////////////////////////////
+// LiteralSubstring
+
+System_String* Win32_Code_StringTest_LiteralSubstring(void)
+{
+    //-------------------
+    // Local variables:
+
+    System_String* local0 = NULL;
+    System_String* local1 = NULL;
+
+    //-------------------
+    // Evaluation stacks:
+
+    System_String* __stack0_0 = NULL;
+    System_String* __stack0_1 = NULL;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        System_String** plocal0;
+        System_String** plocal1;
+        System_String** p__stack0_0;
+        System_String** p__stack0_1;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 4;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.plocal1 = &local1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+#line 29 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 30 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+    __stack0_0 = __string2 /* "ABCDEFGHIJKLMN" */;
+    local0 = __stack0_0;
+#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+    __stack0_0 = local0;
+    __stack1_0 = 3;
+    __stack0_1 = System_String_Substring(__stack0_0, __stack1_0);
+    local1 = __stack0_1;
+    goto L_0000;
+#line 32 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+L_0000:
+    __stack0_0 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);
     return __stack0_0;
 }

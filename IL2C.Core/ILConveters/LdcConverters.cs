@@ -39,6 +39,17 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal sealed class Ldc_i4_3Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_3;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            return _ => new[] { string.Format("{0} = 3", symbolName) };
+        }
+    }
+
     internal sealed class Ldc_i4_5Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_5;

@@ -140,23 +140,23 @@ namespace IL2C.ILConveters
                     var dereferencedTypeName = extractContext.GetCLanguageTypeName(
                         type, TypeNameFlags.Dereferenced);
 
-                    if (overloadIndex >= 1)
+                    return new[]
                     {
-                        return new[] { string.Format(
-                            "__new_ovl__(&{0}, {1}, {2})({3})",
+                        string.Format(
+                            "{0} = __gc_get_uninitialized_object__(__typeof__({1}))",
                             thisSymbolName,
-                            dereferencedTypeName,
-                            overloadIndex,
-                            parameterString) };
-                    }
-                    else
-                    {
-                        return new[] { string.Format(
-                            "__new__(&{0}, {1})({2})",
-                            thisSymbolName,
-                            dereferencedTypeName,
-                            parameterString) };
-                    }
+                            dereferencedTypeName),
+                        (overloadIndex >= 1)
+                            ? string.Format(
+                                "{0}__ctor_{1}({2})",
+                                dereferencedTypeName,
+                                overloadIndex,
+                                parameterString)
+                            : string.Format(
+                                "{0}__ctor({1})",
+                                dereferencedTypeName,
+                                parameterString)
+                    };
                 };
             }
         }

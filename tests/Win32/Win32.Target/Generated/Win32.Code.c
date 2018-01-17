@@ -6,6 +6,7 @@
 
 __DEFINE_CONST_STRING__(__string0, L"ABC");
 __DEFINE_CONST_STRING__(__string1, L"DEF");
+__DEFINE_CONST_STRING__(__string2, L"ABCDEFGHIJKLMN");
 
 #ifdef __cplusplus
 extern "C" {
@@ -412,7 +413,8 @@ int32_t Win32_Code_ClassTypeTest_Test4(void)
 
 #line 39 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 #line 40 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
-    __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
+    __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_ClassTypeTestTarget));
+    Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     local0 = __stack0_0;
 #line 41 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
@@ -471,7 +473,8 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
 
 #line 47 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 #line 48 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
-    __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
+    __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_ClassTypeTestTarget));
+    Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     local0 = __stack0_0;
 #line 49 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
@@ -536,7 +539,8 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
 
 #line 56 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 #line 57 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
-    __new__(&__stack0_0, Win32_Code_ClassTypeTestTarget)(__stack0_0);
+    __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_ClassTypeTestTarget));
+    Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     local0 = __stack0_0;
 #line 58 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = local0;
@@ -599,7 +603,8 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
 #line 65 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
 #line 66 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_0 = 123;
-    __new_ovl__(&__stack0_1, Win32_Code_ClassTypeTestTarget, 1)(__stack0_1, __stack0_0);
+    __stack0_1 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_ClassTypeTestTarget));
+    Win32_Code_ClassTypeTestTarget__ctor_1(__stack0_1, __stack0_0);
     local0 = __stack0_1;
 #line 68 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     __stack0_1 = local0;
@@ -952,7 +957,7 @@ int32_t Win32_Code_Win32_GetCurrentThreadId(void)
 
 void Win32_Code_Win32_OutputDebugString(System_String* message)
 {
-    OutputDebugStringA(message->pString);
+    OutputDebugStringW(message->pBody);
 }
 
 ///////////////////////////////////////
@@ -1157,6 +1162,64 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
 #line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
 L_0000:
     __stack0_0 = local2;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_0;
+}
+
+///////////////////////////////////////
+// LiteralSubstring
+
+System_String* Win32_Code_StringTest_LiteralSubstring(void)
+{
+    //-------------------
+    // Local variables:
+
+    System_String* local0 = NULL;
+    System_String* local1 = NULL;
+
+    //-------------------
+    // Evaluation stacks:
+
+    System_String* __stack0_0 = NULL;
+    System_String* __stack0_1 = NULL;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        System_String** plocal0;
+        System_String** plocal1;
+        System_String** p__stack0_0;
+        System_String** p__stack0_1;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 4;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.plocal1 = &local1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+#line 29 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 30 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+    __stack0_0 = __string2 /* "ABCDEFGHIJKLMN" */;
+    local0 = __stack0_0;
+#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+    __stack0_0 = local0;
+    __stack1_0 = 3;
+    __stack0_1 = System_String_Substring(__stack0_0, __stack1_0);
+    local1 = __stack0_1;
+    goto L_0000;
+#line 32 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+L_0000:
+    __stack0_0 = local1;
     __gc_unlink_execution_frame__(&__executionFrame__);
     return __stack0_0;
 }

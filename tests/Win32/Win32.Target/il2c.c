@@ -36,10 +36,13 @@ typedef long interlock_t;
 
 typedef uint8_t interlock_t;
 
-static interlock_t _InterlockedExchange(interlock_t* p, interlock_t v)
+static interlock_t _InterlockedCompareExchange(interlock_t* p, interlock_t v, interlock_t c)
 {
-    interlock_t cv = *p;
-    *p = v;
+	interlock_t cv = *p;
+	if (cv == c)
+	{
+		*p = v;
+	}
     return cv;
 }
 
@@ -67,7 +70,7 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #endif
 
-#define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchange((interlock_t*)p, (interlock_t)v)
+#define INTERLOCKED_COMPARE_EXCHANGE(p, v, c) (interlock_t)_InterlockedCompareExchange((interlock_t*)p, (interlock_t)v, (interlock_t)c)
 #define INTERLOCKED_EXCHANGE_POINTER(p, v) (void*)_InterlockedExchangePointer((void**)p, (void*)v)
 #define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (void*)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
 
@@ -80,8 +83,8 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 /////////////////////////////////////////////////////////////
 
 // TODO: Support finalizer
-#define GCMARK_NOMARK ((interlock_t)0)
-#define GCMARK_LIVE ((interlock_t)1)
+#define GCMARK_NOMARK ((interlock_t)1)
+#define GCMARK_LIVE ((interlock_t)0)
 
 struct __EXECUTION_FRAME__
 {
@@ -106,8 +109,8 @@ static __REF_HEADER__* g_pBeginHeader__ = NULL;
 
 //////////////////////////
 
-static void __gc_get_uninitialized_object_internal__(
-    void** ppReference, __RUNTIME_TYPE__ type, uint32_t bodySize)
+static void* __gc_get_uninitialized_object_internal__(
+    __RUNTIME_TYPE__ type, uint32_t bodySize)
 {
     __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
     if (pHeader == NULL)
@@ -127,8 +130,7 @@ static void __gc_get_uninitialized_object_internal__(
         }
     }
 
-    void* pReference = ((uint8_t*)pHeader)
-        + sizeof(__REF_HEADER__);
+	void* pReference = ((uint8_t*)pHeader) + sizeof(__REF_HEADER__);
     if (bodySize >= 1)
     {
         memset(pReference, 0, bodySize);
@@ -137,10 +139,6 @@ static void __gc_get_uninitialized_object_internal__(
     pHeader->pNext = NULL;
     pHeader->type = type;
     pHeader->gcMark = GCMARK_NOMARK;
-
-    // Very important link steps:
-    //   Because cause misread on purpose this instance is living by concurrent gc's.
-    *ppReference = pReference;
 
     // Safe link both headers.
     while (1)
@@ -158,23 +156,19 @@ static void __gc_get_uninitialized_object_internal__(
             break;
         }
     }
+
+	return pReference;
 }
 
-void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
+void* __gc_get_uninitialized_object__(__RUNTIME_TYPE__ type)
 {
-    assert(ppReference != NULL);
     assert(type != NULL);
 
-    if (type->bodySize == UINT16_MAX)
-    {
-        // String or Array:
-        // throw new InvalidProgramException();
-        assert(0);
-    }
-    else
-    {
-        __gc_get_uninitialized_object_internal__(ppReference, type, type->bodySize);
-    }
+    // String or Array:
+    // throw new InvalidProgramException();
+    assert(type->bodySize != UINT16_MAX);
+
+	return __gc_get_uninitialized_object_internal__(type, type->bodySize);
 }
 
 void __gc_mark_from_handler__(void* pReference)
@@ -183,7 +177,7 @@ void __gc_mark_from_handler__(void* pReference)
 
     __REF_HEADER__* pHeader = (__REF_HEADER__*)
         (((uint8_t*)pReference) - sizeof(__REF_HEADER__));
-    interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+    interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
         assert(pHeader->type != NULL);
@@ -216,6 +210,8 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
 void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
 {
     assert(pFrame != NULL);
+
+	__gc_collect__();
 
     g_pBeginFrame__ = ((__EXECUTION_FRAME__*)pFrame)->pNext;
 }
@@ -254,7 +250,7 @@ void __gc_step2_mark_gcmark__()
             // Marking process.
             __REF_HEADER__* pHeader = (__REF_HEADER__*)
                 (((uint8_t*)*ppReference) - sizeof(__REF_HEADER__));
-            interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+            interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {
                 assert(pHeader->type != NULL);
@@ -331,8 +327,7 @@ void __gc_shutdown__()
 
 System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type)
 {
-    void* pBoxed;
-    __gc_get_uninitialized_object__(&pBoxed, type);
+    void* pBoxed = __gc_get_uninitialized_object__(type);
     memcpy(pBoxed, pValue, type->bodySize);
     return (System_Object*)pBoxed;
 }
@@ -404,54 +399,55 @@ __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__ = {
     "System.String", UINT16_MAX, __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__ = &__System_String_RUNTIME_TYPE_DEF__;
 
-static wchar_t* __new_string_internal__(System_String** ppReference, uint32_t size)
+static System_String* __new_string_internal__(uint32_t size)
 {
 	uint32_t bodySize = sizeof(System_String) + size;
-    __gc_get_uninitialized_object_internal__(
-        (void**)ppReference,
+	System_String* pString = __gc_get_uninitialized_object_internal__(
         __System_String_RUNTIME_TYPE__,
         bodySize);
-	wchar_t* pBody = (wchar_t*)(((uint8_t*)*ppReference) + sizeof(System_String));
-    (*ppReference)->pString = pBody;
-    return pBody;
+	wchar_t* pBody = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
+	pString->pBody = pBody;
+    return pString;
 }
 
-void __new_string__(System_String** ppReference, const wchar_t* pString)
+System_String* __new_string__(const wchar_t* pBody)
 {
-	uint32_t size = (wcslen(pString) + 1) * sizeof(wchar_t);
-	wchar_t* pBody = __new_string_internal__(ppReference, size);
-    memcpy(pBody, pString, size);
+	uint32_t size = (uint32_t)(wcslen(pBody) + 1) * sizeof(wchar_t);
+	System_String* pString = __new_string_internal__(size);
+    memcpy((wchar_t*)(pString->pBody), pString, size);
+
+	return pString;
 }
 
 System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 {
-    //-------------------
-    // Local variables:
+    uint32_t str0Size = (uint32_t)wcslen(str0->pBody) * sizeof(wchar_t);
+	uint32_t str1Size = (uint32_t)wcslen(str1->pBody) * sizeof(wchar_t);
 
-    System_String* local0 = NULL;
+	System_String* pString = __new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
+    memcpy((wchar_t*)(pString->pBody), str0->pBody, str0Size);
+    memcpy(((uint8_t*)(pString->pBody)) + str0Size, str1->pBody, str1Size + sizeof(wchar_t));
 
-    //-------------------
-    // Setup stack frame:
+    return pString;
+}
 
-    struct /* __EXECUTION_FRAME__ */
-    {
-        __EXECUTION_FRAME__* pNext;
-        uint8_t targetCount;
-        System_String** plocal0;
-    } __executionFrame__;
+System_String* System_String_Substring(System_String* __this, int32_t startIndex)
+{
+	// TODO: IndexOutOfRangeException
+	assert(startIndex >= 0);
 
-    __executionFrame__.targetCount = 1;
-    __executionFrame__.plocal0 = &local0;
-    __gc_link_execution_frame__(&__executionFrame__);
+	if (startIndex == 0)
+	{
+		return __this;
+	}
 
-    //-------------------
+	int32_t length = wcslen(__this->pBody);
+	// TODO: IndexOutOfRangeException
+	assert(startIndex < length);
 
-    uint32_t str0Size = wcslen(str0->pString) * sizeof(wchar_t);
-	uint32_t str1Size = wcslen(str1->pString) * sizeof(wchar_t);
+	int32_t newSize = (length - startIndex + 1) * sizeof(wchar_t);
+	System_String* pString = __new_string_internal__(newSize);
+	memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
 
-    wchar_t* pBody = __new_string_internal__(&local0, str0Size + str1Size + sizeof(wchar_t));
-    memcpy(pBody, str0->pString, str0Size);
-    memcpy(((uint8_t*)pBody) + str0Size, str1->pString, str1Size + sizeof(wchar_t));
-    __gc_unlink_execution_frame__(&__executionFrame__);
-    return local0;
+	return pString;
 }

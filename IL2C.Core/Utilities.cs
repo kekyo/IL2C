@@ -91,7 +91,8 @@ namespace IL2C
                 || type.IsInt16Type()
                 || type.IsUInt16Type()
                 || type.IsUInt32Type()
-                || type.IsBooleanType())
+                || type.IsBooleanType()
+                || type.IsCharType())
             {
                 return type.GetSafeInt32Type();
             }

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 
 using Mono.Cecil;
+using Mono.Cecil.Pdb;
 
 using IL2C.Translators;
-using Mono.Cecil.Pdb;
 
 namespace IL2C
 {
@@ -28,7 +28,8 @@ namespace IL2C
             { typeof(ulong).FullName, "stdint.h" },
             { typeof(string).FullName, "string.h" },
             { typeof(IntPtr).FullName, "stdint.h" },
-            { typeof(UIntPtr).FullName, "stdint.h" }
+            { typeof(UIntPtr).FullName, "stdint.h" },
+            { typeof(char).FullName, "wchar.h" }
         };
 
         private static readonly Dictionary<string, string> predefinedCTypeNames = new Dictionary<string, string>
@@ -44,7 +45,8 @@ namespace IL2C
             { typeof(long).FullName, "int64_t" },
             { typeof(ulong).FullName, "uint64_t" },
             { typeof(IntPtr).FullName, "intptr_t" },
-            { typeof(UIntPtr).FullName, "uintptr_t" }
+            { typeof(UIntPtr).FullName, "uintptr_t" },
+            { typeof(char).FullName, "wchar_t" }
         };
 
         private readonly HashSet<string> includes = new HashSet<string>();

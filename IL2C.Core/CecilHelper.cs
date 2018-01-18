@@ -55,7 +55,8 @@ namespace IL2C
             typeof(long).FullName,
             typeof(ulong).FullName,
             typeof(IntPtr).FullName,
-            typeof(UIntPtr).FullName
+            typeof(UIntPtr).FullName,
+            typeof(char).FullName
         };
         #endregion
 
@@ -304,6 +305,11 @@ namespace IL2C
             return member.Module.TypeSystem.String;
         }
 
+        public static TypeReference GetSafeCharType(this MemberReference member)
+        {
+            return member.Module.TypeSystem.Char;
+        }
+
         ///
 
         public static TypeReference GetSafeVoidType(this ModuleDefinition module)
@@ -380,6 +386,11 @@ namespace IL2C
         {
             return module.TypeSystem.String;
         }
+
+        public static TypeReference GetSafeCharType(this ModuleDefinition module)
+        {
+            return module.TypeSystem.Char;
+        }
         #endregion
 
         #region Type system safed "is" operators
@@ -455,6 +466,11 @@ namespace IL2C
         public static bool IsStringType(this TypeReference type)
         {
             return type.GetSafeStringType().MemberEquals(type);
+        }
+
+        public static bool IsCharType(this TypeReference type)
+        {
+            return type.GetSafeCharType().MemberEquals(type);
         }
         #endregion
     }

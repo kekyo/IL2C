@@ -30,5 +30,10 @@ namespace Win32.Code
             string a = "ABCDEFGHIJKLMN";
             return a.Substring(3);
         }
+
+        public static char GetChar()
+        {
+            return 'A';
+        }
     }
 }

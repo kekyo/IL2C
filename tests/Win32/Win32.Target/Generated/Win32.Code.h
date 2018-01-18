@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <wchar.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,6 +21,7 @@ typedef struct Win32_Code_Hoge1 Win32_Code_Hoge1;
 typedef struct Win32_Code_Hoge2 Win32_Code_Hoge2;
 typedef struct Win32_Code_Win32 Win32_Code_Win32;
 typedef struct Win32_Code_StringTest Win32_Code_StringTest;
+typedef struct Win32_Code_UnsafeTest Win32_Code_UnsafeTest;
 typedef struct Win32_Code_ValueTypeTestTarget Win32_Code_ValueTypeTestTarget;
 typedef struct Win32_Code_ValueTypeTest Win32_Code_ValueTypeTest;
 
@@ -71,6 +73,12 @@ extern const __RUNTIME_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE__;
 extern const __RUNTIME_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
+// Class: Win32.Code.UnsafeTest
+
+
+extern const __RUNTIME_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE__;
+
+////////////////////////////////////////////////////////////
 // Struct: Win32.Code.ValueTypeTestTarget
 
 struct Win32_Code_ValueTypeTestTarget
@@ -93,6 +101,7 @@ extern const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE__;
 
 extern int32_t Win32_Code_ClassTypeTestTarget_Value1;
 extern Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1;
+
 
 
 
@@ -136,7 +145,10 @@ extern void Win32_Code_StringTest_LiteralString(void);
 extern System_String* Win32_Code_StringTest_InOutString(System_String* a);
 extern System_String* Win32_Code_StringTest_LiteralCombinedString(void);
 extern System_String* Win32_Code_StringTest_LiteralSubstring(void);
+extern wchar_t Win32_Code_StringTest_GetChar(void);
 extern void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this);
+
+extern void Win32_Code_UnsafeTest__ctor(Win32_Code_UnsafeTest* __this);
 
 extern int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget* __this, int32_t a, int32_t b);
 

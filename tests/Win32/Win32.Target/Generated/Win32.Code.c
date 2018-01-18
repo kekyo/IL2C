@@ -39,6 +39,7 @@ Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1 = NULL;
 
 
 
+
 int32_t Win32_Code_ValueTypeTestTarget_Value1 = 0;
 
 
@@ -1225,6 +1226,35 @@ L_0000:
 }
 
 ///////////////////////////////////////
+// GetChar
+
+wchar_t Win32_Code_StringTest_GetChar(void)
+{
+    //-------------------
+    // Local variables:
+
+    wchar_t local0;
+
+    //-------------------
+    // Evaluation stacks:
+
+    int32_t __stack0_0;
+
+    //-------------------
+    // IL body:
+
+#line 35 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 36 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+    __stack0_0 = 65;
+    local0 = (wchar_t)__stack0_0;
+    goto L_0000;
+#line 37 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+L_0000:
+    __stack0_0 = local0;
+    return (wchar_t)__stack0_0;
+}
+
+///////////////////////////////////////
 // .ctor
 
 void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this)
@@ -1246,6 +1276,60 @@ void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this)
         __EXECUTION_FRAME__* pNext;
         uint8_t targetCount;
         Win32_Code_StringTest** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    __stack0_0 = __this;
+    System_Object__ctor((System_Object*)__stack0_0);
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return;
+}
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.UnsafeTest
+
+//////////////////////
+// Runtime helpers:
+
+static void __Win32_Code_UnsafeTest_MARK_HANDLER__(void* pReference)
+{
+    __typeof__(System_Object)->pMarkHandler(pReference);
+}
+
+static __RUNTIME_TYPE_DEF__ __Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.UnsafeTest",
+    0,
+    __Win32_Code_UnsafeTest_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE__ = &__Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__;
+
+///////////////////////////////////////
+// .ctor
+
+void Win32_Code_UnsafeTest__ctor(Win32_Code_UnsafeTest* __this)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_UnsafeTest* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_UnsafeTest** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;

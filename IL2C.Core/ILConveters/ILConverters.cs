@@ -183,5 +183,21 @@ namespace IL2C.ILConveters
                 };
             }
         }
+
+        internal sealed class LdnullConverter : InlineNoneConverter
+        {
+            public override OpCode OpCode => OpCodes.Ldnull;
+
+            public override Func<IExtractContext, string[]> Apply(
+                DecodeContext decodeContext)
+            {
+                var symbolName = decodeContext.PushStack(
+                    decodeContext.Module.GetPseudoZeroType());
+
+                return _ => new[] { string.Format(
+                    "{0} = NULL",
+                    symbolName) };
+            }
+        }
     }
 }

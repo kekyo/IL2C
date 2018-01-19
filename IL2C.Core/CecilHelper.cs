@@ -43,6 +43,15 @@ namespace IL2C
         }
         #endregion
 
+        #region PseudoZeroType
+        private sealed class PseudoZeroType
+        {
+            private PseudoZeroType()
+            {
+            }
+        }
+        #endregion
+
         #region Fields
         private static readonly HashSet<string> primitiveTypes = new HashSet<string>
         {
@@ -58,6 +67,13 @@ namespace IL2C
             typeof(UIntPtr).FullName,
             typeof(char).FullName
         };
+
+        private static readonly TypeDefinition pseudoZeroTypeDefinition = AssemblyDefinition
+            .ReadAssembly(typeof(PseudoZeroType).Assembly.Location)
+            .MainModule
+            .GetType(typeof(CecilHelper).FullName)
+            .NestedTypes
+            .First(t2 => t2.Name == typeof(PseudoZeroType).Name);
         #endregion
 
         private static T ResolveIf<T>(MemberReference reference)
@@ -310,6 +326,10 @@ namespace IL2C
             return member.Module.TypeSystem.Char;
         }
 
+        public static TypeReference GetPseudoZeroType(this MemberReference member)
+        {
+            return pseudoZeroTypeDefinition;
+        }
         ///
 
         public static TypeReference GetSafeVoidType(this ModuleDefinition module)
@@ -391,6 +411,11 @@ namespace IL2C
         {
             return module.TypeSystem.Char;
         }
+
+        public static TypeReference GetPseudoZeroType(this ModuleDefinition module)
+        {
+            return pseudoZeroTypeDefinition;
+        }
         #endregion
 
         #region Type system safed "is" operators
@@ -471,6 +496,11 @@ namespace IL2C
         public static bool IsCharType(this TypeReference type)
         {
             return type.GetSafeCharType().MemberEquals(type);
+        }
+
+        public static bool IsPseudoZeroType(this TypeReference type)
+        {
+            return type.GetPseudoZeroType().MemberEquals(type);
         }
         #endregion
     }

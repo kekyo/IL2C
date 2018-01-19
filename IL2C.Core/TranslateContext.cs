@@ -259,6 +259,13 @@ namespace IL2C
                         rhs.SymbolName);
                 }
             }
+            else if (!lhsType.IsValueType && rhs.TargetType.IsPseudoZeroType())
+            {
+                return String.Format(
+                    "({0}){1}",
+                    this.GetCLanguageTypeName(lhsType),
+                    rhs.SymbolName);
+            }
 
             return null;
         }

@@ -35,5 +35,10 @@ namespace Win32.Code
         {
             return 'A';
         }
+
+        public static char GetCharByIndex(string str, int index)
+        {
+            return str[index];
+        }
     }
 }

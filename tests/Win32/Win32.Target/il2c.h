@@ -138,6 +138,7 @@ extern System_String* __new_string__(const wchar_t* pString);
 
 extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
 extern System_String* System_String_Substring(System_String* __this, int32_t startIndex);
+extern wchar_t System_String_get_Chars(System_String* __this, int32_t index);
 
 #ifdef __cplusplus
 }

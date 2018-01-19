@@ -1255,6 +1255,55 @@ L_0000:
 }
 
 ///////////////////////////////////////
+// GetCharByIndex
+
+wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index)
+{
+    //-------------------
+    // Local variables:
+
+    wchar_t local0;
+
+    //-------------------
+    // Evaluation stacks:
+
+    System_String* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack0_2;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        System_String** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+#line 40 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 41 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+    __stack0_0 = str;
+    __stack1_0 = index;
+    __stack0_1 = System_String_get_Chars(__stack0_0, __stack1_0);
+    local0 = (wchar_t)__stack0_1;
+    goto L_0000;
+#line 42 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+L_0000:
+    __stack0_2 = local0;
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return (wchar_t)__stack0_2;
+}
+
+///////////////////////////////////////
 // .ctor
 
 void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this)

@@ -146,6 +146,7 @@ extern System_String* Win32_Code_StringTest_InOutString(System_String* a);
 extern System_String* Win32_Code_StringTest_LiteralCombinedString(void);
 extern System_String* Win32_Code_StringTest_LiteralSubstring(void);
 extern wchar_t Win32_Code_StringTest_GetChar(void);
+extern wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index);
 extern void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this);
 
 extern void Win32_Code_UnsafeTest__ctor(Win32_Code_UnsafeTest* __this);

@@ -443,3 +443,12 @@ System_String* System_String_Substring(System_String* __this, int32_t startIndex
 
 	return pString;
 }
+
+wchar_t System_String_get_Chars(System_String* __this, int32_t index)
+{
+	// TODO: IndexOutOfRangeException
+	assert(index >= 0);
+	assert(index < wcslen(__this->pBody));
+
+	return __this->pBody[index];
+}

@@ -7,12 +7,12 @@
 typedef unsigned long long EFI_STATUS;
 typedef void *EFI_HANDLE;
 
-struct EFI_INPUT_KEY {
+typedef struct {
 	unsigned short ScanCode;
-	unsigned short UnicodeChar;
-};
+	wchar_t UnicodeChar;
+} EFI_INPUT_KEY;
 
-enum EFI_MEMORY_TYPE {
+typedef enum {
 	EfiReservedMemoryType,
 	EfiLoaderCode,
 	EfiLoaderData,
@@ -28,28 +28,36 @@ enum EFI_MEMORY_TYPE {
 	EfiMemoryMappedIOPortSpace,
 	EfiPalCode,
 	EfiMaxMemoryType
-};
+} EFI_MEMORY_TYPE;
 
 typedef struct {
 	char _buf1[44];
+
 	struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL {
 		void *_buf;
-		EFI_STATUS (*ReadKeyStroke)(struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL *, struct EFI_INPUT_KEY *);
+		EFI_STATUS (*ReadKeyStroke)(struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL *, EFI_INPUT_KEY*);
 	} *ConIn;
+
 	void *_buf2;
+
 	struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
 		void *_buf;
 		EFI_STATUS (*OutputString)(struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *, const wchar_t*);
 	} *ConOut;
+
 	unsigned long long _buf3[3];
+
 	struct EFI_BOOT_SERVICES {
 		char _buf1[24];
+
 		// Task Priority Services
 		unsigned long long _buf2[2];
-		// Memory Services
+
 		unsigned long long _buf3[3];
+
+		// Memory Services
 		EFI_STATUS (*AllocatePool)(
-			enum EFI_MEMORY_TYPE PoolType,
+			EFI_MEMORY_TYPE PoolType,
 			unsigned long long Size,
 			void **Buffer);
 		EFI_STATUS (*FreePool)(
@@ -89,6 +97,47 @@ void __cdecl free(void* _Block)
 	g_pSystemTable->BootServices->FreePool(_Block);
 }
 
+void ReadLine(wchar_t* pBuffer, size_t length)
+{
+	wchar_t buffer[] = { L'\0', L'\0', L'\0' };
+	uint32_t index = 0;
+
+	while ((index + 1) < length)
+	{
+		EFI_INPUT_KEY efi_input_key;
+		g_pSystemTable->ConIn->ReadKeyStroke(g_pSystemTable->ConIn, &efi_input_key);
+
+		if (efi_input_key.UnicodeChar == L'\r')
+		{
+			break;
+		}
+
+		pBuffer[index] = efi_input_key.UnicodeChar;
+
+		buffer[0] = efi_input_key.UnicodeChar;
+
+		g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+	}
+
+	pBuffer[index] = L'\0';
+
+	buffer[0] = L'\r';
+	buffer[1] = L'\n';
+
+	g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+}
+
+void Write(wchar_t const* pMessage)
+{
+	g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, pMessage);
+}
+
+void WriteLine(wchar_t const* pMessage)
+{
+	g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, pMessage);
+	g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
+}
+
 //////////////////////////////////////////////////////////////////////////
 // UEFI interface: code refer from
 
@@ -99,23 +148,11 @@ EFI_STATUS EfiMain(
 	// Setup interop pointer
 	g_pSystemTable = pSystemTable;
 
-	struct EFI_INPUT_KEY efi_input_key;
-	unsigned short str[3];
+	__gc_initialize__();
 
-	while (1) {
-		if (!pSystemTable->ConIn->ReadKeyStroke(pSystemTable->ConIn, &efi_input_key)) {
-			if (efi_input_key.UnicodeChar != L'\r') {
-				str[0] = efi_input_key.UnicodeChar;
-				str[1] = L'\0';
-			}
-			else {
-				str[0] = L'\r';
-				str[1] = L'\n';
-				str[2] = L'\0';
-			}
-			pSystemTable->ConOut->OutputString(pSystemTable->ConOut, str);
-		}
-	}
+	UEFI_Code_ReversePolishNotation_Main();
+
+	__gc_shutdown__();
 
 	return 0;
 }

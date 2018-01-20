@@ -31,5 +31,18 @@ namespace UEFI.Code
             }
             return null;
         }
+
+        public static void Main()
+        {
+            while (true)
+            {
+                Console.Write("RPN> ");
+                var line = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(line) == false)
+                {
+                    var expr = Parse(line, 0);
+                }
+            }
+        }
     }
 }

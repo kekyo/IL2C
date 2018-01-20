@@ -1,6 +1,7 @@
 /////////////////////////////////////////////////////////////
 // For platform specifics:
 
+#include <stdio.h>
 #if defined(UEFI)
 
 #include <intrin.h>
@@ -488,4 +489,67 @@ int32_t System_String_get_Length(System_String* __this)
 	GCASSERT(__this->pBody != NULL);
 
 	return (int32_t)wcslen(__this->pBody);
+}
+
+bool System_String_IsNullOrWhiteSpace(System_String* value)
+{
+	if (value == NULL)
+	{
+		return true;
+	}
+
+	GCASSERT(value->pBody != NULL);
+
+	uint32_t index = 0;
+	while (true)
+	{
+		wchar_t ch = value->pBody[index];
+		switch (ch)
+		{
+		case L'\0':
+			return true;
+		case L' ':
+		case L'\t':
+			break;
+		default:
+			return false;
+		}
+
+		index++;
+	}
+}
+
+/////////////////////////////////////////////////////////////
+// System.Console
+
+extern void Write(const wchar_t* pMessage);
+extern void WriteLine(const wchar_t* pMessage);
+extern void ReadLine(wchar_t* pBuffer, size_t length);
+
+void System_Console_Write_9(System_String* value)
+{
+	// TODO: NullReferenceException
+	GCASSERT(value != NULL);
+
+	GCASSERT(value->pBody != NULL);
+	Write(value->pBody);
+}
+
+void System_Console_WriteLine_10(System_String* value)
+{
+	// TODO: NullReferenceException
+	GCASSERT(value != NULL);
+
+	GCASSERT(value->pBody != NULL);
+	WriteLine(value->pBody);
+}
+
+#define MAX_READLINE 128
+
+System_String* System_Console_ReadLine()
+{
+	wchar_t buffer[MAX_READLINE];
+
+	ReadLine(buffer, MAX_READLINE);
+	return __new_string__(buffer);
 }

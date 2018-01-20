@@ -49,6 +49,7 @@
     <GenerateManifest>false</GenerateManifest>
     <TargetExt>.efi</TargetExt>
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>bootx64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
@@ -56,6 +57,7 @@
     <GenerateManifest>false</GenerateManifest>
     <TargetExt>.efi</TargetExt>
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>bootx64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

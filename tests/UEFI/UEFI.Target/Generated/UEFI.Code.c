@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Const strings:
 
+__DEFINE_CONST_STRING__(__string0, L"RPN> ");
 
 #ifdef __cplusplus
 extern "C" {
@@ -192,6 +193,84 @@ L_0002:
     __stack0_2 = local2;
     __gc_unlink_execution_frame__(&__executionFrame__);
     return __stack0_2;
+}
+
+///////////////////////////////////////
+// Main
+
+void UEFI_Code_ReversePolishNotation_Main(void)
+{
+    //-------------------
+    // Local variables:
+
+    System_String* local0 = NULL;
+    bool local1;
+    UEFI_Code_Expression* local2 = NULL;
+    bool local3;
+
+    //-------------------
+    // Evaluation stacks:
+
+    int32_t __stack0_0;
+    System_String* __stack0_1 = NULL;
+    UEFI_Code_Expression* __stack0_2 = NULL;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        System_String** plocal0;
+        UEFI_Code_Expression** plocal2;
+        System_String** p__stack0_1;
+        UEFI_Code_Expression** p__stack0_2;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 4;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.plocal2 = &local2;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
+    __executionFrame__.p__stack0_2 = &__stack0_2;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+#line 36 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+    goto L_0000;
+#line 37 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+L_0000:
+    __stack0_0 = 1;
+    local3 = __stack0_0 ? true : false;
+    goto L_0001;
+#line 38 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+L_0001:
+#line 39 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+    __stack0_1 = __string0 /* "RPN> " */;
+    System_Console_Write_9(__stack0_1);
+#line 40 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+    __stack0_1 = System_Console_ReadLine();
+    local0 = __stack0_1;
+#line 41 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+    __stack0_1 = local0;
+    __stack0_0 = System_String_IsNullOrWhiteSpace(__stack0_1);
+    __stack1_0 = 0;
+    __stack0_0 = (__stack0_0 == __stack1_0) ? 1 : 0;
+    local1 = __stack0_0 ? true : false;
+    __stack0_0 = local1;
+    if (__stack0_0 == 0) goto L_0002;
+#line 42 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+#line 43 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+    __stack0_1 = local0;
+    __stack1_0 = 0;
+    __stack0_2 = UEFI_Code_ReversePolishNotation_Parse(__stack0_1, __stack1_0);
+    local2 = __stack0_2;
+#line 44 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+#line 45 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\ReversePolishNotation.cs"
+L_0002:
 }
 
 ///////////////////////////////////////

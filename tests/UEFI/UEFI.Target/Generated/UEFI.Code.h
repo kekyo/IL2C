@@ -46,6 +46,7 @@ extern const __RUNTIME_TYPE__ __UEFI_Code_ReversePolishNotation_RUNTIME_TYPE__;
 extern void UEFI_Code_Expression__ctor(UEFI_Code_Expression* __this, UEFI_Code_Expression* lhs, UEFI_Code_Expression* rhs, wchar_t oper);
 
 extern UEFI_Code_Expression* UEFI_Code_ReversePolishNotation_Parse(System_String* line, int32_t startIndex);
+extern void UEFI_Code_ReversePolishNotation_Main(void);
 extern void UEFI_Code_ReversePolishNotation__ctor(UEFI_Code_ReversePolishNotation* __this);
 
 #ifdef __cplusplus

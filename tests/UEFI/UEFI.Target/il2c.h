@@ -1,6 +1,7 @@
 #ifndef __IL2C_H__
 #define __IL2C_H__
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <wchar.h>
 
@@ -142,6 +143,14 @@ extern System_String* System_String_Concat_6(System_String* str0, System_String*
 extern System_String* System_String_Substring(System_String* __this, int32_t startIndex);
 extern wchar_t System_String_get_Chars(System_String* __this, int32_t index);
 extern int32_t System_String_get_Length(System_String* __this);
+extern bool System_String_IsNullOrWhiteSpace(System_String* value);
+
+/////////////////////////////////////////////////////////////
+// System.Console
+
+extern void System_Console_Write_9(System_String* value);
+extern void System_Console_WriteLine_10(System_String* value);
+extern System_String* System_Console_ReadLine();
 
 #ifdef __cplusplus
 }

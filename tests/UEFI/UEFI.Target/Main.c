@@ -150,7 +150,7 @@ EFI_STATUS EfiMain(
 
 	__gc_initialize__();
 
-	UEFI_Code_ReversePolishNotation_Main();
+	UEFI_Code_PolishNotation_Main();
 
 	__gc_shutdown__();
 

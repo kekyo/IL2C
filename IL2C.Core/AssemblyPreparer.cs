@@ -78,21 +78,31 @@ namespace IL2C
                 body.Instructions.ToArray(),
                 prepareContext);
 
+            // It gathers sequence point informations.
+            // It will use writing the line preprocessor directive.
             var sequencePoints =
                 (from sp in body.Method.DebugInformation.SequencePoints
+                 where !sp.IsHidden
                  group sp by sp.Offset into g
-                 let sps = g.Where(sp => !sp.IsHidden).ToArray()
+                 let sps = g.OrderBy(sp => sp.Offset).ToArray()
                  where sps.Length >= 1
                  select new { g.Key, sps })
                 .ToDictionary(g => g.Key, g => g.sps);
 
+            // Important:
+            //   It's core decoding sequence.
+            //   The flow analysis can't predict by sequential path.
+            //   So, it reorders by IL offset.
             var preparedILBodies = decodeContext
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
+                    let ucbi = dc.UniqueCodeBlockIndex
                     let sps = sequencePoints.UnsafeGetValue(ilBody.Label.Offset, empty)
                     let generator = ilBody.ILConverter.Apply(ilBody.Operand, dc)
-                    select new PreparedILBody(ilBody.Label, generator, sps))
+                    select new PreparedILBody(ilBody.Label, generator, ucbi, sps))
+                .OrderBy(ilb => ilb.UniqueCodeBlockIndex)
+                .ThenBy(ilb => ilb.Label.Offset)
                 .ToArray();
 
             var stacks = decodeContext

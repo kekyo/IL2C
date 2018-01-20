@@ -199,5 +199,25 @@ namespace IL2C.ILConveters
                     symbolName) };
             }
         }
+
+        internal sealed class DupConverter : InlineNoneConverter
+        {
+            public override OpCode OpCode => OpCodes.Dup;
+
+            public override Func<IExtractContext, string[]> Apply(
+                DecodeContext decodeContext)
+            {
+                var si = decodeContext.PopStack();
+                decodeContext.PushStack(si.TargetType);
+
+                var symbolName1 = decodeContext.PushStack(
+                    si.TargetType);
+
+                return _ => new[] { string.Format(
+                    "{0} = {1}",
+                    symbolName1,
+                    si.SymbolName) };
+            }
+        }
     }
 }

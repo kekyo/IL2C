@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -256,9 +257,18 @@ namespace IL2C
             tw.WriteLine("{0}// IL body:", indent);
             tw.WriteLine();
 
+            var canWriteSequencePoint = true;
             preparedFunction.PreparedILBodies.ForEach(ilBody =>
             {
-                if (ilBody.SequencePoints.Any())
+                // Write label if available and used.
+                if (preparedFunction.TryGetLabelName(
+                    ilBody.Label, out var labelName))
+                {
+                    tw.WriteLine("{0}:", labelName);
+                }
+
+                // Write the line preprocessor directive if available.
+                if (canWriteSequencePoint && ilBody.SequencePoints.Any())
                 {
                     var sp = ilBody.SequencePoints.First();
 
@@ -266,18 +276,16 @@ namespace IL2C
                         "#line {0} \"{1}\"",
                         sp.StartLine,
                         sp.Document.Url.Replace("\\", "\\\\"));
+
+                    canWriteSequencePoint = false;
                 }
 
-                if (preparedFunction.TryGetLabelName(
-                    ilBody.Label, out var labelName))
-                {
-                    tw.WriteLine("{0}:", labelName);
-                }
-
+                // Generate source code fragments and write.
                 var sourceCodes = ilBody.Generator(extractContext);
                 sourceCodes.ForEach(sourceCode =>
                 {
                     // Dirty hack:
+                    //   Write unlink execution frame code if cause exiting method.
                     if (sourceCode.StartsWith("return")
                         && (frameEntries.Length >= 1))
                     {
@@ -290,6 +298,8 @@ namespace IL2C
                         "{0}{1};",
                         indent,
                         sourceCode);
+
+                    canWriteSequencePoint = true;
                 });
             });
 

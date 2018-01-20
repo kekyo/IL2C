@@ -2,7 +2,7 @@
   "profiles": {
     "IL2C": {
       "commandName": "Project",
-      "commandLineArgs": "\"$(ProjectDir)..\\tests\\Win32\\Win32.Code\\bin\\$(ConfigurationName)\\netstandard1.3\\Win32.Code.dll\" \"$(ProjectDir)..\\tests\\Win32\\Win32.Target\\Generated\""
+      "commandLineArgs": "\"$(ProjectDir)..\\tests\\UEFI\\UEFI.Code\\bin\\$(ConfigurationName)\\netstandard1.3\\UEFI.Code.dll\" \"$(ProjectDir)..\\tests\\UEFI\\UEFI.Target\\Generated\""
     }
   }
 }

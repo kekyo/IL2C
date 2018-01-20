@@ -237,6 +237,8 @@ namespace IL2C.Translators
         #endregion
 
         #region Path
+        public int UniqueCodeBlockIndex { get; private set; }
+
         public string EnqueueNewPath(int targetOffset)
         {
             Debug.Assert(decodingPathNumber >= 1);
@@ -276,6 +278,12 @@ namespace IL2C.Translators
                     {
                         continue;
                     }
+
+                    // Same but has to reinterpret code block:
+                    //   It will interpret already through (but bit different) path,
+                    //   these code blocks assigned at same IL offset.
+                    //   IL2C has to split blocks by this unique code block index.
+                    this.UniqueCodeBlockIndex++;
                 }
 
                 // Start next path.

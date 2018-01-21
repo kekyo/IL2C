@@ -815,9 +815,9 @@ IL_0009:
     goto IL_000d;
 IL_000d:
 #line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
-    /* Path=4, Unique=1: IL_000d: ldloc.0 */
+    /* Path=3, Unique=0: IL_000d: ldloc.0 */
     __stack0_0 = local0;
-    /* Path=4, Unique=1: IL_000e: ret */
+    /* Path=3, Unique=0: IL_000e: ret */
     return __stack0_0;
 }
 
@@ -867,9 +867,9 @@ IL_0009:
     goto IL_000e;
 IL_000e:
 #line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
-    /* Path=4, Unique=1: IL_000e: ldloc.0 */
+    /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
-    /* Path=4, Unique=1: IL_000f: ret */
+    /* Path=3, Unique=0: IL_000f: ret */
     return __stack0_0;
 }
 
@@ -976,9 +976,9 @@ IL_0009:
     goto IL_000e;
 IL_000e:
 #line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
-    /* Path=4, Unique=1: IL_000e: ldloc.0 */
+    /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
-    /* Path=4, Unique=1: IL_000f: ret */
+    /* Path=3, Unique=0: IL_000f: ret */
     return (uint8_t)__stack0_0;
 }
 
@@ -1027,9 +1027,9 @@ IL_0009:
     goto IL_000e;
 IL_000e:
 #line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
-    /* Path=4, Unique=1: IL_000e: ldloc.0 */
+    /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
-    /* Path=4, Unique=1: IL_000f: ret */
+    /* Path=3, Unique=0: IL_000f: ret */
     return (uint16_t)__stack0_0;
 }
 

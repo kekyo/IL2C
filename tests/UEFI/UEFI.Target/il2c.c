@@ -401,6 +401,18 @@ static __RUNTIME_TYPE_DEF__ __System_UInt64_RUNTIME_TYPE_DEF__ = {
     "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
 
+extern int wtoi(const wchar_t *_Str);
+
+int32_t System_Int32_Parse(System_String* pStr)
+{
+	// TODO: NullReferenceException
+	GCASSERT(pStr != NULL);
+
+	GCASSERT(pStr->pBody != NULL);
+
+	return wtoi(pStr->pBody);
+}
+
 /////////////////////////////////////////////////////////////
 // System.String
 
@@ -549,7 +561,7 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
 
 extern void Write(const wchar_t* pMessage);
 extern void WriteLine(const wchar_t* pMessage);
-extern void ReadLine(wchar_t* pBuffer, size_t length);
+extern void ReadLine(wchar_t* pBuffer, uint16_t length);
 
 void System_Console_Write_9(System_String* value)
 {

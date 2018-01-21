@@ -284,8 +284,19 @@ IL_001e:
     /* Path=5, Unique=0: IL_0022: nop */
     /* Path=5, Unique=0: IL_0023: br.s IL_0037 */
     goto IL_0037;
+IL_0025:
+#line 45 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
+    /* Path=6, Unique=0: IL_0025: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=6, Unique=0: IL_0026: ldc.i4.1 */
+    __stack1_2 = 1;
+    /* Path=6, Unique=0: IL_0027: add */
+    __stack0_0 = __stack0_0 + __stack1_2;
+    /* Path=6, Unique=0: IL_0028: stloc.0 */
+    local0 = __stack0_0;
+#line 46 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
+    /* Path=6, Unique=0: IL_0029: nop */
 IL_002a:
-#line 38 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_002a: ldloc.0 */
     __stack0_0 = local0;
     /* Path=2, Unique=0: IL_002b: ldarg.0 */
@@ -315,18 +326,6 @@ IL_003c:
     /* Path=4, Unique=0: IL_003e: ret */
     __gc_unlink_execution_frame__(&__executionFrame__);
     return __stack0_0;
-IL_0025:
-#line 45 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
-    /* Path=7, Unique=1: IL_0025: ldloc.0 */
-    __stack0_0 = local0;
-    /* Path=7, Unique=1: IL_0026: ldc.i4.1 */
-    __stack1_2 = 1;
-    /* Path=7, Unique=1: IL_0027: add */
-    __stack0_0 = __stack0_0 + __stack1_2;
-    /* Path=7, Unique=1: IL_0028: stloc.0 */
-    local0 = __stack0_0;
-#line 46 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
-    /* Path=7, Unique=1: IL_0029: nop */
 }
 
 ///////////////////////////////////////
@@ -523,8 +522,19 @@ IL_001b:
     /* Path=5, Unique=0: IL_0021: nop */
     /* Path=5, Unique=0: IL_0022: br.s IL_0038 */
     goto IL_0038;
+IL_0024:
+#line 70 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
+    /* Path=6, Unique=0: IL_0024: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=6, Unique=0: IL_0025: ldc.i4.1 */
+    __stack1_2 = 1;
+    /* Path=6, Unique=0: IL_0026: add */
+    __stack0_0 = __stack0_0 + __stack1_2;
+    /* Path=6, Unique=0: IL_0027: stloc.0 */
+    local0 = __stack0_0;
+#line 71 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
+    /* Path=6, Unique=0: IL_0028: nop */
 IL_0029:
-#line 63 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0029: ldloc.0 */
     __stack0_0 = local0;
     /* Path=2, Unique=0: IL_002a: ldarg.0 */
@@ -590,18 +600,6 @@ IL_005d:
     /* Path=4, Unique=0: IL_005f: ret */
     __gc_unlink_execution_frame__(&__executionFrame__);
     return __stack0_3;
-IL_0024:
-#line 70 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
-    /* Path=7, Unique=1: IL_0024: ldloc.0 */
-    __stack0_0 = local0;
-    /* Path=7, Unique=1: IL_0025: ldc.i4.1 */
-    __stack1_2 = 1;
-    /* Path=7, Unique=1: IL_0026: add */
-    __stack0_0 = __stack0_0 + __stack1_2;
-    /* Path=7, Unique=1: IL_0027: stloc.0 */
-    local0 = __stack0_0;
-#line 71 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
-    /* Path=7, Unique=1: IL_0028: nop */
 }
 
 ///////////////////////////////////////

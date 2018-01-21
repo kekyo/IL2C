@@ -112,13 +112,17 @@ extern const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
 typedef uint64_t System_UInt64;
 extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
 
+typedef struct System_String System_String;
+
+extern int32_t System_Int32_Parse(System_String* pStr);
+
 /////////////////////////////////////////////////////////////
 // System.String
 
-typedef struct System_String
+struct System_String
 {
     const wchar_t* pBody;
-} System_String;
+};
 
 extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
 

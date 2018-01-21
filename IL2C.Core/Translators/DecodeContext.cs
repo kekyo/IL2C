@@ -65,18 +65,18 @@ namespace IL2C.Translators
             }
         }
 
-        private struct BranchTargetInformation
+        private struct StackSnapshot
         {
-            public readonly int Offset;
-            public readonly SymbolInformation[] StackInformationsSnapshot;
+            public readonly int Key;
+            public readonly SymbolInformation[] StackInformations;
 
-            public BranchTargetInformation(
-                int offset,
+            public StackSnapshot(
+                int key,
                 int stackInformationsPosition,
-                List<StackInformationHolder> stackInformationHolderList)
+                IEnumerable<StackInformationHolder> stackInformationHolders)
             {
-                this.Offset = offset;
-                this.StackInformationsSnapshot = stackInformationHolderList
+                this.Key = key;
+                this.StackInformations = stackInformationHolders
                     .Take(stackInformationsPosition)
                     .Select(stackInformationList => stackInformationList.GetCurrent())
                     .ToArray();
@@ -96,16 +96,16 @@ namespace IL2C.Translators
         private int nextOffset = -1;
 
         private int decodingPathNumber = 0;
-        private readonly Dictionary<int, int> decodedPathNumbersAtOffset =
-            new Dictionary<int, int>();
+        private readonly Dictionary<int, StackSnapshot> stackSnapshortsAtOffset =
+            new Dictionary<int, StackSnapshot>();
 
         private readonly List<StackInformationHolder> stackList =
             new List<StackInformationHolder>();
         private int stackPointer = -1;
         private readonly Dictionary<int, string> labelNames = 
             new Dictionary<int, string>();
-        private readonly Queue<BranchTargetInformation> pathRemains =
-            new Queue<BranchTargetInformation>();
+        private readonly Queue<StackSnapshot> pathRemains =
+            new Queue<StackSnapshot>();
         #endregion
 
         public DecodeContext(
@@ -131,19 +131,21 @@ namespace IL2C.Translators
             instructions.ForEach(instruction => this.instructions.Add(instruction.Offset, instruction));
 
             // First valid process is TryDequeueNextPath.
-            this.pathRemains.Enqueue(new BranchTargetInformation(0, 0, new List<StackInformationHolder>()));
+            this.pathRemains.Enqueue(new StackSnapshot(0, 0, new List<StackInformationHolder>()));
         }
 
         #region Instruction
         public bool MoveNext()
         {
             // Finish if current position already decoded.
-            if (decodedPathNumbersAtOffset.TryGetValue(nextOffset, out var pathNumber))
+            if (stackSnapshortsAtOffset.TryGetValue(nextOffset, out var stackSnapshot))
             {
                 this.Current = null;
                 return false;
             }
-            decodedPathNumbersAtOffset.Add(nextOffset, decodingPathNumber);
+
+            stackSnapshot = new StackSnapshot(decodingPathNumber, stackPointer, stackList);
+            stackSnapshortsAtOffset.Add(nextOffset, stackSnapshot);
 
             if (instructions.TryGetValue(nextOffset, out var instruction) == false)
             {
@@ -154,6 +156,7 @@ namespace IL2C.Translators
             this.Current = instruction;
 
             nextOffset = instruction.Offset + instruction.GetSize();
+
             return true;
         }
 
@@ -247,7 +250,7 @@ namespace IL2C.Translators
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            pathRemains.Enqueue(new BranchTargetInformation(
+            pathRemains.Enqueue(new StackSnapshot(
                 targetOffset, stackPointer, stackList));
 
             if (labelNames.TryGetValue(
@@ -266,17 +269,14 @@ namespace IL2C.Translators
             while (pathRemains.Count >= 1)
             {
                 // Get queued branch target.
-                var branchTarget = pathRemains.Dequeue();
+                var beforeBranchStackSnapshot = pathRemains.Dequeue();
 
                 // If current position already decoded:
-                if (decodedPathNumbersAtOffset.TryGetValue(branchTarget.Offset, out var pathNumber))
+                if (stackSnapshortsAtOffset.TryGetValue(beforeBranchStackSnapshot.Key, out var stackSnapshot))
                 {
                     // Skip if stack information equals.
-                    var currentStacks = stackList
-                        .Take(stackPointer)
-                        .Select(si => si.GetCurrent());
-                    var branchTargetStacks = branchTarget.StackInformationsSnapshot;
-                    if (currentStacks.SequenceEqual(branchTargetStacks))
+                    if (stackSnapshot.StackInformations.SequenceEqual(
+                        beforeBranchStackSnapshot.StackInformations))
                     {
                         continue;
                     }
@@ -290,17 +290,17 @@ namespace IL2C.Translators
 
                 // Start next path.
                 decodingPathNumber++;
-                nextOffset = branchTarget.Offset;
+                nextOffset = beforeBranchStackSnapshot.Key;
 
                 // Retreive stack informations.
                 for (var index = 0;
-                    index < branchTarget.StackInformationsSnapshot.Length;
+                    index < beforeBranchStackSnapshot.StackInformations.Length;
                     index++)
                 {
-                    stackList[index]
-                        .GetOrAdd(branchTarget.StackInformationsSnapshot[index].TargetType);
+                    stackList[index].GetOrAdd(
+                        beforeBranchStackSnapshot.StackInformations[index].TargetType);
                 }
-                stackPointer = branchTarget.StackInformationsSnapshot.Length;
+                stackPointer = beforeBranchStackSnapshot.StackInformations.Length;
 
                 return true;
             }

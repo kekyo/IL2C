@@ -460,11 +460,36 @@ System_String* System_String_Substring(System_String* __this, int32_t startIndex
 		return __this;
 	}
 
-	int32_t length = (int32_t)wcslen(__this->pBody);
+	int32_t thisLength = (int32_t)wcslen(__this->pBody);
 	// TODO: IndexOutOfRangeException
-	GCASSERT(startIndex < length);
+	GCASSERT(startIndex < thisLength);
 
-	uint32_t newSize = (length - startIndex + 1) * sizeof(wchar_t);
+	uint32_t newSize = (thisLength - startIndex + 1) * sizeof(wchar_t);
+	System_String* pString = __new_string_internal__(newSize);
+	memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
+
+	return pString;
+}
+
+System_String* System_String_Substring_1(System_String* __this, int32_t startIndex, int32_t length)
+{
+	GCASSERT(__this != NULL);
+	GCASSERT(__this->pBody != NULL);
+
+	// TODO: IndexOutOfRangeException
+	GCASSERT(startIndex >= 0);
+	GCASSERT(length >= 0);
+
+	int32_t thisLength = (int32_t)wcslen(__this->pBody);
+	// TODO: IndexOutOfRangeException
+	GCASSERT((startIndex + length) < thisLength);
+
+	if ((startIndex == 0) && (length == thisLength))
+	{
+		return __this;
+	}
+
+	uint32_t newSize = (thisLength - startIndex + 1) * sizeof(wchar_t);
 	System_String* pString = __new_string_internal__(newSize);
 	memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
 

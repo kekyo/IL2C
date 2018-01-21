@@ -239,6 +239,8 @@ namespace IL2C.Translators
         #region Path
         public int UniqueCodeBlockIndex { get; private set; }
 
+        public int DecodingPathNumber => decodingPathNumber;
+
         public string EnqueueNewPath(int targetOffset)
         {
             Debug.Assert(decodingPathNumber >= 1);
@@ -251,7 +253,7 @@ namespace IL2C.Translators
             if (labelNames.TryGetValue(
                 targetOffset, out var labelName) == false)
             {
-                labelName = string.Format("L_{0:x4}", labelNames.Count);
+                labelName = string.Format("IL_{0:x4}", targetOffset);
                 labelNames.Add(targetOffset, labelName);
             }
 

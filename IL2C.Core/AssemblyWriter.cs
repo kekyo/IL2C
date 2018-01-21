@@ -280,6 +280,12 @@ namespace IL2C
                     canWriteSequencePoint = false;
                 }
 
+                // Hack: Debugging information.
+                tw.WriteLine(
+                    "{0}/* {1} */",
+                    indent,
+                    ilBody);
+
                 // Generate source code fragments and write.
                 var sourceCodes = ilBody.Generator(extractContext);
                 sourceCodes.ForEach(sourceCode =>

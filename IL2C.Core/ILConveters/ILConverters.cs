@@ -106,15 +106,6 @@ namespace IL2C.ILConveters
                         md.GetFullMemberName());
                 }
 
-                var type = md.DeclaringType;
-                if (type.IsValueType)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Invalid new object type: Offset={0}, Method={1}",
-                        decodeContext.Current.Offset,
-                        md.GetFullMemberName());
-                }
-
                 var pairParameters = md.Parameters
                     .Reverse()
                     .Select(parameter => new Utilities.RightExpressionGivenParameter(
@@ -123,6 +114,7 @@ namespace IL2C.ILConveters
                     .ToList();
                 var overloadIndex = method.GetMethodOverloadIndex();
 
+                var type = md.DeclaringType;
                 var thisSymbolName = decodeContext.PushStack(type);
 
                 // Insert this reference.
@@ -137,26 +129,63 @@ namespace IL2C.ILConveters
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters.ToArray(), extractContext, offset);
 
-                    var dereferencedTypeName = extractContext.GetCLanguageTypeName(
-                        type, TypeNameFlags.Dereferenced);
-
-                    return new[]
+                    // newobj opcode can handle value type with parameter applied constructor.
+                    if (type.IsValueType)
                     {
-                        string.Format(
-                            "{0} = __gc_get_uninitialized_object__(__typeof__({1}))",
-                            thisSymbolName,
-                            dereferencedTypeName),
-                        (overloadIndex >= 1)
-                            ? string.Format(
-                                "{0}__ctor_{1}({2})",
-                                dereferencedTypeName,
-                                overloadIndex,
-                                parameterString)
-                            : string.Format(
-                                "{0}__ctor({1})",
-                                dereferencedTypeName,
-                                parameterString)
-                    };
+                        var typeName = extractContext.GetCLanguageTypeName(
+                            type);
+                        // If constructor's arguments greater than or equal 2 (this and others)
+                        if (pairParameters.Count >= 2)
+                        {
+                            return new[] {
+                                string.Format(
+                                    "memset(&{0}, 0x00, sizeof({1}))",
+                                    thisSymbolName,
+                                    typeName),
+                                (overloadIndex >= 1)
+                                    ? string.Format(
+                                        "{0}__ctor_{1}(&{2})",
+                                        typeName,
+                                        overloadIndex,
+                                        parameterString)
+                                    : string.Format(
+                                        "{0}__ctor(&{1})",
+                                        typeName,
+                                        parameterString)
+                            };
+                        }
+                        else
+                        {
+                            // ValueType's default constructor not declared.
+                            return new[] { string.Format(
+                                "memset(&{0}, 0x00, sizeof({1}))",
+                                thisSymbolName,
+                                typeName) };
+                        }
+                    }
+                    // Object reference types.
+                    else
+                    {
+                        var dereferencedTypeName = extractContext.GetCLanguageTypeName(
+                            type, TypeNameFlags.Dereferenced);
+                        return new[]
+                        {
+                            string.Format(
+                                "{0} = __gc_get_uninitialized_object__(__typeof__({1}))",
+                                thisSymbolName,
+                                dereferencedTypeName),
+                            (overloadIndex >= 1)
+                                ? string.Format(
+                                    "{0}__ctor_{1}({2})",
+                                    dereferencedTypeName,
+                                    overloadIndex,
+                                    parameterString)
+                                : string.Format(
+                                    "{0}__ctor({1})",
+                                    dereferencedTypeName,
+                                    parameterString)
+                        };
+                    }
                 };
             }
         }
@@ -176,10 +205,9 @@ namespace IL2C.ILConveters
                 return extractContext =>
                 {
                     return new[] { string.Format(
-                        "{0} = {1} /* \"{2}\" */",
+                        "{0} = {1}",
                         symbolName,
-                        constStringName,
-                        operand) };
+                        constStringName) };
                 };
             }
         }

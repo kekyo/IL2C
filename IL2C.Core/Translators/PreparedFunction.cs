@@ -54,7 +54,12 @@ namespace IL2C.Translators
         {
             Debug.Assert(labelNames != null);
 
-            return labelNames.TryGetValue(label.Offset, out labelName);
+            if (labelNames.TryGetValue(label.Offset, out labelName) == false)
+            {
+                return false;
+            }
+            labelName = string.Format("IL_{0:x4}", label.Offset);
+            return true;
         }
     }
 }

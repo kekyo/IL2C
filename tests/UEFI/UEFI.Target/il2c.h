@@ -141,6 +141,7 @@ extern System_String* __new_string__(const wchar_t* pString);
 
 extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
 extern System_String* System_String_Substring(System_String* __this, int32_t startIndex);
+extern System_String* System_String_Substring_1(System_String* __this, int32_t startIndex, int32_t length);
 extern wchar_t System_String_get_Chars(System_String* __this, int32_t index);
 extern int32_t System_String_get_Length(System_String* __this);
 extern bool System_String_IsNullOrWhiteSpace(System_String* value);

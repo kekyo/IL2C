@@ -145,12 +145,12 @@ namespace IL2C
             var expr = ms.OrderBy(m => m.Parameters.Count);
             for (var index = 0; index < maxParameterCount; index++)
             {
-                // HACK: C# captured inner incremented value.
-                var i = index;
+                // HACK: C# lambda captured inner incremented value.
+                var capturedIndex = index;
 
                 // TODO: Improve human predictivity.
                 expr = expr.ThenBy(m =>
-                    m.Parameters.ElementAtOrDefault(i)
+                    m.Parameters.ElementAtOrDefault(capturedIndex)
                         ?.ParameterType.GetFullMemberName()
                         ??string.Empty);
             }

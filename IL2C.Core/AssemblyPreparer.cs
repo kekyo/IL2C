@@ -97,10 +97,16 @@ namespace IL2C
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
-                    let ucbi = dc.UniqueCodeBlockIndex
                     let sps = sequencePoints.UnsafeGetValue(ilBody.Label.Offset, empty)
                     let generator = ilBody.ILConverter.Apply(ilBody.Operand, dc)
-                    select new PreparedILBody(ilBody.Label, generator, ucbi, sps))
+                    select new PreparedILBody(
+                        ilBody.Label,
+                        generator,
+                        dc.UniqueCodeBlockIndex,
+                        sps,
+                        ilBody.ILConverter.OpCode,
+                        ilBody.Operand,
+                        dc.DecodingPathNumber))
                 .OrderBy(ilb => ilb.UniqueCodeBlockIndex)
                 .ThenBy(ilb => ilb.Label.Offset)
                 .ToArray();

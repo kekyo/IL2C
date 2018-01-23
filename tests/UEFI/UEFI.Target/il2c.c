@@ -1,7 +1,6 @@
 /////////////////////////////////////////////////////////////
 // For platform specifics:
 
-#include <stdio.h>
 #if defined(UEFI)
 
 #include <intrin.h>
@@ -14,7 +13,14 @@ typedef long interlock_t;
 #define GCFREE free
 #define GCASSERT assert
 
+void WriteLineToError(const wchar_t* pMessage);
+
+#ifdef _DEBUG
+#define DEBUG_WRITE(step, message) { \
+    WriteLineToError(L##step); }
+#else
 #define DEBUG_WRITE(step, message)
+#endif
 
 #elif defined(_WIN32)
 
@@ -437,7 +443,7 @@ System_String* __new_string__(const wchar_t* pBody)
 
 	uint32_t size = (uint32_t)(wcslen(pBody) + 1) * sizeof(wchar_t);
 	System_String* pString = __new_string_internal__(size);
-    memcpy((wchar_t*)(pString->pBody), pString, size);
+    memcpy((wchar_t*)(pString->pBody), pBody, size);
 
 	return pString;
 }
@@ -570,6 +576,11 @@ void System_Console_Write_9(System_String* value)
 
 	GCASSERT(value->pBody != NULL);
 	Write(value->pBody);
+}
+
+void System_Console_WriteLine()
+{
+	WriteLine(L"");
 }
 
 void System_Console_WriteLine_10(System_String* value)

@@ -154,8 +154,10 @@ extern bool System_String_IsNullOrWhiteSpace(System_String* value);
 // System.Console
 
 extern void System_Console_Write_9(System_String* value);
+extern void System_Console_WriteLine();
 extern void System_Console_WriteLine_10(System_String* value);
-extern System_String* System_Console_ReadLine();
+
+	extern System_String* System_Console_ReadLine();
 
 #ifdef __cplusplus
 }

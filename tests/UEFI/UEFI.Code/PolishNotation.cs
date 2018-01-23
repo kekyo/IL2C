@@ -81,6 +81,7 @@ namespace UEFI.Code
         {
             while (true)
             {
+                Console.WriteLine();
                 Console.Write("PN> ");
                 var line = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(line) == false)

@@ -9,46 +9,45 @@ namespace UEFI.Code
     public struct OperatorResult
     {
         public readonly char Operator;
-        public readonly int Index;
+        public readonly int NextIndex;
 
         public OperatorResult(char oper, int index)
         {
             this.Operator = oper;
-            this.Index = index;
+            this.NextIndex = index;
         }
     }
 
     public struct NumericResult
     {
         public readonly int Numeric;
-        public readonly int Index;
+        public readonly int NextIndex;
 
         public NumericResult(int numeric, int index)
         {
             this.Numeric = numeric;
-            this.Index = index;
+            this.NextIndex = index;
         }
     }
 
     public class PolishNotation
     {
-        private static int SkipWhiteSpace(string line, int startIndex)
+        internal static int SkipWhiteSpace(string line, int startIndex)
         {
             var index = startIndex;
             while (index < line.Length)
             {
-                var ch = line[index];
+                var ch = line[index++];
                 if ((ch != ' ') && (ch != '\t'))
                 {
                     break;
                 }
-                index++;
             }
 
             return index;
         }
 
-        private static OperatorResult ParseOperator(string line, int startIndex)
+        internal static OperatorResult ParseOperator(string line, int startIndex)
         {
             var index = startIndex;
             var ch = line[index++];
@@ -57,7 +56,7 @@ namespace UEFI.Code
             return new OperatorResult(ch, index);
         }
 
-        private static NumericResult ParseNumeric(string line, int startIndex)
+        internal static NumericResult ParseNumeric(string line, int startIndex)
         {
             var index = startIndex;
             while (index < line.Length)

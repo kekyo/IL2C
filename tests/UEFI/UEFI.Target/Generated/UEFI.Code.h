@@ -24,7 +24,7 @@ typedef struct UEFI_Code_PolishNotation UEFI_Code_PolishNotation;
 struct UEFI_Code_OperatorResult
 {
     wchar_t Operator;
-    int32_t Index;
+    int32_t NextIndex;
 };
 
 extern const __RUNTIME_TYPE__ __UEFI_Code_OperatorResult_RUNTIME_TYPE__;
@@ -35,7 +35,7 @@ extern const __RUNTIME_TYPE__ __UEFI_Code_OperatorResult_RUNTIME_TYPE__;
 struct UEFI_Code_NumericResult
 {
     int32_t Numeric;
-    int32_t Index;
+    int32_t NextIndex;
 };
 
 extern const __RUNTIME_TYPE__ __UEFI_Code_NumericResult_RUNTIME_TYPE__;

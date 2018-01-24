@@ -100,6 +100,15 @@ namespace UEFI.Code
             Assert.AreEqual(int.MinValue, numeric.Numeric);
             Assert.AreEqual(valueString.Length, numeric.NextIndex);
         }
+        [Test]
+        public void ZeroNumericParseTest()
+        {
+            var valueString = "0";
+            var numeric = PolishNotation.ParseNumeric(valueString, 0);
+
+            Assert.AreEqual(0, numeric.Numeric);
+            Assert.AreEqual(valueString.Length, numeric.NextIndex);
+        }
         #endregion
 
         #region ParseExpression
@@ -109,8 +118,8 @@ namespace UEFI.Code
             var expr = PolishNotation.ParseExpression("+ 123 456", 0);
 
             Assert.AreEqual('+', expr.Operator.Operator);
-            Assert.AreEqual(123, expr.LeftNumeric.Numeric);
-            Assert.AreEqual(456, expr.RightNumeric.Numeric);
+            Assert.AreEqual(123, ((NumericNode)expr.Left).Numeric);
+            Assert.AreEqual(456, ((NumericNode)expr.Right).Numeric);
             Assert.AreEqual(9, expr.NextIndex);
         }
 
@@ -120,8 +129,8 @@ namespace UEFI.Code
             var expr = PolishNotation.ParseExpression("+ 123 456   ", 0);
             
             Assert.AreEqual('+', expr.Operator.Operator);
-            Assert.AreEqual(123, expr.LeftNumeric.Numeric);
-            Assert.AreEqual(456, expr.RightNumeric.Numeric);
+            Assert.AreEqual(123, ((NumericNode)expr.Left).Numeric);
+            Assert.AreEqual(456, ((NumericNode)expr.Right).Numeric);
             Assert.AreEqual(12, expr.NextIndex);
         }
 
@@ -131,8 +140,8 @@ namespace UEFI.Code
             var expr = PolishNotation.ParseExpression("   + 123 456   ", 3);
 
             Assert.AreEqual('+', expr.Operator.Operator);
-            Assert.AreEqual(123, expr.LeftNumeric.Numeric);
-            Assert.AreEqual(456, expr.RightNumeric.Numeric);
+            Assert.AreEqual(123, ((NumericNode)expr.Left).Numeric);
+            Assert.AreEqual(456, ((NumericNode)expr.Right).Numeric);
             Assert.AreEqual(15, expr.NextIndex);
         }
 
@@ -142,9 +151,66 @@ namespace UEFI.Code
             var expr = PolishNotation.ParseExpression("+   123  456   ", 0);
 
             Assert.AreEqual('+', expr.Operator.Operator);
-            Assert.AreEqual(123, expr.LeftNumeric.Numeric);
-            Assert.AreEqual(456, expr.RightNumeric.Numeric);
+            Assert.AreEqual(123, ((NumericNode)expr.Left).Numeric);
+            Assert.AreEqual(456, ((NumericNode)expr.Right).Numeric);
             Assert.AreEqual(15, expr.NextIndex);
+        }
+
+        [Test]
+        public void ExpressionParseWithLeftNestedTest()
+        {
+            var expr = PolishNotation.ParseExpression("+ - 123 456 789   ", 0);
+
+            Assert.AreEqual('+', expr.Operator.Operator);
+            var left = (ExpressionNode) expr.Left;
+            Assert.AreEqual('-', left.Operator.Operator);
+            Assert.AreEqual(123, ((NumericNode)left.Left).Numeric);
+            Assert.AreEqual(456, ((NumericNode)left.Right).Numeric);
+            Assert.AreEqual(789, ((NumericNode)expr.Right).Numeric);
+            Assert.AreEqual(18, expr.NextIndex);
+        }
+
+        [Test]
+        public void ExpressionParseWithRightNestedTest()
+        {
+            var expr = PolishNotation.ParseExpression("+ 123 - 456 789   ", 0);
+
+            Assert.AreEqual('+', expr.Operator.Operator);
+            Assert.AreEqual(123, ((NumericNode)expr.Left).Numeric);
+            var right = (ExpressionNode)expr.Right;
+            Assert.AreEqual('-', right.Operator.Operator);
+            Assert.AreEqual(456, ((NumericNode)right.Left).Numeric);
+            Assert.AreEqual(789, ((NumericNode)right.Right).Numeric);
+            Assert.AreEqual(18, expr.NextIndex);
+        }
+
+        [Test]
+        public void ExpressionParseWithBothNestedTest()
+        {
+            var expr = PolishNotation.ParseExpression("+ - 123 456 * 789 111  ", 0);
+
+            Assert.AreEqual('+', expr.Operator.Operator);
+            var left = (ExpressionNode)expr.Left;
+            Assert.AreEqual('-', left.Operator.Operator);
+            Assert.AreEqual(123, ((NumericNode)left.Left).Numeric);
+            Assert.AreEqual(456, ((NumericNode)left.Right).Numeric);
+            var right = (ExpressionNode)expr.Right;
+            Assert.AreEqual('*', right.Operator.Operator);
+            Assert.AreEqual(789, ((NumericNode)right.Left).Numeric);
+            Assert.AreEqual(111, ((NumericNode)right.Right).Numeric);
+            Assert.AreEqual(23, expr.NextIndex);
+        }
+        #endregion
+
+        #region Reduce
+        [Test]
+        public void ReduceTest()
+        {
+            var expr = PolishNotation.ParseExpression("+ - 123 456 * 789 111  ", 0);
+
+            var result = expr.Reduce();
+
+            Assert.AreEqual(-333 + 87579, result);
         }
         #endregion
     }

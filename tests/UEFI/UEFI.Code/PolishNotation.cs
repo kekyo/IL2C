@@ -6,59 +6,86 @@ using System.Text;
 
 namespace UEFI.Code
 {
-    public abstract class PolishNotationNode
+    public abstract class AbstractNode
     {
         public readonly int NextIndex;
 
-        protected PolishNotationNode(int nextIndex)
+        protected AbstractNode(int nextIndex)
         {
             this.NextIndex = nextIndex;
         }
     }
 
-    public class OperatorNode : PolishNotationNode
+    public class OperatorNode : AbstractNode
     {
         public readonly char Operator;
 
-        public OperatorNode(char oper, int index) : base(index)
+        public OperatorNode(char oper, int nextIndex) : base(nextIndex)
         {
             this.Operator = oper;
         }
     }
-    
-    public class NumericNode : PolishNotationNode
+
+    public abstract class ReducibleNode : AbstractNode
+    {
+        protected ReducibleNode(int nextIndex) : base(nextIndex)
+        {
+        }
+
+        public abstract int Reduce();
+    }
+
+    public class NumericNode : ReducibleNode
     {
         public readonly int Numeric;
 
-        public NumericNode(int numeric, int index) : base(index)
+        public NumericNode(int numeric, int nextIndex) : base(nextIndex)
         {
             this.Numeric = numeric;
         }
-    }
 
-    public class ExpressionNode : PolishNotationNode
-    {
-        public readonly OperatorNode Operator;
-        public readonly NumericNode LeftNumeric;
-        public readonly NumericNode RightNumeric;
-
-        public ExpressionNode(OperatorNode oper, NumericNode leftNumeric, NumericNode rightNumeric, int index) : base(index)
+        public override int Reduce()
         {
-            this.Operator = oper;
-            this.LeftNumeric = leftNumeric;
-            this.RightNumeric = rightNumeric;
+            return this.Numeric;
         }
     }
 
-    public class CombinedExpressionNode : PolishNotationNode
+    public class ExpressionNode : ReducibleNode
     {
-        public readonly ExpressionNode FirstExpression;
-        public readonly ExpressionNode SecondExpression;
+        public readonly OperatorNode Operator;
+        public readonly ReducibleNode Left;
+        public readonly ReducibleNode Right;
 
-        public CombinedExpressionNode(ExpressionNode firstExpression, ExpressionNode secondExpression, int index) : base(index)
+        public ExpressionNode(OperatorNode oper, ReducibleNode left, ReducibleNode right, int nextIndex) : base(nextIndex)
         {
-            this.FirstExpression = firstExpression;
-            this.SecondExpression = secondExpression;
+            this.Operator = oper;
+            this.Left = left;
+            this.Right = right;
+        }
+
+        public override int Reduce()
+        {
+            var leftResult = this.Left.Reduce();
+            var rightResult = this.Right.Reduce();
+            if (this.Operator.Operator == '+')
+            {
+                return leftResult + rightResult;
+            }
+            if (this.Operator.Operator == '-')
+            {
+                return leftResult - rightResult;
+            }
+            if (this.Operator.Operator == '*')
+            {
+                return leftResult * rightResult;
+            }
+            if (this.Operator.Operator == '/')
+            {
+                return leftResult / rightResult;
+            }
+
+            // Invalid
+            return 0;
         }
     }
 
@@ -110,7 +137,7 @@ namespace UEFI.Code
             while (index < line.Length)
             {
                 var ch = line[index];
-                if ((((ch >= '0') && (ch <= '9')) || (ch == '-')) == false)
+                if (ch == ' ')
                 {
                     break;
                 }
@@ -123,7 +150,10 @@ namespace UEFI.Code
             }
 
             var token = line.Substring(startIndex, index - startIndex);
-            var numeric = int.Parse(token);
+            if (int.TryParse(token, out var numeric) == false)
+            {
+                return null;
+            }
 
             index = SkipWhiteSpace(line, index);
             return new NumericNode(numeric, index);
@@ -142,26 +172,29 @@ namespace UEFI.Code
                 return null;
             }
 
-            var numericLeft = ParseNumeric(line, oper.NextIndex);
-            if (numericLeft == null)
+            ReducibleNode left = ParseNumeric(line, oper.NextIndex);
+            if (left == null)
             {
-                return null;
+                left = ParseExpression(line, oper.NextIndex);
+                if (left == null)
+                {
+                    return null;
+                }
             }
 
-            var numericRight = ParseNumeric(line, numericLeft.NextIndex);
-            if (numericRight == null)
+            ReducibleNode right = ParseNumeric(line, left.NextIndex);
+            if (right == null)
             {
-                return null;
+                right = ParseExpression(line, left.NextIndex);
+                if (right == null)
+                {
+                    return null;
+                }
             }
 
-            var index = SkipWhiteSpace(line, numericRight.NextIndex);
-            return new ExpressionNode(oper, numericLeft, numericRight, index);
+            var index = SkipWhiteSpace(line, right.NextIndex);
+            return new ExpressionNode(oper, left, right, index);
         }
-
-        //internal static CombinedExpressionResult ParseCombinedExpression(string line, int startIndex)
-        //{
-            
-        //}
 
         public static void Main()
         {
@@ -172,7 +205,11 @@ namespace UEFI.Code
                 var line = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(line) == false)
                 {
-                    var expr = ParseOperator(line, 0);
+                    var expr = ParseExpression(line, 0);
+                    var result = expr.Reduce();
+
+                    Console.Write("Reuslt=");
+                    Console.WriteLine(result);
                 }
             }
         }

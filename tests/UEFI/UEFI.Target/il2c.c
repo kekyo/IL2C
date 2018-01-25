@@ -407,16 +407,18 @@ static __RUNTIME_TYPE_DEF__ __System_UInt64_RUNTIME_TYPE_DEF__ = {
     "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
 
-extern int wtoi(const wchar_t *_Str);
+// TODO: Reimplement by managed code.
+extern bool twtoi(const wchar_t *_Str, int32_t* value);
 
-int32_t System_Int32_Parse(System_String* pStr)
+bool System_Int32_TryParse(System_String* s, int32_t* result)
 {
 	// TODO: NullReferenceException
-	GCASSERT(pStr != NULL);
+	GCASSERT(s != NULL);
 
-	GCASSERT(pStr->pBody != NULL);
+    GCASSERT(result != NULL);
+	GCASSERT(s->pBody != NULL);
 
-	return wtoi(pStr->pBody);
+	return twtoi(s->pBody, result);
 }
 
 /////////////////////////////////////////////////////////////
@@ -581,6 +583,16 @@ void System_Console_Write_9(System_String* value)
 void System_Console_WriteLine()
 {
 	WriteLine(L"");
+}
+
+// TODO: Reimplement by managed code.
+extern void itow(int32_t value, wchar_t* p);
+
+void System_Console_WriteLine_6(int32_t value)
+{
+    wchar_t buf[20];
+    itow(value, buf);
+    WriteLine(buf);
 }
 
 void System_Console_WriteLine_10(System_String* value)

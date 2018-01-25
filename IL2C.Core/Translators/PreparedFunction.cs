@@ -7,8 +7,16 @@ using Mono.Cecil.Cil;
 
 namespace IL2C.Translators
 {
+    public enum FunctionTypes
+    {
+        Standard,
+        Abstract,
+        PInvoke
+    }
+
     public sealed class PreparedFunction
     {
+        public readonly FunctionTypes FunctionType;
         public readonly string MethodName;
         internal readonly string RawMethodName;
         internal readonly TypeReference ReturnType;
@@ -19,7 +27,7 @@ namespace IL2C.Translators
 
         private readonly IReadOnlyDictionary<int, string> labelNames;
 
-        internal PreparedFunction(
+        private PreparedFunction(
             string methodName,
             string rawMethodName,
             TypeReference returnType,
@@ -27,7 +35,8 @@ namespace IL2C.Translators
             PreparedILBody[] preparedILBodies,
             VariableDefinition[] localVariables,
             SymbolInformation[] stacks,
-            IReadOnlyDictionary<int, string> labelNames)
+            IReadOnlyDictionary<int, string> labelNames,
+            FunctionTypes functionType)
         {
             this.MethodName = methodName;
             this.RawMethodName = rawMethodName;
@@ -37,14 +46,44 @@ namespace IL2C.Translators
             this.LocalVariables = localVariables;
             this.Stacks = stacks;
             this.labelNames = labelNames;
+            this.FunctionType = functionType;
         }
 
         internal PreparedFunction(
             string methodName,
             string rawMethodName,
             TypeReference returnType,
-            Parameter[] parameters)
-            : this(methodName, rawMethodName, returnType, parameters, null, null, null, null)
+            Parameter[] parameters,
+            PreparedILBody[] preparedILBodies,
+            VariableDefinition[] localVariables,
+            SymbolInformation[] stacks,
+            IReadOnlyDictionary<int, string> labelNames)
+            : this(
+                  methodName,
+                  rawMethodName,
+                  returnType,
+                  parameters,
+                  preparedILBodies,
+                  localVariables,
+                  stacks,
+                  labelNames,
+                  FunctionTypes.Standard)
+        {
+        }
+
+        internal PreparedFunction(
+            string methodName,
+            string rawMethodName,
+            TypeReference returnType,
+            Parameter[] parameters,
+            bool isPInvoke)
+            : this(
+                  methodName,
+                  rawMethodName,
+                  returnType,
+                  parameters,
+                  null, null, null, null,
+                  isPInvoke ? FunctionTypes.PInvoke : FunctionTypes.Abstract)
         {
         }
 

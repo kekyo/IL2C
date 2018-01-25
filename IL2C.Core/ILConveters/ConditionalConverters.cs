@@ -71,10 +71,11 @@ namespace IL2C.ILConveters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
+            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+
             if (si0.TargetType.IsNumericPrimitive()
                 && si1.TargetType.IsNumericPrimitive())
             {
-                var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
                 return _ => new[] { string.Format(
                     "{0} = ({1} == {2}) ? 1 : 0",
                     resultName,
@@ -82,11 +83,24 @@ namespace IL2C.ILConveters
                     si1.SymbolName) };
             }
 
-            throw new InvalidProgramSequenceException(
-                "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.Current.Offset,
-                si0.TargetType.FullName,
-                si1.TargetType.FullName);
+            return extractContext =>
+            {
+                var rhsExpr = extractContext.GetRightExpression(si0.TargetType, si1);
+                if (rhsExpr == null)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
+                        decodeContext.Current.Offset,
+                        si0.TargetType.FullName,
+                        si1.TargetType.FullName);
+                }
+
+                return new[] { string.Format(
+                    "{0} = ({1} == ({2})) ? 1 : 0",
+                    resultName,
+                    si0.SymbolName,
+                    rhsExpr) };
+            };
         }
     }
 

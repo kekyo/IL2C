@@ -312,7 +312,46 @@ namespace IL2C
             tw.WriteLine("}");
         }
 
-        private static void InternalConvertFromFunction(
+        private static void InternalConvertFromAbstractFunction(
+            TextWriter tw,
+            IExtractContext extractContext,
+            PreparedFunction preparedFunction,
+            string indent)
+        {
+            var functionPrototype = Utilities.GetFunctionPrototypeString(
+                preparedFunction.MethodName,
+                preparedFunction.ReturnType,
+                preparedFunction.Parameters,
+                extractContext);
+
+            tw.WriteLine();
+            tw.WriteLine("///////////////////////////////////////");
+            tw.WriteLine("// Abstract: {0}", preparedFunction.RawMethodName);
+            tw.WriteLine();
+
+            tw.WriteLine(functionPrototype);
+            tw.WriteLine("{");
+
+            tw.WriteLine(
+                "{0}// WARNING: Pure virtual function called.",
+                indent);
+            tw.WriteLine(
+                "{0}//TODO: throw : assert(0);",
+                indent);
+
+            if (preparedFunction.ReturnType.IsVoidType() == false)
+            {
+                tw.WriteLine(
+                    "{0}return ({1}){2};",
+                    indent,
+                    extractContext.GetCLanguageTypeName(preparedFunction.ReturnType),
+                    preparedFunction.ReturnType.IsNumericPrimitive() ? "0" : "NULL");
+            }
+
+            tw.WriteLine("}");
+        }
+
+        private static void InternalConvertFromPInvokeFunction(
             TextWriter tw,
             IExtractContext extractContext,
             PreparedFunction preparedFunction,
@@ -436,31 +475,43 @@ namespace IL2C
             var methodName = method.GetFullMemberName();
             var preparedFunction = preparedFunctions.Functions[method];
 
-            // Write method body:
-            if (preparedFunction.PreparedILBodies != null)
+            // Write method body
+            switch (preparedFunction.FunctionType)
             {
-                InternalConvertFromFunction(
-                    tw,
-                    extractContext,
-                    preparedFunction,
-                    indent);
-            }
-            else if (method.IsPInvokeImpl)
-            {
-                var pinvokeInfo = method.PInvokeInfo;
-                if (pinvokeInfo == null)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Missing DllImport attribute at P/Invoke entry: Method={0}",
-                        methodName);
-                }
+                case FunctionTypes.Standard:
+                    Debug.Assert(preparedFunction.PreparedILBodies != null);
 
-                InternalConvertFromFunction(
-                    tw,
-                    extractContext,
-                    preparedFunction,
-                    pinvokeInfo,
-                    indent);
+                    InternalConvertFromFunction(
+                        tw,
+                        extractContext,
+                        preparedFunction,
+                        indent);
+                    break;
+
+                case FunctionTypes.Abstract:
+                    InternalConvertFromAbstractFunction(
+                        tw,
+                        extractContext,
+                        preparedFunction,
+                        indent);
+                    break;
+
+                case FunctionTypes.PInvoke:
+                    var pinvokeInfo = method.PInvokeInfo;
+                    if (pinvokeInfo == null)
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Missing DllImport attribute at P/Invoke entry: Method={0}",
+                            methodName);
+                    }
+
+                    InternalConvertFromPInvokeFunction(
+                        tw,
+                        extractContext,
+                        preparedFunction,
+                        pinvokeInfo,
+                        indent);
+                    break;
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Mono.Cecil;
@@ -129,6 +130,24 @@ namespace IL2C
                 labelNames);
         }
 
+        private static PreparedFunction PrepareAbstractMethod(
+            IPrepareContext prepareContext,
+            string methodName,
+            string rawMethodName,
+            TypeReference returnType,
+            Parameter[] parameters)
+        {
+            // TODO: throw
+            //prepareContext.RegisterIncludeFile("assert.h");
+
+            return new PreparedFunction(
+                methodName,
+                rawMethodName,
+                returnType,
+                parameters, 
+                false);
+        }
+
         private static PreparedFunction PreparePInvokeMethod(
             IPrepareContext prepareContext,
             string methodName,
@@ -151,7 +170,8 @@ namespace IL2C
                 methodName,
                 rawMethodName,
                 returnType,
-                parameters);
+                parameters,
+                true);
         }
 
         private static PreparedFunction PrepareMethod(
@@ -184,6 +204,20 @@ namespace IL2C
                     parameters,
                     pinvokeInfo);
             }
+
+            if (method.IsAbstract)
+            {
+                Debug.Assert(method.Body == null);
+
+                return PrepareAbstractMethod(
+                    prepareContext,
+                    methodName,
+                    method.Name,
+                    returnType,
+                    parameters);
+            }
+
+            Debug.Assert(method.Body != null);
 
             return PrepareMethod(
                 prepareContext,

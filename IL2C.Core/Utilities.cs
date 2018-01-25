@@ -222,6 +222,11 @@ namespace IL2C
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;
             }
+
+            public override string ToString()
+            {
+                return string.Format("{0} <-- {1}", this.TargetType.GetFullMemberName(), this.SymbolInformation);
+            }
         }
 
         public static string GetGivenParameterDeclaration(

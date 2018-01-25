@@ -7,7 +7,7 @@
 
 static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
 
-int wtoi(const wchar_t *_Str)
+bool twtoi(const wchar_t *_Str, int32_t* value)
 {
     bool sign = false;
 
@@ -28,17 +28,48 @@ int wtoi(const wchar_t *_Str)
         {
             _Str++;
         }
+        else
+        {
+            return false;
+        }
 
         break;
     }
 
-    int n = 0;
+    int32_t n = 0;
     while ((*_Str >= L'0') && (*_Str <= L'9'))
     {
         n = n * 10 + *_Str++ - L'0';
     }
 
-    return sign ? -n : n;
+    *value = sign ? -n : n;
+    return true;
+}
+
+void itow(int32_t value, wchar_t* p)
+{
+    wchar_t *j;
+    wchar_t b[6];
+
+    if (value < 0)
+    {
+        *p++ = L'-';
+        value = -value;
+    }
+
+    j = &b[5];
+    *j-- = 0;
+
+    do
+    {
+        *j-- = value % 10 + L'0';
+        value /= 10;
+    } while (value);
+
+    do
+    {
+        *p++ = *++j;
+    } while (*j);
 }
 
 void ReadLine(wchar_t* pBuffer, uint16_t length)
@@ -163,6 +194,10 @@ EFI_STATUS EfiMain(
     // Setup interop pointer
     g_pSystemTable = pSystemTable;
 
+    // Disable default auto-reset watchdog timer
+    g_pSystemTable->BootServices->SetWatchdogTimer(0, 0, 0, NULL);
+
+    // Clear screen
     g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
 
     __gc_initialize__();

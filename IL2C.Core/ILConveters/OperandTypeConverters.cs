@@ -55,6 +55,10 @@ namespace IL2C.ILConveters
     {
     }
 
+    internal abstract class ShortInlineParamConverter : ILConverter<ParameterReference>
+    {
+    }
+
     internal abstract class ShortInlineVarConverter : ILConverter<VariableReference>
     {
     }

@@ -114,7 +114,7 @@ extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
 
 typedef struct System_String System_String;
 
-extern int32_t System_Int32_Parse(System_String* pStr);
+extern bool System_Int32_TryParse(System_String* s, int32_t* result);
 
 /////////////////////////////////////////////////////////////
 // System.String
@@ -155,9 +155,10 @@ extern bool System_String_IsNullOrWhiteSpace(System_String* value);
 
 extern void System_Console_Write_9(System_String* value);
 extern void System_Console_WriteLine();
+extern void System_Console_WriteLine_6(int32_t value);
 extern void System_Console_WriteLine_10(System_String* value);
 
-	extern System_String* System_Console_ReadLine();
+extern System_String* System_Console_ReadLine();
 
 #ifdef __cplusplus
 }

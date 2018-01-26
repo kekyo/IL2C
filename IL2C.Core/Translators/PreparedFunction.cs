@@ -10,7 +10,7 @@ namespace IL2C.Translators
     public enum FunctionTypes
     {
         Standard,
-        Abstract,
+        Virtual,
         PInvoke
     }
 
@@ -24,6 +24,7 @@ namespace IL2C.Translators
         internal readonly PreparedILBody[] PreparedILBodies;
         internal readonly VariableDefinition[] LocalVariables;
         internal readonly SymbolInformation[] Stacks;
+        public readonly int SlotIndex;
 
         private readonly IReadOnlyDictionary<int, string> labelNames;
 
@@ -36,7 +37,8 @@ namespace IL2C.Translators
             VariableDefinition[] localVariables,
             SymbolInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames,
-            FunctionTypes functionType)
+            FunctionTypes functionType,
+            int slotIndex)
         {
             this.MethodName = methodName;
             this.RawMethodName = rawMethodName;
@@ -47,6 +49,7 @@ namespace IL2C.Translators
             this.Stacks = stacks;
             this.labelNames = labelNames;
             this.FunctionType = functionType;
+            this.SlotIndex = slotIndex;
         }
 
         internal PreparedFunction(
@@ -57,7 +60,8 @@ namespace IL2C.Translators
             PreparedILBody[] preparedILBodies,
             VariableDefinition[] localVariables,
             SymbolInformation[] stacks,
-            IReadOnlyDictionary<int, string> labelNames)
+            IReadOnlyDictionary<int, string> labelNames,
+            int? slotIndex)
             : this(
                   methodName,
                   rawMethodName,
@@ -67,7 +71,8 @@ namespace IL2C.Translators
                   localVariables,
                   stacks,
                   labelNames,
-                  FunctionTypes.Standard)
+                  slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.Standard,
+                  slotIndex ?? -1)
         {
         }
 
@@ -76,14 +81,15 @@ namespace IL2C.Translators
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
-            bool isPInvoke)
+            int? slotIndex)
             : this(
                   methodName,
                   rawMethodName,
                   returnType,
                   parameters,
                   null, null, null, null,
-                  isPInvoke ? FunctionTypes.PInvoke : FunctionTypes.Abstract)
+                  slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.PInvoke,
+                  slotIndex ?? -1)
         {
         }
 

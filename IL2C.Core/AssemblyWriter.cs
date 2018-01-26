@@ -68,6 +68,13 @@ namespace IL2C
             tw.WriteLine(makrHandlerPrototype);
         }
 
+        private static string GetFunctionNameByFunctionType(PreparedFunction preparedFunction)
+        {
+            return (preparedFunction.FunctionType == FunctionTypes.Virtual)
+                ? ("__" + preparedFunction.MethodName + "__")
+                : preparedFunction.MethodName;
+        }
+
         private static void InternalConvertToPrototypes(
             TextWriter tw,
             TypeDefinition[] types,
@@ -138,13 +145,75 @@ namespace IL2C
                         var preparedFunction = preparedFunctions.Functions[method];
 
                         var functionPrototype = Utilities.GetFunctionPrototypeString(
-                            preparedFunction.MethodName,
+                            GetFunctionNameByFunctionType(preparedFunction),
                             preparedFunction.ReturnType,
                             preparedFunction.Parameters,
                             extractContext);
 
                         tw.WriteLine("extern {0};", functionPrototype);
                     });
+
+                var virtualMethods = type
+                    .EnumerateOrderedOverridedMethods()
+                    .ToArray();
+                if (virtualMethods.Length >= 1)
+                {
+                    var typeName = type.GetFullMemberName().ManglingSymbolName();
+
+                    tw.WriteLine();
+                    tw.WriteLine(
+                        "typedef const struct __{0}_TYPE_DEF_TYPE__",
+                        typeName);
+                    tw.WriteLine(
+                        "{");
+                    Enumerable.Range(0, 3)
+                        .ForEach(index => tw.WriteLine(
+                            "{0}intptr_t __reserved{1}__;",
+                            indent,
+                            index));
+
+                    virtualMethods.ForEach(method =>
+                    {
+                        var functionPrototype = Utilities.GetFunctionTypeString(
+                            method.GetOverloadedMethodName().ManglingSymbolName(),
+                            method.ReturnType,
+                            method.GetSafeParameters(),
+                            extractContext);
+
+                        tw.WriteLine(
+                            "{0}{1};",
+                            indent,
+                            functionPrototype);
+                    });
+
+                    tw.WriteLine(
+                        "}} __{0}_TYPE_DEF_TYPE__;",
+                        typeName);
+                    tw.WriteLine();
+
+                    virtualMethods
+                        .Where(method => method.DeclaringType.MemberEquals(type))
+                        .ForEach(method =>
+                    {
+                        var fullMethodName = method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName();
+                        var methodName = method.GetOverloadedMethodName().ManglingSymbolName();
+                        var functionParameters = string.Join(
+                            ", ",
+                            method.GetSafeParameters().Select(parameter => parameter.Name));
+
+                        tw.WriteLine(
+                            "#define {0}({1}) \\",
+                            fullMethodName,
+                            functionParameters);
+
+                        tw.WriteLine(
+                            "{0}(((__{1}_TYPE_DEF_TYPE__*)(__get_typedef__(__this)))->{2}({3}))",
+                            indent,
+                            typeName,
+                            methodName,
+                            functionParameters);
+                    });
+                }
             });
 
             tw.WriteLine();
@@ -162,14 +231,19 @@ namespace IL2C
             var locals = preparedFunction.LocalVariables;
 
             var functionPrototype = Utilities.GetFunctionPrototypeString(
-                preparedFunction.MethodName,
+                GetFunctionNameByFunctionType(preparedFunction),
                 preparedFunction.ReturnType,
                 preparedFunction.Parameters,
                 extractContext);
 
             tw.WriteLine();
             tw.WriteLine("///////////////////////////////////////");
-            tw.WriteLine("// {0}", preparedFunction.RawMethodName);
+            tw.WriteLine(
+                "// {0}{1}",
+                (preparedFunction.FunctionType == FunctionTypes.Virtual)
+                    ? "Virtual: "
+                    : string.Empty,
+                preparedFunction.RawMethodName);
             tw.WriteLine();
 
             tw.WriteLine(functionPrototype);
@@ -271,12 +345,12 @@ namespace IL2C
                 if (canWriteSequencePoint && ilBody.SequencePoints.Any())
                 {
                     var sp = ilBody.SequencePoints.First();
-
+#if false
                     tw.WriteLine(
                         "#line {0} \"{1}\"",
                         sp.StartLine,
                         sp.Document.Url.Replace("\\", "\\\\"));
-
+#endif
                     canWriteSequencePoint = false;
                 }
 
@@ -319,7 +393,7 @@ namespace IL2C
             string indent)
         {
             var functionPrototype = Utilities.GetFunctionPrototypeString(
-                preparedFunction.MethodName,
+                GetFunctionNameByFunctionType(preparedFunction),
                 preparedFunction.ReturnType,
                 preparedFunction.Parameters,
                 extractContext);
@@ -359,7 +433,7 @@ namespace IL2C
             string indent)
         {
             var functionPrototype = Utilities.GetFunctionPrototypeString(
-                preparedFunction.MethodName,
+                GetFunctionNameByFunctionType(preparedFunction),
                 preparedFunction.ReturnType,
                 preparedFunction.Parameters,
                 extractContext);
@@ -431,7 +505,7 @@ namespace IL2C
             // Write runtime type information
             tw.WriteLine();
             tw.WriteLine(
-                "static __RUNTIME_TYPE_DEF__ __{0}_RUNTIME_TYPE_DEF__ = {{",
+                "static __{0}_TYPE_DEF_TYPE__ __{0}_RUNTIME_TYPE_DEF__ = {{",
                 rawTypeName);
 
             tw.WriteLine(
@@ -456,12 +530,28 @@ namespace IL2C
                     indent);
             }
             tw.WriteLine(
-                "{0}__{1}_MARK_HANDLER__ }};",
+                "{0}__{1}_MARK_HANDLER__,",
                 indent,
                 rawTypeName);
 
+            // Write virtual methods
+            declaredType
+                .EnumerateOrderedOverridedMethods()
+                .ForEach(method =>
+                {
+                    tw.WriteLine(
+                        "{0}__{1}__,",
+                        indent,
+                        method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName());
+                });
+
+            tw.WriteLine("};");
+
             tw.WriteLine(
-                "const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ = &__{0}_RUNTIME_TYPE_DEF__;",
+                "const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ =",
+                rawTypeName);
+            tw.WriteLine(
+                "   (const __RUNTIME_TYPE_DEF__*)&__{0}_RUNTIME_TYPE_DEF__;",
                 rawTypeName);
         }
 
@@ -488,12 +578,23 @@ namespace IL2C
                         indent);
                     break;
 
-                case FunctionTypes.Abstract:
-                    InternalConvertFromAbstractFunction(
-                        tw,
-                        extractContext,
-                        preparedFunction,
-                        indent);
+                case FunctionTypes.Virtual:
+                    if (preparedFunction.PreparedILBodies != null)
+                    {
+                        InternalConvertFromFunction(
+                            tw,
+                            extractContext,
+                            preparedFunction,
+                            indent);
+                    }
+                    else
+                    {
+                        InternalConvertFromAbstractFunction(
+                            tw,
+                            extractContext,
+                            preparedFunction,
+                            indent);
+                    }
                     break;
 
                 case FunctionTypes.PInvoke:
@@ -623,12 +724,6 @@ namespace IL2C
                 twSource.WriteLine("////////////////////////////////////////////////////////////");
                 twSource.WriteLine("// Type: {0}", type.GetFullMemberName());
 
-                InternalConvertTypeHelper(
-                    twSource,
-                    extractContext,
-                    type,
-                    indent);
-
                 // All methods and constructor exclude type initializer
                 type.Methods
                     .Where(method => !method.IsConstructor || !method.IsStatic)
@@ -641,6 +736,12 @@ namespace IL2C
                             method,
                             indent);
                     });
+
+                InternalConvertTypeHelper(
+                    twSource,
+                    extractContext,
+                    type,
+                    indent);
             });
         }
     }

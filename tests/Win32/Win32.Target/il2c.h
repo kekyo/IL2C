@@ -1,6 +1,7 @@
 #ifndef __IL2C_H__
 #define __IL2C_H__
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <wchar.h>
 
@@ -8,7 +9,7 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(UEFI)
 typedef long interlock_t;
 #else
 typedef uint8_t interlock_t;
@@ -28,7 +29,7 @@ typedef void(*__MARK_HANDLER__)(void*);
 typedef const struct __RUNTIME_TYPE_DEF__
 {
     const char* pTypeName;
-    uint16_t bodySize;
+    uintptr_t bodySize;
     __MARK_HANDLER__ pMarkHandler;
 } __RUNTIME_TYPE_DEF__;
 
@@ -36,17 +37,29 @@ typedef __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
 
 #define __typeof__(typeName) (__##typeName##_RUNTIME_TYPE__)
 #define __sizeof__(typeName) (__typeof__(typeName)->bodySize)
+#define __get_typedef__(__this) ((__RUNTIME_TYPE__)(((uint8_t*)__this) - sizeof(intptr_t) * 2))
 
 /////////////////////////////////////////////////////////////
 // System.Object
 
 typedef struct System_Object System_Object;
+typedef struct System_String System_String;
 
 static void System_Object__ctor(System_Object* __this)
 {
 }
 
+extern System_String* __System_Object_ToString__(System_Object* __this);
+extern int32_t __System_Object_GetHashCode__(System_Object* __this);
+extern void __System_Object_Finalize__(System_Object* __this);
+extern bool __System_Object_Equals__(System_Object* __this, System_Object* obj);
+
 extern const __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
+
+#define System_Object_ToString(__this) ((__get_typedef__(__this)->pFunctions[0x00])(__this))
+#define System_Object_GetHashCode(__this) ((__get_typedef__(__this)->pFunctions[0x01])(__this))
+#define System_Object_Finalize(__this) ((__get_typedef__(__this)->pFunctions[0x02])(__this))
+#define System_Object_Equals(__this, obj) ((__get_typedef__(__this)->pFunctions[0x03])(__this, obj))
 
 /////////////////////////////////////////////////////////////
 // Garbage collector related declarations
@@ -63,7 +76,7 @@ extern void __gc_unlink_execution_frame__(/* __EXECUTION_FRAME__* */ void* pFram
 
 extern void __gc_mark_from_handler__(void* pReference);
 #define __TRY_MARK_FROM_HANDLER__(pReference) \
-    if ((pReference) != NULL) __gc_mark_from_handler__(pReference)
+if ((pReference) != NULL) __gc_mark_from_handler__(pReference)
 
 /////////////////////////////////////////////////////////////
 // System.ValueType
@@ -84,6 +97,8 @@ extern void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type);
 
 /////////////////////////////////////////////////////////////
 // Primitive types
+
+typedef System_Object IL2C_CecilHelper_PseudoZeroType;
 
 typedef uint8_t System_Byte;
 extern const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
@@ -109,13 +124,15 @@ extern const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
 typedef uint64_t System_UInt64;
 extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
 
+extern bool System_Int32_TryParse(System_String* s, int32_t* result);
+
 /////////////////////////////////////////////////////////////
 // System.String
 
-typedef struct System_String
+struct System_String
 {
     const wchar_t* pBody;
-} System_String;
+};
 
 extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
 
@@ -123,22 +140,35 @@ extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
 typedef struct __CONST_STRING__
 {
     const void* _0;
-	const __RUNTIME_TYPE__ __stringType;
-	const interlock_t _1;
+    const __RUNTIME_TYPE__ __stringType;
+    const interlock_t _1;
     const wchar_t* __pBody;
 } __CONST_STRING__;
 
 extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
 
 #define __DEFINE_CONST_STRING__(name, pBody) \
-    static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pBody }; \
-    static System_String* const name = ((System_String*)&(__##name##_const_string__.__pBody))
+static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pBody }; \
+static System_String* const name = ((System_String*)&(__##name##_const_string__.__pBody))
 
 extern System_String* __new_string__(const wchar_t* pString);
 
 extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
 extern System_String* System_String_Substring(System_String* __this, int32_t startIndex);
+extern System_String* System_String_Substring_1(System_String* __this, int32_t startIndex, int32_t length);
 extern wchar_t System_String_get_Chars(System_String* __this, int32_t index);
+extern int32_t System_String_get_Length(System_String* __this);
+extern bool System_String_IsNullOrWhiteSpace(System_String* value);
+
+/////////////////////////////////////////////////////////////
+// System.Console
+
+extern void System_Console_Write_9(System_String* value);
+extern void System_Console_WriteLine();
+extern void System_Console_WriteLine_6(int32_t value);
+extern void System_Console_WriteLine_10(System_String* value);
+
+extern System_String* System_Console_ReadLine();
 
 #ifdef __cplusplus
 }

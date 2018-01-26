@@ -40,6 +40,8 @@ Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1 = NULL;
 
 
 
+
+
 int32_t Win32_Code_ValueTypeTestTarget_Value1 = 0;
 
 
@@ -48,20 +50,6 @@ int32_t Win32_Code_ValueTypeTestTarget_Value1 = 0;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.BoxingTest
-
-//////////////////////
-// Runtime helpers:
-
-static void __Win32_Code_BoxingTest_MARK_HANDLER__(void* pReference)
-{
-    __typeof__(System_Object)->pMarkHandler(pReference);
-}
-
-static __RUNTIME_TYPE_DEF__ __Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.BoxingTest",
-    0,
-    __Win32_Code_BoxingTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_BoxingTest_RUNTIME_TYPE__ = &__Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__;
 
 ///////////////////////////////////////
 // BoxingInt32
@@ -100,7 +88,6 @@ void Win32_Code_BoxingTest_BoxingInt32(int32_t a)
     //-------------------
     // IL body:
 
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -108,14 +95,12 @@ void Win32_Code_BoxingTest_BoxingInt32(int32_t a)
     __stack0_1 = __box__(&__stack0_0, __typeof__(System_Int32));
     /* Path=1, Unique=0: IL_0007: stloc.0 */
     local0 = __stack0_1;
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
     /* Path=1, Unique=0: IL_0008: ldloc.0 */
     __stack0_1 = local0;
     /* Path=1, Unique=0: IL_0009: unbox.any System.Int32 */
     __stack0_2 = *((int32_t*)__unbox__(__stack0_1, __typeof__(System_Int32)));
     /* Path=1, Unique=0: IL_000e: stloc.1 */
     local1 = __stack0_2;
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
     /* Path=1, Unique=0: IL_000f: ret */
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
@@ -162,23 +147,28 @@ void Win32_Code_BoxingTest__ctor(Win32_Code_BoxingTest* __this)
     return;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.ClassTypeTestTarget
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_BoxingTest_MARK_HANDLER__(void* pReference)
 {
-    __TRY_MARK_FROM_HANDLER__(((Win32_Code_ClassTypeTestTarget*)pReference)->OR2);
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ClassTypeTestTarget",
-    sizeof(Win32_Code_ClassTypeTestTarget),
-    __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE__ = &__Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
+static __Win32_Code_BoxingTest_TYPE_DEF_TYPE__ __Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.BoxingTest",
+    0,
+    __Win32_Code_BoxingTest_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_BoxingTest_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.ClassTypeTestTarget
 
 ///////////////////////////////////////
 // .ctor
@@ -211,13 +201,11 @@ void Win32_Code_ClassTypeTestTarget__ctor(Win32_Code_ClassTypeTestTarget* __this
     //-------------------
     // IL body:
 
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = __this;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ret */
     __gc_unlink_execution_frame__(&__executionFrame__);
@@ -256,13 +244,11 @@ void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* __th
     //-------------------
     // IL body:
 
-#line 20 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = __this;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 21 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ldarg.0 */
     __stack0_0 = __this;
@@ -270,7 +256,6 @@ void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* __th
     __stack1_0 = value;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_000f: ret */
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
@@ -310,7 +295,6 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget*
     //-------------------
     // IL body:
 
-#line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = __this;
@@ -329,7 +313,6 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget*
     /* Path=1, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 28 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_000e: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000f: ret */
@@ -371,7 +354,6 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarge
     //-------------------
     // IL body:
 
-#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = __this;
@@ -394,7 +376,6 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarge
     /* Path=1, Unique=0: IL_000e: br.s IL_0010 */
     goto IL_0010;
 IL_0010:
-#line 33 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0010: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_0011: ret */
@@ -402,22 +383,29 @@ IL_0010:
     return __stack0_1;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.ClassTypeTest
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_ClassTypeTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
+    __TRY_MARK_FROM_HANDLER__(((Win32_Code_ClassTypeTestTarget*)pReference)->OR2);
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ClassTypeTest",
-    0,
-    __Win32_Code_ClassTypeTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE__ = &__Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__;
+static __Win32_Code_ClassTypeTestTarget_TYPE_DEF_TYPE__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ClassTypeTestTarget",
+    sizeof(Win32_Code_ClassTypeTestTarget),
+    __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.ClassTypeTest
 
 ///////////////////////////////////////
 // Test4
@@ -456,21 +444,18 @@ int32_t Win32_Code_ClassTypeTest_Test4(void)
     //-------------------
     // IL body:
 
-#line 39 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.ClassTypeTestTarget::.ctor() */
     __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_ClassTypeTestTarget));
     Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 41 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4 456 */
     __stack1_0 = 456;
     /* Path=1, Unique=0: IL_000d: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 43 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0012: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0013: ldfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
@@ -480,7 +465,6 @@ int32_t Win32_Code_ClassTypeTest_Test4(void)
     /* Path=1, Unique=0: IL_0019: br.s IL_001b */
     goto IL_001b;
 IL_001b:
-#line 44 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_001b: ldloc.1 */
     __stack0_1 = local1;
     /* Path=2, Unique=0: IL_001c: ret */
@@ -527,21 +511,18 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
     //-------------------
     // IL body:
 
-#line 47 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.ClassTypeTestTarget::.ctor() */
     __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_ClassTypeTestTarget));
     Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 49 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4 789 */
     __stack1_0 = 789;
     /* Path=1, Unique=0: IL_000d: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 51 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0012: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0013: ldc.i4.s 123 */
@@ -552,7 +533,6 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
     __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
     /* Path=1, Unique=0: IL_001f: stloc.1 */
     local1 = __stack0_1;
-#line 52 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0020: ldloc.1 */
     __stack0_1 = local1;
     /* Path=1, Unique=0: IL_0021: stloc.2 */
@@ -560,7 +540,6 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
     /* Path=1, Unique=0: IL_0022: br.s IL_0024 */
     goto IL_0024;
 IL_0024:
-#line 53 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0024: ldloc.2 */
     __stack0_1 = local2;
     /* Path=2, Unique=0: IL_0025: ret */
@@ -608,21 +587,18 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
     //-------------------
     // IL body:
 
-#line 56 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.ClassTypeTestTarget::.ctor() */
     __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_ClassTypeTestTarget));
     Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 58 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4 789 */
     __stack1_0 = 789;
     /* Path=1, Unique=0: IL_000d: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 60 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0012: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0013: ldc.i4.s 123 */
@@ -635,7 +611,6 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
     __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2_1(__stack0_0, __stack1_0, __stack2_0, __stack3_0);
     /* Path=1, Unique=0: IL_0024: stloc.1 */
     local1 = __stack0_1;
-#line 61 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0025: ldloc.1 */
     __stack0_1 = local1;
     /* Path=1, Unique=0: IL_0026: stloc.2 */
@@ -643,7 +618,6 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
     /* Path=1, Unique=0: IL_0027: br.s IL_0029 */
     goto IL_0029;
 IL_0029:
-#line 62 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0029: ldloc.2 */
     __stack0_1 = local2;
     /* Path=2, Unique=0: IL_002a: ret */
@@ -687,7 +661,6 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
     //-------------------
     // IL body:
 
-#line 65 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldc.i4.s 123 */
     __stack0_0 = 123;
@@ -696,7 +669,6 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
     Win32_Code_ClassTypeTestTarget__ctor_1(__stack0_1, __stack0_0);
     /* Path=1, Unique=0: IL_0008: stloc.0 */
     local0 = __stack0_1;
-#line 68 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0009: ldloc.0 */
     __stack0_1 = local0;
     /* Path=1, Unique=0: IL_000a: ldfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
@@ -706,7 +678,6 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
     /* Path=1, Unique=0: IL_0010: br.s IL_0012 */
     goto IL_0012;
 IL_0012:
-#line 69 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0012: ldloc.1 */
     __stack0_0 = local1;
     /* Path=2, Unique=0: IL_0013: ret */
@@ -755,22 +726,28 @@ void Win32_Code_ClassTypeTest__ctor(Win32_Code_ClassTypeTest* __this)
     return;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.Hoge1
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_Hoge1_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_ClassTypeTest_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_Hoge1_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.Hoge1",
+static __Win32_Code_ClassTypeTest_TYPE_DEF_TYPE__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ClassTypeTest",
     0,
-    __Win32_Code_Hoge1_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_Hoge1_RUNTIME_TYPE__ = &__Win32_Code_Hoge1_RUNTIME_TYPE_DEF__;
+    __Win32_Code_ClassTypeTest_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.Hoge1
 
 ///////////////////////////////////////
 // Add1
@@ -791,7 +768,6 @@ int32_t Win32_Code_Hoge1_Add1(int32_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 11 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -814,7 +790,6 @@ IL_0009:
     /* Path=2, Unique=0: IL_000b: br.s IL_000d */
     goto IL_000d;
 IL_000d:
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=3, Unique=0: IL_000d: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000e: ret */
@@ -841,7 +816,6 @@ int64_t Win32_Code_Hoge1_Add2(int64_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -866,7 +840,6 @@ IL_0009:
     /* Path=2, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000f: ret */
@@ -914,22 +887,28 @@ void Win32_Code_Hoge1__ctor(Win32_Code_Hoge1* __this)
     return;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.Hoge2
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_Hoge2_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_Hoge1_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_Hoge2_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.Hoge2",
+static __Win32_Code_Hoge1_TYPE_DEF_TYPE__ __Win32_Code_Hoge1_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.Hoge1",
     0,
-    __Win32_Code_Hoge2_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_Hoge2_RUNTIME_TYPE__ = &__Win32_Code_Hoge2_RUNTIME_TYPE_DEF__;
+    __Win32_Code_Hoge1_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_Hoge1_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_Hoge1_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.Hoge2
 
 ///////////////////////////////////////
 // Add3
@@ -950,7 +929,6 @@ uint8_t Win32_Code_Hoge2_Add3(uint8_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 11 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = (int32_t)(a);
@@ -975,7 +953,6 @@ IL_0009:
     /* Path=2, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000f: ret */
@@ -1001,7 +978,6 @@ uint16_t Win32_Code_Hoge2_Add4(uint16_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = (int32_t)(a);
@@ -1026,7 +1002,6 @@ IL_0009:
     /* Path=2, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000f: ret */
@@ -1074,22 +1049,459 @@ void Win32_Code_Hoge2__ctor(Win32_Code_Hoge2* __this)
     return;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.Win32
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_Win32_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_Hoge2_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_Win32_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.Win32",
+static __Win32_Code_Hoge2_TYPE_DEF_TYPE__ __Win32_Code_Hoge2_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.Hoge2",
     0,
-    __Win32_Code_Win32_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE__ = &__Win32_Code_Win32_RUNTIME_TYPE_DEF__;
+    __Win32_Code_Hoge2_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_Hoge2_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_Hoge2_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.InheritTestTargetBase1
+
+///////////////////////////////////////
+// .ctor
+
+void Win32_Code_InheritTestTargetBase1__ctor(Win32_Code_InheritTestTargetBase1* __this)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTargetBase1* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTargetBase1** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
+    System_Object__ctor((System_Object*)__stack0_0);
+    /* Path=1, Unique=0: IL_0006: nop */
+    /* Path=1, Unique=0: IL_0007: nop */
+    /* Path=1, Unique=0: IL_0008: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return;
+}
+
+///////////////////////////////////////
+// .ctor
+
+void Win32_Code_InheritTestTargetBase1__ctor_1(Win32_Code_InheritTestTargetBase1* __this, int32_t value)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTargetBase1* __stack0_0 = NULL;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTargetBase1** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
+    System_Object__ctor((System_Object*)__stack0_0);
+    /* Path=1, Unique=0: IL_0006: nop */
+    /* Path=1, Unique=0: IL_0007: nop */
+    /* Path=1, Unique=0: IL_0008: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0009: ldarg.1 */
+    __stack1_0 = value;
+    /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_0->Value2 = __stack1_0;
+    /* Path=1, Unique=0: IL_000f: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return;
+}
+
+///////////////////////////////////////
+// Calc
+
+int32_t Win32_Code_InheritTestTargetBase1_Calc(Win32_Code_InheritTestTargetBase1* __this, int32_t a)
+{
+    //-------------------
+    // Local variables:
+
+    int32_t local0;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTargetBase1* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTargetBase1** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0002: ldfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_1 = __stack0_0->Value2;
+    /* Path=1, Unique=0: IL_0007: ldarg.1 */
+    __stack1_0 = a;
+    /* Path=1, Unique=0: IL_0008: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_0009: stloc.0 */
+    local0 = __stack0_1;
+    /* Path=1, Unique=0: IL_000a: br.s IL_000c */
+    goto IL_000c;
+IL_000c:
+    /* Path=2, Unique=0: IL_000c: ldloc.0 */
+    __stack0_1 = local0;
+    /* Path=2, Unique=0: IL_000d: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+///////////////////////////////////////
+// Virtual: Calc
+
+int32_t __Win32_Code_InheritTestTargetBase1_Calc_1__(Win32_Code_InheritTestTargetBase1* __this, int32_t a, int32_t b)
+{
+    //-------------------
+    // Local variables:
+
+    int32_t local0;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTargetBase1* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTargetBase1** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0002: ldfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_1 = __stack0_0->Value2;
+    /* Path=1, Unique=0: IL_0007: ldarg.1 */
+    __stack1_0 = a;
+    /* Path=1, Unique=0: IL_0008: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_0009: ldarg.2 */
+    __stack1_0 = b;
+    /* Path=1, Unique=0: IL_000a: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_000b: stloc.0 */
+    local0 = __stack0_1;
+    /* Path=1, Unique=0: IL_000c: br.s IL_000e */
+    goto IL_000e;
+IL_000e:
+    /* Path=2, Unique=0: IL_000e: ldloc.0 */
+    __stack0_1 = local0;
+    /* Path=2, Unique=0: IL_000f: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+//////////////////////
+// Runtime helpers:
+
+static void __Win32_Code_InheritTestTargetBase1_MARK_HANDLER__(void* pReference)
+{
+    __TRY_MARK_FROM_HANDLER__(((Win32_Code_InheritTestTargetBase1*)pReference)->OR2);
+    __typeof__(System_Object)->pMarkHandler(pReference);
+}
+
+static __Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.InheritTestTargetBase1",
+    sizeof(Win32_Code_InheritTestTargetBase1),
+    __Win32_Code_InheritTestTargetBase1_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+    __Win32_Code_InheritTestTargetBase1_Calc_1__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.InheritTypeTest
+
+///////////////////////////////////////
+// Test1
+
+int32_t Win32_Code_InheritTypeTest_Test1(void)
+{
+    //-------------------
+    // Local variables:
+
+    Win32_Code_InheritTestTargetBase1* local0 = NULL;
+    int32_t local1;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTargetBase1* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTargetBase1** plocal0;
+        Win32_Code_InheritTestTargetBase1** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 2;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTargetBase1::.ctor() */
+    __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_InheritTestTargetBase1));
+    Win32_Code_InheritTestTargetBase1__ctor(__stack0_0);
+    /* Path=1, Unique=0: IL_0006: stloc.0 */
+    local0 = __stack0_0;
+    /* Path=1, Unique=0: IL_0007: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
+    __stack1_0 = 123;
+    /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_0->Value2 = __stack1_0;
+    /* Path=1, Unique=0: IL_000f: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
+    __stack1_0 = 1;
+    /* Path=1, Unique=0: IL_0011: callvirt System.Int32 Win32.Code.InheritTestTargetBase1::Calc(System.Int32) */
+    __stack0_1 = Win32_Code_InheritTestTargetBase1_Calc(__stack0_0, __stack1_0);
+    /* Path=1, Unique=0: IL_0016: stloc.1 */
+    local1 = __stack0_1;
+    /* Path=1, Unique=0: IL_0017: br.s IL_0019 */
+    goto IL_0019;
+IL_0019:
+    /* Path=2, Unique=0: IL_0019: ldloc.1 */
+    __stack0_1 = local1;
+    /* Path=2, Unique=0: IL_001a: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+///////////////////////////////////////
+// Test2
+
+int32_t Win32_Code_InheritTypeTest_Test2(void)
+{
+    //-------------------
+    // Local variables:
+
+    Win32_Code_InheritTestTargetBase1* local0 = NULL;
+    int32_t local1;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTargetBase1* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+    int32_t __stack2_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTargetBase1** plocal0;
+        Win32_Code_InheritTestTargetBase1** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 2;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTargetBase1::.ctor() */
+    __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_InheritTestTargetBase1));
+    Win32_Code_InheritTestTargetBase1__ctor(__stack0_0);
+    /* Path=1, Unique=0: IL_0006: stloc.0 */
+    local0 = __stack0_0;
+    /* Path=1, Unique=0: IL_0007: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
+    __stack1_0 = 123;
+    /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_0->Value2 = __stack1_0;
+    /* Path=1, Unique=0: IL_000f: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
+    __stack1_0 = 1;
+    /* Path=1, Unique=0: IL_0011: ldc.i4.2 */
+    __stack2_0 = 2;
+    /* Path=1, Unique=0: IL_0012: callvirt System.Int32 Win32.Code.InheritTestTargetBase1::Calc(System.Int32,System.Int32) */
+    __stack0_1 = Win32_Code_InheritTestTargetBase1_Calc_1(__stack0_0, __stack1_0, __stack2_0);
+    /* Path=1, Unique=0: IL_0017: stloc.1 */
+    local1 = __stack0_1;
+    /* Path=1, Unique=0: IL_0018: br.s IL_001a */
+    goto IL_001a;
+IL_001a:
+    /* Path=2, Unique=0: IL_001a: ldloc.1 */
+    __stack0_1 = local1;
+    /* Path=2, Unique=0: IL_001b: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+///////////////////////////////////////
+// .ctor
+
+void Win32_Code_InheritTypeTest__ctor(Win32_Code_InheritTypeTest* __this)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTypeTest* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTypeTest** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
+    System_Object__ctor((System_Object*)__stack0_0);
+    /* Path=1, Unique=0: IL_0006: nop */
+    /* Path=1, Unique=0: IL_0007: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return;
+}
+
+//////////////////////
+// Runtime helpers:
+
+static void __Win32_Code_InheritTypeTest_MARK_HANDLER__(void* pReference)
+{
+    __typeof__(System_Object)->pMarkHandler(pReference);
+}
+
+static __Win32_Code_InheritTypeTest_TYPE_DEF_TYPE__ __Win32_Code_InheritTypeTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.InheritTypeTest",
+    0,
+    __Win32_Code_InheritTypeTest_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_InheritTypeTest_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTypeTest_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.Win32
 
 ///////////////////////////////////////
 // P/Invoke: GetCurrentProcessId
@@ -1156,22 +1568,28 @@ void Win32_Code_Win32__ctor(Win32_Code_Win32* __this)
     return;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.StringTest
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_StringTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_Win32_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_StringTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.StringTest",
+static __Win32_Code_Win32_TYPE_DEF_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.Win32",
     0,
-    __Win32_Code_StringTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE__ = &__Win32_Code_StringTest_RUNTIME_TYPE_DEF__;
+    __Win32_Code_Win32_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_Win32_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.StringTest
 
 ///////////////////////////////////////
 // LiteralString
@@ -1207,13 +1625,11 @@ void Win32_Code_StringTest_LiteralString(void)
     //-------------------
     // IL body:
 
-#line 12 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABC" */
     __stack0_0 = __string0;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 14 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0007: ret */
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
@@ -1253,7 +1669,6 @@ System_String* Win32_Code_StringTest_InOutString(System_String* a)
     //-------------------
     // IL body:
 
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -1262,7 +1677,6 @@ System_String* Win32_Code_StringTest_InOutString(System_String* a)
     /* Path=1, Unique=0: IL_0003: br.s IL_0005 */
     goto IL_0005;
 IL_0005:
-#line 19 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0005: ldloc.0 */
     __stack0_0 = local0;
     /* Path=2, Unique=0: IL_0006: ret */
@@ -1313,18 +1727,15 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
     //-------------------
     // IL body:
 
-#line 22 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABC" */
     __stack0_0 = __string0;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 24 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0007: ldstr "DEF" */
     __stack0_0 = __string1;
     /* Path=1, Unique=0: IL_000c: stloc.1 */
     local1 = __stack0_0;
-#line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_000d: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_000e: ldloc.1 */
@@ -1336,7 +1747,6 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
     /* Path=1, Unique=0: IL_0015: br.s IL_0017 */
     goto IL_0017;
 IL_0017:
-#line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0017: ldloc.2 */
     __stack0_0 = local2;
     /* Path=2, Unique=0: IL_0018: ret */
@@ -1385,13 +1795,11 @@ System_String* Win32_Code_StringTest_LiteralSubstring(void)
     //-------------------
     // IL body:
 
-#line 29 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABCDEFGHIJKLMN" */
     __stack0_0 = __string2;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4.3 */
@@ -1403,7 +1811,6 @@ System_String* Win32_Code_StringTest_LiteralSubstring(void)
     /* Path=1, Unique=0: IL_000f: br.s IL_0011 */
     goto IL_0011;
 IL_0011:
-#line 32 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0011: ldloc.1 */
     __stack0_0 = local1;
     /* Path=2, Unique=0: IL_0012: ret */
@@ -1429,7 +1836,6 @@ wchar_t Win32_Code_StringTest_GetChar(void)
     //-------------------
     // IL body:
 
-#line 35 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldc.i4.s 65 */
     __stack0_0 = 65;
@@ -1438,7 +1844,6 @@ wchar_t Win32_Code_StringTest_GetChar(void)
     /* Path=1, Unique=0: IL_0004: br.s IL_0006 */
     goto IL_0006;
 IL_0006:
-#line 37 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0006: ldloc.0 */
     __stack0_0 = local0;
     /* Path=2, Unique=0: IL_0007: ret */
@@ -1480,7 +1885,6 @@ wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index)
     //-------------------
     // IL body:
 
-#line 40 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = str;
@@ -1493,7 +1897,6 @@ wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index)
     /* Path=1, Unique=0: IL_0009: br.s IL_000b */
     goto IL_000b;
 IL_000b:
-#line 42 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_000b: ldloc.0 */
     __stack0_2 = local0;
     /* Path=2, Unique=0: IL_000c: ret */
@@ -1542,22 +1945,28 @@ void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this)
     return;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.UnsafeTest
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_UnsafeTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_StringTest_MARK_HANDLER__(void* pReference)
 {
     __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.UnsafeTest",
+static __Win32_Code_StringTest_TYPE_DEF_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.StringTest",
     0,
-    __Win32_Code_UnsafeTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE__ = &__Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__;
+    __Win32_Code_StringTest_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_StringTest_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.UnsafeTest
 
 ///////////////////////////////////////
 // .ctor
@@ -1600,23 +2009,28 @@ void Win32_Code_UnsafeTest__ctor(Win32_Code_UnsafeTest* __this)
     return;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.ValueTypeTestTarget
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_UnsafeTest_MARK_HANDLER__(void* pReference)
 {
-    __TRY_MARK_FROM_HANDLER__(((Win32_Code_ValueTypeTestTarget*)pReference)->OR2);
-    __typeof__(System_ValueType)->pMarkHandler(pReference);
+    __typeof__(System_Object)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ValueTypeTestTarget",
-    sizeof(Win32_Code_ValueTypeTestTarget),
-    __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE__ = &__Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__;
+static __Win32_Code_UnsafeTest_TYPE_DEF_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.UnsafeTest",
+    0,
+    __Win32_Code_UnsafeTest_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.ValueTypeTestTarget
 
 ///////////////////////////////////////
 // GetValue2
@@ -1652,7 +2066,6 @@ int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget*
     //-------------------
     // IL body:
 
-#line 15 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = __this;
@@ -1671,7 +2084,6 @@ int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget*
     /* Path=1, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=2, Unique=0: IL_000e: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000f: ret */
@@ -1679,22 +2091,32 @@ IL_000e:
     return __stack0_1;
 }
 
-////////////////////////////////////////////////////////////
-// Type: Win32.Code.ValueTypeTest
-
 //////////////////////
 // Runtime helpers:
 
-static void __Win32_Code_ValueTypeTest_MARK_HANDLER__(void* pReference)
+static void __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(System_Object)->pMarkHandler(pReference);
+    __TRY_MARK_FROM_HANDLER__(((Win32_Code_ValueTypeTestTarget*)pReference)->OR2);
+    __typeof__(System_ValueType)->pMarkHandler(pReference);
 }
 
-static __RUNTIME_TYPE_DEF__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ValueTypeTest",
-    0,
-    __Win32_Code_ValueTypeTest_MARK_HANDLER__ };
-const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE__ = &__Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__;
+static __Win32_Code_ValueTypeTestTarget_TYPE_DEF_TYPE__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ValueTypeTestTarget",
+    sizeof(Win32_Code_ValueTypeTestTarget),
+    __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+    __System_ValueType_GetHashCode__,
+    __System_ValueType_ToString__,
+    __System_ValueType_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.ValueTypeTest
 
 ///////////////////////////////////////
 // Test4
@@ -1735,20 +2157,17 @@ int32_t Win32_Code_ValueTypeTest_Test4(void)
     //-------------------
     // IL body:
 
-#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldloca.s local0 */
     __stack0_0 = &local0;
     /* Path=1, Unique=0: IL_0003: initobj Win32.Code.ValueTypeTestTarget */
     memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
-#line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0009: ldloca.s local0 */
     __stack0_1 = &local0;
     /* Path=1, Unique=0: IL_000b: ldc.i4 456 */
     __stack1_0 = 456;
     /* Path=1, Unique=0: IL_0010: stfld System.Int32 Win32.Code.ValueTypeTestTarget::Value2 */
     __stack0_1->Value2 = __stack1_0;
-#line 27 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0015: ldloc.0 */
     __stack0_2 = local0;
     /* Path=1, Unique=0: IL_0016: ldfld System.Int32 Win32.Code.ValueTypeTestTarget::Value2 */
@@ -1758,7 +2177,6 @@ int32_t Win32_Code_ValueTypeTest_Test4(void)
     /* Path=1, Unique=0: IL_001c: br.s IL_001e */
     goto IL_001e;
 IL_001e:
-#line 28 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=2, Unique=0: IL_001e: ldloc.1 */
     __stack0_3 = local1;
     /* Path=2, Unique=0: IL_001f: ret */
@@ -1809,20 +2227,17 @@ int32_t Win32_Code_ValueTypeTest_Test5(void)
     //-------------------
     // IL body:
 
-#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldloca.s local0 */
     __stack0_0 = &local0;
     /* Path=1, Unique=0: IL_0003: initobj Win32.Code.ValueTypeTestTarget */
     memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
-#line 33 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0009: ldloca.s local0 */
     __stack0_1 = &local0;
     /* Path=1, Unique=0: IL_000b: ldc.i4 789 */
     __stack1_0 = 789;
     /* Path=1, Unique=0: IL_0010: stfld System.Int32 Win32.Code.ValueTypeTestTarget::Value2 */
     __stack0_1->Value2 = __stack1_0;
-#line 35 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0015: ldloca.s local0 */
     __stack0_2 = &local0;
     /* Path=1, Unique=0: IL_0017: ldc.i4.s 123 */
@@ -1833,7 +2248,6 @@ int32_t Win32_Code_ValueTypeTest_Test5(void)
     __stack0_3 = Win32_Code_ValueTypeTestTarget_GetValue2(__stack0_2, __stack1_0, __stack2_0);
     /* Path=1, Unique=0: IL_0023: stloc.1 */
     local1 = __stack0_3;
-#line 36 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0024: ldloc.1 */
     __stack0_3 = local1;
     /* Path=1, Unique=0: IL_0025: stloc.2 */
@@ -1841,7 +2255,6 @@ int32_t Win32_Code_ValueTypeTest_Test5(void)
     /* Path=1, Unique=0: IL_0026: br.s IL_0028 */
     goto IL_0028;
 IL_0028:
-#line 37 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=2, Unique=0: IL_0028: ldloc.2 */
     __stack0_3 = local2;
     /* Path=2, Unique=0: IL_0029: ret */
@@ -1889,3 +2302,23 @@ void Win32_Code_ValueTypeTest__ctor(Win32_Code_ValueTypeTest* __this)
     __gc_unlink_execution_frame__(&__executionFrame__);
     return;
 }
+
+//////////////////////
+// Runtime helpers:
+
+static void __Win32_Code_ValueTypeTest_MARK_HANDLER__(void* pReference)
+{
+    __typeof__(System_Object)->pMarkHandler(pReference);
+}
+
+static __Win32_Code_ValueTypeTest_TYPE_DEF_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
+    "Win32.Code.ValueTypeTest",
+    0,
+    __Win32_Code_ValueTypeTest_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE__ =
+   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__;

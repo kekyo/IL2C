@@ -127,7 +127,8 @@ namespace IL2C
                 preparedILBodies,
                 localVariables,
                 stacks,
-                labelNames);
+                labelNames,
+                body.Method.IsVirtual ? (int?)body.Method.GetMethodOverloadIndex() : null);
         }
 
         private static PreparedFunction PrepareAbstractMethod(
@@ -135,7 +136,8 @@ namespace IL2C
             string methodName,
             string rawMethodName,
             TypeReference returnType,
-            Parameter[] parameters)
+            Parameter[] parameters,
+            int slotIndex)
         {
             // TODO: throw
             //prepareContext.RegisterIncludeFile("assert.h");
@@ -144,8 +146,8 @@ namespace IL2C
                 methodName,
                 rawMethodName,
                 returnType,
-                parameters, 
-                false);
+                parameters,
+                slotIndex);
         }
 
         private static PreparedFunction PreparePInvokeMethod(
@@ -171,7 +173,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
-                true);
+                null);
         }
 
         private static PreparedFunction PrepareMethod(
@@ -214,7 +216,8 @@ namespace IL2C
                     methodName,
                     method.Name,
                     returnType,
-                    parameters);
+                    parameters,
+                    method.GetMethodOverloadIndex());
             }
 
             Debug.Assert(method.Body != null);

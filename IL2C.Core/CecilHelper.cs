@@ -136,11 +136,11 @@ namespace IL2C
             return false;
         }
 
-        private static IOrderedEnumerable<MethodDefinition> OrderByParameters(
+        public static IOrderedEnumerable<MethodDefinition> OrderByParameters(
             this IEnumerable<MethodDefinition> methods)
         {
             var ms = methods.ToArray();
-            var maxParameterCount = ms.Max(m => m.Parameters.Count);
+            var maxParameterCount = (ms.Length >= 1) ? ms.Max(m => m.Parameters.Count) : 0;
 
             var expr = ms.OrderBy(m => m.Parameters.Count);
             for (var index = 0; index < maxParameterCount; index++)
@@ -148,7 +148,7 @@ namespace IL2C
                 // HACK: C# lambda captured inner incremented value.
                 var capturedIndex = index;
 
-                // TODO: Improve human predictivity.
+                // TODO: Improve human predictivity and stable compatibility.
                 expr = expr.ThenBy(m =>
                     m.Parameters.ElementAtOrDefault(capturedIndex)
                         ?.ParameterType.GetFullMemberName()
@@ -174,6 +174,16 @@ namespace IL2C
             return found.i;
         }
 
+        public static IEnumerable<MethodDefinition> EnumerateOrderedOverridedMethods(this TypeReference type)
+        {
+            return type.Resolve()
+                .Traverse(t => t.BaseType?.Resolve())
+                .Reverse()
+                .SelectMany(t => t.Methods
+                    .Where(method => method.IsVirtual)
+                    .OrderByParameters());       // Make stable in current type.
+        }
+
         public static string GetFullMemberName(
             this MemberReference member, MethodNameTypes nameType = MethodNameTypes.Nothing)
         {
@@ -195,15 +205,17 @@ namespace IL2C
                 .Reverse()
                 .ToArray();
 
+            var namespaceName = declaringTypes.First().Namespace;
+
             var method = member as MethodReference;
             if (method != null)
             {
                 switch (nameType)
                 {
                     case MethodNameTypes.Full:
-                        return String.Format(
+                        return string.Format(
                             "{0}.{1}.{2}({3})",
-                            declaringTypes.First().Namespace,
+                            namespaceName,
                             string.Join(".", declaringTypes.Select(dt => dt.Name)),
                             method.Name,
                             string.Join(
@@ -214,9 +226,9 @@ namespace IL2C
                                     parameter.Name))));
 
                     case MethodNameTypes.Types:
-                        return String.Format(
+                        return string.Format(
                             "{0}.{1}.{2}({3})",
-                            declaringTypes.First().Namespace,
+                            namespaceName,
                             string.Join(".", declaringTypes.Select(dt => dt.Name)),
                             method.Name,
                             string.Join(
@@ -227,9 +239,10 @@ namespace IL2C
                         var index = method.GetMethodOverloadIndex();
                         if (index >= 1)
                         {
-                            return String.Format(
+                            // Atmark will replace to underscore by ManglingSymbolName()
+                            return string.Format(
                                 "{0}.{1}.{2}@{3}",
-                                declaringTypes.First().Namespace,
+                                namespaceName,
                                 string.Join(".", declaringTypes.Select(dt => dt.Name)),
                                 method.Name,
                                 index);
@@ -238,11 +251,26 @@ namespace IL2C
                 }
             }
 
-            return String.Format(
+            return string.Format(
                 "{0}.{1}.{2}",
-                declaringTypes.First().Namespace,
+                namespaceName,
                 string.Join(".", declaringTypes.Select(dt => dt.Name)),
                 member.Name);
+        }
+
+        public static string GetOverloadedMethodName(this MethodReference method)
+        {
+            var index = method.GetMethodOverloadIndex();
+            if (index >= 1)
+            {
+                // Atmark will replace to underscore by ManglingSymbolName()
+                return string.Format(
+                    "{0}@{1}",
+                    method.Name,
+                    index);
+            }
+
+            return method.Name;
         }
 
         #region Type system safed references

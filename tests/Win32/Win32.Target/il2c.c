@@ -22,6 +22,31 @@ void WriteLineToError(const wchar_t* pMessage);
 #define DEBUG_WRITE(step, message)
 #endif
 
+#elif defined(_WDM)
+
+#include <intrin.h>
+
+#include <wdm.h>
+#include <stdint.h>
+
+typedef long interlock_t;
+
+#define GCASSERT ASSERT
+#define GCALLOC(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
+#define GCFREE(p) ExFreePoolWithTag(p, 0x11231123UL)
+
+#ifdef DBG
+#define DEBUG_WRITE(step, message) { \
+    char buffer[256]; \
+    strcpy(buffer, step); \
+    strcat(buffer, ": "); \
+    strcat(buffer, message); \
+    strcat(buffer, "\r\n"); \
+    DbgPrint(buffer); }
+#else
+#define DEBUG_WRITE(step, message)
+#endif
+
 #elif defined(_WIN32)
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -106,19 +131,6 @@ struct __EXECUTION_FRAME__
     struct __EXECUTION_FRAME__* pNext;
     uint8_t targetCount;
     void** pTargets[];      // We have to track object references.
-};
-
-typedef void(*__MARK_HANDLER__)(void*);
-
-struct __REF_HEADER__
-{
-    struct __REF_HEADER__* pNext;
-    __RUNTIME_TYPE__ type;
-    union
-    {
-        interlock_t gcMark;
-        intptr_t __dummy;
-    };
 };
 
 // TODO: Become store to thread local storage
@@ -324,7 +336,7 @@ void __gc_collect__()
 
 void __gc_initialize__()
 {
-#ifdef _WIN32
+#ifdef _CRTDBG_ALLOC_MEM_DF
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
 #endif
 
@@ -336,7 +348,7 @@ void __gc_shutdown__()
 {
     __gc_collect__();
 
-#ifdef _WIN32
+#ifdef _CRTDBG_ALLOC_MEM_DF
     _CrtDumpMemoryLeaks();
 #endif
 }
@@ -424,6 +436,10 @@ static __RUNTIME_TYPE_DEF__ __System_ValueType_RUNTIME_TYPE_DEF__ = {
     "System.ValueType", 0, __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_ValueType_RUNTIME_TYPE__ = &__System_ValueType_RUNTIME_TYPE_DEF__;
 
+static __RUNTIME_TYPE_DEF__ __System_IntPtr_RUNTIME_TYPE_DEF__ = {
+    "System.IntPtr", sizeof(System_IntPtr), __Dummy_MARK_HANDLER__ };
+const __RUNTIME_TYPE__ __System_IntPtr_RUNTIME_TYPE__ = &__System_IntPtr_RUNTIME_TYPE_DEF__;
+
 static __RUNTIME_TYPE_DEF__ __System_Byte_RUNTIME_TYPE_DEF__ = {
     "System.Byte", sizeof(System_Byte), __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;
@@ -455,6 +471,8 @@ const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__ = &__System_Int64_RUNTIME_T
 static __RUNTIME_TYPE_DEF__ __System_UInt64_RUNTIME_TYPE_DEF__ = {
     "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
+
+const System_IntPtr System_IntPtr_Zero = 0;
 
 // TODO: Reimplement by managed code.
 extern bool twtoi(const wchar_t *_Str, int32_t* value);

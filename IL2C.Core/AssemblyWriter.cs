@@ -161,11 +161,8 @@ namespace IL2C
                     var typeName = type.GetFullMemberName().ManglingSymbolName();
 
                     tw.WriteLine();
-                    tw.WriteLine(
-                        "typedef const struct __{0}_TYPE_DEF_TYPE__",
-                        typeName);
-                    tw.WriteLine(
-                        "{");
+                    tw.WriteLine("typedef const struct");
+                    tw.WriteLine("{");
                     Enumerable.Range(0, 3)
                         .ForEach(index => tw.WriteLine(
                             "{0}intptr_t __reserved{1}__;",

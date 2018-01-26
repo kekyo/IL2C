@@ -100,6 +100,11 @@ int main()
 {
     __gc_initialize__();
 
+    Win32_Code_InheritTypeTest_Test1();
+    Win32_Code_InheritTypeTest_Test2();
+    Win32_Code_InheritTypeTest_Test3();
+    Win32_Code_InheritTypeTest_Test4();
+
     while (1)
     {
         int index;

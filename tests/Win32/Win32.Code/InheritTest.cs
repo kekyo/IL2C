@@ -30,22 +30,60 @@ namespace Win32.Code
         }
     }
 
+    public class InheritTestTarget2 : InheritTestTargetBase1
+    {
+        public InheritTestTarget2()
+        {
+        }
+
+        public InheritTestTarget2(int value)
+            : base(value)
+        {
+        }
+
+        public new int Calc(int a)
+        {
+            return this.Value2 + a + 10000;
+        }
+
+        public override int Calc(int a, int b)
+        {
+            return this.Value2 + a + b + 10000;
+        }
+    }
+
     public class InheritTypeTest
     {
         public static int Test1()
         {
-            var hoge3 = new InheritTestTargetBase1();
-            hoge3.Value2 = 123;
+            var hoge = new InheritTestTargetBase1();
+            hoge.Value2 = 123;
 
-            return hoge3.Calc(1);
+            return hoge.Calc(1);
         }
 
         public static int Test2()
         {
-            var hoge3 = new InheritTestTargetBase1();
-            hoge3.Value2 = 123;
+            var hoge = new InheritTestTargetBase1();
+            hoge.Value2 = 123;
 
-            return hoge3.Calc(1, 2);
+            return hoge.Calc(1, 2);
+        }
+
+        public static int Test3()
+        {
+            var hoge = new InheritTestTarget2();
+            hoge.Value2 = 123;
+
+            return hoge.Calc(1, 2);
+        }
+
+        public static int Test4()
+        {
+            InheritTestTargetBase1 hoge = new InheritTestTarget2();
+            hoge.Value2 = 123;
+
+            return hoge.Calc(1, 2);
         }
     }
 }

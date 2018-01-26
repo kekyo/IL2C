@@ -45,11 +45,35 @@ extern const __RUNTIME_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE__;
 extern void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this, intptr_t pFrom, intptr_t pTo, int32_t size);
 extern uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pBuffer, int32_t offset, int32_t size);
 
+typedef const struct
+{
+    intptr_t __reserved0__;
+    intptr_t __reserved1__;
+    intptr_t __reserved2__;
+    System_String* (*ToString)(System_Object* __this);
+    int32_t (*GetHashCode)(System_Object* __this);
+    void (*Finalize)(System_Object* __this);
+    bool (*Equals)(System_Object* __this, System_Object* obj);
+} __WDM_Code_InterceptCDRomDevice_TYPE_DEF_TYPE__;
+
+
 extern void WDM_Code_Wdm_DbgPrint(System_String* message);
 extern void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message);
 extern intptr_t WDM_Code_Wdm_memmem(intptr_t p1, int32_t s1, intptr_t p2, int32_t s2);
 extern void WDM_Code_Wdm_memcpy(intptr_t pDest, intptr_t pSource, int32_t size);
 extern void WDM_Code_Wdm__ctor(WDM_Code_Wdm* __this);
+
+typedef const struct
+{
+    intptr_t __reserved0__;
+    intptr_t __reserved1__;
+    intptr_t __reserved2__;
+    System_String* (*ToString)(System_Object* __this);
+    int32_t (*GetHashCode)(System_Object* __this);
+    void (*Finalize)(System_Object* __this);
+    bool (*Equals)(System_Object* __this, System_Object* obj);
+} __WDM_Code_Wdm_TYPE_DEF_TYPE__;
+
 
 #ifdef __cplusplus
 }

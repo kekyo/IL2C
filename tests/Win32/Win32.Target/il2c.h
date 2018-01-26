@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#if defined(_WIN32) || defined(UEFI)
+#if defined(_WIN32) || defined(_WDM) || defined(UEFI)
 typedef long interlock_t;
 #else
 typedef uint8_t interlock_t;
@@ -21,12 +21,9 @@ typedef uint8_t interlock_t;
 typedef struct __EXECUTION_FRAME__ __EXECUTION_FRAME__;
 typedef struct __REF_HEADER__ __REF_HEADER__;
 
-/////////////////////////////////////////////////////////////
-// Runtime type information related declarations
-
 typedef void(*__MARK_HANDLER__)(void*);
 
-typedef const struct __RUNTIME_TYPE_DEF__
+typedef const struct
 {
     const char* pTypeName;
     uintptr_t bodySize;
@@ -35,9 +32,25 @@ typedef const struct __RUNTIME_TYPE_DEF__
 
 typedef __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
 
+struct __REF_HEADER__
+{
+    struct __REF_HEADER__* pNext;
+    __RUNTIME_TYPE__ type;
+    union
+    {
+        interlock_t gcMark;
+        intptr_t __dummy;
+    };
+};
+
+
+/////////////////////////////////////////////////////////////
+// Runtime type information related declarations
+
 #define __typeof__(typeName) (__##typeName##_RUNTIME_TYPE__)
 #define __sizeof__(typeName) (__typeof__(typeName)->bodySize)
-#define __get_typedef__(__this) ((__RUNTIME_TYPE__)(((uint8_t*)__this) - sizeof(intptr_t) * 2))
+
+#define __get_typedef__(__this) ((((__REF_HEADER__*)(__this)) - 1)->type)
 
 /////////////////////////////////////////////////////////////
 // System.Object
@@ -109,6 +122,9 @@ extern void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type);
 
 typedef System_Object IL2C_CecilHelper_PseudoZeroType;
 
+typedef intptr_t System_IntPtr;
+extern const __RUNTIME_TYPE__ __System_IntPtr_RUNTIME_TYPE__;
+
 typedef uint8_t System_Byte;
 extern const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
 
@@ -132,6 +148,18 @@ extern const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
 
 typedef uint64_t System_UInt64;
 extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
+
+extern const System_IntPtr System_IntPtr_Zero;
+
+static System_IntPtr System_IntPtr_op_Addition(System_IntPtr lhs, int32_t rhs)
+{
+    return lhs + rhs;
+}
+
+static bool System_IntPtr_op_Inequality(System_IntPtr lhs, System_IntPtr rhs)
+{
+    return lhs != rhs;
+}
 
 extern bool System_Int32_TryParse(System_String* s, int32_t* result);
 

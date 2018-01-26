@@ -42,6 +42,7 @@ Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1 = NULL;
 
 
 
+
 int32_t Win32_Code_ValueTypeTestTarget_Value1 = 0;
 
 
@@ -1300,6 +1301,239 @@ const __RUNTIME_TYPE__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE__ =
    (__RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
+// Type: Win32.Code.InheritTestTarget2
+
+///////////////////////////////////////
+// .ctor
+
+void Win32_Code_InheritTestTarget2__ctor(Win32_Code_InheritTestTarget2* __this)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTarget2* __stack0_0 = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTarget2** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0001: call System.Void Win32.Code.InheritTestTargetBase1::.ctor() */
+    Win32_Code_InheritTestTargetBase1__ctor((Win32_Code_InheritTestTargetBase1*)__stack0_0);
+    /* Path=1, Unique=0: IL_0006: nop */
+    /* Path=1, Unique=0: IL_0007: nop */
+    /* Path=1, Unique=0: IL_0008: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return;
+}
+
+///////////////////////////////////////
+// .ctor
+
+void Win32_Code_InheritTestTarget2__ctor_1(Win32_Code_InheritTestTarget2* __this, int32_t value)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTarget2* __stack0_0 = NULL;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTarget2** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0001: ldarg.1 */
+    __stack1_0 = value;
+    /* Path=1, Unique=0: IL_0002: call System.Void Win32.Code.InheritTestTargetBase1::.ctor(System.Int32) */
+    Win32_Code_InheritTestTargetBase1__ctor_1((Win32_Code_InheritTestTargetBase1*)__stack0_0, __stack1_0);
+    /* Path=1, Unique=0: IL_0007: nop */
+    /* Path=1, Unique=0: IL_0008: nop */
+    /* Path=1, Unique=0: IL_0009: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return;
+}
+
+///////////////////////////////////////
+// Calc
+
+int32_t Win32_Code_InheritTestTarget2_Calc(Win32_Code_InheritTestTarget2* __this, int32_t a)
+{
+    //-------------------
+    // Local variables:
+
+    int32_t local0;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTarget2* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTarget2** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0002: ldfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_1 = __stack0_0->Value2;
+    /* Path=1, Unique=0: IL_0007: ldarg.1 */
+    __stack1_0 = a;
+    /* Path=1, Unique=0: IL_0008: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_0009: ldc.i4 10000 */
+    __stack1_0 = 10000;
+    /* Path=1, Unique=0: IL_000e: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_000f: stloc.0 */
+    local0 = __stack0_1;
+    /* Path=1, Unique=0: IL_0010: br.s IL_0012 */
+    goto IL_0012;
+IL_0012:
+    /* Path=2, Unique=0: IL_0012: ldloc.0 */
+    __stack0_1 = local0;
+    /* Path=2, Unique=0: IL_0013: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+///////////////////////////////////////
+// Virtual: Calc
+
+int32_t __Win32_Code_InheritTestTarget2_Calc_1__(Win32_Code_InheritTestTarget2* __this, int32_t a, int32_t b)
+{
+    //-------------------
+    // Local variables:
+
+    int32_t local0;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTarget2* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTarget2** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
+    __stack0_0 = __this;
+    /* Path=1, Unique=0: IL_0002: ldfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_1 = __stack0_0->Value2;
+    /* Path=1, Unique=0: IL_0007: ldarg.1 */
+    __stack1_0 = a;
+    /* Path=1, Unique=0: IL_0008: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_0009: ldarg.2 */
+    __stack1_0 = b;
+    /* Path=1, Unique=0: IL_000a: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_000b: ldc.i4 10000 */
+    __stack1_0 = 10000;
+    /* Path=1, Unique=0: IL_0010: add */
+    __stack0_1 = __stack0_1 + __stack1_0;
+    /* Path=1, Unique=0: IL_0011: stloc.0 */
+    local0 = __stack0_1;
+    /* Path=1, Unique=0: IL_0012: br.s IL_0014 */
+    goto IL_0014;
+IL_0014:
+    /* Path=2, Unique=0: IL_0014: ldloc.0 */
+    __stack0_1 = local0;
+    /* Path=2, Unique=0: IL_0015: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+//////////////////////
+// Runtime helpers:
+
+static void __Win32_Code_InheritTestTarget2_MARK_HANDLER__(void* pReference)
+{
+    __typeof__(Win32_Code_InheritTestTargetBase1)->pMarkHandler(pReference);
+}
+
+static __Win32_Code_InheritTestTarget2_TYPE_DEF_TYPE__ __Win32_Code_InheritTestTarget2_RUNTIME_TYPE_DEF__ = {
+    (intptr_t)"Win32.Code.InheritTestTarget2",
+    (intptr_t)sizeof(Win32_Code_InheritTestTarget2),
+    (intptr_t)__Win32_Code_InheritTestTarget2_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+    __Win32_Code_InheritTestTarget2_Calc_1__,
+};
+const __RUNTIME_TYPE__ __Win32_Code_InheritTestTarget2_RUNTIME_TYPE__ =
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTestTarget2_RUNTIME_TYPE_DEF__;
+
+////////////////////////////////////////////////////////////
 // Type: Win32.Code.InheritTypeTest
 
 ///////////////////////////////////////
@@ -1437,6 +1671,149 @@ IL_001a:
     /* Path=2, Unique=0: IL_001b: ret */
     __gc_unlink_execution_frame__(&__executionFrame__);
     return __stack0_1;
+}
+
+///////////////////////////////////////
+// Test3
+
+int32_t Win32_Code_InheritTypeTest_Test3(void)
+{
+    //-------------------
+    // Local variables:
+
+    Win32_Code_InheritTestTarget2* local0 = NULL;
+    int32_t local1;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTarget2* __stack0_0 = NULL;
+    int32_t __stack0_1;
+    int32_t __stack1_0;
+    int32_t __stack2_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTarget2** plocal0;
+        Win32_Code_InheritTestTarget2** p__stack0_0;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 2;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTarget2::.ctor() */
+    __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_InheritTestTarget2));
+    Win32_Code_InheritTestTarget2__ctor(__stack0_0);
+    /* Path=1, Unique=0: IL_0006: stloc.0 */
+    local0 = __stack0_0;
+    /* Path=1, Unique=0: IL_0007: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
+    __stack1_0 = 123;
+    /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_0->Value2 = __stack1_0;
+    /* Path=1, Unique=0: IL_000f: ldloc.0 */
+    __stack0_0 = local0;
+    /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
+    __stack1_0 = 1;
+    /* Path=1, Unique=0: IL_0011: ldc.i4.2 */
+    __stack2_0 = 2;
+    /* Path=1, Unique=0: IL_0012: callvirt System.Int32 Win32.Code.InheritTestTargetBase1::Calc(System.Int32,System.Int32) */
+    __stack0_1 = Win32_Code_InheritTestTargetBase1_Calc_1((Win32_Code_InheritTestTargetBase1*)__stack0_0, __stack1_0, __stack2_0);
+    /* Path=1, Unique=0: IL_0017: stloc.1 */
+    local1 = __stack0_1;
+    /* Path=1, Unique=0: IL_0018: br.s IL_001a */
+    goto IL_001a;
+IL_001a:
+    /* Path=2, Unique=0: IL_001a: ldloc.1 */
+    __stack0_1 = local1;
+    /* Path=2, Unique=0: IL_001b: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_1;
+}
+
+///////////////////////////////////////
+// Test4
+
+int32_t Win32_Code_InheritTypeTest_Test4(void)
+{
+    //-------------------
+    // Local variables:
+
+    Win32_Code_InheritTestTargetBase1* local0 = NULL;
+    int32_t local1;
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_InheritTestTarget2* __stack0_0 = NULL;
+    Win32_Code_InheritTestTargetBase1* __stack0_1 = NULL;
+    int32_t __stack0_2;
+    int32_t __stack1_0;
+    int32_t __stack2_0;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* __EXECUTION_FRAME__ */
+    {
+        __EXECUTION_FRAME__* pNext;
+        uint8_t targetCount;
+        Win32_Code_InheritTestTargetBase1** plocal0;
+        Win32_Code_InheritTestTarget2** p__stack0_0;
+        Win32_Code_InheritTestTargetBase1** p__stack0_1;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 3;
+    __executionFrame__.plocal0 = &local0;
+    __executionFrame__.p__stack0_0 = &__stack0_0;
+    __executionFrame__.p__stack0_1 = &__stack0_1;
+    __gc_link_execution_frame__(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTarget2::.ctor() */
+    __stack0_0 = __gc_get_uninitialized_object__(__typeof__(Win32_Code_InheritTestTarget2));
+    Win32_Code_InheritTestTarget2__ctor(__stack0_0);
+    /* Path=1, Unique=0: IL_0006: stloc.0 */
+    local0 = (Win32_Code_InheritTestTargetBase1*)__stack0_0;
+    /* Path=1, Unique=0: IL_0007: ldloc.0 */
+    __stack0_1 = local0;
+    /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
+    __stack1_0 = 123;
+    /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
+    __stack0_1->Value2 = __stack1_0;
+    /* Path=1, Unique=0: IL_000f: ldloc.0 */
+    __stack0_1 = local0;
+    /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
+    __stack1_0 = 1;
+    /* Path=1, Unique=0: IL_0011: ldc.i4.2 */
+    __stack2_0 = 2;
+    /* Path=1, Unique=0: IL_0012: callvirt System.Int32 Win32.Code.InheritTestTargetBase1::Calc(System.Int32,System.Int32) */
+    __stack0_2 = Win32_Code_InheritTestTargetBase1_Calc_1(__stack0_1, __stack1_0, __stack2_0);
+    /* Path=1, Unique=0: IL_0017: stloc.1 */
+    local1 = __stack0_2;
+    /* Path=1, Unique=0: IL_0018: br.s IL_001a */
+    goto IL_001a;
+IL_001a:
+    /* Path=2, Unique=0: IL_001a: ldloc.1 */
+    __stack0_2 = local1;
+    /* Path=2, Unique=0: IL_001b: ret */
+    __gc_unlink_execution_frame__(&__executionFrame__);
+    return __stack0_2;
 }
 
 ///////////////////////////////////////

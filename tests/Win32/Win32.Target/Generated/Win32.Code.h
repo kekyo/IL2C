@@ -20,6 +20,7 @@ typedef struct Win32_Code_ClassTypeTest Win32_Code_ClassTypeTest;
 typedef struct Win32_Code_Hoge1 Win32_Code_Hoge1;
 typedef struct Win32_Code_Hoge2 Win32_Code_Hoge2;
 typedef struct Win32_Code_InheritTestTargetBase1 Win32_Code_InheritTestTargetBase1;
+typedef struct Win32_Code_InheritTestTarget2 Win32_Code_InheritTestTarget2;
 typedef struct Win32_Code_InheritTypeTest Win32_Code_InheritTypeTest;
 typedef struct Win32_Code_Win32 Win32_Code_Win32;
 typedef struct Win32_Code_StringTest Win32_Code_StringTest;
@@ -72,6 +73,17 @@ struct Win32_Code_InheritTestTargetBase1
 };
 
 extern const __RUNTIME_TYPE__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE__;
+
+////////////////////////////////////////////////////////////
+// Class: Win32.Code.InheritTestTarget2
+
+struct Win32_Code_InheritTestTarget2
+{
+    int32_t Value2;
+    Win32_Code_ClassTypeTestTarget* OR2;
+};
+
+extern const __RUNTIME_TYPE__ __Win32_Code_InheritTestTarget2_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.InheritTypeTest
@@ -129,6 +141,7 @@ extern Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1;
 
 
 
+
 extern int32_t Win32_Code_ValueTypeTestTarget_Value1;
 
 
@@ -138,7 +151,7 @@ extern int32_t Win32_Code_ValueTypeTestTarget_Value1;
 extern void Win32_Code_BoxingTest_BoxingInt32(int32_t a);
 extern void Win32_Code_BoxingTest__ctor(Win32_Code_BoxingTest* __this);
 
-typedef const struct __Win32_Code_BoxingTest_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -155,7 +168,7 @@ extern void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarge
 extern int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget* __this, int32_t a, int32_t b);
 extern int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarget* __this, int32_t a, int32_t b, int32_t c);
 
-typedef const struct __Win32_Code_ClassTypeTestTarget_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -173,7 +186,7 @@ extern int32_t Win32_Code_ClassTypeTest_Test6(void);
 extern int32_t Win32_Code_ClassTypeTest_Test7(void);
 extern void Win32_Code_ClassTypeTest__ctor(Win32_Code_ClassTypeTest* __this);
 
-typedef const struct __Win32_Code_ClassTypeTest_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -189,7 +202,7 @@ extern int32_t Win32_Code_Hoge1_Add1(int32_t a, bool isTwo);
 extern int64_t Win32_Code_Hoge1_Add2(int64_t a, bool isTwo);
 extern void Win32_Code_Hoge1__ctor(Win32_Code_Hoge1* __this);
 
-typedef const struct __Win32_Code_Hoge1_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -205,7 +218,7 @@ extern uint8_t Win32_Code_Hoge2_Add3(uint8_t a, bool isTwo);
 extern uint16_t Win32_Code_Hoge2_Add4(uint16_t a, bool isTwo);
 extern void Win32_Code_Hoge2__ctor(Win32_Code_Hoge2* __this);
 
-typedef const struct __Win32_Code_Hoge2_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -222,7 +235,7 @@ extern void Win32_Code_InheritTestTargetBase1__ctor_1(Win32_Code_InheritTestTarg
 extern int32_t Win32_Code_InheritTestTargetBase1_Calc(Win32_Code_InheritTestTargetBase1* __this, int32_t a);
 extern int32_t __Win32_Code_InheritTestTargetBase1_Calc_1__(Win32_Code_InheritTestTargetBase1* __this, int32_t a, int32_t b);
 
-typedef const struct __Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -237,11 +250,33 @@ typedef const struct __Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__
 #define Win32_Code_InheritTestTargetBase1_Calc_1(__this, a, b) \
     (((__Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__*)(__get_typedef__(__this)))->Calc_1(__this, a, b))
 
+extern void Win32_Code_InheritTestTarget2__ctor(Win32_Code_InheritTestTarget2* __this);
+extern void Win32_Code_InheritTestTarget2__ctor_1(Win32_Code_InheritTestTarget2* __this, int32_t value);
+extern int32_t Win32_Code_InheritTestTarget2_Calc(Win32_Code_InheritTestTarget2* __this, int32_t a);
+extern int32_t __Win32_Code_InheritTestTarget2_Calc_1__(Win32_Code_InheritTestTarget2* __this, int32_t a, int32_t b);
+
+typedef const struct
+{
+    intptr_t __reserved0__;
+    intptr_t __reserved1__;
+    intptr_t __reserved2__;
+    System_String* (*ToString)(System_Object* __this);
+    int32_t (*GetHashCode)(System_Object* __this);
+    void (*Finalize)(System_Object* __this);
+    bool (*Equals)(System_Object* __this, System_Object* obj);
+    int32_t (*Calc_1)(Win32_Code_InheritTestTarget2* __this, int32_t a, int32_t b);
+} __Win32_Code_InheritTestTarget2_TYPE_DEF_TYPE__;
+
+#define Win32_Code_InheritTestTarget2_Calc_1(__this, a, b) \
+    (((__Win32_Code_InheritTestTarget2_TYPE_DEF_TYPE__*)(__get_typedef__(__this)))->Calc_1(__this, a, b))
+
 extern int32_t Win32_Code_InheritTypeTest_Test1(void);
 extern int32_t Win32_Code_InheritTypeTest_Test2(void);
+extern int32_t Win32_Code_InheritTypeTest_Test3(void);
+extern int32_t Win32_Code_InheritTypeTest_Test4(void);
 extern void Win32_Code_InheritTypeTest__ctor(Win32_Code_InheritTypeTest* __this);
 
-typedef const struct __Win32_Code_InheritTypeTest_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -258,7 +293,7 @@ extern int32_t Win32_Code_Win32_GetCurrentThreadId(void);
 extern void Win32_Code_Win32_OutputDebugString(System_String* message);
 extern void Win32_Code_Win32__ctor(Win32_Code_Win32* __this);
 
-typedef const struct __Win32_Code_Win32_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -278,7 +313,7 @@ extern wchar_t Win32_Code_StringTest_GetChar(void);
 extern wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index);
 extern void Win32_Code_StringTest__ctor(Win32_Code_StringTest* __this);
 
-typedef const struct __Win32_Code_StringTest_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -292,7 +327,7 @@ typedef const struct __Win32_Code_StringTest_TYPE_DEF_TYPE__
 
 extern void Win32_Code_UnsafeTest__ctor(Win32_Code_UnsafeTest* __this);
 
-typedef const struct __Win32_Code_UnsafeTest_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -306,7 +341,7 @@ typedef const struct __Win32_Code_UnsafeTest_TYPE_DEF_TYPE__
 
 extern int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget* __this, int32_t a, int32_t b);
 
-typedef const struct __Win32_Code_ValueTypeTestTarget_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;
@@ -322,7 +357,7 @@ extern int32_t Win32_Code_ValueTypeTest_Test4(void);
 extern int32_t Win32_Code_ValueTypeTest_Test5(void);
 extern void Win32_Code_ValueTypeTest__ctor(Win32_Code_ValueTypeTest* __this);
 
-typedef const struct __Win32_Code_ValueTypeTest_TYPE_DEF_TYPE__
+typedef const struct
 {
     intptr_t __reserved0__;
     intptr_t __reserved1__;

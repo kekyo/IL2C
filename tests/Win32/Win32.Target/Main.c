@@ -1,4 +1,96 @@
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+//////////////////////////////////////////////////////////////////////////
+// IL2C <---> UEFI interop functions
+
+bool twtoi(const wchar_t *_Str, int32_t* value)
+{
+    bool sign = false;
+
+    for (;; _Str++)
+    {
+        wchar_t ch = *_Str;
+        if ((ch == L' ') || (ch == L'\t'))
+        {
+            continue;
+        }
+
+        if (ch == L'-')
+        {
+            sign = true;
+            _Str++;
+        }
+        else if (ch == L'+')
+        {
+            _Str++;
+        }
+        else
+        {
+            return false;
+        }
+
+        break;
+    }
+
+    int32_t n = 0;
+    while ((*_Str >= L'0') && (*_Str <= L'9'))
+    {
+        n = n * 10 + *_Str++ - L'0';
+    }
+
+    *value = sign ? -n : n;
+    return true;
+}
+
+void itow(int32_t value, wchar_t* p)
+{
+    wchar_t *j;
+    wchar_t b[6];
+
+    if (value < 0)
+    {
+        *p++ = L'-';
+        value = -value;
+    }
+
+    j = &b[5];
+    *j-- = 0;
+
+    do
+    {
+        *j-- = value % 10 + L'0';
+        value /= 10;
+    } while (value);
+
+    do
+    {
+        *p++ = *++j;
+    } while (*j);
+}
+
+void ReadLine(wchar_t* pBuffer, uint16_t length)
+{
+    wscanf_s(L"%ls", pBuffer, length);
+}
+
+void Write(const wchar_t* pMessage)
+{
+    wprintf(L"%ls", pMessage);
+}
+
+void WriteLine(const wchar_t* pMessage)
+{
+    wprintf(L"%ls\r\n", pMessage);
+}
+
+void WriteLineToError(const wchar_t* pMessage)
+{
+    fwprintf(stderr, L"%ls\r\n", pMessage);
+}
+
+///////////////////////////////////////////////////////////
 
 #include "Generated/Win32.Code.h"
 

@@ -156,16 +156,16 @@ static void __Win32_Code_BoxingTest_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_BoxingTest_TYPE_DEF_TYPE__ __Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.BoxingTest",
-    0,
-    __Win32_Code_BoxingTest_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.BoxingTest",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_BoxingTest_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_BoxingTest_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.ClassTypeTestTarget
@@ -393,16 +393,16 @@ static void __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_ClassTypeTestTarget_TYPE_DEF_TYPE__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ClassTypeTestTarget",
-    sizeof(Win32_Code_ClassTypeTestTarget),
-    __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.ClassTypeTestTarget",
+    (intptr_t)sizeof(Win32_Code_ClassTypeTestTarget),
+    (intptr_t)__Win32_Code_ClassTypeTestTarget_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.ClassTypeTest
@@ -735,16 +735,16 @@ static void __Win32_Code_ClassTypeTest_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_ClassTypeTest_TYPE_DEF_TYPE__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ClassTypeTest",
-    0,
-    __Win32_Code_ClassTypeTest_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.ClassTypeTest",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_ClassTypeTest_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.Hoge1
@@ -896,16 +896,16 @@ static void __Win32_Code_Hoge1_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_Hoge1_TYPE_DEF_TYPE__ __Win32_Code_Hoge1_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.Hoge1",
-    0,
-    __Win32_Code_Hoge1_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.Hoge1",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_Hoge1_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_Hoge1_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_Hoge1_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_Hoge1_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.Hoge2
@@ -1058,16 +1058,16 @@ static void __Win32_Code_Hoge2_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_Hoge2_TYPE_DEF_TYPE__ __Win32_Code_Hoge2_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.Hoge2",
-    0,
-    __Win32_Code_Hoge2_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.Hoge2",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_Hoge2_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_Hoge2_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_Hoge2_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_Hoge2_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.InheritTestTargetBase1
@@ -1287,9 +1287,9 @@ static void __Win32_Code_InheritTestTargetBase1_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.InheritTestTargetBase1",
-    sizeof(Win32_Code_InheritTestTargetBase1),
-    __Win32_Code_InheritTestTargetBase1_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.InheritTestTargetBase1",
+    (intptr_t)sizeof(Win32_Code_InheritTestTargetBase1),
+    (intptr_t)__Win32_Code_InheritTestTargetBase1_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
@@ -1297,7 +1297,7 @@ static __Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__ __Win32_Code_InheritT
     __Win32_Code_InheritTestTargetBase1_Calc_1__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.InheritTypeTest
@@ -1489,16 +1489,16 @@ static void __Win32_Code_InheritTypeTest_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_InheritTypeTest_TYPE_DEF_TYPE__ __Win32_Code_InheritTypeTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.InheritTypeTest",
-    0,
-    __Win32_Code_InheritTypeTest_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.InheritTypeTest",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_InheritTypeTest_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_InheritTypeTest_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTypeTest_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_InheritTypeTest_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.Win32
@@ -1577,16 +1577,16 @@ static void __Win32_Code_Win32_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_Win32_TYPE_DEF_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.Win32",
-    0,
-    __Win32_Code_Win32_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.Win32",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_Win32_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_Win32_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_Win32_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.StringTest
@@ -1954,16 +1954,16 @@ static void __Win32_Code_StringTest_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_StringTest_TYPE_DEF_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.StringTest",
-    0,
-    __Win32_Code_StringTest_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.StringTest",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_StringTest_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_StringTest_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_StringTest_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.UnsafeTest
@@ -2018,16 +2018,16 @@ static void __Win32_Code_UnsafeTest_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_UnsafeTest_TYPE_DEF_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.UnsafeTest",
-    0,
-    __Win32_Code_UnsafeTest_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.UnsafeTest",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_UnsafeTest_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.ValueTypeTestTarget
@@ -2101,19 +2101,16 @@ static void __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_ValueTypeTestTarget_TYPE_DEF_TYPE__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ValueTypeTestTarget",
-    sizeof(Win32_Code_ValueTypeTestTarget),
-    __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__,
-    __System_Object_ToString__,
-    __System_Object_GetHashCode__,
-    __System_Object_Finalize__,
-    __System_Object_Equals__,
-    __System_ValueType_GetHashCode__,
+    (intptr_t)"Win32.Code.ValueTypeTestTarget",
+    (intptr_t)sizeof(Win32_Code_ValueTypeTestTarget),
+    (intptr_t)__Win32_Code_ValueTypeTestTarget_MARK_HANDLER__,
     __System_ValueType_ToString__,
+    __System_ValueType_GetHashCode__,
+    __System_Object_Finalize__,
     __System_ValueType_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__;
 
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.ValueTypeTest
@@ -2312,13 +2309,13 @@ static void __Win32_Code_ValueTypeTest_MARK_HANDLER__(void* pReference)
 }
 
 static __Win32_Code_ValueTypeTest_TYPE_DEF_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
-    "Win32.Code.ValueTypeTest",
-    0,
-    __Win32_Code_ValueTypeTest_MARK_HANDLER__,
+    (intptr_t)"Win32.Code.ValueTypeTest",
+    (intptr_t)0,
+    (intptr_t)__Win32_Code_ValueTypeTest_MARK_HANDLER__,
     __System_Object_ToString__,
     __System_Object_GetHashCode__,
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE_DEF__*)&__Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__;
+   (__RUNTIME_TYPE_DEF__*)&__Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__;

@@ -87,7 +87,16 @@ static void System_ValueType__ctor(System_ValueType* __this)
 {
 }
 
+extern System_String* __System_ValueType_ToString__(System_ValueType* __this);
+extern int32_t __System_ValueType_GetHashCode__(System_ValueType* __this);
+extern bool __System_ValueType_Equals__(System_ValueType* __this, System_Object* obj);
+
 extern const __RUNTIME_TYPE__ __System_ValueType_RUNTIME_TYPE__;
+
+#define System_Object_ToString(__this) ((__get_typedef__(__this)->pFunctions[0x00])(__this))
+#define System_Object_GetHashCode(__this) ((__get_typedef__(__this)->pFunctions[0x01])(__this))
+#define System_Object_Finalize(__this) ((__get_typedef__(__this)->pFunctions[0x02])(__this))
+#define System_Object_Equals(__this, obj) ((__get_typedef__(__this)->pFunctions[0x03])(__this, obj))
 
 /////////////////////////////////////////////////////////////
 // Boxing related declarations

@@ -311,12 +311,9 @@ typedef const struct __Win32_Code_ValueTypeTestTarget_TYPE_DEF_TYPE__
     intptr_t __reserved0__;
     intptr_t __reserved1__;
     intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
-    int32_t (*GetHashCode)(System_ValueType* __this);
     System_String* (*ToString)(System_ValueType* __this);
+    int32_t (*GetHashCode)(System_ValueType* __this);
+    void (*Finalize)(System_Object* __this);
     bool (*Equals)(System_ValueType* __this, System_Object* obj);
 } __Win32_Code_ValueTypeTestTarget_TYPE_DEF_TYPE__;
 

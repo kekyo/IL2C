@@ -509,7 +509,7 @@ namespace IL2C
                 rawTypeName);
 
             tw.WriteLine(
-                "{0}\"{1}\",",
+                "{0}(intptr_t)\"{1}\",",
                 indent,
                 declaredType.GetFullMemberName());
             var instanceFields = declaredType
@@ -518,7 +518,7 @@ namespace IL2C
             if (instanceFields.Any())
             {
                 tw.WriteLine(
-                    "{0}sizeof({1}),",
+                    "{0}(intptr_t)sizeof({1}),",
                     indent,
                     typeName);
             }
@@ -526,11 +526,11 @@ namespace IL2C
             {
                 // HACK: C language can't resolve empty structure size.
                 tw.WriteLine(
-                    "{0}0,",
+                    "{0}(intptr_t)0,",
                     indent);
             }
             tw.WriteLine(
-                "{0}__{1}_MARK_HANDLER__,",
+                "{0}(intptr_t)__{1}_MARK_HANDLER__,",
                 indent,
                 rawTypeName);
 
@@ -551,7 +551,7 @@ namespace IL2C
                 "const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ =",
                 rawTypeName);
             tw.WriteLine(
-                "   (const __RUNTIME_TYPE_DEF__*)&__{0}_RUNTIME_TYPE_DEF__;",
+                "   (__RUNTIME_TYPE_DEF__*)&__{0}_RUNTIME_TYPE_DEF__;",
                 rawTypeName);
         }
 

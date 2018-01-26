@@ -176,12 +176,39 @@ namespace IL2C
 
         public static IEnumerable<MethodDefinition> EnumerateOrderedOverridedMethods(this TypeReference type)
         {
-            return type.Resolve()
+            var results = new List<MethodDefinition>();
+            var c = MemberReferenceComparer<MethodReference>.Instance;
+
+            foreach (var t in type.Resolve()
                 .Traverse(t => t.BaseType?.Resolve())
-                .Reverse()
-                .SelectMany(t => t.Methods
+                .Reverse())
+            {
+                foreach (var method in t.Methods
                     .Where(method => method.IsVirtual)
-                    .OrderByParameters());       // Make stable in current type.
+                    .OrderByParameters())    // Make stable in current type.
+                {
+                    if (method.IsNewSlot == false)
+                    {
+                        var index = results
+                            .FindIndex(md => (md.Name == method.Name)
+                            && (md.Parameters.Select(p => p.ParameterType).SequenceEqual(method.Parameters.Select(p => p.ParameterType))));
+                        if (index >= 0)
+                        {
+                            results[index] = method;
+                        }
+                        else
+                        {
+                            results.Add(method);
+                        }
+                    }
+                    else
+                    {
+                        results.Add(method);
+                    }
+                }
+            }
+
+            return results.ToArray();
         }
 
         public static string GetFullMemberName(

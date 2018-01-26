@@ -365,7 +365,7 @@ void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type)
 }
 
 /////////////////////////////////////////////////////////////
-// Basic type informations
+// System.Object
 
 __DEFINE_CONST_STRING__(System_Object_name, L"System.Object");
 System_String* __System_Object_ToString__(System_Object* __this)
@@ -387,6 +387,30 @@ bool __System_Object_Equals__(System_Object* __this, System_Object* obj)
 {
     return ((intptr_t)__this) == ((intptr_t)obj);
 }
+
+/////////////////////////////////////////////////////////////
+// System.ValueType
+
+__DEFINE_CONST_STRING__(System_ValueType_name, L"System.ValueType");
+System_String* __System_ValueType_ToString__(System_ValueType* __this)
+{
+    return System_ValueType_name;
+}
+
+int32_t __System_ValueType_GetHashCode__(System_ValueType* __this)
+{
+    // TODO:
+    return (int32_t)(intptr_t)__this;
+}
+
+bool __System_ValueType_Equals__(System_ValueType* __this, System_Object* obj)
+{
+    // TODO:
+    return false;
+}
+
+/////////////////////////////////////////////////////////////
+// Basic type informations
 
 static void __Dummy_MARK_HANDLER__(void* pReference)
 {

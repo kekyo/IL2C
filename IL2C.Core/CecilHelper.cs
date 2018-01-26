@@ -43,6 +43,15 @@ namespace IL2C
         }
         #endregion
 
+        #region PseudoZeroType
+        private sealed class PseudoZeroType
+        {
+            private PseudoZeroType()
+            {
+            }
+        }
+        #endregion
+
         #region Fields
         private static readonly HashSet<string> primitiveTypes = new HashSet<string>
         {
@@ -58,6 +67,13 @@ namespace IL2C
             typeof(UIntPtr).FullName,
             typeof(char).FullName
         };
+
+        private static readonly TypeDefinition pseudoZeroTypeDefinition = AssemblyDefinition
+            .ReadAssembly(typeof(PseudoZeroType).Assembly.Location)
+            .MainModule
+            .GetType(typeof(CecilHelper).FullName)
+            .NestedTypes
+            .First(t2 => t2.Name == typeof(PseudoZeroType).Name);
         #endregion
 
         private static T ResolveIf<T>(MemberReference reference)
@@ -120,21 +136,21 @@ namespace IL2C
             return false;
         }
 
-        private static IOrderedEnumerable<MethodDefinition> OrderByParameters(
+        public static IOrderedEnumerable<MethodDefinition> OrderByParameters(
             this IEnumerable<MethodDefinition> methods)
         {
             var ms = methods.ToArray();
-            var maxParameterCount = ms.Max(m => m.Parameters.Count);
+            var maxParameterCount = (ms.Length >= 1) ? ms.Max(m => m.Parameters.Count) : 0;
 
             var expr = ms.OrderBy(m => m.Parameters.Count);
             for (var index = 0; index < maxParameterCount; index++)
             {
-                // HACK: C# captured inner incremented value.
-                var i = index;
+                // HACK: C# lambda captured inner incremented value.
+                var capturedIndex = index;
 
-                // TODO: Improve human predictivity.
+                // TODO: Improve human predictivity and stable compatibility.
                 expr = expr.ThenBy(m =>
-                    m.Parameters.ElementAtOrDefault(i)
+                    m.Parameters.ElementAtOrDefault(capturedIndex)
                         ?.ParameterType.GetFullMemberName()
                         ??string.Empty);
             }
@@ -158,6 +174,43 @@ namespace IL2C
             return found.i;
         }
 
+        public static IEnumerable<MethodDefinition> EnumerateOrderedOverridedMethods(this TypeReference type)
+        {
+            var results = new List<MethodDefinition>();
+            var c = MemberReferenceComparer<MethodReference>.Instance;
+
+            foreach (var t in type.Resolve()
+                .Traverse(t => t.BaseType?.Resolve())
+                .Reverse())
+            {
+                foreach (var method in t.Methods
+                    .Where(method => method.IsVirtual)
+                    .OrderByParameters())    // Make stable in current type.
+                {
+                    if (method.IsNewSlot == false)
+                    {
+                        var index = results
+                            .FindIndex(md => (md.Name == method.Name)
+                            && (md.Parameters.Select(p => p.ParameterType).SequenceEqual(method.Parameters.Select(p => p.ParameterType))));
+                        if (index >= 0)
+                        {
+                            results[index] = method;
+                        }
+                        else
+                        {
+                            results.Add(method);
+                        }
+                    }
+                    else
+                    {
+                        results.Add(method);
+                    }
+                }
+            }
+
+            return results.ToArray();
+        }
+
         public static string GetFullMemberName(
             this MemberReference member, MethodNameTypes nameType = MethodNameTypes.Nothing)
         {
@@ -179,15 +232,17 @@ namespace IL2C
                 .Reverse()
                 .ToArray();
 
+            var namespaceName = declaringTypes.First().Namespace;
+
             var method = member as MethodReference;
             if (method != null)
             {
                 switch (nameType)
                 {
                     case MethodNameTypes.Full:
-                        return String.Format(
+                        return string.Format(
                             "{0}.{1}.{2}({3})",
-                            declaringTypes.First().Namespace,
+                            namespaceName,
                             string.Join(".", declaringTypes.Select(dt => dt.Name)),
                             method.Name,
                             string.Join(
@@ -198,9 +253,9 @@ namespace IL2C
                                     parameter.Name))));
 
                     case MethodNameTypes.Types:
-                        return String.Format(
+                        return string.Format(
                             "{0}.{1}.{2}({3})",
-                            declaringTypes.First().Namespace,
+                            namespaceName,
                             string.Join(".", declaringTypes.Select(dt => dt.Name)),
                             method.Name,
                             string.Join(
@@ -211,9 +266,10 @@ namespace IL2C
                         var index = method.GetMethodOverloadIndex();
                         if (index >= 1)
                         {
-                            return String.Format(
+                            // Atmark will replace to underscore by ManglingSymbolName()
+                            return string.Format(
                                 "{0}.{1}.{2}@{3}",
-                                declaringTypes.First().Namespace,
+                                namespaceName,
                                 string.Join(".", declaringTypes.Select(dt => dt.Name)),
                                 method.Name,
                                 index);
@@ -222,11 +278,26 @@ namespace IL2C
                 }
             }
 
-            return String.Format(
+            return string.Format(
                 "{0}.{1}.{2}",
-                declaringTypes.First().Namespace,
+                namespaceName,
                 string.Join(".", declaringTypes.Select(dt => dt.Name)),
                 member.Name);
+        }
+
+        public static string GetOverloadedMethodName(this MethodReference method)
+        {
+            var index = method.GetMethodOverloadIndex();
+            if (index >= 1)
+            {
+                // Atmark will replace to underscore by ManglingSymbolName()
+                return string.Format(
+                    "{0}@{1}",
+                    method.Name,
+                    index);
+            }
+
+            return method.Name;
         }
 
         #region Type system safed references
@@ -310,6 +381,10 @@ namespace IL2C
             return member.Module.TypeSystem.Char;
         }
 
+        public static TypeReference GetPseudoZeroType(this MemberReference member)
+        {
+            return pseudoZeroTypeDefinition;
+        }
         ///
 
         public static TypeReference GetSafeVoidType(this ModuleDefinition module)
@@ -391,6 +466,11 @@ namespace IL2C
         {
             return module.TypeSystem.Char;
         }
+
+        public static TypeReference GetPseudoZeroType(this ModuleDefinition module)
+        {
+            return pseudoZeroTypeDefinition;
+        }
         #endregion
 
         #region Type system safed "is" operators
@@ -471,6 +551,11 @@ namespace IL2C
         public static bool IsCharType(this TypeReference type)
         {
             return type.GetSafeCharType().MemberEquals(type);
+        }
+
+        public static bool IsPseudoZeroType(this TypeReference type)
+        {
+            return type.GetPseudoZeroType().MemberEquals(type);
         }
         #endregion
     }

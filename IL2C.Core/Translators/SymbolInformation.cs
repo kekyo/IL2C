@@ -38,5 +38,10 @@ namespace IL2C.Translators
         {
             return this.SymbolName.GetHashCode() ^ this.TargetType.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", this.SymbolName, this.TypeName);
+        }
     }
 }

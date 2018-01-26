@@ -7,8 +7,16 @@ using Mono.Cecil.Cil;
 
 namespace IL2C.Translators
 {
+    public enum FunctionTypes
+    {
+        Standard,
+        Virtual,
+        PInvoke
+    }
+
     public sealed class PreparedFunction
     {
+        public readonly FunctionTypes FunctionType;
         public readonly string MethodName;
         internal readonly string RawMethodName;
         internal readonly TypeReference ReturnType;
@@ -16,10 +24,11 @@ namespace IL2C.Translators
         internal readonly PreparedILBody[] PreparedILBodies;
         internal readonly VariableDefinition[] LocalVariables;
         internal readonly SymbolInformation[] Stacks;
+        public readonly int SlotIndex;
 
         private readonly IReadOnlyDictionary<int, string> labelNames;
 
-        internal PreparedFunction(
+        private PreparedFunction(
             string methodName,
             string rawMethodName,
             TypeReference returnType,
@@ -27,7 +36,9 @@ namespace IL2C.Translators
             PreparedILBody[] preparedILBodies,
             VariableDefinition[] localVariables,
             SymbolInformation[] stacks,
-            IReadOnlyDictionary<int, string> labelNames)
+            IReadOnlyDictionary<int, string> labelNames,
+            FunctionTypes functionType,
+            int slotIndex)
         {
             this.MethodName = methodName;
             this.RawMethodName = rawMethodName;
@@ -37,14 +48,48 @@ namespace IL2C.Translators
             this.LocalVariables = localVariables;
             this.Stacks = stacks;
             this.labelNames = labelNames;
+            this.FunctionType = functionType;
+            this.SlotIndex = slotIndex;
         }
 
         internal PreparedFunction(
             string methodName,
             string rawMethodName,
             TypeReference returnType,
-            Parameter[] parameters)
-            : this(methodName, rawMethodName, returnType, parameters, null, null, null, null)
+            Parameter[] parameters,
+            PreparedILBody[] preparedILBodies,
+            VariableDefinition[] localVariables,
+            SymbolInformation[] stacks,
+            IReadOnlyDictionary<int, string> labelNames,
+            int? slotIndex)
+            : this(
+                  methodName,
+                  rawMethodName,
+                  returnType,
+                  parameters,
+                  preparedILBodies,
+                  localVariables,
+                  stacks,
+                  labelNames,
+                  slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.Standard,
+                  slotIndex ?? -1)
+        {
+        }
+
+        internal PreparedFunction(
+            string methodName,
+            string rawMethodName,
+            TypeReference returnType,
+            Parameter[] parameters,
+            int? slotIndex)
+            : this(
+                  methodName,
+                  rawMethodName,
+                  returnType,
+                  parameters,
+                  null, null, null, null,
+                  slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.PInvoke,
+                  slotIndex ?? -1)
         {
         }
 
@@ -54,7 +99,12 @@ namespace IL2C.Translators
         {
             Debug.Assert(labelNames != null);
 
-            return labelNames.TryGetValue(label.Offset, out labelName);
+            if (labelNames.TryGetValue(label.Offset, out labelName) == false)
+            {
+                return false;
+            }
+            labelName = string.Format("IL_{0:x4}", label.Offset);
+            return true;
         }
     }
 }

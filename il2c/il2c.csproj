@@ -17,6 +17,7 @@
     <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+    <StartupObject>IL2C.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

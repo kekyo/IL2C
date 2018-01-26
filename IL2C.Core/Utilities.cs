@@ -160,9 +160,9 @@ namespace IL2C
             Parameter[] parameters,
             IExtractContext extractContext)
         {
-            var parametersString = String.Join(
+            var parametersString = string.Join(
                 ", ",
-                parameters.Select(parameter => String.Format(
+                parameters.Select(parameter => string.Format(
                     "{0} {1}",
                     extractContext.GetCLanguageTypeName(parameter.ParameterType),
                     parameter.Name)));
@@ -170,8 +170,31 @@ namespace IL2C
             var returnTypeName =
                 extractContext.GetCLanguageTypeName(returnType);
 
-            return String.Format(
+            return string.Format(
                 "{0} {1}({2})",
+                returnTypeName,
+                methodName.ManglingSymbolName(),
+                (parametersString.Length >= 1) ? parametersString : "void");
+        }
+
+        public static string GetFunctionTypeString(
+            string methodName,
+            TypeReference returnType,
+            Parameter[] parameters,
+            IExtractContext extractContext)
+        {
+            var parametersString = string.Join(
+                ", ",
+                parameters.Select(parameter => string.Format(
+                    "{0} {1}",
+                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
+                    parameter.Name)));
+
+            var returnTypeName =
+                extractContext.GetCLanguageTypeName(returnType);
+
+            return string.Format(
+                "{0} (*{1})({2})",
                 returnTypeName,
                 methodName.ManglingSymbolName(),
                 (parametersString.Length >= 1) ? parametersString : "void");
@@ -221,6 +244,11 @@ namespace IL2C
             {
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;
+            }
+
+            public override string ToString()
+            {
+                return string.Format("{0} <-- {1}", this.TargetType.GetFullMemberName(), this.SymbolInformation);
             }
         }
 
@@ -279,6 +307,15 @@ namespace IL2C
             foreach (var value in enumerable)
             {
                 action(value);
+            }
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T, int> action)
+        {
+            var index = 0;
+            foreach (var value in enumerable)
+            {
+                action(value, index++);
             }
         }
 

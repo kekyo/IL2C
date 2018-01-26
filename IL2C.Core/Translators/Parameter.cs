@@ -14,5 +14,10 @@ namespace IL2C.Translators
         }
 
         public string ParameterTypeName => this.ParameterType.GetFullMemberName();
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", this.Name, this.ParameterTypeName);
+        }
     }
 }

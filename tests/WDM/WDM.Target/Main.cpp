@@ -136,10 +136,12 @@ static NTSTATUS WDM_Code_AddDevice(
     __gc_link_execution_frame__(pDeviceExtension);
 
     // new InterceptCDRomDevice();
-    __new__(&pDeviceExtension->pInterceptCDRomDevice, WDM_Code_InterceptCDRomDevice)
-        (pDeviceExtension->pInterceptCDRomDevice,
-            reinterpret_cast<intptr_t>(pFrom),
-            reinterpret_cast<intptr_t>(pTo), 10);
+    pDeviceExtension->pInterceptCDRomDevice = static_cast<WDM_Code_InterceptCDRomDevice*>(
+        __gc_get_uninitialized_object__(__typeof__(WDM_Code_InterceptCDRomDevice)));
+    WDM_Code_InterceptCDRomDevice__ctor(
+        pDeviceExtension->pInterceptCDRomDevice,
+        reinterpret_cast<intptr_t>(pFrom),
+        reinterpret_cast<intptr_t>(pTo), 10);
 
     //////////////////////////////////////////
     // Initialize device object.

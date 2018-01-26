@@ -1,7 +1,28 @@
 /////////////////////////////////////////////////////////////
 // For platform specifics:
 
-#ifdef _WDM
+#if defined(UEFI)
+
+#include <intrin.h>
+#include <stdint.h>
+#include <wchar.h>
+
+typedef long interlock_t;
+
+#define GCALLOC malloc
+#define GCFREE free
+#define GCASSERT assert
+
+void WriteLineToError(const wchar_t* pMessage);
+
+#ifdef _DEBUG
+#define DEBUG_WRITE(step, message) { \
+    WriteLineToError(L##step); }
+#else
+#define DEBUG_WRITE(step, message)
+#endif
+
+#elif defined(_WDM)
 
 #include <intrin.h>
 
@@ -33,12 +54,12 @@ typedef long interlock_t;
 #include <crtdbg.h>
 #include <intrin.h>
 
-#define GCASSERT assert
 #define GCALLOC malloc
 #define GCFREE free
+#define GCASSERT assert
 
 #include <stdint.h>
-#include <assert.h>
+#include <wchar.h>
 
 typedef long interlock_t;
 
@@ -59,21 +80,16 @@ typedef long interlock_t;
 #else
 
 #include <stdint.h>
-#include <assert.h>
 
 typedef uint8_t interlock_t;
 
-static interlock_t _InterlockedExchange(interlock_t* p, interlock_t v)
+static interlock_t _InterlockedCompareExchange(interlock_t* p, interlock_t v, interlock_t c)
 {
     interlock_t cv = *p;
-    *p = v;
-    return cv;
-}
-
-static void* _InterlockedExchangePointer(void** p, void* v)
-{
-    void* cv = *p;
-    *p = v;
+    if (cv == c)
+    {
+        *p = v;
+    }
     return cv;
 }
 
@@ -87,18 +103,18 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
     return cv;
 }
 
-#define GCASSERT assert
 #define GCALLOC(size) malloc(size)
 #define GCFREE(p) free(p)
+#define GCASSERT assert
 
 #define DEBUG_WRITE(step, message)
 
 #endif
 
-#define INTERLOCKED_EXCHANGE(p, v) (interlock_t)_InterlockedExchange((interlock_t*)p, (interlock_t)v)
-#define INTERLOCKED_EXCHANGE_POINTER(p, v) (void*)_InterlockedExchangePointer((void**)p, (void*)v)
+#define INTERLOCKED_COMPARE_EXCHANGE(p, v, c) (interlock_t)_InterlockedCompareExchange((interlock_t*)p, (interlock_t)v, (interlock_t)c)
 #define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (void*)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -107,8 +123,8 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 /////////////////////////////////////////////////////////////
 
 // TODO: Support finalizer
-#define GCMARK_NOMARK ((interlock_t)0)
-#define GCMARK_LIVE ((interlock_t)1)
+#define GCMARK_NOMARK ((interlock_t)1)
+#define GCMARK_LIVE ((interlock_t)0)
 
 struct __EXECUTION_FRAME__
 {
@@ -123,7 +139,11 @@ struct __REF_HEADER__
 {
     struct __REF_HEADER__* pNext;
     __RUNTIME_TYPE__ type;
-    interlock_t gcMark;
+    union
+    {
+        interlock_t gcMark;
+        intptr_t __dummy;
+    };
 };
 
 // TODO: Become store to thread local storage
@@ -133,8 +153,8 @@ static __REF_HEADER__* g_pBeginHeader__ = NULL;
 
 //////////////////////////
 
-static void __gc_get_uninitialized_object_internal__(
-    void** ppReference, __RUNTIME_TYPE__ type, size_t bodySize)
+static void* __gc_get_uninitialized_object_internal__(
+    __RUNTIME_TYPE__ type, uintptr_t bodySize)
 {
     __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
     if (pHeader == NULL)
@@ -154,8 +174,7 @@ static void __gc_get_uninitialized_object_internal__(
         }
     }
 
-    void* pReference = ((uint8_t*)pHeader)
-        + sizeof(__REF_HEADER__);
+    void* pReference = ((uint8_t*)pHeader) + sizeof(__REF_HEADER__);
     if (bodySize >= 1)
     {
         memset(pReference, 0, bodySize);
@@ -164,10 +183,6 @@ static void __gc_get_uninitialized_object_internal__(
     pHeader->pNext = NULL;
     pHeader->type = type;
     pHeader->gcMark = GCMARK_NOMARK;
-
-    // Very important link steps:
-    //   Because cause misread on purpose this instance is living by concurrent gc's.
-    *ppReference = pReference;
 
     // Safe link both headers.
     while (1)
@@ -185,23 +200,19 @@ static void __gc_get_uninitialized_object_internal__(
             break;
         }
     }
+
+    return pReference;
 }
 
-void __gc_get_uninitialized_object__(void** ppReference, __RUNTIME_TYPE__ type)
+void* __gc_get_uninitialized_object__(__RUNTIME_TYPE__ type)
 {
-    GCASSERT(ppReference != NULL);
     GCASSERT(type != NULL);
 
-    if (type->bodySize == UINT16_MAX)
-    {
-        // String or Array:
-        // throw new InvalidProgramException();
-        GCASSERT(0);
-    }
-    else
-    {
-        __gc_get_uninitialized_object_internal__(ppReference, type, type->bodySize);
-    }
+    // String or Array:
+    // throw new InvalidProgramException();
+    GCASSERT(type->bodySize != UINTPTR_MAX);
+
+    return __gc_get_uninitialized_object_internal__(type, type->bodySize);
 }
 
 void __gc_mark_from_handler__(void* pReference)
@@ -210,7 +221,7 @@ void __gc_mark_from_handler__(void* pReference)
 
     __REF_HEADER__* pHeader = (__REF_HEADER__*)
         (((uint8_t*)pReference) - sizeof(__REF_HEADER__));
-    interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+    interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
         GCASSERT(pHeader->type != NULL);
@@ -243,6 +254,8 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
 void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
 {
     GCASSERT(pFrame != NULL);
+
+    __gc_collect__();
 
     g_pBeginFrame__ = ((__EXECUTION_FRAME__*)pFrame)->pNext;
 }
@@ -281,7 +294,7 @@ void __gc_step2_mark_gcmark__()
             // Marking process.
             __REF_HEADER__* pHeader = (__REF_HEADER__*)
                 (((uint8_t*)*ppReference) - sizeof(__REF_HEADER__));
-            interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
+            interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {
                 GCASSERT(pHeader->type != NULL);
@@ -336,8 +349,8 @@ void __gc_collect__()
 
 void __gc_initialize__()
 {
-#ifdef _WIN32
-//    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
+#ifdef _CRTDBG_ALLOC_MEM_DF
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
 #endif
 
     g_pBeginFrame__ = NULL;
@@ -348,8 +361,8 @@ void __gc_shutdown__()
 {
     __gc_collect__();
 
-#ifdef _WIN32
-//    _CrtDumpMemoryLeaks();
+#ifdef _CRTDBG_ALLOC_MEM_DF
+    _CrtDumpMemoryLeaks();
 #endif
 }
 
@@ -358,8 +371,7 @@ void __gc_shutdown__()
 
 System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type)
 {
-    void* pBoxed;
-    __gc_get_uninitialized_object__(&pBoxed, type);
+    void* pBoxed = __gc_get_uninitialized_object__(type);
     memcpy(pBoxed, pValue, type->bodySize);
     return (System_Object*)pBoxed;
 }
@@ -375,6 +387,51 @@ void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type)
     }
 
     return pObject;
+}
+
+/////////////////////////////////////////////////////////////
+// System.Object
+
+__DEFINE_CONST_STRING__(System_Object_name, L"System.Object");
+System_String* __System_Object_ToString__(System_Object* __this)
+{
+    return System_Object_name;
+}
+
+int32_t __System_Object_GetHashCode__(System_Object* __this)
+{
+    return (int32_t)(intptr_t)__this;
+}
+
+void __System_Object_Finalize__(System_Object* __this)
+{
+    DEBUG_WRITE("System.Object.Finalize", "called.");
+}
+
+bool __System_Object_Equals__(System_Object* __this, System_Object* obj)
+{
+    return ((intptr_t)__this) == ((intptr_t)obj);
+}
+
+/////////////////////////////////////////////////////////////
+// System.ValueType
+
+__DEFINE_CONST_STRING__(System_ValueType_name, L"System.ValueType");
+System_String* __System_ValueType_ToString__(System_ValueType* __this)
+{
+    return System_ValueType_name;
+}
+
+int32_t __System_ValueType_GetHashCode__(System_ValueType* __this)
+{
+    // TODO:
+    return (int32_t)(intptr_t)__this;
+}
+
+bool __System_ValueType_Equals__(System_ValueType* __this, System_Object* obj)
+{
+    // TODO:
+    return false;
 }
 
 /////////////////////////////////////////////////////////////
@@ -430,61 +487,209 @@ const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME
 
 const System_IntPtr System_IntPtr_Zero = 0;
 
+// TODO: Reimplement by managed code.
+extern bool twtoi(const wchar_t *_Str, int32_t* value);
+
+bool System_Int32_TryParse(System_String* s, int32_t* result)
+{
+    // TODO: NullReferenceException
+    GCASSERT(s != NULL);
+
+    GCASSERT(result != NULL);
+    GCASSERT(s->pBody != NULL);
+
+    return twtoi(s->pBody, result);
+}
+
 /////////////////////////////////////////////////////////////
 // System.String
 
 __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__ = {
-    "System.String", UINT16_MAX, __Dummy_MARK_HANDLER__ };
+    "System.String", UINTPTR_MAX, __Dummy_MARK_HANDLER__ };
 const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__ = &__System_String_RUNTIME_TYPE_DEF__;
 
-static char* __new_string_internal__(System_String** ppReference, size_t size)
+static System_String* __new_string_internal__(uintptr_t size)
 {
-    size_t bodySize = sizeof(System_String) + size;
-    __gc_get_uninitialized_object_internal__(
-        (void**)ppReference,
+    uintptr_t bodySize = sizeof(System_String) + size;
+    System_String* pString = __gc_get_uninitialized_object_internal__(
         __System_String_RUNTIME_TYPE__,
         bodySize);
-    char* pBody = (char*)(((uint8_t*)*ppReference) + sizeof(System_String));
-    (*ppReference)->pString = pBody;
-    return pBody;
+    wchar_t* pBody = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
+    pString->pBody = pBody;
+    return pString;
 }
 
-void __new_string__(System_String** ppReference, const char* pString)
+System_String* __new_string__(const wchar_t* pBody)
 {
-    size_t size = strlen(pString) + 1;
-    char* pBody = __new_string_internal__(ppReference, size);
-    memcpy(pBody, pString, size);
+    GCASSERT(pBody != NULL);
+
+    uintptr_t size = (uintptr_t)(wcslen(pBody) + 1) * sizeof(wchar_t);
+    System_String* pString = __new_string_internal__(size);
+    memcpy((wchar_t*)(pString->pBody), pBody, size);
+
+    return pString;
 }
 
 System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 {
-    //-------------------
-    // Local variables:
+    GCASSERT(str0 != NULL);
+    GCASSERT(str1 != NULL);
+    GCASSERT(str0->pBody != NULL);
+    GCASSERT(str1->pBody != NULL);
 
-    System_String* local0 = NULL;
+    uintptr_t str0Size = (uintptr_t)wcslen(str0->pBody) * sizeof(wchar_t);
+    uintptr_t str1Size = (uintptr_t)wcslen(str1->pBody) * sizeof(wchar_t);
 
-    //-------------------
-    // Setup stack frame:
+    System_String* pString = __new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
+    memcpy((wchar_t*)(pString->pBody), str0->pBody, str0Size);
+    memcpy(((uint8_t*)(pString->pBody)) + str0Size, str1->pBody, str1Size + sizeof(wchar_t));
 
-    struct /* __EXECUTION_FRAME__ */
+    return pString;
+}
+
+System_String* System_String_Substring(System_String* __this, int32_t startIndex)
+{
+    GCASSERT(__this != NULL);
+    GCASSERT(__this->pBody != NULL);
+
+    // TODO: IndexOutOfRangeException
+    GCASSERT(startIndex >= 0);
+
+    if (startIndex == 0)
     {
-        __EXECUTION_FRAME__* pNext;
-        uint8_t targetCount;
-        System_String** plocal0;
-    } __executionFrame__;
+        return __this;
+    }
 
-    __executionFrame__.targetCount = 1;
-    __executionFrame__.plocal0 = &local0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    int32_t thisLength = (int32_t)wcslen(__this->pBody);
+    // TODO: IndexOutOfRangeException
+    GCASSERT(startIndex < thisLength);
 
-    //-------------------
+    uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
+    System_String* pString = __new_string_internal__(newSize);
+    memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
 
-    size_t str0Size = strlen(str0->pString);
-    size_t str1Size = strlen(str1->pString);
+    return pString;
+}
 
-    char* pBody = __new_string_internal__(&local0, str0Size + str1Size + 1);
-    memcpy(pBody, str0->pString, str0Size);
-    memcpy(pBody + str0Size, str1->pString, str1Size + 1);
-    __gc_unlink_execution_frame__(&__executionFrame__);
-    return local0;
+System_String* System_String_Substring_1(System_String* __this, int32_t startIndex, int32_t length)
+{
+    GCASSERT(__this != NULL);
+    GCASSERT(__this->pBody != NULL);
+
+    // TODO: IndexOutOfRangeException
+    GCASSERT(startIndex >= 0);
+    GCASSERT(length >= 0);
+
+    int32_t thisLength = (int32_t)wcslen(__this->pBody);
+    // TODO: IndexOutOfRangeException
+    GCASSERT((startIndex + length) < thisLength);
+
+    if ((startIndex == 0) && (length == thisLength))
+    {
+        return __this;
+    }
+
+    uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
+    System_String* pString = __new_string_internal__(newSize);
+    memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
+
+    return pString;
+}
+
+wchar_t System_String_get_Chars(System_String* __this, int32_t index)
+{
+    GCASSERT(__this != NULL);
+    GCASSERT(__this->pBody != NULL);
+
+    // TODO: IndexOutOfRangeException
+    GCASSERT(index >= 0);
+    GCASSERT(index < wcslen(__this->pBody));
+
+    return __this->pBody[index];
+}
+
+int32_t System_String_get_Length(System_String* __this)
+{
+    GCASSERT(__this != NULL);
+    GCASSERT(__this->pBody != NULL);
+
+    return (int32_t)wcslen(__this->pBody);
+}
+
+bool System_String_IsNullOrWhiteSpace(System_String* value)
+{
+    if (value == NULL)
+    {
+        return true;
+    }
+
+    GCASSERT(value->pBody != NULL);
+
+    uint32_t index = 0;
+    while (true)
+    {
+        wchar_t ch = value->pBody[index];
+        switch (ch)
+        {
+        case L'\0':
+            return true;
+        case L' ':
+        case L'\t':
+            break;
+        default:
+            return false;
+        }
+
+        index++;
+    }
+}
+
+/////////////////////////////////////////////////////////////
+// System.Console
+
+extern void Write(const wchar_t* pMessage);
+extern void WriteLine(const wchar_t* pMessage);
+extern void ReadLine(wchar_t* pBuffer, uint16_t length);
+
+void System_Console_Write_9(System_String* value)
+{
+    // TODO: NullReferenceException
+    GCASSERT(value != NULL);
+
+    GCASSERT(value->pBody != NULL);
+    Write(value->pBody);
+}
+
+void System_Console_WriteLine()
+{
+    WriteLine(L"");
+}
+
+// TODO: Reimplement by managed code.
+extern void itow(int32_t value, wchar_t* p);
+
+void System_Console_WriteLine_6(int32_t value)
+{
+    wchar_t buf[20];
+    itow(value, buf);
+    WriteLine(buf);
+}
+
+void System_Console_WriteLine_10(System_String* value)
+{
+    // TODO: NullReferenceException
+    GCASSERT(value != NULL);
+
+    GCASSERT(value->pBody != NULL);
+    WriteLine(value->pBody);
+}
+
+#define MAX_READLINE 128
+
+System_String* System_Console_ReadLine()
+{
+    wchar_t buffer[MAX_READLINE];
+
+    ReadLine(buffer, MAX_READLINE);
+    return __new_string__(buffer);
 }

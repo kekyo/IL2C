@@ -233,3 +233,5 @@ _Pvt_Extensions
 .fake/
 
 *.VC.db
+
+.vscode/

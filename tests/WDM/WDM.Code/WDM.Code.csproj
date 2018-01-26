@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -19,7 +19,7 @@
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
+  <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard1.3|AnyCPU'">
     <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" "$(OutDir)WDM.Code.dll" "..\..\..\..\WDM.Target\Generated"</PostBuildEvent>
   </PropertyGroup>
 

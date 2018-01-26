@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Mono.Cecil;
@@ -78,21 +79,37 @@ namespace IL2C
                 body.Instructions.ToArray(),
                 prepareContext);
 
+            // It gathers sequence point informations.
+            // It will use writing the line preprocessor directive.
             var sequencePoints =
                 (from sp in body.Method.DebugInformation.SequencePoints
+                 where !sp.IsHidden
                  group sp by sp.Offset into g
-                 let sps = g.Where(sp => !sp.IsHidden).ToArray()
+                 let sps = g.OrderBy(sp => sp.Offset).ToArray()
                  where sps.Length >= 1
                  select new { g.Key, sps })
                 .ToDictionary(g => g.Key, g => g.sps);
 
+            // Important:
+            //   It's core decoding sequence.
+            //   The flow analysis can't predict by sequential path.
+            //   So, it reorders by IL offset.
             var preparedILBodies = decodeContext
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
                     let sps = sequencePoints.UnsafeGetValue(ilBody.Label.Offset, empty)
                     let generator = ilBody.ILConverter.Apply(ilBody.Operand, dc)
-                    select new PreparedILBody(ilBody.Label, generator, sps))
+                    select new PreparedILBody(
+                        ilBody.Label,
+                        generator,
+                        dc.UniqueCodeBlockIndex,
+                        sps,
+                        ilBody.ILConverter.OpCode,
+                        ilBody.Operand,
+                        dc.DecodingPathNumber))
+                .OrderBy(ilb => ilb.UniqueCodeBlockIndex)
+                .ThenBy(ilb => ilb.Label.Offset)
                 .ToArray();
 
             var stacks = decodeContext
@@ -110,7 +127,27 @@ namespace IL2C
                 preparedILBodies,
                 localVariables,
                 stacks,
-                labelNames);
+                labelNames,
+                body.Method.IsVirtual ? (int?)body.Method.GetMethodOverloadIndex() : null);
+        }
+
+        private static PreparedFunction PrepareAbstractMethod(
+            IPrepareContext prepareContext,
+            string methodName,
+            string rawMethodName,
+            TypeReference returnType,
+            Parameter[] parameters,
+            int slotIndex)
+        {
+            // TODO: throw
+            //prepareContext.RegisterIncludeFile("assert.h");
+
+            return new PreparedFunction(
+                methodName,
+                rawMethodName,
+                returnType,
+                parameters,
+                slotIndex);
         }
 
         private static PreparedFunction PreparePInvokeMethod(
@@ -135,7 +172,8 @@ namespace IL2C
                 methodName,
                 rawMethodName,
                 returnType,
-                parameters);
+                parameters,
+                null);
         }
 
         private static PreparedFunction PrepareMethod(
@@ -168,6 +206,21 @@ namespace IL2C
                     parameters,
                     pinvokeInfo);
             }
+
+            if (method.IsAbstract)
+            {
+                Debug.Assert(method.Body == null);
+
+                return PrepareAbstractMethod(
+                    prepareContext,
+                    methodName,
+                    method.Name,
+                    returnType,
+                    parameters,
+                    method.GetMethodOverloadIndex());
+            }
+
+            Debug.Assert(method.Body != null);
 
             return PrepareMethod(
                 prepareContext,

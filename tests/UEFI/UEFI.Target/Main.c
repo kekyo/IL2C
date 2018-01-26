@@ -28,7 +28,7 @@ bool twtoi(const wchar_t *_Str, int32_t* value)
         {
             _Str++;
         }
-        else
+        else if ((*_Str < L'0') || (*_Str > L'9'))
         {
             return false;
         }

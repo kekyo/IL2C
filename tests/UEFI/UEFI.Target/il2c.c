@@ -15,7 +15,7 @@ typedef long interlock_t;
 
 void WriteLineToError(const wchar_t* pMessage);
 
-#ifdef _DEBUG
+#if !defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
     WriteLineToError(L##step); }
 #else
@@ -131,19 +131,6 @@ struct __EXECUTION_FRAME__
     struct __EXECUTION_FRAME__* pNext;
     uint8_t targetCount;
     void** pTargets[];      // We have to track object references.
-};
-
-typedef void(*__MARK_HANDLER__)(void*);
-
-struct __REF_HEADER__
-{
-    struct __REF_HEADER__* pNext;
-    __RUNTIME_TYPE__ type;
-    union
-    {
-        interlock_t gcMark;
-        intptr_t __dummy;
-    };
 };
 
 // TODO: Become store to thread local storage
@@ -582,16 +569,17 @@ System_String* System_String_Substring_1(System_String* __this, int32_t startInd
 
     int32_t thisLength = (int32_t)wcslen(__this->pBody);
     // TODO: IndexOutOfRangeException
-    GCASSERT((startIndex + length) < thisLength);
+    GCASSERT((startIndex + length) <= thisLength);
 
     if ((startIndex == 0) && (length == thisLength))
     {
         return __this;
     }
 
-    uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
-    System_String* pString = __new_string_internal__(newSize);
+    uintptr_t newSize = (uintptr_t)length * sizeof(wchar_t);
+    System_String* pString = __new_string_internal__(newSize + sizeof(wchar_t));
     memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
+    ((wchar_t*)(pString->pBody))[length] = L'\0';
 
     return pString;
 }

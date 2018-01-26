@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <wchar.h>
 
 //////////////////////////////////////////////////////////////////////////
 // IL2C <---> UEFI interop functions
@@ -26,7 +27,7 @@ bool twtoi(const wchar_t *_Str, int32_t* value)
         {
             _Str++;
         }
-        else
+        else if ((*_Str < L'0') || (*_Str > L'9'))
         {
             return false;
         }
@@ -72,7 +73,9 @@ void itow(int32_t value, wchar_t* p)
 
 void ReadLine(wchar_t* pBuffer, uint16_t length)
 {
-    wscanf_s(L"%ls", pBuffer, length);
+    fgetws(pBuffer, length, stdin);
+    int l = wcslen(pBuffer);
+    pBuffer[l - 1] = L'\0';
 }
 
 void Write(const wchar_t* pMessage)
@@ -99,6 +102,8 @@ __DEFINE_CONST_STRING__(hoge, L"Hoge\r\n");
 int main()
 {
     __gc_initialize__();
+
+    Win32_Code_PolishNotation_Main();
 
     Win32_Code_InheritTypeTest_Test1();
     Win32_Code_InheritTypeTest_Test2();

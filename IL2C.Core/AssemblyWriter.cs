@@ -548,7 +548,7 @@ namespace IL2C
                 "const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ =",
                 rawTypeName);
             tw.WriteLine(
-                "   (__RUNTIME_TYPE_DEF__*)&__{0}_RUNTIME_TYPE_DEF__;",
+                "   (const __RUNTIME_TYPE__)(&__{0}_RUNTIME_TYPE_DEF__);",
                 rawTypeName);
         }
 

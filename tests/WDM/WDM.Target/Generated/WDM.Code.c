@@ -245,7 +245,7 @@ static __WDM_Code_InterceptCDRomDevice_TYPE_DEF_TYPE__ __WDM_Code_InterceptCDRom
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: WDM.Code.Wdm
@@ -255,7 +255,7 @@ const __RUNTIME_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ =
 
 void WDM_Code_Wdm_DbgPrint(System_String* message)
 {
-    //DbgPrint(message->pBody);
+    DbgPrint(message->pBody);
 }
 
 ///////////////////////////////////////
@@ -263,7 +263,7 @@ void WDM_Code_Wdm_DbgPrint(System_String* message)
 
 void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message)
 {
-    //DbgPrintEx(componentId, level, message->pBody);
+    DbgPrintEx(componentId, level, message->pBody);
 }
 
 ///////////////////////////////////////
@@ -341,4 +341,4 @@ static __WDM_Code_Wdm_TYPE_DEF_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE_DEF__ = {
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__WDM_Code_Wdm_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__WDM_Code_Wdm_RUNTIME_TYPE_DEF__);

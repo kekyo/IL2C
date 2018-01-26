@@ -569,16 +569,17 @@ System_String* System_String_Substring_1(System_String* __this, int32_t startInd
 
     int32_t thisLength = (int32_t)wcslen(__this->pBody);
     // TODO: IndexOutOfRangeException
-    GCASSERT((startIndex + length) < thisLength);
+    GCASSERT((startIndex + length) <= thisLength);
 
     if ((startIndex == 0) && (length == thisLength))
     {
         return __this;
     }
 
-    uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
-    System_String* pString = __new_string_internal__(newSize);
+    uintptr_t newSize = (uintptr_t)length * sizeof(wchar_t);
+    System_String* pString = __new_string_internal__(newSize + sizeof(wchar_t));
     memcpy((wchar_t*)(pString->pBody), __this->pBody + startIndex, newSize);
+    ((wchar_t*)(pString->pBody))[length] = L'\0';
 
     return pString;
 }

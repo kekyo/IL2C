@@ -4,7 +4,8 @@
 // Const strings:
 
 __DEFINE_CONST_STRING__(__string0, L"PN> ");
-__DEFINE_CONST_STRING__(__string1, L"Reuslt=");
+__DEFINE_CONST_STRING__(__string1, L"Syntax error.");
+__DEFINE_CONST_STRING__(__string2, L"Reuslt=");
 
 #ifdef __cplusplus
 extern "C" {
@@ -106,7 +107,7 @@ static __UEFI_Code_AbstractNode_TYPE_DEF_TYPE__ __UEFI_Code_AbstractNode_RUNTIME
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __UEFI_Code_AbstractNode_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__UEFI_Code_AbstractNode_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__UEFI_Code_AbstractNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.OperatorNode
@@ -180,7 +181,7 @@ static __UEFI_Code_OperatorNode_TYPE_DEF_TYPE__ __UEFI_Code_OperatorNode_RUNTIME
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __UEFI_Code_OperatorNode_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__UEFI_Code_OperatorNode_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__UEFI_Code_OperatorNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.ReducibleNode
@@ -259,7 +260,7 @@ static __UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__ __UEFI_Code_ReducibleNode_RUNTI
     __UEFI_Code_ReducibleNode_Reduce__,
 };
 const __RUNTIME_TYPE__ __UEFI_Code_ReducibleNode_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__UEFI_Code_ReducibleNode_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__UEFI_Code_ReducibleNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.NumericNode
@@ -384,7 +385,7 @@ static __UEFI_Code_NumericNode_TYPE_DEF_TYPE__ __UEFI_Code_NumericNode_RUNTIME_T
     __UEFI_Code_NumericNode_Reduce__,
 };
 const __RUNTIME_TYPE__ __UEFI_Code_NumericNode_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__UEFI_Code_NumericNode_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__UEFI_Code_NumericNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.ExpressionNode
@@ -669,7 +670,7 @@ static __UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__ __UEFI_Code_ExpressionNode_RUN
     __UEFI_Code_ExpressionNode_Reduce__,
 };
 const __RUNTIME_TYPE__ __UEFI_Code_ExpressionNode_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__UEFI_Code_ExpressionNode_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__UEFI_Code_ExpressionNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.PolishNotation
@@ -1508,6 +1509,7 @@ void UEFI_Code_PolishNotation_Main(void)
     UEFI_Code_ExpressionNode* local2 = NULL;
     int32_t local3;
     bool local4;
+    bool local5;
 
     //-------------------
     // Evaluation stacks:
@@ -1516,6 +1518,7 @@ void UEFI_Code_PolishNotation_Main(void)
     System_String* __stack0_1 = NULL;
     UEFI_Code_ExpressionNode* __stack0_2 = NULL;
     int32_t __stack1_0;
+    IL2C_CecilHelper_PseudoZeroType* __stack1_1 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -1528,21 +1531,23 @@ void UEFI_Code_PolishNotation_Main(void)
         UEFI_Code_ExpressionNode** plocal2;
         System_String** p__stack0_1;
         UEFI_Code_ExpressionNode** p__stack0_2;
+        IL2C_CecilHelper_PseudoZeroType** p__stack1_1;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 4;
+    __executionFrame__.targetCount = 5;
     __executionFrame__.plocal0 = &local0;
     __executionFrame__.plocal2 = &local2;
     __executionFrame__.p__stack0_1 = &__stack0_1;
     __executionFrame__.p__stack0_2 = &__stack0_2;
+    __executionFrame__.p__stack1_1 = &__stack1_1;
     __gc_link_execution_frame__(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: br.s IL_004c */
-    goto IL_004c;
+    /* Path=1, Unique=0: IL_0001: br.s IL_0064 */
+    goto IL_0064;
 IL_0003:
     /* Path=3, Unique=0: IL_0003: nop */
     /* Path=3, Unique=0: IL_0004: call System.Void System.Console::WriteLine() */
@@ -1569,8 +1574,8 @@ IL_0003:
     local1 = __stack0_0 ? true : false;
     /* Path=3, Unique=0: IL_0025: ldloc.1 */
     __stack0_0 = local1;
-    /* Path=3, Unique=0: IL_0026: brfalse.s IL_004b */
-    if (__stack0_0 == 0) goto IL_004b;
+    /* Path=3, Unique=0: IL_0026: brfalse.s IL_0063 */
+    if (__stack0_0 == 0) goto IL_0063;
     /* Path=3, Unique=0: IL_0028: nop */
     /* Path=3, Unique=0: IL_0029: ldloc.0 */
     __stack0_1 = local0;
@@ -1582,29 +1587,50 @@ IL_0003:
     local2 = __stack0_2;
     /* Path=3, Unique=0: IL_0031: ldloc.2 */
     __stack0_2 = local2;
-    /* Path=3, Unique=0: IL_0032: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
-    __stack0_0 = UEFI_Code_ReducibleNode_Reduce((UEFI_Code_ReducibleNode*)__stack0_2);
-    /* Path=3, Unique=0: IL_0037: stloc.3 */
-    local3 = __stack0_0;
-    /* Path=3, Unique=0: IL_0038: ldstr "Reuslt=" */
-    __stack0_1 = __string1;
-    /* Path=3, Unique=0: IL_003d: call System.Void System.Console::Write(System.String) */
-    System_Console_Write_9(__stack0_1);
-    /* Path=3, Unique=0: IL_0042: nop */
-    /* Path=3, Unique=0: IL_0043: ldloc.3 */
-    __stack0_0 = local3;
-    /* Path=3, Unique=0: IL_0044: call System.Void System.Console::WriteLine(System.Int32) */
-    System_Console_WriteLine_6(__stack0_0);
-    /* Path=3, Unique=0: IL_0049: nop */
-    /* Path=3, Unique=0: IL_004a: nop */
-IL_004b:
-    /* Path=3, Unique=0: IL_004b: nop */
-IL_004c:
-    /* Path=2, Unique=0: IL_004c: ldc.i4.1 */
-    __stack0_0 = 1;
-    /* Path=2, Unique=0: IL_004d: stloc.s local4 */
+    /* Path=3, Unique=0: IL_0032: ldnull */
+    __stack1_1 = NULL;
+    /* Path=3, Unique=0: IL_0033: ceq */
+    __stack0_0 = (__stack0_2 == ((UEFI_Code_ExpressionNode*)__stack1_1)) ? 1 : 0;
+    /* Path=3, Unique=0: IL_0035: stloc.s local4 */
     local4 = __stack0_0 ? true : false;
-    /* Path=2, Unique=0: IL_004f: br.s IL_0003 */
+    /* Path=3, Unique=0: IL_0037: ldloc.s local4 */
+    __stack0_0 = local4;
+    /* Path=3, Unique=0: IL_0039: brfalse.s IL_0049 */
+    if (__stack0_0 == 0) goto IL_0049;
+    /* Path=3, Unique=0: IL_003b: nop */
+    /* Path=3, Unique=0: IL_003c: ldstr "Syntax error." */
+    __stack0_1 = __string1;
+    /* Path=3, Unique=0: IL_0041: call System.Void System.Console::WriteLine(System.String) */
+    System_Console_WriteLine_10(__stack0_1);
+    /* Path=3, Unique=0: IL_0046: nop */
+    /* Path=3, Unique=0: IL_0047: br.s IL_0064 */
+    goto IL_0064;
+IL_0049:
+    /* Path=5, Unique=0: IL_0049: ldloc.2 */
+    __stack0_2 = local2;
+    /* Path=5, Unique=0: IL_004a: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
+    __stack0_0 = UEFI_Code_ReducibleNode_Reduce((UEFI_Code_ReducibleNode*)__stack0_2);
+    /* Path=5, Unique=0: IL_004f: stloc.3 */
+    local3 = __stack0_0;
+    /* Path=5, Unique=0: IL_0050: ldstr "Reuslt=" */
+    __stack0_1 = __string2;
+    /* Path=5, Unique=0: IL_0055: call System.Void System.Console::Write(System.String) */
+    System_Console_Write_9(__stack0_1);
+    /* Path=5, Unique=0: IL_005a: nop */
+    /* Path=5, Unique=0: IL_005b: ldloc.3 */
+    __stack0_0 = local3;
+    /* Path=5, Unique=0: IL_005c: call System.Void System.Console::WriteLine(System.Int32) */
+    System_Console_WriteLine_6(__stack0_0);
+    /* Path=5, Unique=0: IL_0061: nop */
+    /* Path=5, Unique=0: IL_0062: nop */
+IL_0063:
+    /* Path=4, Unique=0: IL_0063: nop */
+IL_0064:
+    /* Path=2, Unique=0: IL_0064: ldc.i4.1 */
+    __stack0_0 = 1;
+    /* Path=2, Unique=0: IL_0065: stloc.s local5 */
+    local5 = __stack0_0 ? true : false;
+    /* Path=2, Unique=0: IL_0067: br.s IL_0003 */
     goto IL_0003;
 }
 
@@ -1667,4 +1693,4 @@ static __UEFI_Code_PolishNotation_TYPE_DEF_TYPE__ __UEFI_Code_PolishNotation_RUN
     __System_Object_Equals__,
 };
 const __RUNTIME_TYPE__ __UEFI_Code_PolishNotation_RUNTIME_TYPE__ =
-   (__RUNTIME_TYPE_DEF__*)&__UEFI_Code_PolishNotation_RUNTIME_TYPE_DEF__;
+   (const __RUNTIME_TYPE__)(&__UEFI_Code_PolishNotation_RUNTIME_TYPE_DEF__);

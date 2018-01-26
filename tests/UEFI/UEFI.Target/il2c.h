@@ -21,9 +21,6 @@ typedef uint8_t interlock_t;
 typedef struct __EXECUTION_FRAME__ __EXECUTION_FRAME__;
 typedef struct __REF_HEADER__ __REF_HEADER__;
 
-/////////////////////////////////////////////////////////////
-// Runtime type information related declarations
-
 typedef void(*__MARK_HANDLER__)(void*);
 
 typedef const struct
@@ -35,9 +32,25 @@ typedef const struct
 
 typedef __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
 
+struct __REF_HEADER__
+{
+    struct __REF_HEADER__* pNext;
+    __RUNTIME_TYPE__ type;
+    union
+    {
+        interlock_t gcMark;
+        intptr_t __dummy;
+    };
+};
+
+
+/////////////////////////////////////////////////////////////
+// Runtime type information related declarations
+
 #define __typeof__(typeName) (__##typeName##_RUNTIME_TYPE__)
 #define __sizeof__(typeName) (__typeof__(typeName)->bodySize)
-#define __get_typedef__(__this) ((__RUNTIME_TYPE__)(((uint8_t*)__this) - sizeof(intptr_t) * 2))
+
+#define __get_typedef__(__this) ((((__REF_HEADER__*)(__this)) - 1)->type)
 
 /////////////////////////////////////////////////////////////
 // System.Object

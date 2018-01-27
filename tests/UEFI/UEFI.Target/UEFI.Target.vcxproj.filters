@@ -15,21 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="il2c.h">
+    <ClInclude Include="Generated\UEFI.Code.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Generated\UEFI.Code.h">
+    <ClInclude Include="..\..\..\IL2C.Runtime\il2c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="il2c.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Generated\UEFI.Code.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\IL2C.Runtime\il2c.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

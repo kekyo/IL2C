@@ -22,21 +22,18 @@
     <ClCompile Include="Generated\WDM.Code.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="il2c.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="memmem.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\IL2C.Runtime\il2c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generated\WDM.Code.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="il2c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdint.h">
@@ -46,6 +43,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memmem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\IL2C.Runtime\il2c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

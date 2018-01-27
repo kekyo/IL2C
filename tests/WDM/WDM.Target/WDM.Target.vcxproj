@@ -59,7 +59,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../../../IL2C.Runtime;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_WDM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -67,7 +67,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../../../IL2C.Runtime;$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_WDM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -81,13 +81,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Generated\WDM.Code.c" />
-    <ClCompile Include="il2c.c" />
+    <ClCompile Include="..\..\..\IL2C.Runtime\il2c.c" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="memmem.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Generated\WDM.Code.h" />
-    <ClInclude Include="il2c.h" />
+    <ClInclude Include="..\..\..\IL2C.Runtime\il2c.h" />
     <ClInclude Include="memmem.h" />
     <ClInclude Include="stdbool.h" />
     <ClInclude Include="stdint.h" />

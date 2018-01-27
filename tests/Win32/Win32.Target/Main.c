@@ -117,16 +117,16 @@ int main()
         {
             Win32_Code_StringTest_LiteralString();
 
-			System_String* pString11 = Win32_Code_StringTest_LiteralSubstring();
-			printf("pString11 = %ls\r\n", pString11->pBody);
+            System_String* pString11 = Win32_Code_StringTest_LiteralSubstring();
+            printf("pString11 = %ls\r\n", pString11->pBody);
 
-			wchar_t ch1 = Win32_Code_StringTest_GetChar();
-			printf("ch1 = %lc\r\n", ch1);
+            wchar_t ch1 = Win32_Code_StringTest_GetChar();
+            printf("ch1 = %lc\r\n", ch1);
 
-			wchar_t ch2 = Win32_Code_StringTest_GetCharByIndex(hoge, 2);
-			printf("ch2 = %lc\r\n", ch2);
+            wchar_t ch2 = Win32_Code_StringTest_GetCharByIndex(hoge, 2);
+            printf("ch2 = %lc\r\n", ch2);
 
-			System_String* pString1 = Win32_Code_StringTest_InOutString(hoge);
+            System_String* pString1 = Win32_Code_StringTest_InOutString(hoge);
             printf("pString1 = %ls", pString1->pBody);
 
             Win32_Code_Win32_OutputDebugString(hoge);

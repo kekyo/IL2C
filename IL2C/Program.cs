@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace IL2C
@@ -12,7 +11,11 @@ namespace IL2C
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: IL2C.exe <target assembly> <output path>");
+                Console.Error.WriteLine("Usage: IL2C.exe [options] <target assembly> <output path>");
+                Console.Error.WriteLine("  --cpp       : Produce C++ files (apply extension *.cpp instead *.c, body will not changed)");
+                Console.Error.WriteLine("  --debug     : Emit debug informations (contains only comments)");
+                Console.Error.WriteLine("  --debug-full: Emit debug informations (contains line numbers)");
+
                 return 0;
             }
 
@@ -25,11 +28,19 @@ namespace IL2C
                 .ToArray();
 
             var enableCpp = options.Contains("cpp");
+            var debug = options.Contains("debug");
+            var debugFull = options.Contains("debug-full");
+
+            var debugInformationOptions = debugFull
+                ? DebugInformationOptions.Full
+                : debug
+                    ? DebugInformationOptions.CommentOnly
+                    : DebugInformationOptions.None;
 
             var assemblyPath = paths[0];
             var outputPath = paths[1];
 
-            Console.WriteLine("il2c: Translating assembly \"{0}\".", Path.GetFileName(assemblyPath));
+            Console.Write("IL2C: Preparing assembly: \"{0}\" ...", Path.GetFileName(assemblyPath));
 
             if (Directory.Exists(outputPath) == false)
             {
@@ -44,23 +55,35 @@ namespace IL2C
 
             var translateContext = new TranslateContext(assemblyPath);
             var prepared = AssemblyPreparer.Prepare(translateContext);
-            
+
+            Console.WriteLine(" done.");
+
             var assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
             var filePath = Path.Combine(outputPath, assemblyName);
+            var sourceFilePath = filePath + (enableCpp ? ".cpp" : ".c");
+
+            Console.Write("IL2C: Writing source code: \"{0}\" ...", Path.GetFileName(sourceFilePath));
 
             using (var fsSource = new FileStream(
-                filePath + (enableCpp ? ".cpp" : ".c"),
+                sourceFilePath,
                 FileMode.Create,
                 FileAccess.ReadWrite,
                 FileShare.None))
             {
                 var twSource = new StreamWriter(fsSource, Encoding.UTF8);
-                AssemblyWriter.WriteSourceCode(twSource, translateContext, prepared, "    ");
+                AssemblyWriter.WriteSourceCode(
+                    twSource, translateContext, prepared, "    ", debugInformationOptions);
                 twSource.Flush();
             }
 
+            Console.WriteLine(" done.");
+
+            var headerFilePath = filePath + ".h";
+
+            Console.Write("IL2C: Writing header: \"{0}\" ...", Path.GetFileName(headerFilePath));
+
             using (var fsHeader = new FileStream(
-                filePath + ".h",
+                headerFilePath,
                 FileMode.Create,
                 FileAccess.ReadWrite,
                 FileShare.None))
@@ -69,6 +92,8 @@ namespace IL2C
                 AssemblyWriter.WriteHeader(twHeader, translateContext, prepared, "    ");
                 twHeader.Flush();
             }
+
+            Console.WriteLine(" done.");
 
             return 0;
         }

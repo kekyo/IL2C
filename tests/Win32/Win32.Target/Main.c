@@ -74,7 +74,7 @@ void itow(int32_t value, wchar_t* p)
 void ReadLine(wchar_t* pBuffer, uint16_t length)
 {
     fgetws(pBuffer, length, stdin);
-    int l = wcslen(pBuffer);
+    size_t l = wcslen(pBuffer);
     pBuffer[l - 1] = L'\0';
 }
 

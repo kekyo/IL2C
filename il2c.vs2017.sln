@@ -98,6 +98,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UEFI.Code.Tests", "tests\UE
 		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IL2C.Runtime", "IL2C.Runtime", "{2F592E52-588D-4040-BA83-26CF2EF4CE1E}"
+	ProjectSection(SolutionItems) = preProject
+		IL2C.Runtime\il2c.c = IL2C.Runtime\il2c.c
+		IL2C.Runtime\il2c.h = IL2C.Runtime\il2c.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

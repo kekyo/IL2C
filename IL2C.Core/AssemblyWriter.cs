@@ -9,6 +9,13 @@ using IL2C.Translators;
 
 namespace IL2C
 {
+    public enum DebugInformationOptions
+    {
+        None,
+        CommentOnly,
+        Full
+    }
+
     public static class AssemblyWriter
     {
         private static void InternalConvertType(
@@ -223,7 +230,8 @@ namespace IL2C
             TextWriter tw,
             IExtractContext extractContext,
             PreparedFunction preparedFunction,
-            string indent)
+            string indent,
+            DebugInformationOptions debugInformationOption)
         {
             var locals = preparedFunction.LocalVariables;
 
@@ -342,20 +350,33 @@ namespace IL2C
                 if (canWriteSequencePoint && ilBody.SequencePoints.Any())
                 {
                     var sp = ilBody.SequencePoints.First();
-#if false
-                    tw.WriteLine(
-                        "#line {0} \"{1}\"",
-                        sp.StartLine,
-                        sp.Document.Url.Replace("\\", "\\\\"));
-#endif
+                    switch (debugInformationOption)
+                    {
+                        case DebugInformationOptions.Full:
+                            tw.WriteLine(
+                                "#line {0} \"{1}\"",
+                                sp.StartLine,
+                                sp.Document.Url.Replace("\\", "\\\\"));
+                            break;
+                        case DebugInformationOptions.CommentOnly:
+                            tw.WriteLine(
+                                "/* {0}({1}): */",
+                                sp.Document.Url.Replace("\\", "\\\\"),
+                                sp.StartLine);
+                            break;
+                    }
+
                     canWriteSequencePoint = false;
                 }
 
-                // Hack: Debugging information.
-                tw.WriteLine(
-                    "{0}/* {1} */",
-                    indent,
-                    ilBody);
+                if (debugInformationOption != DebugInformationOptions.None)
+                {
+                    // Write debugging information.
+                    tw.WriteLine(
+                        "{0}/* {1} */",
+                        indent,
+                        ilBody);
+                }
 
                 // Generate source code fragments and write.
                 var sourceCodes = ilBody.Generator(extractContext);
@@ -557,7 +578,8 @@ namespace IL2C
             IExtractContext extractContext,
             PreparedFunctions preparedFunctions,
             MethodDefinition method,
-            string indent)
+            string indent,
+            DebugInformationOptions debugInformationOption = DebugInformationOptions.None)
         {
             var methodName = method.GetFullMemberName();
             var preparedFunction = preparedFunctions.Functions[method];
@@ -572,7 +594,8 @@ namespace IL2C
                         tw,
                         extractContext,
                         preparedFunction,
-                        indent);
+                        indent,
+                        debugInformationOption);
                     break;
 
                 case FunctionTypes.Virtual:
@@ -582,7 +605,8 @@ namespace IL2C
                             tw,
                             extractContext,
                             preparedFunction,
-                            indent);
+                            indent,
+                            debugInformationOption);
                     }
                     else
                     {
@@ -653,7 +677,8 @@ namespace IL2C
             TextWriter twSource,
             TranslateContext translateContext,
             PreparedFunctions preparedFunctions,
-            string indent)
+            string indent,
+            DebugInformationOptions debugInformationOption = DebugInformationOptions.Full)
         {
             IExtractContext extractContext = translateContext;
 
@@ -731,7 +756,8 @@ namespace IL2C
                             extractContext,
                             preparedFunctions,
                             method,
-                            indent);
+                            indent,
+                            debugInformationOption);
                     });
 
                 InternalConvertTypeHelper(

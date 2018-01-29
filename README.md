@@ -1,5 +1,10 @@
 # IL2C - A translator implementation of .NET intermediate language to C language.
 
+|Provider|Result|
+|:--|:--|
+|AppVeyor (.NET 4.5 / .NET Core 2.0)|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master)|
+|CircleCI (.NET Core 2.0)|[![CircleCI (.NET Core 2.0)](https://circleci.com/gh/kekyo/IL2C/tree/master.svg?style=svg)](https://circleci.com/gh/kekyo/IL2C/tree/master)|
+
 ## What's this?
 
 * IL2C is a translator implementation of .NET intermediate language to C language, and the project for step-by-step designing and video recording.

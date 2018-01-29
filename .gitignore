@@ -235,3 +235,5 @@ _Pvt_Extensions
 *.VC.db
 
 .vscode/
+*.swp
+

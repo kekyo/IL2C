@@ -124,7 +124,7 @@ TODO:
 | Issue | Status | Milestone
 |:---|:---|:---|
 | System.Object | Partial supported |
-| System.ValueType |
+| System.ValueType | Partial supported |
 | System.String | Partial supported |
 | System.Decimal |
 | System.Guid |
@@ -151,7 +151,7 @@ TODO:
 | Instance field | Partial supported | M3
 | Static method | Partial supported | M3
 | Instance method | Partial supported | M3
-| Virtual method |
+| Virtual method | Partial supported |
 | Interop method (extern static) | Partial supported |
 | Internal method (internal call) |
 | Constructor | Partial supported |
@@ -204,9 +204,9 @@ TODO:
 | Host platform on .NET Core 2 | Supported |
 | Host platform on mono |
 | Support C99 compilers | Supported | M1
-| Support non C99 (ANSI) compilers |
+| Support non C99 (ANSI) compilers | Supported |
 | Support better C code output via C++ symbol declarations |
-| Support continuous integrations |
+| Support continuous integrations | Partial supported |
 
 ## Took pictures on design process
 

@@ -10,6 +10,11 @@ extern "C" {
 #endif
 
 #if defined(_WIN32) || defined(_WDM) || defined(UEFI)
+#include <intrin.h>
+
+#pragma intrinsic(memset)
+#pragma intrinsic(memcpy)
+
 typedef long interlock_t;
 #else
 typedef uint8_t interlock_t;

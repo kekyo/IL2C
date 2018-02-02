@@ -77,38 +77,35 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* this__, 
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
-    /* Path=1, Unique=0: IL_0006: nop */
-#line 12 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_0007: nop */
-    /* Path=1, Unique=0: IL_0008: ldstr "Hello driver constructor called!!
+#line 13 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+    /* Path=1, Unique=0: IL_0006: ldstr "Hello driver constructor called!!
 " */
     __stack0_1 = __string0;
-    /* Path=1, Unique=0: IL_000d: call System.Void WDM.Code.Wdm::DbgPrint(System.String) */
+    /* Path=1, Unique=0: IL_000b: call System.Void WDM.Code.Wdm::DbgPrint(System.String) */
     WDM_Code_Wdm_DbgPrint(__stack0_1);
-    /* Path=1, Unique=0: IL_0012: nop */
 #line 15 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_0013: ldarg.0 */
+    /* Path=1, Unique=0: IL_0010: ldarg.0 */
     __stack0_0 = this__;
-    /* Path=1, Unique=0: IL_0014: ldarg.1 */
+    /* Path=1, Unique=0: IL_0011: ldarg.1 */
     __stack1_0 = pFrom;
-    /* Path=1, Unique=0: IL_0015: stfld System.IntPtr WDM.Code.InterceptCDRomDevice::pFrom */
+    /* Path=1, Unique=0: IL_0012: stfld System.IntPtr WDM.Code.InterceptCDRomDevice::pFrom */
     __stack0_0->pFrom = __stack1_0;
 #line 16 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_001a: ldarg.0 */
+    /* Path=1, Unique=0: IL_0017: ldarg.0 */
     __stack0_0 = this__;
-    /* Path=1, Unique=0: IL_001b: ldarg.2 */
+    /* Path=1, Unique=0: IL_0018: ldarg.2 */
     __stack1_0 = pTo;
-    /* Path=1, Unique=0: IL_001c: stfld System.IntPtr WDM.Code.InterceptCDRomDevice::pTo */
+    /* Path=1, Unique=0: IL_0019: stfld System.IntPtr WDM.Code.InterceptCDRomDevice::pTo */
     __stack0_0->pTo = __stack1_0;
 #line 17 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_0021: ldarg.0 */
+    /* Path=1, Unique=0: IL_001e: ldarg.0 */
     __stack0_0 = this__;
-    /* Path=1, Unique=0: IL_0022: ldarg.3 */
+    /* Path=1, Unique=0: IL_001f: ldarg.3 */
     __stack1_1 = size;
-    /* Path=1, Unique=0: IL_0023: stfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
+    /* Path=1, Unique=0: IL_0020: stfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
     __stack0_0->size = __stack1_1;
 #line 18 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_0028: ret */
+    /* Path=1, Unique=0: IL_0025: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
@@ -122,8 +119,6 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     // Local variables:
 
     intptr_t local0;
-    bool local1;
-    uint32_t local2;
 
     //-------------------
     // Evaluation stacks:
@@ -163,77 +158,60 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     //-------------------
     // IL body:
 
-#line 21 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ldarg.1 */
+#line 22 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+    /* Path=1, Unique=0: IL_0000: ldarg.1 */
     __stack0_0 = pBuffer;
-    /* Path=1, Unique=0: IL_0002: ldarg.2 */
+    /* Path=1, Unique=0: IL_0001: ldarg.2 */
     __stack1_0 = offset;
-    /* Path=1, Unique=0: IL_0003: call System.IntPtr System.IntPtr::op_Addition(System.IntPtr,System.Int32) */
+    /* Path=1, Unique=0: IL_0002: call System.IntPtr System.IntPtr::op_Addition(System.IntPtr,System.Int32) */
     __stack0_0 = System_IntPtr_op_Addition(__stack0_0, __stack1_0);
-    /* Path=1, Unique=0: IL_0008: ldarg.3 */
+    /* Path=1, Unique=0: IL_0007: ldarg.3 */
     __stack1_0 = size;
-    /* Path=1, Unique=0: IL_0009: ldarg.0 */
+    /* Path=1, Unique=0: IL_0008: ldarg.0 */
     __stack2_0 = this__;
-    /* Path=1, Unique=0: IL_000a: ldfld System.IntPtr WDM.Code.InterceptCDRomDevice::pFrom */
+    /* Path=1, Unique=0: IL_0009: ldfld System.IntPtr WDM.Code.InterceptCDRomDevice::pFrom */
     __stack2_1 = __stack2_0->pFrom;
-    /* Path=1, Unique=0: IL_000f: ldarg.0 */
+    /* Path=1, Unique=0: IL_000e: ldarg.0 */
     __stack3_0 = this__;
-    /* Path=1, Unique=0: IL_0010: ldfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
+    /* Path=1, Unique=0: IL_000f: ldfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
     __stack3_1 = __stack3_0->size;
-    /* Path=1, Unique=0: IL_0015: call System.IntPtr WDM.Code.Wdm::memmem(System.IntPtr,System.Int32,System.IntPtr,System.Int32) */
+    /* Path=1, Unique=0: IL_0014: call System.IntPtr WDM.Code.Wdm::memmem(System.IntPtr,System.Int32,System.IntPtr,System.Int32) */
     __stack0_0 = WDM_Code_Wdm_memmem(__stack0_0, __stack1_0, __stack2_1, __stack3_1);
-    /* Path=1, Unique=0: IL_001a: stloc.0 */
+    /* Path=1, Unique=0: IL_0019: stloc.0 */
     local0 = __stack0_0;
 #line 23 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_001b: ldloc.0 */
+    /* Path=1, Unique=0: IL_001a: ldloc.0 */
     __stack0_0 = local0;
-    /* Path=1, Unique=0: IL_001c: ldsfld System.IntPtr System.IntPtr::Zero */
+    /* Path=1, Unique=0: IL_001b: ldsfld System.IntPtr System.IntPtr::Zero */
     __stack1_1 = System_IntPtr_Zero;
-    /* Path=1, Unique=0: IL_0021: call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr) */
+    /* Path=1, Unique=0: IL_0020: call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr) */
     __stack0_1 = System_IntPtr_op_Inequality(__stack0_0, __stack1_1);
-    /* Path=1, Unique=0: IL_0026: stloc.1 */
-    local1 = __stack0_1 ? true : false;
-    /* Path=1, Unique=0: IL_0027: ldloc.1 */
-    __stack0_1 = local1;
-    /* Path=1, Unique=0: IL_0028: brfalse.s IL_004a */
-    if (__stack0_1 == 0) goto IL_004a;
-#line 24 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_002a: nop */
-    /* Path=1, Unique=0: IL_002b: ldstr "Draw BABEL!!
+    /* Path=1, Unique=0: IL_0025: brfalse.s IL_0043 */
+    if (__stack0_1 == 0) goto IL_0043;
+#line 25 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+    /* Path=1, Unique=0: IL_0027: ldstr "Draw BABEL!!
 " */
     __stack0_2 = __string1;
-    /* Path=1, Unique=0: IL_0030: call System.Void WDM.Code.Wdm::DbgPrint(System.String) */
+    /* Path=1, Unique=0: IL_002c: call System.Void WDM.Code.Wdm::DbgPrint(System.String) */
     WDM_Code_Wdm_DbgPrint(__stack0_2);
-    /* Path=1, Unique=0: IL_0035: nop */
 #line 27 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_0036: ldloc.0 */
+    /* Path=1, Unique=0: IL_0031: ldloc.0 */
     __stack0_0 = local0;
-    /* Path=1, Unique=0: IL_0037: ldarg.0 */
+    /* Path=1, Unique=0: IL_0032: ldarg.0 */
     __stack1_2 = this__;
-    /* Path=1, Unique=0: IL_0038: ldfld System.IntPtr WDM.Code.InterceptCDRomDevice::pTo */
+    /* Path=1, Unique=0: IL_0033: ldfld System.IntPtr WDM.Code.InterceptCDRomDevice::pTo */
     __stack1_1 = __stack1_2->pTo;
-    /* Path=1, Unique=0: IL_003d: ldarg.0 */
+    /* Path=1, Unique=0: IL_0038: ldarg.0 */
     __stack2_0 = this__;
-    /* Path=1, Unique=0: IL_003e: ldfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
+    /* Path=1, Unique=0: IL_0039: ldfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
     __stack2_2 = __stack2_0->size;
-    /* Path=1, Unique=0: IL_0043: call System.Void WDM.Code.Wdm::memcpy(System.IntPtr,System.IntPtr,System.Int32) */
+    /* Path=1, Unique=0: IL_003e: call System.Void WDM.Code.Wdm::memcpy(System.IntPtr,System.IntPtr,System.Int32) */
     WDM_Code_Wdm_memcpy(__stack0_0, __stack1_1, __stack2_2);
-    /* Path=1, Unique=0: IL_0048: nop */
-#line 28 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=1, Unique=0: IL_0049: nop */
-IL_004a:
-    /* Path=1, Unique=0: IL_004a: ldc.i4.0 */
+IL_0043:
+#line 30 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
+    /* Path=1, Unique=0: IL_0043: ldc.i4.0 */
     __stack0_1 = 0;
-    /* Path=1, Unique=0: IL_004b: stloc.2 */
-    local2 = (uint32_t)__stack0_1;
-    /* Path=1, Unique=0: IL_004c: br.s IL_004e */
-    goto IL_004e;
-IL_004e:
-#line 31 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
-    /* Path=2, Unique=0: IL_004e: ldloc.2 */
-    __stack0_1 = local2;
-    /* Path=2, Unique=0: IL_004f: ret */
+    /* Path=1, Unique=0: IL_0044: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return (uint32_t)__stack0_1;
 }
@@ -277,9 +255,8 @@ void WDM_Code_Wdm_DbgPrint(System_String* message)
     //-------------------
     // IL body:
 
-#line 10 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\Wdm.cs"
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ret */
+#line 11 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\Wdm.cs"
+    /* Path=1, Unique=0: IL_0000: ret */
     return;
 }
 
@@ -299,9 +276,8 @@ void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String
     //-------------------
     // IL body:
 
-#line 14 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\Wdm.cs"
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ret */
+#line 15 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\Wdm.cs"
+    /* Path=1, Unique=0: IL_0000: ret */
     return;
 }
 
@@ -356,8 +332,7 @@ void WDM_Code_Wdm__ctor(WDM_Code_Wdm* this__)
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
-    /* Path=1, Unique=0: IL_0006: nop */
-    /* Path=1, Unique=0: IL_0007: ret */
+    /* Path=1, Unique=0: IL_0006: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }

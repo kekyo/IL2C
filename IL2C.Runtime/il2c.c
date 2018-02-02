@@ -7,6 +7,9 @@
 #include <stdint.h>
 #include <wchar.h>
 
+#pragma intrinsic(memset)
+#pragma intrinsic(memcpy)
+
 typedef long interlock_t;
 
 #define GCALLOC malloc
@@ -25,9 +28,12 @@ void WriteLineToError(const wchar_t* pMessage);
 #elif defined(_WDM)
 
 #include <intrin.h>
-
 #include <wdm.h>
 #include <stdint.h>
+#include <wchar.h>
+
+#pragma intrinsic(memset)
+#pragma intrinsic(memcpy)
 
 typedef long interlock_t;
 
@@ -60,6 +66,9 @@ typedef long interlock_t;
 
 #include <stdint.h>
 #include <wchar.h>
+
+#pragma intrinsic(memset)
+#pragma intrinsic(memcpy)
 
 typedef long interlock_t;
 

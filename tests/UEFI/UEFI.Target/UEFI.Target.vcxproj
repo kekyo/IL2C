@@ -73,6 +73,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <DisableSpecificWarnings>4091</DisableSpecificWarnings>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <SubSystem>EFI Application</SubSystem>
@@ -99,6 +100,7 @@
       <UndefinePreprocessorDefinitions>_WIN32</UndefinePreprocessorDefinitions>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <DisableSpecificWarnings>4091</DisableSpecificWarnings>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <SubSystem>EFI Application</SubSystem>

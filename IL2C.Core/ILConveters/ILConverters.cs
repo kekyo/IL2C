@@ -247,5 +247,17 @@ namespace IL2C.ILConveters
                     si.SymbolName) };
             }
         }
+
+        internal sealed class PopConverter : InlineNoneConverter
+        {
+            public override OpCode OpCode => OpCodes.Pop;
+
+            public override Func<IExtractContext, string[]> Apply(
+                DecodeContext decodeContext)
+            {
+                var si = decodeContext.PopStack();
+                return _ => new string[0];
+            }
+        }
     }
 }

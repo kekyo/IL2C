@@ -54,8 +54,13 @@ namespace IL2C.ILConveters
                     si.SymbolName,
                     labelName) };
             }
-
-            throw new InvalidOperationException();
+            else
+            {
+                return _ => new[] { string.Format(
+                    "if ({0} == NULL) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
         }
     }
 
@@ -77,8 +82,13 @@ namespace IL2C.ILConveters
                     si.SymbolName,
                     labelName) };
             }
-
-            throw new InvalidOperationException();
+            else
+            {
+                return _ => new[] { string.Format(
+                    "if ({0} != NULL) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
         }
     }
 
@@ -100,8 +110,13 @@ namespace IL2C.ILConveters
                     si.SymbolName,
                     labelName) };
             }
-
-            throw new InvalidOperationException();
+            else
+            {
+                return _ => new[] { string.Format(
+                    "if ({0} != NULL) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
         }
     }
 
@@ -139,6 +154,26 @@ namespace IL2C.ILConveters
 
             return _ => new[] { string.Format(
                 "if ({0} < {1}) goto {2}",
+                si0.SymbolName,
+                si1.SymbolName,
+                labelName) };
+        }
+    }
+
+    internal sealed class Bne_Un_sConverter : ShortInlineBrTargetConverter
+    {
+        public override OpCode OpCode => OpCodes.Bne_Un_S;
+
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
+        {
+            var si1 = decodeContext.PopStack();
+            var si0 = decodeContext.PopStack();
+
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
+
+            return _ => new[] { string.Format(
+                "if ({0} != {1}) goto {2}",
                 si0.SymbolName,
                 si1.SymbolName,
                 labelName) };

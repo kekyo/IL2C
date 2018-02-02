@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Const strings:
 
-__DEFINE_CONST_STRING__(__string0, L"PN> ");
-__DEFINE_CONST_STRING__(__string1, L"Syntax error.");
-__DEFINE_CONST_STRING__(__string2, L"Reuslt=");
+IL2C_CONST_STRING(__string0, L"PN> ");
+IL2C_CONST_STRING(__string1, L"Syntax error.");
+IL2C_CONST_STRING(__string2, L"Reuslt=");
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +43,7 @@ extern "C" {
 ///////////////////////////////////////
 // .ctor
 
-void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* __this, int32_t nextIndex)
+void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* this__, int32_t nextIndex)
 {
     //-------------------
     // Local variables:
@@ -58,37 +58,37 @@ void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* __this, int32_t nextIn
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_AbstractNode** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
     __executionFrame__.p__stack0_0 = &__stack0_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
 #line 13 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
 #line 14 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0009: ldarg.1 */
     __stack1_0 = nextIndex;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
     __stack0_0->NextIndex = __stack1_0;
 #line 16 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_000f: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
@@ -97,7 +97,7 @@ void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* __this, int32_t nextIn
 
 static void __UEFI_Code_AbstractNode_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(System_Object)->pMarkHandler(pReference);
+    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_AbstractNode_TYPE_DEF_TYPE__ __UEFI_Code_AbstractNode_RUNTIME_TYPE_DEF__ = {
@@ -109,8 +109,8 @@ static __UEFI_Code_AbstractNode_TYPE_DEF_TYPE__ __UEFI_Code_AbstractNode_RUNTIME
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
-const __RUNTIME_TYPE__ __UEFI_Code_AbstractNode_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__UEFI_Code_AbstractNode_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __UEFI_Code_AbstractNode_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__UEFI_Code_AbstractNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.OperatorNode
@@ -118,7 +118,7 @@ const __RUNTIME_TYPE__ __UEFI_Code_AbstractNode_RUNTIME_TYPE__ =
 ///////////////////////////////////////
 // .ctor
 
-void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* __this, wchar_t oper, int32_t nextIndex)
+void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* this__, wchar_t oper, int32_t nextIndex)
 {
     //-------------------
     // Local variables:
@@ -133,23 +133,23 @@ void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* __this, wchar_t oper, 
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_OperatorNode** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
     __executionFrame__.p__stack0_0 = &__stack0_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
 #line 23 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.2 */
     __stack1_0 = nextIndex;
     /* Path=1, Unique=0: IL_0002: call System.Void UEFI.Code.AbstractNode::.ctor(System.Int32) */
@@ -158,14 +158,14 @@ void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* __this, wchar_t oper, 
 #line 24 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0008: nop */
     /* Path=1, Unique=0: IL_0009: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_000a: ldarg.1 */
     __stack1_0 = (int32_t)(oper);
     /* Path=1, Unique=0: IL_000b: stfld System.Char UEFI.Code.OperatorNode::Operator */
     __stack0_0->Operator = (wchar_t)__stack1_0;
 #line 26 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0010: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
@@ -174,7 +174,7 @@ void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* __this, wchar_t oper, 
 
 static void __UEFI_Code_OperatorNode_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
+    il2c_typeof(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_OperatorNode_TYPE_DEF_TYPE__ __UEFI_Code_OperatorNode_RUNTIME_TYPE_DEF__ = {
@@ -186,8 +186,8 @@ static __UEFI_Code_OperatorNode_TYPE_DEF_TYPE__ __UEFI_Code_OperatorNode_RUNTIME
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
-const __RUNTIME_TYPE__ __UEFI_Code_OperatorNode_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__UEFI_Code_OperatorNode_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __UEFI_Code_OperatorNode_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__UEFI_Code_OperatorNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.ReducibleNode
@@ -195,7 +195,7 @@ const __RUNTIME_TYPE__ __UEFI_Code_OperatorNode_RUNTIME_TYPE__ =
 ///////////////////////////////////////
 // .ctor
 
-void UEFI_Code_ReducibleNode__ctor(UEFI_Code_ReducibleNode* __this, int32_t nextIndex)
+void UEFI_Code_ReducibleNode__ctor(UEFI_Code_ReducibleNode* this__, int32_t nextIndex)
 {
     //-------------------
     // Local variables:
@@ -210,23 +210,23 @@ void UEFI_Code_ReducibleNode__ctor(UEFI_Code_ReducibleNode* __this, int32_t next
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_ReducibleNode** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
     __executionFrame__.p__stack0_0 = &__stack0_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
 #line 31 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.1 */
     __stack1_0 = nextIndex;
     /* Path=1, Unique=0: IL_0002: call System.Void UEFI.Code.AbstractNode::.ctor(System.Int32) */
@@ -235,14 +235,14 @@ void UEFI_Code_ReducibleNode__ctor(UEFI_Code_ReducibleNode* __this, int32_t next
 #line 32 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0008: nop */
     /* Path=1, Unique=0: IL_0009: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
 ///////////////////////////////////////
 // Abstract: Reduce
 
-int32_t __UEFI_Code_ReducibleNode_Reduce__(UEFI_Code_ReducibleNode* __this)
+int32_t __UEFI_Code_ReducibleNode_Reduce__(UEFI_Code_ReducibleNode* this__)
 {
     // WARNING: Pure virtual function called.
     //TODO: throw : assert(0);
@@ -254,7 +254,7 @@ int32_t __UEFI_Code_ReducibleNode_Reduce__(UEFI_Code_ReducibleNode* __this)
 
 static void __UEFI_Code_ReducibleNode_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
+    il2c_typeof(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__ __UEFI_Code_ReducibleNode_RUNTIME_TYPE_DEF__ = {
@@ -267,8 +267,8 @@ static __UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__ __UEFI_Code_ReducibleNode_RUNTI
     __System_Object_Equals__,
     __UEFI_Code_ReducibleNode_Reduce__,
 };
-const __RUNTIME_TYPE__ __UEFI_Code_ReducibleNode_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__UEFI_Code_ReducibleNode_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __UEFI_Code_ReducibleNode_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__UEFI_Code_ReducibleNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.NumericNode
@@ -276,7 +276,7 @@ const __RUNTIME_TYPE__ __UEFI_Code_ReducibleNode_RUNTIME_TYPE__ =
 ///////////////////////////////////////
 // .ctor
 
-void UEFI_Code_NumericNode__ctor(UEFI_Code_NumericNode* __this, int32_t numeric, int32_t nextIndex)
+void UEFI_Code_NumericNode__ctor(UEFI_Code_NumericNode* this__, int32_t numeric, int32_t nextIndex)
 {
     //-------------------
     // Local variables:
@@ -291,23 +291,23 @@ void UEFI_Code_NumericNode__ctor(UEFI_Code_NumericNode* __this, int32_t numeric,
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_NumericNode** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
     __executionFrame__.p__stack0_0 = &__stack0_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
 #line 42 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.2 */
     __stack1_0 = nextIndex;
     /* Path=1, Unique=0: IL_0002: call System.Void UEFI.Code.ReducibleNode::.ctor(System.Int32) */
@@ -316,21 +316,21 @@ void UEFI_Code_NumericNode__ctor(UEFI_Code_NumericNode* __this, int32_t numeric,
 #line 43 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0008: nop */
     /* Path=1, Unique=0: IL_0009: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_000a: ldarg.1 */
     __stack1_0 = numeric;
     /* Path=1, Unique=0: IL_000b: stfld System.Int32 UEFI.Code.NumericNode::Numeric */
     __stack0_0->Numeric = __stack1_0;
 #line 45 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0010: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
 ///////////////////////////////////////
 // Virtual: Reduce
 
-int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* __this)
+int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* this__)
 {
     //-------------------
     // Local variables:
@@ -346,16 +346,16 @@ int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* __this)
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_NumericNode** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
     __executionFrame__.p__stack0_0 = &__stack0_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -363,7 +363,7 @@ int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* __this)
 #line 48 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0002: ldfld System.Int32 UEFI.Code.NumericNode::Numeric */
     __stack0_1 = __stack0_0->Numeric;
     /* Path=1, Unique=0: IL_0007: stloc.0 */
@@ -375,7 +375,7 @@ IL_000a:
     /* Path=2, Unique=0: IL_000a: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000b: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return __stack0_1;
 }
 
@@ -384,7 +384,7 @@ IL_000a:
 
 static void __UEFI_Code_NumericNode_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
+    il2c_typeof(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_NumericNode_TYPE_DEF_TYPE__ __UEFI_Code_NumericNode_RUNTIME_TYPE_DEF__ = {
@@ -397,8 +397,8 @@ static __UEFI_Code_NumericNode_TYPE_DEF_TYPE__ __UEFI_Code_NumericNode_RUNTIME_T
     __System_Object_Equals__,
     __UEFI_Code_NumericNode_Reduce__,
 };
-const __RUNTIME_TYPE__ __UEFI_Code_NumericNode_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__UEFI_Code_NumericNode_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __UEFI_Code_NumericNode_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__UEFI_Code_NumericNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.ExpressionNode
@@ -406,7 +406,7 @@ const __RUNTIME_TYPE__ __UEFI_Code_NumericNode_RUNTIME_TYPE__ =
 ///////////////////////////////////////
 // .ctor
 
-void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* __this, UEFI_Code_OperatorNode* oper, UEFI_Code_ReducibleNode* left, UEFI_Code_ReducibleNode* right, int32_t nextIndex)
+void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* this__, UEFI_Code_OperatorNode* oper, UEFI_Code_ReducibleNode* left, UEFI_Code_ReducibleNode* right, int32_t nextIndex)
 {
     //-------------------
     // Local variables:
@@ -423,9 +423,9 @@ void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* __this, UEFI_Code_
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_ExpressionNode** p__stack0_0;
         UEFI_Code_OperatorNode** p__stack1_1;
@@ -436,14 +436,14 @@ void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* __this, UEFI_Code_
     __executionFrame__.p__stack0_0 = &__stack0_0;
     __executionFrame__.p__stack1_1 = &__stack1_1;
     __executionFrame__.p__stack1_2 = &__stack1_2;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
 #line 59 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.s nextIndex */
     __stack1_0 = nextIndex;
     /* Path=1, Unique=0: IL_0003: call System.Void UEFI.Code.ReducibleNode::.ctor(System.Int32) */
@@ -452,35 +452,35 @@ void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* __this, UEFI_Code_
 #line 60 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0009: nop */
     /* Path=1, Unique=0: IL_000a: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_000b: ldarg.1 */
     __stack1_1 = oper;
     /* Path=1, Unique=0: IL_000c: stfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     __stack0_0->Operator = __stack1_1;
 #line 62 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0011: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0012: ldarg.2 */
     __stack1_2 = left;
     /* Path=1, Unique=0: IL_0013: stfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Left */
     __stack0_0->Left = __stack1_2;
 #line 63 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0018: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0019: ldarg.3 */
     __stack1_2 = right;
     /* Path=1, Unique=0: IL_001a: stfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Right */
     __stack0_0->Right = __stack1_2;
 #line 64 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_001f: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
 ///////////////////////////////////////
 // Virtual: Reduce
 
-int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this)
+int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* this__)
 {
     //-------------------
     // Local variables:
@@ -505,9 +505,9 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this)
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_ExpressionNode** p__stack0_0;
         UEFI_Code_ReducibleNode** p__stack0_1;
@@ -518,7 +518,7 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this)
     __executionFrame__.p__stack0_0 = &__stack0_0;
     __executionFrame__.p__stack0_1 = &__stack0_1;
     __executionFrame__.p__stack0_3 = &__stack0_3;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -526,7 +526,7 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this)
 #line 67 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0002: ldfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Left */
     __stack0_1 = __stack0_0->Left;
     /* Path=1, Unique=0: IL_0007: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
@@ -535,7 +535,7 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this)
     local0 = __stack0_2;
 #line 69 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_000d: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_000e: ldfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Right */
     __stack0_1 = __stack0_0->Right;
     /* Path=1, Unique=0: IL_0013: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
@@ -544,7 +544,7 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this)
     local1 = __stack0_2;
 #line 70 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0019: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_001a: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     __stack0_3 = __stack0_0->Operator;
     /* Path=1, Unique=0: IL_001f: ldfld System.Char UEFI.Code.OperatorNode::Operator */
@@ -574,7 +574,7 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this)
 IL_0033:
 #line 74 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0033: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=2, Unique=0: IL_0034: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     __stack0_3 = __stack0_0->Operator;
     /* Path=2, Unique=0: IL_0039: ldfld System.Char UEFI.Code.OperatorNode::Operator */
@@ -604,7 +604,7 @@ IL_0033:
 IL_004f:
 #line 78 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_004f: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=4, Unique=0: IL_0050: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     __stack0_3 = __stack0_0->Operator;
     /* Path=4, Unique=0: IL_0055: ldfld System.Char UEFI.Code.OperatorNode::Operator */
@@ -634,7 +634,7 @@ IL_004f:
 IL_006b:
 #line 82 "D:\\PROJECT\\IL2C\\tests\\UEFI\\UEFI.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_006b: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=5, Unique=0: IL_006c: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     __stack0_3 = __stack0_0->Operator;
     /* Path=5, Unique=0: IL_0071: ldfld System.Char UEFI.Code.OperatorNode::Operator */
@@ -674,7 +674,7 @@ IL_008b:
     /* Path=3, Unique=0: IL_008b: ldloc.3 */
     __stack0_2 = local3;
     /* Path=3, Unique=0: IL_008c: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return __stack0_2;
 }
 
@@ -683,10 +683,10 @@ IL_008b:
 
 static void __UEFI_Code_ExpressionNode_MARK_HANDLER__(void* pReference)
 {
-    __TRY_MARK_FROM_HANDLER__(((UEFI_Code_ExpressionNode*)pReference)->Operator);
-    __TRY_MARK_FROM_HANDLER__(((UEFI_Code_ExpressionNode*)pReference)->Left);
-    __TRY_MARK_FROM_HANDLER__(((UEFI_Code_ExpressionNode*)pReference)->Right);
-    __typeof__(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
+    il2c_try_mark_from_handler(((UEFI_Code_ExpressionNode*)pReference)->Operator);
+    il2c_try_mark_from_handler(((UEFI_Code_ExpressionNode*)pReference)->Left);
+    il2c_try_mark_from_handler(((UEFI_Code_ExpressionNode*)pReference)->Right);
+    il2c_typeof(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__ __UEFI_Code_ExpressionNode_RUNTIME_TYPE_DEF__ = {
@@ -699,8 +699,8 @@ static __UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__ __UEFI_Code_ExpressionNode_RUN
     __System_Object_Equals__,
     __UEFI_Code_ExpressionNode_Reduce__,
 };
-const __RUNTIME_TYPE__ __UEFI_Code_ExpressionNode_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__UEFI_Code_ExpressionNode_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __UEFI_Code_ExpressionNode_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__UEFI_Code_ExpressionNode_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: UEFI.Code.PolishNotation
@@ -732,9 +732,9 @@ int32_t UEFI_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t sta
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         System_String** p__stack0_1;
         System_String** p__stack1_0;
@@ -743,7 +743,7 @@ int32_t UEFI_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t sta
     __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_1 = &__stack0_1;
     __executionFrame__.p__stack1_0 = &__stack1_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -840,7 +840,7 @@ IL_003c:
     /* Path=4, Unique=0: IL_003c: ldloc.s local4 */
     __stack0_0 = local4;
     /* Path=4, Unique=0: IL_003e: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return __stack0_0;
 }
 
@@ -873,9 +873,9 @@ UEFI_Code_OperatorNode* UEFI_Code_PolishNotation_ParseOperator(System_String* li
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_OperatorNode** plocal3;
         IL2C_CecilHelper_PseudoZeroType** p__stack0_1;
@@ -890,7 +890,7 @@ UEFI_Code_OperatorNode* UEFI_Code_PolishNotation_ParseOperator(System_String* li
     __executionFrame__.p__stack0_2 = &__stack0_2;
     __executionFrame__.p__stack0_4 = &__stack0_4;
     __executionFrame__.p__stack1_0 = &__stack1_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -1012,7 +1012,7 @@ IL_0045:
     /* Path=5, Unique=0: IL_0052: ldloc.0 */
     __stack1_2 = local0;
     /* Path=5, Unique=0: IL_0053: newobj System.Void UEFI.Code.OperatorNode::.ctor(System.Char,System.Int32) */
-    __stack0_4 = __gc_get_uninitialized_object__(__typeof__(UEFI_Code_OperatorNode));
+    __stack0_4 = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_OperatorNode));
     UEFI_Code_OperatorNode__ctor(__stack0_4, (wchar_t)__stack0_0, __stack1_2);
     /* Path=5, Unique=0: IL_0058: stloc.3 */
     local3 = __stack0_4;
@@ -1023,7 +1023,7 @@ IL_005b:
     /* Path=3, Unique=0: IL_005b: ldloc.3 */
     __stack0_4 = local3;
     /* Path=3, Unique=0: IL_005c: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return __stack0_4;
 }
 
@@ -1065,9 +1065,9 @@ UEFI_Code_NumericNode* UEFI_Code_PolishNotation_ParseNumeric(System_String* line
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         System_String** plocal1;
         UEFI_Code_NumericNode** plocal4;
@@ -1088,7 +1088,7 @@ UEFI_Code_NumericNode* UEFI_Code_PolishNotation_ParseNumeric(System_String* line
     __executionFrame__.p__stack0_5 = &__stack0_5;
     __executionFrame__.p__stack1_0 = &__stack1_0;
     __executionFrame__.p__stack1_3 = &__stack1_3;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -1263,7 +1263,7 @@ IL_007a:
     /* Path=8, Unique=0: IL_0083: ldloc.0 */
     __stack1_2 = local0;
     /* Path=8, Unique=0: IL_0084: newobj System.Void UEFI.Code.NumericNode::.ctor(System.Int32,System.Int32) */
-    __stack0_2 = __gc_get_uninitialized_object__(__typeof__(UEFI_Code_NumericNode));
+    __stack0_2 = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_NumericNode));
     UEFI_Code_NumericNode__ctor(__stack0_2, __stack0_0, __stack1_2);
     /* Path=8, Unique=0: IL_0089: stloc.s local4 */
     local4 = __stack0_2;
@@ -1274,7 +1274,7 @@ IL_008d:
     /* Path=3, Unique=0: IL_008d: ldloc.s local4 */
     __stack0_2 = local4;
     /* Path=3, Unique=0: IL_008f: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return __stack0_2;
 }
 
@@ -1320,9 +1320,9 @@ UEFI_Code_ExpressionNode* UEFI_Code_PolishNotation_ParseExpression(System_String
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_OperatorNode** plocal0;
         UEFI_Code_ReducibleNode** plocal1;
@@ -1357,7 +1357,7 @@ UEFI_Code_ExpressionNode* UEFI_Code_PolishNotation_ParseExpression(System_String
     __executionFrame__.p__stack1_4 = &__stack1_4;
     __executionFrame__.p__stack1_5 = &__stack1_5;
     __executionFrame__.p__stack2_0 = &__stack2_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -1563,7 +1563,7 @@ IL_00a3:
     /* Path=7, Unique=0: IL_00b3: ldloc.3 */
     __stack3_0 = local3;
     /* Path=7, Unique=0: IL_00b4: newobj System.Void UEFI.Code.ExpressionNode::.ctor(UEFI.Code.OperatorNode,UEFI.Code.ReducibleNode,UEFI.Code.ReducibleNode,System.Int32) */
-    __stack0_4 = __gc_get_uninitialized_object__(__typeof__(UEFI_Code_ExpressionNode));
+    __stack0_4 = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_ExpressionNode));
     UEFI_Code_ExpressionNode__ctor(__stack0_4, __stack0_3, __stack1_5, __stack2_0, __stack3_0);
     /* Path=7, Unique=0: IL_00b9: stloc.s local5 */
     local5 = __stack0_4;
@@ -1574,7 +1574,7 @@ IL_00bd:
     /* Path=3, Unique=0: IL_00bd: ldloc.s local5 */
     __stack0_4 = local5;
     /* Path=3, Unique=0: IL_00bf: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return __stack0_4;
 }
 
@@ -1605,9 +1605,9 @@ void UEFI_Code_PolishNotation_Main(void)
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         System_String** plocal0;
         UEFI_Code_ExpressionNode** plocal2;
@@ -1622,7 +1622,7 @@ void UEFI_Code_PolishNotation_Main(void)
     __executionFrame__.p__stack0_1 = &__stack0_1;
     __executionFrame__.p__stack0_2 = &__stack0_2;
     __executionFrame__.p__stack1_1 = &__stack1_1;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -1732,7 +1732,7 @@ IL_0064:
 ///////////////////////////////////////
 // .ctor
 
-void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* __this)
+void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* this__)
 {
     //-------------------
     // Local variables:
@@ -1746,27 +1746,27 @@ void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* __this)
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         UEFI_Code_PolishNotation** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
     __executionFrame__.p__stack0_0 = &__stack0_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
@@ -1775,7 +1775,7 @@ void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* __this)
 
 static void __UEFI_Code_PolishNotation_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(System_Object)->pMarkHandler(pReference);
+    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_PolishNotation_TYPE_DEF_TYPE__ __UEFI_Code_PolishNotation_RUNTIME_TYPE_DEF__ = {
@@ -1787,5 +1787,5 @@ static __UEFI_Code_PolishNotation_TYPE_DEF_TYPE__ __UEFI_Code_PolishNotation_RUN
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
-const __RUNTIME_TYPE__ __UEFI_Code_PolishNotation_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__UEFI_Code_PolishNotation_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __UEFI_Code_PolishNotation_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__UEFI_Code_PolishNotation_RUNTIME_TYPE_DEF__);

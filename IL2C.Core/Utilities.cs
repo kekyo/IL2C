@@ -120,7 +120,7 @@ namespace IL2C
                 var thisType = type.IsValueType ? type.MakeByReferenceType() : type;
                 parameters = new[]
                     {
-                        new Parameter("__this", thisType)
+                        new Parameter("this__", thisType)
                     }
                     .Concat(parameters);
             }
@@ -132,7 +132,7 @@ namespace IL2C
         {
             if (parameter.ParameterType.IsStringType())
             {
-                return string.Format("{0}->pBody", parameter.Name);
+                return string.Format("{0}->string_body__", parameter.Name);
             }
             else
             {

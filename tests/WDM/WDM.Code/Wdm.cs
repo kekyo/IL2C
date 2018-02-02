@@ -5,11 +5,20 @@ namespace WDM.Code
 {
     public class Wdm
     {
-        [DllImport("wdm.h", EntryPoint = "DbgPrint")]
-        public static extern void DbgPrint(string message);
+#if true
+        public static void DbgPrint(string message)
+        {
+        }
 
+        public static void DbgPrint(uint componentId, uint level, string message)
+        {
+        }
+#else
+        [DllImport("wdm.h", EntryPoint = "DbgPrint")]
+        public static extern void DbgPrint([MarshalAs(UnmanagedType.LPStr)] string message);
         [DllImport("wdm.h", EntryPoint = "DbgPrintEx")]
-        public static extern void DbgPrint(uint componentId, uint level, string message);
+        public static extern void DbgPrint(uint componentId, uint level, [MarshalAs(UnmanagedType.LPStr)] string message);
+#endif
 
         [DllImport("memmem.h", EntryPoint = "__memmem")]
         public static extern IntPtr memmem(IntPtr p1, int s1, IntPtr p2, int s2);

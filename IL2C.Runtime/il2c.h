@@ -18,39 +18,37 @@ typedef uint8_t interlock_t;
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
 
-typedef struct __EXECUTION_FRAME__ __EXECUTION_FRAME__;
-typedef struct __REF_HEADER__ __REF_HEADER__;
+typedef struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
+typedef struct IL2C_REF_HEADER IL2C_REF_HEADER;
 
-typedef void(*__MARK_HANDLER__)(void*);
+typedef void(*IL2C_MARK_HANDLER)(void*);
 
 typedef const struct
 {
     const char* pTypeName;
     uintptr_t bodySize;
-    __MARK_HANDLER__ pMarkHandler;
-} __RUNTIME_TYPE_DEF__;
+    IL2C_MARK_HANDLER pMarkHandler;
+} IL2C_RUNTIME_TYPE_DECL;
 
-typedef __RUNTIME_TYPE_DEF__* __RUNTIME_TYPE__;
+typedef IL2C_RUNTIME_TYPE_DECL* IL2C_RUNTIME_TYPE;
 
-struct __REF_HEADER__
+struct IL2C_REF_HEADER
 {
-    struct __REF_HEADER__* pNext;
-    __RUNTIME_TYPE__ type;
+    IL2C_REF_HEADER* pNext;
+    IL2C_RUNTIME_TYPE type;
     union
     {
         interlock_t gcMark;
-        intptr_t __dummy;
+        intptr_t reserved0__;
     };
 };
-
 
 /////////////////////////////////////////////////////////////
 // Runtime type information related declarations
 
-#define __typeof__(typeName) (__##typeName##_RUNTIME_TYPE__)
-#define __sizeof__(typeName) (__typeof__(typeName)->bodySize)
-
-#define __get_typedef__(__this) ((((__REF_HEADER__*)(__this)) - 1)->type)
+#define il2c_typeof(typeName) (__##typeName##_RUNTIME_TYPE__)
+#define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
+#define il2c_get_type(this__) ((((IL2C_REF_HEADER*)(this__)) - 1)->type)
 
 /////////////////////////////////////////////////////////////
 // System.Object
@@ -58,64 +56,64 @@ struct __REF_HEADER__
 typedef struct System_Object System_Object;
 typedef struct System_String System_String;
 
-static void System_Object__ctor(System_Object* __this)
+static void System_Object__ctor(System_Object* this__)
 {
 }
 
-extern System_String* __System_Object_ToString__(System_Object* __this);
-extern int32_t __System_Object_GetHashCode__(System_Object* __this);
-extern void __System_Object_Finalize__(System_Object* __this);
-extern bool __System_Object_Equals__(System_Object* __this, System_Object* obj);
+extern System_String* __System_Object_ToString__(System_Object* this__);
+extern int32_t __System_Object_GetHashCode__(System_Object* this__);
+extern void __System_Object_Finalize__(System_Object* this__);
+extern bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
 
-extern const __RUNTIME_TYPE__ __System_Object_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_Object_RUNTIME_TYPE__;
 
-#define System_Object_ToString(__this) ((__get_typedef__(__this)->pFunctions[0x00])(__this))
-#define System_Object_GetHashCode(__this) ((__get_typedef__(__this)->pFunctions[0x01])(__this))
-#define System_Object_Finalize(__this) ((__get_typedef__(__this)->pFunctions[0x02])(__this))
-#define System_Object_Equals(__this, obj) ((__get_typedef__(__this)->pFunctions[0x03])(__this, obj))
+#define System_Object_ToString(this__) ((il2c_get_type(this__)->pFunctions[0x00])(this__))
+#define System_Object_GetHashCode(this__) ((il2c_get_type(this__)->pFunctions[0x01])(this__))
+#define System_Object_Finalize(this__) ((il2c_get_type(this__)->pFunctions[0x02])(this__))
+#define System_Object_Equals(this__, obj) ((il2c_get_type(this__)->pFunctions[0x03])(this__, obj))
 
 /////////////////////////////////////////////////////////////
 // Garbage collector related declarations
 
-extern void __gc_initialize__();
-extern void __gc_shutdown__();
+extern void il2c_initialize();
+extern void il2c_shutdown();
 
-extern void __gc_collect__();
+extern void il2c_collect();
 
-extern void* __gc_get_uninitialized_object__(__RUNTIME_TYPE__ type);
+extern void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE type);
 
-extern void __gc_link_execution_frame__(/* __EXECUTION_FRAME__* */ void* pNewFrame);
-extern void __gc_unlink_execution_frame__(/* __EXECUTION_FRAME__* */ void* pFrame);
+extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pNewFrame);
+extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pFrame);
 
-extern void __gc_mark_from_handler__(void* pReference);
-#define __TRY_MARK_FROM_HANDLER__(pReference) \
-if ((pReference) != NULL) __gc_mark_from_handler__(pReference)
+extern void il2c_mark_from_handler(void* pReference);
+#define il2c_try_mark_from_handler(pReference) \
+    if ((pReference) != NULL) il2c_mark_from_handler(pReference)
 
 /////////////////////////////////////////////////////////////
 // System.ValueType
 
 typedef struct System_ValueType System_ValueType;
 
-static void System_ValueType__ctor(System_ValueType* __this)
+static void System_ValueType__ctor(System_ValueType* this__)
 {
 }
 
-extern System_String* __System_ValueType_ToString__(System_ValueType* __this);
-extern int32_t __System_ValueType_GetHashCode__(System_ValueType* __this);
-extern bool __System_ValueType_Equals__(System_ValueType* __this, System_Object* obj);
+extern System_String* __System_ValueType_ToString__(System_ValueType* this__);
+extern int32_t __System_ValueType_GetHashCode__(System_ValueType* this__);
+extern bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj);
 
-extern const __RUNTIME_TYPE__ __System_ValueType_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_ValueType_RUNTIME_TYPE__;
 
-#define System_Object_ToString(__this) ((__get_typedef__(__this)->pFunctions[0x00])(__this))
-#define System_Object_GetHashCode(__this) ((__get_typedef__(__this)->pFunctions[0x01])(__this))
-#define System_Object_Finalize(__this) ((__get_typedef__(__this)->pFunctions[0x02])(__this))
-#define System_Object_Equals(__this, obj) ((__get_typedef__(__this)->pFunctions[0x03])(__this, obj))
+#define System_ValueType_ToString(this__) System_Object_ToString(this__)
+#define System_ValueType_GetHashCode(this__) System_Object_GetHashCode(this__)
+#define System_ValueType_Finalize(this__) System_Object_Finalize(this__)
+#define System_ValueType_Equals(this__, obj) System_Object_Equals(this__, obj)
 
 /////////////////////////////////////////////////////////////
 // Boxing related declarations
 
-extern System_Object* __box__(void* pValue, __RUNTIME_TYPE__ type);
-extern void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type);
+extern System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE type);
+extern void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE type);
 
 /////////////////////////////////////////////////////////////
 // Primitive types
@@ -123,31 +121,31 @@ extern void* __unbox__(System_Object* pObject, __RUNTIME_TYPE__ type);
 typedef System_Object IL2C_CecilHelper_PseudoZeroType;
 
 typedef intptr_t System_IntPtr;
-extern const __RUNTIME_TYPE__ __System_IntPtr_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_IntPtr_RUNTIME_TYPE__;
 
 typedef uint8_t System_Byte;
-extern const __RUNTIME_TYPE__ __System_Byte_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_Byte_RUNTIME_TYPE__;
 
 typedef int8_t System_SByte;
-extern const __RUNTIME_TYPE__ __System_SByte_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_SByte_RUNTIME_TYPE__;
 
 typedef int16_t System_Int16;
-extern const __RUNTIME_TYPE__ __System_Int16_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_Int16_RUNTIME_TYPE__;
 
 typedef uint16_t System_UInt16;
-extern const __RUNTIME_TYPE__ __System_UInt16_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_UInt16_RUNTIME_TYPE__;
 
 typedef int32_t System_Int32;
-extern const __RUNTIME_TYPE__ __System_Int32_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_Int32_RUNTIME_TYPE__;
 
 typedef uint32_t System_UInt32;
-extern const __RUNTIME_TYPE__ __System_UInt32_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_UInt32_RUNTIME_TYPE__;
 
 typedef int64_t System_Int64;
-extern const __RUNTIME_TYPE__ __System_Int64_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_Int64_RUNTIME_TYPE__;
 
 typedef uint64_t System_UInt64;
-extern const __RUNTIME_TYPE__ __System_UInt64_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __System_UInt64_RUNTIME_TYPE__;
 
 extern const System_IntPtr System_IntPtr_Zero;
 
@@ -168,33 +166,32 @@ extern bool System_Int32_TryParse(System_String* s, int32_t* result);
 
 struct System_String
 {
-    const wchar_t* pBody;
+    const wchar_t* string_body__;
 };
 
-extern const __RUNTIME_TYPE__ __System_String_RUNTIME_TYPE__;
+extern IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE_DEF__;
+extern const IL2C_RUNTIME_TYPE __System_String_RUNTIME_TYPE__;
 
-// Binary layout compatible: __REF_HEADER__ + System_String.
-typedef struct __CONST_STRING__
+// Binary layout compatible: IL2C_REF_HEADER + System_String.
+typedef struct
 {
-    const void* _0;
-    const __RUNTIME_TYPE__ __stringType;
-    const interlock_t _1;
-    const wchar_t* __pBody;
-} __CONST_STRING__;
+    const void* reserved0__;              /* IL2C_REF_HEADER* */
+    const IL2C_RUNTIME_TYPE stringType__; /* IL2C_RUNTIME_TYPE */
+    const intptr_t reserved1__;           /* interlock_t */
+    const wchar_t* string_body__;
+} IL2C_CONST_STRING_DECL;
 
-extern __RUNTIME_TYPE_DEF__ __System_String_RUNTIME_TYPE_DEF__;
+#define IL2C_CONST_STRING(name, string_body) \
+    static IL2C_CONST_STRING_DECL __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, string_body }; \
+    static System_String* const name = ((System_String*)&(__##name##_const_string__.string_body__))
 
-#define __DEFINE_CONST_STRING__(name, pBody) \
-static __CONST_STRING__ __##name##_const_string__ = { NULL, &__System_String_RUNTIME_TYPE_DEF__, 0, pBody }; \
-static System_String* const name = ((System_String*)&(__##name##_const_string__.__pBody))
-
-extern System_String* __new_string__(const wchar_t* pString);
+extern System_String* il2c_new_string(const wchar_t* pString);
 
 extern System_String* System_String_Concat_6(System_String* str0, System_String* str1);
-extern System_String* System_String_Substring(System_String* __this, int32_t startIndex);
-extern System_String* System_String_Substring_1(System_String* __this, int32_t startIndex, int32_t length);
-extern wchar_t System_String_get_Chars(System_String* __this, int32_t index);
-extern int32_t System_String_get_Length(System_String* __this);
+extern System_String* System_String_Substring(System_String* this__, int32_t startIndex);
+extern System_String* System_String_Substring_1(System_String* this__, int32_t startIndex, int32_t length);
+extern wchar_t System_String_get_Chars(System_String* this__, int32_t index);
+extern int32_t System_String_get_Length(System_String* this__);
 extern bool System_String_IsNullOrWhiteSpace(System_String* value);
 
 /////////////////////////////////////////////////////////////

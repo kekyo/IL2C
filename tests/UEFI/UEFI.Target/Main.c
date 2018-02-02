@@ -200,11 +200,11 @@ EFI_STATUS EfiMain(
     // Clear screen
     g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
 
-    __gc_initialize__();
+    il2c_initialize();
 
     UEFI_Code_PolishNotation_Main();
 
-    __gc_shutdown__();
+    il2c_shutdown();
 
     return 0;
 }

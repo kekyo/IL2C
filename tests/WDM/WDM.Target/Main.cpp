@@ -11,8 +11,8 @@ static const char* pTo = "BABELBABEL";
 
 typedef struct WDM_Code_DeviceExtension
 {
-    // DIRTY HACK: __EXECUTION_FRAME__
-    __EXECUTION_FRAME__* pNext;
+    // DIRTY HACK: IL2C_EXECUTION_FRAME
+    IL2C_EXECUTION_FRAME* pNext;
     uint8_t targetCount;
     WDM_Code_InterceptCDRomDevice** ppInterceptCDRomDevice;
 
@@ -133,11 +133,11 @@ static NTSTATUS WDM_Code_AddDevice(
     pDeviceExtension->targetCount = 1;
     pDeviceExtension->ppInterceptCDRomDevice =
         &pDeviceExtension->pInterceptCDRomDevice;
-    __gc_link_execution_frame__(pDeviceExtension);
+    il2c_link_execution_frame(pDeviceExtension);
 
     // new InterceptCDRomDevice();
     pDeviceExtension->pInterceptCDRomDevice = static_cast<WDM_Code_InterceptCDRomDevice*>(
-        __gc_get_uninitialized_object__(__typeof__(WDM_Code_InterceptCDRomDevice)));
+        il2c_get_uninitialized_object(il2c_typeof(WDM_Code_InterceptCDRomDevice)));
     WDM_Code_InterceptCDRomDevice__ctor(
         pDeviceExtension->pInterceptCDRomDevice,
         reinterpret_cast<intptr_t>(pFrom),
@@ -169,7 +169,7 @@ static void WDM_Code_Unload(DRIVER_OBJECT* pDriverObject)
 {
     PAGED_CODE();
 
-    __gc_shutdown__();
+    il2c_shutdown();
 }
 
 extern "C" NTSTATUS DriverEntry(
@@ -184,7 +184,7 @@ extern "C" NTSTATUS DriverEntry(
 
     DbgPrint("WDM_Code: DriverEntry(): Path: %wZ\r\n", pRegistryPath);
 
-    __gc_initialize__();
+    il2c_initialize();
 
     pDriverObject->DriverExtension->AddDevice = WDM_Code_AddDevice;
     pDriverObject->DriverUnload = WDM_Code_Unload;

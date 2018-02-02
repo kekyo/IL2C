@@ -1,12 +1,11 @@
-﻿#include <wdm.h>
-#include <memmem.h>
+﻿#include <memmem.h>
 #include "WDM.Code.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 // Const strings:
 
-__DEFINE_CONST_STRING__(__string0, L"Hello driver constructor called!!\r\n");
-__DEFINE_CONST_STRING__(__string1, L"Draw BABEL!!\r\n");
+IL2C_CONST_STRING(__string0, L"Hello driver constructor called!!\r\n");
+IL2C_CONST_STRING(__string1, L"Draw BABEL!!\r\n");
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,7 +39,7 @@ extern "C" {
 ///////////////////////////////////////
 // .ctor
 
-void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this, intptr_t pFrom, intptr_t pTo, int32_t size)
+void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* this__, intptr_t pFrom, intptr_t pTo, int32_t size)
 {
     //-------------------
     // Local variables:
@@ -57,9 +56,9 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this, 
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         WDM_Code_InterceptCDRomDevice** p__stack0_0;
         System_String** p__stack0_1;
@@ -68,14 +67,14 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this, 
     __executionFrame__.targetCount = 2;
     __executionFrame__.p__stack0_0 = &__stack0_0;
     __executionFrame__.p__stack0_1 = &__stack0_1;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
 #line 11 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
@@ -89,35 +88,35 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* __this, 
     /* Path=1, Unique=0: IL_0012: nop */
 #line 15 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     /* Path=1, Unique=0: IL_0013: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0014: ldarg.1 */
     __stack1_0 = pFrom;
     /* Path=1, Unique=0: IL_0015: stfld System.IntPtr WDM.Code.InterceptCDRomDevice::pFrom */
     __stack0_0->pFrom = __stack1_0;
 #line 16 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     /* Path=1, Unique=0: IL_001a: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_001b: ldarg.2 */
     __stack1_0 = pTo;
     /* Path=1, Unique=0: IL_001c: stfld System.IntPtr WDM.Code.InterceptCDRomDevice::pTo */
     __stack0_0->pTo = __stack1_0;
 #line 17 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     /* Path=1, Unique=0: IL_0021: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0022: ldarg.3 */
     __stack1_1 = size;
     /* Path=1, Unique=0: IL_0023: stfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
     __stack0_0->size = __stack1_1;
 #line 18 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\InterceptCDRomDevice.cs"
     /* Path=1, Unique=0: IL_0028: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
 ///////////////////////////////////////
 // ReadCompleted
 
-uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* __this, intptr_t pBuffer, int32_t offset, int32_t size)
+uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* this__, intptr_t pBuffer, int32_t offset, int32_t size)
 {
     //-------------------
     // Local variables:
@@ -144,9 +143,9 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         System_String** p__stack0_2;
         WDM_Code_InterceptCDRomDevice** p__stack1_2;
@@ -159,7 +158,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     __executionFrame__.p__stack1_2 = &__stack1_2;
     __executionFrame__.p__stack2_0 = &__stack2_0;
     __executionFrame__.p__stack3_0 = &__stack3_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -175,11 +174,11 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     /* Path=1, Unique=0: IL_0008: ldarg.3 */
     __stack1_0 = size;
     /* Path=1, Unique=0: IL_0009: ldarg.0 */
-    __stack2_0 = __this;
+    __stack2_0 = this__;
     /* Path=1, Unique=0: IL_000a: ldfld System.IntPtr WDM.Code.InterceptCDRomDevice::pFrom */
     __stack2_1 = __stack2_0->pFrom;
     /* Path=1, Unique=0: IL_000f: ldarg.0 */
-    __stack3_0 = __this;
+    __stack3_0 = this__;
     /* Path=1, Unique=0: IL_0010: ldfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
     __stack3_1 = __stack3_0->size;
     /* Path=1, Unique=0: IL_0015: call System.IntPtr WDM.Code.Wdm::memmem(System.IntPtr,System.Int32,System.IntPtr,System.Int32) */
@@ -211,11 +210,11 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     /* Path=1, Unique=0: IL_0036: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0037: ldarg.0 */
-    __stack1_2 = __this;
+    __stack1_2 = this__;
     /* Path=1, Unique=0: IL_0038: ldfld System.IntPtr WDM.Code.InterceptCDRomDevice::pTo */
     __stack1_1 = __stack1_2->pTo;
     /* Path=1, Unique=0: IL_003d: ldarg.0 */
-    __stack2_0 = __this;
+    __stack2_0 = this__;
     /* Path=1, Unique=0: IL_003e: ldfld System.Int32 WDM.Code.InterceptCDRomDevice::size */
     __stack2_2 = __stack2_0->size;
     /* Path=1, Unique=0: IL_0043: call System.Void WDM.Code.Wdm::memcpy(System.IntPtr,System.IntPtr,System.Int32) */
@@ -235,7 +234,7 @@ IL_004e:
     /* Path=2, Unique=0: IL_004e: ldloc.2 */
     __stack0_1 = local2;
     /* Path=2, Unique=0: IL_004f: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return (uint32_t)__stack0_1;
 }
 
@@ -244,7 +243,7 @@ IL_004e:
 
 static void __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(System_Object)->pMarkHandler(pReference);
+    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __WDM_Code_InterceptCDRomDevice_TYPE_DEF_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__ = {
@@ -256,26 +255,54 @@ static __WDM_Code_InterceptCDRomDevice_TYPE_DEF_TYPE__ __WDM_Code_InterceptCDRom
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
-const __RUNTIME_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__);
 
 ////////////////////////////////////////////////////////////
 // Type: WDM.Code.Wdm
 
 ///////////////////////////////////////
-// P/Invoke: DbgPrint
+// DbgPrint
 
 void WDM_Code_Wdm_DbgPrint(System_String* message)
 {
-    DbgPrint(message->pBody);
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+
+    //-------------------
+    // IL body:
+
+#line 10 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\Wdm.cs"
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ret */
+    return;
 }
 
 ///////////////////////////////////////
-// P/Invoke: DbgPrint
+// DbgPrint
 
 void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message)
 {
-    DbgPrintEx(componentId, level, message->pBody);
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+
+    //-------------------
+    // IL body:
+
+#line 14 "D:\\PROJECT\\IL2C\\tests\\WDM\\WDM.Code\\Wdm.cs"
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ret */
+    return;
 }
 
 ///////////////////////////////////////
@@ -297,7 +324,7 @@ void WDM_Code_Wdm_memcpy(intptr_t pDest, intptr_t pSource, int32_t size)
 ///////////////////////////////////////
 // .ctor
 
-void WDM_Code_Wdm__ctor(WDM_Code_Wdm* __this)
+void WDM_Code_Wdm__ctor(WDM_Code_Wdm* this__)
 {
     //-------------------
     // Local variables:
@@ -311,27 +338,27 @@ void WDM_Code_Wdm__ctor(WDM_Code_Wdm* __this)
     //-------------------
     // Setup stack frame:
 
-    struct /* __EXECUTION_FRAME__ */
+    struct /* IL2C_EXECUTION_FRAME */
     {
-        __EXECUTION_FRAME__* pNext;
+        IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         WDM_Code_Wdm** p__stack0_0;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 1;
     __executionFrame__.p__stack0_0 = &__stack0_0;
-    __gc_link_execution_frame__(&__executionFrame__);
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
-    __stack0_0 = __this;
+    __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
-    __gc_unlink_execution_frame__(&__executionFrame__);
+    il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
 
@@ -340,7 +367,7 @@ void WDM_Code_Wdm__ctor(WDM_Code_Wdm* __this)
 
 static void __WDM_Code_Wdm_MARK_HANDLER__(void* pReference)
 {
-    __typeof__(System_Object)->pMarkHandler(pReference);
+    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __WDM_Code_Wdm_TYPE_DEF_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE_DEF__ = {
@@ -352,5 +379,5 @@ static __WDM_Code_Wdm_TYPE_DEF_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE_DEF__ = {
     __System_Object_Finalize__,
     __System_Object_Equals__,
 };
-const __RUNTIME_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE__ =
-   (const __RUNTIME_TYPE__)(&__WDM_Code_Wdm_RUNTIME_TYPE_DEF__);
+const IL2C_RUNTIME_TYPE __WDM_Code_Wdm_RUNTIME_TYPE__ =
+   (const IL2C_RUNTIME_TYPE)(&__WDM_Code_Wdm_RUNTIME_TYPE_DEF__);

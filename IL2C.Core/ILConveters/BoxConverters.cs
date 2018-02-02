@@ -30,7 +30,7 @@ namespace IL2C.ILConveters
             return _ =>
             {
                 return new[] { string.Format(
-                    "{0} = __box__(&{1}, __typeof__({2}))",
+                    "{0} = il2c_box(&{1}, il2c_typeof({2}))",
                     symbolName,
                     si.SymbolName,
                     si.TargetType.GetFullMemberName().ManglingSymbolName()) };
@@ -62,7 +62,7 @@ namespace IL2C.ILConveters
                 var typeName = extractContext.GetCLanguageTypeName(operand);
 
                 return new[] { string.Format(
-                    "{0} = *(({1}*)__unbox__({2}, __typeof__({3})))",
+                    "{0} = *(({1}*)il2c_unbox({2}, il2c_typeof({3})))",
                     symbolName,
                     typeName,
                     si.SymbolName,

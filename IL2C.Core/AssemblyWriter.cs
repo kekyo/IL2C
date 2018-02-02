@@ -70,7 +70,7 @@ namespace IL2C
             // Write mark handler:
             tw.WriteLine();
             var makrHandlerPrototype = string.Format(
-                "extern const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__;",
+                "extern const IL2C_RUNTIME_TYPE __{0}_RUNTIME_TYPE__;",
                 rawTypeName);
             tw.WriteLine(makrHandlerPrototype);
         }
@@ -172,7 +172,7 @@ namespace IL2C
                     tw.WriteLine("{");
                     Enumerable.Range(0, 3)
                         .ForEach(index => tw.WriteLine(
-                            "{0}intptr_t __reserved{1}__;",
+                            "{0}intptr_t reserved{1}__;",
                             indent,
                             index));
 
@@ -211,7 +211,7 @@ namespace IL2C
                             functionParameters);
 
                         tw.WriteLine(
-                            "{0}(((__{1}_TYPE_DEF_TYPE__*)(__get_typedef__(__this)))->{2}({3}))",
+                            "{0}(((__{1}_TYPE_DEF_TYPE__*)(il2c_get_type(this__)))->{2}({3}))",
                             indent,
                             typeName,
                             methodName,
@@ -302,9 +302,9 @@ namespace IL2C
                 tw.WriteLine("{0}// Setup stack frame:", indent);
                 tw.WriteLine();
 
-                tw.WriteLine("{0}struct /* __EXECUTION_FRAME__ */", indent);
+                tw.WriteLine("{0}struct /* IL2C_EXECUTION_FRAME */", indent);
                 tw.WriteLine("{0}{{", indent);
-                tw.WriteLine("{0}{0}__EXECUTION_FRAME__* pNext;", indent);
+                tw.WriteLine("{0}{0}IL2C_EXECUTION_FRAME* pNext;", indent);
                 tw.WriteLine("{0}{0}uint8_t targetCount;", indent);
 
                 frameEntries.ForEach(frameEntry =>
@@ -328,7 +328,7 @@ namespace IL2C
                         frameEntry.Name);
                 });
 
-                tw.WriteLine("{0}__gc_link_execution_frame__(&__executionFrame__);", indent);
+                tw.WriteLine("{0}il2c_link_execution_frame(&__executionFrame__);", indent);
             }
 
             tw.WriteLine();
@@ -388,7 +388,7 @@ namespace IL2C
                         && (frameEntries.Length >= 1))
                     {
                         tw.WriteLine(
-                            "{0}__gc_unlink_execution_frame__(&__executionFrame__);",
+                            "{0}il2c_unlink_execution_frame(&__executionFrame__);",
                             indent);
                     }
 
@@ -508,14 +508,14 @@ namespace IL2C
                 .ForEach(field =>
                 {
                     tw.WriteLine(
-                        "{0}__TRY_MARK_FROM_HANDLER__((({1}*)pReference)->{2});",
+                        "{0}il2c_try_mark_from_handler((({1}*)pReference)->{2});",
                         indent,
                         typeName,
                         field.Name);
                 });
 
             tw.WriteLine(
-                "{0}__typeof__({1})->pMarkHandler(pReference);",
+                "{0}il2c_typeof({1})->pMarkHandler(pReference);",
                 indent,
                 rawBaseTypeName);
             tw.WriteLine("}");
@@ -566,10 +566,10 @@ namespace IL2C
             tw.WriteLine("};");
 
             tw.WriteLine(
-                "const __RUNTIME_TYPE__ __{0}_RUNTIME_TYPE__ =",
+                "const IL2C_RUNTIME_TYPE __{0}_RUNTIME_TYPE__ =",
                 rawTypeName);
             tw.WriteLine(
-                "   (const __RUNTIME_TYPE__)(&__{0}_RUNTIME_TYPE_DEF__);",
+                "   (const IL2C_RUNTIME_TYPE)(&__{0}_RUNTIME_TYPE_DEF__);",
                 rawTypeName);
         }
 
@@ -698,7 +698,7 @@ namespace IL2C
                 {
                     var escaped = Utilities.GetEscapedCString(kv.Value);
                     twSource.WriteLine(
-                        "__DEFINE_CONST_STRING__({0}, L\"{1}\");",
+                        "IL2C_CONST_STRING({0}, L\"{1}\");",
                         kv.Key,
                         escaped);
                 });

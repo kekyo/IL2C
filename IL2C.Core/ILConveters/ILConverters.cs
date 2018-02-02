@@ -171,7 +171,7 @@ namespace IL2C.ILConveters
                         return new[]
                         {
                             string.Format(
-                                "{0} = __gc_get_uninitialized_object__(__typeof__({1}))",
+                                "{0} = il2c_get_uninitialized_object(il2c_typeof({1}))",
                                 thisSymbolName,
                                 dereferencedTypeName),
                             (overloadIndex >= 1)

@@ -19,7 +19,7 @@ void setup() {
   pinMode(WIOLTE_D38, OUTPUT);
   pinMode(WIOLTE_D39, INPUT);
 
-  __gc_initialize__();
+  il2c_initialize();
 }
 
 void loop() {
@@ -80,5 +80,5 @@ void loop() {
   
   WioLTE_Code_Arduino_Delay(INTERVAL);
 
-  __gc_collect__();
+  il2c_collect();
 }

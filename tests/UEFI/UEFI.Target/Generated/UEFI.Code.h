@@ -29,7 +29,7 @@ struct UEFI_Code_AbstractNode
     int32_t NextIndex;
 };
 
-extern const __RUNTIME_TYPE__ __UEFI_Code_AbstractNode_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __UEFI_Code_AbstractNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.OperatorNode
@@ -40,7 +40,7 @@ struct UEFI_Code_OperatorNode
     wchar_t Operator;
 };
 
-extern const __RUNTIME_TYPE__ __UEFI_Code_OperatorNode_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __UEFI_Code_OperatorNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.ReducibleNode
@@ -50,7 +50,7 @@ struct UEFI_Code_ReducibleNode
     int32_t NextIndex;
 };
 
-extern const __RUNTIME_TYPE__ __UEFI_Code_ReducibleNode_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __UEFI_Code_ReducibleNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.NumericNode
@@ -61,7 +61,7 @@ struct UEFI_Code_NumericNode
     int32_t Numeric;
 };
 
-extern const __RUNTIME_TYPE__ __UEFI_Code_NumericNode_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __UEFI_Code_NumericNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.ExpressionNode
@@ -74,13 +74,13 @@ struct UEFI_Code_ExpressionNode
     UEFI_Code_ReducibleNode* Right;
 };
 
-extern const __RUNTIME_TYPE__ __UEFI_Code_ExpressionNode_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __UEFI_Code_ExpressionNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.PolishNotation
 
 
-extern const __RUNTIME_TYPE__ __UEFI_Code_PolishNotation_RUNTIME_TYPE__;
+extern const IL2C_RUNTIME_TYPE __UEFI_Code_PolishNotation_RUNTIME_TYPE__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:
@@ -94,104 +94,104 @@ extern const __RUNTIME_TYPE__ __UEFI_Code_PolishNotation_RUNTIME_TYPE__;
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
 
-extern void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* __this, int32_t nextIndex);
+extern void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* this__, int32_t nextIndex);
 
 typedef const struct
 {
-    intptr_t __reserved0__;
-    intptr_t __reserved1__;
-    intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __UEFI_Code_AbstractNode_TYPE_DEF_TYPE__;
 
 
-extern void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* __this, wchar_t oper, int32_t nextIndex);
+extern void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* this__, wchar_t oper, int32_t nextIndex);
 
 typedef const struct
 {
-    intptr_t __reserved0__;
-    intptr_t __reserved1__;
-    intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __UEFI_Code_OperatorNode_TYPE_DEF_TYPE__;
 
 
-extern void UEFI_Code_ReducibleNode__ctor(UEFI_Code_ReducibleNode* __this, int32_t nextIndex);
-extern int32_t __UEFI_Code_ReducibleNode_Reduce__(UEFI_Code_ReducibleNode* __this);
+extern void UEFI_Code_ReducibleNode__ctor(UEFI_Code_ReducibleNode* this__, int32_t nextIndex);
+extern int32_t __UEFI_Code_ReducibleNode_Reduce__(UEFI_Code_ReducibleNode* this__);
 
 typedef const struct
 {
-    intptr_t __reserved0__;
-    intptr_t __reserved1__;
-    intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
-    int32_t (*Reduce)(UEFI_Code_ReducibleNode* __this);
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
+    int32_t (*Reduce)(UEFI_Code_ReducibleNode* this__);
 } __UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__;
 
-#define UEFI_Code_ReducibleNode_Reduce(__this) \
-    (((__UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__*)(__get_typedef__(__this)))->Reduce(__this))
+#define UEFI_Code_ReducibleNode_Reduce(this__) \
+    (((__UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__*)(il2c_get_type(this__)))->Reduce(this__))
 
-extern void UEFI_Code_NumericNode__ctor(UEFI_Code_NumericNode* __this, int32_t numeric, int32_t nextIndex);
-extern int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* __this);
+extern void UEFI_Code_NumericNode__ctor(UEFI_Code_NumericNode* this__, int32_t numeric, int32_t nextIndex);
+extern int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* this__);
 
 typedef const struct
 {
-    intptr_t __reserved0__;
-    intptr_t __reserved1__;
-    intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
-    int32_t (*Reduce)(UEFI_Code_NumericNode* __this);
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
+    int32_t (*Reduce)(UEFI_Code_NumericNode* this__);
 } __UEFI_Code_NumericNode_TYPE_DEF_TYPE__;
 
-#define UEFI_Code_NumericNode_Reduce(__this) \
-    (((__UEFI_Code_NumericNode_TYPE_DEF_TYPE__*)(__get_typedef__(__this)))->Reduce(__this))
+#define UEFI_Code_NumericNode_Reduce(this__) \
+    (((__UEFI_Code_NumericNode_TYPE_DEF_TYPE__*)(il2c_get_type(this__)))->Reduce(this__))
 
-extern void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* __this, UEFI_Code_OperatorNode* oper, UEFI_Code_ReducibleNode* left, UEFI_Code_ReducibleNode* right, int32_t nextIndex);
-extern int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* __this);
+extern void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* this__, UEFI_Code_OperatorNode* oper, UEFI_Code_ReducibleNode* left, UEFI_Code_ReducibleNode* right, int32_t nextIndex);
+extern int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* this__);
 
 typedef const struct
 {
-    intptr_t __reserved0__;
-    intptr_t __reserved1__;
-    intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
-    int32_t (*Reduce)(UEFI_Code_ExpressionNode* __this);
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
+    int32_t (*Reduce)(UEFI_Code_ExpressionNode* this__);
 } __UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__;
 
-#define UEFI_Code_ExpressionNode_Reduce(__this) \
-    (((__UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__*)(__get_typedef__(__this)))->Reduce(__this))
+#define UEFI_Code_ExpressionNode_Reduce(this__) \
+    (((__UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__*)(il2c_get_type(this__)))->Reduce(this__))
 
 extern int32_t UEFI_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t startIndex);
 extern UEFI_Code_OperatorNode* UEFI_Code_PolishNotation_ParseOperator(System_String* line, int32_t startIndex);
 extern UEFI_Code_NumericNode* UEFI_Code_PolishNotation_ParseNumeric(System_String* line, int32_t startIndex);
 extern UEFI_Code_ExpressionNode* UEFI_Code_PolishNotation_ParseExpression(System_String* line, int32_t startIndex);
 extern void UEFI_Code_PolishNotation_Main(void);
-extern void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* __this);
+extern void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* this__);
 
 typedef const struct
 {
-    intptr_t __reserved0__;
-    intptr_t __reserved1__;
-    intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __UEFI_Code_PolishNotation_TYPE_DEF_TYPE__;
 
 

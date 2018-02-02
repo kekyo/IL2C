@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
-using Mono.Cecil;
 
 namespace IL2C.ILConveters
 {

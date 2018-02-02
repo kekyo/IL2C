@@ -59,26 +59,26 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 #define GCMARK_NOMARK ((interlock_t)0)
 #define GCMARK_LIVE ((interlock_t)1)
 
-struct __EXECUTION_FRAME__
+struct IL2C_EXECUTION_FRAME
 {
-    struct __EXECUTION_FRAME__* pNext;
+    struct IL2C_EXECUTION_FRAME* pNext;
     uint8_t targetCount;
     void** pTargets[];      // We have to track object references.
 };
 
-typedef void(*__MARK_HANDLER__)(void*);
+typedef void(*IL2C_MARK_HANDLER)(void*);
 
-struct __REF_HEADER__
+struct IL2C_REF_HEADER
 {
-    struct __REF_HEADER__* pNext;
-    __MARK_HANDLER__ pMarkHandler;
+    struct IL2C_REF_HEADER* pNext;
+    IL2C_MARK_HANDLER pMarkHandler;
     interlock_t gcMark;
 };
 
 // TODO: Become store to thread local storage
-static __EXECUTION_FRAME__* g_pBeginFrame__ = NULL;
+static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
 
-static __REF_HEADER__* g_pBeginHeader__ = NULL;
+static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 
 // Part of "pNext".
 // HACK: Must arrange structure index to 0.
@@ -86,13 +86,13 @@ static const void* g_pTerminator = NULL;
 
 //////////////////////////
 
-void __gc_get_uninitialized_object__(
-    void** ppReference, uint16_t bodySize, __MARK_HANDLER__ pMarkHandler)
+void il2c_get_uninitialized_object(
+    void** ppReference, uint16_t bodySize, IL2C_MARK_HANDLER pMarkHandler)
 {
     assert(ppReference != NULL);
     assert(pMarkHandler != NULL);
 
-    __REF_HEADER__* pHeader = (__REF_HEADER__*)GCALLOC(sizeof(__REF_HEADER__) + bodySize);
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)GCALLOC(sizeof(IL2C_REF_HEADER) + bodySize);
     void* pReference = pHeader + 1;
     if (bodySize >= 1)
     {
@@ -104,18 +104,18 @@ void __gc_get_uninitialized_object__(
     pHeader->gcMark = GCMARK_NOMARK;
 
     // Very important link steps:
-    //   Because cause misread on purpose this instance is living by concurrent gc's.
+    //   Because cause misread on purpose this__ instance is living by concurrent gc's.
     *ppReference = pReference;
 
     // Safe link both headers.
     while (1)
     {
         // (1)
-        __REF_HEADER__* pNext = g_pBeginHeader__;
+        IL2C_REF_HEADER* pNext = g_pBeginHeader__;
         // (2)
         pHeader->pNext = pNext;
         // (3)
-        if ((__REF_HEADER__*)INTERLOCKED_COMPARE_EXCHANGE_POINTER(
+        if ((IL2C_REF_HEADER*)INTERLOCKED_COMPARE_EXCHANGE_POINTER(
             &g_pBeginHeader__,
             pHeader,
             pNext) == pNext)
@@ -127,11 +127,11 @@ void __gc_get_uninitialized_object__(
     assert(g_pTerminator == NULL);
 }
 
-void __gc_mark_from_handler__(void* pReference)
+void il2c_mark_from_handler(void* pReference)
 {
     assert(pReference != NULL);
 
-    __REF_HEADER__* pHeader = (__REF_HEADER__*)pReference - 1;
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)pReference - 1;
     interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
     if (currentMark == GCMARK_NOMARK)
     {
@@ -142,15 +142,15 @@ void __gc_mark_from_handler__(void* pReference)
 
 //////////////////////////
 
-void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
+void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
 {
     assert(pNewFrame != NULL);
 
-    ((__EXECUTION_FRAME__*)pNewFrame)->pNext = g_pBeginFrame__;
-    g_pBeginFrame__ = (__EXECUTION_FRAME__*)pNewFrame;
+    ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext = g_pBeginFrame__;
+    g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)pNewFrame;
 
 #ifdef _DEBUG
-    __EXECUTION_FRAME__* p = pNewFrame;
+    IL2C_EXECUTION_FRAME* p = pNewFrame;
     for (uint8_t index = 0; index < p->targetCount; index++)
     {
         assert(*p->pTargets[index] == NULL);
@@ -160,21 +160,21 @@ void __gc_link_execution_frame__(/* EXECUTION_FRAME__* */ void* pNewFrame)
     assert(g_pTerminator == NULL);
 }
 
-void __gc_unlink_execution_frame__(/* EXECUTION_FRAME__* */ void* pFrame)
+void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ void* pFrame)
 {
     assert(pFrame != NULL);
 
-    g_pBeginFrame__ = ((__EXECUTION_FRAME__*)pFrame)->pNext;
+    g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext;
 
     assert(g_pTerminator == NULL);
 }
 
 //////////////////////////
 
-void __gc_step1_clear_gcmark__()
+void il2c_step1_clear_gcmark__()
 {
     // Clear header marks.
-    __REF_HEADER__* pCurrentHeader = g_pBeginHeader__;
+    IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     assert(pCurrentHeader != NULL);
 
     while (pCurrentHeader != NULL)
@@ -184,10 +184,10 @@ void __gc_step1_clear_gcmark__()
     }
 }
 
-void __gc_step2_mark_gcmark__()
+void il2c_step2_mark_gcmark__()
 {
     // Mark headers.
-    __EXECUTION_FRAME__* pCurrentFrame = g_pBeginFrame__;
+    IL2C_EXECUTION_FRAME* pCurrentFrame = g_pBeginFrame__;
     while (pCurrentFrame != NULL)
     {
         // Traverse current frame.
@@ -203,7 +203,7 @@ void __gc_step2_mark_gcmark__()
             }
 
             // Marking process.
-            __REF_HEADER__* pHeader = (__REF_HEADER__*)*ppReference - 1;
+            IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)*ppReference - 1;
             interlock_t currentMark = INTERLOCKED_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE);
             if (currentMark == GCMARK_NOMARK)
             {
@@ -216,17 +216,17 @@ void __gc_step2_mark_gcmark__()
     }
 }
 
-void __gc_step3_sweep_garbage__()
+void il2c_step3_sweep_garbage__()
 {
     // Sweep garbage if gcmark isn't marked.
-    __REF_HEADER__** ppUnlinkTarget = &g_pBeginHeader__;
-    __REF_HEADER__* pCurrentHeader = g_pBeginHeader__;
+    IL2C_REF_HEADER** ppUnlinkTarget = &g_pBeginHeader__;
+    IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     while (pCurrentHeader != NULL)
     {
-        __REF_HEADER__* pNext = pCurrentHeader->pNext;
+        IL2C_REF_HEADER* pNext = pCurrentHeader->pNext;
         if (pCurrentHeader->gcMark != GCMARK_LIVE)
         {
-            // Very important link steps: because cause misread on purpose this instance is living.
+            // Very important link steps: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
 
             // Heap discarded
@@ -246,14 +246,14 @@ void __gc_step3_sweep_garbage__()
 
 //////////////////////////
 
-void __gc_collect__()
+void il2c_collect()
 {
-    __gc_step1_clear_gcmark__();
-    __gc_step2_mark_gcmark__();
-    __gc_step3_sweep_garbage__();
+    il2c_step1_clear_gcmark__();
+    il2c_step2_mark_gcmark__();
+    il2c_step3_sweep_garbage__();
 }
 
-void __gc_initialize__()
+void il2c_initialize()
 {
 #ifdef _WIN32
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
@@ -261,13 +261,13 @@ void __gc_initialize__()
 
     assert(g_pTerminator == NULL);
 
-    g_pBeginFrame__ = (__EXECUTION_FRAME__*)g_pTerminator;
-    g_pBeginHeader__ = (__REF_HEADER__*)g_pTerminator;
+    g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)g_pTerminator;
+    g_pBeginHeader__ = (IL2C_REF_HEADER*)g_pTerminator;
 }
 
-void __gc_shutdown__()
+void il2c_shutdown()
 {
-    __gc_collect__();
+    il2c_collect();
 
 #ifdef _WIN32
     _CrtDumpMemoryLeaks();
@@ -278,7 +278,7 @@ void __gc_shutdown__()
 
 void __System_Object_NEW__(System_Object** ppReference)
 {
-    __gc_get_uninitialized_object__(
+    il2c_get_uninitialized_object(
         (void**)ppReference, 0, __System_Object_MARK_HANDLER__);
     System_Object__ctor(*ppReference);
 }

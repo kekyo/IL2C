@@ -10,27 +10,27 @@ extern "C" {
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
 
-typedef struct __EXECUTION_FRAME__ __EXECUTION_FRAME__;
-typedef struct __REF_HEADER__ __REF_HEADER__;
-typedef void(*__MARK_HANDLER__)(void*);
+typedef struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
+typedef struct IL2C_REF_HEADER IL2C_REF_HEADER;
+typedef void(*IL2C_MARK_HANDLER)(void*);
 
 /////////////////////////////////////////////////////////////
 // Garbage collector related declarations
 
-extern void __gc_initialize__();
-extern void __gc_shutdown__();
+extern void il2c_initialize();
+extern void il2c_shutdown();
 
-extern void __gc_collect__();
+extern void il2c_collect();
 
-extern void __gc_get_uninitialized_object__(
-    void** ppReference, uint16_t bodySize, __MARK_HANDLER__ pMarkHandler);
+extern void il2c_get_uninitialized_object(
+    void** ppReference, uint16_t bodySize, IL2C_MARK_HANDLER pMarkHandler);
 
-extern void __gc_link_execution_frame__(/* __EXECUTION_FRAME__* */ void* pNewFrame);
-extern void __gc_unlink_execution_frame__(/* __EXECUTION_FRAME__* */ void* pFrame);
+extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pNewFrame);
+extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pFrame);
 
-extern void __gc_mark_from_handler__(void* pReference);
-#define __TRY_MARK_FROM_HANDLER__(pReference) \
-    if ((pReference) != NULL) __gc_mark_from_handler__(pReference)
+extern void il2c_mark_from_handler(void* pReference);
+#define il2c_try_mark_from_handler(pReference) \
+    if ((pReference) != NULL) il2c_mark_from_handler(pReference)
 
 /////////////////////////////////////////////////////////////
 // System.Object
@@ -38,7 +38,7 @@ extern void __gc_mark_from_handler__(void* pReference);
 typedef struct System_Object System_Object;
 #define __System_Object_SIZEOF__() (0)
 
-static void System_Object__ctor(System_Object* __this)
+static void System_Object__ctor(System_Object* this__)
 {
 }
 

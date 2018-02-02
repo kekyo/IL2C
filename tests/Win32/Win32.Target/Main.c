@@ -97,11 +97,11 @@ void WriteLineToError(const wchar_t* pMessage)
 
 #include "Generated/Win32.Code.h"
 
-__DEFINE_CONST_STRING__(hoge, L"Hoge\r\n");
+IL2C_CONST_STRING(hoge, L"Hoge\r\n");
 
 int main()
 {
-    __gc_initialize__();
+    il2c_initialize();
 
     Win32_Code_PolishNotation_Main();
 
@@ -118,7 +118,7 @@ int main()
             Win32_Code_StringTest_LiteralString();
 
             System_String* pString11 = Win32_Code_StringTest_LiteralSubstring();
-            printf("pString11 = %ls\r\n", pString11->pBody);
+            printf("pString11 = %ls\r\n", pString11->string_body__);
 
             wchar_t ch1 = Win32_Code_StringTest_GetChar();
             printf("ch1 = %lc\r\n", ch1);
@@ -127,12 +127,12 @@ int main()
             printf("ch2 = %lc\r\n", ch2);
 
             System_String* pString1 = Win32_Code_StringTest_InOutString(hoge);
-            printf("pString1 = %ls", pString1->pBody);
+            printf("pString1 = %ls", pString1->string_body__);
 
             Win32_Code_Win32_OutputDebugString(hoge);
 
             System_String* pString2 = Win32_Code_StringTest_LiteralCombinedString();
-            printf("pString2 = %ls\n", pString2->pBody);
+            printf("pString2 = %ls\n", pString2->string_body__);
 
             int32_t result6 = Win32_Code_ClassTypeTest_Test4();
             printf("result6 = %d\n", result6);
@@ -158,8 +158,8 @@ int main()
             printf("result2 = %d\n", result2);
         }
 
-        __gc_collect__();
+        il2c_collect();
     }
 
-    __gc_shutdown__();
+    il2c_shutdown();
 }

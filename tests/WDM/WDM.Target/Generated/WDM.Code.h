@@ -3,6 +3,7 @@
 
 #include <il2c.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 
 #ifdef __cplusplus
@@ -49,12 +50,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    System_String* (*ToString)(WDM_Code_InterceptCDRomDevice* this__);
+    int32_t (*GetHashCode)(WDM_Code_InterceptCDRomDevice* this__);
+    void (*Finalize)(WDM_Code_InterceptCDRomDevice* this__);
+    bool (*Equals)(WDM_Code_InterceptCDRomDevice* this__, System_Object* obj);
 } __WDM_Code_InterceptCDRomDevice_TYPE_DEF_TYPE__;
 
+#define WDM_Code_InterceptCDRomDevice_ToString(/* WDM_Code_InterceptCDRomDevice* */ this__) \
+    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->ToString(this__))
+#define WDM_Code_InterceptCDRomDevice_GetHashCode(/* WDM_Code_InterceptCDRomDevice* */ this__) \
+    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->GetHashCode(this__))
+#define WDM_Code_InterceptCDRomDevice_Finalize(/* WDM_Code_InterceptCDRomDevice* */ this__) \
+    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->Finalize(this__))
+#define WDM_Code_InterceptCDRomDevice_Equals(/* WDM_Code_InterceptCDRomDevice* */ this__, /* System_Object* */ obj) \
+    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->Equals(this__, obj))
 
 extern void WDM_Code_Wdm_DbgPrint(System_String* message);
 extern void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message);
@@ -67,12 +76,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    System_String* (*ToString)(WDM_Code_Wdm* this__);
+    int32_t (*GetHashCode)(WDM_Code_Wdm* this__);
+    void (*Finalize)(WDM_Code_Wdm* this__);
+    bool (*Equals)(WDM_Code_Wdm* this__, System_Object* obj);
 } __WDM_Code_Wdm_TYPE_DEF_TYPE__;
 
+#define WDM_Code_Wdm_ToString(/* WDM_Code_Wdm* */ this__) \
+    (il2c_get_vtable(WDM_Code_Wdm, this__)->ToString(this__))
+#define WDM_Code_Wdm_GetHashCode(/* WDM_Code_Wdm* */ this__) \
+    (il2c_get_vtable(WDM_Code_Wdm, this__)->GetHashCode(this__))
+#define WDM_Code_Wdm_Finalize(/* WDM_Code_Wdm* */ this__) \
+    (il2c_get_vtable(WDM_Code_Wdm, this__)->Finalize(this__))
+#define WDM_Code_Wdm_Equals(/* WDM_Code_Wdm* */ this__, /* System_Object* */ obj) \
+    (il2c_get_vtable(WDM_Code_Wdm, this__)->Equals(this__, obj))
 
 #ifdef __cplusplus
 }

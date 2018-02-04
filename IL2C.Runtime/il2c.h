@@ -53,7 +53,8 @@ struct IL2C_REF_HEADER
 
 #define il2c_typeof(typeName) (__##typeName##_RUNTIME_TYPE__)
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
-#define il2c_get_type(this__) ((((IL2C_REF_HEADER*)(this__)) - 1)->type)
+#define il2c_get_vtable(typeName, this__) \
+    ((__##typeName##_TYPE_DEF_TYPE__*)((((IL2C_REF_HEADER*)(this__)) - 1)->type))
 
 /////////////////////////////////////////////////////////////
 // System.Object
@@ -72,10 +73,25 @@ extern bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
 
 extern const IL2C_RUNTIME_TYPE __System_Object_RUNTIME_TYPE__;
 
-#define System_Object_ToString(this__) ((il2c_get_type(this__)->pFunctions[0x00])(this__))
-#define System_Object_GetHashCode(this__) ((il2c_get_type(this__)->pFunctions[0x01])(this__))
-#define System_Object_Finalize(this__) ((il2c_get_type(this__)->pFunctions[0x02])(this__))
-#define System_Object_Equals(this__, obj) ((il2c_get_type(this__)->pFunctions[0x03])(this__, obj))
+typedef const struct
+{
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_Object* this__);
+    int32_t(*GetHashCode)(System_Object* this__);
+    void(*Finalize)(System_Object* this__);
+    bool(*Equals)(System_Object* this__, System_Object* obj);
+} __System_Object_TYPE_DEF_TYPE__;
+
+#define System_Object_ToString(/* System_Object* */ this__) \
+    (il2c_get_vtable(System_Object, this__)->ToString(this__))
+#define System_Object_GetHashCode(/* System_Object* */ this__) \
+    (il2c_get_vtable(System_Object, this__)->GetHashCode(this__))
+#define System_Object_Finalize(/* System_Object* */ this__) \
+    (il2c_get_vtable(System_Object, this__)->Finalize(this__))
+#define System_Object_Equals(/* System_Object* */ this__, /* System_Object* */ obj) \
+    (il2c_get_vtable(System_Object, this__, obj)->Equals(this__, obj))
 
 /////////////////////////////////////////////////////////////
 // Garbage collector related declarations
@@ -109,10 +125,23 @@ extern bool __System_ValueType_Equals__(System_ValueType* this__, System_Object*
 
 extern const IL2C_RUNTIME_TYPE __System_ValueType_RUNTIME_TYPE__;
 
-#define System_ValueType_ToString(this__) System_Object_ToString(this__)
-#define System_ValueType_GetHashCode(this__) System_Object_GetHashCode(this__)
-#define System_ValueType_Finalize(this__) System_Object_Finalize(this__)
-#define System_ValueType_Equals(this__, obj) System_Object_Equals(this__, obj)
+typedef const struct
+{
+    intptr_t reserved0__;
+    intptr_t reserved1__;
+    intptr_t reserved2__;
+    System_String* (*ToString)(System_ValueType* this__);
+    int32_t(*GetHashCode)(System_ValueType* this__);
+    void(*Finalize)(System_Object* this__);
+    bool(*Equals)(System_ValueType* this__, System_Object* obj);
+} __System_ValueType_TYPE_DEF_TYPE__;
+
+#define System_ValueType_ToString(/* System_Object* */ this__) \
+    System_Object_ToString((System_Object*)this__)
+#define System_ValueType_GetHashCode(/* System_Object* */ this__) \
+    System_Object_GetHashCode((System_Object*)this__)
+#define System_ValueType_Equals(/* System_Object* */ this__, /* System_Object* */ obj) \
+    System_Object_Equals((System_Object*)this__, obj)
 
 /////////////////////////////////////////////////////////////
 // Boxing related declarations

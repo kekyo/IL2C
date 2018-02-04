@@ -181,6 +181,7 @@ namespace IL2C
                         var functionPrototype = Utilities.GetFunctionTypeString(
                             method.GetOverloadedMethodName().ManglingSymbolName(),
                             method.ReturnType,
+                            type,  // this
                             method.GetSafeParameters(),
                             extractContext);
 
@@ -195,23 +196,38 @@ namespace IL2C
                         typeName);
                     tw.WriteLine();
 
-                    virtualMethods
-                        .Where(method => method.DeclaringType.MemberEquals(type))
-                        .ForEach(method =>
+                    virtualMethods.ForEach(method =>
                     {
-                        var fullMethodName = method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName();
-                        var methodName = method.GetOverloadedMethodName().ManglingSymbolName();
-                        var functionParameters = string.Join(
+                        var fullMethodName = type
+                            .GetFullMemberName(method, MethodNameTypes.Index)
+                            .ManglingSymbolName();
+                        var functionParametersDeclaration = string.Join(
                             ", ",
-                            method.GetSafeParameters().Select(parameter => parameter.Name));
-
+                            method.GetSafeParameters()
+                                .Select((parameter, index) => (index == 0)
+                                    ? string.Format(
+                                        "/* {0} */ {1}",
+                                        extractContext.GetCLanguageTypeName(type),
+                                        parameter.Name)
+                                    : string.Format(
+                                        "/* {0} */ {1}",
+                                        extractContext.GetCLanguageTypeName(parameter.ParameterType),
+                                        parameter.Name)));
                         tw.WriteLine(
                             "#define {0}({1}) \\",
                             fullMethodName,
-                            functionParameters);
+                            functionParametersDeclaration);
+
+                        var methodName = method
+                            .GetOverloadedMethodName()
+                            .ManglingSymbolName();
+                        var functionParameters = string.Join(
+                            ", ",
+                            method.GetSafeParameters()
+                                .Select(parameter => parameter.Name));
 
                         tw.WriteLine(
-                            "{0}(((__{1}_TYPE_DEF_TYPE__*)(il2c_get_type(this__)))->{2}({3}))",
+                            "{0}(il2c_get_vtable({1}, this__)->{2}({3}))",
                             indent,
                             typeName,
                             methodName,

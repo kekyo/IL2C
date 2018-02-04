@@ -388,6 +388,22 @@ void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE type)
 /////////////////////////////////////////////////////////////
 // System.Object
 
+static void __Dummy_MARK_HANDLER__(void* pReference)
+{
+}
+
+static __System_Object_TYPE_DEF_TYPE__ __System_Object_RUNTIME_TYPE_DEF__ = {
+    (intptr_t)"System.Object",
+    (intptr_t)0,
+    (intptr_t)__Dummy_MARK_HANDLER__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__,
+};
+const IL2C_RUNTIME_TYPE __System_Object_RUNTIME_TYPE__ =
+    (const IL2C_RUNTIME_TYPE)(&__System_Object_RUNTIME_TYPE_DEF__);
+
 IL2C_CONST_STRING(System_Object_name, L"System.Object");
 System_String* __System_Object_ToString__(System_Object* this__)
 {
@@ -412,6 +428,18 @@ bool __System_Object_Equals__(System_Object* this__, System_Object* obj)
 /////////////////////////////////////////////////////////////
 // System.ValueType
 
+static __System_ValueType_TYPE_DEF_TYPE__ __System_ValueType_RUNTIME_TYPE_DEF__ = {
+    (intptr_t)"System.ValueType",
+    (intptr_t)0,
+    (intptr_t)__Dummy_MARK_HANDLER__,
+    __System_ValueType_ToString__,
+    __System_ValueType_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_ValueType_Equals__,
+};
+const IL2C_RUNTIME_TYPE __System_ValueType_RUNTIME_TYPE__ =
+    (const IL2C_RUNTIME_TYPE)(&__System_ValueType_RUNTIME_TYPE_DEF__);
+
 IL2C_CONST_STRING(System_ValueType_name, L"System.ValueType");
 System_String* __System_ValueType_ToString__(System_ValueType* this__)
 {
@@ -432,18 +460,6 @@ bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj)
 
 /////////////////////////////////////////////////////////////
 // Basic type informations
-
-static void __Dummy_MARK_HANDLER__(void* pReference)
-{
-}
-
-static IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE_DEF__ = {
-    "System.Object", 0, __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Object_RUNTIME_TYPE__ = &__System_Object_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE_DEF__ = {
-    "System.ValueType", 0, __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_ValueType_RUNTIME_TYPE__ = &__System_ValueType_RUNTIME_TYPE_DEF__;
 
 static IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE_DEF__ = {
     "System.IntPtr", sizeof(System_IntPtr), __Dummy_MARK_HANDLER__ };

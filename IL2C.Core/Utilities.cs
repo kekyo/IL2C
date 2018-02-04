@@ -180,14 +180,17 @@ namespace IL2C
         public static string GetFunctionTypeString(
             string methodName,
             TypeReference returnType,
+            TypeReference parameter0Type,
             Parameter[] parameters,
             IExtractContext extractContext)
         {
             var parametersString = string.Join(
                 ", ",
-                parameters.Select(parameter => string.Format(
+                parameters.Select((parameter, index) => string.Format(
                     "{0} {1}",
-                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
+                    (index == 0)
+                        ? extractContext.GetCLanguageTypeName(parameter0Type)
+                        : extractContext.GetCLanguageTypeName(parameter.ParameterType),
                     parameter.Name)));
 
             var returnTypeName =

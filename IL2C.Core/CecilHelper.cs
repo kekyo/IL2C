@@ -212,22 +212,9 @@ namespace IL2C
         }
 
         public static string GetFullMemberName(
-            this MemberReference member, MethodNameTypes nameType = MethodNameTypes.Nothing)
+            this TypeReference type, MemberReference member, MethodNameTypes nameType = MethodNameTypes.Nothing)
         {
-            if (member.DeclaringType == null)
-            {
-                var type = member as TypeReference;
-                if (type != null)
-                {
-                    return type.FullName;
-                }
-                else
-                {
-                    return member.Name;
-                }
-            }
-
-            var declaringTypes = member.DeclaringType
+            var declaringTypes = type
                 .Traverse(current => current.DeclaringType)
                 .Reverse()
                 .ToArray();
@@ -283,6 +270,27 @@ namespace IL2C
                 namespaceName,
                 string.Join(".", declaringTypes.Select(dt => dt.Name)),
                 member.Name);
+        }
+
+        public static string GetFullMemberName(
+            this MemberReference member, MethodNameTypes nameType = MethodNameTypes.Nothing)
+        {
+            if (member.DeclaringType == null)
+            {
+                var type = member as TypeReference;
+                if (type != null)
+                {
+                    return type.FullName;
+                }
+                else
+                {
+                    return member.Name;
+                }
+            }
+            else
+            {
+                return GetFullMemberName(member.DeclaringType, member, nameType);
+            }
         }
 
         public static string GetOverloadedMethodName(this MethodReference method)

@@ -229,6 +229,7 @@ extern System_String* System_String_Substring_1(System_String* this__, int32_t s
 extern wchar_t System_String_get_Chars(System_String* this__, int32_t index);
 extern int32_t System_String_get_Length(System_String* this__);
 extern bool System_String_IsNullOrWhiteSpace(System_String* value);
+extern bool System_String_op_Equality(System_String* lhs, System_String* rhs);
 
 /////////////////////////////////////////////////////////////
 // System.Console

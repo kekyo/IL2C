@@ -657,6 +657,18 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
     }
 }
 
+bool System_String_op_Equality(System_String* lhs, System_String* rhs)
+{
+    // TODO: ArgumentNullException
+    GCASSERT(lhs != NULL);
+    GCASSERT(rhs != NULL);
+
+    GCASSERT(lhs->string_body__ != NULL);
+    GCASSERT(rhs->string_body__ != NULL);
+
+    return wcscmp(lhs->string_body__, rhs->string_body__) == 0;
+}
+
 /////////////////////////////////////////////////////////////
 // System.Console
 

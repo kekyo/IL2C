@@ -103,8 +103,10 @@ int main()
 {
     il2c_initialize();
 
+#if true
     Win32_Code_PolishNotation_Main();
 
+#else
     Win32_Code_InheritTypeTest_Test1();
     Win32_Code_InheritTypeTest_Test2();
     Win32_Code_InheritTypeTest_Test3();
@@ -160,6 +162,7 @@ int main()
 
         il2c_collect();
     }
+#endif
 
     il2c_shutdown();
 }

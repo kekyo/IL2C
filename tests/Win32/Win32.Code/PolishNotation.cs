@@ -205,6 +205,11 @@ namespace Win32.Code
                 var line = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(line) == false)
                 {
+                    if (line == "exit")
+                    {
+                        return;
+                    }
+
                     var expr = ParseExpression(line, 0);
                     if (expr == null)
                     {

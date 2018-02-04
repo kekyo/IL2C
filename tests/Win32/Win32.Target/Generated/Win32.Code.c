@@ -5,11 +5,12 @@
 // Const strings:
 
 IL2C_CONST_STRING(__string0, L"PN> ");
-IL2C_CONST_STRING(__string1, L"Syntax error.");
-IL2C_CONST_STRING(__string2, L"Reuslt=");
-IL2C_CONST_STRING(__string3, L"ABC");
-IL2C_CONST_STRING(__string4, L"DEF");
-IL2C_CONST_STRING(__string5, L"ABCDEFGHIJKLMN");
+IL2C_CONST_STRING(__string1, L"exit");
+IL2C_CONST_STRING(__string2, L"Syntax error.");
+IL2C_CONST_STRING(__string3, L"Reuslt=");
+IL2C_CONST_STRING(__string4, L"ABC");
+IL2C_CONST_STRING(__string5, L"DEF");
+IL2C_CONST_STRING(__string6, L"ABCDEFGHIJKLMN");
 
 #ifdef __cplusplus
 extern "C" {
@@ -3599,6 +3600,7 @@ void Win32_Code_PolishNotation_Main(void)
     int32_t local3;
     bool local4;
     bool local5;
+    bool local6;
 
     //-------------------
     // Evaluation stacks:
@@ -3607,7 +3609,8 @@ void Win32_Code_PolishNotation_Main(void)
     System_String* __stack0_1 = NULL;
     Win32_Code_ExpressionNode* __stack0_2 = NULL;
     int32_t __stack1_0;
-    IL2C_CecilHelper_PseudoZeroType* __stack1_1 = NULL;
+    System_String* __stack1_1 = NULL;
+    IL2C_CecilHelper_PseudoZeroType* __stack1_2 = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -3620,15 +3623,17 @@ void Win32_Code_PolishNotation_Main(void)
         Win32_Code_ExpressionNode** plocal2;
         System_String** p__stack0_1;
         Win32_Code_ExpressionNode** p__stack0_2;
-        IL2C_CecilHelper_PseudoZeroType** p__stack1_1;
+        System_String** p__stack1_1;
+        IL2C_CecilHelper_PseudoZeroType** p__stack1_2;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 5;
+    __executionFrame__.targetCount = 6;
     __executionFrame__.plocal0 = &local0;
     __executionFrame__.plocal2 = &local2;
     __executionFrame__.p__stack0_1 = &__stack0_1;
     __executionFrame__.p__stack0_2 = &__stack0_2;
     __executionFrame__.p__stack1_1 = &__stack1_1;
+    __executionFrame__.p__stack1_2 = &__stack1_2;
     il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
@@ -3636,8 +3641,8 @@ void Win32_Code_PolishNotation_Main(void)
 
 #line 200 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: br.s IL_0064 */
-    goto IL_0064;
+    /* Path=1, Unique=0: IL_0001: br.s IL_0078 */
+    goto IL_0078;
 IL_0003:
 #line 202 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_0003: nop */
@@ -3668,72 +3673,95 @@ IL_0003:
     local1 = __stack0_0 ? true : false;
     /* Path=3, Unique=0: IL_0025: ldloc.1 */
     __stack0_0 = local1;
-    /* Path=3, Unique=0: IL_0026: brfalse.s IL_0063 */
-    if (__stack0_0 == 0) goto IL_0063;
+    /* Path=3, Unique=0: IL_0026: brfalse.s IL_0077 */
+    if (__stack0_0 == 0) goto IL_0077;
 #line 207 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_0028: nop */
     /* Path=3, Unique=0: IL_0029: ldloc.0 */
     __stack0_1 = local0;
-    /* Path=3, Unique=0: IL_002a: ldc.i4.0 */
-    __stack1_0 = 0;
-    /* Path=3, Unique=0: IL_002b: call Win32.Code.ExpressionNode Win32.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
-    __stack0_2 = Win32_Code_PolishNotation_ParseExpression(__stack0_1, __stack1_0);
-    /* Path=3, Unique=0: IL_0030: stloc.2 */
-    local2 = __stack0_2;
-#line 209 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
-    /* Path=3, Unique=0: IL_0031: ldloc.2 */
-    __stack0_2 = local2;
-    /* Path=3, Unique=0: IL_0032: ldnull */
-    __stack1_1 = NULL;
-    /* Path=3, Unique=0: IL_0033: ceq */
-    __stack0_0 = (__stack0_2 == ((Win32_Code_ExpressionNode*)__stack1_1)) ? 1 : 0;
-    /* Path=3, Unique=0: IL_0035: stloc.s local4 */
+    /* Path=3, Unique=0: IL_002a: ldstr "exit" */
+    __stack1_1 = __string1;
+    /* Path=3, Unique=0: IL_002f: call System.Boolean System.String::op_Equality(System.String,System.String) */
+    __stack0_0 = System_String_op_Equality(__stack0_1, __stack1_1);
+    /* Path=3, Unique=0: IL_0034: stloc.s local4 */
     local4 = __stack0_0 ? true : false;
-    /* Path=3, Unique=0: IL_0037: ldloc.s local4 */
+    /* Path=3, Unique=0: IL_0036: ldloc.s local4 */
     __stack0_0 = local4;
-    /* Path=3, Unique=0: IL_0039: brfalse.s IL_0049 */
-    if (__stack0_0 == 0) goto IL_0049;
-#line 210 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
-    /* Path=3, Unique=0: IL_003b: nop */
-    /* Path=3, Unique=0: IL_003c: ldstr "Syntax error." */
-    __stack0_1 = __string1;
-    /* Path=3, Unique=0: IL_0041: call System.Void System.Console::WriteLine(System.String) */
-    System_Console_WriteLine_10(__stack0_1);
-    /* Path=3, Unique=0: IL_0046: nop */
-#line 212 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
-    /* Path=3, Unique=0: IL_0047: br.s IL_0064 */
-    goto IL_0064;
-IL_0049:
-#line 215 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
-    /* Path=5, Unique=0: IL_0049: ldloc.2 */
+    /* Path=3, Unique=0: IL_0038: brfalse.s IL_003d */
+    if (__stack0_0 == 0) goto IL_003d;
+#line 209 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=3, Unique=0: IL_003a: nop */
+    /* Path=3, Unique=0: IL_003b: br.s IL_007d */
+    goto IL_007d;
+IL_003d:
+#line 213 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=5, Unique=0: IL_003d: ldloc.0 */
+    __stack0_1 = local0;
+    /* Path=5, Unique=0: IL_003e: ldc.i4.0 */
+    __stack1_0 = 0;
+    /* Path=5, Unique=0: IL_003f: call Win32.Code.ExpressionNode Win32.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
+    __stack0_2 = Win32_Code_PolishNotation_ParseExpression(__stack0_1, __stack1_0);
+    /* Path=5, Unique=0: IL_0044: stloc.2 */
+    local2 = __stack0_2;
+#line 214 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=5, Unique=0: IL_0045: ldloc.2 */
     __stack0_2 = local2;
-    /* Path=5, Unique=0: IL_004a: callvirt System.Int32 Win32.Code.ReducibleNode::Reduce() */
-    __stack0_0 = Win32_Code_ReducibleNode_Reduce((Win32_Code_ReducibleNode*)__stack0_2);
-    /* Path=5, Unique=0: IL_004f: stloc.3 */
-    local3 = __stack0_0;
-#line 217 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
-    /* Path=5, Unique=0: IL_0050: ldstr "Reuslt=" */
-    __stack0_1 = __string2;
-    /* Path=5, Unique=0: IL_0055: call System.Void System.Console::Write(System.String) */
-    System_Console_Write_9(__stack0_1);
-    /* Path=5, Unique=0: IL_005a: nop */
-#line 218 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
-    /* Path=5, Unique=0: IL_005b: ldloc.3 */
-    __stack0_0 = local3;
-    /* Path=5, Unique=0: IL_005c: call System.Void System.Console::WriteLine(System.Int32) */
-    System_Console_WriteLine_6(__stack0_0);
-    /* Path=5, Unique=0: IL_0061: nop */
-#line 219 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
-    /* Path=5, Unique=0: IL_0062: nop */
-IL_0063:
-    /* Path=4, Unique=0: IL_0063: nop */
-IL_0064:
-    /* Path=2, Unique=0: IL_0064: ldc.i4.1 */
-    __stack0_0 = 1;
-    /* Path=2, Unique=0: IL_0065: stloc.s local5 */
+    /* Path=5, Unique=0: IL_0046: ldnull */
+    __stack1_2 = NULL;
+    /* Path=5, Unique=0: IL_0047: ceq */
+    __stack0_0 = (__stack0_2 == ((Win32_Code_ExpressionNode*)__stack1_2)) ? 1 : 0;
+    /* Path=5, Unique=0: IL_0049: stloc.s local5 */
     local5 = __stack0_0 ? true : false;
-    /* Path=2, Unique=0: IL_0067: br.s IL_0003 */
+    /* Path=5, Unique=0: IL_004b: ldloc.s local5 */
+    __stack0_0 = local5;
+    /* Path=5, Unique=0: IL_004d: brfalse.s IL_005d */
+    if (__stack0_0 == 0) goto IL_005d;
+#line 215 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=5, Unique=0: IL_004f: nop */
+    /* Path=5, Unique=0: IL_0050: ldstr "Syntax error." */
+    __stack0_1 = __string2;
+    /* Path=5, Unique=0: IL_0055: call System.Void System.Console::WriteLine(System.String) */
+    System_Console_WriteLine_10(__stack0_1);
+    /* Path=5, Unique=0: IL_005a: nop */
+#line 217 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=5, Unique=0: IL_005b: br.s IL_0078 */
+    goto IL_0078;
+IL_005d:
+#line 220 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=7, Unique=0: IL_005d: ldloc.2 */
+    __stack0_2 = local2;
+    /* Path=7, Unique=0: IL_005e: callvirt System.Int32 Win32.Code.ReducibleNode::Reduce() */
+    __stack0_0 = Win32_Code_ReducibleNode_Reduce((Win32_Code_ReducibleNode*)__stack0_2);
+    /* Path=7, Unique=0: IL_0063: stloc.3 */
+    local3 = __stack0_0;
+#line 222 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=7, Unique=0: IL_0064: ldstr "Reuslt=" */
+    __stack0_1 = __string3;
+    /* Path=7, Unique=0: IL_0069: call System.Void System.Console::Write(System.String) */
+    System_Console_Write_9(__stack0_1);
+    /* Path=7, Unique=0: IL_006e: nop */
+#line 223 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=7, Unique=0: IL_006f: ldloc.3 */
+    __stack0_0 = local3;
+    /* Path=7, Unique=0: IL_0070: call System.Void System.Console::WriteLine(System.Int32) */
+    System_Console_WriteLine_6(__stack0_0);
+    /* Path=7, Unique=0: IL_0075: nop */
+#line 224 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=7, Unique=0: IL_0076: nop */
+IL_0077:
+    /* Path=4, Unique=0: IL_0077: nop */
+IL_0078:
+    /* Path=2, Unique=0: IL_0078: ldc.i4.1 */
+    __stack0_0 = 1;
+    /* Path=2, Unique=0: IL_0079: stloc.s local6 */
+    local6 = __stack0_0 ? true : false;
+    /* Path=2, Unique=0: IL_007b: br.s IL_0003 */
     goto IL_0003;
+IL_007d:
+#line 226 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+    /* Path=6, Unique=0: IL_007d: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return;
 }
 
 ///////////////////////////////////////
@@ -3837,7 +3865,7 @@ void Win32_Code_StringTest_LiteralString(void)
 #line 12 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABC" */
-    __stack0_0 = __string3;
+    __stack0_0 = __string4;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
 #line 14 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
@@ -3943,12 +3971,12 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
 #line 22 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABC" */
-    __stack0_0 = __string3;
+    __stack0_0 = __string4;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
 #line 24 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0007: ldstr "DEF" */
-    __stack0_0 = __string4;
+    __stack0_0 = __string5;
     /* Path=1, Unique=0: IL_000c: stloc.1 */
     local1 = __stack0_0;
 #line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
@@ -4015,7 +4043,7 @@ System_String* Win32_Code_StringTest_LiteralSubstring(void)
 #line 29 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABCDEFGHIJKLMN" */
-    __stack0_0 = __string5;
+    __stack0_0 = __string6;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
 #line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"

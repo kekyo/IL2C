@@ -229,20 +229,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_BoxingTest* this__);
-    int32_t (*GetHashCode)(Win32_Code_BoxingTest* this__);
-    void (*Finalize)(Win32_Code_BoxingTest* this__);
-    bool (*Equals)(Win32_Code_BoxingTest* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_BoxingTest_TYPE_DEF_TYPE__;
 
 #define Win32_Code_BoxingTest_ToString(/* Win32_Code_BoxingTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->ToString((System_Object*)this__))
 #define Win32_Code_BoxingTest_GetHashCode(/* Win32_Code_BoxingTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_BoxingTest_Finalize(/* Win32_Code_BoxingTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_BoxingTest_Equals(/* Win32_Code_BoxingTest* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_BoxingTest, this__)->Equals((System_Object*)this__, obj))
 
 extern void Win32_Code_ClassTypeTestTarget__ctor(Win32_Code_ClassTypeTestTarget* this__);
 extern void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* this__, int32_t value);
@@ -254,20 +254,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_ClassTypeTestTarget* this__);
-    int32_t (*GetHashCode)(Win32_Code_ClassTypeTestTarget* this__);
-    void (*Finalize)(Win32_Code_ClassTypeTestTarget* this__);
-    bool (*Equals)(Win32_Code_ClassTypeTestTarget* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_ClassTypeTestTarget_TYPE_DEF_TYPE__;
 
 #define Win32_Code_ClassTypeTestTarget_ToString(/* Win32_Code_ClassTypeTestTarget* */ this__) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->ToString((System_Object*)this__))
 #define Win32_Code_ClassTypeTestTarget_GetHashCode(/* Win32_Code_ClassTypeTestTarget* */ this__) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_ClassTypeTestTarget_Finalize(/* Win32_Code_ClassTypeTestTarget* */ this__) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_ClassTypeTestTarget_Equals(/* Win32_Code_ClassTypeTestTarget* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_ClassTypeTestTarget, this__)->Equals((System_Object*)this__, obj))
 
 extern int32_t Win32_Code_ClassTypeTest_Test4(void);
 extern int32_t Win32_Code_ClassTypeTest_Test5(void);
@@ -280,20 +280,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_ClassTypeTest* this__);
-    int32_t (*GetHashCode)(Win32_Code_ClassTypeTest* this__);
-    void (*Finalize)(Win32_Code_ClassTypeTest* this__);
-    bool (*Equals)(Win32_Code_ClassTypeTest* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_ClassTypeTest_TYPE_DEF_TYPE__;
 
 #define Win32_Code_ClassTypeTest_ToString(/* Win32_Code_ClassTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->ToString((System_Object*)this__))
 #define Win32_Code_ClassTypeTest_GetHashCode(/* Win32_Code_ClassTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_ClassTypeTest_Finalize(/* Win32_Code_ClassTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_ClassTypeTest_Equals(/* Win32_Code_ClassTypeTest* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_ClassTypeTest, this__)->Equals((System_Object*)this__, obj))
 
 extern int32_t Win32_Code_Hoge1_Add1(int32_t a, bool isTwo);
 extern int64_t Win32_Code_Hoge1_Add2(int64_t a, bool isTwo);
@@ -304,20 +304,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_Hoge1* this__);
-    int32_t (*GetHashCode)(Win32_Code_Hoge1* this__);
-    void (*Finalize)(Win32_Code_Hoge1* this__);
-    bool (*Equals)(Win32_Code_Hoge1* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_Hoge1_TYPE_DEF_TYPE__;
 
 #define Win32_Code_Hoge1_ToString(/* Win32_Code_Hoge1* */ this__) \
-    (il2c_get_vtable(Win32_Code_Hoge1, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_Hoge1, this__)->ToString((System_Object*)this__))
 #define Win32_Code_Hoge1_GetHashCode(/* Win32_Code_Hoge1* */ this__) \
-    (il2c_get_vtable(Win32_Code_Hoge1, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_Hoge1, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_Hoge1_Finalize(/* Win32_Code_Hoge1* */ this__) \
-    (il2c_get_vtable(Win32_Code_Hoge1, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_Hoge1, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_Hoge1_Equals(/* Win32_Code_Hoge1* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_Hoge1, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_Hoge1, this__)->Equals((System_Object*)this__, obj))
 
 extern uint8_t Win32_Code_Hoge2_Add3(uint8_t a, bool isTwo);
 extern uint16_t Win32_Code_Hoge2_Add4(uint16_t a, bool isTwo);
@@ -328,20 +328,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_Hoge2* this__);
-    int32_t (*GetHashCode)(Win32_Code_Hoge2* this__);
-    void (*Finalize)(Win32_Code_Hoge2* this__);
-    bool (*Equals)(Win32_Code_Hoge2* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_Hoge2_TYPE_DEF_TYPE__;
 
 #define Win32_Code_Hoge2_ToString(/* Win32_Code_Hoge2* */ this__) \
-    (il2c_get_vtable(Win32_Code_Hoge2, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_Hoge2, this__)->ToString((System_Object*)this__))
 #define Win32_Code_Hoge2_GetHashCode(/* Win32_Code_Hoge2* */ this__) \
-    (il2c_get_vtable(Win32_Code_Hoge2, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_Hoge2, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_Hoge2_Finalize(/* Win32_Code_Hoge2* */ this__) \
-    (il2c_get_vtable(Win32_Code_Hoge2, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_Hoge2, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_Hoge2_Equals(/* Win32_Code_Hoge2* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_Hoge2, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_Hoge2, this__)->Equals((System_Object*)this__, obj))
 
 extern void Win32_Code_InheritTestTargetBase1__ctor(Win32_Code_InheritTestTargetBase1* this__);
 extern void Win32_Code_InheritTestTargetBase1__ctor_1(Win32_Code_InheritTestTargetBase1* this__, int32_t value);
@@ -353,23 +353,23 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_InheritTestTargetBase1* this__);
-    int32_t (*GetHashCode)(Win32_Code_InheritTestTargetBase1* this__);
-    void (*Finalize)(Win32_Code_InheritTestTargetBase1* this__);
-    bool (*Equals)(Win32_Code_InheritTestTargetBase1* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Calc_1)(Win32_Code_InheritTestTargetBase1* this__, int32_t a, int32_t b);
 } __Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__;
 
 #define Win32_Code_InheritTestTargetBase1_ToString(/* Win32_Code_InheritTestTargetBase1* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->ToString((System_Object*)this__))
 #define Win32_Code_InheritTestTargetBase1_GetHashCode(/* Win32_Code_InheritTestTargetBase1* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_InheritTestTargetBase1_Finalize(/* Win32_Code_InheritTestTargetBase1* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_InheritTestTargetBase1_Equals(/* Win32_Code_InheritTestTargetBase1* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->Equals((System_Object*)this__, obj))
 #define Win32_Code_InheritTestTargetBase1_Calc_1(/* Win32_Code_InheritTestTargetBase1* */ this__, /* int32_t */ a, /* int32_t */ b) \
-    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->Calc_1(this__, a, b))
+    (il2c_get_vtable(Win32_Code_InheritTestTargetBase1, this__)->Calc_1((Win32_Code_InheritTestTargetBase1*)this__, a, b))
 
 extern void Win32_Code_InheritTestTarget2__ctor(Win32_Code_InheritTestTarget2* this__);
 extern void Win32_Code_InheritTestTarget2__ctor_1(Win32_Code_InheritTestTarget2* this__, int32_t value);
@@ -381,23 +381,23 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_InheritTestTarget2* this__);
-    int32_t (*GetHashCode)(Win32_Code_InheritTestTarget2* this__);
-    void (*Finalize)(Win32_Code_InheritTestTarget2* this__);
-    bool (*Equals)(Win32_Code_InheritTestTarget2* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Calc_1)(Win32_Code_InheritTestTarget2* this__, int32_t a, int32_t b);
 } __Win32_Code_InheritTestTarget2_TYPE_DEF_TYPE__;
 
 #define Win32_Code_InheritTestTarget2_ToString(/* Win32_Code_InheritTestTarget2* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->ToString((System_Object*)this__))
 #define Win32_Code_InheritTestTarget2_GetHashCode(/* Win32_Code_InheritTestTarget2* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_InheritTestTarget2_Finalize(/* Win32_Code_InheritTestTarget2* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_InheritTestTarget2_Equals(/* Win32_Code_InheritTestTarget2* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->Equals((System_Object*)this__, obj))
 #define Win32_Code_InheritTestTarget2_Calc_1(/* Win32_Code_InheritTestTarget2* */ this__, /* int32_t */ a, /* int32_t */ b) \
-    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->Calc_1(this__, a, b))
+    (il2c_get_vtable(Win32_Code_InheritTestTarget2, this__)->Calc_1((Win32_Code_InheritTestTarget2*)this__, a, b))
 
 extern int32_t Win32_Code_InheritTypeTest_Test1(void);
 extern int32_t Win32_Code_InheritTypeTest_Test2(void);
@@ -410,20 +410,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_InheritTypeTest* this__);
-    int32_t (*GetHashCode)(Win32_Code_InheritTypeTest* this__);
-    void (*Finalize)(Win32_Code_InheritTypeTest* this__);
-    bool (*Equals)(Win32_Code_InheritTypeTest* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_InheritTypeTest_TYPE_DEF_TYPE__;
 
 #define Win32_Code_InheritTypeTest_ToString(/* Win32_Code_InheritTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->ToString((System_Object*)this__))
 #define Win32_Code_InheritTypeTest_GetHashCode(/* Win32_Code_InheritTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_InheritTypeTest_Finalize(/* Win32_Code_InheritTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_InheritTypeTest_Equals(/* Win32_Code_InheritTypeTest* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_InheritTypeTest, this__)->Equals((System_Object*)this__, obj))
 
 extern int32_t Win32_Code_Win32_GetCurrentProcessId(void);
 extern int32_t Win32_Code_Win32_GetCurrentThreadId(void);
@@ -435,20 +435,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_Win32* this__);
-    int32_t (*GetHashCode)(Win32_Code_Win32* this__);
-    void (*Finalize)(Win32_Code_Win32* this__);
-    bool (*Equals)(Win32_Code_Win32* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_Win32_TYPE_DEF_TYPE__;
 
 #define Win32_Code_Win32_ToString(/* Win32_Code_Win32* */ this__) \
-    (il2c_get_vtable(Win32_Code_Win32, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_Win32, this__)->ToString((System_Object*)this__))
 #define Win32_Code_Win32_GetHashCode(/* Win32_Code_Win32* */ this__) \
-    (il2c_get_vtable(Win32_Code_Win32, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_Win32, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_Win32_Finalize(/* Win32_Code_Win32* */ this__) \
-    (il2c_get_vtable(Win32_Code_Win32, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_Win32, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_Win32_Equals(/* Win32_Code_Win32* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_Win32, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_Win32, this__)->Equals((System_Object*)this__, obj))
 
 extern void Win32_Code_AbstractNode__ctor(Win32_Code_AbstractNode* this__, int32_t nextIndex);
 
@@ -457,20 +457,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_AbstractNode* this__);
-    int32_t (*GetHashCode)(Win32_Code_AbstractNode* this__);
-    void (*Finalize)(Win32_Code_AbstractNode* this__);
-    bool (*Equals)(Win32_Code_AbstractNode* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_AbstractNode_TYPE_DEF_TYPE__;
 
 #define Win32_Code_AbstractNode_ToString(/* Win32_Code_AbstractNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->ToString((System_Object*)this__))
 #define Win32_Code_AbstractNode_GetHashCode(/* Win32_Code_AbstractNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_AbstractNode_Finalize(/* Win32_Code_AbstractNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_AbstractNode_Equals(/* Win32_Code_AbstractNode* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_AbstractNode, this__)->Equals((System_Object*)this__, obj))
 
 extern void Win32_Code_OperatorNode__ctor(Win32_Code_OperatorNode* this__, wchar_t oper, int32_t nextIndex);
 
@@ -479,20 +479,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_OperatorNode* this__);
-    int32_t (*GetHashCode)(Win32_Code_OperatorNode* this__);
-    void (*Finalize)(Win32_Code_OperatorNode* this__);
-    bool (*Equals)(Win32_Code_OperatorNode* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_OperatorNode_TYPE_DEF_TYPE__;
 
 #define Win32_Code_OperatorNode_ToString(/* Win32_Code_OperatorNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->ToString((System_Object*)this__))
 #define Win32_Code_OperatorNode_GetHashCode(/* Win32_Code_OperatorNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_OperatorNode_Finalize(/* Win32_Code_OperatorNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_OperatorNode_Equals(/* Win32_Code_OperatorNode* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_OperatorNode, this__)->Equals((System_Object*)this__, obj))
 
 extern void Win32_Code_ReducibleNode__ctor(Win32_Code_ReducibleNode* this__, int32_t nextIndex);
 extern int32_t __Win32_Code_ReducibleNode_Reduce__(Win32_Code_ReducibleNode* this__);
@@ -502,23 +502,23 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_ReducibleNode* this__);
-    int32_t (*GetHashCode)(Win32_Code_ReducibleNode* this__);
-    void (*Finalize)(Win32_Code_ReducibleNode* this__);
-    bool (*Equals)(Win32_Code_ReducibleNode* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Reduce)(Win32_Code_ReducibleNode* this__);
 } __Win32_Code_ReducibleNode_TYPE_DEF_TYPE__;
 
 #define Win32_Code_ReducibleNode_ToString(/* Win32_Code_ReducibleNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->ToString((System_Object*)this__))
 #define Win32_Code_ReducibleNode_GetHashCode(/* Win32_Code_ReducibleNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_ReducibleNode_Finalize(/* Win32_Code_ReducibleNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_ReducibleNode_Equals(/* Win32_Code_ReducibleNode* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->Equals((System_Object*)this__, obj))
 #define Win32_Code_ReducibleNode_Reduce(/* Win32_Code_ReducibleNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->Reduce(this__))
+    (il2c_get_vtable(Win32_Code_ReducibleNode, this__)->Reduce((Win32_Code_ReducibleNode*)this__))
 
 extern void Win32_Code_NumericNode__ctor(Win32_Code_NumericNode* this__, int32_t numeric, int32_t nextIndex);
 extern int32_t __Win32_Code_NumericNode_Reduce__(Win32_Code_NumericNode* this__);
@@ -528,23 +528,23 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_NumericNode* this__);
-    int32_t (*GetHashCode)(Win32_Code_NumericNode* this__);
-    void (*Finalize)(Win32_Code_NumericNode* this__);
-    bool (*Equals)(Win32_Code_NumericNode* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Reduce)(Win32_Code_NumericNode* this__);
 } __Win32_Code_NumericNode_TYPE_DEF_TYPE__;
 
 #define Win32_Code_NumericNode_ToString(/* Win32_Code_NumericNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_NumericNode, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_NumericNode, this__)->ToString((System_Object*)this__))
 #define Win32_Code_NumericNode_GetHashCode(/* Win32_Code_NumericNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_NumericNode, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_NumericNode, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_NumericNode_Finalize(/* Win32_Code_NumericNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_NumericNode, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_NumericNode, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_NumericNode_Equals(/* Win32_Code_NumericNode* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_NumericNode, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_NumericNode, this__)->Equals((System_Object*)this__, obj))
 #define Win32_Code_NumericNode_Reduce(/* Win32_Code_NumericNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_NumericNode, this__)->Reduce(this__))
+    (il2c_get_vtable(Win32_Code_NumericNode, this__)->Reduce((Win32_Code_NumericNode*)this__))
 
 extern void Win32_Code_ExpressionNode__ctor(Win32_Code_ExpressionNode* this__, Win32_Code_OperatorNode* oper, Win32_Code_ReducibleNode* left, Win32_Code_ReducibleNode* right, int32_t nextIndex);
 extern int32_t __Win32_Code_ExpressionNode_Reduce__(Win32_Code_ExpressionNode* this__);
@@ -554,23 +554,23 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_ExpressionNode* this__);
-    int32_t (*GetHashCode)(Win32_Code_ExpressionNode* this__);
-    void (*Finalize)(Win32_Code_ExpressionNode* this__);
-    bool (*Equals)(Win32_Code_ExpressionNode* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Reduce)(Win32_Code_ExpressionNode* this__);
 } __Win32_Code_ExpressionNode_TYPE_DEF_TYPE__;
 
 #define Win32_Code_ExpressionNode_ToString(/* Win32_Code_ExpressionNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->ToString((System_Object*)this__))
 #define Win32_Code_ExpressionNode_GetHashCode(/* Win32_Code_ExpressionNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_ExpressionNode_Finalize(/* Win32_Code_ExpressionNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_ExpressionNode_Equals(/* Win32_Code_ExpressionNode* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->Equals((System_Object*)this__, obj))
 #define Win32_Code_ExpressionNode_Reduce(/* Win32_Code_ExpressionNode* */ this__) \
-    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->Reduce(this__))
+    (il2c_get_vtable(Win32_Code_ExpressionNode, this__)->Reduce((Win32_Code_ExpressionNode*)this__))
 
 extern int32_t Win32_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t startIndex);
 extern Win32_Code_OperatorNode* Win32_Code_PolishNotation_ParseOperator(System_String* line, int32_t startIndex);
@@ -584,20 +584,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_PolishNotation* this__);
-    int32_t (*GetHashCode)(Win32_Code_PolishNotation* this__);
-    void (*Finalize)(Win32_Code_PolishNotation* this__);
-    bool (*Equals)(Win32_Code_PolishNotation* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_PolishNotation_TYPE_DEF_TYPE__;
 
 #define Win32_Code_PolishNotation_ToString(/* Win32_Code_PolishNotation* */ this__) \
-    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->ToString((System_Object*)this__))
 #define Win32_Code_PolishNotation_GetHashCode(/* Win32_Code_PolishNotation* */ this__) \
-    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_PolishNotation_Finalize(/* Win32_Code_PolishNotation* */ this__) \
-    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_PolishNotation_Equals(/* Win32_Code_PolishNotation* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_PolishNotation, this__)->Equals((System_Object*)this__, obj))
 
 extern void Win32_Code_StringTest_LiteralString(void);
 extern System_String* Win32_Code_StringTest_InOutString(System_String* a);
@@ -612,20 +612,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_StringTest* this__);
-    int32_t (*GetHashCode)(Win32_Code_StringTest* this__);
-    void (*Finalize)(Win32_Code_StringTest* this__);
-    bool (*Equals)(Win32_Code_StringTest* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_StringTest_TYPE_DEF_TYPE__;
 
 #define Win32_Code_StringTest_ToString(/* Win32_Code_StringTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_StringTest, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_StringTest, this__)->ToString((System_Object*)this__))
 #define Win32_Code_StringTest_GetHashCode(/* Win32_Code_StringTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_StringTest, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_StringTest, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_StringTest_Finalize(/* Win32_Code_StringTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_StringTest, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_StringTest, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_StringTest_Equals(/* Win32_Code_StringTest* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_StringTest, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_StringTest, this__)->Equals((System_Object*)this__, obj))
 
 extern void Win32_Code_UnsafeTest__ctor(Win32_Code_UnsafeTest* this__);
 
@@ -634,20 +634,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_UnsafeTest* this__);
-    int32_t (*GetHashCode)(Win32_Code_UnsafeTest* this__);
-    void (*Finalize)(Win32_Code_UnsafeTest* this__);
-    bool (*Equals)(Win32_Code_UnsafeTest* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_UnsafeTest_TYPE_DEF_TYPE__;
 
 #define Win32_Code_UnsafeTest_ToString(/* Win32_Code_UnsafeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->ToString((System_Object*)this__))
 #define Win32_Code_UnsafeTest_GetHashCode(/* Win32_Code_UnsafeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_UnsafeTest_Finalize(/* Win32_Code_UnsafeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_UnsafeTest_Equals(/* Win32_Code_UnsafeTest* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_UnsafeTest, this__)->Equals((System_Object*)this__, obj))
 
 extern int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget* this__, int32_t a, int32_t b);
 
@@ -656,20 +656,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_ValueTypeTestTarget this__);
-    int32_t (*GetHashCode)(Win32_Code_ValueTypeTestTarget this__);
-    void (*Finalize)(Win32_Code_ValueTypeTestTarget this__);
-    bool (*Equals)(Win32_Code_ValueTypeTestTarget this__, System_Object* obj);
+    System_String* (*ToString)(System_ValueType* this__);
+    int32_t (*GetHashCode)(System_ValueType* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_ValueType* this__, System_Object* obj);
 } __Win32_Code_ValueTypeTestTarget_TYPE_DEF_TYPE__;
 
 #define Win32_Code_ValueTypeTestTarget_ToString(/* Win32_Code_ValueTypeTestTarget */ this__) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->ToString((System_ValueType*)this__))
 #define Win32_Code_ValueTypeTestTarget_GetHashCode(/* Win32_Code_ValueTypeTestTarget */ this__) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->GetHashCode((System_ValueType*)this__))
 #define Win32_Code_ValueTypeTestTarget_Finalize(/* Win32_Code_ValueTypeTestTarget */ this__) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_ValueTypeTestTarget_Equals(/* Win32_Code_ValueTypeTestTarget */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_ValueTypeTestTarget, this__)->Equals((System_ValueType*)this__, obj))
 
 extern int32_t Win32_Code_ValueTypeTest_Test4(void);
 extern int32_t Win32_Code_ValueTypeTest_Test5(void);
@@ -680,20 +680,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(Win32_Code_ValueTypeTest* this__);
-    int32_t (*GetHashCode)(Win32_Code_ValueTypeTest* this__);
-    void (*Finalize)(Win32_Code_ValueTypeTest* this__);
-    bool (*Equals)(Win32_Code_ValueTypeTest* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Win32_Code_ValueTypeTest_TYPE_DEF_TYPE__;
 
 #define Win32_Code_ValueTypeTest_ToString(/* Win32_Code_ValueTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->ToString(this__))
+    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->ToString((System_Object*)this__))
 #define Win32_Code_ValueTypeTest_GetHashCode(/* Win32_Code_ValueTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->GetHashCode(this__))
+    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->GetHashCode((System_Object*)this__))
 #define Win32_Code_ValueTypeTest_Finalize(/* Win32_Code_ValueTypeTest* */ this__) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->Finalize(this__))
+    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->Finalize((System_Object*)this__))
 #define Win32_Code_ValueTypeTest_Equals(/* Win32_Code_ValueTypeTest* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->Equals(this__, obj))
+    (il2c_get_vtable(Win32_Code_ValueTypeTest, this__)->Equals((System_Object*)this__, obj))
 
 #ifdef __cplusplus
 }

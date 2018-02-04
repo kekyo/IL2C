@@ -130,18 +130,20 @@ typedef const struct
     intptr_t reserved0__;
     intptr_t reserved1__;
     intptr_t reserved2__;
-    System_String* (*ToString)(System_ValueType* this__);
-    int32_t(*GetHashCode)(System_ValueType* this__);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t(*GetHashCode)(System_Object* this__);
     void(*Finalize)(System_Object* this__);
-    bool(*Equals)(System_ValueType* this__, System_Object* obj);
+    bool(*Equals)(System_Object* this__, System_Object* obj);
 } __System_ValueType_TYPE_DEF_TYPE__;
 
-#define System_ValueType_ToString(/* System_Object* */ this__) \
-    System_Object_ToString((System_Object*)this__)
-#define System_ValueType_GetHashCode(/* System_Object* */ this__) \
-    System_Object_GetHashCode((System_Object*)this__)
-#define System_ValueType_Equals(/* System_Object* */ this__, /* System_Object* */ obj) \
-    System_Object_Equals((System_Object*)this__, obj)
+#define System_ValueType_ToString(/* System_ValueType* */ this__) \
+    (il2c_get_vtable(System_ValueType, this__)->ToString((System_Object*)this__))
+#define System_ValueType_GetHashCode(/* System_ValueType* */ this__) \
+    (il2c_get_vtable(System_ValueType, this__)->GetHashCode((System_Object*)this__))
+#define System_ValueType_Finalize(/* System_ValueType* */ this__) \
+    (il2c_get_vtable(System_ValueType, this__)->Finalize((System_Object*)this__))
+#define System_ValueType_Equals(/* System_ValueType* */ this__, /* System_Object* */ obj) \
+    (il2c_get_vtable(System_ValueType, this__)->Equals((System_Object*)this__), obj)
 
 /////////////////////////////////////////////////////////////
 // Boxing related declarations

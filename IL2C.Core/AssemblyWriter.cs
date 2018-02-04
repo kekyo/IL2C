@@ -181,7 +181,6 @@ namespace IL2C
                         var functionPrototype = Utilities.GetFunctionTypeString(
                             method.GetOverloadedMethodName().ManglingSymbolName(),
                             method.ReturnType,
-                            type,  // this
                             method.GetSafeParameters(),
                             extractContext);
 
@@ -224,7 +223,12 @@ namespace IL2C
                         var functionParameters = string.Join(
                             ", ",
                             method.GetSafeParameters()
-                                .Select(parameter => parameter.Name));
+                                .Select((parameter, index) => (index == 0)
+                                    ? string.Format(
+                                        "({0}){1}",
+                                        extractContext.GetCLanguageTypeName(parameter.ParameterType),
+                                        parameter.Name)
+                                    : parameter.Name));
 
                         tw.WriteLine(
                             "{0}(il2c_get_vtable({1}, this__)->{2}({3}))",

@@ -99,7 +99,7 @@ void Win32_Code_BoxingTest_BoxingInt32(int32_t a)
     //-------------------
     // IL body:
 
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
+#line 13 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\BoxingTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -107,14 +107,14 @@ void Win32_Code_BoxingTest_BoxingInt32(int32_t a)
     __stack0_1 = il2c_box(&__stack0_0, il2c_typeof(System_Int32));
     /* Path=1, Unique=0: IL_0007: stloc.0 */
     local0 = __stack0_1;
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
+#line 16 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\BoxingTest.cs"
     /* Path=1, Unique=0: IL_0008: ldloc.0 */
     __stack0_1 = local0;
     /* Path=1, Unique=0: IL_0009: unbox.any System.Int32 */
     __stack0_2 = *((int32_t*)il2c_unbox(__stack0_1, il2c_typeof(System_Int32)));
     /* Path=1, Unique=0: IL_000e: stloc.1 */
     local1 = __stack0_2;
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\BoxingTest.cs"
+#line 17 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\BoxingTest.cs"
     /* Path=1, Unique=0: IL_000f: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -215,13 +215,13 @@ void Win32_Code_ClassTypeTestTarget__ctor(Win32_Code_ClassTypeTestTarget* this__
     //-------------------
     // IL body:
 
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 16 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 17 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -260,13 +260,13 @@ void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* this
     //-------------------
     // IL body:
 
-#line 20 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 20 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 21 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 21 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ldarg.0 */
     __stack0_0 = this__;
@@ -274,7 +274,7 @@ void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* this
     __stack1_0 = value;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 23 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_000f: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -314,7 +314,7 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget*
     //-------------------
     // IL body:
 
-#line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 26 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -333,7 +333,7 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2(Win32_Code_ClassTypeTestTarget*
     /* Path=1, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 28 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 28 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_000e: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000f: ret */
@@ -375,7 +375,7 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarge
     //-------------------
     // IL body:
 
-#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -398,7 +398,7 @@ int32_t Win32_Code_ClassTypeTestTarget_GetValue2_1(Win32_Code_ClassTypeTestTarge
     /* Path=1, Unique=0: IL_000e: br.s IL_0010 */
     goto IL_0010;
 IL_0010:
-#line 33 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 33 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0010: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_0011: ret */
@@ -467,21 +467,21 @@ int32_t Win32_Code_ClassTypeTest_Test4(void)
     //-------------------
     // IL body:
 
-#line 39 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 39 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.ClassTypeTestTarget::.ctor() */
     __stack0_0 = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_ClassTypeTestTarget));
     Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 41 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 41 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4 456 */
     __stack1_0 = 456;
     /* Path=1, Unique=0: IL_000d: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 43 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 43 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0012: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0013: ldfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
@@ -491,7 +491,7 @@ int32_t Win32_Code_ClassTypeTest_Test4(void)
     /* Path=1, Unique=0: IL_0019: br.s IL_001b */
     goto IL_001b;
 IL_001b:
-#line 44 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 44 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_001b: ldloc.1 */
     __stack0_1 = local1;
     /* Path=2, Unique=0: IL_001c: ret */
@@ -538,21 +538,21 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
     //-------------------
     // IL body:
 
-#line 47 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 47 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.ClassTypeTestTarget::.ctor() */
     __stack0_0 = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_ClassTypeTestTarget));
     Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 49 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 49 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4 789 */
     __stack1_0 = 789;
     /* Path=1, Unique=0: IL_000d: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 51 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 51 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0012: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0013: ldc.i4.s 123 */
@@ -563,7 +563,7 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
     __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2(__stack0_0, __stack1_0, __stack2_0);
     /* Path=1, Unique=0: IL_001f: stloc.1 */
     local1 = __stack0_1;
-#line 52 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 52 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0020: ldloc.1 */
     __stack0_1 = local1;
     /* Path=1, Unique=0: IL_0021: stloc.2 */
@@ -571,7 +571,7 @@ int32_t Win32_Code_ClassTypeTest_Test5(void)
     /* Path=1, Unique=0: IL_0022: br.s IL_0024 */
     goto IL_0024;
 IL_0024:
-#line 53 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 53 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0024: ldloc.2 */
     __stack0_1 = local2;
     /* Path=2, Unique=0: IL_0025: ret */
@@ -619,21 +619,21 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
     //-------------------
     // IL body:
 
-#line 56 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 56 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.ClassTypeTestTarget::.ctor() */
     __stack0_0 = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_ClassTypeTestTarget));
     Win32_Code_ClassTypeTestTarget__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 58 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 58 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4 789 */
     __stack1_0 = 789;
     /* Path=1, Unique=0: IL_000d: stfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 60 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 60 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0012: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0013: ldc.i4.s 123 */
@@ -646,7 +646,7 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
     __stack0_1 = Win32_Code_ClassTypeTestTarget_GetValue2_1(__stack0_0, __stack1_0, __stack2_0, __stack3_0);
     /* Path=1, Unique=0: IL_0024: stloc.1 */
     local1 = __stack0_1;
-#line 61 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 61 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0025: ldloc.1 */
     __stack0_1 = local1;
     /* Path=1, Unique=0: IL_0026: stloc.2 */
@@ -654,7 +654,7 @@ int32_t Win32_Code_ClassTypeTest_Test6(void)
     /* Path=1, Unique=0: IL_0027: br.s IL_0029 */
     goto IL_0029;
 IL_0029:
-#line 62 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 62 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0029: ldloc.2 */
     __stack0_1 = local2;
     /* Path=2, Unique=0: IL_002a: ret */
@@ -698,7 +698,7 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
     //-------------------
     // IL body:
 
-#line 65 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 65 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldc.i4.s 123 */
     __stack0_0 = 123;
@@ -707,7 +707,7 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
     Win32_Code_ClassTypeTestTarget__ctor_1(__stack0_1, __stack0_0);
     /* Path=1, Unique=0: IL_0008: stloc.0 */
     local0 = __stack0_1;
-#line 68 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 68 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=1, Unique=0: IL_0009: ldloc.0 */
     __stack0_1 = local0;
     /* Path=1, Unique=0: IL_000a: ldfld System.Int32 Win32.Code.ClassTypeTestTarget::Value2 */
@@ -717,7 +717,7 @@ int32_t Win32_Code_ClassTypeTest_Test7(void)
     /* Path=1, Unique=0: IL_0010: br.s IL_0012 */
     goto IL_0012;
 IL_0012:
-#line 69 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ClassTypeTest.cs"
+#line 69 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs"
     /* Path=2, Unique=0: IL_0012: ldloc.1 */
     __stack0_0 = local1;
     /* Path=2, Unique=0: IL_0013: ret */
@@ -808,7 +808,7 @@ int32_t Win32_Code_Hoge1_Add1(int32_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 11 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
+#line 11 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -831,7 +831,7 @@ IL_0009:
     /* Path=2, Unique=0: IL_000b: br.s IL_000d */
     goto IL_000d;
 IL_000d:
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
+#line 13 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=3, Unique=0: IL_000d: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000e: ret */
@@ -858,7 +858,7 @@ int64_t Win32_Code_Hoge1_Add2(int64_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
+#line 16 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -883,7 +883,7 @@ IL_0009:
     /* Path=2, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge1.cs"
+#line 18 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge1.cs"
     /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000f: ret */
@@ -973,7 +973,7 @@ uint8_t Win32_Code_Hoge2_Add3(uint8_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 11 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
+#line 11 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = (int32_t)(a);
@@ -998,7 +998,7 @@ IL_0009:
     /* Path=2, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
+#line 13 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000f: ret */
@@ -1024,7 +1024,7 @@ uint16_t Win32_Code_Hoge2_Add4(uint16_t a, bool isTwo)
     //-------------------
     // IL body:
 
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
+#line 16 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = (int32_t)(a);
@@ -1049,7 +1049,7 @@ IL_0009:
     /* Path=2, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\Hoge2.cs"
+#line 18 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\Hoge2.cs"
     /* Path=3, Unique=0: IL_000e: ldloc.0 */
     __stack0_0 = local0;
     /* Path=3, Unique=0: IL_000f: ret */
@@ -1151,13 +1151,13 @@ void Win32_Code_InheritTestTargetBase1__ctor(Win32_Code_InheritTestTargetBase1* 
     //-------------------
     // IL body:
 
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 13 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 14 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 14 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1196,13 +1196,13 @@ void Win32_Code_InheritTestTargetBase1__ctor_1(Win32_Code_InheritTestTargetBase1
     //-------------------
     // IL body:
 
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 17 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 18 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 18 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ldarg.0 */
     __stack0_0 = this__;
@@ -1210,7 +1210,7 @@ void Win32_Code_InheritTestTargetBase1__ctor_1(Win32_Code_InheritTestTargetBase1
     __stack1_0 = value;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 20 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 20 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_000f: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -1250,7 +1250,7 @@ int32_t Win32_Code_InheritTestTargetBase1_Calc(Win32_Code_InheritTestTargetBase1
     //-------------------
     // IL body:
 
-#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 23 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -1265,7 +1265,7 @@ int32_t Win32_Code_InheritTestTargetBase1_Calc(Win32_Code_InheritTestTargetBase1
     /* Path=1, Unique=0: IL_000a: br.s IL_000c */
     goto IL_000c;
 IL_000c:
-#line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 25 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_000c: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000d: ret */
@@ -1307,7 +1307,7 @@ int32_t __Win32_Code_InheritTestTargetBase1_Calc_1__(Win32_Code_InheritTestTarge
     //-------------------
     // IL body:
 
-#line 28 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 28 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -1326,7 +1326,7 @@ int32_t __Win32_Code_InheritTestTargetBase1_Calc_1__(Win32_Code_InheritTestTarge
     /* Path=1, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 30 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 30 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_000e: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000f: ret */
@@ -1390,13 +1390,13 @@ void Win32_Code_InheritTestTarget2__ctor(Win32_Code_InheritTestTarget2* this__)
     //-------------------
     // IL body:
 
-#line 35 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 35 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void Win32.Code.InheritTestTargetBase1::.ctor() */
     Win32_Code_InheritTestTargetBase1__ctor((Win32_Code_InheritTestTargetBase1*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 36 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 36 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1435,7 +1435,7 @@ void Win32_Code_InheritTestTarget2__ctor_1(Win32_Code_InheritTestTarget2* this__
     //-------------------
     // IL body:
 
-#line 40 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 40 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.1 */
@@ -1443,7 +1443,7 @@ void Win32_Code_InheritTestTarget2__ctor_1(Win32_Code_InheritTestTarget2* this__
     /* Path=1, Unique=0: IL_0002: call System.Void Win32.Code.InheritTestTargetBase1::.ctor(System.Int32) */
     Win32_Code_InheritTestTargetBase1__ctor_1((Win32_Code_InheritTestTargetBase1*)__stack0_0, __stack1_0);
     /* Path=1, Unique=0: IL_0007: nop */
-#line 41 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 41 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0008: nop */
     /* Path=1, Unique=0: IL_0009: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1484,7 +1484,7 @@ int32_t Win32_Code_InheritTestTarget2_Calc(Win32_Code_InheritTestTarget2* this__
     //-------------------
     // IL body:
 
-#line 45 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 45 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -1503,7 +1503,7 @@ int32_t Win32_Code_InheritTestTarget2_Calc(Win32_Code_InheritTestTarget2* this__
     /* Path=1, Unique=0: IL_0010: br.s IL_0012 */
     goto IL_0012;
 IL_0012:
-#line 47 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 47 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_0012: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_0013: ret */
@@ -1545,7 +1545,7 @@ int32_t __Win32_Code_InheritTestTarget2_Calc_1__(Win32_Code_InheritTestTarget2* 
     //-------------------
     // IL body:
 
-#line 50 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 50 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -1568,7 +1568,7 @@ int32_t __Win32_Code_InheritTestTarget2_Calc_1__(Win32_Code_InheritTestTarget2* 
     /* Path=1, Unique=0: IL_0012: br.s IL_0014 */
     goto IL_0014;
 IL_0014:
-#line 52 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 52 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_0014: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_0015: ret */
@@ -1637,21 +1637,21 @@ int32_t Win32_Code_InheritTypeTest_Test1(void)
     //-------------------
     // IL body:
 
-#line 58 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 58 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTargetBase1::.ctor() */
     __stack0_0 = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_InheritTestTargetBase1));
     Win32_Code_InheritTestTargetBase1__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 60 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 60 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
     __stack1_0 = 123;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 62 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 62 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_000f: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
@@ -1663,7 +1663,7 @@ int32_t Win32_Code_InheritTypeTest_Test1(void)
     /* Path=1, Unique=0: IL_0017: br.s IL_0019 */
     goto IL_0019;
 IL_0019:
-#line 63 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 63 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_0019: ldloc.1 */
     __stack0_1 = local1;
     /* Path=2, Unique=0: IL_001a: ret */
@@ -1709,21 +1709,21 @@ int32_t Win32_Code_InheritTypeTest_Test2(void)
     //-------------------
     // IL body:
 
-#line 66 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 66 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTargetBase1::.ctor() */
     __stack0_0 = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_InheritTestTargetBase1));
     Win32_Code_InheritTestTargetBase1__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 68 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 68 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
     __stack1_0 = 123;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 70 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 70 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_000f: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
@@ -1737,7 +1737,7 @@ int32_t Win32_Code_InheritTypeTest_Test2(void)
     /* Path=1, Unique=0: IL_0018: br.s IL_001a */
     goto IL_001a;
 IL_001a:
-#line 71 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 71 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_001a: ldloc.1 */
     __stack0_1 = local1;
     /* Path=2, Unique=0: IL_001b: ret */
@@ -1783,21 +1783,21 @@ int32_t Win32_Code_InheritTypeTest_Test3(void)
     //-------------------
     // IL body:
 
-#line 74 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 74 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTarget2::.ctor() */
     __stack0_0 = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_InheritTestTarget2));
     Win32_Code_InheritTestTarget2__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 76 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 76 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
     __stack1_0 = 123;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
     __stack0_0->Value2 = __stack1_0;
-#line 78 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 78 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_000f: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
@@ -1811,7 +1811,7 @@ int32_t Win32_Code_InheritTypeTest_Test3(void)
     /* Path=1, Unique=0: IL_0018: br.s IL_001a */
     goto IL_001a;
 IL_001a:
-#line 79 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 79 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_001a: ldloc.1 */
     __stack0_1 = local1;
     /* Path=2, Unique=0: IL_001b: ret */
@@ -1860,21 +1860,21 @@ int32_t Win32_Code_InheritTypeTest_Test4(void)
     //-------------------
     // IL body:
 
-#line 82 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 82 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: newobj System.Void Win32.Code.InheritTestTarget2::.ctor() */
     __stack0_0 = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_InheritTestTarget2));
     Win32_Code_InheritTestTarget2__ctor(__stack0_0);
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = (Win32_Code_InheritTestTargetBase1*)__stack0_0;
-#line 84 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 84 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_1 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4.s 123 */
     __stack1_0 = 123;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.InheritTestTargetBase1::Value2 */
     __stack0_1->Value2 = __stack1_0;
-#line 86 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 86 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=1, Unique=0: IL_000f: ldloc.0 */
     __stack0_1 = local0;
     /* Path=1, Unique=0: IL_0010: ldc.i4.1 */
@@ -1888,7 +1888,7 @@ int32_t Win32_Code_InheritTypeTest_Test4(void)
     /* Path=1, Unique=0: IL_0018: br.s IL_001a */
     goto IL_001a;
 IL_001a:
-#line 87 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\InheritTest.cs"
+#line 87 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs"
     /* Path=2, Unique=0: IL_001a: ldloc.1 */
     __stack0_2 = local1;
     /* Path=2, Unique=0: IL_001b: ret */
@@ -2080,13 +2080,13 @@ void Win32_Code_AbstractNode__ctor(Win32_Code_AbstractNode* this__, int32_t next
     //-------------------
     // IL body:
 
-#line 13 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 13 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
     System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
-#line 14 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 14 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0007: nop */
     /* Path=1, Unique=0: IL_0008: ldarg.0 */
     __stack0_0 = this__;
@@ -2094,7 +2094,7 @@ void Win32_Code_AbstractNode__ctor(Win32_Code_AbstractNode* this__, int32_t next
     __stack1_0 = nextIndex;
     /* Path=1, Unique=0: IL_000a: stfld System.Int32 Win32.Code.AbstractNode::NextIndex */
     __stack0_0->NextIndex = __stack1_0;
-#line 16 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 16 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_000f: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -2155,7 +2155,7 @@ void Win32_Code_OperatorNode__ctor(Win32_Code_OperatorNode* this__, wchar_t oper
     //-------------------
     // IL body:
 
-#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 23 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.2 */
@@ -2163,7 +2163,7 @@ void Win32_Code_OperatorNode__ctor(Win32_Code_OperatorNode* this__, wchar_t oper
     /* Path=1, Unique=0: IL_0002: call System.Void Win32.Code.AbstractNode::.ctor(System.Int32) */
     Win32_Code_AbstractNode__ctor((Win32_Code_AbstractNode*)__stack0_0, __stack1_0);
     /* Path=1, Unique=0: IL_0007: nop */
-#line 24 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 24 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0008: nop */
     /* Path=1, Unique=0: IL_0009: ldarg.0 */
     __stack0_0 = this__;
@@ -2171,7 +2171,7 @@ void Win32_Code_OperatorNode__ctor(Win32_Code_OperatorNode* this__, wchar_t oper
     __stack1_0 = (int32_t)(oper);
     /* Path=1, Unique=0: IL_000b: stfld System.Char Win32.Code.OperatorNode::Operator */
     __stack0_0->Operator = (wchar_t)__stack1_0;
-#line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 26 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0010: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -2232,7 +2232,7 @@ void Win32_Code_ReducibleNode__ctor(Win32_Code_ReducibleNode* this__, int32_t ne
     //-------------------
     // IL body:
 
-#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.1 */
@@ -2240,7 +2240,7 @@ void Win32_Code_ReducibleNode__ctor(Win32_Code_ReducibleNode* this__, int32_t ne
     /* Path=1, Unique=0: IL_0002: call System.Void Win32.Code.AbstractNode::.ctor(System.Int32) */
     Win32_Code_AbstractNode__ctor((Win32_Code_AbstractNode*)__stack0_0, __stack1_0);
     /* Path=1, Unique=0: IL_0007: nop */
-#line 32 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 32 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0008: nop */
     /* Path=1, Unique=0: IL_0009: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -2313,7 +2313,7 @@ void Win32_Code_NumericNode__ctor(Win32_Code_NumericNode* this__, int32_t numeri
     //-------------------
     // IL body:
 
-#line 42 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 42 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.2 */
@@ -2321,7 +2321,7 @@ void Win32_Code_NumericNode__ctor(Win32_Code_NumericNode* this__, int32_t numeri
     /* Path=1, Unique=0: IL_0002: call System.Void Win32.Code.ReducibleNode::.ctor(System.Int32) */
     Win32_Code_ReducibleNode__ctor((Win32_Code_ReducibleNode*)__stack0_0, __stack1_0);
     /* Path=1, Unique=0: IL_0007: nop */
-#line 43 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 43 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0008: nop */
     /* Path=1, Unique=0: IL_0009: ldarg.0 */
     __stack0_0 = this__;
@@ -2329,7 +2329,7 @@ void Win32_Code_NumericNode__ctor(Win32_Code_NumericNode* this__, int32_t numeri
     __stack1_0 = numeric;
     /* Path=1, Unique=0: IL_000b: stfld System.Int32 Win32.Code.NumericNode::Numeric */
     __stack0_0->Numeric = __stack1_0;
-#line 45 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 45 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0010: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -2368,7 +2368,7 @@ int32_t __Win32_Code_NumericNode_Reduce__(Win32_Code_NumericNode* this__)
     //-------------------
     // IL body:
 
-#line 48 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 48 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -2379,7 +2379,7 @@ int32_t __Win32_Code_NumericNode_Reduce__(Win32_Code_NumericNode* this__)
     /* Path=1, Unique=0: IL_0008: br.s IL_000a */
     goto IL_000a;
 IL_000a:
-#line 50 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 50 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_000a: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000b: ret */
@@ -2449,7 +2449,7 @@ void Win32_Code_ExpressionNode__ctor(Win32_Code_ExpressionNode* this__, Win32_Co
     //-------------------
     // IL body:
 
-#line 59 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 59 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: ldarg.s nextIndex */
@@ -2457,7 +2457,7 @@ void Win32_Code_ExpressionNode__ctor(Win32_Code_ExpressionNode* this__, Win32_Co
     /* Path=1, Unique=0: IL_0003: call System.Void Win32.Code.ReducibleNode::.ctor(System.Int32) */
     Win32_Code_ReducibleNode__ctor((Win32_Code_ReducibleNode*)__stack0_0, __stack1_0);
     /* Path=1, Unique=0: IL_0008: nop */
-#line 60 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 60 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0009: nop */
     /* Path=1, Unique=0: IL_000a: ldarg.0 */
     __stack0_0 = this__;
@@ -2465,21 +2465,21 @@ void Win32_Code_ExpressionNode__ctor(Win32_Code_ExpressionNode* this__, Win32_Co
     __stack1_1 = oper;
     /* Path=1, Unique=0: IL_000c: stfld Win32.Code.OperatorNode Win32.Code.ExpressionNode::Operator */
     __stack0_0->Operator = __stack1_1;
-#line 62 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 62 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0011: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0012: ldarg.2 */
     __stack1_2 = left;
     /* Path=1, Unique=0: IL_0013: stfld Win32.Code.ReducibleNode Win32.Code.ExpressionNode::Left */
     __stack0_0->Left = __stack1_2;
-#line 63 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 63 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0018: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0019: ldarg.3 */
     __stack1_2 = right;
     /* Path=1, Unique=0: IL_001a: stfld Win32.Code.ReducibleNode Win32.Code.ExpressionNode::Right */
     __stack0_0->Right = __stack1_2;
-#line 64 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 64 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_001f: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -2531,7 +2531,7 @@ int32_t __Win32_Code_ExpressionNode_Reduce__(Win32_Code_ExpressionNode* this__)
     //-------------------
     // IL body:
 
-#line 67 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -2541,7 +2541,7 @@ int32_t __Win32_Code_ExpressionNode_Reduce__(Win32_Code_ExpressionNode* this__)
     __stack0_2 = Win32_Code_ReducibleNode_Reduce(__stack0_1);
     /* Path=1, Unique=0: IL_000c: stloc.0 */
     local0 = __stack0_2;
-#line 69 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 69 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_000d: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_000e: ldfld Win32.Code.ReducibleNode Win32.Code.ExpressionNode::Right */
@@ -2550,7 +2550,7 @@ int32_t __Win32_Code_ExpressionNode_Reduce__(Win32_Code_ExpressionNode* this__)
     __stack0_2 = Win32_Code_ReducibleNode_Reduce(__stack0_1);
     /* Path=1, Unique=0: IL_0018: stloc.1 */
     local1 = __stack0_2;
-#line 70 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 70 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0019: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_001a: ldfld Win32.Code.OperatorNode Win32.Code.ExpressionNode::Operator */
@@ -2567,7 +2567,7 @@ int32_t __Win32_Code_ExpressionNode_Reduce__(Win32_Code_ExpressionNode* this__)
     __stack0_2 = local2;
     /* Path=1, Unique=0: IL_002a: brfalse.s IL_0033 */
     if (__stack0_2 == 0) goto IL_0033;
-#line 71 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 71 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_002c: nop */
     /* Path=1, Unique=0: IL_002d: ldloc.0 */
     __stack0_2 = local0;
@@ -2580,7 +2580,7 @@ int32_t __Win32_Code_ExpressionNode_Reduce__(Win32_Code_ExpressionNode* this__)
     /* Path=1, Unique=0: IL_0031: br.s IL_008b */
     goto IL_008b;
 IL_0033:
-#line 74 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 74 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0033: ldarg.0 */
     __stack0_0 = this__;
     /* Path=2, Unique=0: IL_0034: ldfld Win32.Code.OperatorNode Win32.Code.ExpressionNode::Operator */
@@ -2597,7 +2597,7 @@ IL_0033:
     __stack0_2 = local4;
     /* Path=2, Unique=0: IL_0046: brfalse.s IL_004f */
     if (__stack0_2 == 0) goto IL_004f;
-#line 75 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 75 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0048: nop */
     /* Path=2, Unique=0: IL_0049: ldloc.0 */
     __stack0_2 = local0;
@@ -2610,7 +2610,7 @@ IL_0033:
     /* Path=2, Unique=0: IL_004d: br.s IL_008b */
     goto IL_008b;
 IL_004f:
-#line 78 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 78 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_004f: ldarg.0 */
     __stack0_0 = this__;
     /* Path=4, Unique=0: IL_0050: ldfld Win32.Code.OperatorNode Win32.Code.ExpressionNode::Operator */
@@ -2627,7 +2627,7 @@ IL_004f:
     __stack0_2 = local5;
     /* Path=4, Unique=0: IL_0062: brfalse.s IL_006b */
     if (__stack0_2 == 0) goto IL_006b;
-#line 79 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 79 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_0064: nop */
     /* Path=4, Unique=0: IL_0065: ldloc.0 */
     __stack0_2 = local0;
@@ -2640,7 +2640,7 @@ IL_004f:
     /* Path=4, Unique=0: IL_0069: br.s IL_008b */
     goto IL_008b;
 IL_006b:
-#line 82 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 82 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_006b: ldarg.0 */
     __stack0_0 = this__;
     /* Path=5, Unique=0: IL_006c: ldfld Win32.Code.OperatorNode Win32.Code.ExpressionNode::Operator */
@@ -2657,7 +2657,7 @@ IL_006b:
     __stack0_2 = local6;
     /* Path=5, Unique=0: IL_007e: brfalse.s IL_0087 */
     if (__stack0_2 == 0) goto IL_0087;
-#line 83 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 83 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0080: nop */
     /* Path=5, Unique=0: IL_0081: ldloc.0 */
     __stack0_2 = local0;
@@ -2670,7 +2670,7 @@ IL_006b:
     /* Path=5, Unique=0: IL_0085: br.s IL_008b */
     goto IL_008b;
 IL_0087:
-#line 88 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 88 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_0087: ldc.i4.0 */
     __stack0_2 = 0;
     /* Path=6, Unique=0: IL_0088: stloc.3 */
@@ -2678,7 +2678,7 @@ IL_0087:
     /* Path=6, Unique=0: IL_0089: br.s IL_008b */
     goto IL_008b;
 IL_008b:
-#line 89 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 89 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_008b: ldloc.3 */
     __stack0_2 = local3;
     /* Path=3, Unique=0: IL_008c: ret */
@@ -2756,7 +2756,7 @@ int32_t Win32_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t st
     //-------------------
     // IL body:
 
-#line 95 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 95 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.1 */
     __stack0_0 = startIndex;
@@ -2765,7 +2765,7 @@ int32_t Win32_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t st
     /* Path=1, Unique=0: IL_0003: br.s IL_002a */
     goto IL_002a;
 IL_0005:
-#line 98 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 98 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_0005: nop */
     /* Path=3, Unique=0: IL_0006: ldarg.0 */
     __stack0_1 = line;
@@ -2775,7 +2775,7 @@ IL_0005:
     __stack0_2 = System_String_get_Chars(__stack0_1, __stack1_2);
     /* Path=3, Unique=0: IL_000d: stloc.1 */
     local1 = (wchar_t)__stack0_2;
-#line 100 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 100 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_000e: ldloc.1 */
     __stack0_0 = local1;
     /* Path=3, Unique=0: IL_000f: ldc.i4.s 32 */
@@ -2804,12 +2804,12 @@ IL_001e:
     __stack0_0 = local2;
     /* Path=5, Unique=0: IL_0020: brfalse.s IL_0025 */
     if (__stack0_0 == 0) goto IL_0025;
-#line 101 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 101 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0022: nop */
     /* Path=5, Unique=0: IL_0023: br.s IL_0037 */
     goto IL_0037;
 IL_0025:
-#line 104 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 104 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_0025: ldloc.0 */
     __stack0_0 = local0;
     /* Path=6, Unique=0: IL_0026: ldc.i4.1 */
@@ -2818,7 +2818,7 @@ IL_0025:
     __stack0_0 = __stack0_0 + __stack1_2;
     /* Path=6, Unique=0: IL_0028: stloc.0 */
     local0 = __stack0_0;
-#line 105 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 105 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_0029: nop */
 IL_002a:
     /* Path=2, Unique=0: IL_002a: ldloc.0 */
@@ -2836,7 +2836,7 @@ IL_002a:
     /* Path=2, Unique=0: IL_0035: brtrue.s IL_0005 */
     if (__stack0_0 != 0) goto IL_0005;
 IL_0037:
-#line 107 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 107 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0037: ldloc.0 */
     __stack0_0 = local0;
     /* Path=2, Unique=0: IL_0038: stloc.s local4 */
@@ -2844,7 +2844,7 @@ IL_0037:
     /* Path=2, Unique=0: IL_003a: br.s IL_003c */
     goto IL_003c;
 IL_003c:
-#line 108 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 108 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_003c: ldloc.s local4 */
     __stack0_0 = local4;
     /* Path=4, Unique=0: IL_003e: ret */
@@ -2903,7 +2903,7 @@ Win32_Code_OperatorNode* Win32_Code_PolishNotation_ParseOperator(System_String* 
     //-------------------
     // IL body:
 
-#line 111 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 111 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.1 */
     __stack0_0 = startIndex;
@@ -2923,7 +2923,7 @@ Win32_Code_OperatorNode* Win32_Code_PolishNotation_ParseOperator(System_String* 
     __stack0_0 = local2;
     /* Path=1, Unique=0: IL_000f: brfalse.s IL_0016 */
     if (__stack0_0 == 0) goto IL_0016;
-#line 113 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 113 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0011: nop */
     /* Path=1, Unique=0: IL_0012: ldnull */
     __stack0_1 = NULL;
@@ -2932,12 +2932,12 @@ Win32_Code_OperatorNode* Win32_Code_PolishNotation_ParseOperator(System_String* 
     /* Path=1, Unique=0: IL_0014: br.s IL_005b */
     goto IL_005b;
 IL_0016:
-#line 117 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 117 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0016: ldarg.1 */
     __stack0_0 = startIndex;
     /* Path=2, Unique=0: IL_0017: stloc.0 */
     local0 = __stack0_0;
-#line 118 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 118 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0018: ldarg.0 */
     __stack0_2 = line;
     /* Path=2, Unique=0: IL_0019: ldloc.0 */
@@ -2946,7 +2946,7 @@ IL_0016:
     __stack0_3 = System_String_get_Chars(__stack0_2, __stack1_2);
     /* Path=2, Unique=0: IL_001f: stloc.1 */
     local1 = (wchar_t)__stack0_3;
-#line 119 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 119 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0020: ldloc.1 */
     __stack0_0 = local1;
     /* Path=2, Unique=0: IL_0021: ldc.i4.s 43 */
@@ -2987,7 +2987,7 @@ IL_003a:
     __stack0_0 = local4;
     /* Path=4, Unique=0: IL_003e: brfalse.s IL_0045 */
     if (__stack0_0 == 0) goto IL_0045;
-#line 120 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 120 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_0040: nop */
     /* Path=4, Unique=0: IL_0041: ldnull */
     __stack0_1 = NULL;
@@ -2996,7 +2996,7 @@ IL_003a:
     /* Path=4, Unique=0: IL_0043: br.s IL_005b */
     goto IL_005b;
 IL_0045:
-#line 123 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 123 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0045: ldloc.0 */
     __stack0_0 = local0;
     /* Path=5, Unique=0: IL_0046: ldc.i4.1 */
@@ -3005,7 +3005,7 @@ IL_0045:
     __stack0_0 = __stack0_0 + __stack1_2;
     /* Path=5, Unique=0: IL_0048: stloc.0 */
     local0 = __stack0_0;
-#line 125 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 125 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0049: ldarg.0 */
     __stack0_2 = line;
     /* Path=5, Unique=0: IL_004a: ldloc.0 */
@@ -3014,7 +3014,7 @@ IL_0045:
     __stack0_0 = Win32_Code_PolishNotation_SkipWhiteSpace(__stack0_2, __stack1_2);
     /* Path=5, Unique=0: IL_0050: stloc.0 */
     local0 = __stack0_0;
-#line 126 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 126 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0051: ldloc.1 */
     __stack0_0 = local1;
     /* Path=5, Unique=0: IL_0052: ldloc.0 */
@@ -3027,7 +3027,7 @@ IL_0045:
     /* Path=5, Unique=0: IL_0059: br.s IL_005b */
     goto IL_005b;
 IL_005b:
-#line 127 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 127 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_005b: ldloc.3 */
     __stack0_4 = local3;
     /* Path=3, Unique=0: IL_005c: ret */
@@ -3101,7 +3101,7 @@ Win32_Code_NumericNode* Win32_Code_PolishNotation_ParseNumeric(System_String* li
     //-------------------
     // IL body:
 
-#line 130 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 130 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.1 */
     __stack0_0 = startIndex;
@@ -3121,7 +3121,7 @@ Win32_Code_NumericNode* Win32_Code_PolishNotation_ParseNumeric(System_String* li
     __stack0_0 = local3;
     /* Path=1, Unique=0: IL_000f: brfalse.s IL_0017 */
     if (__stack0_0 == 0) goto IL_0017;
-#line 132 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 132 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0011: nop */
     /* Path=1, Unique=0: IL_0012: ldnull */
     __stack0_1 = NULL;
@@ -3130,7 +3130,7 @@ Win32_Code_NumericNode* Win32_Code_PolishNotation_ParseNumeric(System_String* li
     /* Path=1, Unique=0: IL_0015: br.s IL_008d */
     goto IL_008d;
 IL_0017:
-#line 136 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 136 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0017: ldarg.1 */
     __stack0_0 = startIndex;
     /* Path=2, Unique=0: IL_0018: stloc.0 */
@@ -3138,7 +3138,7 @@ IL_0017:
     /* Path=2, Unique=0: IL_0019: br.s IL_0039 */
     goto IL_0039;
 IL_001b:
-#line 138 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 138 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_001b: nop */
     /* Path=5, Unique=0: IL_001c: ldarg.0 */
     __stack0_3 = line;
@@ -3148,7 +3148,7 @@ IL_001b:
     __stack0_4 = System_String_get_Chars(__stack0_3, __stack1_2);
     /* Path=5, Unique=0: IL_0023: stloc.s local5 */
     local5 = (wchar_t)__stack0_4;
-#line 140 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 140 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0025: ldloc.s local5 */
     __stack0_0 = local5;
     /* Path=5, Unique=0: IL_0027: ldc.i4.s 32 */
@@ -3161,12 +3161,12 @@ IL_001b:
     __stack0_0 = local6;
     /* Path=5, Unique=0: IL_002f: brfalse.s IL_0034 */
     if (__stack0_0 == 0) goto IL_0034;
-#line 141 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 141 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0031: nop */
     /* Path=5, Unique=0: IL_0032: br.s IL_0048 */
     goto IL_0048;
 IL_0034:
-#line 144 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 144 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=7, Unique=0: IL_0034: ldloc.0 */
     __stack0_0 = local0;
     /* Path=7, Unique=0: IL_0035: ldc.i4.1 */
@@ -3175,7 +3175,7 @@ IL_0034:
     __stack0_0 = __stack0_0 + __stack1_2;
     /* Path=7, Unique=0: IL_0037: stloc.0 */
     local0 = __stack0_0;
-#line 145 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 145 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=7, Unique=0: IL_0038: nop */
 IL_0039:
     /* Path=4, Unique=0: IL_0039: ldloc.0 */
@@ -3193,7 +3193,7 @@ IL_0039:
     /* Path=4, Unique=0: IL_0046: brtrue.s IL_001b */
     if (__stack0_0 != 0) goto IL_001b;
 IL_0048:
-#line 147 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 147 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_0048: ldloc.0 */
     __stack0_0 = local0;
     /* Path=4, Unique=0: IL_0049: ldarg.1 */
@@ -3206,7 +3206,7 @@ IL_0048:
     __stack0_0 = local8;
     /* Path=4, Unique=0: IL_0050: brfalse.s IL_0058 */
     if (__stack0_0 == 0) goto IL_0058;
-#line 148 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 148 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_0052: nop */
     /* Path=4, Unique=0: IL_0053: ldnull */
     __stack0_1 = NULL;
@@ -3215,7 +3215,7 @@ IL_0048:
     /* Path=4, Unique=0: IL_0056: br.s IL_008d */
     goto IL_008d;
 IL_0058:
-#line 152 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 152 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_0058: ldarg.0 */
     __stack0_3 = line;
     /* Path=6, Unique=0: IL_0059: ldarg.1 */
@@ -3230,7 +3230,7 @@ IL_0058:
     __stack0_5 = System_String_Substring_1(__stack0_3, __stack1_2, __stack2_0);
     /* Path=6, Unique=0: IL_0062: stloc.1 */
     local1 = __stack0_5;
-#line 153 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 153 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_0063: ldloc.1 */
     __stack0_3 = local1;
     /* Path=6, Unique=0: IL_0064: ldloca.s local2 */
@@ -3247,7 +3247,7 @@ IL_0058:
     __stack0_0 = local9;
     /* Path=6, Unique=0: IL_0072: brfalse.s IL_007a */
     if (__stack0_0 == 0) goto IL_007a;
-#line 154 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 154 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_0074: nop */
     /* Path=6, Unique=0: IL_0075: ldnull */
     __stack0_1 = NULL;
@@ -3256,7 +3256,7 @@ IL_0058:
     /* Path=6, Unique=0: IL_0078: br.s IL_008d */
     goto IL_008d;
 IL_007a:
-#line 158 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 158 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=8, Unique=0: IL_007a: ldarg.0 */
     __stack0_3 = line;
     /* Path=8, Unique=0: IL_007b: ldloc.0 */
@@ -3265,7 +3265,7 @@ IL_007a:
     __stack0_0 = Win32_Code_PolishNotation_SkipWhiteSpace(__stack0_3, __stack1_2);
     /* Path=8, Unique=0: IL_0081: stloc.0 */
     local0 = __stack0_0;
-#line 159 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 159 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=8, Unique=0: IL_0082: ldloc.2 */
     __stack0_0 = local2;
     /* Path=8, Unique=0: IL_0083: ldloc.0 */
@@ -3278,7 +3278,7 @@ IL_007a:
     /* Path=8, Unique=0: IL_008b: br.s IL_008d */
     goto IL_008d;
 IL_008d:
-#line 160 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 160 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_008d: ldloc.s local4 */
     __stack0_2 = local4;
     /* Path=3, Unique=0: IL_008f: ret */
@@ -3370,7 +3370,7 @@ Win32_Code_ExpressionNode* Win32_Code_PolishNotation_ParseExpression(System_Stri
     //-------------------
     // IL body:
 
-#line 163 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 163 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.1 */
     __stack0_0 = startIndex;
@@ -3390,7 +3390,7 @@ Win32_Code_ExpressionNode* Win32_Code_PolishNotation_ParseExpression(System_Stri
     __stack0_0 = local4;
     /* Path=1, Unique=0: IL_0011: brfalse.s IL_001c */
     if (__stack0_0 == 0) goto IL_001c;
-#line 165 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 165 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0013: nop */
     /* Path=1, Unique=0: IL_0014: ldnull */
     __stack0_1 = NULL;
@@ -3399,7 +3399,7 @@ Win32_Code_ExpressionNode* Win32_Code_PolishNotation_ParseExpression(System_Stri
     /* Path=1, Unique=0: IL_0017: br IL_00bd */
     goto IL_00bd;
 IL_001c:
-#line 169 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 169 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_001c: ldarg.0 */
     __stack0_2 = line;
     /* Path=2, Unique=0: IL_001d: ldarg.1 */
@@ -3408,7 +3408,7 @@ IL_001c:
     __stack0_3 = Win32_Code_PolishNotation_ParseOperator(__stack0_2, __stack1_2);
     /* Path=2, Unique=0: IL_0023: stloc.0 */
     local0 = __stack0_3;
-#line 170 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 170 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_0024: ldloc.0 */
     __stack0_3 = local0;
     /* Path=2, Unique=0: IL_0025: ldnull */
@@ -3421,7 +3421,7 @@ IL_001c:
     __stack0_0 = local6;
     /* Path=2, Unique=0: IL_002c: brfalse.s IL_0037 */
     if (__stack0_0 == 0) goto IL_0037;
-#line 171 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 171 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=2, Unique=0: IL_002e: nop */
     /* Path=2, Unique=0: IL_002f: ldnull */
     __stack0_1 = NULL;
@@ -3430,7 +3430,7 @@ IL_001c:
     /* Path=2, Unique=0: IL_0032: br IL_00bd */
     goto IL_00bd;
 IL_0037:
-#line 175 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 175 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_0037: ldarg.0 */
     __stack0_2 = line;
     /* Path=4, Unique=0: IL_0038: ldloc.0 */
@@ -3441,7 +3441,7 @@ IL_0037:
     __stack0_5 = Win32_Code_PolishNotation_ParseNumeric(__stack0_2, __stack1_2);
     /* Path=4, Unique=0: IL_0043: stloc.1 */
     local1 = (Win32_Code_ReducibleNode*)__stack0_5;
-#line 176 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 176 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_0044: ldloc.1 */
     __stack0_6 = local1;
     /* Path=4, Unique=0: IL_0045: ldnull */
@@ -3454,7 +3454,7 @@ IL_0037:
     __stack0_0 = local7;
     /* Path=4, Unique=0: IL_004c: brfalse.s IL_006d */
     if (__stack0_0 == 0) goto IL_006d;
-#line 177 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 177 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_004e: nop */
     /* Path=4, Unique=0: IL_004f: ldarg.0 */
     __stack0_2 = line;
@@ -3466,7 +3466,7 @@ IL_0037:
     __stack0_4 = Win32_Code_PolishNotation_ParseExpression(__stack0_2, __stack1_2);
     /* Path=4, Unique=0: IL_005b: stloc.1 */
     local1 = (Win32_Code_ReducibleNode*)__stack0_4;
-#line 179 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 179 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_005c: ldloc.1 */
     __stack0_6 = local1;
     /* Path=4, Unique=0: IL_005d: ldnull */
@@ -3479,7 +3479,7 @@ IL_0037:
     __stack0_0 = local8;
     /* Path=4, Unique=0: IL_0064: brfalse.s IL_006c */
     if (__stack0_0 == 0) goto IL_006c;
-#line 180 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 180 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=4, Unique=0: IL_0066: nop */
     /* Path=4, Unique=0: IL_0067: ldnull */
     __stack0_1 = NULL;
@@ -3488,7 +3488,7 @@ IL_0037:
     /* Path=4, Unique=0: IL_006a: br.s IL_00bd */
     goto IL_00bd;
 IL_006c:
-#line 183 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 183 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_006c: nop */
 IL_006d:
     /* Path=5, Unique=0: IL_006d: ldarg.0 */
@@ -3501,7 +3501,7 @@ IL_006d:
     __stack0_5 = Win32_Code_PolishNotation_ParseNumeric(__stack0_2, __stack1_2);
     /* Path=5, Unique=0: IL_0079: stloc.2 */
     local2 = (Win32_Code_ReducibleNode*)__stack0_5;
-#line 186 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 186 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_007a: ldloc.2 */
     __stack0_6 = local2;
     /* Path=5, Unique=0: IL_007b: ldnull */
@@ -3514,7 +3514,7 @@ IL_006d:
     __stack0_0 = local9;
     /* Path=5, Unique=0: IL_0082: brfalse.s IL_00a3 */
     if (__stack0_0 == 0) goto IL_00a3;
-#line 187 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 187 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0084: nop */
     /* Path=5, Unique=0: IL_0085: ldarg.0 */
     __stack0_2 = line;
@@ -3526,7 +3526,7 @@ IL_006d:
     __stack0_4 = Win32_Code_PolishNotation_ParseExpression(__stack0_2, __stack1_2);
     /* Path=5, Unique=0: IL_0091: stloc.2 */
     local2 = (Win32_Code_ReducibleNode*)__stack0_4;
-#line 189 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 189 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0092: ldloc.2 */
     __stack0_6 = local2;
     /* Path=5, Unique=0: IL_0093: ldnull */
@@ -3539,7 +3539,7 @@ IL_006d:
     __stack0_0 = local10;
     /* Path=5, Unique=0: IL_009a: brfalse.s IL_00a2 */
     if (__stack0_0 == 0) goto IL_00a2;
-#line 190 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 190 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_009c: nop */
     /* Path=5, Unique=0: IL_009d: ldnull */
     __stack0_1 = NULL;
@@ -3548,7 +3548,7 @@ IL_006d:
     /* Path=5, Unique=0: IL_00a0: br.s IL_00bd */
     goto IL_00bd;
 IL_00a2:
-#line 193 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 193 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=8, Unique=0: IL_00a2: nop */
 IL_00a3:
     /* Path=7, Unique=0: IL_00a3: ldarg.0 */
@@ -3561,7 +3561,7 @@ IL_00a3:
     __stack0_0 = Win32_Code_PolishNotation_SkipWhiteSpace(__stack0_2, __stack1_2);
     /* Path=7, Unique=0: IL_00af: stloc.3 */
     local3 = __stack0_0;
-#line 196 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 196 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=7, Unique=0: IL_00b0: ldloc.0 */
     __stack0_3 = local0;
     /* Path=7, Unique=0: IL_00b1: ldloc.1 */
@@ -3578,7 +3578,7 @@ IL_00a3:
     /* Path=7, Unique=0: IL_00bb: br.s IL_00bd */
     goto IL_00bd;
 IL_00bd:
-#line 197 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 197 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_00bd: ldloc.s local5 */
     __stack0_4 = local5;
     /* Path=3, Unique=0: IL_00bf: ret */
@@ -3639,28 +3639,28 @@ void Win32_Code_PolishNotation_Main(void)
     //-------------------
     // IL body:
 
-#line 200 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 200 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: br.s IL_0078 */
     goto IL_0078;
 IL_0003:
-#line 202 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 202 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_0003: nop */
     /* Path=3, Unique=0: IL_0004: call System.Void System.Console::WriteLine() */
     System_Console_WriteLine();
     /* Path=3, Unique=0: IL_0009: nop */
-#line 204 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 204 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_000a: ldstr "PN> " */
     __stack0_1 = __string0;
     /* Path=3, Unique=0: IL_000f: call System.Void System.Console::Write(System.String) */
     System_Console_Write_9(__stack0_1);
     /* Path=3, Unique=0: IL_0014: nop */
-#line 205 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 205 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_0015: call System.String System.Console::ReadLine() */
     __stack0_1 = System_Console_ReadLine();
     /* Path=3, Unique=0: IL_001a: stloc.0 */
     local0 = __stack0_1;
-#line 206 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 206 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_001b: ldloc.0 */
     __stack0_1 = local0;
     /* Path=3, Unique=0: IL_001c: call System.Boolean System.String::IsNullOrWhiteSpace(System.String) */
@@ -3675,7 +3675,7 @@ IL_0003:
     __stack0_0 = local1;
     /* Path=3, Unique=0: IL_0026: brfalse.s IL_0077 */
     if (__stack0_0 == 0) goto IL_0077;
-#line 207 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 207 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_0028: nop */
     /* Path=3, Unique=0: IL_0029: ldloc.0 */
     __stack0_1 = local0;
@@ -3689,12 +3689,12 @@ IL_0003:
     __stack0_0 = local4;
     /* Path=3, Unique=0: IL_0038: brfalse.s IL_003d */
     if (__stack0_0 == 0) goto IL_003d;
-#line 209 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 209 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=3, Unique=0: IL_003a: nop */
     /* Path=3, Unique=0: IL_003b: br.s IL_007d */
     goto IL_007d;
 IL_003d:
-#line 213 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 213 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_003d: ldloc.0 */
     __stack0_1 = local0;
     /* Path=5, Unique=0: IL_003e: ldc.i4.0 */
@@ -3703,7 +3703,7 @@ IL_003d:
     __stack0_2 = Win32_Code_PolishNotation_ParseExpression(__stack0_1, __stack1_0);
     /* Path=5, Unique=0: IL_0044: stloc.2 */
     local2 = __stack0_2;
-#line 214 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 214 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_0045: ldloc.2 */
     __stack0_2 = local2;
     /* Path=5, Unique=0: IL_0046: ldnull */
@@ -3716,37 +3716,37 @@ IL_003d:
     __stack0_0 = local5;
     /* Path=5, Unique=0: IL_004d: brfalse.s IL_005d */
     if (__stack0_0 == 0) goto IL_005d;
-#line 215 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 215 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_004f: nop */
     /* Path=5, Unique=0: IL_0050: ldstr "Syntax error." */
     __stack0_1 = __string2;
     /* Path=5, Unique=0: IL_0055: call System.Void System.Console::WriteLine(System.String) */
     System_Console_WriteLine_10(__stack0_1);
     /* Path=5, Unique=0: IL_005a: nop */
-#line 217 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 217 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=5, Unique=0: IL_005b: br.s IL_0078 */
     goto IL_0078;
 IL_005d:
-#line 220 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 220 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=7, Unique=0: IL_005d: ldloc.2 */
     __stack0_2 = local2;
     /* Path=7, Unique=0: IL_005e: callvirt System.Int32 Win32.Code.ReducibleNode::Reduce() */
     __stack0_0 = Win32_Code_ReducibleNode_Reduce((Win32_Code_ReducibleNode*)__stack0_2);
     /* Path=7, Unique=0: IL_0063: stloc.3 */
     local3 = __stack0_0;
-#line 222 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 222 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=7, Unique=0: IL_0064: ldstr "Reuslt=" */
     __stack0_1 = __string3;
     /* Path=7, Unique=0: IL_0069: call System.Void System.Console::Write(System.String) */
     System_Console_Write_9(__stack0_1);
     /* Path=7, Unique=0: IL_006e: nop */
-#line 223 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 223 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=7, Unique=0: IL_006f: ldloc.3 */
     __stack0_0 = local3;
     /* Path=7, Unique=0: IL_0070: call System.Void System.Console::WriteLine(System.Int32) */
     System_Console_WriteLine_6(__stack0_0);
     /* Path=7, Unique=0: IL_0075: nop */
-#line 224 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 224 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=7, Unique=0: IL_0076: nop */
 IL_0077:
     /* Path=4, Unique=0: IL_0077: nop */
@@ -3758,7 +3758,7 @@ IL_0078:
     /* Path=2, Unique=0: IL_007b: br.s IL_0003 */
     goto IL_0003;
 IL_007d:
-#line 226 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\PolishNotation.cs"
+#line 226 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs"
     /* Path=6, Unique=0: IL_007d: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -3862,13 +3862,13 @@ void Win32_Code_StringTest_LiteralString(void)
     //-------------------
     // IL body:
 
-#line 12 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 12 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABC" */
     __stack0_0 = __string4;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 14 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 14 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -3908,7 +3908,7 @@ System_String* Win32_Code_StringTest_InOutString(System_String* a)
     //-------------------
     // IL body:
 
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 17 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = a;
@@ -3917,7 +3917,7 @@ System_String* Win32_Code_StringTest_InOutString(System_String* a)
     /* Path=1, Unique=0: IL_0003: br.s IL_0005 */
     goto IL_0005;
 IL_0005:
-#line 19 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 19 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0005: ldloc.0 */
     __stack0_0 = local0;
     /* Path=2, Unique=0: IL_0006: ret */
@@ -3968,18 +3968,18 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
     //-------------------
     // IL body:
 
-#line 22 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 22 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABC" */
     __stack0_0 = __string4;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 24 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 24 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0007: ldstr "DEF" */
     __stack0_0 = __string5;
     /* Path=1, Unique=0: IL_000c: stloc.1 */
     local1 = __stack0_0;
-#line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 25 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_000d: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_000e: ldloc.1 */
@@ -3991,7 +3991,7 @@ System_String* Win32_Code_StringTest_LiteralCombinedString(void)
     /* Path=1, Unique=0: IL_0015: br.s IL_0017 */
     goto IL_0017;
 IL_0017:
-#line 26 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 26 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0017: ldloc.2 */
     __stack0_0 = local2;
     /* Path=2, Unique=0: IL_0018: ret */
@@ -4040,13 +4040,13 @@ System_String* Win32_Code_StringTest_LiteralSubstring(void)
     //-------------------
     // IL body:
 
-#line 29 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 29 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldstr "ABCDEFGHIJKLMN" */
     __stack0_0 = __string6;
     /* Path=1, Unique=0: IL_0006: stloc.0 */
     local0 = __stack0_0;
-#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0007: ldloc.0 */
     __stack0_0 = local0;
     /* Path=1, Unique=0: IL_0008: ldc.i4.3 */
@@ -4058,7 +4058,7 @@ System_String* Win32_Code_StringTest_LiteralSubstring(void)
     /* Path=1, Unique=0: IL_000f: br.s IL_0011 */
     goto IL_0011;
 IL_0011:
-#line 32 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 32 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0011: ldloc.1 */
     __stack0_0 = local1;
     /* Path=2, Unique=0: IL_0012: ret */
@@ -4084,7 +4084,7 @@ wchar_t Win32_Code_StringTest_GetChar(void)
     //-------------------
     // IL body:
 
-#line 35 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 35 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldc.i4.s 65 */
     __stack0_0 = 65;
@@ -4093,7 +4093,7 @@ wchar_t Win32_Code_StringTest_GetChar(void)
     /* Path=1, Unique=0: IL_0004: br.s IL_0006 */
     goto IL_0006;
 IL_0006:
-#line 37 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 37 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_0006: ldloc.0 */
     __stack0_0 = local0;
     /* Path=2, Unique=0: IL_0007: ret */
@@ -4135,7 +4135,7 @@ wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index)
     //-------------------
     // IL body:
 
-#line 40 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 40 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = str;
@@ -4148,7 +4148,7 @@ wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index)
     /* Path=1, Unique=0: IL_0009: br.s IL_000b */
     goto IL_000b;
 IL_000b:
-#line 42 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\StringTest.cs"
+#line 42 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\StringTest.cs"
     /* Path=2, Unique=0: IL_000b: ldloc.0 */
     __stack0_2 = local0;
     /* Path=2, Unique=0: IL_000c: ret */
@@ -4318,7 +4318,7 @@ int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget*
     //-------------------
     // IL body:
 
-#line 15 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 15 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldarg.0 */
     __stack0_0 = this__;
@@ -4337,7 +4337,7 @@ int32_t Win32_Code_ValueTypeTestTarget_GetValue2(Win32_Code_ValueTypeTestTarget*
     /* Path=1, Unique=0: IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-#line 17 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 17 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=2, Unique=0: IL_000e: ldloc.0 */
     __stack0_1 = local0;
     /* Path=2, Unique=0: IL_000f: ret */
@@ -4408,20 +4408,20 @@ int32_t Win32_Code_ValueTypeTest_Test4(void)
     //-------------------
     // IL body:
 
-#line 23 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 23 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldloca.s local0 */
     __stack0_0 = &local0;
     /* Path=1, Unique=0: IL_0003: initobj Win32.Code.ValueTypeTestTarget */
     memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
-#line 25 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 25 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0009: ldloca.s local0 */
     __stack0_1 = &local0;
     /* Path=1, Unique=0: IL_000b: ldc.i4 456 */
     __stack1_0 = 456;
     /* Path=1, Unique=0: IL_0010: stfld System.Int32 Win32.Code.ValueTypeTestTarget::Value2 */
     __stack0_1->Value2 = __stack1_0;
-#line 27 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 27 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0015: ldloc.0 */
     __stack0_2 = local0;
     /* Path=1, Unique=0: IL_0016: ldfld System.Int32 Win32.Code.ValueTypeTestTarget::Value2 */
@@ -4431,7 +4431,7 @@ int32_t Win32_Code_ValueTypeTest_Test4(void)
     /* Path=1, Unique=0: IL_001c: br.s IL_001e */
     goto IL_001e;
 IL_001e:
-#line 28 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 28 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=2, Unique=0: IL_001e: ldloc.1 */
     __stack0_3 = local1;
     /* Path=2, Unique=0: IL_001f: ret */
@@ -4482,20 +4482,20 @@ int32_t Win32_Code_ValueTypeTest_Test5(void)
     //-------------------
     // IL body:
 
-#line 31 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0000: nop */
     /* Path=1, Unique=0: IL_0001: ldloca.s local0 */
     __stack0_0 = &local0;
     /* Path=1, Unique=0: IL_0003: initobj Win32.Code.ValueTypeTestTarget */
     memset(__stack0_0, 0x00, sizeof(Win32_Code_ValueTypeTestTarget));
-#line 33 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 33 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0009: ldloca.s local0 */
     __stack0_1 = &local0;
     /* Path=1, Unique=0: IL_000b: ldc.i4 789 */
     __stack1_0 = 789;
     /* Path=1, Unique=0: IL_0010: stfld System.Int32 Win32.Code.ValueTypeTestTarget::Value2 */
     __stack0_1->Value2 = __stack1_0;
-#line 35 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 35 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0015: ldloca.s local0 */
     __stack0_2 = &local0;
     /* Path=1, Unique=0: IL_0017: ldc.i4.s 123 */
@@ -4506,7 +4506,7 @@ int32_t Win32_Code_ValueTypeTest_Test5(void)
     __stack0_3 = Win32_Code_ValueTypeTestTarget_GetValue2(__stack0_2, __stack1_0, __stack2_0);
     /* Path=1, Unique=0: IL_0023: stloc.1 */
     local1 = __stack0_3;
-#line 36 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 36 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=1, Unique=0: IL_0024: ldloc.1 */
     __stack0_3 = local1;
     /* Path=1, Unique=0: IL_0025: stloc.2 */
@@ -4514,7 +4514,7 @@ int32_t Win32_Code_ValueTypeTest_Test5(void)
     /* Path=1, Unique=0: IL_0026: br.s IL_0028 */
     goto IL_0028;
 IL_0028:
-#line 37 "D:\\PROJECT\\IL2C\\tests\\Win32\\Win32.Code\\ValueTypeTest.cs"
+#line 37 "D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ValueTypeTest.cs"
     /* Path=2, Unique=0: IL_0028: ldloc.2 */
     __stack0_3 = local2;
     /* Path=2, Unique=0: IL_0029: ret */

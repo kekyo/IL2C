@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj" />
+    <ProjectReference Include="..\..\IL2C.Core\IL2C.Core.csproj" />
   </ItemGroup>
 
 </Project>

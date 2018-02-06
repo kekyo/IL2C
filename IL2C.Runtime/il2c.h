@@ -54,7 +54,7 @@ struct IL2C_REF_HEADER
 #define il2c_typeof(typeName) (__##typeName##_RUNTIME_TYPE__)
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 #define il2c_get_vtable(typeName, this__) \
-    ((__##typeName##_TYPE_DEF_TYPE__*)((((IL2C_REF_HEADER*)(this__)) - 1)->type))
+    ((__##typeName##_RUNTIME_TYPE_DECL__*)((((IL2C_REF_HEADER*)(this__)) - 1)->type))
 
 /////////////////////////////////////////////////////////////
 // System.Object

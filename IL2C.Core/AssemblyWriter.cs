@@ -191,7 +191,7 @@ namespace IL2C
                     });
 
                     tw.WriteLine(
-                        "}} __{0}_TYPE_DEF_TYPE__;",
+                        "}} __{0}_RUNTIME_TYPE_DECL__;",
                         typeName);
                     tw.WriteLine();
 
@@ -543,7 +543,7 @@ namespace IL2C
             // Write runtime type information
             tw.WriteLine();
             tw.WriteLine(
-                "static __{0}_TYPE_DEF_TYPE__ __{0}_RUNTIME_TYPE_DEF__ = {{",
+                "static __{0}_RUNTIME_TYPE_DECL__ __{0}_RUNTIME_TYPE_DEF__ = {{",
                 rawTypeName);
 
             tw.WriteLine(

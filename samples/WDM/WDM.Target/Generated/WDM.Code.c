@@ -246,7 +246,7 @@ static void __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __WDM_Code_InterceptCDRomDevice_TYPE_DEF_TYPE__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__ = {
+static __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DECL__ __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"WDM.Code.InterceptCDRomDevice",
     (intptr_t)sizeof(WDM_Code_InterceptCDRomDevice),
     (intptr_t)__WDM_Code_InterceptCDRomDevice_MARK_HANDLER__,
@@ -370,7 +370,7 @@ static void __WDM_Code_Wdm_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __WDM_Code_Wdm_TYPE_DEF_TYPE__ __WDM_Code_Wdm_RUNTIME_TYPE_DEF__ = {
+static __WDM_Code_Wdm_RUNTIME_TYPE_DECL__ __WDM_Code_Wdm_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"WDM.Code.Wdm",
     (intptr_t)0,
     (intptr_t)__WDM_Code_Wdm_MARK_HANDLER__,

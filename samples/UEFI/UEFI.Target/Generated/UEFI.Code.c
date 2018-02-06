@@ -100,7 +100,7 @@ static void __UEFI_Code_AbstractNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __UEFI_Code_AbstractNode_TYPE_DEF_TYPE__ __UEFI_Code_AbstractNode_RUNTIME_TYPE_DEF__ = {
+static __UEFI_Code_AbstractNode_RUNTIME_TYPE_DECL__ __UEFI_Code_AbstractNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"UEFI.Code.AbstractNode",
     (intptr_t)sizeof(UEFI_Code_AbstractNode),
     (intptr_t)__UEFI_Code_AbstractNode_MARK_HANDLER__,
@@ -177,7 +177,7 @@ static void __UEFI_Code_OperatorNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
 }
 
-static __UEFI_Code_OperatorNode_TYPE_DEF_TYPE__ __UEFI_Code_OperatorNode_RUNTIME_TYPE_DEF__ = {
+static __UEFI_Code_OperatorNode_RUNTIME_TYPE_DECL__ __UEFI_Code_OperatorNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"UEFI.Code.OperatorNode",
     (intptr_t)sizeof(UEFI_Code_OperatorNode),
     (intptr_t)__UEFI_Code_OperatorNode_MARK_HANDLER__,
@@ -257,7 +257,7 @@ static void __UEFI_Code_ReducibleNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
 }
 
-static __UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__ __UEFI_Code_ReducibleNode_RUNTIME_TYPE_DEF__ = {
+static __UEFI_Code_ReducibleNode_RUNTIME_TYPE_DECL__ __UEFI_Code_ReducibleNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"UEFI.Code.ReducibleNode",
     (intptr_t)sizeof(UEFI_Code_ReducibleNode),
     (intptr_t)__UEFI_Code_ReducibleNode_MARK_HANDLER__,
@@ -387,7 +387,7 @@ static void __UEFI_Code_NumericNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
 }
 
-static __UEFI_Code_NumericNode_TYPE_DEF_TYPE__ __UEFI_Code_NumericNode_RUNTIME_TYPE_DEF__ = {
+static __UEFI_Code_NumericNode_RUNTIME_TYPE_DECL__ __UEFI_Code_NumericNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"UEFI.Code.NumericNode",
     (intptr_t)sizeof(UEFI_Code_NumericNode),
     (intptr_t)__UEFI_Code_NumericNode_MARK_HANDLER__,
@@ -689,7 +689,7 @@ static void __UEFI_Code_ExpressionNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
 }
 
-static __UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__ __UEFI_Code_ExpressionNode_RUNTIME_TYPE_DEF__ = {
+static __UEFI_Code_ExpressionNode_RUNTIME_TYPE_DECL__ __UEFI_Code_ExpressionNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"UEFI.Code.ExpressionNode",
     (intptr_t)sizeof(UEFI_Code_ExpressionNode),
     (intptr_t)__UEFI_Code_ExpressionNode_MARK_HANDLER__,
@@ -1778,7 +1778,7 @@ static void __UEFI_Code_PolishNotation_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __UEFI_Code_PolishNotation_TYPE_DEF_TYPE__ __UEFI_Code_PolishNotation_RUNTIME_TYPE_DEF__ = {
+static __UEFI_Code_PolishNotation_RUNTIME_TYPE_DECL__ __UEFI_Code_PolishNotation_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"UEFI.Code.PolishNotation",
     (intptr_t)0,
     (intptr_t)__UEFI_Code_PolishNotation_MARK_HANDLER__,

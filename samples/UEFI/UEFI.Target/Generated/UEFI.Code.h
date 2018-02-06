@@ -105,7 +105,7 @@ typedef const struct
     int32_t (*GetHashCode)(System_Object* this__);
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
-} __UEFI_Code_AbstractNode_TYPE_DEF_TYPE__;
+} __UEFI_Code_AbstractNode_RUNTIME_TYPE_DECL__;
 
 #define UEFI_Code_AbstractNode_ToString(/* UEFI_Code_AbstractNode* */ this__) \
     (il2c_get_vtable(UEFI_Code_AbstractNode, this__)->ToString((System_Object*)this__))
@@ -127,7 +127,7 @@ typedef const struct
     int32_t (*GetHashCode)(System_Object* this__);
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
-} __UEFI_Code_OperatorNode_TYPE_DEF_TYPE__;
+} __UEFI_Code_OperatorNode_RUNTIME_TYPE_DECL__;
 
 #define UEFI_Code_OperatorNode_ToString(/* UEFI_Code_OperatorNode* */ this__) \
     (il2c_get_vtable(UEFI_Code_OperatorNode, this__)->ToString((System_Object*)this__))
@@ -151,7 +151,7 @@ typedef const struct
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Reduce)(UEFI_Code_ReducibleNode* this__);
-} __UEFI_Code_ReducibleNode_TYPE_DEF_TYPE__;
+} __UEFI_Code_ReducibleNode_RUNTIME_TYPE_DECL__;
 
 #define UEFI_Code_ReducibleNode_ToString(/* UEFI_Code_ReducibleNode* */ this__) \
     (il2c_get_vtable(UEFI_Code_ReducibleNode, this__)->ToString((System_Object*)this__))
@@ -177,7 +177,7 @@ typedef const struct
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Reduce)(UEFI_Code_NumericNode* this__);
-} __UEFI_Code_NumericNode_TYPE_DEF_TYPE__;
+} __UEFI_Code_NumericNode_RUNTIME_TYPE_DECL__;
 
 #define UEFI_Code_NumericNode_ToString(/* UEFI_Code_NumericNode* */ this__) \
     (il2c_get_vtable(UEFI_Code_NumericNode, this__)->ToString((System_Object*)this__))
@@ -203,7 +203,7 @@ typedef const struct
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
     int32_t (*Reduce)(UEFI_Code_ExpressionNode* this__);
-} __UEFI_Code_ExpressionNode_TYPE_DEF_TYPE__;
+} __UEFI_Code_ExpressionNode_RUNTIME_TYPE_DECL__;
 
 #define UEFI_Code_ExpressionNode_ToString(/* UEFI_Code_ExpressionNode* */ this__) \
     (il2c_get_vtable(UEFI_Code_ExpressionNode, this__)->ToString((System_Object*)this__))
@@ -232,7 +232,7 @@ typedef const struct
     int32_t (*GetHashCode)(System_Object* this__);
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
-} __UEFI_Code_PolishNotation_TYPE_DEF_TYPE__;
+} __UEFI_Code_PolishNotation_RUNTIME_TYPE_DECL__;
 
 #define UEFI_Code_PolishNotation_ToString(/* UEFI_Code_PolishNotation* */ this__) \
     (il2c_get_vtable(UEFI_Code_PolishNotation, this__)->ToString((System_Object*)this__))

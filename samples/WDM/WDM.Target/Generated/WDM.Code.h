@@ -54,7 +54,7 @@ typedef const struct
     int32_t (*GetHashCode)(System_Object* this__);
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
-} __WDM_Code_InterceptCDRomDevice_TYPE_DEF_TYPE__;
+} __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DECL__;
 
 #define WDM_Code_InterceptCDRomDevice_ToString(/* WDM_Code_InterceptCDRomDevice* */ this__) \
     (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->ToString((System_Object*)this__))
@@ -80,7 +80,7 @@ typedef const struct
     int32_t (*GetHashCode)(System_Object* this__);
     void (*Finalize)(System_Object* this__);
     bool (*Equals)(System_Object* this__, System_Object* obj);
-} __WDM_Code_Wdm_TYPE_DEF_TYPE__;
+} __WDM_Code_Wdm_RUNTIME_TYPE_DECL__;
 
 #define WDM_Code_Wdm_ToString(/* WDM_Code_Wdm* */ this__) \
     (il2c_get_vtable(WDM_Code_Wdm, this__)->ToString((System_Object*)this__))

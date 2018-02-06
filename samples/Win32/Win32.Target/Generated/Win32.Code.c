@@ -169,7 +169,7 @@ static void __Win32_Code_BoxingTest_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_BoxingTest_TYPE_DEF_TYPE__ __Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_BoxingTest_RUNTIME_TYPE_DECL__ __Win32_Code_BoxingTest_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.BoxingTest",
     (intptr_t)0,
     (intptr_t)__Win32_Code_BoxingTest_MARK_HANDLER__,
@@ -415,7 +415,7 @@ static void __Win32_Code_ClassTypeTestTarget_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_ClassTypeTestTarget_TYPE_DEF_TYPE__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DECL__ __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.ClassTypeTestTarget",
     (intptr_t)sizeof(Win32_Code_ClassTypeTestTarget),
     (intptr_t)__Win32_Code_ClassTypeTestTarget_MARK_HANDLER__,
@@ -774,7 +774,7 @@ static void __Win32_Code_ClassTypeTest_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_ClassTypeTest_TYPE_DEF_TYPE__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_ClassTypeTest_RUNTIME_TYPE_DECL__ __Win32_Code_ClassTypeTest_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.ClassTypeTest",
     (intptr_t)0,
     (intptr_t)__Win32_Code_ClassTypeTest_MARK_HANDLER__,
@@ -939,7 +939,7 @@ static void __Win32_Code_Hoge1_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_Hoge1_TYPE_DEF_TYPE__ __Win32_Code_Hoge1_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_Hoge1_RUNTIME_TYPE_DECL__ __Win32_Code_Hoge1_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.Hoge1",
     (intptr_t)0,
     (intptr_t)__Win32_Code_Hoge1_MARK_HANDLER__,
@@ -1105,7 +1105,7 @@ static void __Win32_Code_Hoge2_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_Hoge2_TYPE_DEF_TYPE__ __Win32_Code_Hoge2_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_Hoge2_RUNTIME_TYPE_DECL__ __Win32_Code_Hoge2_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.Hoge2",
     (intptr_t)0,
     (intptr_t)__Win32_Code_Hoge2_MARK_HANDLER__,
@@ -1343,7 +1343,7 @@ static void __Win32_Code_InheritTestTargetBase1_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_InheritTestTargetBase1_TYPE_DEF_TYPE__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DECL__ __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.InheritTestTargetBase1",
     (intptr_t)sizeof(Win32_Code_InheritTestTargetBase1),
     (intptr_t)__Win32_Code_InheritTestTargetBase1_MARK_HANDLER__,
@@ -1584,7 +1584,7 @@ static void __Win32_Code_InheritTestTarget2_MARK_HANDLER__(void* pReference)
     il2c_typeof(Win32_Code_InheritTestTargetBase1)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_InheritTestTarget2_TYPE_DEF_TYPE__ __Win32_Code_InheritTestTarget2_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_InheritTestTarget2_RUNTIME_TYPE_DECL__ __Win32_Code_InheritTestTarget2_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.InheritTestTarget2",
     (intptr_t)sizeof(Win32_Code_InheritTestTarget2),
     (intptr_t)__Win32_Code_InheritTestTarget2_MARK_HANDLER__,
@@ -1945,7 +1945,7 @@ static void __Win32_Code_InheritTypeTest_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_InheritTypeTest_TYPE_DEF_TYPE__ __Win32_Code_InheritTypeTest_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_InheritTypeTest_RUNTIME_TYPE_DECL__ __Win32_Code_InheritTypeTest_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.InheritTypeTest",
     (intptr_t)0,
     (intptr_t)__Win32_Code_InheritTypeTest_MARK_HANDLER__,
@@ -2033,7 +2033,7 @@ static void __Win32_Code_Win32_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_Win32_TYPE_DEF_TYPE__ __Win32_Code_Win32_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_Win32_RUNTIME_TYPE_DECL__ __Win32_Code_Win32_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.Win32",
     (intptr_t)0,
     (intptr_t)__Win32_Code_Win32_MARK_HANDLER__,
@@ -2108,7 +2108,7 @@ static void __Win32_Code_AbstractNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_AbstractNode_TYPE_DEF_TYPE__ __Win32_Code_AbstractNode_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_AbstractNode_RUNTIME_TYPE_DECL__ __Win32_Code_AbstractNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.AbstractNode",
     (intptr_t)sizeof(Win32_Code_AbstractNode),
     (intptr_t)__Win32_Code_AbstractNode_MARK_HANDLER__,
@@ -2185,7 +2185,7 @@ static void __Win32_Code_OperatorNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(Win32_Code_AbstractNode)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_OperatorNode_TYPE_DEF_TYPE__ __Win32_Code_OperatorNode_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_OperatorNode_RUNTIME_TYPE_DECL__ __Win32_Code_OperatorNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.OperatorNode",
     (intptr_t)sizeof(Win32_Code_OperatorNode),
     (intptr_t)__Win32_Code_OperatorNode_MARK_HANDLER__,
@@ -2265,7 +2265,7 @@ static void __Win32_Code_ReducibleNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(Win32_Code_AbstractNode)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_ReducibleNode_TYPE_DEF_TYPE__ __Win32_Code_ReducibleNode_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_ReducibleNode_RUNTIME_TYPE_DECL__ __Win32_Code_ReducibleNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.ReducibleNode",
     (intptr_t)sizeof(Win32_Code_ReducibleNode),
     (intptr_t)__Win32_Code_ReducibleNode_MARK_HANDLER__,
@@ -2395,7 +2395,7 @@ static void __Win32_Code_NumericNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(Win32_Code_ReducibleNode)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_NumericNode_TYPE_DEF_TYPE__ __Win32_Code_NumericNode_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_NumericNode_RUNTIME_TYPE_DECL__ __Win32_Code_NumericNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.NumericNode",
     (intptr_t)sizeof(Win32_Code_NumericNode),
     (intptr_t)__Win32_Code_NumericNode_MARK_HANDLER__,
@@ -2697,7 +2697,7 @@ static void __Win32_Code_ExpressionNode_MARK_HANDLER__(void* pReference)
     il2c_typeof(Win32_Code_ReducibleNode)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_ExpressionNode_TYPE_DEF_TYPE__ __Win32_Code_ExpressionNode_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_ExpressionNode_RUNTIME_TYPE_DECL__ __Win32_Code_ExpressionNode_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.ExpressionNode",
     (intptr_t)sizeof(Win32_Code_ExpressionNode),
     (intptr_t)__Win32_Code_ExpressionNode_MARK_HANDLER__,
@@ -3813,7 +3813,7 @@ static void __Win32_Code_PolishNotation_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_PolishNotation_TYPE_DEF_TYPE__ __Win32_Code_PolishNotation_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_PolishNotation_RUNTIME_TYPE_DECL__ __Win32_Code_PolishNotation_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.PolishNotation",
     (intptr_t)0,
     (intptr_t)__Win32_Code_PolishNotation_MARK_HANDLER__,
@@ -4205,7 +4205,7 @@ static void __Win32_Code_StringTest_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_StringTest_TYPE_DEF_TYPE__ __Win32_Code_StringTest_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_StringTest_RUNTIME_TYPE_DECL__ __Win32_Code_StringTest_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.StringTest",
     (intptr_t)0,
     (intptr_t)__Win32_Code_StringTest_MARK_HANDLER__,
@@ -4269,7 +4269,7 @@ static void __Win32_Code_UnsafeTest_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_UnsafeTest_TYPE_DEF_TYPE__ __Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_UnsafeTest_RUNTIME_TYPE_DECL__ __Win32_Code_UnsafeTest_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.UnsafeTest",
     (intptr_t)0,
     (intptr_t)__Win32_Code_UnsafeTest_MARK_HANDLER__,
@@ -4354,7 +4354,7 @@ static void __Win32_Code_ValueTypeTestTarget_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_ValueType)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_ValueTypeTestTarget_TYPE_DEF_TYPE__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DECL__ __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.ValueTypeTestTarget",
     (intptr_t)sizeof(Win32_Code_ValueTypeTestTarget),
     (intptr_t)__Win32_Code_ValueTypeTestTarget_MARK_HANDLER__,
@@ -4571,7 +4571,7 @@ static void __Win32_Code_ValueTypeTest_MARK_HANDLER__(void* pReference)
     il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
-static __Win32_Code_ValueTypeTest_TYPE_DEF_TYPE__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
+static __Win32_Code_ValueTypeTest_RUNTIME_TYPE_DECL__ __Win32_Code_ValueTypeTest_RUNTIME_TYPE_DEF__ = {
     (intptr_t)"Win32.Code.ValueTypeTest",
     (intptr_t)0,
     (intptr_t)__Win32_Code_ValueTypeTest_MARK_HANDLER__,

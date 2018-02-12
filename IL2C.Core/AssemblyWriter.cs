@@ -45,18 +45,56 @@ namespace IL2C
                 declaredType.GetFullMemberName());
             tw.WriteLine();
 
+            var virtualMethods = declaredType
+                .EnumerateOrderedOverridedMethods()
+                .ToArray();
+            if (virtualMethods.Length >= 1)
+            {
+                tw.WriteLine("typedef const struct");
+                tw.WriteLine("{");
+                tw.WriteLine(
+                    "{0}void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);",
+                    indent);
+                virtualMethods.ForEach(method =>
+                {
+                    var functionPrototype = Utilities.GetFunctionTypeString(
+                        method.GetOverloadedMethodName().ManglingSymbolName(),
+                        method.ReturnType,
+                        method.GetSafeParameters(),
+                        extractContext);
+                    tw.WriteLine(
+                        "{0}{1};",
+                        indent,
+                        functionPrototype);
+                });
+
+                tw.WriteLine(
+                    "}} __{0}_VTABLE_DECL__;",
+                    rawTypeName);
+                tw.WriteLine();
+            }
+
             var instanceFields = declaredType
                 .Traverse(type => type.BaseType?.Resolve())
                 .Reverse()
                 .SelectMany(type => type.Fields.Where(field => !field.IsStatic))
                 .ToArray();
-            if (instanceFields.Length >= 1)
+            if ((declaredType.IsValueType == false) ||
+                (instanceFields.Length >= 1))
             {
                 tw.WriteLine(
                     "struct {0}",
                     structName);
                 tw.WriteLine("{");
 
+                if (declaredType.IsValueType == false)
+                {
+                    tw.WriteLine(
+                        "{0}__{1}_VTABLE_DECL__* vptr__;",
+                        indent,
+                        rawTypeName);
+                    tw.WriteLine();
+                }
                 instanceFields.ForEach(field =>
                     tw.WriteLine(
                         "{0}{1} {2};",
@@ -65,12 +103,12 @@ namespace IL2C
                         field.Name));
 
                 tw.WriteLine("};");
+                tw.WriteLine();
             }
 
             // Write mark handler:
-            tw.WriteLine();
             var makrHandlerPrototype = string.Format(
-                "extern const IL2C_RUNTIME_TYPE __{0}_RUNTIME_TYPE__;",
+                "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
                 rawTypeName);
             tw.WriteLine(makrHandlerPrototype);
         }
@@ -165,36 +203,6 @@ namespace IL2C
                     .ToArray();
                 if (virtualMethods.Length >= 1)
                 {
-                    var typeName = type.GetFullMemberName().ManglingSymbolName();
-
-                    tw.WriteLine();
-                    tw.WriteLine("typedef const struct");
-                    tw.WriteLine("{");
-                    Enumerable.Range(0, 3)
-                        .ForEach(index => tw.WriteLine(
-                            "{0}intptr_t reserved{1}__;",
-                            indent,
-                            index));
-
-                    virtualMethods.ForEach(method =>
-                    {
-                        var functionPrototype = Utilities.GetFunctionTypeString(
-                            method.GetOverloadedMethodName().ManglingSymbolName(),
-                            method.ReturnType,
-                            method.GetSafeParameters(),
-                            extractContext);
-
-                        tw.WriteLine(
-                            "{0}{1};",
-                            indent,
-                            functionPrototype);
-                    });
-
-                    tw.WriteLine(
-                        "}} __{0}_RUNTIME_TYPE_DECL__;",
-                        typeName);
-                    tw.WriteLine();
-
                     virtualMethods.ForEach(method =>
                     {
                         var fullMethodName = type
@@ -225,15 +233,16 @@ namespace IL2C
                             method.GetSafeParameters()
                                 .Select((parameter, index) => (index == 0)
                                     ? string.Format(
-                                        "({0}){1}",
+                                        "({0})({1})",
                                         extractContext.GetCLanguageTypeName(parameter.ParameterType),
                                         parameter.Name)
-                                    : parameter.Name));
+                                    : string.Format(
+                                        "({0})",
+                                        parameter.Name)));
 
                         tw.WriteLine(
-                            "{0}(il2c_get_vtable({1}, this__)->{2}({3}))",
+                            "{0}((this__)->vptr__->{1}({2}))",
                             indent,
-                            typeName,
                             methodName,
                             functionParameters);
                     });
@@ -540,39 +549,17 @@ namespace IL2C
                 rawBaseTypeName);
             tw.WriteLine("}");
 
-            // Write runtime type information
+            // Write virtual methods
             tw.WriteLine();
             tw.WriteLine(
-                "static __{0}_RUNTIME_TYPE_DECL__ __{0}_RUNTIME_TYPE_DEF__ = {{",
+                "static __{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                 rawTypeName);
-
             tw.WriteLine(
-                "{0}(intptr_t)\"{1}\",",
-                indent,
-                declaredType.GetFullMemberName());
-            var instanceFields = declaredType
-                .Traverse(type => type.BaseType?.Resolve())
-                .SelectMany(type => type.Fields.Where(field => !field.IsStatic));
-            if (instanceFields.Any())
-            {
-                tw.WriteLine(
-                    "{0}(intptr_t)sizeof({1}),",
-                    indent,
-                    typeName);
-            }
-            else
-            {
-                // HACK: C language can't resolve empty structure size.
-                tw.WriteLine(
-                    "{0}(intptr_t)0,",
-                    indent);
-            }
-            tw.WriteLine(
-                "{0}(intptr_t)__{1}_MARK_HANDLER__,",
+                // TODO: RuntimeCast
+                //"{0}__{1}_IL2C_RuntimeCast__,",
+                "{0}__System_Object_IL2C_RuntimeCast__,",
                 indent,
                 rawTypeName);
-
-            // Write virtual methods
             declaredType
                 .EnumerateOrderedOverridedMethods()
                 .ForEach(method =>
@@ -582,15 +569,27 @@ namespace IL2C
                         indent,
                         method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName());
                 });
-
             tw.WriteLine("};");
 
+            // Write runtime type information
+            tw.WriteLine();
             tw.WriteLine(
-                "const IL2C_RUNTIME_TYPE __{0}_RUNTIME_TYPE__ =",
+                "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
                 rawTypeName);
             tw.WriteLine(
-                "   (const IL2C_RUNTIME_TYPE)(&__{0}_RUNTIME_TYPE_DEF__);",
+                "{0}\"{1}\",",
+                indent,
+                declaredType.GetFullMemberName());
+            tw.WriteLine(
+                "{0}sizeof({1}),",
+                indent,
+                typeName);
+            tw.WriteLine(
+                "{0}__{1}_MARK_HANDLER__,",
+                indent,
                 rawTypeName);
+
+            tw.WriteLine("};");
         }
 
         internal static void InternalConvertFromMethod(

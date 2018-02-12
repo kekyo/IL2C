@@ -150,7 +150,7 @@ static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 //////////////////////////
 
 static void* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
+    IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize)
 {
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)GCALLOC(sizeof(IL2C_REF_HEADER) + bodySize);
     if (pHeader == NULL)
@@ -200,7 +200,7 @@ static void* il2c_get_uninitialized_object_internal__(
     return pReference;
 }
 
-void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE type)
+void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
 {
     GCASSERT(type != NULL);
 
@@ -365,14 +365,14 @@ void il2c_shutdown()
 /////////////////////////////////////////////////////////////
 // Boxing related functions
 
-System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE type)
+System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
 {
     void* pBoxed = il2c_get_uninitialized_object(type);
     memcpy(pBoxed, pValue, type->bodySize);
     return (System_Object*)pBoxed;
 }
 
-void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE type)
+void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
 {
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pObject) - sizeof(IL2C_REF_HEADER));
@@ -392,17 +392,22 @@ static void __Dummy_MARK_HANDLER__(void* pReference)
 {
 }
 
-static __System_Object_TYPE_DEF_TYPE__ __System_Object_RUNTIME_TYPE_DEF__ = {
-    (intptr_t)"System.Object",
-    (intptr_t)0,
-    (intptr_t)__Dummy_MARK_HANDLER__,
-    __System_Object_ToString__,
-    __System_Object_GetHashCode__,
-    __System_Object_Finalize__,
-    __System_Object_Equals__,
-};
-const IL2C_RUNTIME_TYPE __System_Object_RUNTIME_TYPE__ =
-    (const IL2C_RUNTIME_TYPE)(&__System_Object_RUNTIME_TYPE_DEF__);
+void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // TODO: RuntimeCast
+#if true
+    return this__;
+#else
+    if (type == il2c_typeof(System_Object))
+    {
+        return this__;
+    }
+
+    // throw new InvalidCastException();
+    assert(0);
+    return NULL;
+#endif
+}
 
 IL2C_CONST_STRING(System_Object_name, L"System.Object");
 System_String* __System_Object_ToString__(System_Object* this__)
@@ -425,20 +430,22 @@ bool __System_Object_Equals__(System_Object* this__, System_Object* obj)
     return ((intptr_t)this__) == ((intptr_t)obj);
 }
 
+static __System_Object_VTABLE_DECL__ __System_Object_VTABLE__ = {
+    __System_Object_IL2C_RuntimeCast__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__
+};
+
+IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
+    "System.Object",
+    sizeof(System_Object),
+    __Dummy_MARK_HANDLER__
+};
+
 /////////////////////////////////////////////////////////////
 // System.ValueType
-
-static __System_ValueType_TYPE_DEF_TYPE__ __System_ValueType_RUNTIME_TYPE_DEF__ = {
-    (intptr_t)"System.ValueType",
-    (intptr_t)0,
-    (intptr_t)__Dummy_MARK_HANDLER__,
-    __System_ValueType_ToString__,
-    __System_ValueType_GetHashCode__,
-    __System_Object_Finalize__,
-    __System_ValueType_Equals__,
-};
-const IL2C_RUNTIME_TYPE __System_ValueType_RUNTIME_TYPE__ =
-    (const IL2C_RUNTIME_TYPE)(&__System_ValueType_RUNTIME_TYPE_DEF__);
 
 IL2C_CONST_STRING(System_ValueType_name, L"System.ValueType");
 System_String* __System_ValueType_ToString__(System_ValueType* this__)
@@ -458,44 +465,41 @@ bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj)
     return false;
 }
 
+static __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
+    __System_Object_IL2C_RuntimeCast__,
+    __System_ValueType_ToString__,
+    __System_ValueType_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_ValueType_Equals__,
+};
+
+IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__ = {
+    "System.ValueType",
+    sizeof(System_ValueType),
+    __Dummy_MARK_HANDLER__
+};
+
 /////////////////////////////////////////////////////////////
 // Basic type informations
 
-static IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__ = {
     "System.IntPtr", sizeof(System_IntPtr), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_IntPtr_RUNTIME_TYPE__ = &__System_IntPtr_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__ = {
     "System.Byte", sizeof(System_Byte), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE__ = {
     "System.SByte", sizeof(System_SByte), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_SByte_RUNTIME_TYPE__ = &__System_SByte_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Int16_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_Int16_RUNTIME_TYPE__ = {
     "System.Int16", sizeof(System_Int16), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Int16_RUNTIME_TYPE__ = &__System_Int16_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE__ = {
     "System.UInt16", sizeof(System_UInt16), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_UInt16_RUNTIME_TYPE__ = &__System_UInt16_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE__ = {
     "System.Int32", sizeof(System_Int32), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Int32_RUNTIME_TYPE__ = &__System_Int32_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_UInt32_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_UInt32_RUNTIME_TYPE__ = {
     "System.UInt32", sizeof(System_UInt32), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_UInt32_RUNTIME_TYPE__ = &__System_UInt32_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Int64_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_Int64_RUNTIME_TYPE__ = {
     "System.Int64", sizeof(System_Int64), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Int64_RUNTIME_TYPE__ = &__System_Int64_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE__ = {
     "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
 
 const System_IntPtr System_IntPtr_Zero = 0;
 
@@ -516,15 +520,14 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 /////////////////////////////////////////////////////////////
 // System.String
 
-IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE_DEF__ = {
+IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
     "System.String", UINTPTR_MAX, __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_String_RUNTIME_TYPE__ = &__System_String_RUNTIME_TYPE_DEF__;
 
 static System_String* __new_string_internal__(uintptr_t size)
 {
     uintptr_t bodySize = sizeof(System_String) + size;
     System_String* pString = il2c_get_uninitialized_object_internal__(
-        __System_String_RUNTIME_TYPE__,
+        il2c_typeof(System_String),
         bodySize);
     wchar_t* string_body__ = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
     pString->string_body__ = string_body__;

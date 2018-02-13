@@ -24,106 +24,125 @@ typedef struct UEFI_Code_PolishNotation UEFI_Code_PolishNotation;
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.AbstractNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(UEFI_Code_AbstractNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(UEFI_Code_AbstractNode* this__);
+    int32_t (*GetHashCode)(UEFI_Code_AbstractNode* this__);
+    void (*Finalize)(UEFI_Code_AbstractNode* this__);
+    bool (*Equals)(UEFI_Code_AbstractNode* this__, System_Object* obj);
 } __UEFI_Code_AbstractNode_VTABLE_DECL__;
 
+// Class layout
 struct UEFI_Code_AbstractNode
 {
+// Instance's vptr
     __UEFI_Code_AbstractNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_AbstractNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.OperatorNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(UEFI_Code_OperatorNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(UEFI_Code_OperatorNode* this__);
+    int32_t (*GetHashCode)(UEFI_Code_OperatorNode* this__);
+    void (*Finalize)(UEFI_Code_OperatorNode* this__);
+    bool (*Equals)(UEFI_Code_OperatorNode* this__, System_Object* obj);
 } __UEFI_Code_OperatorNode_VTABLE_DECL__;
 
+// Class layout
 struct UEFI_Code_OperatorNode
 {
+// Instance's vptr
     __UEFI_Code_OperatorNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
     wchar_t Operator;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_OperatorNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.ReducibleNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(UEFI_Code_ReducibleNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(UEFI_Code_ReducibleNode* this__);
+    int32_t (*GetHashCode)(UEFI_Code_ReducibleNode* this__);
+    void (*Finalize)(UEFI_Code_ReducibleNode* this__);
+    bool (*Equals)(UEFI_Code_ReducibleNode* this__, System_Object* obj);
     int32_t (*Reduce)(UEFI_Code_ReducibleNode* this__);
 } __UEFI_Code_ReducibleNode_VTABLE_DECL__;
 
+// Class layout
 struct UEFI_Code_ReducibleNode
 {
+// Instance's vptr
     __UEFI_Code_ReducibleNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ReducibleNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.NumericNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(UEFI_Code_NumericNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(UEFI_Code_NumericNode* this__);
+    int32_t (*GetHashCode)(UEFI_Code_NumericNode* this__);
+    void (*Finalize)(UEFI_Code_NumericNode* this__);
+    bool (*Equals)(UEFI_Code_NumericNode* this__, System_Object* obj);
     int32_t (*Reduce)(UEFI_Code_NumericNode* this__);
 } __UEFI_Code_NumericNode_VTABLE_DECL__;
 
+// Class layout
 struct UEFI_Code_NumericNode
 {
+// Instance's vptr
     __UEFI_Code_NumericNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
     int32_t Numeric;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_NumericNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.ExpressionNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(UEFI_Code_ExpressionNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(UEFI_Code_ExpressionNode* this__);
+    int32_t (*GetHashCode)(UEFI_Code_ExpressionNode* this__);
+    void (*Finalize)(UEFI_Code_ExpressionNode* this__);
+    bool (*Equals)(UEFI_Code_ExpressionNode* this__, System_Object* obj);
     int32_t (*Reduce)(UEFI_Code_ExpressionNode* this__);
 } __UEFI_Code_ExpressionNode_VTABLE_DECL__;
 
+// Class layout
 struct UEFI_Code_ExpressionNode
 {
+// Instance's vptr
     __UEFI_Code_ExpressionNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
@@ -132,26 +151,31 @@ struct UEFI_Code_ExpressionNode
     UEFI_Code_ReducibleNode* Right;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ExpressionNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.PolishNotation
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(UEFI_Code_PolishNotation* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(UEFI_Code_PolishNotation* this__);
+    int32_t (*GetHashCode)(UEFI_Code_PolishNotation* this__);
+    void (*Finalize)(UEFI_Code_PolishNotation* this__);
+    bool (*Equals)(UEFI_Code_PolishNotation* this__, System_Object* obj);
 } __UEFI_Code_PolishNotation_VTABLE_DECL__;
 
+// Class layout
 struct UEFI_Code_PolishNotation
 {
+// Instance's vptr
     __UEFI_Code_PolishNotation_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_PolishNotation_RUNTIME_TYPE__;
 
 //////////////////////////////////////////////////////////////////////////////////

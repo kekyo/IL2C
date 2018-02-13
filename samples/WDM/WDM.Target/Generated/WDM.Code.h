@@ -19,17 +19,20 @@ typedef struct WDM_Code_Wdm WDM_Code_Wdm;
 ////////////////////////////////////////////////////////////
 // Class: WDM.Code.InterceptCDRomDevice
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(WDM_Code_InterceptCDRomDevice* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(WDM_Code_InterceptCDRomDevice* this__);
+    int32_t (*GetHashCode)(WDM_Code_InterceptCDRomDevice* this__);
+    void (*Finalize)(WDM_Code_InterceptCDRomDevice* this__);
+    bool (*Equals)(WDM_Code_InterceptCDRomDevice* this__, System_Object* obj);
 } __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__;
 
+// Class layout
 struct WDM_Code_InterceptCDRomDevice
 {
+// Instance's vptr
     __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__* vptr__;
 
     intptr_t pFrom;
@@ -37,26 +40,31 @@ struct WDM_Code_InterceptCDRomDevice
     int32_t size;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: WDM.Code.Wdm
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(WDM_Code_Wdm* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(WDM_Code_Wdm* this__);
+    int32_t (*GetHashCode)(WDM_Code_Wdm* this__);
+    void (*Finalize)(WDM_Code_Wdm* this__);
+    bool (*Equals)(WDM_Code_Wdm* this__, System_Object* obj);
 } __WDM_Code_Wdm_VTABLE_DECL__;
 
+// Class layout
 struct WDM_Code_Wdm
 {
+// Instance's vptr
     __WDM_Code_Wdm_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __WDM_Code_Wdm_RUNTIME_TYPE__;
 
 //////////////////////////////////////////////////////////////////////////////////

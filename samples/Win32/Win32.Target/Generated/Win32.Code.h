@@ -37,294 +37,349 @@ typedef struct Win32_Code_ValueTypeTest Win32_Code_ValueTypeTest;
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.BoxingTest
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_BoxingTest* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_BoxingTest* this__);
+    int32_t (*GetHashCode)(Win32_Code_BoxingTest* this__);
+    void (*Finalize)(Win32_Code_BoxingTest* this__);
+    bool (*Equals)(Win32_Code_BoxingTest* this__, System_Object* obj);
 } __Win32_Code_BoxingTest_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_BoxingTest
 {
+// Instance's vptr
     __Win32_Code_BoxingTest_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_BoxingTest_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.ClassTypeTestTarget
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_ClassTypeTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_ClassTypeTestTarget* this__);
+    int32_t (*GetHashCode)(Win32_Code_ClassTypeTestTarget* this__);
+    void (*Finalize)(Win32_Code_ClassTypeTestTarget* this__);
+    bool (*Equals)(Win32_Code_ClassTypeTestTarget* this__, System_Object* obj);
 } __Win32_Code_ClassTypeTestTarget_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_ClassTypeTestTarget
 {
+// Instance's vptr
     __Win32_Code_ClassTypeTestTarget_VTABLE_DECL__* vptr__;
 
     int32_t Value2;
     Win32_Code_ClassTypeTestTarget* OR2;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.ClassTypeTest
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_ClassTypeTest* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_ClassTypeTest* this__);
+    int32_t (*GetHashCode)(Win32_Code_ClassTypeTest* this__);
+    void (*Finalize)(Win32_Code_ClassTypeTest* this__);
+    bool (*Equals)(Win32_Code_ClassTypeTest* this__, System_Object* obj);
 } __Win32_Code_ClassTypeTest_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_ClassTypeTest
 {
+// Instance's vptr
     __Win32_Code_ClassTypeTest_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_ClassTypeTest_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.Hoge1
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_Hoge1* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_Hoge1* this__);
+    int32_t (*GetHashCode)(Win32_Code_Hoge1* this__);
+    void (*Finalize)(Win32_Code_Hoge1* this__);
+    bool (*Equals)(Win32_Code_Hoge1* this__, System_Object* obj);
 } __Win32_Code_Hoge1_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_Hoge1
 {
+// Instance's vptr
     __Win32_Code_Hoge1_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_Hoge1_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.Hoge2
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_Hoge2* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_Hoge2* this__);
+    int32_t (*GetHashCode)(Win32_Code_Hoge2* this__);
+    void (*Finalize)(Win32_Code_Hoge2* this__);
+    bool (*Equals)(Win32_Code_Hoge2* this__, System_Object* obj);
 } __Win32_Code_Hoge2_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_Hoge2
 {
+// Instance's vptr
     __Win32_Code_Hoge2_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_Hoge2_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.InheritTestTargetBase1
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_InheritTestTargetBase1* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_InheritTestTargetBase1* this__);
+    int32_t (*GetHashCode)(Win32_Code_InheritTestTargetBase1* this__);
+    void (*Finalize)(Win32_Code_InheritTestTargetBase1* this__);
+    bool (*Equals)(Win32_Code_InheritTestTargetBase1* this__, System_Object* obj);
     int32_t (*Calc_1)(Win32_Code_InheritTestTargetBase1* this__, int32_t a, int32_t b);
 } __Win32_Code_InheritTestTargetBase1_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_InheritTestTargetBase1
 {
+// Instance's vptr
     __Win32_Code_InheritTestTargetBase1_VTABLE_DECL__* vptr__;
 
     int32_t Value2;
     Win32_Code_ClassTypeTestTarget* OR2;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.InheritTestTarget2
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_InheritTestTarget2* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_InheritTestTarget2* this__);
+    int32_t (*GetHashCode)(Win32_Code_InheritTestTarget2* this__);
+    void (*Finalize)(Win32_Code_InheritTestTarget2* this__);
+    bool (*Equals)(Win32_Code_InheritTestTarget2* this__, System_Object* obj);
     int32_t (*Calc_1)(Win32_Code_InheritTestTarget2* this__, int32_t a, int32_t b);
 } __Win32_Code_InheritTestTarget2_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_InheritTestTarget2
 {
+// Instance's vptr
     __Win32_Code_InheritTestTarget2_VTABLE_DECL__* vptr__;
 
     int32_t Value2;
     Win32_Code_ClassTypeTestTarget* OR2;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_InheritTestTarget2_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.InheritTypeTest
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_InheritTypeTest* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_InheritTypeTest* this__);
+    int32_t (*GetHashCode)(Win32_Code_InheritTypeTest* this__);
+    void (*Finalize)(Win32_Code_InheritTypeTest* this__);
+    bool (*Equals)(Win32_Code_InheritTypeTest* this__, System_Object* obj);
 } __Win32_Code_InheritTypeTest_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_InheritTypeTest
 {
+// Instance's vptr
     __Win32_Code_InheritTypeTest_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_InheritTypeTest_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.Win32
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_Win32* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_Win32* this__);
+    int32_t (*GetHashCode)(Win32_Code_Win32* this__);
+    void (*Finalize)(Win32_Code_Win32* this__);
+    bool (*Equals)(Win32_Code_Win32* this__, System_Object* obj);
 } __Win32_Code_Win32_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_Win32
 {
+// Instance's vptr
     __Win32_Code_Win32_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_Win32_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.AbstractNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_AbstractNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_AbstractNode* this__);
+    int32_t (*GetHashCode)(Win32_Code_AbstractNode* this__);
+    void (*Finalize)(Win32_Code_AbstractNode* this__);
+    bool (*Equals)(Win32_Code_AbstractNode* this__, System_Object* obj);
 } __Win32_Code_AbstractNode_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_AbstractNode
 {
+// Instance's vptr
     __Win32_Code_AbstractNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_AbstractNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.OperatorNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_OperatorNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_OperatorNode* this__);
+    int32_t (*GetHashCode)(Win32_Code_OperatorNode* this__);
+    void (*Finalize)(Win32_Code_OperatorNode* this__);
+    bool (*Equals)(Win32_Code_OperatorNode* this__, System_Object* obj);
 } __Win32_Code_OperatorNode_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_OperatorNode
 {
+// Instance's vptr
     __Win32_Code_OperatorNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
     wchar_t Operator;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_OperatorNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.ReducibleNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_ReducibleNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_ReducibleNode* this__);
+    int32_t (*GetHashCode)(Win32_Code_ReducibleNode* this__);
+    void (*Finalize)(Win32_Code_ReducibleNode* this__);
+    bool (*Equals)(Win32_Code_ReducibleNode* this__, System_Object* obj);
     int32_t (*Reduce)(Win32_Code_ReducibleNode* this__);
 } __Win32_Code_ReducibleNode_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_ReducibleNode
 {
+// Instance's vptr
     __Win32_Code_ReducibleNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_ReducibleNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.NumericNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_NumericNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_NumericNode* this__);
+    int32_t (*GetHashCode)(Win32_Code_NumericNode* this__);
+    void (*Finalize)(Win32_Code_NumericNode* this__);
+    bool (*Equals)(Win32_Code_NumericNode* this__, System_Object* obj);
     int32_t (*Reduce)(Win32_Code_NumericNode* this__);
 } __Win32_Code_NumericNode_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_NumericNode
 {
+// Instance's vptr
     __Win32_Code_NumericNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
     int32_t Numeric;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_NumericNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.ExpressionNode
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_ExpressionNode* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_ExpressionNode* this__);
+    int32_t (*GetHashCode)(Win32_Code_ExpressionNode* this__);
+    void (*Finalize)(Win32_Code_ExpressionNode* this__);
+    bool (*Equals)(Win32_Code_ExpressionNode* this__, System_Object* obj);
     int32_t (*Reduce)(Win32_Code_ExpressionNode* this__);
 } __Win32_Code_ExpressionNode_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_ExpressionNode
 {
+// Instance's vptr
     __Win32_Code_ExpressionNode_VTABLE_DECL__* vptr__;
 
     int32_t NextIndex;
@@ -333,106 +388,126 @@ struct Win32_Code_ExpressionNode
     Win32_Code_ReducibleNode* Right;
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_ExpressionNode_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.PolishNotation
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_PolishNotation* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_PolishNotation* this__);
+    int32_t (*GetHashCode)(Win32_Code_PolishNotation* this__);
+    void (*Finalize)(Win32_Code_PolishNotation* this__);
+    bool (*Equals)(Win32_Code_PolishNotation* this__, System_Object* obj);
 } __Win32_Code_PolishNotation_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_PolishNotation
 {
+// Instance's vptr
     __Win32_Code_PolishNotation_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_PolishNotation_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.StringTest
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_StringTest* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_StringTest* this__);
+    int32_t (*GetHashCode)(Win32_Code_StringTest* this__);
+    void (*Finalize)(Win32_Code_StringTest* this__);
+    bool (*Equals)(Win32_Code_StringTest* this__, System_Object* obj);
 } __Win32_Code_StringTest_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_StringTest
 {
+// Instance's vptr
     __Win32_Code_StringTest_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_StringTest_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.UnsafeTest
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_UnsafeTest* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_UnsafeTest* this__);
+    int32_t (*GetHashCode)(Win32_Code_UnsafeTest* this__);
+    void (*Finalize)(Win32_Code_UnsafeTest* this__);
+    bool (*Equals)(Win32_Code_UnsafeTest* this__, System_Object* obj);
 } __Win32_Code_UnsafeTest_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_UnsafeTest
 {
+// Instance's vptr
     __Win32_Code_UnsafeTest_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_UnsafeTest_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Struct: Win32.Code.ValueTypeTestTarget
 
+// Struct vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_ValueType* this__);
-    int32_t (*GetHashCode)(System_ValueType* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_ValueType* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_ValueTypeTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_ValueTypeTestTarget this__);
+    int32_t (*GetHashCode)(Win32_Code_ValueTypeTestTarget this__);
+    void (*Finalize)(Win32_Code_ValueTypeTestTarget this__);
+    bool (*Equals)(Win32_Code_ValueTypeTestTarget this__, System_Object* obj);
 } __Win32_Code_ValueTypeTestTarget_VTABLE_DECL__;
 
+// Struct layout
 struct Win32_Code_ValueTypeTestTarget
 {
     int32_t Value2;
     Win32_Code_ClassTypeTestTarget* OR2;
 };
 
+// Struct runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.ValueTypeTest
 
+// Class vtable layout
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    void* (*IL2C_RuntimeCast)(Win32_Code_ValueTypeTest* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_ValueTypeTest* this__);
+    int32_t (*GetHashCode)(Win32_Code_ValueTypeTest* this__);
+    void (*Finalize)(Win32_Code_ValueTypeTest* this__);
+    bool (*Equals)(Win32_Code_ValueTypeTest* this__, System_Object* obj);
 } __Win32_Code_ValueTypeTest_VTABLE_DECL__;
 
+// Class layout
 struct Win32_Code_ValueTypeTest
 {
+// Instance's vptr
     __Win32_Code_ValueTypeTest_VTABLE_DECL__* vptr__;
 
 };
 
+// Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_ValueTypeTest_RUNTIME_TYPE__;
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -559,6 +634,7 @@ extern int32_t Win32_Code_InheritTypeTest_Test1(void);
 extern int32_t Win32_Code_InheritTypeTest_Test2(void);
 extern int32_t Win32_Code_InheritTypeTest_Test3(void);
 extern int32_t Win32_Code_InheritTypeTest_Test4(void);
+extern int32_t Win32_Code_InheritTypeTest_Test5(void);
 extern void Win32_Code_InheritTypeTest__ctor(Win32_Code_InheritTypeTest* this__);
 #define Win32_Code_InheritTypeTest_ToString(/* Win32_Code_InheritTypeTest* */ this__) \
     ((this__)->vptr__->ToString((System_Object*)(this__)))

@@ -110,14 +110,14 @@ namespace IL2C
             return type;
         }
 
-        public static Parameter[] GetSafeParameters(this MethodReference method)
+        public static Parameter[] GetSafeParameters(this MethodReference method, TypeReference thisType = null)
         {
             var parameters = method.Parameters
                 .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
             if (method.HasThis)
             {
-                TypeReference type = method.DeclaringType;
-                var thisType = type.IsValueType ? type.MakeByReferenceType() : type;
+                var type = method.DeclaringType;
+                thisType = thisType ?? (type.IsValueType ? type.MakeByReferenceType() : type);
                 parameters = new[]
                     {
                         new Parameter("this__", thisType)

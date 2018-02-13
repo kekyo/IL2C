@@ -259,5 +259,48 @@ namespace IL2C.ILConveters
                 return _ => new string[0];
             }
         }
+
+        internal sealed class CastclassConverter : InlineTypeConverter
+        {
+            public override OpCode OpCode => OpCodes.Castclass;
+
+            public override Func<IExtractContext, string[]> Apply(
+                TypeReference operand, DecodeContext decodeContext)
+            {
+                var si = decodeContext.PopStack();
+                var symbolName = decodeContext.PushStack(operand);
+
+                // If this type can cast statically
+                if (operand.IsAssignableFrom(si.TargetType))
+                {
+                    return extractContext =>
+                    {
+                        var operandTypeName = extractContext.GetCLanguageTypeName(
+                            operand);
+
+                        return new[] { string.Format(
+                            "{0} = ({1}){2}",
+                            symbolName,
+                            operandTypeName,
+                            si.SymbolName) };
+                    };
+                }
+                else
+                {
+                    return extractContext =>
+                    {
+                        var operandDereferencedTypeName = extractContext.GetCLanguageTypeName(
+                            operand,
+                            TypeNameFlags.Dereferenced);
+
+                        return new[] { string.Format(
+                            "{0} = il2c_runtime_cast({1}, {2})",
+                            symbolName,
+                            si.SymbolName,
+                            operandDereferencedTypeName) };
+                    };
+                }
+            }
+        }
     }
 }

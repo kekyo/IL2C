@@ -394,19 +394,11 @@ static void __Dummy_MARK_HANDLER__(void* pReference)
 
 void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    // TODO: RuntimeCast
-#if true
-    return this__;
-#else
-    if (type == il2c_typeof(System_Object))
-    {
-        return this__;
-    }
+    if (type == il2c_typeof(System_Object)) return this__;
 
     // throw new InvalidCastException();
     assert(0);
     return NULL;
-#endif
 }
 
 IL2C_CONST_STRING(System_Object_name, L"System.Object");
@@ -447,6 +439,12 @@ IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
 /////////////////////////////////////////////////////////////
 // System.ValueType
 
+void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    if (type == il2c_typeof(System_ValueType)) return this__;
+    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
+}
+
 IL2C_CONST_STRING(System_ValueType_name, L"System.ValueType");
 System_String* __System_ValueType_ToString__(System_ValueType* this__)
 {
@@ -466,10 +464,10 @@ bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj)
 }
 
 static __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
-    __System_Object_IL2C_RuntimeCast__,
+    __System_ValueType_IL2C_RuntimeCast__,
     __System_ValueType_ToString__,
     __System_ValueType_GetHashCode__,
-    __System_Object_Finalize__,
+    (void*)__System_Object_Finalize__,
     __System_ValueType_Equals__,
 };
 

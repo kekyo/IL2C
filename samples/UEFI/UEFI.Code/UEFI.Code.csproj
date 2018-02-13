@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard1.3|AnyCPU'">
-    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" --debug-full "$(OutDir)UEFI.Code.dll" "..\..\..\..\UEFI.Target\Generated"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" --debug "$(OutDir)UEFI.Code.dll" "..\..\..\..\UEFI.Target\Generated"</PostBuildEvent>
   </PropertyGroup>
 
 </Project>

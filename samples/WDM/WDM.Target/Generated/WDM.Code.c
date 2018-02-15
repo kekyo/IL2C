@@ -120,9 +120,9 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     //-------------------
     // Local variables:
 
-    intptr_t result;
-    bool local1__;
-    uint32_t local2__;
+    intptr_t result__;
+    bool local0__;
+    uint32_t local1__;
 
     //-------------------
     // Evaluation stacks:
@@ -183,18 +183,18 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     /* Path=1, Unique=0: IL_0015: call System.IntPtr WDM.Code.Wdm::memmem(System.IntPtr,System.Int32,System.IntPtr,System.Int32) */
     stack0_0__ = WDM_Code_Wdm_memmem(stack0_0__, stack1_0__, stack2_1__, stack3_1__);
     /* Path=1, Unique=0: IL_001a: stloc.0 */
-    result = stack0_0__;
+    result__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(23): */
     /* Path=1, Unique=0: IL_001b: ldloc.0 */
-    stack0_0__ = result;
+    stack0_0__ = result__;
     /* Path=1, Unique=0: IL_001c: ldsfld System.IntPtr System.IntPtr::Zero */
     stack1_1__ = System_IntPtr_Zero;
     /* Path=1, Unique=0: IL_0021: call System.Boolean System.IntPtr::op_Inequality(System.IntPtr,System.IntPtr) */
     stack0_1__ = System_IntPtr_op_Inequality(stack0_0__, stack1_1__);
     /* Path=1, Unique=0: IL_0026: stloc.1 */
-    local1__ = stack0_1__ ? true : false;
+    local0__ = stack0_1__ ? true : false;
     /* Path=1, Unique=0: IL_0027: ldloc.1 */
-    stack0_1__ = local1__;
+    stack0_1__ = local0__;
     /* Path=1, Unique=0: IL_0028: brfalse.s IL_004a */
     if (stack0_1__ == 0) goto IL_004a;
 /* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(24): */
@@ -207,7 +207,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     /* Path=1, Unique=0: IL_0035: nop */
 /* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(27): */
     /* Path=1, Unique=0: IL_0036: ldloc.0 */
-    stack0_0__ = result;
+    stack0_0__ = result__;
     /* Path=1, Unique=0: IL_0037: ldarg.0 */
     stack1_2__ = this__;
     /* Path=1, Unique=0: IL_0038: ldfld System.IntPtr WDM.Code.InterceptCDRomDevice::pTo */
@@ -225,13 +225,13 @@ IL_004a:
     /* Path=1, Unique=0: IL_004a: ldc.i4.0 */
     stack0_1__ = 0;
     /* Path=1, Unique=0: IL_004b: stloc.2 */
-    local2__ = (uint32_t)stack0_1__;
+    local1__ = (uint32_t)stack0_1__;
     /* Path=1, Unique=0: IL_004c: br.s IL_004e */
     goto IL_004e;
 IL_004e:
 /* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(31): */
     /* Path=2, Unique=0: IL_004e: ldloc.2 */
-    stack0_1__ = local2__;
+    stack0_1__ = local1__;
     /* Path=2, Unique=0: IL_004f: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return (uint32_t)stack0_1__;
@@ -243,16 +243,21 @@ IL_004e:
 // Runtime cast
 void* __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__(WDM_Code_InterceptCDRomDevice* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    if (type == il2c_typeof(System_Object)) return this__;
+    // This type
+    if (type == il2c_typeof(WDM_Code_InterceptCDRomDevice)) return this__;
+
+    // Delegate checking base types
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
 }
 
 // GC's mark handler
 void __WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__(WDM_Code_InterceptCDRomDevice* this__)
 {
+
     /* Suppressed invoke base mark handler */
 }
 
+// Vtable of instance type
 __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VTABLE__ = {
     /* internalcall */ __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -261,6 +266,7 @@ __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VT
     (void*)__System_Object_Equals__,
 };
 
+// Runtime type information
 IL2C_RUNTIME_TYPE_DECL __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ = {
     "WDM.Code.InterceptCDRomDevice",
     sizeof(WDM_Code_InterceptCDRomDevice),
@@ -376,16 +382,21 @@ void WDM_Code_Wdm__ctor(WDM_Code_Wdm* this__)
 // Runtime cast
 void* __WDM_Code_Wdm_IL2C_RuntimeCast__(WDM_Code_Wdm* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    if (type == il2c_typeof(System_Object)) return this__;
+    // This type
+    if (type == il2c_typeof(WDM_Code_Wdm)) return this__;
+
+    // Delegate checking base types
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
 }
 
 // GC's mark handler
 void __WDM_Code_Wdm_IL2C_MarkHandler__(WDM_Code_Wdm* this__)
 {
+
     /* Suppressed invoke base mark handler */
 }
 
+// Vtable of instance type
 __WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
     /* internalcall */ __WDM_Code_Wdm_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -394,6 +405,7 @@ __WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
     (void*)__System_Object_Equals__,
 };
 
+// Runtime type information
 IL2C_RUNTIME_TYPE_DECL __WDM_Code_Wdm_RUNTIME_TYPE__ = {
     "WDM.Code.Wdm",
     sizeof(WDM_Code_Wdm),

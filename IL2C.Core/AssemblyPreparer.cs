@@ -68,13 +68,32 @@ namespace IL2C
             MethodBody body)
         {
             var localVariables = body.Variables
-                .Select(localVariable => new SymbolInformation(
-                    body.Method.DebugInformation.TryGetName(localVariable, out var name)
-                        ? name
-                        : string.Format("local{0}__", localVariable.Index),
-                    localVariable.VariableType))
+                // If found non named local variable, force named "local[n]__"
+                .GroupBy(v => body.Method.DebugInformation.TryGetName(v, out var name) ? name : "local")
+                // If contains both named symbol each different scope (in the method by C#'s block), try to named with index number.
+                .SelectMany(g =>
+                {
+                    var list = g.ToArray();
+                    return (list.Length >= 2)
+                        ? list.Select((v, index) => new {
+                            Name = string.Format("{0}{1}__", g.Key, index),
+                            Type = v.VariableType,
+                            Index = v.Index })
+                        : new[] { new {
+                            Name = string.Format("{0}__", g.Key),
+                            Type = list[0].VariableType,
+                            Index = list[0].Index} };
+                })
+                .OrderBy(e => e.Index)
+                .Select((e, index) =>
+                {
+                    Debug.Assert(e.Index == index);
+                    return new SymbolInformation(e.Name, e.Type);
+                })
                 .ToArray();
-            localVariables.ForEach(local => prepareContext.RegisterType(local.TargetType));
+
+            localVariables.ForEach(local =>
+                prepareContext.RegisterType(local.TargetType));
 
             var decodeContext = new DecodeContext(
                 body.Method.Module,
@@ -192,7 +211,8 @@ namespace IL2C
             var parameters = method.GetSafeParameters();
 
             prepareContext.RegisterType(returnType);
-            parameters.ForEach(parameter => prepareContext.RegisterType(parameter.ParameterType));
+            parameters.ForEach(parameter =>
+                prepareContext.RegisterType(parameter.ParameterType));
 
             if (method.IsPInvokeImpl)
             {

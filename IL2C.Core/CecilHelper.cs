@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Runtime.Remoting.Messaging;
 using Mono.Cecil;
 
 namespace IL2C
@@ -99,7 +99,7 @@ namespace IL2C
 
         public static bool IsValidDefinition(this TypeDefinition type)
         {
-            return (type.IsValueType || type.IsClass) && (type.BaseType != null);
+            return ((type.IsValueType || type.IsClass) && (type.BaseType != null)) || type.IsInterface;
         }
 
         public static bool IsNumericPrimitive(this TypeReference type)
@@ -123,6 +123,18 @@ namespace IL2C
                 return rhsDefinition
                     .Traverse(type => type.BaseType?.Resolve(), true)
                     .Any(type => type.MemberEquals(lhsDefinition));
+            }
+
+            // System.Object <-- Any
+            if (lhsDefinition.IsObjectType())
+            {
+                return true;
+            }
+
+            // System.ValueType <-- ValueType
+            if (lhsDefinition.IsValueTypeType() && rhsDefinition.IsValueType)
+            {
+                return true;
             }
 
             // IBase <-- DerivedClass
@@ -177,10 +189,15 @@ namespace IL2C
         public static IEnumerable<MethodDefinition> EnumerateOrderedOverridedMethods(this TypeReference type)
         {
             var results = new List<MethodDefinition>();
-            var c = MemberReferenceComparer<MethodReference>.Instance;
 
             foreach (var t in type.Resolve()
-                .Traverse(t => t.BaseType?.Resolve())
+                .Traverse(t =>
+                {
+                    return (t.IsValueType || t.IsClass)
+                        ? t.BaseType?.Resolve()
+                        // TODO: Traverse interface inheritance
+                        : t.GetSafeObjectType().Resolve();
+                })
                 .Reverse())
             {
                 foreach (var method in t.Methods

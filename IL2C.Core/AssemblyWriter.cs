@@ -25,7 +25,7 @@ namespace IL2C
             string indent)
         {
             if (declaredType.IsPrimitive
-                || !(declaredType.IsValueType || declaredType.IsClass))
+                || !(declaredType.IsValueType || declaredType.IsClass || declaredType.IsInterface))
             {
                 return;
             }
@@ -38,47 +38,48 @@ namespace IL2C
             var rawTypeName = declaredType
                 .GetFullMemberName()
                 .ManglingSymbolName();
-            var classOrStruct = declaredType.IsValueType ? "Struct" : "Class";
+            var typeString = declaredType.IsValueType
+                ? "Struct"
+                : declaredType.IsInterface
+                    ? "Interface"
+                    : "Class";
 
             tw.WriteLine("////////////////////////////////////////////////////////////");
             tw.WriteLine(
                 "// {0}: {1}",
-                classOrStruct,
+                typeString,
                 declaredType.GetFullMemberName());
             tw.WriteLine();
+
+            tw.WriteLine(
+                "// {0} vtable layout",
+                typeString);
+            tw.WriteLine("typedef const struct");
+            tw.WriteLine("{");
+            tw.WriteLine(
+                "{0}/* internalcall */ void* (*IL2C_RuntimeCast)({1}* this__, IL2C_RUNTIME_TYPE_DECL* type);",
+                indent,
+                rawTypeName);
 
             var virtualMethods = declaredType
                 .EnumerateOrderedOverridedMethods()
                 .ToArray();
-            if (virtualMethods.Length >= 1)
+            virtualMethods.ForEach(method =>
             {
+                var functionPrototype = Utilities.GetFunctionTypeString(
+                    method.GetOverloadedMethodName().ManglingSymbolName(),
+                    method.ReturnType,
+                    method.GetSafeParameters(declaredType),
+                    extractContext);
                 tw.WriteLine(
-                    "// {0} vtable layout",
-                    classOrStruct);
-                tw.WriteLine("typedef const struct");
-                tw.WriteLine("{");
-                tw.WriteLine(
-                    "{0}/* internalcall */ void* (*IL2C_RuntimeCast)({1}* this__, IL2C_RUNTIME_TYPE_DECL* type);",
+                    "{0}{1};",
                     indent,
-                    rawTypeName);
-                virtualMethods.ForEach(method =>
-                {
-                    var functionPrototype = Utilities.GetFunctionTypeString(
-                        method.GetOverloadedMethodName().ManglingSymbolName(),
-                        method.ReturnType,
-                        method.GetSafeParameters(declaredType),
-                        extractContext);
-                    tw.WriteLine(
-                        "{0}{1};",
-                        indent,
-                        functionPrototype);
-                });
+                    functionPrototype);
+            });
 
-                tw.WriteLine(
-                    "}} __{0}_VTABLE_DECL__;",
-                    rawTypeName);
-                tw.WriteLine();
-            }
+            tw.WriteLine(
+                "}} __{0}_VTABLE_DECL__;",
+                rawTypeName);
 
             var instanceFields = declaredType
                 .Traverse(type => type.BaseType?.Resolve())
@@ -88,15 +89,17 @@ namespace IL2C
             if ((declaredType.IsValueType == false) ||
                 (instanceFields.Length >= 1))
             {
+                tw.WriteLine();
                 tw.WriteLine(
                     "// {0} layout",
-                    classOrStruct);
+                    typeString);
                 tw.WriteLine(
                     "struct {0}",
                     structName);
                 tw.WriteLine("{");
 
-                if (declaredType.IsValueType == false)
+                // Emit vptr
+                if (declaredType.IsClass)
                 {
                     tw.WriteLine(
                         "{0}// Instance's vptr",
@@ -107,6 +110,18 @@ namespace IL2C
                         rawTypeName);
                     tw.WriteLine();
                 }
+                else if (declaredType.IsInterface)
+                {
+                    tw.WriteLine(
+                        "{0}// Interface type vptr",
+                        indent);
+                    tw.WriteLine(
+                        "{0}__{1}_VTABLE_DECL__* vptr_{1}__;",
+                        indent,
+                        rawTypeName);
+                    tw.WriteLine();
+                }
+
                 instanceFields.ForEach(field =>
                     tw.WriteLine(
                         "{0}{1} {2};",
@@ -121,9 +136,10 @@ namespace IL2C
             var makrHandlerPrototype = string.Format(
                 "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
                 rawTypeName);
+            tw.WriteLine();
             tw.WriteLine(
                 "// {0} runtime type information",
-                classOrStruct);
+                typeString);
             tw.WriteLine(makrHandlerPrototype);
         }
 
@@ -206,10 +222,15 @@ namespace IL2C
                 tw.WriteLine(
                     "// {0}",
                     type.FullName);
-                tw.WriteLine(
-                    "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1}* this__);",
-                    rawTypeName,
-                    typeName);
+
+                if (!type.IsInterface)
+                {
+                    tw.WriteLine(
+                        "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1}* this__);",
+                        rawTypeName,
+                        typeName);
+                }
+
                 tw.WriteLine(
                     "extern /* internalcall */ void* __{0}_IL2C_RuntimeCast__({1}* this__, IL2C_RUNTIME_TYPE_DECL* type);",
                     rawTypeName,
@@ -268,11 +289,23 @@ namespace IL2C
                             method.GetSafeParameters()
                                 .Select(parameter => parameter.Name));
 
-                        tw.WriteLine(
-                            "{0}((this__)->vptr0__->{1}({2}))",
-                            indent,
-                            methodName,
-                            functionParameters);
+                        if (type.IsValueType || type.IsClass)
+                        {
+                            tw.WriteLine(
+                                "{0}((this__)->vptr0__->{1}({2}))",
+                                indent,
+                                methodName,
+                                functionParameters);
+                        }
+                        else
+                        {
+                            tw.WriteLine(
+                                "{0}((this__)->vptr_{1}__->{2}({3}))",
+                                indent,
+                                rawTypeName,
+                                methodName,
+                                functionParameters);
+                        }
                     });
                 }
             });
@@ -562,11 +595,47 @@ namespace IL2C
                 rawTypeName,
                 typeName);
             tw.WriteLine("{");
-            // TODO: interfaces
+
+            // RuntimeCast: this type.
+            //   TODO: inlining all base type comparer are better than base invoker?
+            tw.WriteLine(
+                "{0}// This type",
+                indent);
             tw.WriteLine(
                 "{0}if (type == il2c_typeof({1})) return this__;",
                 indent,
-                rawBaseTypeName);
+                rawTypeName);
+
+            // RuntimeCast: implemented interfaces.
+            if (declaredType.Interfaces.Count >= 1)
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "{0}// Interface types",
+                    indent);
+                declaredType.Interfaces.ForEach(interfaceImpl =>
+                {
+                    var rawInterfaceTypeName = interfaceImpl.InterfaceType
+                        .GetFullMemberName()
+                        .ManglingSymbolName();
+
+                    // NOTE:
+                    //  The virtual function pointer added offset for between vptr_TYPE__ and vptr0__.
+                    //  If will invoke interface's virtual function,
+                    //  the function is delegated "Adjust thunk" function,
+                    //  it will recalculate this pointer offset.
+                    tw.WriteLine(
+                        "{0}if (type == il2c_typeof({1})) return &(this__->vptr_{1}__);",
+                        indent,
+                        rawInterfaceTypeName);
+                });
+            }
+
+            // RuntimeCast: reflect base types.
+            tw.WriteLine();
+            tw.WriteLine(
+                "{0}// Delegate checking base types",
+                indent);
             tw.WriteLine(
                 "{0}return __{1}_IL2C_RuntimeCast__(({1}*)this__, type);",
                 indent,
@@ -584,15 +653,22 @@ namespace IL2C
             tw.WriteLine(makrHandlerPrototype);
             tw.WriteLine("{");
 
-            declaredType.Fields
+            var fields = declaredType.Fields
                 .Where(field => !field.IsStatic && !field.FieldType.IsValueType)
-                .ForEach(field =>
-                {
-                    tw.WriteLine(
-                        "{0}il2c_try_mark_from_handler(this__->{1});",
-                        indent,
-                        field.Name);
-                });
+                .ToArray();
+            if (fields.Length >= 1)
+            {
+                tw.WriteLine(
+                    "{0}// Try marking each object reference fields",
+                    indent);
+                fields.ForEach(field =>
+                    {
+                        tw.WriteLine(
+                            "{0}il2c_try_mark_from_handler(this__->{1});",
+                            indent,
+                            field.Name);
+                    });
+            }
 
             // Invoke base class mark handler except System.Object and System.ValueType.
             var baseType = declaredType.BaseType;
@@ -600,6 +676,10 @@ namespace IL2C
             {
                 if ((baseType.IsObjectType() || baseType.IsValueTypeType()) == false)
                 {
+                    tw.WriteLine();
+                    tw.WriteLine(
+                        "{0}// Delegate checking base types",
+                        indent);
                     tw.WriteLine(
                         "{0}__{1}_IL2C_MarkHandler__(({1}*)this__);",
                         indent,
@@ -607,6 +687,7 @@ namespace IL2C
                 }
                 else
                 {
+                    tw.WriteLine();
                     tw.WriteLine(
                         "{0}/* Suppressed invoke base mark handler */",
                         indent);
@@ -617,6 +698,7 @@ namespace IL2C
 
             // Write virtual methods
             tw.WriteLine();
+            tw.WriteLine("// Vtable of instance type");
             tw.WriteLine(
                 "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                 rawTypeName);
@@ -637,6 +719,7 @@ namespace IL2C
 
             // Write runtime type information
             tw.WriteLine();
+            tw.WriteLine("// Runtime type information");
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
                 rawTypeName);
@@ -741,7 +824,7 @@ namespace IL2C
             var types = extractContext.Assembly.Modules
                 .SelectMany(module => module.Types)
                 // All types exclude privates
-                .Where(type => (type.IsValueType || type.IsClass)
+                .Where(type => (type.IsValueType || type.IsClass || type.IsInterface)
                     && (type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly))
                 .ToArray();
 
@@ -843,11 +926,14 @@ namespace IL2C
                             debugInformationOption);
                     });
 
-                InternalConvertTypeHelper(
-                    twSource,
-                    extractContext,
-                    type,
-                    indent);
+                if (type.IsClass || type.IsValueType)
+                {
+                    InternalConvertTypeHelper(
+                        twSource,
+                        extractContext,
+                        type,
+                        indent);
+                }
             });
         }
     }

@@ -43,6 +43,7 @@ struct UEFI_Code_AbstractNode
     int32_t NextIndex;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_AbstractNode_RUNTIME_TYPE__;
 
@@ -68,6 +69,7 @@ struct UEFI_Code_OperatorNode
     int32_t NextIndex;
     wchar_t Operator;
 };
+
 
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_OperatorNode_RUNTIME_TYPE__;
@@ -95,6 +97,7 @@ struct UEFI_Code_ReducibleNode
     int32_t NextIndex;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ReducibleNode_RUNTIME_TYPE__;
 
@@ -121,6 +124,7 @@ struct UEFI_Code_NumericNode
     int32_t NextIndex;
     int32_t Numeric;
 };
+
 
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_NumericNode_RUNTIME_TYPE__;
@@ -151,6 +155,7 @@ struct UEFI_Code_ExpressionNode
     UEFI_Code_ReducibleNode* Right;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ExpressionNode_RUNTIME_TYPE__;
 
@@ -174,6 +179,7 @@ struct UEFI_Code_PolishNotation
     __UEFI_Code_PolishNotation_VTABLE_DECL__* vptr0__;
 
 };
+
 
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_PolishNotation_RUNTIME_TYPE__;

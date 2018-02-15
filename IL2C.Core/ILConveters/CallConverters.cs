@@ -24,11 +24,17 @@ namespace IL2C.ILConveters
 
             var methodName = method.GetFullMemberName(MethodNameTypes.Index);
             var functionName = methodName.ManglingSymbolName();
+            var offset = decodeContext.Current.Offset;
+
+            // System.Object's constructor calls ignored.
+            var md = method.Resolve();
+            if (md.IsConstructor && md.DeclaringType.IsObjectType())
+            {
+                return _ => new string[0];
+            }
 
             if (method.ReturnType.IsVoidType())
             {
-                var offset = decodeContext.Current.Offset;
-
                 return extractContext =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
@@ -45,9 +51,7 @@ namespace IL2C.ILConveters
             else
             {
                 var targetType = method.ReturnType.GetStackableType();
-
                 var resultName = decodeContext.PushStack(targetType);
-                var offset = decodeContext.Current.Offset;
 
                 return extractContext =>
                 {

@@ -76,7 +76,6 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* this__, 
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
 /* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(12): */
     /* Path=1, Unique=0: IL_0007: nop */
@@ -364,7 +363,6 @@ void WDM_Code_Wdm__ctor(WDM_Code_Wdm* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);

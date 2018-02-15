@@ -154,7 +154,6 @@ void Win32_Code_BoxingTest__ctor(Win32_Code_BoxingTest* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -228,7 +227,6 @@ void Win32_Code_ClassTypeTestTarget__ctor(Win32_Code_ClassTypeTestTarget* this__
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
 /* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs(17): */
     /* Path=1, Unique=0: IL_0007: nop */
@@ -273,7 +271,6 @@ void Win32_Code_ClassTypeTestTarget__ctor_1(Win32_Code_ClassTypeTestTarget* this
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
 /* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\ClassTypeTest.cs(21): */
     /* Path=1, Unique=0: IL_0007: nop */
@@ -781,7 +778,6 @@ void Win32_Code_ClassTypeTest__ctor(Win32_Code_ClassTypeTest* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -955,7 +951,6 @@ void Win32_Code_Hoge1__ctor(Win32_Code_Hoge1* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1130,7 +1125,6 @@ void Win32_Code_Hoge2__ctor(Win32_Code_Hoge2* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1204,7 +1198,6 @@ void Win32_Code_InheritTestTargetBase1__ctor(Win32_Code_InheritTestTargetBase1* 
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
 /* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs(14): */
     /* Path=1, Unique=0: IL_0007: nop */
@@ -1249,7 +1242,6 @@ void Win32_Code_InheritTestTargetBase1__ctor_1(Win32_Code_InheritTestTargetBase1
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
 /* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InheritTest.cs(18): */
     /* Path=1, Unique=0: IL_0007: nop */
@@ -2090,7 +2082,6 @@ void Win32_Code_InheritTypeTest__ctor(Win32_Code_InheritTypeTest* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -2187,7 +2178,6 @@ void Win32_Code_Win32__ctor(Win32_Code_Win32* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -2262,7 +2252,6 @@ void Win32_Code_AbstractNode__ctor(Win32_Code_AbstractNode* this__, int32_t next
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
 /* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\PolishNotation.cs(14): */
     /* Path=1, Unique=0: IL_0007: nop */
@@ -4028,7 +4017,6 @@ void Win32_Code_PolishNotation__ctor(Win32_Code_PolishNotation* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -4429,7 +4417,6 @@ void Win32_Code_StringTest__ctor(Win32_Code_StringTest* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -4502,7 +4489,6 @@ void Win32_Code_UnsafeTest__ctor(Win32_Code_UnsafeTest* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -4823,7 +4809,6 @@ void Win32_Code_ValueTypeTest__ctor(Win32_Code_ValueTypeTest* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     __stack0_0 = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    System_Object__ctor((System_Object*)__stack0_0);
     /* Path=1, Unique=0: IL_0006: nop */
     /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);

@@ -40,7 +40,7 @@ namespace IL2C.Translators
                 }
 
                 var symbolName = string.Format(
-                    "__stack{0}_{1}",
+                    "stack{0}_{1}__",
                     stackPointer,
                     typedStackInformation.Count);
 
@@ -89,7 +89,7 @@ namespace IL2C.Translators
         public readonly string MethodName;
         public readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
-        public readonly VariableDefinition[] Locals;
+        public readonly SymbolInformation[] Locals;
         public readonly IPrepareContext PrepareContext;
 
         private readonly SortedDictionary<int, Instruction> instructions;
@@ -113,7 +113,7 @@ namespace IL2C.Translators
             string methodName,
             TypeReference returnType,
             Parameter[] parameters,
-            VariableDefinition[] locals,
+            SymbolInformation[] locals,
             Instruction[] instructions,
             IPrepareContext prepareContext)
         {

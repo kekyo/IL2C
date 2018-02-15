@@ -321,11 +321,11 @@ namespace IL2C
             preparedFunction.LocalVariables.ForEach(local =>
             {
                 tw.WriteLine(
-                    "{0}{1} local{2}{3};",
+                    "{0}{1} {2}{3};",
                     indent,
-                    extractContext.GetCLanguageTypeName(local.VariableType),
-                    local.Index,
-                    local.VariableType.IsValueType ? string.Empty : " = NULL");
+                    extractContext.GetCLanguageTypeName(local.TargetType),
+                    local.SymbolName,
+                    local.TargetType.IsValueType ? string.Empty : " = NULL");
             });
 
             tw.WriteLine();
@@ -344,11 +344,8 @@ namespace IL2C
             });
 
             var frameEntries = locals
-                .Where(local => !local.VariableType.IsValueType && !local.VariableType.IsPointer)
-                .Select(local => new { Type = local.VariableType, Name = "local" + local.Index })
-                .Concat(preparedFunction.Stacks
-                    .Where(stack => !stack.TargetType.IsValueType && !stack.TargetType.IsPointer)
-                    .Select(stack => new { Type = stack.TargetType, Name = stack.SymbolName }))
+                .Concat(preparedFunction.Stacks)
+                .Where(local => !local.TargetType.IsValueType && !local.TargetType.IsPointer)
                 .ToArray();
 
             if (frameEntries.Length >= 1)
@@ -368,8 +365,8 @@ namespace IL2C
                     tw.WriteLine(
                         "{0}{0}{1}* p{2};",
                         indent,
-                        extractContext.GetCLanguageTypeName(frameEntry.Type),
-                        frameEntry.Name);
+                        extractContext.GetCLanguageTypeName(frameEntry.TargetType),
+                        frameEntry.SymbolName);
                 });
 
                 tw.WriteLine("{0}}} __executionFrame__;", indent);
@@ -381,7 +378,7 @@ namespace IL2C
                     tw.WriteLine(
                         "{0}__executionFrame__.p{1} = &{1};",
                         indent,
-                        frameEntry.Name);
+                        frameEntry.SymbolName);
                 });
 
                 tw.WriteLine("{0}il2c_link_execution_frame(&__executionFrame__);", indent);

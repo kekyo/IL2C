@@ -22,7 +22,7 @@ namespace IL2C.Translators
         internal readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
         internal readonly PreparedILBody[] PreparedILBodies;
-        internal readonly VariableDefinition[] LocalVariables;
+        internal readonly SymbolInformation[] LocalVariables;
         internal readonly SymbolInformation[] Stacks;
         public readonly int SlotIndex;
 
@@ -34,7 +34,7 @@ namespace IL2C.Translators
             TypeReference returnType,
             Parameter[] parameters,
             PreparedILBody[] preparedILBodies,
-            VariableDefinition[] localVariables,
+            SymbolInformation[] localVariables,
             SymbolInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames,
             FunctionTypes functionType,
@@ -58,7 +58,7 @@ namespace IL2C.Translators
             TypeReference returnType,
             Parameter[] parameters,
             PreparedILBody[] preparedILBodies,
-            VariableDefinition[] localVariables,
+            SymbolInformation[] localVariables,
             SymbolInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames,
             int? slotIndex)

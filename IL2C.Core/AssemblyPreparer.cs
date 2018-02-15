@@ -67,8 +67,14 @@ namespace IL2C
             Parameter[] parameters,
             MethodBody body)
         {
-            var localVariables = body.Variables.ToArray();
-            localVariables.ForEach(local => prepareContext.RegisterType(local.VariableType));
+            var localVariables = body.Variables
+                .Select(localVariable => new SymbolInformation(
+                    body.Method.DebugInformation.TryGetName(localVariable, out var name)
+                        ? name
+                        : string.Format("local{0}__", localVariable.Index),
+                    localVariable.VariableType))
+                .ToArray();
+            localVariables.ForEach(local => prepareContext.RegisterType(local.TargetType));
 
             var decodeContext = new DecodeContext(
                 body.Method.Module,

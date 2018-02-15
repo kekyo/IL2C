@@ -618,7 +618,7 @@ namespace IL2C
             // Write virtual methods
             tw.WriteLine();
             tw.WriteLine(
-                "static __{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
+                "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                 rawTypeName);
             tw.WriteLine(
                 "{0}/* internalcall */ __{1}_IL2C_RuntimeCast__,",

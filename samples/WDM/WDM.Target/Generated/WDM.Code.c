@@ -241,19 +241,20 @@ IL_004e:
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__(WDM_Code_InterceptCDRomDevice* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(System_Object)) return this__;
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
 }
 
-static void __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__(WDM_Code_InterceptCDRomDevice* this__)
 {
-    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VTABLE__ = {
-    __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__,
+    /* internalcall */ __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -263,7 +264,7 @@ static __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDe
 IL2C_RUNTIME_TYPE_DECL __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ = {
     "WDM.Code.InterceptCDRomDevice",
     sizeof(WDM_Code_InterceptCDRomDevice),
-    __WDM_Code_InterceptCDRomDevice_MARK_HANDLER__,
+    /* internalcall */ (void*)__WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -373,19 +374,20 @@ void WDM_Code_Wdm__ctor(WDM_Code_Wdm* this__)
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __WDM_Code_Wdm_IL2C_RuntimeCast__(WDM_Code_Wdm* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(System_Object)) return this__;
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
 }
 
-static void __WDM_Code_Wdm_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __WDM_Code_Wdm_IL2C_MarkHandler__(WDM_Code_Wdm* this__)
 {
-    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
-    __WDM_Code_Wdm_IL2C_RuntimeCast__,
+    /* internalcall */ __WDM_Code_Wdm_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -395,5 +397,5 @@ static __WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
 IL2C_RUNTIME_TYPE_DECL __WDM_Code_Wdm_RUNTIME_TYPE__ = {
     "WDM.Code.Wdm",
     sizeof(WDM_Code_Wdm),
-    __WDM_Code_Wdm_MARK_HANDLER__,
+    /* internalcall */ (void*)__WDM_Code_Wdm_IL2C_MarkHandler__,
 };

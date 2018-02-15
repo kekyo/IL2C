@@ -26,13 +26,13 @@ typedef uint8_t interlock_t;
 typedef struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
 typedef struct IL2C_REF_HEADER IL2C_REF_HEADER;
 
-typedef void(*IL2C_MARK_HANDLER)(void*);
+typedef void (*IL2C_MARK_HANDLER)(void*);
 
 typedef const struct
 {
     const char* pTypeName;
     uintptr_t bodySize;
-    IL2C_MARK_HANDLER pMarkHandler;
+    /* internalcall */ IL2C_MARK_HANDLER IL2C_MarkHandler;
 } IL2C_RUNTIME_TYPE_DECL;
 
 struct IL2C_REF_HEADER
@@ -52,7 +52,7 @@ struct IL2C_REF_HEADER
 #define il2c_typeof(typeName) (&__##typeName##_RUNTIME_TYPE__)
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 #define il2c_runtime_cast(pReference, typeName) \
-    ((typeName##*)((pReference)->vptr__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
+    ((typeName##*)((pReference)->vptr0__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
 
 /////////////////////////////////////////////////////////////
 // System.Object
@@ -62,7 +62,7 @@ typedef struct System_String System_String;
 
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    /* internalcall */ void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
     System_String* (*ToString)(System_Object* this__);
     int32_t (*GetHashCode)(System_Object* this__);
     void (*Finalize)(System_Object* this__);
@@ -71,7 +71,7 @@ typedef const struct
 
 struct System_Object
 {
-    __System_Object_VTABLE_DECL__* vptr__;
+    __System_Object_VTABLE_DECL__* vptr0__;
 };
 
 extern IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__;
@@ -80,20 +80,21 @@ static void System_Object__ctor(System_Object* this__)
 {
 }
 
-extern void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern System_String* __System_Object_ToString__(System_Object* this__);
-extern int32_t __System_Object_GetHashCode__(System_Object* this__);
-extern void __System_Object_Finalize__(System_Object* this__);
-extern bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
+extern /* internalcall */ void __System_Object_IL2C_MarkHandler__(System_Object* this__);
+extern /* internalcall */ void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
+extern /* virtual */ System_String* __System_Object_ToString__(System_Object* this__);
+extern /* virtual */ int32_t __System_Object_GetHashCode__(System_Object* this__);
+extern /* virtual */ void __System_Object_Finalize__(System_Object* this__);
+extern /* virtual */ bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
 
 #define System_Object_ToString(/* System_Object* */ this__) \
-    ((this__)->vptr__->ToString((this__)))
+    ((this__)->vptr0__->ToString((this__)))
 #define System_Object_GetHashCode(/* System_Object* */ this__) \
-    ((this__)->vptr__->GetHashCode((this__)))
+    ((this__)->vptr0__->GetHashCode((this__)))
 #define System_Object_Finalize(/* System_Object* */ this__) \
-    ((this__)->vptr__->Finalize((this__)))
+    ((this__)->vptr0__->Finalize((this__)))
 #define System_Object_Equals(/* System_Object* */ this__, /* System_Object* */ obj) \
-    ((this__)->vptr__->Equals((this__), (obj)))
+    ((this__)->vptr0__->Equals((this__), (obj)))
 
 /////////////////////////////////////////////////////////////
 // Garbage collector related declarations
@@ -119,7 +120,7 @@ typedef struct System_ValueType System_ValueType;
 
 typedef const struct
 {
-    void* (*IL2C_RuntimeCast)(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    /* internalcall */ void* (*IL2C_RuntimeCast)(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type);
     System_String* (*ToString)(System_ValueType* this__);
     int32_t (*GetHashCode)(System_ValueType* this__);
     void (*Finalize)(System_ValueType* this__);
@@ -138,19 +139,20 @@ static void System_ValueType__ctor(System_ValueType* this__)
 {
 }
 
-extern void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern System_String* __System_ValueType_ToString__(System_ValueType* this__);
-extern int32_t __System_ValueType_GetHashCode__(System_ValueType* this__);
-extern bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj);
+extern /* internalcall */ void __System_ValueType_IL2C_MarkHandler__(System_ValueType* this__);
+extern /* internalcall */ void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type);
+extern /* virtual */ System_String* __System_ValueType_ToString__(System_ValueType* this__);
+extern /* virtual */ int32_t __System_ValueType_GetHashCode__(System_ValueType* this__);
+extern /* virtual */ bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj);
 
 #define System_ValueType_ToString(/* System_ValueType* */ this__) \
-    ((this__)->vptr__->ToString((this__)))
+    ((this__)->vptr0__->ToString((this__)))
 #define System_ValueType_GetHashCode(/* System_ValueType* */ this__) \
-    ((this__)->vptr__->GetHashCode((this__)))
+    ((this__)->vptr0__->GetHashCode((this__)))
 #define System_ValueType_Finalize(/* System_ValueType* */ this__) \
-    ((this__)->vptr__->Finalize((this__)))
+    ((this__)->vptr0__->Finalize((this__)))
 #define System_ValueType_Equals(/* System_ValueType* */ this__, /* System_Object* */ obj) \
-    ((this__)->vptr__->Equals((this__), (obj)))
+    ((this__)->vptr0__->Equals((this__), (obj)))
 
 /////////////////////////////////////////////////////////////
 // Boxing related declarations

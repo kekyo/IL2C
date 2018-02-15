@@ -58,7 +58,7 @@ namespace IL2C
                 tw.WriteLine("typedef const struct");
                 tw.WriteLine("{");
                 tw.WriteLine(
-                    "{0}void* (*IL2C_RuntimeCast)({1}* this__, IL2C_RUNTIME_TYPE_DECL* type);",
+                    "{0}/* internalcall */ void* (*IL2C_RuntimeCast)({1}* this__, IL2C_RUNTIME_TYPE_DECL* type);",
                     indent,
                     rawTypeName);
                 virtualMethods.ForEach(method =>
@@ -101,7 +101,7 @@ namespace IL2C
                     tw.WriteLine(
                         "// Instance's vptr");
                     tw.WriteLine(
-                        "{0}__{1}_VTABLE_DECL__* vptr__;",
+                        "{0}__{1}_VTABLE_DECL__* vptr0__;",
                         indent,
                         rawTypeName);
                     tw.WriteLine();
@@ -194,7 +194,25 @@ namespace IL2C
 
             types.ForEach(type =>
             {
+                var rawTypeName = type
+                    .GetFullMemberName()
+                    .ManglingSymbolName();
+                var typeName = extractContext
+                    .GetCLanguageTypeName(type, TypeNameFlags.Dereferenced)
+                    .ManglingSymbolName();
+
                 tw.WriteLine();
+                tw.WriteLine(
+                    "// {0}",
+                    type.FullName);
+                tw.WriteLine(
+                    "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1}* this__);",
+                    rawTypeName,
+                    typeName);
+                tw.WriteLine(
+                    "extern /* internalcall */ void* __{0}_IL2C_RuntimeCast__({1}* this__, IL2C_RUNTIME_TYPE_DECL* type);",
+                    rawTypeName,
+                    typeName);
 
                 type.Methods
                     .Where(method => !method.IsConstructor || !method.IsStatic)
@@ -208,7 +226,10 @@ namespace IL2C
                             preparedFunction.Parameters,
                             extractContext);
 
-                        tw.WriteLine("extern {0};", functionPrototype);
+                        tw.WriteLine(
+                            "extern {0}{1};",
+                            method.IsVirtual ? "/* virtual */ " : string.Empty,
+                            functionPrototype);
                     });
 
                 var virtualMethods = type
@@ -244,17 +265,10 @@ namespace IL2C
                         var functionParameters = string.Join(
                             ", ",
                             method.GetSafeParameters()
-                                .Select((parameter, index) => (index == 0)
-                                    ? string.Format(
-                                        "({0})({1})",
-                                        extractContext.GetCLanguageTypeName(parameter.ParameterType),
-                                        parameter.Name)
-                                    : string.Format(
-                                        "({0})",
-                                        parameter.Name)));
+                                .Select(parameter => parameter.Name));
 
                         tw.WriteLine(
-                            "{0}((this__)->vptr__->{1}({2}))",
+                            "{0}((this__)->vptr0__->{1}({2}))",
                             indent,
                             methodName,
                             functionParameters);
@@ -544,9 +558,11 @@ namespace IL2C
 
             // Write RuntimeCast function:
             tw.WriteLine();
+            tw.WriteLine("// Runtime cast");
             tw.WriteLine(
-                "void* __{0}_IL2C_RuntimeCast__({0}* this__, IL2C_RUNTIME_TYPE_DECL* type)",
-                rawTypeName);
+                "void* __{0}_IL2C_RuntimeCast__({1}* this__, IL2C_RUNTIME_TYPE_DECL* type)",
+                rawTypeName,
+                typeName);
             tw.WriteLine("{");
             // TODO: interfaces
             tw.WriteLine(
@@ -561,10 +577,12 @@ namespace IL2C
 
             // Write mark handler:
             var makrHandlerPrototype = string.Format(
-                "static void __{0}_MARK_HANDLER__(void* pReference)",
-                rawTypeName);
+                "void __{0}_IL2C_MarkHandler__({1}* this__)",
+                rawTypeName,
+                typeName);
 
             tw.WriteLine();
+            tw.WriteLine("// GC's mark handler");
             tw.WriteLine(makrHandlerPrototype);
             tw.WriteLine("{");
 
@@ -573,16 +591,19 @@ namespace IL2C
                 .ForEach(field =>
                 {
                     tw.WriteLine(
-                        "{0}il2c_try_mark_from_handler((({1}*)pReference)->{2});",
+                        "{0}il2c_try_mark_from_handler(this__->{1});",
                         indent,
-                        typeName,
                         field.Name);
                 });
 
-            tw.WriteLine(
-                "{0}il2c_typeof({1})->pMarkHandler(pReference);",
-                indent,
-                rawBaseTypeName);
+            if ((declaredType.BaseType?.IsObjectType() ?? true) == false)
+            {
+                tw.WriteLine(
+                    "{0}__{1}_IL2C_MarkHandler__(({1}*)this__);",
+                    indent,
+                    rawBaseTypeName);
+            }
+
             tw.WriteLine("}");
 
             // Write virtual methods
@@ -591,7 +612,7 @@ namespace IL2C
                 "static __{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                 rawTypeName);
             tw.WriteLine(
-                "{0}__{1}_IL2C_RuntimeCast__,",
+                "{0}/* internalcall */ __{1}_IL2C_RuntimeCast__,",
                 indent,
                 rawTypeName);
             declaredType
@@ -619,7 +640,7 @@ namespace IL2C
                 indent,
                 typeName);
             tw.WriteLine(
-                "{0}__{1}_MARK_HANDLER__,",
+                "{0}/* internalcall */ (void*)__{1}_IL2C_MarkHandler__,",
                 indent,
                 rawTypeName);
 

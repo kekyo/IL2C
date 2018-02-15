@@ -95,19 +95,20 @@ void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* this__, int32_t nextIn
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __UEFI_Code_AbstractNode_IL2C_RuntimeCast__(UEFI_Code_AbstractNode* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(System_Object)) return this__;
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
 }
 
-static void __UEFI_Code_AbstractNode_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __UEFI_Code_AbstractNode_IL2C_MarkHandler__(UEFI_Code_AbstractNode* this__)
 {
-    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_AbstractNode_VTABLE_DECL__ __UEFI_Code_AbstractNode_VTABLE__ = {
-    __UEFI_Code_AbstractNode_IL2C_RuntimeCast__,
+    /* internalcall */ __UEFI_Code_AbstractNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -117,7 +118,7 @@ static __UEFI_Code_AbstractNode_VTABLE_DECL__ __UEFI_Code_AbstractNode_VTABLE__ 
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_AbstractNode_RUNTIME_TYPE__ = {
     "UEFI.Code.AbstractNode",
     sizeof(UEFI_Code_AbstractNode),
-    __UEFI_Code_AbstractNode_MARK_HANDLER__,
+    /* internalcall */ (void*)__UEFI_Code_AbstractNode_IL2C_MarkHandler__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -180,19 +181,21 @@ void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* this__, wchar_t oper, 
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __UEFI_Code_OperatorNode_IL2C_RuntimeCast__(UEFI_Code_OperatorNode* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(UEFI_Code_AbstractNode)) return this__;
     return __UEFI_Code_AbstractNode_IL2C_RuntimeCast__((UEFI_Code_AbstractNode*)this__, type);
 }
 
-static void __UEFI_Code_OperatorNode_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __UEFI_Code_OperatorNode_IL2C_MarkHandler__(UEFI_Code_OperatorNode* this__)
 {
-    il2c_typeof(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
+    __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
 
 static __UEFI_Code_OperatorNode_VTABLE_DECL__ __UEFI_Code_OperatorNode_VTABLE__ = {
-    __UEFI_Code_OperatorNode_IL2C_RuntimeCast__,
+    /* internalcall */ __UEFI_Code_OperatorNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -202,7 +205,7 @@ static __UEFI_Code_OperatorNode_VTABLE_DECL__ __UEFI_Code_OperatorNode_VTABLE__ 
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_OperatorNode_RUNTIME_TYPE__ = {
     "UEFI.Code.OperatorNode",
     sizeof(UEFI_Code_OperatorNode),
-    __UEFI_Code_OperatorNode_MARK_HANDLER__,
+    /* internalcall */ (void*)__UEFI_Code_OperatorNode_IL2C_MarkHandler__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -268,19 +271,21 @@ int32_t __UEFI_Code_ReducibleNode_Reduce__(UEFI_Code_ReducibleNode* this__)
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __UEFI_Code_ReducibleNode_IL2C_RuntimeCast__(UEFI_Code_ReducibleNode* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(UEFI_Code_AbstractNode)) return this__;
     return __UEFI_Code_AbstractNode_IL2C_RuntimeCast__((UEFI_Code_AbstractNode*)this__, type);
 }
 
-static void __UEFI_Code_ReducibleNode_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __UEFI_Code_ReducibleNode_IL2C_MarkHandler__(UEFI_Code_ReducibleNode* this__)
 {
-    il2c_typeof(UEFI_Code_AbstractNode)->pMarkHandler(pReference);
+    __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
 
 static __UEFI_Code_ReducibleNode_VTABLE_DECL__ __UEFI_Code_ReducibleNode_VTABLE__ = {
-    __UEFI_Code_ReducibleNode_IL2C_RuntimeCast__,
+    /* internalcall */ __UEFI_Code_ReducibleNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -291,7 +296,7 @@ static __UEFI_Code_ReducibleNode_VTABLE_DECL__ __UEFI_Code_ReducibleNode_VTABLE_
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ReducibleNode_RUNTIME_TYPE__ = {
     "UEFI.Code.ReducibleNode",
     sizeof(UEFI_Code_ReducibleNode),
-    __UEFI_Code_ReducibleNode_MARK_HANDLER__,
+    /* internalcall */ (void*)__UEFI_Code_ReducibleNode_IL2C_MarkHandler__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -406,19 +411,21 @@ IL_000a:
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __UEFI_Code_NumericNode_IL2C_RuntimeCast__(UEFI_Code_NumericNode* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(UEFI_Code_ReducibleNode)) return this__;
     return __UEFI_Code_ReducibleNode_IL2C_RuntimeCast__((UEFI_Code_ReducibleNode*)this__, type);
 }
 
-static void __UEFI_Code_NumericNode_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __UEFI_Code_NumericNode_IL2C_MarkHandler__(UEFI_Code_NumericNode* this__)
 {
-    il2c_typeof(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
+    __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
 
 static __UEFI_Code_NumericNode_VTABLE_DECL__ __UEFI_Code_NumericNode_VTABLE__ = {
-    __UEFI_Code_NumericNode_IL2C_RuntimeCast__,
+    /* internalcall */ __UEFI_Code_NumericNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -429,7 +436,7 @@ static __UEFI_Code_NumericNode_VTABLE_DECL__ __UEFI_Code_NumericNode_VTABLE__ = 
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_NumericNode_RUNTIME_TYPE__ = {
     "UEFI.Code.NumericNode",
     sizeof(UEFI_Code_NumericNode),
-    __UEFI_Code_NumericNode_MARK_HANDLER__,
+    /* internalcall */ (void*)__UEFI_Code_NumericNode_IL2C_MarkHandler__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -713,22 +720,24 @@ IL_008b:
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __UEFI_Code_ExpressionNode_IL2C_RuntimeCast__(UEFI_Code_ExpressionNode* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(UEFI_Code_ReducibleNode)) return this__;
     return __UEFI_Code_ReducibleNode_IL2C_RuntimeCast__((UEFI_Code_ReducibleNode*)this__, type);
 }
 
-static void __UEFI_Code_ExpressionNode_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __UEFI_Code_ExpressionNode_IL2C_MarkHandler__(UEFI_Code_ExpressionNode* this__)
 {
-    il2c_try_mark_from_handler(((UEFI_Code_ExpressionNode*)pReference)->Operator);
-    il2c_try_mark_from_handler(((UEFI_Code_ExpressionNode*)pReference)->Left);
-    il2c_try_mark_from_handler(((UEFI_Code_ExpressionNode*)pReference)->Right);
-    il2c_typeof(UEFI_Code_ReducibleNode)->pMarkHandler(pReference);
+    il2c_try_mark_from_handler(this__->Operator);
+    il2c_try_mark_from_handler(this__->Left);
+    il2c_try_mark_from_handler(this__->Right);
+    __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
 
 static __UEFI_Code_ExpressionNode_VTABLE_DECL__ __UEFI_Code_ExpressionNode_VTABLE__ = {
-    __UEFI_Code_ExpressionNode_IL2C_RuntimeCast__,
+    /* internalcall */ __UEFI_Code_ExpressionNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -739,7 +748,7 @@ static __UEFI_Code_ExpressionNode_VTABLE_DECL__ __UEFI_Code_ExpressionNode_VTABL
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ExpressionNode_RUNTIME_TYPE__ = {
     "UEFI.Code.ExpressionNode",
     sizeof(UEFI_Code_ExpressionNode),
-    __UEFI_Code_ExpressionNode_MARK_HANDLER__,
+    /* internalcall */ (void*)__UEFI_Code_ExpressionNode_IL2C_MarkHandler__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1053,6 +1062,7 @@ IL_0045:
     __stack1_2 = local0;
     /* Path=5, Unique=0: IL_0053: newobj System.Void UEFI.Code.OperatorNode::.ctor(System.Char,System.Int32) */
     __stack0_4 = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_OperatorNode));
+    __stack0_4->vptr0__ = &__UEFI_Code_OperatorNode_VTABLE__;
     UEFI_Code_OperatorNode__ctor(__stack0_4, (wchar_t)__stack0_0, __stack1_2);
     /* Path=5, Unique=0: IL_0058: stloc.3 */
     local3 = __stack0_4;
@@ -1304,6 +1314,7 @@ IL_007a:
     __stack1_2 = local0;
     /* Path=8, Unique=0: IL_0084: newobj System.Void UEFI.Code.NumericNode::.ctor(System.Int32,System.Int32) */
     __stack0_2 = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_NumericNode));
+    __stack0_2->vptr0__ = &__UEFI_Code_NumericNode_VTABLE__;
     UEFI_Code_NumericNode__ctor(__stack0_2, __stack0_0, __stack1_2);
     /* Path=8, Unique=0: IL_0089: stloc.s local4 */
     local4 = __stack0_2;
@@ -1604,6 +1615,7 @@ IL_00a3:
     __stack3_0 = local3;
     /* Path=7, Unique=0: IL_00b4: newobj System.Void UEFI.Code.ExpressionNode::.ctor(UEFI.Code.OperatorNode,UEFI.Code.ReducibleNode,UEFI.Code.ReducibleNode,System.Int32) */
     __stack0_4 = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_ExpressionNode));
+    __stack0_4->vptr0__ = &__UEFI_Code_ExpressionNode_VTABLE__;
     UEFI_Code_ExpressionNode__ctor(__stack0_4, __stack0_3, __stack1_5, __stack2_0, __stack3_0);
     /* Path=7, Unique=0: IL_00b9: stloc.s local5 */
     local5 = __stack0_4;
@@ -1813,19 +1825,20 @@ void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* this__)
 //////////////////////
 // Runtime helpers:
 
+// Runtime cast
 void* __UEFI_Code_PolishNotation_IL2C_RuntimeCast__(UEFI_Code_PolishNotation* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     if (type == il2c_typeof(System_Object)) return this__;
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
 }
 
-static void __UEFI_Code_PolishNotation_MARK_HANDLER__(void* pReference)
+// GC's mark handler
+void __UEFI_Code_PolishNotation_IL2C_MarkHandler__(UEFI_Code_PolishNotation* this__)
 {
-    il2c_typeof(System_Object)->pMarkHandler(pReference);
 }
 
 static __UEFI_Code_PolishNotation_VTABLE_DECL__ __UEFI_Code_PolishNotation_VTABLE__ = {
-    __UEFI_Code_PolishNotation_IL2C_RuntimeCast__,
+    /* internalcall */ __UEFI_Code_PolishNotation_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -1835,5 +1848,5 @@ static __UEFI_Code_PolishNotation_VTABLE_DECL__ __UEFI_Code_PolishNotation_VTABL
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_PolishNotation_RUNTIME_TYPE__ = {
     "UEFI.Code.PolishNotation",
     sizeof(UEFI_Code_PolishNotation),
-    __UEFI_Code_PolishNotation_MARK_HANDLER__,
+    /* internalcall */ (void*)__UEFI_Code_PolishNotation_IL2C_MarkHandler__,
 };

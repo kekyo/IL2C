@@ -321,7 +321,8 @@ namespace IL2C
 
         public static TypeReference GetSafeValueTypeType(this MemberReference member)
         {
-            return member.Module.TypeSystem.Object.Module.GetType("System.ValueType");
+            var realObject = member.Module.TypeSystem.Object.Resolve();
+            return realObject.Module.GetType("System.ValueType");
         }
 
         public static TypeReference GetSafeIntPtrType(this MemberReference member)
@@ -393,6 +394,7 @@ namespace IL2C
         {
             return pseudoZeroTypeDefinition;
         }
+
         ///
 
         public static TypeReference GetSafeVoidType(this ModuleDefinition module)
@@ -407,7 +409,8 @@ namespace IL2C
 
         public static TypeReference GetSafeValueTypeType(this ModuleDefinition module)
         {
-            return module.TypeSystem.Object.Module.GetType("System.ValueType");
+            var realObject = module.TypeSystem.Object.Resolve();
+            return realObject.Module.GetType("System.ValueType");
         }
 
         public static TypeReference GetSafeIntPtrType(this ModuleDefinition module)

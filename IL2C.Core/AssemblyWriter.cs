@@ -99,7 +99,8 @@ namespace IL2C
                 if (declaredType.IsValueType == false)
                 {
                     tw.WriteLine(
-                        "// Instance's vptr");
+                        "{0}// Instance's vptr",
+                        indent);
                     tw.WriteLine(
                         "{0}__{1}_VTABLE_DECL__* vptr0__;",
                         indent,
@@ -593,12 +594,23 @@ namespace IL2C
                         field.Name);
                 });
 
-            if ((declaredType.BaseType?.IsObjectType() ?? true) == false)
+            // Invoke base class mark handler except System.Object and System.ValueType.
+            var baseType = declaredType.BaseType;
+            if (baseType != null)
             {
-                tw.WriteLine(
-                    "{0}__{1}_IL2C_MarkHandler__(({1}*)this__);",
-                    indent,
-                    rawBaseTypeName);
+                if ((baseType.IsObjectType() || baseType.IsValueTypeType()) == false)
+                {
+                    tw.WriteLine(
+                        "{0}__{1}_IL2C_MarkHandler__(({1}*)this__);",
+                        indent,
+                        rawBaseTypeName);
+                }
+                else
+                {
+                    tw.WriteLine(
+                        "{0}/* Suppressed invoke base mark handler */",
+                        indent);
+                }
             }
 
             tw.WriteLine("}");

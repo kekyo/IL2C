@@ -50,7 +50,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_BoxingTest
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_BoxingTest_VTABLE_DECL__* vptr0__;
 
 };
@@ -74,7 +74,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_ClassTypeTestTarget
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_ClassTypeTestTarget_VTABLE_DECL__* vptr0__;
 
     int32_t Value2;
@@ -100,7 +100,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_ClassTypeTest
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_ClassTypeTest_VTABLE_DECL__* vptr0__;
 
 };
@@ -124,7 +124,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_Hoge1
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_Hoge1_VTABLE_DECL__* vptr0__;
 
 };
@@ -148,7 +148,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_Hoge2
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_Hoge2_VTABLE_DECL__* vptr0__;
 
 };
@@ -173,7 +173,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_InheritTestTargetBase1
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_InheritTestTargetBase1_VTABLE_DECL__* vptr0__;
 
     int32_t Value2;
@@ -200,7 +200,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_InheritTestTarget2
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_InheritTestTarget2_VTABLE_DECL__* vptr0__;
 
     int32_t Value2;
@@ -226,7 +226,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_InheritTypeTest
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_InheritTypeTest_VTABLE_DECL__* vptr0__;
 
 };
@@ -250,7 +250,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_Win32
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_Win32_VTABLE_DECL__* vptr0__;
 
 };
@@ -274,7 +274,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_AbstractNode
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_AbstractNode_VTABLE_DECL__* vptr0__;
 
     int32_t NextIndex;
@@ -299,7 +299,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_OperatorNode
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_OperatorNode_VTABLE_DECL__* vptr0__;
 
     int32_t NextIndex;
@@ -326,7 +326,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_ReducibleNode
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_ReducibleNode_VTABLE_DECL__* vptr0__;
 
     int32_t NextIndex;
@@ -352,7 +352,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_NumericNode
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_NumericNode_VTABLE_DECL__* vptr0__;
 
     int32_t NextIndex;
@@ -379,7 +379,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_ExpressionNode
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_ExpressionNode_VTABLE_DECL__* vptr0__;
 
     int32_t NextIndex;
@@ -407,7 +407,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_PolishNotation
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_PolishNotation_VTABLE_DECL__* vptr0__;
 
 };
@@ -431,7 +431,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_StringTest
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_StringTest_VTABLE_DECL__* vptr0__;
 
 };
@@ -455,7 +455,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_UnsafeTest
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_UnsafeTest_VTABLE_DECL__* vptr0__;
 
 };
@@ -502,7 +502,7 @@ typedef const struct
 // Class layout
 struct Win32_Code_ValueTypeTest
 {
-// Instance's vptr
+    // Instance's vptr
     __Win32_Code_ValueTypeTest_VTABLE_DECL__* vptr0__;
 
 };
@@ -786,6 +786,7 @@ extern System_String* Win32_Code_StringTest_LiteralCombinedString(void);
 extern System_String* Win32_Code_StringTest_LiteralSubstring(void);
 extern wchar_t Win32_Code_StringTest_GetChar(void);
 extern wchar_t Win32_Code_StringTest_GetCharByIndex(System_String* str, int32_t index);
+extern System_String* Win32_Code_StringTest_GetString(void);
 extern void Win32_Code_StringTest__ctor(Win32_Code_StringTest* this__);
 #define Win32_Code_StringTest_ToString(/* Win32_Code_StringTest* */ this__) \
     ((this__)->vptr0__->ToString(this__))

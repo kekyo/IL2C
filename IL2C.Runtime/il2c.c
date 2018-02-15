@@ -152,6 +152,14 @@ static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 static void* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize)
 {
+    // +----------------------+ <-- pHeader
+    // | IL2C_REF_HEADER      |
+    // +----------------------+ <-- pReference   -------
+    // |          :           |                    ^
+    // | (Instance body)      |                    | bodySize
+    // |          :           |                    v
+    // +----------------------+                  -------
+
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)GCALLOC(sizeof(IL2C_REF_HEADER) + bodySize);
     if (pHeader == NULL)
     {
@@ -173,6 +181,7 @@ static void* il2c_get_uninitialized_object_internal__(
     void* pReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
     if (bodySize >= 1)
     {
+        // Guarantee cleared body
         memset(pReference, 0, bodySize);
     }
 
@@ -528,17 +537,62 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 /////////////////////////////////////////////////////////////
 // System.String
 
+void __System_String_IL2C_MarkHandler__(System_String* this__)
+{
+    IL2C_ASSERT(this__ != NULL);
+}
+
+void* __System_String_IL2C_RuntimeCast__(System_String* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    IL2C_ASSERT(this__ != NULL);
+
+    if (type == il2c_typeof(System_String)) return this__;
+    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
+}
+
+System_String* __System_String_ToString__(System_String* this__)
+{
+    return this__;
+}
+
+int32_t __System_String_GetHashCode__(System_String* this__)
+{
+    // TODO:
+    return (int32_t)(intptr_t)this__;
+}
+
+__System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
+    /* internalcall */ __System_String_IL2C_RuntimeCast__,
+    __System_String_ToString__,
+    __System_String_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+};
+
 IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
     "System.String", UINTPTR_MAX, /* internalcall */ __System_Object_IL2C_MarkHandler__ };
 
-static System_String* __new_string_internal__(uintptr_t size)
+static System_String* __new_string_internal__(uintptr_t byteSize)
 {
-    uintptr_t bodySize = sizeof(System_String) + size;
+    // +----------------------+
+    // | IL2C_REF_HEADER      |
+    // +----------------------+ <-- pString                        ---------------------------
+    // | vptr0__              |                                       ^                   ^
+    // +----------------------+                                       | System_String     |
+    // | string_body__        | ----+                                 v                   |
+    // +----------------------+     | il2c_new_string():memcpy     -------                | bodySize
+    // |        :             | <---+                                 ^                   |
+    // | (Copied string)      |                                       | byteSize          |
+    // |        :             |                                       v                   v
+    // +----------------------+                                    ---------------------------
+
+    uintptr_t bodySize = sizeof(System_String) + byteSize;
     System_String* pString = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
         bodySize);
-    wchar_t* string_body__ = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
-    pString->string_body__ = string_body__;
+    pString->vptr0__ = &__System_String_VTABLE__;
+    wchar_t* string_body = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
+    pString->string_body__ = string_body;
     return pString;
 }
 
@@ -548,6 +602,8 @@ System_String* il2c_new_string(const wchar_t* string_body__)
 
     uintptr_t size = (uintptr_t)(wcslen(string_body__) + 1) * sizeof(wchar_t);
     System_String* pString = __new_string_internal__(size);
+
+    // Copy string at below
     memcpy((wchar_t*)(pString->string_body__), string_body__, size);
 
     return pString;

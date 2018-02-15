@@ -40,5 +40,10 @@ namespace Win32.Code
         {
             return str[index];
         }
+
+        public static string GetString()
+        {
+            return "ABC".ToString();
+        }
     }
 }

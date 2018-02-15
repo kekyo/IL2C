@@ -136,7 +136,7 @@ namespace IL2C
         {
             if (!constStrings.TryGetValue(str, out var symbolName))
             {
-                symbolName = string.Format("__string{0}", constStrings.Count);
+                symbolName = string.Format("string{0}__", constStrings.Count);
                 constStrings.Add(str, symbolName);
             }
 

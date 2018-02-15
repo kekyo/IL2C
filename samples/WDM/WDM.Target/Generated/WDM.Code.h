@@ -3,7 +3,6 @@
 
 #include <il2c.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <string.h>
 
 #ifdef __cplusplus
@@ -32,7 +31,7 @@ typedef const struct
 // Class layout
 struct WDM_Code_InterceptCDRomDevice
 {
-// Instance's vptr
+    // Instance's vptr
     __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__* vptr0__;
 
     intptr_t pFrom;
@@ -59,7 +58,7 @@ typedef const struct
 // Class layout
 struct WDM_Code_Wdm
 {
-// Instance's vptr
+    // Instance's vptr
     __WDM_Code_Wdm_VTABLE_DECL__* vptr0__;
 
 };

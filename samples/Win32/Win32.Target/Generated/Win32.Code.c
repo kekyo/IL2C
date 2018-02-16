@@ -2179,12 +2179,12 @@ IL2C_RUNTIME_TYPE_DECL __Win32_Code_InheritTypeTest_RUNTIME_TYPE__ = {
 };
 
 ////////////////////////////////////////////////////////////
-// Type: Win32.Code.InterfaceTestTarget
+// Type: Win32.Code.IInterfaceTestTarget
 
 ///////////////////////////////////////
 // Abstract: Calc
 
-int32_t __Win32_Code_InterfaceTestTarget_Calc__(Win32_Code_InterfaceTestTarget* this__, int32_t a, int32_t b)
+int32_t __Win32_Code_IInterfaceTestTarget_Calc__(Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b)
 {
     // WARNING: Pure virtual function called.
     //TODO: throw : assert(0);
@@ -2308,7 +2308,7 @@ void* __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__(Win32_Code_Interf
     if (type == il2c_typeof(Win32_Code_InterfaceTestTargetClass)) return this__;
 
     // Interface types
-    if (type == il2c_typeof(Win32_Code_InterfaceTestTarget)) return &(this__->vptr_Win32_Code_InterfaceTestTarget__);
+    if (type == il2c_typeof(Win32_Code_IInterfaceTestTarget)) return &(this__->vptr_Win32_Code_IInterfaceTestTarget__);
 
     // Delegate checking base types
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
@@ -2427,14 +2427,14 @@ int32_t Win32_Code_InterfaceTypeTest_Test2(void)
     // Local variables:
 
     Win32_Code_InterfaceTestTargetClass* hoge__ = NULL;
-    Win32_Code_InterfaceTestTarget* hoge2__ = NULL;
+    Win32_Code_IInterfaceTestTarget* hoge2__ = NULL;
     int32_t local__;
 
     //-------------------
     // Evaluation stacks:
 
     Win32_Code_InterfaceTestTargetClass* stack0_0__ = NULL;
-    Win32_Code_InterfaceTestTarget* stack0_1__ = NULL;
+    Win32_Code_IInterfaceTestTarget* stack0_1__ = NULL;
     int32_t stack0_2__;
     int32_t stack1_0__;
     int32_t stack2_0__;
@@ -2447,9 +2447,9 @@ int32_t Win32_Code_InterfaceTypeTest_Test2(void)
         IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
         Win32_Code_InterfaceTestTargetClass** phoge__;
-        Win32_Code_InterfaceTestTarget** phoge2__;
+        Win32_Code_IInterfaceTestTarget** phoge2__;
         Win32_Code_InterfaceTestTargetClass** pstack0_0__;
-        Win32_Code_InterfaceTestTarget** pstack0_1__;
+        Win32_Code_IInterfaceTestTarget** pstack0_1__;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 4;
@@ -2481,7 +2481,7 @@ int32_t Win32_Code_InterfaceTypeTest_Test2(void)
     /* Path=1, Unique=0: IL_000f: ldloc.0 */
     stack0_0__ = hoge__;
     /* Path=1, Unique=0: IL_0010: stloc.1 */
-    hoge2__ = (Win32_Code_InterfaceTestTarget*)stack0_0__;
+    hoge2__ = (Win32_Code_IInterfaceTestTarget*)stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\InterfaceTest.cs(45): */
     /* Path=1, Unique=0: IL_0011: ldloc.1 */
     stack0_1__ = hoge2__;
@@ -2489,8 +2489,8 @@ int32_t Win32_Code_InterfaceTypeTest_Test2(void)
     stack1_0__ = 1;
     /* Path=1, Unique=0: IL_0013: ldc.i4.2 */
     stack2_0__ = 2;
-    /* Path=1, Unique=0: IL_0014: callvirt System.Int32 Win32.Code.InterfaceTestTarget::Calc(System.Int32,System.Int32) */
-    stack0_2__ = Win32_Code_InterfaceTestTarget_Calc(stack0_1__, stack1_0__, stack2_0__);
+    /* Path=1, Unique=0: IL_0014: callvirt System.Int32 Win32.Code.IInterfaceTestTarget::Calc(System.Int32,System.Int32) */
+    stack0_2__ = Win32_Code_IInterfaceTestTarget_Calc(stack0_1__, stack1_0__, stack2_0__);
     /* Path=1, Unique=0: IL_0019: stloc.2 */
     local__ = stack0_2__;
     /* Path=1, Unique=0: IL_001a: br.s IL_001c */

@@ -32,9 +32,7 @@ typedef const struct
 // Class layout
 struct WDM_Code_InterceptCDRomDevice
 {
-    // Instance's vptr
     __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__* vptr0__;
-
     intptr_t pFrom;
     intptr_t pTo;
     int32_t size;
@@ -60,9 +58,7 @@ typedef const struct
 // Class layout
 struct WDM_Code_Wdm
 {
-    // Instance's vptr
     __WDM_Code_Wdm_VTABLE_DECL__* vptr0__;
-
 };
 
 

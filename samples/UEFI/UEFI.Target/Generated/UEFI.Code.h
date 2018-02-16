@@ -37,9 +37,7 @@ typedef const struct
 // Class layout
 struct UEFI_Code_AbstractNode
 {
-    // Instance's vptr
     __UEFI_Code_AbstractNode_VTABLE_DECL__* vptr0__;
-
     int32_t NextIndex;
 };
 
@@ -63,9 +61,7 @@ typedef const struct
 // Class layout
 struct UEFI_Code_OperatorNode
 {
-    // Instance's vptr
     __UEFI_Code_OperatorNode_VTABLE_DECL__* vptr0__;
-
     int32_t NextIndex;
     wchar_t Operator;
 };
@@ -91,9 +87,7 @@ typedef const struct
 // Class layout
 struct UEFI_Code_ReducibleNode
 {
-    // Instance's vptr
     __UEFI_Code_ReducibleNode_VTABLE_DECL__* vptr0__;
-
     int32_t NextIndex;
 };
 
@@ -118,9 +112,7 @@ typedef const struct
 // Class layout
 struct UEFI_Code_NumericNode
 {
-    // Instance's vptr
     __UEFI_Code_NumericNode_VTABLE_DECL__* vptr0__;
-
     int32_t NextIndex;
     int32_t Numeric;
 };
@@ -146,9 +138,7 @@ typedef const struct
 // Class layout
 struct UEFI_Code_ExpressionNode
 {
-    // Instance's vptr
     __UEFI_Code_ExpressionNode_VTABLE_DECL__* vptr0__;
-
     int32_t NextIndex;
     UEFI_Code_OperatorNode* Operator;
     UEFI_Code_ReducibleNode* Left;
@@ -175,9 +165,7 @@ typedef const struct
 // Class layout
 struct UEFI_Code_PolishNotation
 {
-    // Instance's vptr
     __UEFI_Code_PolishNotation_VTABLE_DECL__* vptr0__;
-
 };
 
 

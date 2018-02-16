@@ -81,13 +81,37 @@ namespace IL2C
                 "}} __{0}_VTABLE_DECL__;",
                 rawTypeName);
 
-            var instanceFields = declaredType
+            var fields = declaredType
                 .Traverse(type => type.BaseType?.Resolve())
                 .Reverse()
-                .SelectMany(type => type.Fields.Where(field => !field.IsStatic))
+                .SelectMany(type =>
+                {
+                    var vptrs = type.Interfaces
+                        .Select(interfaceImpl => new
+                        {
+                            Name = string.Format(
+                                "vptr_{0}__",
+                                interfaceImpl.InterfaceType
+                                    .GetFullMemberName()
+                                    .ManglingSymbolName()),
+                            TypeName = string.Format(
+                                "__{0}_VTABLE_DECL__*",
+                                interfaceImpl.InterfaceType
+                                    .GetFullMemberName()
+                                    .ManglingSymbolName())
+                        });
+                    var thisFields = type.Fields
+                        .Where(field => !field.IsStatic)
+                        .Select(field => new
+                        {
+                            field.Name,
+                            TypeName = extractContext.GetCLanguageTypeName(field.FieldType)
+                        });
+                    return vptrs.Concat(thisFields);
+                })
                 .ToArray();
             if ((declaredType.IsValueType == false) ||
-                (instanceFields.Length >= 1))
+                (fields.Length >= 1))
             {
                 tw.WriteLine();
                 tw.WriteLine(
@@ -102,31 +126,23 @@ namespace IL2C
                 if (declaredType.IsClass)
                 {
                     tw.WriteLine(
-                        "{0}// Instance's vptr",
-                        indent);
-                    tw.WriteLine(
                         "{0}__{1}_VTABLE_DECL__* vptr0__;",
                         indent,
                         rawTypeName);
-                    tw.WriteLine();
                 }
                 else if (declaredType.IsInterface)
                 {
                     tw.WriteLine(
-                        "{0}// Interface type vptr",
-                        indent);
-                    tw.WriteLine(
                         "{0}__{1}_VTABLE_DECL__* vptr_{1}__;",
                         indent,
                         rawTypeName);
-                    tw.WriteLine();
                 }
 
-                instanceFields.ForEach(field =>
+                fields.ForEach(field =>
                     tw.WriteLine(
                         "{0}{1} {2};",
                         indent,
-                        extractContext.GetCLanguageTypeName(field.FieldType),
+                        field.TypeName,
                         field.Name));
 
                 tw.WriteLine("};");

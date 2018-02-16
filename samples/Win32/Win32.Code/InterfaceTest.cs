@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Win32.Code
 {
-    public interface InterfaceTestTarget
+    public interface IInterfaceTestTarget
     {
         int Calc(int a, int b);
     }
 
-    public class InterfaceTestTargetClass : InterfaceTestTarget
+    public class InterfaceTestTargetClass : IInterfaceTestTarget
     {
         public int Value2;
         public ClassTypeTestTarget OR2;
@@ -40,7 +40,7 @@ namespace Win32.Code
             var hoge = new InterfaceTestTargetClass();
             hoge.Value2 = 123;
 
-            InterfaceTestTarget hoge2 = hoge;
+            IInterfaceTestTarget hoge2 = hoge;
 
             return hoge2.Calc(1, 2);
         }

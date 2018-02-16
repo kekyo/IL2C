@@ -74,14 +74,14 @@ namespace IL2C
             // +----------------------+           |    | Calc()             |
             //                                    |    +--------------------+
             //                                    |      __A_IB_VTABLE__
-            //                                    +--> +--------------------+
-            //                                         | ILC2_RuntimeCast() |
-            //                                         | ToString()         |
-            //                                         | GetHashCode()      |
-            //                                         | Finalize()         |
-            //                                         | Equals()           |
-            //                                         | Calc()             |
-            //                                         +--------------------+
+            //                                    +--> +------------------------------+
+            //                                         | ILC2_RuntimeCast() [with AT] |
+            //                                         | ToString() [with AT]         |
+            //                                         | GetHashCode() [with AT]      |
+            //                                         | Finalize() [with AT]         |
+            //                                         | Equals() [with AT]           |
+            //                                         | Calc() [with AT]             |
+            //                                         +------------------------------+
 
             tw.WriteLine(
                 "// {0} vtable layout",
@@ -752,7 +752,9 @@ namespace IL2C
 
             // Write virtual methods
             tw.WriteLine();
-            tw.WriteLine("// Vtable of instance type");
+            tw.WriteLine(
+                "// Vtable of {0}",
+                declaredType.FullName);
             tw.WriteLine(
                 "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                 rawTypeName);
@@ -770,6 +772,37 @@ namespace IL2C
                         method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName());
                 });
             tw.WriteLine("};");
+
+            declaredType.Interfaces
+                .ForEach(interfaceImpl =>
+                {
+                    var rawInterfaceTypeName = interfaceImpl.InterfaceType
+                        .GetFullMemberName()
+                        .ManglingSymbolName();
+
+                    tw.WriteLine();
+                    tw.WriteLine(
+                        "// Vtable of {0} (with AT)",
+                        interfaceImpl.InterfaceType.FullName);
+                    tw.WriteLine(
+                        "__{0}_VTABLE_DECL__ __{1}_{0}_VTABLE__ = {{",
+                        rawInterfaceTypeName,
+                        rawTypeName);
+                    tw.WriteLine(
+                        "{0}/* internalcall */ __{1}_IL2C_RuntimeCast__,",
+                        indent,
+                        rawTypeName);
+                    interfaceImpl.InterfaceType
+                        .EnumerateOrderedOverridedMethods()
+                        .ForEach(method =>
+                        {
+                            tw.WriteLine(
+                                "{0}(void*)__{1}__,",
+                                indent,
+                                method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName());
+                        });
+                    tw.WriteLine("};");
+                });
 
             // Write runtime type information
             tw.WriteLine();

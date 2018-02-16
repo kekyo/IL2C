@@ -257,7 +257,7 @@ void __WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__(WDM_Code_InterceptCDRomD
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of instance type
+// Vtable of WDM.Code.InterceptCDRomDevice
 __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VTABLE__ = {
     /* internalcall */ __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -396,7 +396,7 @@ void __WDM_Code_Wdm_IL2C_MarkHandler__(WDM_Code_Wdm* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of instance type
+// Vtable of WDM.Code.Wdm
 __WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
     /* internalcall */ __WDM_Code_Wdm_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,

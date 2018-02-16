@@ -111,7 +111,7 @@ void __UEFI_Code_AbstractNode_IL2C_MarkHandler__(UEFI_Code_AbstractNode* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of instance type
+// Vtable of UEFI.Code.AbstractNode
 __UEFI_Code_AbstractNode_VTABLE_DECL__ __UEFI_Code_AbstractNode_VTABLE__ = {
     /* internalcall */ __UEFI_Code_AbstractNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -205,7 +205,7 @@ void __UEFI_Code_OperatorNode_IL2C_MarkHandler__(UEFI_Code_OperatorNode* this__)
     __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
 
-// Vtable of instance type
+// Vtable of UEFI.Code.OperatorNode
 __UEFI_Code_OperatorNode_VTABLE_DECL__ __UEFI_Code_OperatorNode_VTABLE__ = {
     /* internalcall */ __UEFI_Code_OperatorNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -302,7 +302,7 @@ void __UEFI_Code_ReducibleNode_IL2C_MarkHandler__(UEFI_Code_ReducibleNode* this_
     __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
 
-// Vtable of instance type
+// Vtable of UEFI.Code.ReducibleNode
 __UEFI_Code_ReducibleNode_VTABLE_DECL__ __UEFI_Code_ReducibleNode_VTABLE__ = {
     /* internalcall */ __UEFI_Code_ReducibleNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -449,7 +449,7 @@ void __UEFI_Code_NumericNode_IL2C_MarkHandler__(UEFI_Code_NumericNode* this__)
     __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
 
-// Vtable of instance type
+// Vtable of UEFI.Code.NumericNode
 __UEFI_Code_NumericNode_VTABLE_DECL__ __UEFI_Code_NumericNode_VTABLE__ = {
     /* internalcall */ __UEFI_Code_NumericNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -769,7 +769,7 @@ void __UEFI_Code_ExpressionNode_IL2C_MarkHandler__(UEFI_Code_ExpressionNode* thi
     __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
 
-// Vtable of instance type
+// Vtable of UEFI.Code.ExpressionNode
 __UEFI_Code_ExpressionNode_VTABLE_DECL__ __UEFI_Code_ExpressionNode_VTABLE__ = {
     /* internalcall */ __UEFI_Code_ExpressionNode_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
@@ -1876,7 +1876,7 @@ void __UEFI_Code_PolishNotation_IL2C_MarkHandler__(UEFI_Code_PolishNotation* thi
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of instance type
+// Vtable of UEFI.Code.PolishNotation
 __UEFI_Code_PolishNotation_VTABLE_DECL__ __UEFI_Code_PolishNotation_VTABLE__ = {
     /* internalcall */ __UEFI_Code_PolishNotation_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,

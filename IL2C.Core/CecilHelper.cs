@@ -196,6 +196,11 @@ namespace IL2C
                     return (t.IsValueType || t.IsClass)
                         ? t.BaseType?.Resolve()
                         // TODO: Traverse interface inheritance
+
+                        // HACK: Interface metadata not contains basic System.Object methods (ex: ToString, Equals...)
+                        //   But we have to support for invoking these methods by callvirt opcode.
+                        //   IL2C applies easy way to interface type has pseudo these method entries.
+                        //   This code fragment makes it.
                         : t.GetSafeObjectType().Resolve();
                 })
                 .Reverse())

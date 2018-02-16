@@ -51,6 +51,38 @@ namespace IL2C
                 declaredType.GetFullMemberName());
             tw.WriteLine();
 
+            // IL2C vtable model case [1]:
+            //
+            // public class A : IB {
+            //   public int F1;
+            //   public string F2;
+            //   public virtual int Calc(int a, int b);
+            // }
+            // public interface IB {
+            //   int Calc(int a, int b);
+            // }
+            //
+            // +----------------------+
+            // | IL2C_REF_HEADER      |
+            // +----------------------+ <-- this__       __A_VTABLE__
+            // | vptr0__              | -------------> +--------------------+
+            // +----------------------+                | ILC2_RuntimeCast() |
+            // | vptr_A_IB__          | ----------+    | ToString()         |
+            // +----------------------+           |    | GetHashCode()      |
+            // | int F1               |           |    | Finalize()         |
+            // | string F2            |           |    | Equals()           |
+            // +----------------------+           |    | Calc()             |
+            //                                    |    +--------------------+
+            //                                    |      __A_IB_VTABLE__
+            //                                    +--> +--------------------+
+            //                                         | ILC2_RuntimeCast() |
+            //                                         | ToString()         |
+            //                                         | GetHashCode()      |
+            //                                         | Finalize()         |
+            //                                         | Equals()           |
+            //                                         | Calc()             |
+            //                                         +--------------------+
+
             tw.WriteLine(
                 "// {0} vtable layout",
                 typeString);
@@ -122,7 +154,7 @@ namespace IL2C
                     structName);
                 tw.WriteLine("{");
 
-                // Emit vptr
+                // Emit vptr:
                 if (declaredType.IsClass)
                 {
                     tw.WriteLine(
@@ -315,6 +347,12 @@ namespace IL2C
                         }
                         else
                         {
+                            // TODO: If interface's vtable layout same as class vtable.
+                            //   We can use instead to classes.
+                            //   Invoke and space cost efficient because classes directly pointed to function without adjustor thunk.
+                            //     1. First interface type
+                            //     2. Method list sequence equal between class and intrerface.
+                            //   (But we can't remove interface's vptr, because we'll have to do with C++ interoperability)
                             tw.WriteLine(
                                 "{0}((this__)->vptr_{1}__->{2}({3}))",
                                 indent,
@@ -636,7 +674,7 @@ namespace IL2C
                         .ManglingSymbolName();
 
                     // NOTE:
-                    //  The virtual function pointer added offset for between vptr_TYPE__ and vptr0__.
+                    //  The virtual function pointer added offset from between vptr_TYPE__ and vptr0__.
                     //  If will invoke interface's virtual function,
                     //  the function is delegated "Adjust thunk" function,
                     //  it will recalculate this pointer offset.

@@ -117,17 +117,39 @@ namespace IL2C.ILConveters
                 {
                     var dereferencedTypeName = extractContext.GetCLanguageTypeName(
                         type, TypeNameFlags.Dereferenced);
-                    return new[]
+
+                    var get = new[]
                     {
                         string.Format(
                             "{0} = il2c_get_uninitialized_object(il2c_typeof({1}))",
                             thisSymbolName,
-                            dereferencedTypeName),
-                        // TODO: support multiple vptr
+                            dereferencedTypeName)
+                    };
+
+                    // Setup vptr from vtables.
+                    var vptr = new[]
+                    {
+                        // Instance's vptr
                         string.Format(
                             "{0}->vptr0__ = &__{1}_VTABLE__",
                             thisSymbolName,
-                            dereferencedTypeName),
+                            dereferencedTypeName)
+                    }.Concat(type.Interfaces.Select(interfaceImpl =>
+                    {
+                        // Interface's vptr:
+                        //   These are unique tables by pair of instance type and interface type.
+                        //   Because vtable has function pointers from unique adjustor thunk by instance type layout offset.
+                        var tn = extractContext.GetCLanguageTypeName(
+                            interfaceImpl.InterfaceType, TypeNameFlags.Dereferenced);
+                        return string.Format(
+                            "{0}->vptr_{1}__ = &__{2}_{1}_VTABLE__",
+                            thisSymbolName,
+                            tn,
+                            dereferencedTypeName);
+                    }));
+
+                    var ctor = new[]
+                    {
                         (overloadIndex >= 1)
                             ? string.Format(
                                 "{0}__ctor_{1}({2})",
@@ -139,6 +161,11 @@ namespace IL2C.ILConveters
                                 dereferencedTypeName,
                                 parameterString)
                     };
+
+                    return get
+                        .Concat(vptr)
+                        .Concat(ctor)
+                        .ToArray();
                 }
             };
         }

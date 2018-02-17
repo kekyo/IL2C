@@ -104,8 +104,7 @@ int main()
     il2c_initialize();
 
 #if true
-    Win32_Code_InterfaceTypeTest_Test1();
-    Win32_Code_InterfaceTypeTest_Test2();
+    Win32_Code_BoxingTest_BoxingInt32(123);
 
     Win32_Code_PolishNotation_Main();
 

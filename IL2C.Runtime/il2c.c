@@ -376,8 +376,22 @@ void il2c_shutdown()
 
 System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    void* pBoxed = il2c_get_uninitialized_object(type);
-    memcpy(pBoxed, pValue, type->bodySize);
+    // +----------------------+
+    // | IL2C_REF_HEADER      |
+    // +----------------------+ <-- pBoxed        ---------------------------
+    // | vptr0__              |                     | System_ValueType    ^
+    // +----------------------+                   -----------             |
+    // |        :             |                     ^                     | bodySize
+    // | (value data)         | Copy from pValue    | type->bodySize      |
+    // |        :             |                     v                     v
+    // +----------------------+                   ---------------------------
+
+    uintptr_t bodySize = sizeof(System_ValueType) + type->bodySize;
+    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(type, bodySize);
+
+    pBoxed->vptr0__ = &__System_ValueType_VTABLE__;
+    memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, type->bodySize);
+
     return (System_Object*)pBoxed;
 }
 
@@ -391,7 +405,7 @@ void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
         IL2C_ASSERT(0);
     }
 
-    return pObject;
+    return ((uint8_t*)pObject) + sizeof(System_ValueType);
 }
 
 /////////////////////////////////////////////////////////////

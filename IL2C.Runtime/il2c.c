@@ -12,17 +12,18 @@
 
 typedef long interlock_t;
 
-#define GCALLOC malloc
-#define GCFREE free
-#define IL2C_ASSERT assert
+extern void* il2c_malloc(size_t size);
+extern void il2c_free(void* p);
 
-void WriteLineToError(const wchar_t* pMessage);
+extern void WriteLineToError(const wchar_t* pMessage);
 
 #if !defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
     WriteLineToError(L##step); }
+#define il2c_assert(actual) if (!(actual)) DEBUG_WRITE(0, #actual)
 #else
 #define DEBUG_WRITE(step, message)
+#define il2c_assert(actual)
 #endif
 
 #elif defined(_WDM)
@@ -37,9 +38,8 @@ void WriteLineToError(const wchar_t* pMessage);
 
 typedef long interlock_t;
 
-#define IL2C_ASSERT ASSERT
-#define GCALLOC(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
-#define GCFREE(p) ExFreePoolWithTag(p, 0x11231123UL)
+#define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
+#define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 
 #ifdef DBG
 #define DEBUG_WRITE(step, message) { \
@@ -49,8 +49,10 @@ typedef long interlock_t;
     strcat(buffer, message); \
     strcat(buffer, "\r\n"); \
     DbgPrint(buffer); }
+#define il2c_assert(actual) if (!(actual)) DEBUG_WRITE(0, #actual)
 #else
 #define DEBUG_WRITE(step, message)
+#define il2c_assert(actual)
 #endif
 
 #elif defined(_WIN32)
@@ -60,9 +62,8 @@ typedef long interlock_t;
 #include <crtdbg.h>
 #include <intrin.h>
 
-#define GCALLOC malloc
-#define GCFREE free
-#define IL2C_ASSERT assert
+#define il2c_malloc malloc
+#define il2c_free free
 
 #include <stdint.h>
 #include <wchar.h>
@@ -85,6 +86,9 @@ typedef long interlock_t;
 #else
 #define DEBUG_WRITE(step, message)
 #endif
+
+#include <assert.h>
+#define il2c_assert assert
 
 #else
 
@@ -112,9 +116,9 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
     return cv;
 }
 
-#define GCALLOC(size) malloc(size)
-#define GCFREE(p) free(p)
-#define IL2C_ASSERT assert
+#define il2c_malloc malloc
+#define il2c_free free
+#define il2c_assert assert
 
 #define DEBUG_WRITE(step, message)
 
@@ -123,7 +127,6 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 #define INTERLOCKED_COMPARE_EXCHANGE(p, v, c) (interlock_t)_InterlockedCompareExchange((interlock_t*)p, (interlock_t)v, (interlock_t)c)
 #define INTERLOCKED_COMPARE_EXCHANGE_POINTER(p, v, c) (void*)_InterlockedCompareExchangePointer((void**)p, (void*)v, (void*)c)
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -160,21 +163,21 @@ static void* il2c_get_uninitialized_object_internal__(
     // |          :           |                    v
     // +----------------------+                  -------
 
-    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)GCALLOC(sizeof(IL2C_REF_HEADER) + bodySize);
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)il2c_malloc(sizeof(IL2C_REF_HEADER) + bodySize);
     if (pHeader == NULL)
     {
         while (1)
         {
             il2c_collect();
 
-            pHeader = (IL2C_REF_HEADER*)GCALLOC(sizeof(IL2C_REF_HEADER) + bodySize);
+            pHeader = (IL2C_REF_HEADER*)il2c_malloc(sizeof(IL2C_REF_HEADER) + bodySize);
             if (pHeader != NULL)
             {
                 break;
             }
 
             // throw NotEnoughMemoryException();
-            IL2C_ASSERT(0);
+            il2c_assert(0);
         }
     }
 
@@ -211,26 +214,26 @@ static void* il2c_get_uninitialized_object_internal__(
 
 void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
 {
-    IL2C_ASSERT(type != NULL);
+    il2c_assert(type != NULL);
 
     // String or Array:
     // throw new InvalidProgramException();
-    IL2C_ASSERT(type->bodySize != UINTPTR_MAX);
+    il2c_assert(type->bodySize != UINTPTR_MAX);
 
     return il2c_get_uninitialized_object_internal__(type, type->bodySize);
 }
 
 void il2c_mark_from_handler(void* pReference)
 {
-    IL2C_ASSERT(pReference != NULL);
+    il2c_assert(pReference != NULL);
 
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
     interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
-        IL2C_ASSERT(pHeader->type != NULL);
-        IL2C_ASSERT(pHeader->type->IL2C_MarkHandler != NULL);
+        il2c_assert(pHeader->type != NULL);
+        il2c_assert(pHeader->type->IL2C_MarkHandler != NULL);
         pHeader->type->IL2C_MarkHandler(pReference);
     }
 }
@@ -239,7 +242,7 @@ void il2c_mark_from_handler(void* pReference)
 
 void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
 {
-    IL2C_ASSERT(pNewFrame != NULL);
+    il2c_assert(pNewFrame != NULL);
 
     ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext = g_pBeginFrame__;
     g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)pNewFrame;
@@ -250,7 +253,7 @@ void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
         uint8_t index;
         for (index = 0; index < p->targetCount; index++)
         {
-            IL2C_ASSERT(*p->pTargets[index] == NULL);
+            il2c_assert(*p->pTargets[index] == NULL);
         }
     }
 #endif
@@ -258,7 +261,7 @@ void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
 
 void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ void* pFrame)
 {
-    IL2C_ASSERT(pFrame != NULL);
+    il2c_assert(pFrame != NULL);
 
     il2c_collect();
 
@@ -289,7 +292,7 @@ void il2c_step2_mark_gcmark__()
         for (index = 0; index < pCurrentFrame->targetCount; index++)
         {
             void** ppReference = pCurrentFrame->pTargets[index];
-            IL2C_ASSERT(ppReference != NULL);
+            il2c_assert(ppReference != NULL);
 
             if (*ppReference == NULL)
             {
@@ -302,8 +305,8 @@ void il2c_step2_mark_gcmark__()
             interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {
-                IL2C_ASSERT(pHeader->type != NULL);
-                IL2C_ASSERT(pHeader->type->IL2C_MarkHandler != NULL);
+                il2c_assert(pHeader->type != NULL);
+                il2c_assert(pHeader->type->IL2C_MarkHandler != NULL);
 
                 DEBUG_WRITE("il2c_step2_mark_gcmark__", pHeader->type->pTypeName);
 
@@ -331,7 +334,7 @@ void il2c_step3_sweep_garbage__()
             DEBUG_WRITE("il2c_step3_sweep_garbage__", pCurrentHeader->type->pTypeName);
 
             // Heap discarded
-            GCFREE(pCurrentHeader);
+            il2c_free(pCurrentHeader);
 
             pCurrentHeader = pNext;
         }
@@ -402,7 +405,7 @@ void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
     if (pHeader->type != type)
     {
         // new InvalidCastException();
-        IL2C_ASSERT(0);
+        il2c_assert(0);
     }
 
     return ((uint8_t*)pObject) + sizeof(System_ValueType);
@@ -413,17 +416,17 @@ void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
 
 void __System_Object_IL2C_MarkHandler__(System_Object* this__)
 {
-    IL2C_ASSERT(this__ != NULL);
+    il2c_assert(this__ != NULL);
 }
 
 void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    IL2C_ASSERT(this__ != NULL);
+    il2c_assert(this__ != NULL);
 
     if (type == il2c_typeof(System_Object)) return this__;
 
     // throw new InvalidCastException();
-    assert(0);
+    il2c_assert(0);
     return NULL;
 }
 
@@ -467,12 +470,12 @@ IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
 
 void __System_ValueType_IL2C_MarkHandler__(System_ValueType* this__)
 {
-    IL2C_ASSERT(this__ != NULL);
+    il2c_assert(this__ != NULL);
 }
 
 void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    IL2C_ASSERT(this__ != NULL);
+    il2c_assert(this__ != NULL);
 
     if (type == il2c_typeof(System_ValueType)) return this__;
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
@@ -540,10 +543,10 @@ extern bool twtoi(const wchar_t *_Str, int32_t* value);
 bool System_Int32_TryParse(System_String* s, int32_t* result)
 {
     // TODO: NullReferenceException
-    IL2C_ASSERT(s != NULL);
+    il2c_assert(s != NULL);
 
-    IL2C_ASSERT(result != NULL);
-    IL2C_ASSERT(s->string_body__ != NULL);
+    il2c_assert(result != NULL);
+    il2c_assert(s->string_body__ != NULL);
 
     return twtoi(s->string_body__, result);
 }
@@ -553,12 +556,12 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 
 void __System_String_IL2C_MarkHandler__(System_String* this__)
 {
-    IL2C_ASSERT(this__ != NULL);
+    il2c_assert(this__ != NULL);
 }
 
 void* __System_String_IL2C_RuntimeCast__(System_String* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    IL2C_ASSERT(this__ != NULL);
+    il2c_assert(this__ != NULL);
 
     if (type == il2c_typeof(System_String)) return this__;
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
@@ -612,7 +615,7 @@ static System_String* __new_string_internal__(uintptr_t byteSize)
 
 System_String* il2c_new_string(const wchar_t* string_body__)
 {
-    IL2C_ASSERT(string_body__ != NULL);
+    il2c_assert(string_body__ != NULL);
 
     uintptr_t size = (uintptr_t)(wcslen(string_body__) + 1) * sizeof(wchar_t);
     System_String* pString = __new_string_internal__(size);
@@ -625,10 +628,10 @@ System_String* il2c_new_string(const wchar_t* string_body__)
 
 System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 {
-    IL2C_ASSERT(str0 != NULL);
-    IL2C_ASSERT(str1 != NULL);
-    IL2C_ASSERT(str0->string_body__ != NULL);
-    IL2C_ASSERT(str1->string_body__ != NULL);
+    il2c_assert(str0 != NULL);
+    il2c_assert(str1 != NULL);
+    il2c_assert(str0->string_body__ != NULL);
+    il2c_assert(str1->string_body__ != NULL);
 
     uintptr_t str0Size = (uintptr_t)wcslen(str0->string_body__) * sizeof(wchar_t);
     uintptr_t str1Size = (uintptr_t)wcslen(str1->string_body__) * sizeof(wchar_t);
@@ -642,11 +645,11 @@ System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 
 System_String* System_String_Substring(System_String* this__, int32_t startIndex)
 {
-    IL2C_ASSERT(this__ != NULL);
-    IL2C_ASSERT(this__->string_body__ != NULL);
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->string_body__ != NULL);
 
     // TODO: IndexOutOfRangeException
-    IL2C_ASSERT(startIndex >= 0);
+    il2c_assert(startIndex >= 0);
 
     if (startIndex == 0)
     {
@@ -655,7 +658,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
 
     int32_t thisLength = (int32_t)wcslen(this__->string_body__);
     // TODO: IndexOutOfRangeException
-    IL2C_ASSERT(startIndex < thisLength);
+    il2c_assert(startIndex < thisLength);
 
     uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
     System_String* pString = __new_string_internal__(newSize);
@@ -666,16 +669,16 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
 
 System_String* System_String_Substring_1(System_String* this__, int32_t startIndex, int32_t length)
 {
-    IL2C_ASSERT(this__ != NULL);
-    IL2C_ASSERT(this__->string_body__ != NULL);
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->string_body__ != NULL);
 
     // TODO: IndexOutOfRangeException
-    IL2C_ASSERT(startIndex >= 0);
-    IL2C_ASSERT(length >= 0);
+    il2c_assert(startIndex >= 0);
+    il2c_assert(length >= 0);
 
     int32_t thisLength = (int32_t)wcslen(this__->string_body__);
     // TODO: IndexOutOfRangeException
-    IL2C_ASSERT((startIndex + length) <= thisLength);
+    il2c_assert((startIndex + length) <= thisLength);
 
     if ((startIndex == 0) && (length == thisLength))
     {
@@ -692,20 +695,20 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
 
 wchar_t System_String_get_Chars(System_String* this__, int32_t index)
 {
-    IL2C_ASSERT(this__ != NULL);
-    IL2C_ASSERT(this__->string_body__ != NULL);
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->string_body__ != NULL);
 
     // TODO: IndexOutOfRangeException
-    IL2C_ASSERT(index >= 0);
-    IL2C_ASSERT(index < wcslen(this__->string_body__));
+    il2c_assert(index >= 0);
+    il2c_assert(index < wcslen(this__->string_body__));
 
     return this__->string_body__[index];
 }
 
 int32_t System_String_get_Length(System_String* this__)
 {
-    IL2C_ASSERT(this__ != NULL);
-    IL2C_ASSERT(this__->string_body__ != NULL);
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->string_body__ != NULL);
 
     return (int32_t)wcslen(this__->string_body__);
 }
@@ -717,7 +720,7 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
         return true;
     }
 
-    IL2C_ASSERT(value->string_body__ != NULL);
+    il2c_assert(value->string_body__ != NULL);
 
     uint32_t index = 0;
     while (true)
@@ -741,11 +744,11 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
 bool System_String_op_Equality(System_String* lhs, System_String* rhs)
 {
     // TODO: ArgumentNullException
-    IL2C_ASSERT(lhs != NULL);
-    IL2C_ASSERT(rhs != NULL);
+    il2c_assert(lhs != NULL);
+    il2c_assert(rhs != NULL);
 
-    IL2C_ASSERT(lhs->string_body__ != NULL);
-    IL2C_ASSERT(rhs->string_body__ != NULL);
+    il2c_assert(lhs->string_body__ != NULL);
+    il2c_assert(rhs->string_body__ != NULL);
 
     return wcscmp(lhs->string_body__, rhs->string_body__) == 0;
 }
@@ -760,9 +763,9 @@ extern void ReadLine(wchar_t* pBuffer, uint16_t length);
 void System_Console_Write_9(System_String* value)
 {
     // TODO: NullReferenceException
-    IL2C_ASSERT(value != NULL);
+    il2c_assert(value != NULL);
 
-    IL2C_ASSERT(value->string_body__ != NULL);
+    il2c_assert(value->string_body__ != NULL);
     Write(value->string_body__);
 }
 
@@ -784,9 +787,9 @@ void System_Console_WriteLine_6(int32_t value)
 void System_Console_WriteLine_10(System_String* value)
 {
     // TODO: NullReferenceException
-    IL2C_ASSERT(value != NULL);
+    il2c_assert(value != NULL);
 
-    IL2C_ASSERT(value->string_body__ != NULL);
+    il2c_assert(value->string_body__ != NULL);
     WriteLine(value->string_body__);
 }
 

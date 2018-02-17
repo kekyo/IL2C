@@ -157,15 +157,7 @@ void WriteLineToError(const wchar_t* pMessage)
     g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"\r\n");
 }
 
-void __cdecl _wassert(
-    wchar_t const* _Message,
-    wchar_t const* _File,
-    unsigned _Line)
-{
-    WriteLineToError(_Message);
-}
-
-void* __cdecl malloc(size_t _Size)
+void* il2c_malloc(size_t _Size)
 {
     void* ppAllocated = NULL;
     if (g_pSystemTable->BootServices->AllocatePool(
@@ -179,7 +171,7 @@ void* __cdecl malloc(size_t _Size)
     }
 }
 
-void __cdecl free(void* _Block)
+void il2c_free(void* _Block)
 {
     g_pSystemTable->BootServices->FreePool(_Block);
 }

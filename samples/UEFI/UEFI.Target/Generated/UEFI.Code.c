@@ -76,17 +76,15 @@ void UEFI_Code_AbstractNode__ctor(UEFI_Code_AbstractNode* this__, int32_t nextIn
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     stack0_0__ = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    /* Path=1, Unique=0: IL_0006: nop */
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(14): */
-    /* Path=1, Unique=0: IL_0007: nop */
-    /* Path=1, Unique=0: IL_0008: ldarg.0 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(15): */
+    /* Path=1, Unique=0: IL_0006: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_0009: ldarg.1 */
+    /* Path=1, Unique=0: IL_0007: ldarg.1 */
     stack1_0__ = nextIndex;
-    /* Path=1, Unique=0: IL_000a: stfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
+    /* Path=1, Unique=0: IL_0008: stfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
     stack0_0__->NextIndex = stack1_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(16): */
-    /* Path=1, Unique=0: IL_000f: ret */
+    /* Path=1, Unique=0: IL_000d: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
@@ -172,17 +170,15 @@ void UEFI_Code_OperatorNode__ctor(UEFI_Code_OperatorNode* this__, wchar_t oper, 
     stack1_0__ = nextIndex;
     /* Path=1, Unique=0: IL_0002: call System.Void UEFI.Code.AbstractNode::.ctor(System.Int32) */
     UEFI_Code_AbstractNode__ctor((UEFI_Code_AbstractNode*)stack0_0__, stack1_0__);
-    /* Path=1, Unique=0: IL_0007: nop */
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(24): */
-    /* Path=1, Unique=0: IL_0008: nop */
-    /* Path=1, Unique=0: IL_0009: ldarg.0 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(25): */
+    /* Path=1, Unique=0: IL_0007: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_000a: ldarg.1 */
+    /* Path=1, Unique=0: IL_0008: ldarg.1 */
     stack1_0__ = (int32_t)(oper);
-    /* Path=1, Unique=0: IL_000b: stfld System.Char UEFI.Code.OperatorNode::Operator */
+    /* Path=1, Unique=0: IL_0009: stfld System.Char UEFI.Code.OperatorNode::Operator */
     stack0_0__->Operator = (wchar_t)stack1_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(26): */
-    /* Path=1, Unique=0: IL_0010: ret */
+    /* Path=1, Unique=0: IL_000e: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
@@ -269,10 +265,8 @@ void UEFI_Code_ReducibleNode__ctor(UEFI_Code_ReducibleNode* this__, int32_t next
     stack1_0__ = nextIndex;
     /* Path=1, Unique=0: IL_0002: call System.Void UEFI.Code.AbstractNode::.ctor(System.Int32) */
     UEFI_Code_AbstractNode__ctor((UEFI_Code_AbstractNode*)stack0_0__, stack1_0__);
-    /* Path=1, Unique=0: IL_0007: nop */
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(32): */
-    /* Path=1, Unique=0: IL_0008: nop */
-    /* Path=1, Unique=0: IL_0009: ret */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(33): */
+    /* Path=1, Unique=0: IL_0007: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
@@ -370,17 +364,15 @@ void UEFI_Code_NumericNode__ctor(UEFI_Code_NumericNode* this__, int32_t numeric,
     stack1_0__ = nextIndex;
     /* Path=1, Unique=0: IL_0002: call System.Void UEFI.Code.ReducibleNode::.ctor(System.Int32) */
     UEFI_Code_ReducibleNode__ctor((UEFI_Code_ReducibleNode*)stack0_0__, stack1_0__);
-    /* Path=1, Unique=0: IL_0007: nop */
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(43): */
-    /* Path=1, Unique=0: IL_0008: nop */
-    /* Path=1, Unique=0: IL_0009: ldarg.0 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(44): */
+    /* Path=1, Unique=0: IL_0007: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_000a: ldarg.1 */
+    /* Path=1, Unique=0: IL_0008: ldarg.1 */
     stack1_0__ = numeric;
-    /* Path=1, Unique=0: IL_000b: stfld System.Int32 UEFI.Code.NumericNode::Numeric */
+    /* Path=1, Unique=0: IL_0009: stfld System.Int32 UEFI.Code.NumericNode::Numeric */
     stack0_0__->Numeric = stack1_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(45): */
-    /* Path=1, Unique=0: IL_0010: ret */
+    /* Path=1, Unique=0: IL_000e: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
@@ -393,7 +385,6 @@ int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* this__)
     //-------------------
     // Local variables:
 
-    int32_t local__;
 
     //-------------------
     // Evaluation stacks:
@@ -418,21 +409,12 @@ int32_t __UEFI_Code_NumericNode_Reduce__(UEFI_Code_NumericNode* this__)
     //-------------------
     // IL body:
 
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(48): */
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ldarg.0 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(49): */
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_0002: ldfld System.Int32 UEFI.Code.NumericNode::Numeric */
+    /* Path=1, Unique=0: IL_0001: ldfld System.Int32 UEFI.Code.NumericNode::Numeric */
     stack0_1__ = stack0_0__->Numeric;
-    /* Path=1, Unique=0: IL_0007: stloc.0 */
-    local__ = stack0_1__;
-    /* Path=1, Unique=0: IL_0008: br.s IL_000a */
-    goto IL_000a;
-IL_000a:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(50): */
-    /* Path=2, Unique=0: IL_000a: ldloc.0 */
-    stack0_1__ = local__;
-    /* Path=2, Unique=0: IL_000b: ret */
+    /* Path=1, Unique=0: IL_0006: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return stack0_1__;
 }
@@ -526,31 +508,29 @@ void UEFI_Code_ExpressionNode__ctor(UEFI_Code_ExpressionNode* this__, UEFI_Code_
     stack1_0__ = nextIndex;
     /* Path=1, Unique=0: IL_0003: call System.Void UEFI.Code.ReducibleNode::.ctor(System.Int32) */
     UEFI_Code_ReducibleNode__ctor((UEFI_Code_ReducibleNode*)stack0_0__, stack1_0__);
-    /* Path=1, Unique=0: IL_0008: nop */
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(60): */
-    /* Path=1, Unique=0: IL_0009: nop */
-    /* Path=1, Unique=0: IL_000a: ldarg.0 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(61): */
+    /* Path=1, Unique=0: IL_0008: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_000b: ldarg.1 */
+    /* Path=1, Unique=0: IL_0009: ldarg.1 */
     stack1_1__ = oper;
-    /* Path=1, Unique=0: IL_000c: stfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
+    /* Path=1, Unique=0: IL_000a: stfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     stack0_0__->Operator = stack1_1__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(62): */
-    /* Path=1, Unique=0: IL_0011: ldarg.0 */
+    /* Path=1, Unique=0: IL_000f: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_0012: ldarg.2 */
+    /* Path=1, Unique=0: IL_0010: ldarg.2 */
     stack1_2__ = left;
-    /* Path=1, Unique=0: IL_0013: stfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Left */
+    /* Path=1, Unique=0: IL_0011: stfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Left */
     stack0_0__->Left = stack1_2__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(63): */
-    /* Path=1, Unique=0: IL_0018: ldarg.0 */
+    /* Path=1, Unique=0: IL_0016: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_0019: ldarg.3 */
+    /* Path=1, Unique=0: IL_0017: ldarg.3 */
     stack1_2__ = right;
-    /* Path=1, Unique=0: IL_001a: stfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Right */
+    /* Path=1, Unique=0: IL_0018: stfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Right */
     stack0_0__->Right = stack1_2__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(64): */
-    /* Path=1, Unique=0: IL_001f: ret */
+    /* Path=1, Unique=0: IL_001d: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }
@@ -565,11 +545,6 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* this__)
 
     int32_t leftResult__;
     int32_t rightResult__;
-    bool local0__;
-    int32_t local1__;
-    bool local2__;
-    bool local3__;
-    bool local4__;
 
     //-------------------
     // Evaluation stacks:
@@ -601,157 +576,116 @@ int32_t __UEFI_Code_ExpressionNode_Reduce__(UEFI_Code_ExpressionNode* this__)
     //-------------------
     // IL body:
 
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(67): */
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ldarg.0 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(68): */
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_0002: ldfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Left */
+    /* Path=1, Unique=0: IL_0001: ldfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Left */
     stack0_1__ = stack0_0__->Left;
-    /* Path=1, Unique=0: IL_0007: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
+    /* Path=1, Unique=0: IL_0006: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
     stack0_2__ = UEFI_Code_ReducibleNode_Reduce(stack0_1__);
-    /* Path=1, Unique=0: IL_000c: stloc.0 */
+    /* Path=1, Unique=0: IL_000b: stloc.0 */
     leftResult__ = stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(69): */
-    /* Path=1, Unique=0: IL_000d: ldarg.0 */
+    /* Path=1, Unique=0: IL_000c: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_000e: ldfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Right */
+    /* Path=1, Unique=0: IL_000d: ldfld UEFI.Code.ReducibleNode UEFI.Code.ExpressionNode::Right */
     stack0_1__ = stack0_0__->Right;
-    /* Path=1, Unique=0: IL_0013: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
+    /* Path=1, Unique=0: IL_0012: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
     stack0_2__ = UEFI_Code_ReducibleNode_Reduce(stack0_1__);
-    /* Path=1, Unique=0: IL_0018: stloc.1 */
+    /* Path=1, Unique=0: IL_0017: stloc.1 */
     rightResult__ = stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(70): */
-    /* Path=1, Unique=0: IL_0019: ldarg.0 */
+    /* Path=1, Unique=0: IL_0018: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=1, Unique=0: IL_001a: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
+    /* Path=1, Unique=0: IL_0019: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     stack0_3__ = stack0_0__->Operator;
-    /* Path=1, Unique=0: IL_001f: ldfld System.Char UEFI.Code.OperatorNode::Operator */
+    /* Path=1, Unique=0: IL_001e: ldfld System.Char UEFI.Code.OperatorNode::Operator */
     stack0_2__ = (int32_t)(stack0_3__->Operator);
-    /* Path=1, Unique=0: IL_0024: ldc.i4.s 43 */
+    /* Path=1, Unique=0: IL_0023: ldc.i4.s 43 */
     stack1_0__ = 43;
-    /* Path=1, Unique=0: IL_0026: ceq */
-    stack0_2__ = (stack0_2__ == stack1_0__) ? 1 : 0;
-    /* Path=1, Unique=0: IL_0028: stloc.2 */
-    local0__ = stack0_2__ ? true : false;
-    /* Path=1, Unique=0: IL_0029: ldloc.2 */
-    stack0_2__ = local0__;
-    /* Path=1, Unique=0: IL_002a: brfalse.s IL_0033 */
-    if (stack0_2__ == 0) goto IL_0033;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(71): */
-    /* Path=1, Unique=0: IL_002c: nop */
-    /* Path=1, Unique=0: IL_002d: ldloc.0 */
+    /* Path=1, Unique=0: IL_0025: bne.un.s IL_002b */
+    if (stack0_2__ != stack1_0__) goto IL_002b;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(72): */
+    /* Path=1, Unique=0: IL_0027: ldloc.0 */
     stack0_2__ = leftResult__;
-    /* Path=1, Unique=0: IL_002e: ldloc.1 */
+    /* Path=1, Unique=0: IL_0028: ldloc.1 */
     stack1_0__ = rightResult__;
-    /* Path=1, Unique=0: IL_002f: add */
+    /* Path=1, Unique=0: IL_0029: add */
     stack0_2__ = stack0_2__ + stack1_0__;
-    /* Path=1, Unique=0: IL_0030: stloc.3 */
-    local1__ = stack0_2__;
-    /* Path=1, Unique=0: IL_0031: br.s IL_008b */
-    goto IL_008b;
-IL_0033:
+    /* Path=1, Unique=0: IL_002a: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return stack0_2__;
+IL_002b:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(74): */
-    /* Path=2, Unique=0: IL_0033: ldarg.0 */
+    /* Path=2, Unique=0: IL_002b: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=2, Unique=0: IL_0034: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
+    /* Path=2, Unique=0: IL_002c: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     stack0_3__ = stack0_0__->Operator;
-    /* Path=2, Unique=0: IL_0039: ldfld System.Char UEFI.Code.OperatorNode::Operator */
+    /* Path=2, Unique=0: IL_0031: ldfld System.Char UEFI.Code.OperatorNode::Operator */
     stack0_2__ = (int32_t)(stack0_3__->Operator);
-    /* Path=2, Unique=0: IL_003e: ldc.i4.s 45 */
+    /* Path=2, Unique=0: IL_0036: ldc.i4.s 45 */
     stack1_0__ = 45;
-    /* Path=2, Unique=0: IL_0040: ceq */
-    stack0_2__ = (stack0_2__ == stack1_0__) ? 1 : 0;
-    /* Path=2, Unique=0: IL_0042: stloc.s local4 */
-    local2__ = stack0_2__ ? true : false;
-    /* Path=2, Unique=0: IL_0044: ldloc.s local4 */
-    stack0_2__ = local2__;
-    /* Path=2, Unique=0: IL_0046: brfalse.s IL_004f */
-    if (stack0_2__ == 0) goto IL_004f;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(75): */
-    /* Path=2, Unique=0: IL_0048: nop */
-    /* Path=2, Unique=0: IL_0049: ldloc.0 */
+    /* Path=2, Unique=0: IL_0038: bne.un.s IL_003e */
+    if (stack0_2__ != stack1_0__) goto IL_003e;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(76): */
+    /* Path=2, Unique=0: IL_003a: ldloc.0 */
     stack0_2__ = leftResult__;
-    /* Path=2, Unique=0: IL_004a: ldloc.1 */
+    /* Path=2, Unique=0: IL_003b: ldloc.1 */
     stack1_0__ = rightResult__;
-    /* Path=2, Unique=0: IL_004b: sub */
+    /* Path=2, Unique=0: IL_003c: sub */
     stack0_2__ = stack0_2__ - stack1_0__;
-    /* Path=2, Unique=0: IL_004c: stloc.3 */
-    local1__ = stack0_2__;
-    /* Path=2, Unique=0: IL_004d: br.s IL_008b */
-    goto IL_008b;
-IL_004f:
+    /* Path=2, Unique=0: IL_003d: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return stack0_2__;
+IL_003e:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(78): */
-    /* Path=4, Unique=0: IL_004f: ldarg.0 */
+    /* Path=3, Unique=0: IL_003e: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=4, Unique=0: IL_0050: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
+    /* Path=3, Unique=0: IL_003f: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     stack0_3__ = stack0_0__->Operator;
-    /* Path=4, Unique=0: IL_0055: ldfld System.Char UEFI.Code.OperatorNode::Operator */
+    /* Path=3, Unique=0: IL_0044: ldfld System.Char UEFI.Code.OperatorNode::Operator */
     stack0_2__ = (int32_t)(stack0_3__->Operator);
-    /* Path=4, Unique=0: IL_005a: ldc.i4.s 42 */
+    /* Path=3, Unique=0: IL_0049: ldc.i4.s 42 */
     stack1_0__ = 42;
-    /* Path=4, Unique=0: IL_005c: ceq */
-    stack0_2__ = (stack0_2__ == stack1_0__) ? 1 : 0;
-    /* Path=4, Unique=0: IL_005e: stloc.s local5 */
-    local3__ = stack0_2__ ? true : false;
-    /* Path=4, Unique=0: IL_0060: ldloc.s local5 */
-    stack0_2__ = local3__;
-    /* Path=4, Unique=0: IL_0062: brfalse.s IL_006b */
-    if (stack0_2__ == 0) goto IL_006b;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(79): */
-    /* Path=4, Unique=0: IL_0064: nop */
-    /* Path=4, Unique=0: IL_0065: ldloc.0 */
+    /* Path=3, Unique=0: IL_004b: bne.un.s IL_0051 */
+    if (stack0_2__ != stack1_0__) goto IL_0051;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(80): */
+    /* Path=3, Unique=0: IL_004d: ldloc.0 */
     stack0_2__ = leftResult__;
-    /* Path=4, Unique=0: IL_0066: ldloc.1 */
+    /* Path=3, Unique=0: IL_004e: ldloc.1 */
     stack1_0__ = rightResult__;
-    /* Path=4, Unique=0: IL_0067: mul */
+    /* Path=3, Unique=0: IL_004f: mul */
     stack0_2__ = stack0_2__ * stack1_0__;
-    /* Path=4, Unique=0: IL_0068: stloc.3 */
-    local1__ = stack0_2__;
-    /* Path=4, Unique=0: IL_0069: br.s IL_008b */
-    goto IL_008b;
-IL_006b:
+    /* Path=3, Unique=0: IL_0050: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return stack0_2__;
+IL_0051:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(82): */
-    /* Path=5, Unique=0: IL_006b: ldarg.0 */
+    /* Path=4, Unique=0: IL_0051: ldarg.0 */
     stack0_0__ = this__;
-    /* Path=5, Unique=0: IL_006c: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
+    /* Path=4, Unique=0: IL_0052: ldfld UEFI.Code.OperatorNode UEFI.Code.ExpressionNode::Operator */
     stack0_3__ = stack0_0__->Operator;
-    /* Path=5, Unique=0: IL_0071: ldfld System.Char UEFI.Code.OperatorNode::Operator */
+    /* Path=4, Unique=0: IL_0057: ldfld System.Char UEFI.Code.OperatorNode::Operator */
     stack0_2__ = (int32_t)(stack0_3__->Operator);
-    /* Path=5, Unique=0: IL_0076: ldc.i4.s 47 */
+    /* Path=4, Unique=0: IL_005c: ldc.i4.s 47 */
     stack1_0__ = 47;
-    /* Path=5, Unique=0: IL_0078: ceq */
-    stack0_2__ = (stack0_2__ == stack1_0__) ? 1 : 0;
-    /* Path=5, Unique=0: IL_007a: stloc.s local6 */
-    local4__ = stack0_2__ ? true : false;
-    /* Path=5, Unique=0: IL_007c: ldloc.s local6 */
-    stack0_2__ = local4__;
-    /* Path=5, Unique=0: IL_007e: brfalse.s IL_0087 */
-    if (stack0_2__ == 0) goto IL_0087;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(83): */
-    /* Path=5, Unique=0: IL_0080: nop */
-    /* Path=5, Unique=0: IL_0081: ldloc.0 */
+    /* Path=4, Unique=0: IL_005e: bne.un.s IL_0064 */
+    if (stack0_2__ != stack1_0__) goto IL_0064;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(84): */
+    /* Path=4, Unique=0: IL_0060: ldloc.0 */
     stack0_2__ = leftResult__;
-    /* Path=5, Unique=0: IL_0082: ldloc.1 */
+    /* Path=4, Unique=0: IL_0061: ldloc.1 */
     stack1_0__ = rightResult__;
-    /* Path=5, Unique=0: IL_0083: div */
+    /* Path=4, Unique=0: IL_0062: div */
     stack0_2__ = stack0_2__ / stack1_0__;
-    /* Path=5, Unique=0: IL_0084: stloc.3 */
-    local1__ = stack0_2__;
-    /* Path=5, Unique=0: IL_0085: br.s IL_008b */
-    goto IL_008b;
-IL_0087:
+    /* Path=4, Unique=0: IL_0063: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return stack0_2__;
+IL_0064:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(88): */
-    /* Path=6, Unique=0: IL_0087: ldc.i4.0 */
+    /* Path=5, Unique=0: IL_0064: ldc.i4.0 */
     stack0_2__ = 0;
-    /* Path=6, Unique=0: IL_0088: stloc.3 */
-    local1__ = stack0_2__;
-    /* Path=6, Unique=0: IL_0089: br.s IL_008b */
-    goto IL_008b;
-IL_008b:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(89): */
-    /* Path=3, Unique=0: IL_008b: ldloc.3 */
-    stack0_2__ = local1__;
-    /* Path=3, Unique=0: IL_008c: ret */
+    /* Path=5, Unique=0: IL_0065: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return stack0_2__;
 }
@@ -814,9 +748,6 @@ int32_t UEFI_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t sta
 
     int32_t index__;
     wchar_t ch__;
-    bool local0__;
-    bool local1__;
-    int32_t local2__;
 
     //-------------------
     // Evaluation stacks:
@@ -847,98 +778,61 @@ int32_t UEFI_Code_PolishNotation_SkipWhiteSpace(System_String* line, int32_t sta
     //-------------------
     // IL body:
 
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(95): */
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ldarg.1 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(96): */
+    /* Path=1, Unique=0: IL_0000: ldarg.1 */
     stack0_0__ = startIndex;
-    /* Path=1, Unique=0: IL_0002: stloc.0 */
+    /* Path=1, Unique=0: IL_0001: stloc.0 */
     index__ = stack0_0__;
-    /* Path=1, Unique=0: IL_0003: br.s IL_002a */
-    goto IL_002a;
-IL_0005:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(98): */
-    /* Path=3, Unique=0: IL_0005: nop */
-    /* Path=3, Unique=0: IL_0006: ldarg.0 */
+    /* Path=1, Unique=0: IL_0002: br.s IL_001a */
+    goto IL_001a;
+IL_0004:
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(99): */
+    /* Path=3, Unique=0: IL_0004: ldarg.0 */
     stack0_1__ = line;
-    /* Path=3, Unique=0: IL_0007: ldloc.0 */
+    /* Path=3, Unique=0: IL_0005: ldloc.0 */
     stack1_2__ = index__;
-    /* Path=3, Unique=0: IL_0008: callvirt System.Char System.String::get_Chars(System.Int32) */
+    /* Path=3, Unique=0: IL_0006: callvirt System.Char System.String::get_Chars(System.Int32) */
     stack0_2__ = System_String_get_Chars(stack0_1__, stack1_2__);
-    /* Path=3, Unique=0: IL_000d: stloc.1 */
+    /* Path=3, Unique=0: IL_000b: stloc.1 */
     ch__ = (wchar_t)stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(100): */
-    /* Path=3, Unique=0: IL_000e: ldloc.1 */
+    /* Path=3, Unique=0: IL_000c: ldloc.1 */
     stack0_0__ = ch__;
-    /* Path=3, Unique=0: IL_000f: ldc.i4.s 32 */
+    /* Path=3, Unique=0: IL_000d: ldc.i4.s 32 */
     stack1_2__ = 32;
-    /* Path=3, Unique=0: IL_0011: beq.s IL_001d */
-    if (stack0_0__ == stack1_2__) goto IL_001d;
-    /* Path=3, Unique=0: IL_0013: ldloc.1 */
+    /* Path=3, Unique=0: IL_000f: beq.s IL_0016 */
+    if (stack0_0__ == stack1_2__) goto IL_0016;
+    /* Path=3, Unique=0: IL_0011: ldloc.1 */
     stack0_0__ = ch__;
-    /* Path=3, Unique=0: IL_0014: ldc.i4.s 9 */
+    /* Path=3, Unique=0: IL_0012: ldc.i4.s 9 */
     stack1_2__ = 9;
-    /* Path=3, Unique=0: IL_0016: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=3, Unique=0: IL_0018: ldc.i4.0 */
-    stack1_2__ = 0;
-    /* Path=3, Unique=0: IL_0019: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=3, Unique=0: IL_001b: br.s IL_001e */
-    goto IL_001e;
-IL_001d:
-    /* Path=5, Unique=0: IL_001d: ldc.i4.0 */
-    stack0_0__ = 0;
-IL_001e:
-    /* Path=5, Unique=0: IL_001e: stloc.2 */
-    local0__ = stack0_0__ ? true : false;
-    /* Path=5, Unique=0: IL_001f: ldloc.2 */
-    stack0_0__ = local0__;
-    /* Path=5, Unique=0: IL_0020: brfalse.s IL_0025 */
-    if (stack0_0__ == 0) goto IL_0025;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(101): */
-    /* Path=5, Unique=0: IL_0022: nop */
-    /* Path=5, Unique=0: IL_0023: br.s IL_0037 */
-    goto IL_0037;
-IL_0025:
+    /* Path=3, Unique=0: IL_0014: bne.un.s IL_0023 */
+    if (stack0_0__ != stack1_2__) goto IL_0023;
+IL_0016:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(104): */
-    /* Path=6, Unique=0: IL_0025: ldloc.0 */
+    /* Path=3, Unique=0: IL_0016: ldloc.0 */
     stack0_0__ = index__;
-    /* Path=6, Unique=0: IL_0026: ldc.i4.1 */
+    /* Path=3, Unique=0: IL_0017: ldc.i4.1 */
     stack1_2__ = 1;
-    /* Path=6, Unique=0: IL_0027: add */
+    /* Path=3, Unique=0: IL_0018: add */
     stack0_0__ = stack0_0__ + stack1_2__;
-    /* Path=6, Unique=0: IL_0028: stloc.0 */
+    /* Path=3, Unique=0: IL_0019: stloc.0 */
     index__ = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(105): */
-    /* Path=6, Unique=0: IL_0029: nop */
-IL_002a:
-    /* Path=2, Unique=0: IL_002a: ldloc.0 */
+IL_001a:
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(97): */
+    /* Path=2, Unique=0: IL_001a: ldloc.0 */
     stack0_0__ = index__;
-    /* Path=2, Unique=0: IL_002b: ldarg.0 */
+    /* Path=2, Unique=0: IL_001b: ldarg.0 */
     stack1_0__ = line;
-    /* Path=2, Unique=0: IL_002c: callvirt System.Int32 System.String::get_Length() */
+    /* Path=2, Unique=0: IL_001c: callvirt System.Int32 System.String::get_Length() */
     stack1_1__ = System_String_get_Length(stack1_0__);
-    /* Path=2, Unique=0: IL_0031: clt */
-    stack0_0__ = (stack0_0__ < stack1_1__) ? 1 : 0;
-    /* Path=2, Unique=0: IL_0033: stloc.3 */
-    local1__ = stack0_0__ ? true : false;
-    /* Path=2, Unique=0: IL_0034: ldloc.3 */
-    stack0_0__ = local1__;
-    /* Path=2, Unique=0: IL_0035: brtrue.s IL_0005 */
-    if (stack0_0__ != 0) goto IL_0005;
-IL_0037:
+    /* Path=2, Unique=0: IL_0021: blt.s IL_0004 */
+    if (stack0_0__ < stack1_1__) goto IL_0004;
+IL_0023:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(107): */
-    /* Path=2, Unique=0: IL_0037: ldloc.0 */
+    /* Path=2, Unique=0: IL_0023: ldloc.0 */
     stack0_0__ = index__;
-    /* Path=2, Unique=0: IL_0038: stloc.s local4 */
-    local2__ = stack0_0__;
-    /* Path=2, Unique=0: IL_003a: br.s IL_003c */
-    goto IL_003c;
-IL_003c:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(108): */
-    /* Path=4, Unique=0: IL_003c: ldloc.s local4 */
-    stack0_0__ = local2__;
-    /* Path=4, Unique=0: IL_003e: ret */
+    /* Path=2, Unique=0: IL_0024: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return stack0_0__;
 }
@@ -953,9 +847,6 @@ UEFI_Code_OperatorNode* UEFI_Code_PolishNotation_ParseOperator(System_String* li
 
     int32_t index__;
     wchar_t ch__;
-    bool local0__;
-    UEFI_Code_OperatorNode* local1__ = NULL;
-    bool local2__;
 
     //-------------------
     // Evaluation stacks:
@@ -976,15 +867,13 @@ UEFI_Code_OperatorNode* UEFI_Code_PolishNotation_ParseOperator(System_String* li
     {
         IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
-        UEFI_Code_OperatorNode** plocal1__;
         IL2C_CecilHelper_PseudoZeroType** pstack0_1__;
         System_String** pstack0_2__;
         UEFI_Code_OperatorNode** pstack0_4__;
         System_String** pstack1_0__;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 5;
-    __executionFrame__.plocal1__ = &local1__;
+    __executionFrame__.targetCount = 4;
     __executionFrame__.pstack0_1__ = &stack0_1__;
     __executionFrame__.pstack0_2__ = &stack0_2__;
     __executionFrame__.pstack0_4__ = &stack0_4__;
@@ -994,135 +883,96 @@ UEFI_Code_OperatorNode* UEFI_Code_PolishNotation_ParseOperator(System_String* li
     //-------------------
     // IL body:
 
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(111): */
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ldarg.1 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(112): */
+    /* Path=1, Unique=0: IL_0000: ldarg.1 */
     stack0_0__ = startIndex;
-    /* Path=1, Unique=0: IL_0002: ldarg.0 */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
     stack1_0__ = line;
-    /* Path=1, Unique=0: IL_0003: callvirt System.Int32 System.String::get_Length() */
+    /* Path=1, Unique=0: IL_0002: callvirt System.Int32 System.String::get_Length() */
     stack1_1__ = System_String_get_Length(stack1_0__);
-    /* Path=1, Unique=0: IL_0008: clt */
-    stack0_0__ = (stack0_0__ < stack1_1__) ? 1 : 0;
-    /* Path=1, Unique=0: IL_000a: ldc.i4.0 */
-    stack1_2__ = 0;
-    /* Path=1, Unique=0: IL_000b: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=1, Unique=0: IL_000d: stloc.2 */
-    local0__ = stack0_0__ ? true : false;
-    /* Path=1, Unique=0: IL_000e: ldloc.2 */
-    stack0_0__ = local0__;
-    /* Path=1, Unique=0: IL_000f: brfalse.s IL_0016 */
-    if (stack0_0__ == 0) goto IL_0016;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(113): */
-    /* Path=1, Unique=0: IL_0011: nop */
-    /* Path=1, Unique=0: IL_0012: ldnull */
+    /* Path=1, Unique=0: IL_0007: blt.s IL_000b */
+    if (stack0_0__ < stack1_1__) goto IL_000b;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(114): */
+    /* Path=1, Unique=0: IL_0009: ldnull */
     stack0_1__ = NULL;
-    /* Path=1, Unique=0: IL_0013: stloc.3 */
-    local1__ = (UEFI_Code_OperatorNode*)stack0_1__;
-    /* Path=1, Unique=0: IL_0014: br.s IL_005b */
-    goto IL_005b;
-IL_0016:
+    /* Path=1, Unique=0: IL_000a: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_OperatorNode*)stack0_1__;
+IL_000b:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(117): */
-    /* Path=2, Unique=0: IL_0016: ldarg.1 */
+    /* Path=2, Unique=0: IL_000b: ldarg.1 */
     stack0_0__ = startIndex;
-    /* Path=2, Unique=0: IL_0017: stloc.0 */
+    /* Path=2, Unique=0: IL_000c: stloc.0 */
     index__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(118): */
-    /* Path=2, Unique=0: IL_0018: ldarg.0 */
+    /* Path=2, Unique=0: IL_000d: ldarg.0 */
     stack0_2__ = line;
-    /* Path=2, Unique=0: IL_0019: ldloc.0 */
+    /* Path=2, Unique=0: IL_000e: ldloc.0 */
     stack1_2__ = index__;
-    /* Path=2, Unique=0: IL_001a: callvirt System.Char System.String::get_Chars(System.Int32) */
+    /* Path=2, Unique=0: IL_000f: callvirt System.Char System.String::get_Chars(System.Int32) */
     stack0_3__ = System_String_get_Chars(stack0_2__, stack1_2__);
-    /* Path=2, Unique=0: IL_001f: stloc.1 */
+    /* Path=2, Unique=0: IL_0014: stloc.1 */
     ch__ = (wchar_t)stack0_3__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(119): */
-    /* Path=2, Unique=0: IL_0020: ldloc.1 */
+    /* Path=2, Unique=0: IL_0015: ldloc.1 */
     stack0_0__ = ch__;
-    /* Path=2, Unique=0: IL_0021: ldc.i4.s 43 */
+    /* Path=2, Unique=0: IL_0016: ldc.i4.s 43 */
     stack1_2__ = 43;
-    /* Path=2, Unique=0: IL_0023: beq.s IL_0039 */
-    if (stack0_0__ == stack1_2__) goto IL_0039;
-    /* Path=2, Unique=0: IL_0025: ldloc.1 */
+    /* Path=2, Unique=0: IL_0018: beq.s IL_002b */
+    if (stack0_0__ == stack1_2__) goto IL_002b;
+    /* Path=2, Unique=0: IL_001a: ldloc.1 */
     stack0_0__ = ch__;
-    /* Path=2, Unique=0: IL_0026: ldc.i4.s 45 */
+    /* Path=2, Unique=0: IL_001b: ldc.i4.s 45 */
     stack1_2__ = 45;
-    /* Path=2, Unique=0: IL_0028: beq.s IL_0039 */
-    if (stack0_0__ == stack1_2__) goto IL_0039;
-    /* Path=2, Unique=0: IL_002a: ldloc.1 */
+    /* Path=2, Unique=0: IL_001d: beq.s IL_002b */
+    if (stack0_0__ == stack1_2__) goto IL_002b;
+    /* Path=2, Unique=0: IL_001f: ldloc.1 */
     stack0_0__ = ch__;
-    /* Path=2, Unique=0: IL_002b: ldc.i4.s 42 */
+    /* Path=2, Unique=0: IL_0020: ldc.i4.s 42 */
     stack1_2__ = 42;
-    /* Path=2, Unique=0: IL_002d: beq.s IL_0039 */
-    if (stack0_0__ == stack1_2__) goto IL_0039;
-    /* Path=2, Unique=0: IL_002f: ldloc.1 */
+    /* Path=2, Unique=0: IL_0022: beq.s IL_002b */
+    if (stack0_0__ == stack1_2__) goto IL_002b;
+    /* Path=2, Unique=0: IL_0024: ldloc.1 */
     stack0_0__ = ch__;
-    /* Path=2, Unique=0: IL_0030: ldc.i4.s 47 */
+    /* Path=2, Unique=0: IL_0025: ldc.i4.s 47 */
     stack1_2__ = 47;
-    /* Path=2, Unique=0: IL_0032: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=2, Unique=0: IL_0034: ldc.i4.0 */
-    stack1_2__ = 0;
-    /* Path=2, Unique=0: IL_0035: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=2, Unique=0: IL_0037: br.s IL_003a */
-    goto IL_003a;
-IL_0039:
-    /* Path=4, Unique=0: IL_0039: ldc.i4.0 */
-    stack0_0__ = 0;
-IL_003a:
-    /* Path=4, Unique=0: IL_003a: stloc.s local4 */
-    local2__ = stack0_0__ ? true : false;
-    /* Path=4, Unique=0: IL_003c: ldloc.s local4 */
-    stack0_0__ = local2__;
-    /* Path=4, Unique=0: IL_003e: brfalse.s IL_0045 */
-    if (stack0_0__ == 0) goto IL_0045;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(120): */
-    /* Path=4, Unique=0: IL_0040: nop */
-    /* Path=4, Unique=0: IL_0041: ldnull */
+    /* Path=2, Unique=0: IL_0027: beq.s IL_002b */
+    if (stack0_0__ == stack1_2__) goto IL_002b;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(121): */
+    /* Path=2, Unique=0: IL_0029: ldnull */
     stack0_1__ = NULL;
-    /* Path=4, Unique=0: IL_0042: stloc.3 */
-    local1__ = (UEFI_Code_OperatorNode*)stack0_1__;
-    /* Path=4, Unique=0: IL_0043: br.s IL_005b */
-    goto IL_005b;
-IL_0045:
+    /* Path=2, Unique=0: IL_002a: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_OperatorNode*)stack0_1__;
+IL_002b:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(123): */
-    /* Path=5, Unique=0: IL_0045: ldloc.0 */
+    /* Path=3, Unique=0: IL_002b: ldloc.0 */
     stack0_0__ = index__;
-    /* Path=5, Unique=0: IL_0046: ldc.i4.1 */
+    /* Path=3, Unique=0: IL_002c: ldc.i4.1 */
     stack1_2__ = 1;
-    /* Path=5, Unique=0: IL_0047: add */
+    /* Path=3, Unique=0: IL_002d: add */
     stack0_0__ = stack0_0__ + stack1_2__;
-    /* Path=5, Unique=0: IL_0048: stloc.0 */
+    /* Path=3, Unique=0: IL_002e: stloc.0 */
     index__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(125): */
-    /* Path=5, Unique=0: IL_0049: ldarg.0 */
+    /* Path=3, Unique=0: IL_002f: ldarg.0 */
     stack0_2__ = line;
-    /* Path=5, Unique=0: IL_004a: ldloc.0 */
+    /* Path=3, Unique=0: IL_0030: ldloc.0 */
     stack1_2__ = index__;
-    /* Path=5, Unique=0: IL_004b: call System.Int32 UEFI.Code.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
+    /* Path=3, Unique=0: IL_0031: call System.Int32 UEFI.Code.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
     stack0_0__ = UEFI_Code_PolishNotation_SkipWhiteSpace(stack0_2__, stack1_2__);
-    /* Path=5, Unique=0: IL_0050: stloc.0 */
+    /* Path=3, Unique=0: IL_0036: stloc.0 */
     index__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(126): */
-    /* Path=5, Unique=0: IL_0051: ldloc.1 */
+    /* Path=3, Unique=0: IL_0037: ldloc.1 */
     stack0_0__ = ch__;
-    /* Path=5, Unique=0: IL_0052: ldloc.0 */
+    /* Path=3, Unique=0: IL_0038: ldloc.0 */
     stack1_2__ = index__;
-    /* Path=5, Unique=0: IL_0053: newobj System.Void UEFI.Code.OperatorNode::.ctor(System.Char,System.Int32) */
+    /* Path=3, Unique=0: IL_0039: newobj System.Void UEFI.Code.OperatorNode::.ctor(System.Char,System.Int32) */
     stack0_4__ = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_OperatorNode));
     stack0_4__->vptr0__ = &__UEFI_Code_OperatorNode_VTABLE__;
     UEFI_Code_OperatorNode__ctor(stack0_4__, (wchar_t)stack0_0__, stack1_2__);
-    /* Path=5, Unique=0: IL_0058: stloc.3 */
-    local1__ = stack0_4__;
-    /* Path=5, Unique=0: IL_0059: br.s IL_005b */
-    goto IL_005b;
-IL_005b:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(127): */
-    /* Path=3, Unique=0: IL_005b: ldloc.3 */
-    stack0_4__ = local1__;
-    /* Path=3, Unique=0: IL_005c: ret */
+    /* Path=3, Unique=0: IL_003e: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return stack0_4__;
 }
@@ -1136,25 +986,17 @@ UEFI_Code_NumericNode* UEFI_Code_PolishNotation_ParseNumeric(System_String* line
     // Local variables:
 
     int32_t index__;
-    System_String* token__ = NULL;
     int32_t numeric__;
-    bool local0__;
-    UEFI_Code_NumericNode* local1__ = NULL;
-    wchar_t ch__;
-    bool local2__;
-    bool local3__;
-    bool local4__;
-    bool local5__;
 
     //-------------------
     // Evaluation stacks:
 
     int32_t stack0_0__;
     IL2C_CecilHelper_PseudoZeroType* stack0_1__ = NULL;
-    UEFI_Code_NumericNode* stack0_2__ = NULL;
-    System_String* stack0_3__ = NULL;
-    int32_t stack0_4__;
-    System_String* stack0_5__ = NULL;
+    System_String* stack0_2__ = NULL;
+    int32_t stack0_3__;
+    System_String* stack0_4__ = NULL;
+    UEFI_Code_NumericNode* stack0_5__ = NULL;
     System_String* stack1_0__ = NULL;
     int32_t stack1_1__;
     int32_t stack1_2__;
@@ -1169,22 +1011,18 @@ UEFI_Code_NumericNode* UEFI_Code_PolishNotation_ParseNumeric(System_String* line
     {
         IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
-        System_String** ptoken__;
-        UEFI_Code_NumericNode** plocal1__;
         IL2C_CecilHelper_PseudoZeroType** pstack0_1__;
-        UEFI_Code_NumericNode** pstack0_2__;
-        System_String** pstack0_3__;
-        System_String** pstack0_5__;
+        System_String** pstack0_2__;
+        System_String** pstack0_4__;
+        UEFI_Code_NumericNode** pstack0_5__;
         System_String** pstack1_0__;
         int32_t** pstack1_3__;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 8;
-    __executionFrame__.ptoken__ = &token__;
-    __executionFrame__.plocal1__ = &local1__;
+    __executionFrame__.targetCount = 6;
     __executionFrame__.pstack0_1__ = &stack0_1__;
     __executionFrame__.pstack0_2__ = &stack0_2__;
-    __executionFrame__.pstack0_3__ = &stack0_3__;
+    __executionFrame__.pstack0_4__ = &stack0_4__;
     __executionFrame__.pstack0_5__ = &stack0_5__;
     __executionFrame__.pstack1_0__ = &stack1_0__;
     __executionFrame__.pstack1_3__ = &stack1_3__;
@@ -1193,190 +1031,124 @@ UEFI_Code_NumericNode* UEFI_Code_PolishNotation_ParseNumeric(System_String* line
     //-------------------
     // IL body:
 
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(130): */
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ldarg.1 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(131): */
+    /* Path=1, Unique=0: IL_0000: ldarg.1 */
     stack0_0__ = startIndex;
-    /* Path=1, Unique=0: IL_0002: ldarg.0 */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
     stack1_0__ = line;
-    /* Path=1, Unique=0: IL_0003: callvirt System.Int32 System.String::get_Length() */
+    /* Path=1, Unique=0: IL_0002: callvirt System.Int32 System.String::get_Length() */
     stack1_1__ = System_String_get_Length(stack1_0__);
-    /* Path=1, Unique=0: IL_0008: clt */
-    stack0_0__ = (stack0_0__ < stack1_1__) ? 1 : 0;
-    /* Path=1, Unique=0: IL_000a: ldc.i4.0 */
-    stack1_2__ = 0;
-    /* Path=1, Unique=0: IL_000b: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=1, Unique=0: IL_000d: stloc.3 */
-    local0__ = stack0_0__ ? true : false;
-    /* Path=1, Unique=0: IL_000e: ldloc.3 */
-    stack0_0__ = local0__;
-    /* Path=1, Unique=0: IL_000f: brfalse.s IL_0017 */
-    if (stack0_0__ == 0) goto IL_0017;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(132): */
-    /* Path=1, Unique=0: IL_0011: nop */
-    /* Path=1, Unique=0: IL_0012: ldnull */
+    /* Path=1, Unique=0: IL_0007: blt.s IL_000b */
+    if (stack0_0__ < stack1_1__) goto IL_000b;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(133): */
+    /* Path=1, Unique=0: IL_0009: ldnull */
     stack0_1__ = NULL;
-    /* Path=1, Unique=0: IL_0013: stloc.s local4 */
-    local1__ = (UEFI_Code_NumericNode*)stack0_1__;
-    /* Path=1, Unique=0: IL_0015: br.s IL_008d */
-    goto IL_008d;
-IL_0017:
+    /* Path=1, Unique=0: IL_000a: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_NumericNode*)stack0_1__;
+IL_000b:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(136): */
-    /* Path=2, Unique=0: IL_0017: ldarg.1 */
+    /* Path=2, Unique=0: IL_000b: ldarg.1 */
     stack0_0__ = startIndex;
-    /* Path=2, Unique=0: IL_0018: stloc.0 */
+    /* Path=2, Unique=0: IL_000c: stloc.0 */
     index__ = stack0_0__;
-    /* Path=2, Unique=0: IL_0019: br.s IL_0039 */
-    goto IL_0039;
-IL_001b:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(138): */
-    /* Path=5, Unique=0: IL_001b: nop */
-    /* Path=5, Unique=0: IL_001c: ldarg.0 */
-    stack0_3__ = line;
-    /* Path=5, Unique=0: IL_001d: ldloc.0 */
+    /* Path=2, Unique=0: IL_000d: br.s IL_001e */
+    goto IL_001e;
+IL_000f:
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(139): */
+    /* Path=4, Unique=0: IL_000f: ldarg.0 */
+    stack0_2__ = line;
+    /* Path=4, Unique=0: IL_0010: ldloc.0 */
     stack1_2__ = index__;
-    /* Path=5, Unique=0: IL_001e: callvirt System.Char System.String::get_Chars(System.Int32) */
-    stack0_4__ = System_String_get_Chars(stack0_3__, stack1_2__);
-    /* Path=5, Unique=0: IL_0023: stloc.s local5 */
-    ch__ = (wchar_t)stack0_4__;
+    /* Path=4, Unique=0: IL_0011: callvirt System.Char System.String::get_Chars(System.Int32) */
+    stack0_3__ = System_String_get_Chars(stack0_2__, stack1_2__);
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(140): */
-    /* Path=5, Unique=0: IL_0025: ldloc.s local5 */
-    stack0_0__ = ch__;
-    /* Path=5, Unique=0: IL_0027: ldc.i4.s 32 */
+    /* Path=4, Unique=0: IL_0016: ldc.i4.s 32 */
     stack1_2__ = 32;
-    /* Path=5, Unique=0: IL_0029: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=5, Unique=0: IL_002b: stloc.s local6 */
-    local2__ = stack0_0__ ? true : false;
-    /* Path=5, Unique=0: IL_002d: ldloc.s local6 */
-    stack0_0__ = local2__;
-    /* Path=5, Unique=0: IL_002f: brfalse.s IL_0034 */
-    if (stack0_0__ == 0) goto IL_0034;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(141): */
-    /* Path=5, Unique=0: IL_0031: nop */
-    /* Path=5, Unique=0: IL_0032: br.s IL_0048 */
-    goto IL_0048;
-IL_0034:
+    /* Path=4, Unique=0: IL_0018: beq.s IL_0027 */
+    if (stack0_3__ == stack1_2__) goto IL_0027;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(144): */
-    /* Path=7, Unique=0: IL_0034: ldloc.0 */
+    /* Path=4, Unique=0: IL_001a: ldloc.0 */
     stack0_0__ = index__;
-    /* Path=7, Unique=0: IL_0035: ldc.i4.1 */
+    /* Path=4, Unique=0: IL_001b: ldc.i4.1 */
     stack1_2__ = 1;
-    /* Path=7, Unique=0: IL_0036: add */
+    /* Path=4, Unique=0: IL_001c: add */
     stack0_0__ = stack0_0__ + stack1_2__;
-    /* Path=7, Unique=0: IL_0037: stloc.0 */
+    /* Path=4, Unique=0: IL_001d: stloc.0 */
     index__ = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(145): */
-    /* Path=7, Unique=0: IL_0038: nop */
-IL_0039:
-    /* Path=4, Unique=0: IL_0039: ldloc.0 */
+IL_001e:
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(137): */
+    /* Path=3, Unique=0: IL_001e: ldloc.0 */
     stack0_0__ = index__;
-    /* Path=4, Unique=0: IL_003a: ldarg.0 */
+    /* Path=3, Unique=0: IL_001f: ldarg.0 */
     stack1_0__ = line;
-    /* Path=4, Unique=0: IL_003b: callvirt System.Int32 System.String::get_Length() */
+    /* Path=3, Unique=0: IL_0020: callvirt System.Int32 System.String::get_Length() */
     stack1_1__ = System_String_get_Length(stack1_0__);
-    /* Path=4, Unique=0: IL_0040: clt */
-    stack0_0__ = (stack0_0__ < stack1_1__) ? 1 : 0;
-    /* Path=4, Unique=0: IL_0042: stloc.s local7 */
-    local3__ = stack0_0__ ? true : false;
-    /* Path=4, Unique=0: IL_0044: ldloc.s local7 */
-    stack0_0__ = local3__;
-    /* Path=4, Unique=0: IL_0046: brtrue.s IL_001b */
-    if (stack0_0__ != 0) goto IL_001b;
-IL_0048:
+    /* Path=3, Unique=0: IL_0025: blt.s IL_000f */
+    if (stack0_0__ < stack1_1__) goto IL_000f;
+IL_0027:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(147): */
-    /* Path=4, Unique=0: IL_0048: ldloc.0 */
+    /* Path=3, Unique=0: IL_0027: ldloc.0 */
     stack0_0__ = index__;
-    /* Path=4, Unique=0: IL_0049: ldarg.1 */
+    /* Path=3, Unique=0: IL_0028: ldarg.1 */
     stack1_2__ = startIndex;
-    /* Path=4, Unique=0: IL_004a: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=4, Unique=0: IL_004c: stloc.s local8 */
-    local4__ = stack0_0__ ? true : false;
-    /* Path=4, Unique=0: IL_004e: ldloc.s local8 */
-    stack0_0__ = local4__;
-    /* Path=4, Unique=0: IL_0050: brfalse.s IL_0058 */
-    if (stack0_0__ == 0) goto IL_0058;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(148): */
-    /* Path=4, Unique=0: IL_0052: nop */
-    /* Path=4, Unique=0: IL_0053: ldnull */
+    /* Path=3, Unique=0: IL_0029: bne.un.s IL_002d */
+    if (stack0_0__ != stack1_2__) goto IL_002d;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(149): */
+    /* Path=3, Unique=0: IL_002b: ldnull */
     stack0_1__ = NULL;
-    /* Path=4, Unique=0: IL_0054: stloc.s local4 */
-    local1__ = (UEFI_Code_NumericNode*)stack0_1__;
-    /* Path=4, Unique=0: IL_0056: br.s IL_008d */
-    goto IL_008d;
-IL_0058:
+    /* Path=3, Unique=0: IL_002c: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_NumericNode*)stack0_1__;
+IL_002d:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(152): */
-    /* Path=6, Unique=0: IL_0058: ldarg.0 */
-    stack0_3__ = line;
-    /* Path=6, Unique=0: IL_0059: ldarg.1 */
+    /* Path=5, Unique=0: IL_002d: ldarg.0 */
+    stack0_2__ = line;
+    /* Path=5, Unique=0: IL_002e: ldarg.1 */
     stack1_2__ = startIndex;
-    /* Path=6, Unique=0: IL_005a: ldloc.0 */
+    /* Path=5, Unique=0: IL_002f: ldloc.0 */
     stack2_0__ = index__;
-    /* Path=6, Unique=0: IL_005b: ldarg.1 */
+    /* Path=5, Unique=0: IL_0030: ldarg.1 */
     stack3_0__ = startIndex;
-    /* Path=6, Unique=0: IL_005c: sub */
+    /* Path=5, Unique=0: IL_0031: sub */
     stack2_0__ = stack2_0__ - stack3_0__;
-    /* Path=6, Unique=0: IL_005d: callvirt System.String System.String::Substring(System.Int32,System.Int32) */
-    stack0_5__ = System_String_Substring_1(stack0_3__, stack1_2__, stack2_0__);
-    /* Path=6, Unique=0: IL_0062: stloc.1 */
-    token__ = stack0_5__;
+    /* Path=5, Unique=0: IL_0032: callvirt System.String System.String::Substring(System.Int32,System.Int32) */
+    stack0_4__ = System_String_Substring_1(stack0_2__, stack1_2__, stack2_0__);
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(153): */
-    /* Path=6, Unique=0: IL_0063: ldloc.1 */
-    stack0_3__ = token__;
-    /* Path=6, Unique=0: IL_0064: ldloca.s local2 */
+    /* Path=5, Unique=0: IL_0037: ldloca.s local1 */
     stack1_3__ = &numeric__;
-    /* Path=6, Unique=0: IL_0066: call System.Boolean System.Int32::TryParse(System.String,System.Int32&) */
-    stack0_0__ = System_Int32_TryParse(stack0_3__, stack1_3__);
-    /* Path=6, Unique=0: IL_006b: ldc.i4.0 */
-    stack1_2__ = 0;
-    /* Path=6, Unique=0: IL_006c: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=6, Unique=0: IL_006e: stloc.s local9 */
-    local5__ = stack0_0__ ? true : false;
-    /* Path=6, Unique=0: IL_0070: ldloc.s local9 */
-    stack0_0__ = local5__;
-    /* Path=6, Unique=0: IL_0072: brfalse.s IL_007a */
-    if (stack0_0__ == 0) goto IL_007a;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(154): */
-    /* Path=6, Unique=0: IL_0074: nop */
-    /* Path=6, Unique=0: IL_0075: ldnull */
+    /* Path=5, Unique=0: IL_0039: call System.Boolean System.Int32::TryParse(System.String,System.Int32&) */
+    stack0_0__ = System_Int32_TryParse(stack0_4__, stack1_3__);
+    /* Path=5, Unique=0: IL_003e: brtrue.s IL_0042 */
+    if (stack0_0__ != 0) goto IL_0042;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(155): */
+    /* Path=5, Unique=0: IL_0040: ldnull */
     stack0_1__ = NULL;
-    /* Path=6, Unique=0: IL_0076: stloc.s local4 */
-    local1__ = (UEFI_Code_NumericNode*)stack0_1__;
-    /* Path=6, Unique=0: IL_0078: br.s IL_008d */
-    goto IL_008d;
-IL_007a:
+    /* Path=5, Unique=0: IL_0041: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_NumericNode*)stack0_1__;
+IL_0042:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(158): */
-    /* Path=8, Unique=0: IL_007a: ldarg.0 */
-    stack0_3__ = line;
-    /* Path=8, Unique=0: IL_007b: ldloc.0 */
+    /* Path=6, Unique=0: IL_0042: ldarg.0 */
+    stack0_2__ = line;
+    /* Path=6, Unique=0: IL_0043: ldloc.0 */
     stack1_2__ = index__;
-    /* Path=8, Unique=0: IL_007c: call System.Int32 UEFI.Code.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
-    stack0_0__ = UEFI_Code_PolishNotation_SkipWhiteSpace(stack0_3__, stack1_2__);
-    /* Path=8, Unique=0: IL_0081: stloc.0 */
+    /* Path=6, Unique=0: IL_0044: call System.Int32 UEFI.Code.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
+    stack0_0__ = UEFI_Code_PolishNotation_SkipWhiteSpace(stack0_2__, stack1_2__);
+    /* Path=6, Unique=0: IL_0049: stloc.0 */
     index__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(159): */
-    /* Path=8, Unique=0: IL_0082: ldloc.2 */
+    /* Path=6, Unique=0: IL_004a: ldloc.1 */
     stack0_0__ = numeric__;
-    /* Path=8, Unique=0: IL_0083: ldloc.0 */
+    /* Path=6, Unique=0: IL_004b: ldloc.0 */
     stack1_2__ = index__;
-    /* Path=8, Unique=0: IL_0084: newobj System.Void UEFI.Code.NumericNode::.ctor(System.Int32,System.Int32) */
-    stack0_2__ = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_NumericNode));
-    stack0_2__->vptr0__ = &__UEFI_Code_NumericNode_VTABLE__;
-    UEFI_Code_NumericNode__ctor(stack0_2__, stack0_0__, stack1_2__);
-    /* Path=8, Unique=0: IL_0089: stloc.s local4 */
-    local1__ = stack0_2__;
-    /* Path=8, Unique=0: IL_008b: br.s IL_008d */
-    goto IL_008d;
-IL_008d:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(160): */
-    /* Path=3, Unique=0: IL_008d: ldloc.s local4 */
-    stack0_2__ = local1__;
-    /* Path=3, Unique=0: IL_008f: ret */
+    /* Path=6, Unique=0: IL_004c: newobj System.Void UEFI.Code.NumericNode::.ctor(System.Int32,System.Int32) */
+    stack0_5__ = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_NumericNode));
+    stack0_5__->vptr0__ = &__UEFI_Code_NumericNode_VTABLE__;
+    UEFI_Code_NumericNode__ctor(stack0_5__, stack0_0__, stack1_2__);
+    /* Path=6, Unique=0: IL_0051: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
-    return stack0_2__;
+    return stack0_5__;
 }
 
 ///////////////////////////////////////
@@ -1391,13 +1163,6 @@ UEFI_Code_ExpressionNode* UEFI_Code_PolishNotation_ParseExpression(System_String
     UEFI_Code_ReducibleNode* left__ = NULL;
     UEFI_Code_ReducibleNode* right__ = NULL;
     int32_t index__;
-    bool local0__;
-    UEFI_Code_ExpressionNode* local1__ = NULL;
-    bool local2__;
-    bool local3__;
-    bool local4__;
-    bool local5__;
-    bool local6__;
 
     //-------------------
     // Evaluation stacks:
@@ -1406,15 +1171,14 @@ UEFI_Code_ExpressionNode* UEFI_Code_PolishNotation_ParseExpression(System_String
     IL2C_CecilHelper_PseudoZeroType* stack0_1__ = NULL;
     System_String* stack0_2__ = NULL;
     UEFI_Code_OperatorNode* stack0_3__ = NULL;
-    UEFI_Code_ExpressionNode* stack0_4__ = NULL;
-    UEFI_Code_NumericNode* stack0_5__ = NULL;
-    UEFI_Code_ReducibleNode* stack0_6__ = NULL;
+    UEFI_Code_NumericNode* stack0_4__ = NULL;
+    UEFI_Code_ReducibleNode* stack0_5__ = NULL;
+    UEFI_Code_ExpressionNode* stack0_6__ = NULL;
     System_String* stack1_0__ = NULL;
     int32_t stack1_1__;
     int32_t stack1_2__;
-    IL2C_CecilHelper_PseudoZeroType* stack1_3__ = NULL;
-    UEFI_Code_OperatorNode* stack1_4__ = NULL;
-    UEFI_Code_ReducibleNode* stack1_5__ = NULL;
+    UEFI_Code_OperatorNode* stack1_3__ = NULL;
+    UEFI_Code_ReducibleNode* stack1_4__ = NULL;
     UEFI_Code_ReducibleNode* stack2_0__ = NULL;
     int32_t stack3_0__;
 
@@ -1428,25 +1192,22 @@ UEFI_Code_ExpressionNode* UEFI_Code_PolishNotation_ParseExpression(System_String
         UEFI_Code_OperatorNode** poper__;
         UEFI_Code_ReducibleNode** pleft__;
         UEFI_Code_ReducibleNode** pright__;
-        UEFI_Code_ExpressionNode** plocal1__;
         IL2C_CecilHelper_PseudoZeroType** pstack0_1__;
         System_String** pstack0_2__;
         UEFI_Code_OperatorNode** pstack0_3__;
-        UEFI_Code_ExpressionNode** pstack0_4__;
-        UEFI_Code_NumericNode** pstack0_5__;
-        UEFI_Code_ReducibleNode** pstack0_6__;
+        UEFI_Code_NumericNode** pstack0_4__;
+        UEFI_Code_ReducibleNode** pstack0_5__;
+        UEFI_Code_ExpressionNode** pstack0_6__;
         System_String** pstack1_0__;
-        IL2C_CecilHelper_PseudoZeroType** pstack1_3__;
-        UEFI_Code_OperatorNode** pstack1_4__;
-        UEFI_Code_ReducibleNode** pstack1_5__;
+        UEFI_Code_OperatorNode** pstack1_3__;
+        UEFI_Code_ReducibleNode** pstack1_4__;
         UEFI_Code_ReducibleNode** pstack2_0__;
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 15;
+    __executionFrame__.targetCount = 13;
     __executionFrame__.poper__ = &oper__;
     __executionFrame__.pleft__ = &left__;
     __executionFrame__.pright__ = &right__;
-    __executionFrame__.plocal1__ = &local1__;
     __executionFrame__.pstack0_1__ = &stack0_1__;
     __executionFrame__.pstack0_2__ = &stack0_2__;
     __executionFrame__.pstack0_3__ = &stack0_3__;
@@ -1456,228 +1217,154 @@ UEFI_Code_ExpressionNode* UEFI_Code_PolishNotation_ParseExpression(System_String
     __executionFrame__.pstack1_0__ = &stack1_0__;
     __executionFrame__.pstack1_3__ = &stack1_3__;
     __executionFrame__.pstack1_4__ = &stack1_4__;
-    __executionFrame__.pstack1_5__ = &stack1_5__;
     __executionFrame__.pstack2_0__ = &stack2_0__;
     il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
 
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(163): */
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: ldarg.1 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(164): */
+    /* Path=1, Unique=0: IL_0000: ldarg.1 */
     stack0_0__ = startIndex;
-    /* Path=1, Unique=0: IL_0002: ldarg.0 */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
     stack1_0__ = line;
-    /* Path=1, Unique=0: IL_0003: callvirt System.Int32 System.String::get_Length() */
+    /* Path=1, Unique=0: IL_0002: callvirt System.Int32 System.String::get_Length() */
     stack1_1__ = System_String_get_Length(stack1_0__);
-    /* Path=1, Unique=0: IL_0008: clt */
-    stack0_0__ = (stack0_0__ < stack1_1__) ? 1 : 0;
-    /* Path=1, Unique=0: IL_000a: ldc.i4.0 */
-    stack1_2__ = 0;
-    /* Path=1, Unique=0: IL_000b: ceq */
-    stack0_0__ = (stack0_0__ == stack1_2__) ? 1 : 0;
-    /* Path=1, Unique=0: IL_000d: stloc.s local4 */
-    local0__ = stack0_0__ ? true : false;
-    /* Path=1, Unique=0: IL_000f: ldloc.s local4 */
-    stack0_0__ = local0__;
-    /* Path=1, Unique=0: IL_0011: brfalse.s IL_001c */
-    if (stack0_0__ == 0) goto IL_001c;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(165): */
-    /* Path=1, Unique=0: IL_0013: nop */
-    /* Path=1, Unique=0: IL_0014: ldnull */
+    /* Path=1, Unique=0: IL_0007: blt.s IL_000b */
+    if (stack0_0__ < stack1_1__) goto IL_000b;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(166): */
+    /* Path=1, Unique=0: IL_0009: ldnull */
     stack0_1__ = NULL;
-    /* Path=1, Unique=0: IL_0015: stloc.s local5 */
-    local1__ = (UEFI_Code_ExpressionNode*)stack0_1__;
-    /* Path=1, Unique=0: IL_0017: br IL_00bd */
-    goto IL_00bd;
-IL_001c:
+    /* Path=1, Unique=0: IL_000a: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_ExpressionNode*)stack0_1__;
+IL_000b:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(169): */
-    /* Path=2, Unique=0: IL_001c: ldarg.0 */
+    /* Path=2, Unique=0: IL_000b: ldarg.0 */
     stack0_2__ = line;
-    /* Path=2, Unique=0: IL_001d: ldarg.1 */
+    /* Path=2, Unique=0: IL_000c: ldarg.1 */
     stack1_2__ = startIndex;
-    /* Path=2, Unique=0: IL_001e: call UEFI.Code.OperatorNode UEFI.Code.PolishNotation::ParseOperator(System.String,System.Int32) */
+    /* Path=2, Unique=0: IL_000d: call UEFI.Code.OperatorNode UEFI.Code.PolishNotation::ParseOperator(System.String,System.Int32) */
     stack0_3__ = UEFI_Code_PolishNotation_ParseOperator(stack0_2__, stack1_2__);
-    /* Path=2, Unique=0: IL_0023: stloc.0 */
+    /* Path=2, Unique=0: IL_0012: stloc.0 */
     oper__ = stack0_3__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(170): */
-    /* Path=2, Unique=0: IL_0024: ldloc.0 */
+    /* Path=2, Unique=0: IL_0013: ldloc.0 */
     stack0_3__ = oper__;
-    /* Path=2, Unique=0: IL_0025: ldnull */
-    stack1_3__ = NULL;
-    /* Path=2, Unique=0: IL_0026: ceq */
-    stack0_0__ = (stack0_3__ == ((UEFI_Code_OperatorNode*)stack1_3__)) ? 1 : 0;
-    /* Path=2, Unique=0: IL_0028: stloc.s local6 */
-    local2__ = stack0_0__ ? true : false;
-    /* Path=2, Unique=0: IL_002a: ldloc.s local6 */
-    stack0_0__ = local2__;
-    /* Path=2, Unique=0: IL_002c: brfalse.s IL_0037 */
-    if (stack0_0__ == 0) goto IL_0037;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(171): */
-    /* Path=2, Unique=0: IL_002e: nop */
-    /* Path=2, Unique=0: IL_002f: ldnull */
+    /* Path=2, Unique=0: IL_0014: brtrue.s IL_0018 */
+    if (stack0_3__ != NULL) goto IL_0018;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(172): */
+    /* Path=2, Unique=0: IL_0016: ldnull */
     stack0_1__ = NULL;
-    /* Path=2, Unique=0: IL_0030: stloc.s local5 */
-    local1__ = (UEFI_Code_ExpressionNode*)stack0_1__;
-    /* Path=2, Unique=0: IL_0032: br IL_00bd */
-    goto IL_00bd;
-IL_0037:
+    /* Path=2, Unique=0: IL_0017: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_ExpressionNode*)stack0_1__;
+IL_0018:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(175): */
-    /* Path=4, Unique=0: IL_0037: ldarg.0 */
+    /* Path=3, Unique=0: IL_0018: ldarg.0 */
     stack0_2__ = line;
-    /* Path=4, Unique=0: IL_0038: ldloc.0 */
-    stack1_4__ = oper__;
-    /* Path=4, Unique=0: IL_0039: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
-    stack1_2__ = stack1_4__->NextIndex;
-    /* Path=4, Unique=0: IL_003e: call UEFI.Code.NumericNode UEFI.Code.PolishNotation::ParseNumeric(System.String,System.Int32) */
-    stack0_5__ = UEFI_Code_PolishNotation_ParseNumeric(stack0_2__, stack1_2__);
-    /* Path=4, Unique=0: IL_0043: stloc.1 */
-    left__ = (UEFI_Code_ReducibleNode*)stack0_5__;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(176): */
-    /* Path=4, Unique=0: IL_0044: ldloc.1 */
-    stack0_6__ = left__;
-    /* Path=4, Unique=0: IL_0045: ldnull */
-    stack1_3__ = NULL;
-    /* Path=4, Unique=0: IL_0046: ceq */
-    stack0_0__ = (stack0_6__ == ((UEFI_Code_ReducibleNode*)stack1_3__)) ? 1 : 0;
-    /* Path=4, Unique=0: IL_0048: stloc.s local7 */
-    local3__ = stack0_0__ ? true : false;
-    /* Path=4, Unique=0: IL_004a: ldloc.s local7 */
-    stack0_0__ = local3__;
-    /* Path=4, Unique=0: IL_004c: brfalse.s IL_006d */
-    if (stack0_0__ == 0) goto IL_006d;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(177): */
-    /* Path=4, Unique=0: IL_004e: nop */
-    /* Path=4, Unique=0: IL_004f: ldarg.0 */
-    stack0_2__ = line;
-    /* Path=4, Unique=0: IL_0050: ldloc.0 */
-    stack1_4__ = oper__;
-    /* Path=4, Unique=0: IL_0051: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
-    stack1_2__ = stack1_4__->NextIndex;
-    /* Path=4, Unique=0: IL_0056: call UEFI.Code.ExpressionNode UEFI.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
-    stack0_4__ = UEFI_Code_PolishNotation_ParseExpression(stack0_2__, stack1_2__);
-    /* Path=4, Unique=0: IL_005b: stloc.1 */
+    /* Path=3, Unique=0: IL_0019: ldloc.0 */
+    stack1_3__ = oper__;
+    /* Path=3, Unique=0: IL_001a: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
+    stack1_2__ = stack1_3__->NextIndex;
+    /* Path=3, Unique=0: IL_001f: call UEFI.Code.NumericNode UEFI.Code.PolishNotation::ParseNumeric(System.String,System.Int32) */
+    stack0_4__ = UEFI_Code_PolishNotation_ParseNumeric(stack0_2__, stack1_2__);
+    /* Path=3, Unique=0: IL_0024: stloc.1 */
     left__ = (UEFI_Code_ReducibleNode*)stack0_4__;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(176): */
+    /* Path=3, Unique=0: IL_0025: ldloc.1 */
+    stack0_5__ = left__;
+    /* Path=3, Unique=0: IL_0026: brtrue.s IL_003a */
+    if (stack0_5__ != NULL) goto IL_003a;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(178): */
+    /* Path=3, Unique=0: IL_0028: ldarg.0 */
+    stack0_2__ = line;
+    /* Path=3, Unique=0: IL_0029: ldloc.0 */
+    stack1_3__ = oper__;
+    /* Path=3, Unique=0: IL_002a: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
+    stack1_2__ = stack1_3__->NextIndex;
+    /* Path=3, Unique=0: IL_002f: call UEFI.Code.ExpressionNode UEFI.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
+    stack0_6__ = UEFI_Code_PolishNotation_ParseExpression(stack0_2__, stack1_2__);
+    /* Path=3, Unique=0: IL_0034: stloc.1 */
+    left__ = (UEFI_Code_ReducibleNode*)stack0_6__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(179): */
-    /* Path=4, Unique=0: IL_005c: ldloc.1 */
-    stack0_6__ = left__;
-    /* Path=4, Unique=0: IL_005d: ldnull */
-    stack1_3__ = NULL;
-    /* Path=4, Unique=0: IL_005e: ceq */
-    stack0_0__ = (stack0_6__ == ((UEFI_Code_ReducibleNode*)stack1_3__)) ? 1 : 0;
-    /* Path=4, Unique=0: IL_0060: stloc.s local8 */
-    local4__ = stack0_0__ ? true : false;
-    /* Path=4, Unique=0: IL_0062: ldloc.s local8 */
-    stack0_0__ = local4__;
-    /* Path=4, Unique=0: IL_0064: brfalse.s IL_006c */
-    if (stack0_0__ == 0) goto IL_006c;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(180): */
-    /* Path=4, Unique=0: IL_0066: nop */
-    /* Path=4, Unique=0: IL_0067: ldnull */
+    /* Path=3, Unique=0: IL_0035: ldloc.1 */
+    stack0_5__ = left__;
+    /* Path=3, Unique=0: IL_0036: brtrue.s IL_003a */
+    if (stack0_5__ != NULL) goto IL_003a;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(181): */
+    /* Path=3, Unique=0: IL_0038: ldnull */
     stack0_1__ = NULL;
-    /* Path=4, Unique=0: IL_0068: stloc.s local5 */
-    local1__ = (UEFI_Code_ExpressionNode*)stack0_1__;
-    /* Path=4, Unique=0: IL_006a: br.s IL_00bd */
-    goto IL_00bd;
-IL_006c:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(183): */
-    /* Path=6, Unique=0: IL_006c: nop */
-IL_006d:
-    /* Path=5, Unique=0: IL_006d: ldarg.0 */
+    /* Path=3, Unique=0: IL_0039: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_ExpressionNode*)stack0_1__;
+IL_003a:
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(185): */
+    /* Path=4, Unique=0: IL_003a: ldarg.0 */
     stack0_2__ = line;
-    /* Path=5, Unique=0: IL_006e: ldloc.1 */
-    stack1_5__ = left__;
-    /* Path=5, Unique=0: IL_006f: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
-    stack1_2__ = stack1_5__->NextIndex;
-    /* Path=5, Unique=0: IL_0074: call UEFI.Code.NumericNode UEFI.Code.PolishNotation::ParseNumeric(System.String,System.Int32) */
-    stack0_5__ = UEFI_Code_PolishNotation_ParseNumeric(stack0_2__, stack1_2__);
-    /* Path=5, Unique=0: IL_0079: stloc.2 */
-    right__ = (UEFI_Code_ReducibleNode*)stack0_5__;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(186): */
-    /* Path=5, Unique=0: IL_007a: ldloc.2 */
-    stack0_6__ = right__;
-    /* Path=5, Unique=0: IL_007b: ldnull */
-    stack1_3__ = NULL;
-    /* Path=5, Unique=0: IL_007c: ceq */
-    stack0_0__ = (stack0_6__ == ((UEFI_Code_ReducibleNode*)stack1_3__)) ? 1 : 0;
-    /* Path=5, Unique=0: IL_007e: stloc.s local9 */
-    local5__ = stack0_0__ ? true : false;
-    /* Path=5, Unique=0: IL_0080: ldloc.s local9 */
-    stack0_0__ = local5__;
-    /* Path=5, Unique=0: IL_0082: brfalse.s IL_00a3 */
-    if (stack0_0__ == 0) goto IL_00a3;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(187): */
-    /* Path=5, Unique=0: IL_0084: nop */
-    /* Path=5, Unique=0: IL_0085: ldarg.0 */
-    stack0_2__ = line;
-    /* Path=5, Unique=0: IL_0086: ldloc.1 */
-    stack1_5__ = left__;
-    /* Path=5, Unique=0: IL_0087: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
-    stack1_2__ = stack1_5__->NextIndex;
-    /* Path=5, Unique=0: IL_008c: call UEFI.Code.ExpressionNode UEFI.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
-    stack0_4__ = UEFI_Code_PolishNotation_ParseExpression(stack0_2__, stack1_2__);
-    /* Path=5, Unique=0: IL_0091: stloc.2 */
+    /* Path=4, Unique=0: IL_003b: ldloc.1 */
+    stack1_4__ = left__;
+    /* Path=4, Unique=0: IL_003c: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
+    stack1_2__ = stack1_4__->NextIndex;
+    /* Path=4, Unique=0: IL_0041: call UEFI.Code.NumericNode UEFI.Code.PolishNotation::ParseNumeric(System.String,System.Int32) */
+    stack0_4__ = UEFI_Code_PolishNotation_ParseNumeric(stack0_2__, stack1_2__);
+    /* Path=4, Unique=0: IL_0046: stloc.2 */
     right__ = (UEFI_Code_ReducibleNode*)stack0_4__;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(189): */
-    /* Path=5, Unique=0: IL_0092: ldloc.2 */
-    stack0_6__ = right__;
-    /* Path=5, Unique=0: IL_0093: ldnull */
-    stack1_3__ = NULL;
-    /* Path=5, Unique=0: IL_0094: ceq */
-    stack0_0__ = (stack0_6__ == ((UEFI_Code_ReducibleNode*)stack1_3__)) ? 1 : 0;
-    /* Path=5, Unique=0: IL_0096: stloc.s local10 */
-    local6__ = stack0_0__ ? true : false;
-    /* Path=5, Unique=0: IL_0098: ldloc.s local10 */
-    stack0_0__ = local6__;
-    /* Path=5, Unique=0: IL_009a: brfalse.s IL_00a2 */
-    if (stack0_0__ == 0) goto IL_00a2;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(190): */
-    /* Path=5, Unique=0: IL_009c: nop */
-    /* Path=5, Unique=0: IL_009d: ldnull */
-    stack0_1__ = NULL;
-    /* Path=5, Unique=0: IL_009e: stloc.s local5 */
-    local1__ = (UEFI_Code_ExpressionNode*)stack0_1__;
-    /* Path=5, Unique=0: IL_00a0: br.s IL_00bd */
-    goto IL_00bd;
-IL_00a2:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(193): */
-    /* Path=8, Unique=0: IL_00a2: nop */
-IL_00a3:
-    /* Path=7, Unique=0: IL_00a3: ldarg.0 */
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(186): */
+    /* Path=4, Unique=0: IL_0047: ldloc.2 */
+    stack0_5__ = right__;
+    /* Path=4, Unique=0: IL_0048: brtrue.s IL_005c */
+    if (stack0_5__ != NULL) goto IL_005c;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(188): */
+    /* Path=4, Unique=0: IL_004a: ldarg.0 */
     stack0_2__ = line;
-    /* Path=7, Unique=0: IL_00a4: ldloc.2 */
-    stack1_5__ = right__;
-    /* Path=7, Unique=0: IL_00a5: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
-    stack1_2__ = stack1_5__->NextIndex;
-    /* Path=7, Unique=0: IL_00aa: call System.Int32 UEFI.Code.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
+    /* Path=4, Unique=0: IL_004b: ldloc.1 */
+    stack1_4__ = left__;
+    /* Path=4, Unique=0: IL_004c: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
+    stack1_2__ = stack1_4__->NextIndex;
+    /* Path=4, Unique=0: IL_0051: call UEFI.Code.ExpressionNode UEFI.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
+    stack0_6__ = UEFI_Code_PolishNotation_ParseExpression(stack0_2__, stack1_2__);
+    /* Path=4, Unique=0: IL_0056: stloc.2 */
+    right__ = (UEFI_Code_ReducibleNode*)stack0_6__;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(189): */
+    /* Path=4, Unique=0: IL_0057: ldloc.2 */
+    stack0_5__ = right__;
+    /* Path=4, Unique=0: IL_0058: brtrue.s IL_005c */
+    if (stack0_5__ != NULL) goto IL_005c;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(191): */
+    /* Path=4, Unique=0: IL_005a: ldnull */
+    stack0_1__ = NULL;
+    /* Path=4, Unique=0: IL_005b: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return (UEFI_Code_ExpressionNode*)stack0_1__;
+IL_005c:
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(195): */
+    /* Path=5, Unique=0: IL_005c: ldarg.0 */
+    stack0_2__ = line;
+    /* Path=5, Unique=0: IL_005d: ldloc.2 */
+    stack1_4__ = right__;
+    /* Path=5, Unique=0: IL_005e: ldfld System.Int32 UEFI.Code.AbstractNode::NextIndex */
+    stack1_2__ = stack1_4__->NextIndex;
+    /* Path=5, Unique=0: IL_0063: call System.Int32 UEFI.Code.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
     stack0_0__ = UEFI_Code_PolishNotation_SkipWhiteSpace(stack0_2__, stack1_2__);
-    /* Path=7, Unique=0: IL_00af: stloc.3 */
+    /* Path=5, Unique=0: IL_0068: stloc.3 */
     index__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(196): */
-    /* Path=7, Unique=0: IL_00b0: ldloc.0 */
+    /* Path=5, Unique=0: IL_0069: ldloc.0 */
     stack0_3__ = oper__;
-    /* Path=7, Unique=0: IL_00b1: ldloc.1 */
-    stack1_5__ = left__;
-    /* Path=7, Unique=0: IL_00b2: ldloc.2 */
+    /* Path=5, Unique=0: IL_006a: ldloc.1 */
+    stack1_4__ = left__;
+    /* Path=5, Unique=0: IL_006b: ldloc.2 */
     stack2_0__ = right__;
-    /* Path=7, Unique=0: IL_00b3: ldloc.3 */
+    /* Path=5, Unique=0: IL_006c: ldloc.3 */
     stack3_0__ = index__;
-    /* Path=7, Unique=0: IL_00b4: newobj System.Void UEFI.Code.ExpressionNode::.ctor(UEFI.Code.OperatorNode,UEFI.Code.ReducibleNode,UEFI.Code.ReducibleNode,System.Int32) */
-    stack0_4__ = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_ExpressionNode));
-    stack0_4__->vptr0__ = &__UEFI_Code_ExpressionNode_VTABLE__;
-    UEFI_Code_ExpressionNode__ctor(stack0_4__, stack0_3__, stack1_5__, stack2_0__, stack3_0__);
-    /* Path=7, Unique=0: IL_00b9: stloc.s local5 */
-    local1__ = stack0_4__;
-    /* Path=7, Unique=0: IL_00bb: br.s IL_00bd */
-    goto IL_00bd;
-IL_00bd:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(197): */
-    /* Path=3, Unique=0: IL_00bd: ldloc.s local5 */
-    stack0_4__ = local1__;
-    /* Path=3, Unique=0: IL_00bf: ret */
+    /* Path=5, Unique=0: IL_006d: newobj System.Void UEFI.Code.ExpressionNode::.ctor(UEFI.Code.OperatorNode,UEFI.Code.ReducibleNode,UEFI.Code.ReducibleNode,System.Int32) */
+    stack0_6__ = il2c_get_uninitialized_object(il2c_typeof(UEFI_Code_ExpressionNode));
+    stack0_6__->vptr0__ = &__UEFI_Code_ExpressionNode_VTABLE__;
+    UEFI_Code_ExpressionNode__ctor(stack0_6__, stack0_3__, stack1_4__, stack2_0__, stack3_0__);
+    /* Path=5, Unique=0: IL_0072: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
-    return stack0_4__;
+    return stack0_6__;
 }
 
 ///////////////////////////////////////
@@ -1689,20 +1376,16 @@ void UEFI_Code_PolishNotation_Main(void)
     // Local variables:
 
     System_String* line__ = NULL;
-    bool local0__;
     UEFI_Code_ExpressionNode* expr__ = NULL;
-    int32_t result__;
-    bool local1__;
-    bool local2__;
 
     //-------------------
     // Evaluation stacks:
 
-    int32_t stack0_0__;
-    System_String* stack0_1__ = NULL;
+    System_String* stack0_0__ = NULL;
+    int32_t stack0_1__;
     UEFI_Code_ExpressionNode* stack0_2__ = NULL;
     int32_t stack1_0__;
-    IL2C_CecilHelper_PseudoZeroType* stack1_1__ = NULL;
+    System_String* stack1_1__ = NULL;
 
     //-------------------
     // Setup stack frame:
@@ -1713,15 +1396,15 @@ void UEFI_Code_PolishNotation_Main(void)
         uint8_t targetCount;
         System_String** pline__;
         UEFI_Code_ExpressionNode** pexpr__;
-        System_String** pstack0_1__;
+        System_String** pstack0_0__;
         UEFI_Code_ExpressionNode** pstack0_2__;
-        IL2C_CecilHelper_PseudoZeroType** pstack1_1__;
+        System_String** pstack1_1__;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 5;
     __executionFrame__.pline__ = &line__;
     __executionFrame__.pexpr__ = &expr__;
-    __executionFrame__.pstack0_1__ = &stack0_1__;
+    __executionFrame__.pstack0_0__ = &stack0_0__;
     __executionFrame__.pstack0_2__ = &stack0_2__;
     __executionFrame__.pstack1_1__ = &stack1_1__;
     il2c_link_execution_frame(&__executionFrame__);
@@ -1729,106 +1412,66 @@ void UEFI_Code_PolishNotation_Main(void)
     //-------------------
     // IL body:
 
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(200): */
-    /* Path=1, Unique=0: IL_0000: nop */
-    /* Path=1, Unique=0: IL_0001: br.s IL_0064 */
-    goto IL_0064;
-IL_0003:
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(202): */
-    /* Path=3, Unique=0: IL_0003: nop */
-    /* Path=3, Unique=0: IL_0004: call System.Void System.Console::WriteLine() */
+IL_0000:
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(203): */
+    /* Path=1, Unique=0: IL_0000: call System.Void System.Console::WriteLine() */
     System_Console_WriteLine();
-    /* Path=3, Unique=0: IL_0009: nop */
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(204): */
-    /* Path=3, Unique=0: IL_000a: ldstr "PN> " */
-    stack0_1__ = string0__;
-    /* Path=3, Unique=0: IL_000f: call System.Void System.Console::Write(System.String) */
-    System_Console_Write_9(stack0_1__);
-    /* Path=3, Unique=0: IL_0014: nop */
+    /* Path=1, Unique=0: IL_0005: ldstr "PN> " */
+    stack0_0__ = string0__;
+    /* Path=1, Unique=0: IL_000a: call System.Void System.Console::Write(System.String) */
+    System_Console_Write_9(stack0_0__);
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(205): */
-    /* Path=3, Unique=0: IL_0015: call System.String System.Console::ReadLine() */
-    stack0_1__ = System_Console_ReadLine();
-    /* Path=3, Unique=0: IL_001a: stloc.0 */
-    line__ = stack0_1__;
+    /* Path=1, Unique=0: IL_000f: call System.String System.Console::ReadLine() */
+    stack0_0__ = System_Console_ReadLine();
+    /* Path=1, Unique=0: IL_0014: stloc.0 */
+    line__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(206): */
-    /* Path=3, Unique=0: IL_001b: ldloc.0 */
-    stack0_1__ = line__;
-    /* Path=3, Unique=0: IL_001c: call System.Boolean System.String::IsNullOrWhiteSpace(System.String) */
-    stack0_0__ = System_String_IsNullOrWhiteSpace(stack0_1__);
-    /* Path=3, Unique=0: IL_0021: ldc.i4.0 */
+    /* Path=1, Unique=0: IL_0015: ldloc.0 */
+    stack0_0__ = line__;
+    /* Path=1, Unique=0: IL_0016: call System.Boolean System.String::IsNullOrWhiteSpace(System.String) */
+    stack0_1__ = System_String_IsNullOrWhiteSpace(stack0_0__);
+    /* Path=1, Unique=0: IL_001b: brtrue.s IL_0000 */
+    if (stack0_1__ != 0) goto IL_0000;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(208): */
+    /* Path=1, Unique=0: IL_001d: ldloc.0 */
+    stack0_0__ = line__;
+    /* Path=1, Unique=0: IL_001e: ldc.i4.0 */
     stack1_0__ = 0;
-    /* Path=3, Unique=0: IL_0022: ceq */
-    stack0_0__ = (stack0_0__ == stack1_0__) ? 1 : 0;
-    /* Path=3, Unique=0: IL_0024: stloc.1 */
-    local0__ = stack0_0__ ? true : false;
-    /* Path=3, Unique=0: IL_0025: ldloc.1 */
-    stack0_0__ = local0__;
-    /* Path=3, Unique=0: IL_0026: brfalse.s IL_0063 */
-    if (stack0_0__ == 0) goto IL_0063;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(207): */
-    /* Path=3, Unique=0: IL_0028: nop */
-    /* Path=3, Unique=0: IL_0029: ldloc.0 */
-    stack0_1__ = line__;
-    /* Path=3, Unique=0: IL_002a: ldc.i4.0 */
-    stack1_0__ = 0;
-    /* Path=3, Unique=0: IL_002b: call UEFI.Code.ExpressionNode UEFI.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
-    stack0_2__ = UEFI_Code_PolishNotation_ParseExpression(stack0_1__, stack1_0__);
-    /* Path=3, Unique=0: IL_0030: stloc.2 */
+    /* Path=1, Unique=0: IL_001f: call UEFI.Code.ExpressionNode UEFI.Code.PolishNotation::ParseExpression(System.String,System.Int32) */
+    stack0_2__ = UEFI_Code_PolishNotation_ParseExpression(stack0_0__, stack1_0__);
+    /* Path=1, Unique=0: IL_0024: stloc.1 */
     expr__ = stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(209): */
-    /* Path=3, Unique=0: IL_0031: ldloc.2 */
+    /* Path=1, Unique=0: IL_0025: ldloc.1 */
     stack0_2__ = expr__;
-    /* Path=3, Unique=0: IL_0032: ldnull */
-    stack1_1__ = NULL;
-    /* Path=3, Unique=0: IL_0033: ceq */
-    stack0_0__ = (stack0_2__ == ((UEFI_Code_ExpressionNode*)stack1_1__)) ? 1 : 0;
-    /* Path=3, Unique=0: IL_0035: stloc.s local4 */
-    local1__ = stack0_0__ ? true : false;
-    /* Path=3, Unique=0: IL_0037: ldloc.s local4 */
-    stack0_0__ = local1__;
-    /* Path=3, Unique=0: IL_0039: brfalse.s IL_0049 */
-    if (stack0_0__ == 0) goto IL_0049;
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(210): */
-    /* Path=3, Unique=0: IL_003b: nop */
-    /* Path=3, Unique=0: IL_003c: ldstr "Syntax error." */
-    stack0_1__ = string1__;
-    /* Path=3, Unique=0: IL_0041: call System.Void System.Console::WriteLine(System.String) */
-    System_Console_WriteLine_10(stack0_1__);
-    /* Path=3, Unique=0: IL_0046: nop */
+    /* Path=1, Unique=0: IL_0026: brtrue.s IL_0034 */
+    if (stack0_2__ != NULL) goto IL_0034;
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(211): */
+    /* Path=1, Unique=0: IL_0028: ldstr "Syntax error." */
+    stack0_0__ = string1__;
+    /* Path=1, Unique=0: IL_002d: call System.Void System.Console::WriteLine(System.String) */
+    System_Console_WriteLine_10(stack0_0__);
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(212): */
-    /* Path=3, Unique=0: IL_0047: br.s IL_0064 */
-    goto IL_0064;
-IL_0049:
+    /* Path=1, Unique=0: IL_0032: br.s IL_0000 */
+    goto IL_0000;
+IL_0034:
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(215): */
-    /* Path=5, Unique=0: IL_0049: ldloc.2 */
+    /* Path=2, Unique=0: IL_0034: ldloc.1 */
     stack0_2__ = expr__;
-    /* Path=5, Unique=0: IL_004a: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
-    stack0_0__ = UEFI_Code_ReducibleNode_Reduce((UEFI_Code_ReducibleNode*)stack0_2__);
-    /* Path=5, Unique=0: IL_004f: stloc.3 */
-    result__ = stack0_0__;
+    /* Path=2, Unique=0: IL_0035: callvirt System.Int32 UEFI.Code.ReducibleNode::Reduce() */
+    stack0_1__ = UEFI_Code_ReducibleNode_Reduce((UEFI_Code_ReducibleNode*)stack0_2__);
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(217): */
-    /* Path=5, Unique=0: IL_0050: ldstr "Reuslt=" */
-    stack0_1__ = string2__;
-    /* Path=5, Unique=0: IL_0055: call System.Void System.Console::Write(System.String) */
-    System_Console_Write_9(stack0_1__);
-    /* Path=5, Unique=0: IL_005a: nop */
+    /* Path=2, Unique=0: IL_003a: ldstr "Reuslt=" */
+    stack1_1__ = string2__;
+    /* Path=2, Unique=0: IL_003f: call System.Void System.Console::Write(System.String) */
+    System_Console_Write_9(stack1_1__);
 /* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(218): */
-    /* Path=5, Unique=0: IL_005b: ldloc.3 */
-    stack0_0__ = result__;
-    /* Path=5, Unique=0: IL_005c: call System.Void System.Console::WriteLine(System.Int32) */
-    System_Console_WriteLine_6(stack0_0__);
-    /* Path=5, Unique=0: IL_0061: nop */
-/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(219): */
-    /* Path=5, Unique=0: IL_0062: nop */
-IL_0063:
-    /* Path=4, Unique=0: IL_0063: nop */
-IL_0064:
-    /* Path=2, Unique=0: IL_0064: ldc.i4.1 */
-    stack0_0__ = 1;
-    /* Path=2, Unique=0: IL_0065: stloc.s local5 */
-    local2__ = stack0_0__ ? true : false;
-    /* Path=2, Unique=0: IL_0067: br.s IL_0003 */
-    goto IL_0003;
+    /* Path=2, Unique=0: IL_0044: call System.Void System.Console::WriteLine(System.Int32) */
+    System_Console_WriteLine_6(stack0_1__);
+/* D:\\PROJECT\\IL2C\\samples\\UEFI\\UEFI.Code\\PolishNotation.cs(201): */
+    /* Path=2, Unique=0: IL_0049: br.s IL_0000 */
+    goto IL_0000;
 }
 
 ///////////////////////////////////////
@@ -1865,8 +1508,7 @@ void UEFI_Code_PolishNotation__ctor(UEFI_Code_PolishNotation* this__)
     /* Path=1, Unique=0: IL_0000: ldarg.0 */
     stack0_0__ = this__;
     /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
-    /* Path=1, Unique=0: IL_0006: nop */
-    /* Path=1, Unique=0: IL_0007: ret */
+    /* Path=1, Unique=0: IL_0006: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
 }

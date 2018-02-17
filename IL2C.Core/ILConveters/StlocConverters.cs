@@ -1,5 +1,6 @@
 ﻿using System;
 
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
@@ -8,36 +9,49 @@ namespace IL2C.ILConveters
 {
     internal static class StlocConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(VariableReference local, DecodeContext decodeContext)
+        private static Func<IExtractContext, string[]> Apply(
+            string targetName,
+            TypeReference targetType,
+            DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            var localType = local.VariableType;
 
             var offset = decodeContext.Current.Offset;
 
             return extractContext =>
             {
-                var rightExpression = extractContext.GetRightExpression(localType, si);
+                var rightExpression = extractContext.GetRightExpression(targetType, si);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid store operation: Offset={0}, StackType={1}, LocalType={2}, LocalIndex={3}",
+                        "Invalid store operation: Offset={0}, StackType={1}, LocalType={2}, SymbolName={3}",
                         offset,
                         si.TargetType.FullName,
-                        localType.FullName,
-                        local.Index);
+                        targetType.FullName,
+                        targetName);
                 }
 
                 return new[] { string.Format(
-                    "local{0} = {1}",
-                    local.Index,
+                    "{0} = {1}",
+                    targetName,
                     rightExpression) };
             };
         }
 
-        public static Func<IExtractContext, string[]> Apply(int localIndex, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            int localIndex,
+            DecodeContext decodeContext)
         {
-            return Apply(decodeContext.Locals[localIndex], decodeContext);
+            var local = decodeContext.Locals[localIndex];
+            return Apply(local.SymbolName, local.TargetType, decodeContext);
+        }
+
+        public static Func<IExtractContext, string[]> Apply(
+            VariableReference localVariable,
+            DecodeContext decodeContext)
+        {
+            var local = decodeContext.Locals[localVariable.Index];
+            return Apply(local.SymbolName, local.TargetType, decodeContext);
         }
     }
 

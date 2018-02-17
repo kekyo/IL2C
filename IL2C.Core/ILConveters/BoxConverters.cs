@@ -46,6 +46,7 @@ namespace IL2C.ILConveters
             TypeReference operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
+
             if (!si.TargetType.IsObjectType())
             {
                 throw new InvalidProgramSequenceException(
@@ -55,17 +56,20 @@ namespace IL2C.ILConveters
                     si.TargetType.FullName);
             }
 
-            var symbolName = decodeContext.PushStack(operand.GetStackableType());
+            var symbolName = decodeContext.PushStack(
+                operand.GetStackableType());
 
             return extractContext =>
             {
                 var typeName = extractContext.GetCLanguageTypeName(operand);
+                var rhs = extractContext.GetRightExpression(
+                    operand.GetSafeObjectType(), si);
 
                 return new[] { string.Format(
                     "{0} = *(({1}*)il2c_unbox({2}, il2c_typeof({3})))",
                     symbolName,
                     typeName,
-                    si.SymbolName,
+                    rhs,
                     operand.GetFullMemberName().ManglingSymbolName()) };
             };
         }

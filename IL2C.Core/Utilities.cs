@@ -110,14 +110,14 @@ namespace IL2C
             return type;
         }
 
-        public static Parameter[] GetSafeParameters(this MethodReference method)
+        public static Parameter[] GetSafeParameters(this MethodReference method, TypeReference thisType = null)
         {
             var parameters = method.Parameters
                 .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
             if (method.HasThis)
             {
-                TypeReference type = method.DeclaringType;
-                var thisType = type.IsValueType ? type.MakeByReferenceType() : type;
+                var type = method.DeclaringType;
+                thisType = thisType ?? (type.IsValueType ? type.MakeByReferenceType() : type);
                 parameters = new[]
                     {
                         new Parameter("this__", thisType)
@@ -322,6 +322,11 @@ namespace IL2C
         public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
         {
             return dict.TryGetValue(key, out var value) ? value : defaultValue;
+        }
+
+        public static KeyValuePair<TKey, TValue> KeyValue<TKey, TValue>(TKey key, TValue value)
+        {
+            return new KeyValuePair<TKey, TValue>(key, value);
         }
     }
 }

@@ -54,7 +54,7 @@ namespace IL2C
             }
 
             var translateContext = new TranslateContext(assemblyPath);
-            var prepared = AssemblyPreparer.Prepare(translateContext);
+            var preparedFunctions = AssemblyPreparer.Prepare(translateContext);
 
             Console.WriteLine(" done.");
 
@@ -72,7 +72,7 @@ namespace IL2C
             {
                 var twSource = new StreamWriter(fsSource, Encoding.UTF8);
                 AssemblyWriter.WriteSourceCode(
-                    twSource, translateContext, prepared, "    ", debugInformationOptions);
+                    twSource, translateContext, preparedFunctions, "    ", debugInformationOptions);
                 twSource.Flush();
             }
 
@@ -89,7 +89,7 @@ namespace IL2C
                 FileShare.None))
             {
                 var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
-                AssemblyWriter.WriteHeader(twHeader, translateContext, prepared, "    ");
+                AssemblyWriter.WriteHeader(twHeader, translateContext, preparedFunctions, "    ");
                 twHeader.Flush();
             }
 

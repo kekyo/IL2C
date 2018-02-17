@@ -19,20 +19,51 @@ typedef struct WDM_Code_Wdm WDM_Code_Wdm;
 ////////////////////////////////////////////////////////////
 // Class: WDM.Code.InterceptCDRomDevice
 
+// Class vtable layout
+typedef const struct
+{
+    /* internalcall */ void* (*IL2C_RuntimeCast)(WDM_Code_InterceptCDRomDevice* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(WDM_Code_InterceptCDRomDevice* this__);
+    int32_t (*GetHashCode)(WDM_Code_InterceptCDRomDevice* this__);
+    void (*Finalize)(WDM_Code_InterceptCDRomDevice* this__);
+    bool (*Equals)(WDM_Code_InterceptCDRomDevice* this__, System_Object* obj);
+} __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__;
+
+// Class layout
 struct WDM_Code_InterceptCDRomDevice
 {
+    __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__* vptr0__;
     intptr_t pFrom;
     intptr_t pTo;
     int32_t size;
 };
 
-extern const IL2C_RUNTIME_TYPE __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__;
+
+// Class runtime type information
+extern IL2C_RUNTIME_TYPE_DECL __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: WDM.Code.Wdm
 
+// Class vtable layout
+typedef const struct
+{
+    /* internalcall */ void* (*IL2C_RuntimeCast)(WDM_Code_Wdm* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(WDM_Code_Wdm* this__);
+    int32_t (*GetHashCode)(WDM_Code_Wdm* this__);
+    void (*Finalize)(WDM_Code_Wdm* this__);
+    bool (*Equals)(WDM_Code_Wdm* this__, System_Object* obj);
+} __WDM_Code_Wdm_VTABLE_DECL__;
 
-extern const IL2C_RUNTIME_TYPE __WDM_Code_Wdm_RUNTIME_TYPE__;
+// Class layout
+struct WDM_Code_Wdm
+{
+    __WDM_Code_Wdm_VTABLE_DECL__* vptr0__;
+};
+
+
+// Class runtime type information
+extern IL2C_RUNTIME_TYPE_DECL __WDM_Code_Wdm_RUNTIME_TYPE__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:
@@ -42,54 +73,36 @@ extern const IL2C_RUNTIME_TYPE __WDM_Code_Wdm_RUNTIME_TYPE__;
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
 
+// WDM.Code.InterceptCDRomDevice
+extern /* internalcall */ void __WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__(WDM_Code_InterceptCDRomDevice* this__);
+extern /* internalcall */ void* __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__(WDM_Code_InterceptCDRomDevice* this__, IL2C_RUNTIME_TYPE_DECL* type);
 extern void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* this__, intptr_t pFrom, intptr_t pTo, int32_t size);
 extern uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevice* this__, intptr_t pBuffer, int32_t offset, int32_t size);
-
-typedef const struct
-{
-    intptr_t reserved0__;
-    intptr_t reserved1__;
-    intptr_t reserved2__;
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
-} __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE_DECL__;
-
 #define WDM_Code_InterceptCDRomDevice_ToString(/* WDM_Code_InterceptCDRomDevice* */ this__) \
-    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->ToString((System_Object*)this__))
+    ((this__)->vptr0__->ToString(this__))
 #define WDM_Code_InterceptCDRomDevice_GetHashCode(/* WDM_Code_InterceptCDRomDevice* */ this__) \
-    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->GetHashCode((System_Object*)this__))
+    ((this__)->vptr0__->GetHashCode(this__))
 #define WDM_Code_InterceptCDRomDevice_Finalize(/* WDM_Code_InterceptCDRomDevice* */ this__) \
-    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->Finalize((System_Object*)this__))
+    ((this__)->vptr0__->Finalize(this__))
 #define WDM_Code_InterceptCDRomDevice_Equals(/* WDM_Code_InterceptCDRomDevice* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(WDM_Code_InterceptCDRomDevice, this__)->Equals((System_Object*)this__, obj))
+    ((this__)->vptr0__->Equals(this__, obj))
 
+// WDM.Code.Wdm
+extern /* internalcall */ void __WDM_Code_Wdm_IL2C_MarkHandler__(WDM_Code_Wdm* this__);
+extern /* internalcall */ void* __WDM_Code_Wdm_IL2C_RuntimeCast__(WDM_Code_Wdm* this__, IL2C_RUNTIME_TYPE_DECL* type);
 extern void WDM_Code_Wdm_DbgPrint(System_String* message);
 extern void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String* message);
 extern intptr_t WDM_Code_Wdm_memmem(intptr_t p1, int32_t s1, intptr_t p2, int32_t s2);
 extern void WDM_Code_Wdm_memcpy(intptr_t pDest, intptr_t pSource, int32_t size);
 extern void WDM_Code_Wdm__ctor(WDM_Code_Wdm* this__);
-
-typedef const struct
-{
-    intptr_t reserved0__;
-    intptr_t reserved1__;
-    intptr_t reserved2__;
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
-} __WDM_Code_Wdm_RUNTIME_TYPE_DECL__;
-
 #define WDM_Code_Wdm_ToString(/* WDM_Code_Wdm* */ this__) \
-    (il2c_get_vtable(WDM_Code_Wdm, this__)->ToString((System_Object*)this__))
+    ((this__)->vptr0__->ToString(this__))
 #define WDM_Code_Wdm_GetHashCode(/* WDM_Code_Wdm* */ this__) \
-    (il2c_get_vtable(WDM_Code_Wdm, this__)->GetHashCode((System_Object*)this__))
+    ((this__)->vptr0__->GetHashCode(this__))
 #define WDM_Code_Wdm_Finalize(/* WDM_Code_Wdm* */ this__) \
-    (il2c_get_vtable(WDM_Code_Wdm, this__)->Finalize((System_Object*)this__))
+    ((this__)->vptr0__->Finalize(this__))
 #define WDM_Code_Wdm_Equals(/* WDM_Code_Wdm* */ this__, /* System_Object* */ obj) \
-    (il2c_get_vtable(WDM_Code_Wdm, this__)->Equals((System_Object*)this__, obj))
+    ((this__)->vptr0__->Equals(this__, obj))
 
 #ifdef __cplusplus
 }

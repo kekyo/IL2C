@@ -67,8 +67,33 @@ namespace IL2C
             Parameter[] parameters,
             MethodBody body)
         {
-            var localVariables = body.Variables.ToArray();
-            localVariables.ForEach(local => prepareContext.RegisterType(local.VariableType));
+            var localVariables = body.Variables
+                // If found non named local variable, force named "local[n]__"
+                .GroupBy(v => body.Method.DebugInformation.TryGetName(v, out var name) ? name : "local")
+                // If contains both named symbol each different scope (in the method by C#'s block), try to named with index number.
+                .SelectMany(g =>
+                {
+                    var list = g.ToArray();
+                    return (list.Length >= 2)
+                        ? list.Select((v, index) => new {
+                            Name = string.Format("{0}{1}__", g.Key, index),
+                            Type = v.VariableType,
+                            Index = v.Index })
+                        : new[] { new {
+                            Name = string.Format("{0}__", g.Key),
+                            Type = list[0].VariableType,
+                            Index = list[0].Index} };
+                })
+                .OrderBy(e => e.Index)
+                .Select((e, index) =>
+                {
+                    Debug.Assert(e.Index == index);
+                    return new SymbolInformation(e.Name, e.Type);
+                })
+                .ToArray();
+
+            localVariables.ForEach(local =>
+                prepareContext.RegisterType(local.TargetType));
 
             var decodeContext = new DecodeContext(
                 body.Method.Module,
@@ -137,6 +162,7 @@ namespace IL2C
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
+            bool isInterface,
             int slotIndex)
         {
             // TODO: throw
@@ -147,6 +173,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
+                isInterface,
                 slotIndex);
         }
 
@@ -173,6 +200,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
+                false,
                 null);
         }
 
@@ -186,7 +214,8 @@ namespace IL2C
             var parameters = method.GetSafeParameters();
 
             prepareContext.RegisterType(returnType);
-            parameters.ForEach(parameter => prepareContext.RegisterType(parameter.ParameterType));
+            parameters.ForEach(parameter =>
+                prepareContext.RegisterType(parameter.ParameterType));
 
             if (method.IsPInvokeImpl)
             {
@@ -217,6 +246,7 @@ namespace IL2C
                     method.Name,
                     returnType,
                     parameters,
+                    method.DeclaringType.IsInterface,
                     method.GetMethodOverloadIndex());
             }
 

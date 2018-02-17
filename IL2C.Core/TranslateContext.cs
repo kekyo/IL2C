@@ -136,7 +136,7 @@ namespace IL2C
         {
             if (!constStrings.TryGetValue(str, out var symbolName))
             {
-                symbolName = string.Format("__string{0}", constStrings.Count);
+                symbolName = string.Format("string{0}__", constStrings.Count);
                 constStrings.Add(str, symbolName);
             }
 
@@ -168,35 +168,57 @@ namespace IL2C
         private string GetCLanguageTypeName(
             TypeReference type, TypeNameFlags flags = TypeNameFlags.Strict)
         {
+            var prefix = ((flags == TypeNameFlags.DereferencedWithStructPrefix)
+                || (flags == TypeNameFlags.ForcePointerWithStructPrefix))
+                ? "struct "
+                : string.Empty;
+            var postfix = ((flags == TypeNameFlags.ForcePointer)
+                || (flags == TypeNameFlags.ForcePointerWithStructPrefix))
+                ? "*"
+                : string.Empty;
+
             if (predefinedCTypeNames.TryGetValue(type.FullName, out var cTypeName))
             {
-                return cTypeName;
+                // Predefined type name must not applies prefix.
+                return cTypeName + postfix;
             }
 
             if (type.IsByReference || type.IsPointer)
             {
-                var dereferencedType = type.GetElementType();
-                var name = this.GetCLanguageTypeName(dereferencedType);
-                return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
-                    ? name : (name + "*");
-            }
-            else
-            {
-                var name = type.GetFullMemberName().ManglingSymbolName();
-                if ((flags & TypeNameFlags.StructPrefix) == TypeNameFlags.StructPrefix)
-                {
-                    name = "struct " + name;
-                }
+                var dereferencedType = type
+                    .GetElementType();
+                var dereferencedTypeName = this.GetCLanguageTypeName(
+                    dereferencedType);
 
-                if (!type.IsValueType)
+                if ((flags == TypeNameFlags.Dereferenced)
+                    || (flags == TypeNameFlags.DereferencedWithStructPrefix))
                 {
-                    return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
-                        ? name : (name + "*");
+                    return prefix + dereferencedTypeName;
                 }
                 else
                 {
-                    return name;
+                    return prefix + dereferencedTypeName + "*";
                 }
+            }
+
+            var fullName = type
+                .GetFullMemberName()
+                .ManglingSymbolName();
+            if (!type.IsValueType)
+            {
+                if ((flags == TypeNameFlags.Dereferenced)
+                    || (flags == TypeNameFlags.DereferencedWithStructPrefix))
+                {
+                    return prefix + fullName;
+                }
+                else
+                {
+                    return prefix + fullName + "*";
+                }
+            }
+            else
+            {
+                return prefix + fullName + postfix;
             }
         }
 
@@ -217,10 +239,25 @@ namespace IL2C
                 Debug.Assert(lhsType.IsValueType == false);
                 Debug.Assert(rhs.TargetType.IsValueType == false);
 
-                return String.Format(
-                    "({0}){1}",
-                    this.GetCLanguageTypeName(lhsType),
-                    rhs.SymbolName);
+                var lhsResolved = lhsType.Resolve();
+                var rhsResolved = rhs.TargetType.Resolve();
+
+                // IHoge <-- Hoge  (use il2c_cast_to_interface() macro)
+                if (lhsResolved.IsInterface && !rhsResolved.IsInterface)
+                {
+                    return string.Format(
+                        "il2c_cast_to_interface({0}, {1}, {2})",
+                        this.GetCLanguageTypeName(lhsType, TypeNameFlags.Dereferenced),
+                        this.GetCLanguageTypeName(rhs.TargetType, TypeNameFlags.Dereferenced),
+                        rhs.SymbolName);
+                }
+                else
+                {
+                    return string.Format(
+                        "({0}){1}",
+                        this.GetCLanguageTypeName(lhsType),
+                        rhs.SymbolName);
+                }
             }
 
             if (rhs.TargetType.IsNumericPrimitive())

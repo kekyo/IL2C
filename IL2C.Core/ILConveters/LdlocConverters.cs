@@ -1,5 +1,6 @@
 ﻿using System;
 
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 
@@ -9,25 +10,33 @@ namespace IL2C.ILConveters
 {
     internal static class LdlocConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(
-            int localIndex, DecodeContext decodeContext)
+        private static Func<IExtractContext, string[]> Apply(
+            string targetName, TypeReference targetType, DecodeContext decodeContext, bool isReference)
         {
-            return Apply(decodeContext.Locals[localIndex], decodeContext);
-        }
-
-        public static Func<IExtractContext, string[]> Apply(
-            VariableReference local, DecodeContext decodeContext, bool isReference = false)
-        {
-            var targetType = local.VariableType.GetStackableType();
+            targetType = targetType.GetStackableType();
             targetType = isReference ? targetType.MakeByReferenceType() : targetType;
                 
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
-                "{0} = {1}local{2}",
+                "{0} = {1}{2}",
                 symbolName,
                 isReference ? "&" : string.Empty,
-                local.Index) };
+                targetName) };
+        }
+
+        public static Func<IExtractContext, string[]> Apply(
+            int localIndex, DecodeContext decodeContext, bool isReference = false)
+        {
+            var local = decodeContext.Locals[localIndex];
+            return Apply(local.SymbolName, local.TargetType, decodeContext, isReference);
+        }
+
+        public static Func<IExtractContext, string[]> Apply(
+            VariableReference localVariable, DecodeContext decodeContext, bool isReference = false)
+        {
+            var local = decodeContext.Locals[localVariable.Index];
+            return Apply(local.SymbolName, local.TargetType, decodeContext, isReference);
         }
     }
 

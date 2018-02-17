@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -57,137 +56,6 @@ namespace IL2C.ILConveters
                     "return {0}",
                     rightExpression) };
             };
-        }
-
-        internal sealed class InitobjConverter : InlineTypeConverter
-        {
-            public override OpCode OpCode => OpCodes.Initobj;
-
-            public override Func<IExtractContext, string[]> Apply(
-                TypeReference type, DecodeContext decodeContext)
-            {
-                var si = decodeContext.PopStack();
-                if (si.TargetType.IsByReference == false)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                        decodeContext.Current.Offset,
-                        type.FullName,
-                        si.TargetType.FullName);
-                }
-
-                decodeContext.PrepareContext.RegisterIncludeFile("string.h");
-
-                return extractContext =>
-                {
-                    var typeName = extractContext.GetCLanguageTypeName(type);
-
-                    return new[] { string.Format(
-                        "memset({0}, 0x00, sizeof({1}))",
-                        si.SymbolName,
-                        typeName) };
-                };
-            }
-        }
-
-        internal sealed class NewobjConverter : InlineMethodConverter
-        {
-            public override OpCode OpCode => OpCodes.Newobj;
-
-            public override Func<IExtractContext, string[]> Apply(
-                MethodReference method, DecodeContext decodeContext)
-            {
-                var md = method.Resolve();
-                if (!md.IsConstructor)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Invalid new object constructor: Offset={0}, Method={1}",
-                        decodeContext.Current.Offset,
-                        md.GetFullMemberName());
-                }
-
-                var pairParameters = md.Parameters
-                    .Reverse()
-                    .Select(parameter => new Utilities.RightExpressionGivenParameter(
-                        parameter.ParameterType, decodeContext.PopStack()))
-                    .Reverse()
-                    .ToList();
-                var overloadIndex = method.GetMethodOverloadIndex();
-
-                var type = md.DeclaringType;
-                var thisSymbolName = decodeContext.PushStack(type);
-
-                // Insert this reference.
-                pairParameters.Insert(0,
-                    new Utilities.RightExpressionGivenParameter(
-                        type, new SymbolInformation(thisSymbolName, type)));
-
-                var offset = decodeContext.Current.Offset;
-
-                return extractContext =>
-                {
-                    var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters.ToArray(), extractContext, offset);
-
-                    // newobj opcode can handle value type with parameter applied constructor.
-                    if (type.IsValueType)
-                    {
-                        var typeName = extractContext.GetCLanguageTypeName(
-                            type);
-                        // If constructor's arguments greater than or equal 2 (this and others)
-                        if (pairParameters.Count >= 2)
-                        {
-                            return new[] {
-                                string.Format(
-                                    "memset(&{0}, 0x00, sizeof({1}))",
-                                    thisSymbolName,
-                                    typeName),
-                                (overloadIndex >= 1)
-                                    ? string.Format(
-                                        "{0}__ctor_{1}(&{2})",
-                                        typeName,
-                                        overloadIndex,
-                                        parameterString)
-                                    : string.Format(
-                                        "{0}__ctor(&{1})",
-                                        typeName,
-                                        parameterString)
-                            };
-                        }
-                        else
-                        {
-                            // ValueType's default constructor not declared.
-                            return new[] { string.Format(
-                                "memset(&{0}, 0x00, sizeof({1}))",
-                                thisSymbolName,
-                                typeName) };
-                        }
-                    }
-                    // Object reference types.
-                    else
-                    {
-                        var dereferencedTypeName = extractContext.GetCLanguageTypeName(
-                            type, TypeNameFlags.Dereferenced);
-                        return new[]
-                        {
-                            string.Format(
-                                "{0} = il2c_get_uninitialized_object(il2c_typeof({1}))",
-                                thisSymbolName,
-                                dereferencedTypeName),
-                            (overloadIndex >= 1)
-                                ? string.Format(
-                                    "{0}__ctor_{1}({2})",
-                                    dereferencedTypeName,
-                                    overloadIndex,
-                                    parameterString)
-                                : string.Format(
-                                    "{0}__ctor({1})",
-                                    dereferencedTypeName,
-                                    parameterString)
-                        };
-                    }
-                };
-            }
         }
 
         internal sealed class LdstrConverter : InlineStringConverter
@@ -257,6 +125,49 @@ namespace IL2C.ILConveters
             {
                 var si = decodeContext.PopStack();
                 return _ => new string[0];
+            }
+        }
+
+        internal sealed class CastclassConverter : InlineTypeConverter
+        {
+            public override OpCode OpCode => OpCodes.Castclass;
+
+            public override Func<IExtractContext, string[]> Apply(
+                TypeReference operand, DecodeContext decodeContext)
+            {
+                var si = decodeContext.PopStack();
+                var symbolName = decodeContext.PushStack(operand);
+
+                // If this type can cast statically
+                if (operand.IsAssignableFrom(si.TargetType))
+                {
+                    return extractContext =>
+                    {
+                        var operandTypeName = extractContext.GetCLanguageTypeName(
+                            operand);
+
+                        return new[] { string.Format(
+                            "{0} = ({1}){2}",
+                            symbolName,
+                            operandTypeName,
+                            si.SymbolName) };
+                    };
+                }
+                else
+                {
+                    return extractContext =>
+                    {
+                        var operandDereferencedTypeName = extractContext.GetCLanguageTypeName(
+                            operand,
+                            TypeNameFlags.Dereferenced);
+
+                        return new[] { string.Format(
+                            "{0} = il2c_runtime_cast({1}, {2})",
+                            symbolName,
+                            si.SymbolName,
+                            operandDereferencedTypeName) };
+                    };
+                }
             }
         }
     }

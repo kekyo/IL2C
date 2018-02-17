@@ -14,7 +14,7 @@ typedef long interlock_t;
 
 #define GCALLOC malloc
 #define GCFREE free
-#define GCASSERT assert
+#define IL2C_ASSERT assert
 
 void WriteLineToError(const wchar_t* pMessage);
 
@@ -37,7 +37,7 @@ void WriteLineToError(const wchar_t* pMessage);
 
 typedef long interlock_t;
 
-#define GCASSERT ASSERT
+#define IL2C_ASSERT ASSERT
 #define GCALLOC(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define GCFREE(p) ExFreePoolWithTag(p, 0x11231123UL)
 
@@ -62,7 +62,7 @@ typedef long interlock_t;
 
 #define GCALLOC malloc
 #define GCFREE free
-#define GCASSERT assert
+#define IL2C_ASSERT assert
 
 #include <stdint.h>
 #include <wchar.h>
@@ -114,7 +114,7 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #define GCALLOC(size) malloc(size)
 #define GCFREE(p) free(p)
-#define GCASSERT assert
+#define IL2C_ASSERT assert
 
 #define DEBUG_WRITE(step, message)
 
@@ -150,8 +150,16 @@ static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 //////////////////////////
 
 static void* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
+    IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize)
 {
+    // +----------------------+ <-- pHeader
+    // | IL2C_REF_HEADER      |
+    // +----------------------+ <-- pReference   -------
+    // |          :           |                    ^
+    // | (Instance body)      |                    | bodySize
+    // |          :           |                    v
+    // +----------------------+                  -------
+
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)GCALLOC(sizeof(IL2C_REF_HEADER) + bodySize);
     if (pHeader == NULL)
     {
@@ -166,13 +174,14 @@ static void* il2c_get_uninitialized_object_internal__(
             }
 
             // throw NotEnoughMemoryException();
-            GCASSERT(0);
+            IL2C_ASSERT(0);
         }
     }
 
     void* pReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
     if (bodySize >= 1)
     {
+        // Guarantee cleared body
         memset(pReference, 0, bodySize);
     }
 
@@ -200,29 +209,29 @@ static void* il2c_get_uninitialized_object_internal__(
     return pReference;
 }
 
-void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE type)
+void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
 {
-    GCASSERT(type != NULL);
+    IL2C_ASSERT(type != NULL);
 
     // String or Array:
     // throw new InvalidProgramException();
-    GCASSERT(type->bodySize != UINTPTR_MAX);
+    IL2C_ASSERT(type->bodySize != UINTPTR_MAX);
 
     return il2c_get_uninitialized_object_internal__(type, type->bodySize);
 }
 
 void il2c_mark_from_handler(void* pReference)
 {
-    GCASSERT(pReference != NULL);
+    IL2C_ASSERT(pReference != NULL);
 
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
     interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
-        GCASSERT(pHeader->type != NULL);
-        GCASSERT(pHeader->type->pMarkHandler != NULL);
-        pHeader->type->pMarkHandler(pReference);
+        IL2C_ASSERT(pHeader->type != NULL);
+        IL2C_ASSERT(pHeader->type->IL2C_MarkHandler != NULL);
+        pHeader->type->IL2C_MarkHandler(pReference);
     }
 }
 
@@ -230,7 +239,7 @@ void il2c_mark_from_handler(void* pReference)
 
 void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
 {
-    GCASSERT(pNewFrame != NULL);
+    IL2C_ASSERT(pNewFrame != NULL);
 
     ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext = g_pBeginFrame__;
     g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)pNewFrame;
@@ -241,7 +250,7 @@ void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
         uint8_t index;
         for (index = 0; index < p->targetCount; index++)
         {
-            GCASSERT(*p->pTargets[index] == NULL);
+            IL2C_ASSERT(*p->pTargets[index] == NULL);
         }
     }
 #endif
@@ -249,7 +258,7 @@ void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
 
 void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ void* pFrame)
 {
-    GCASSERT(pFrame != NULL);
+    IL2C_ASSERT(pFrame != NULL);
 
     il2c_collect();
 
@@ -280,7 +289,7 @@ void il2c_step2_mark_gcmark__()
         for (index = 0; index < pCurrentFrame->targetCount; index++)
         {
             void** ppReference = pCurrentFrame->pTargets[index];
-            GCASSERT(ppReference != NULL);
+            IL2C_ASSERT(ppReference != NULL);
 
             if (*ppReference == NULL)
             {
@@ -293,12 +302,12 @@ void il2c_step2_mark_gcmark__()
             interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {
-                GCASSERT(pHeader->type != NULL);
-                GCASSERT(pHeader->type->pMarkHandler != NULL);
+                IL2C_ASSERT(pHeader->type != NULL);
+                IL2C_ASSERT(pHeader->type->IL2C_MarkHandler != NULL);
 
                 DEBUG_WRITE("il2c_step2_mark_gcmark__", pHeader->type->pTypeName);
 
-                pHeader->type->pMarkHandler(*ppReference);
+                pHeader->type->IL2C_MarkHandler(*ppReference);
             }
         }
 
@@ -365,44 +374,58 @@ void il2c_shutdown()
 /////////////////////////////////////////////////////////////
 // Boxing related functions
 
-System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE type)
+System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    void* pBoxed = il2c_get_uninitialized_object(type);
-    memcpy(pBoxed, pValue, type->bodySize);
+    // +----------------------+
+    // | IL2C_REF_HEADER      |
+    // +----------------------+ <-- pBoxed        ---------------------------
+    // | vptr0__              |                     | System_ValueType    ^
+    // +----------------------+                   -----------             |
+    // |        :             |                     ^                     | bodySize
+    // | (value data)         | Copy from pValue    | type->bodySize      |
+    // |        :             |                     v                     v
+    // +----------------------+                   ---------------------------
+
+    uintptr_t bodySize = sizeof(System_ValueType) + type->bodySize;
+    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(type, bodySize);
+
+    pBoxed->vptr0__ = &__System_ValueType_VTABLE__;
+    memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, type->bodySize);
+
     return (System_Object*)pBoxed;
 }
 
-void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE type)
+void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
 {
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pObject) - sizeof(IL2C_REF_HEADER));
     if (pHeader->type != type)
     {
         // new InvalidCastException();
-        GCASSERT(0);
+        IL2C_ASSERT(0);
     }
 
-    return pObject;
+    return ((uint8_t*)pObject) + sizeof(System_ValueType);
 }
 
 /////////////////////////////////////////////////////////////
 // System.Object
 
-static void __Dummy_MARK_HANDLER__(void* pReference)
+void __System_Object_IL2C_MarkHandler__(System_Object* this__)
 {
+    IL2C_ASSERT(this__ != NULL);
 }
 
-static __System_Object_TYPE_DEF_TYPE__ __System_Object_RUNTIME_TYPE_DEF__ = {
-    (intptr_t)"System.Object",
-    (intptr_t)0,
-    (intptr_t)__Dummy_MARK_HANDLER__,
-    __System_Object_ToString__,
-    __System_Object_GetHashCode__,
-    __System_Object_Finalize__,
-    __System_Object_Equals__,
-};
-const IL2C_RUNTIME_TYPE __System_Object_RUNTIME_TYPE__ =
-    (const IL2C_RUNTIME_TYPE)(&__System_Object_RUNTIME_TYPE_DEF__);
+void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    IL2C_ASSERT(this__ != NULL);
+
+    if (type == il2c_typeof(System_Object)) return this__;
+
+    // throw new InvalidCastException();
+    assert(0);
+    return NULL;
+}
 
 IL2C_CONST_STRING(System_Object_name, L"System.Object");
 System_String* __System_Object_ToString__(System_Object* this__)
@@ -425,20 +448,35 @@ bool __System_Object_Equals__(System_Object* this__, System_Object* obj)
     return ((intptr_t)this__) == ((intptr_t)obj);
 }
 
+static __System_Object_VTABLE_DECL__ __System_Object_VTABLE__ = {
+    /* internalcall */ __System_Object_IL2C_RuntimeCast__,
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_Finalize__,
+    __System_Object_Equals__
+};
+
+IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
+    "System.Object",
+    sizeof(System_Object),
+    /* internalcall */ __System_Object_IL2C_MarkHandler__
+};
+
 /////////////////////////////////////////////////////////////
 // System.ValueType
 
-static __System_ValueType_TYPE_DEF_TYPE__ __System_ValueType_RUNTIME_TYPE_DEF__ = {
-    (intptr_t)"System.ValueType",
-    (intptr_t)0,
-    (intptr_t)__Dummy_MARK_HANDLER__,
-    __System_ValueType_ToString__,
-    __System_ValueType_GetHashCode__,
-    __System_Object_Finalize__,
-    __System_ValueType_Equals__,
-};
-const IL2C_RUNTIME_TYPE __System_ValueType_RUNTIME_TYPE__ =
-    (const IL2C_RUNTIME_TYPE)(&__System_ValueType_RUNTIME_TYPE_DEF__);
+void __System_ValueType_IL2C_MarkHandler__(System_ValueType* this__)
+{
+    IL2C_ASSERT(this__ != NULL);
+}
+
+void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    IL2C_ASSERT(this__ != NULL);
+
+    if (type == il2c_typeof(System_ValueType)) return this__;
+    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
+}
 
 IL2C_CONST_STRING(System_ValueType_name, L"System.ValueType");
 System_String* __System_ValueType_ToString__(System_ValueType* this__)
@@ -458,44 +496,41 @@ bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj)
     return false;
 }
 
+static __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
+    /* internalcall */ __System_ValueType_IL2C_RuntimeCast__,
+    __System_ValueType_ToString__,
+    __System_ValueType_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    __System_ValueType_Equals__,
+};
+
+IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__ = {
+    "System.ValueType",
+    sizeof(System_ValueType),
+    /* internalcall */ __System_ValueType_IL2C_MarkHandler__
+};
+
 /////////////////////////////////////////////////////////////
 // Basic type informations
 
-static IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE_DEF__ = {
-    "System.IntPtr", sizeof(System_IntPtr), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_IntPtr_RUNTIME_TYPE__ = &__System_IntPtr_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE_DEF__ = {
-    "System.Byte", sizeof(System_Byte), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Byte_RUNTIME_TYPE__ = &__System_Byte_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE_DEF__ = {
-    "System.SByte", sizeof(System_SByte), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_SByte_RUNTIME_TYPE__ = &__System_SByte_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Int16_RUNTIME_TYPE_DEF__ = {
-    "System.Int16", sizeof(System_Int16), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Int16_RUNTIME_TYPE__ = &__System_Int16_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE_DEF__ = {
-    "System.UInt16", sizeof(System_UInt16), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_UInt16_RUNTIME_TYPE__ = &__System_UInt16_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE_DEF__ = {
-    "System.Int32", sizeof(System_Int32), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Int32_RUNTIME_TYPE__ = &__System_Int32_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_UInt32_RUNTIME_TYPE_DEF__ = {
-    "System.UInt32", sizeof(System_UInt32), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_UInt32_RUNTIME_TYPE__ = &__System_UInt32_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_Int64_RUNTIME_TYPE_DEF__ = {
-    "System.Int64", sizeof(System_Int64), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_Int64_RUNTIME_TYPE__ = &__System_Int64_RUNTIME_TYPE_DEF__;
-
-static IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE_DEF__ = {
-    "System.UInt64", sizeof(System_UInt64), __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_UInt64_RUNTIME_TYPE__ = &__System_UInt64_RUNTIME_TYPE_DEF__;
+IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__ = {
+    "System.IntPtr", sizeof(System_IntPtr), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__ = {
+    "System.Byte", sizeof(System_Byte), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE__ = {
+    "System.SByte", sizeof(System_SByte), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_Int16_RUNTIME_TYPE__ = {
+    "System.Int16", sizeof(System_Int16), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE__ = {
+    "System.UInt16", sizeof(System_UInt16), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE__ = {
+    "System.Int32", sizeof(System_Int32), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_UInt32_RUNTIME_TYPE__ = {
+    "System.UInt32", sizeof(System_UInt32), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_Int64_RUNTIME_TYPE__ = {
+    "System.Int64", sizeof(System_Int64), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE__ = {
+    "System.UInt64", sizeof(System_UInt64), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
 
 const System_IntPtr System_IntPtr_Zero = 0;
 
@@ -505,10 +540,10 @@ extern bool twtoi(const wchar_t *_Str, int32_t* value);
 bool System_Int32_TryParse(System_String* s, int32_t* result)
 {
     // TODO: NullReferenceException
-    GCASSERT(s != NULL);
+    IL2C_ASSERT(s != NULL);
 
-    GCASSERT(result != NULL);
-    GCASSERT(s->string_body__ != NULL);
+    IL2C_ASSERT(result != NULL);
+    IL2C_ASSERT(s->string_body__ != NULL);
 
     return twtoi(s->string_body__, result);
 }
@@ -516,27 +551,73 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 /////////////////////////////////////////////////////////////
 // System.String
 
-IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE_DEF__ = {
-    "System.String", UINTPTR_MAX, __Dummy_MARK_HANDLER__ };
-const IL2C_RUNTIME_TYPE __System_String_RUNTIME_TYPE__ = &__System_String_RUNTIME_TYPE_DEF__;
-
-static System_String* __new_string_internal__(uintptr_t size)
+void __System_String_IL2C_MarkHandler__(System_String* this__)
 {
-    uintptr_t bodySize = sizeof(System_String) + size;
+    IL2C_ASSERT(this__ != NULL);
+}
+
+void* __System_String_IL2C_RuntimeCast__(System_String* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    IL2C_ASSERT(this__ != NULL);
+
+    if (type == il2c_typeof(System_String)) return this__;
+    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
+}
+
+System_String* __System_String_ToString__(System_String* this__)
+{
+    return this__;
+}
+
+int32_t __System_String_GetHashCode__(System_String* this__)
+{
+    // TODO:
+    return (int32_t)(intptr_t)this__;
+}
+
+__System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
+    /* internalcall */ __System_String_IL2C_RuntimeCast__,
+    __System_String_ToString__,
+    __System_String_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+};
+
+IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
+    "System.String", UINTPTR_MAX, /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+
+static System_String* __new_string_internal__(uintptr_t byteSize)
+{
+    // +----------------------+
+    // | IL2C_REF_HEADER      |
+    // +----------------------+ <-- pString                        ---------------------------
+    // | vptr0__              |                                       ^                   ^
+    // +----------------------+                                       | System_String     |
+    // | string_body__        | ----+                                 v                   |
+    // +----------------------+     | il2c_new_string():memcpy     -------                | bodySize
+    // |        :             | <---+                                 ^                   |
+    // | (Copied string)      |                                       | byteSize          |
+    // |        :             |                                       v                   v
+    // +----------------------+                                    ---------------------------
+
+    uintptr_t bodySize = sizeof(System_String) + byteSize;
     System_String* pString = il2c_get_uninitialized_object_internal__(
-        __System_String_RUNTIME_TYPE__,
+        il2c_typeof(System_String),
         bodySize);
-    wchar_t* string_body__ = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
-    pString->string_body__ = string_body__;
+    pString->vptr0__ = &__System_String_VTABLE__;
+    wchar_t* string_body = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
+    pString->string_body__ = string_body;
     return pString;
 }
 
 System_String* il2c_new_string(const wchar_t* string_body__)
 {
-    GCASSERT(string_body__ != NULL);
+    IL2C_ASSERT(string_body__ != NULL);
 
     uintptr_t size = (uintptr_t)(wcslen(string_body__) + 1) * sizeof(wchar_t);
     System_String* pString = __new_string_internal__(size);
+
+    // Copy string at below
     memcpy((wchar_t*)(pString->string_body__), string_body__, size);
 
     return pString;
@@ -544,10 +625,10 @@ System_String* il2c_new_string(const wchar_t* string_body__)
 
 System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 {
-    GCASSERT(str0 != NULL);
-    GCASSERT(str1 != NULL);
-    GCASSERT(str0->string_body__ != NULL);
-    GCASSERT(str1->string_body__ != NULL);
+    IL2C_ASSERT(str0 != NULL);
+    IL2C_ASSERT(str1 != NULL);
+    IL2C_ASSERT(str0->string_body__ != NULL);
+    IL2C_ASSERT(str1->string_body__ != NULL);
 
     uintptr_t str0Size = (uintptr_t)wcslen(str0->string_body__) * sizeof(wchar_t);
     uintptr_t str1Size = (uintptr_t)wcslen(str1->string_body__) * sizeof(wchar_t);
@@ -561,11 +642,11 @@ System_String* System_String_Concat_6(System_String* str0, System_String* str1)
 
 System_String* System_String_Substring(System_String* this__, int32_t startIndex)
 {
-    GCASSERT(this__ != NULL);
-    GCASSERT(this__->string_body__ != NULL);
+    IL2C_ASSERT(this__ != NULL);
+    IL2C_ASSERT(this__->string_body__ != NULL);
 
     // TODO: IndexOutOfRangeException
-    GCASSERT(startIndex >= 0);
+    IL2C_ASSERT(startIndex >= 0);
 
     if (startIndex == 0)
     {
@@ -574,7 +655,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
 
     int32_t thisLength = (int32_t)wcslen(this__->string_body__);
     // TODO: IndexOutOfRangeException
-    GCASSERT(startIndex < thisLength);
+    IL2C_ASSERT(startIndex < thisLength);
 
     uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
     System_String* pString = __new_string_internal__(newSize);
@@ -585,16 +666,16 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
 
 System_String* System_String_Substring_1(System_String* this__, int32_t startIndex, int32_t length)
 {
-    GCASSERT(this__ != NULL);
-    GCASSERT(this__->string_body__ != NULL);
+    IL2C_ASSERT(this__ != NULL);
+    IL2C_ASSERT(this__->string_body__ != NULL);
 
     // TODO: IndexOutOfRangeException
-    GCASSERT(startIndex >= 0);
-    GCASSERT(length >= 0);
+    IL2C_ASSERT(startIndex >= 0);
+    IL2C_ASSERT(length >= 0);
 
     int32_t thisLength = (int32_t)wcslen(this__->string_body__);
     // TODO: IndexOutOfRangeException
-    GCASSERT((startIndex + length) <= thisLength);
+    IL2C_ASSERT((startIndex + length) <= thisLength);
 
     if ((startIndex == 0) && (length == thisLength))
     {
@@ -611,20 +692,20 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
 
 wchar_t System_String_get_Chars(System_String* this__, int32_t index)
 {
-    GCASSERT(this__ != NULL);
-    GCASSERT(this__->string_body__ != NULL);
+    IL2C_ASSERT(this__ != NULL);
+    IL2C_ASSERT(this__->string_body__ != NULL);
 
     // TODO: IndexOutOfRangeException
-    GCASSERT(index >= 0);
-    GCASSERT(index < wcslen(this__->string_body__));
+    IL2C_ASSERT(index >= 0);
+    IL2C_ASSERT(index < wcslen(this__->string_body__));
 
     return this__->string_body__[index];
 }
 
 int32_t System_String_get_Length(System_String* this__)
 {
-    GCASSERT(this__ != NULL);
-    GCASSERT(this__->string_body__ != NULL);
+    IL2C_ASSERT(this__ != NULL);
+    IL2C_ASSERT(this__->string_body__ != NULL);
 
     return (int32_t)wcslen(this__->string_body__);
 }
@@ -636,7 +717,7 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
         return true;
     }
 
-    GCASSERT(value->string_body__ != NULL);
+    IL2C_ASSERT(value->string_body__ != NULL);
 
     uint32_t index = 0;
     while (true)
@@ -660,11 +741,11 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
 bool System_String_op_Equality(System_String* lhs, System_String* rhs)
 {
     // TODO: ArgumentNullException
-    GCASSERT(lhs != NULL);
-    GCASSERT(rhs != NULL);
+    IL2C_ASSERT(lhs != NULL);
+    IL2C_ASSERT(rhs != NULL);
 
-    GCASSERT(lhs->string_body__ != NULL);
-    GCASSERT(rhs->string_body__ != NULL);
+    IL2C_ASSERT(lhs->string_body__ != NULL);
+    IL2C_ASSERT(rhs->string_body__ != NULL);
 
     return wcscmp(lhs->string_body__, rhs->string_body__) == 0;
 }
@@ -679,9 +760,9 @@ extern void ReadLine(wchar_t* pBuffer, uint16_t length);
 void System_Console_Write_9(System_String* value)
 {
     // TODO: NullReferenceException
-    GCASSERT(value != NULL);
+    IL2C_ASSERT(value != NULL);
 
-    GCASSERT(value->string_body__ != NULL);
+    IL2C_ASSERT(value->string_body__ != NULL);
     Write(value->string_body__);
 }
 
@@ -703,9 +784,9 @@ void System_Console_WriteLine_6(int32_t value)
 void System_Console_WriteLine_10(System_String* value)
 {
     // TODO: NullReferenceException
-    GCASSERT(value != NULL);
+    IL2C_ASSERT(value != NULL);
 
-    GCASSERT(value->string_body__ != NULL);
+    IL2C_ASSERT(value->string_body__ != NULL);
     WriteLine(value->string_body__);
 }
 

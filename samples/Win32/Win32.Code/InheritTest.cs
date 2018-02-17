@@ -85,5 +85,14 @@ namespace Win32.Code
 
             return hoge.Calc(1, 2);
         }
+
+        public static int Test5()
+        {
+            object hoge = new InheritTestTarget2();
+            InheritTestTarget2 hoge2 = (InheritTestTarget2) hoge;
+            hoge2.Value2 = 123;
+
+            return hoge2.Calc(1, 2);
+        }
     }
 }

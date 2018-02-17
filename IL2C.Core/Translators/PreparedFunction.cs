@@ -11,6 +11,7 @@ namespace IL2C.Translators
     {
         Standard,
         Virtual,
+        InterfaceVirtual,
         PInvoke
     }
 
@@ -22,7 +23,7 @@ namespace IL2C.Translators
         internal readonly TypeReference ReturnType;
         public readonly Parameter[] Parameters;
         internal readonly PreparedILBody[] PreparedILBodies;
-        internal readonly VariableDefinition[] LocalVariables;
+        internal readonly SymbolInformation[] LocalVariables;
         internal readonly SymbolInformation[] Stacks;
         public readonly int SlotIndex;
 
@@ -34,7 +35,7 @@ namespace IL2C.Translators
             TypeReference returnType,
             Parameter[] parameters,
             PreparedILBody[] preparedILBodies,
-            VariableDefinition[] localVariables,
+            SymbolInformation[] localVariables,
             SymbolInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames,
             FunctionTypes functionType,
@@ -58,7 +59,7 @@ namespace IL2C.Translators
             TypeReference returnType,
             Parameter[] parameters,
             PreparedILBody[] preparedILBodies,
-            VariableDefinition[] localVariables,
+            SymbolInformation[] localVariables,
             SymbolInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames,
             int? slotIndex)
@@ -81,6 +82,7 @@ namespace IL2C.Translators
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
+            bool isInterface,
             int? slotIndex)
             : this(
                   methodName,
@@ -88,7 +90,9 @@ namespace IL2C.Translators
                   returnType,
                   parameters,
                   null, null, null, null,
-                  slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.PInvoke,
+                  isInterface
+                    ? FunctionTypes.InterfaceVirtual
+                    : (slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.PInvoke),
                   slotIndex ?? -1)
         {
         }

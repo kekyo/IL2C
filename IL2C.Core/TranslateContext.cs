@@ -242,7 +242,7 @@ namespace IL2C
                 var lhsResolved = lhsType.Resolve();
                 var rhsResolved = rhs.TargetType.Resolve();
 
-                // 1. IHoge <-- Hoge  (can static cast)
+                // IHoge <-- Hoge  (use il2c_cast_to_interface() macro)
                 if (lhsResolved.IsInterface && !rhsResolved.IsInterface)
                 {
                     return string.Format(

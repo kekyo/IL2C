@@ -116,7 +116,7 @@ TODO:
 | System.Double
 | System.Boolean | Supported | M2
 | System.Void | Partial supported | M2
-| System.IntPtr
+| System.IntPtr | Partial supported |
 | System.UIntPtr
 
 #### Support basic types
@@ -134,10 +134,10 @@ TODO:
 | Unmanaged pointer |
 | Enum types |
 | Delegate types |
-| Interface types |
+| Interface types | Partial supported |
 | Nested types |
 | Class inherits | Partial supported |
-| Interface implements |
+| Interface implements | Partial supported |
 | Array types |
 | Multi dimensional array types |
 | Closed generic types |
@@ -151,7 +151,8 @@ TODO:
 | Instance field | Partial supported | M3
 | Static method | Partial supported | M3
 | Instance method | Partial supported | M3
-| Virtual method | Partial supported |
+| Virtual method (class) | Supported |
+| Virtual method (interface) | Partial supported |
 | Interop method (extern static) | Partial supported |
 | Internal method (internal call) |
 | Constructor | Partial supported |
@@ -170,7 +171,7 @@ TODO:
 | Class type scopes | Partial supported |
 | Enum type scopes |
 | Delegate type scopes |
-| Interface type scopes |
+| Interface type scopes | Partial supported |
 | Nested type scopes |
 | Field scopes | Partial supported | M3
 | Method scopes | Partial supported | M3

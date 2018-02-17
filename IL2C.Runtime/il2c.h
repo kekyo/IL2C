@@ -51,11 +51,19 @@ struct IL2C_REF_HEADER
 
 #define il2c_typeof(typeName) (&__##typeName##_RUNTIME_TYPE__)
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
+
+// dynamic cast operator
 #define il2c_runtime_cast(pReference, typeName) \
     ((typeName##*)((pReference)->vptr0__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
-#define il2c_static_cast(typeName, referenceTypeName, pReference) \
-    ((typeName##*)(((uint8_t*)(pReference)) - \
-     (offsetof(typeName, vptr_##referenceTypeName##__) - \
+
+// static cast operators
+#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
+    ((typeName##*)(((uint8_t*)(pInterface)) - \
+     (offsetof(typeName, vptr_##interfaceTypeName##__) - \
+      offsetof(typeName, vptr0__))))
+#define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
+    ((interfaceTypeName##*)(((uint8_t*)(pReference)) + \
+     (offsetof(typeName, vptr_##interfaceTypeName##__) - \
       offsetof(typeName, vptr0__))))
 
 /////////////////////////////////////////////////////////////

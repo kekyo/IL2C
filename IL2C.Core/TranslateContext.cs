@@ -239,10 +239,25 @@ namespace IL2C
                 Debug.Assert(lhsType.IsValueType == false);
                 Debug.Assert(rhs.TargetType.IsValueType == false);
 
-                return String.Format(
-                    "({0}){1}",
-                    this.GetCLanguageTypeName(lhsType),
-                    rhs.SymbolName);
+                var lhsResolved = lhsType.Resolve();
+                var rhsResolved = rhs.TargetType.Resolve();
+
+                // 1. IHoge <-- Hoge  (can static cast)
+                if (lhsResolved.IsInterface && !rhsResolved.IsInterface)
+                {
+                    return string.Format(
+                        "il2c_cast_to_interface({0}, {1}, {2})",
+                        this.GetCLanguageTypeName(lhsType, TypeNameFlags.Dereferenced),
+                        this.GetCLanguageTypeName(rhs.TargetType, TypeNameFlags.Dereferenced),
+                        rhs.SymbolName);
+                }
+                else
+                {
+                    return string.Format(
+                        "({0}){1}",
+                        this.GetCLanguageTypeName(lhsType),
+                        rhs.SymbolName);
+                }
             }
 
             if (rhs.TargetType.IsNumericPrimitive())

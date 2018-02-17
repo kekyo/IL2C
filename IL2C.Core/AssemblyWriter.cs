@@ -919,9 +919,9 @@ namespace IL2C
                                 ", ",
                                 method.Parameters.Select((parameter, index) =>
                                     (index == 0)
-                                        // Adjust vptr offset with il2c_static_cast() macro.
+                                        // Adjust vptr offset with il2c_cast_from_interface() macro.
                                         ? string.Format(
-                                            "({0}*)il2c_static_cast({1}, {2}, {3})",
+                                            "({0}*)il2c_cast_from_interface({1}, {2}, {3})",
                                             method.TypeName,
                                             rawTypeName,
                                             rawInterfaceTypeName,

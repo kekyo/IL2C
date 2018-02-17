@@ -2205,6 +2205,14 @@ __Win32_Code_InheritTypeTest_VTABLE_DECL__ __Win32_Code_InheritTypeTest_VTABLE__
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.IInterfaceTestTarget
 
+//////////////////////
+// Runtime helpers:
+
+// Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Win32_Code_IInterfaceTestTarget_RUNTIME_TYPE__ = {
+    "Win32.Code.IInterfaceTestTarget", 0, NULL
+};
+
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.InterfaceTestTargetClass
 
@@ -2361,42 +2369,42 @@ __Win32_Code_InterfaceTestTargetClass_VTABLE_DECL__ __Win32_Code_InterfaceTestTa
 static void* __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    return __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__(this__, type);
+    return __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__((Win32_Code_InterfaceTestTargetClass*)il2c_static_cast(Win32_Code_InterfaceTestTargetClass, Win32_Code_IInterfaceTestTarget, this__), type);
 }
 
 // Adjustor thunk: System_Object.ToString
 static System_String* __System_Object_ToString_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__)
 {
-    return __System_Object_ToString__(this__);
+    return __System_Object_ToString__((System_Object*)il2c_static_cast(Win32_Code_InterfaceTestTargetClass, Win32_Code_IInterfaceTestTarget, this__));
 }
 
 // Adjustor thunk: System_Object.GetHashCode
 static int32_t __System_Object_GetHashCode_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__)
 {
-    return __System_Object_GetHashCode__(this__);
+    return __System_Object_GetHashCode__((System_Object*)il2c_static_cast(Win32_Code_InterfaceTestTargetClass, Win32_Code_IInterfaceTestTarget, this__));
 }
 
 // Adjustor thunk: System_Object.Finalize
 static void __System_Object_Finalize_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__)
 {
-    __System_Object_Finalize__(this__);
+    __System_Object_Finalize__((System_Object*)il2c_static_cast(Win32_Code_InterfaceTestTargetClass, Win32_Code_IInterfaceTestTarget, this__));
 }
 
 // Adjustor thunk: System_Object.Equals
 static bool __System_Object_Equals_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__, System_Object* obj)
 {
-    return __System_Object_Equals__(this__, obj);
+    return __System_Object_Equals__((System_Object*)il2c_static_cast(Win32_Code_InterfaceTestTargetClass, Win32_Code_IInterfaceTestTarget, this__), obj);
 }
 
 // Adjustor thunk: Win32_Code_InterfaceTestTargetClass.Calc
 static int32_t __Win32_Code_InterfaceTestTargetClass_Calc_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b)
 {
-    return __Win32_Code_InterfaceTestTargetClass_Calc__(this__, a, b);
+    return __Win32_Code_InterfaceTestTargetClass_Calc__((Win32_Code_InterfaceTestTargetClass*)il2c_static_cast(Win32_Code_InterfaceTestTargetClass, Win32_Code_IInterfaceTestTarget, this__), a, b);
 }
 
 // Vtable of Win32.Code.IInterfaceTestTarget (with adjustor thunk)

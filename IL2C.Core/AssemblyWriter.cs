@@ -704,9 +704,6 @@ namespace IL2C
             var typeName = extractContext.GetCLanguageTypeName(
                 declaredType,
                 TypeNameFlags.Dereferenced);
-            var rawBaseTypeName = declaredType.BaseType
-                .GetFullMemberName()
-                .ManglingSymbolName();
 
             // Write RuntimeCast function:
             tw.WriteLine();
@@ -754,6 +751,10 @@ namespace IL2C
                 });
             }
 
+            var rawBaseTypeName = declaredType.BaseType
+                .GetFullMemberName()
+                .ManglingSymbolName();
+
             // RuntimeCast: reflect base types.
             tw.WriteLine();
             tw.WriteLine(
@@ -788,12 +789,12 @@ namespace IL2C
                     "{0}// Try marking each object reference fields",
                     indent);
                 fields.ForEach(field =>
-                    {
-                        tw.WriteLine(
-                            "{0}il2c_try_mark_from_handler(this__->{1});",
-                            indent,
-                            field.Name);
-                    });
+                {
+                    tw.WriteLine(
+                        "{0}il2c_try_mark_from_handler(this__->{1});",
+                        indent,
+                        field.Name);
+                });
             }
 
             // Invoke base class mark handler except System.Object and System.ValueType.
@@ -916,7 +917,16 @@ namespace IL2C
                             method.Name,
                             string.Join(
                                 ", ",
-                                method.Parameters.Select(parameter => parameter.Value)));
+                                method.Parameters.Select((parameter, index) =>
+                                    (index == 0)
+                                        // Adjust vptr offset with il2c_static_cast() macro.
+                                        ? string.Format(
+                                            "({0}*)il2c_static_cast({1}, {2}, {3})",
+                                            method.TypeName,
+                                            rawTypeName,
+                                            rawInterfaceTypeName,
+                                            parameter.Value)
+                                        : parameter.Value)));
                         tw.WriteLine(
                             "}");
                     });
@@ -930,16 +940,44 @@ namespace IL2C
                         rawInterfaceTypeName,
                         rawTypeName);
                     methods.ForEach(method =>
-                        {
-                            tw.WriteLine(
-                                "{0}__{1}_{2}_AT_{3}__,",
-                                indent,
-                                method.TypeName,
-                                method.Name,
-                                rawInterfaceTypeName);
-                        });
+                    {
+                        tw.WriteLine(
+                            "{0}__{1}_{2}_AT_{3}__,",
+                            indent,
+                            method.TypeName,
+                            method.Name,
+                            rawInterfaceTypeName);
+                    });
                     tw.WriteLine("};");
                 });
+        }
+
+        private static void InternalConvertTypeHelperForInterface(
+            TextWriter tw,
+            TypeDefinition declaredType,
+            string indent)
+        {
+            tw.WriteLine();
+            tw.WriteLine("//////////////////////");
+            tw.WriteLine("// Runtime helpers:");
+
+            var rawTypeName = declaredType
+                .GetFullMemberName()
+                .ManglingSymbolName();
+
+            // Write runtime type information
+            tw.WriteLine();
+            tw.WriteLine("// Runtime type information");
+
+            // TODO: IL2C_RUNTIME_TYPE_DECL's some fields not used.
+            tw.WriteLine(
+                "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
+                rawTypeName);
+            tw.WriteLine(
+                "{0}\"{1}\", 0, NULL",
+                indent,
+                declaredType.GetFullMemberName());
+            tw.WriteLine("};");
         }
 
         internal static void InternalConvertFromMethod(
@@ -1138,6 +1176,13 @@ namespace IL2C
                     InternalConvertTypeHelper(
                         twSource,
                         extractContext,
+                        type,
+                        indent);
+                }
+                else if (type.IsInterface)
+                {
+                    InternalConvertTypeHelperForInterface(
+                        twSource,
                         type,
                         indent);
                 }

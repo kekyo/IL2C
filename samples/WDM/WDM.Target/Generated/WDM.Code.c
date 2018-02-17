@@ -257,20 +257,23 @@ void __WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__(WDM_Code_InterceptCDRomD
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of WDM.Code.InterceptCDRomDevice
-__WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VTABLE__ = {
-    /* internalcall */ __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ = {
     "WDM.Code.InterceptCDRomDevice",
     sizeof(WDM_Code_InterceptCDRomDevice),
     /* internalcall */ (void*)__WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of WDM.Code.InterceptCDRomDevice
+__WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VTABLE__ = {
+    (void*)__WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -396,18 +399,21 @@ void __WDM_Code_Wdm_IL2C_MarkHandler__(WDM_Code_Wdm* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of WDM.Code.Wdm
-__WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
-    /* internalcall */ __WDM_Code_Wdm_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __WDM_Code_Wdm_RUNTIME_TYPE__ = {
     "WDM.Code.Wdm",
     sizeof(WDM_Code_Wdm),
     /* internalcall */ (void*)__WDM_Code_Wdm_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of WDM.Code.Wdm
+__WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
+    (void*)__WDM_Code_Wdm_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };

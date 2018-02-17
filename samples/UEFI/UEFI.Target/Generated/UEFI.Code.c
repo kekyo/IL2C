@@ -111,20 +111,23 @@ void __UEFI_Code_AbstractNode_IL2C_MarkHandler__(UEFI_Code_AbstractNode* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of UEFI.Code.AbstractNode
-__UEFI_Code_AbstractNode_VTABLE_DECL__ __UEFI_Code_AbstractNode_VTABLE__ = {
-    /* internalcall */ __UEFI_Code_AbstractNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_AbstractNode_RUNTIME_TYPE__ = {
     "UEFI.Code.AbstractNode",
     sizeof(UEFI_Code_AbstractNode),
     /* internalcall */ (void*)__UEFI_Code_AbstractNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of UEFI.Code.AbstractNode
+__UEFI_Code_AbstractNode_VTABLE_DECL__ __UEFI_Code_AbstractNode_VTABLE__ = {
+    (void*)__UEFI_Code_AbstractNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -202,23 +205,26 @@ void __UEFI_Code_OperatorNode_IL2C_MarkHandler__(UEFI_Code_OperatorNode* this__)
 {
 
     // Delegate checking base types
-    __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
+    __UEFI_Code_AbstractNode*_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
-
-// Vtable of UEFI.Code.OperatorNode
-__UEFI_Code_OperatorNode_VTABLE_DECL__ __UEFI_Code_OperatorNode_VTABLE__ = {
-    /* internalcall */ __UEFI_Code_OperatorNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_OperatorNode_RUNTIME_TYPE__ = {
     "UEFI.Code.OperatorNode",
     sizeof(UEFI_Code_OperatorNode),
     /* internalcall */ (void*)__UEFI_Code_OperatorNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of UEFI.Code.OperatorNode
+__UEFI_Code_OperatorNode_VTABLE_DECL__ __UEFI_Code_OperatorNode_VTABLE__ = {
+    (void*)__UEFI_Code_OperatorNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -299,24 +305,27 @@ void __UEFI_Code_ReducibleNode_IL2C_MarkHandler__(UEFI_Code_ReducibleNode* this_
 {
 
     // Delegate checking base types
-    __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
+    __UEFI_Code_AbstractNode*_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
-
-// Vtable of UEFI.Code.ReducibleNode
-__UEFI_Code_ReducibleNode_VTABLE_DECL__ __UEFI_Code_ReducibleNode_VTABLE__ = {
-    /* internalcall */ __UEFI_Code_ReducibleNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__UEFI_Code_ReducibleNode_Reduce__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ReducibleNode_RUNTIME_TYPE__ = {
     "UEFI.Code.ReducibleNode",
     sizeof(UEFI_Code_ReducibleNode),
     /* internalcall */ (void*)__UEFI_Code_ReducibleNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of UEFI.Code.ReducibleNode
+__UEFI_Code_ReducibleNode_VTABLE_DECL__ __UEFI_Code_ReducibleNode_VTABLE__ = {
+    (void*)__UEFI_Code_ReducibleNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__UEFI_Code_ReducibleNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -446,24 +455,27 @@ void __UEFI_Code_NumericNode_IL2C_MarkHandler__(UEFI_Code_NumericNode* this__)
 {
 
     // Delegate checking base types
-    __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
+    __UEFI_Code_ReducibleNode*_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
-
-// Vtable of UEFI.Code.NumericNode
-__UEFI_Code_NumericNode_VTABLE_DECL__ __UEFI_Code_NumericNode_VTABLE__ = {
-    /* internalcall */ __UEFI_Code_NumericNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__UEFI_Code_NumericNode_Reduce__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_NumericNode_RUNTIME_TYPE__ = {
     "UEFI.Code.NumericNode",
     sizeof(UEFI_Code_NumericNode),
     /* internalcall */ (void*)__UEFI_Code_NumericNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of UEFI.Code.NumericNode
+__UEFI_Code_NumericNode_VTABLE_DECL__ __UEFI_Code_NumericNode_VTABLE__ = {
+    (void*)__UEFI_Code_NumericNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__UEFI_Code_NumericNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -766,24 +778,27 @@ void __UEFI_Code_ExpressionNode_IL2C_MarkHandler__(UEFI_Code_ExpressionNode* thi
     il2c_try_mark_from_handler(this__->Right);
 
     // Delegate checking base types
-    __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
+    __UEFI_Code_ReducibleNode*_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
-
-// Vtable of UEFI.Code.ExpressionNode
-__UEFI_Code_ExpressionNode_VTABLE_DECL__ __UEFI_Code_ExpressionNode_VTABLE__ = {
-    /* internalcall */ __UEFI_Code_ExpressionNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__UEFI_Code_ExpressionNode_Reduce__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ExpressionNode_RUNTIME_TYPE__ = {
     "UEFI.Code.ExpressionNode",
     sizeof(UEFI_Code_ExpressionNode),
     /* internalcall */ (void*)__UEFI_Code_ExpressionNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of UEFI.Code.ExpressionNode
+__UEFI_Code_ExpressionNode_VTABLE_DECL__ __UEFI_Code_ExpressionNode_VTABLE__ = {
+    (void*)__UEFI_Code_ExpressionNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__UEFI_Code_ExpressionNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1876,18 +1891,21 @@ void __UEFI_Code_PolishNotation_IL2C_MarkHandler__(UEFI_Code_PolishNotation* thi
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of UEFI.Code.PolishNotation
-__UEFI_Code_PolishNotation_VTABLE_DECL__ __UEFI_Code_PolishNotation_VTABLE__ = {
-    /* internalcall */ __UEFI_Code_PolishNotation_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __UEFI_Code_PolishNotation_RUNTIME_TYPE__ = {
     "UEFI.Code.PolishNotation",
     sizeof(UEFI_Code_PolishNotation),
     /* internalcall */ (void*)__UEFI_Code_PolishNotation_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of UEFI.Code.PolishNotation
+__UEFI_Code_PolishNotation_VTABLE_DECL__ __UEFI_Code_PolishNotation_VTABLE__ = {
+    (void*)__UEFI_Code_PolishNotation_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };

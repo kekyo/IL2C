@@ -323,5 +323,10 @@ namespace IL2C
         {
             return dict.TryGetValue(key, out var value) ? value : defaultValue;
         }
+
+        public static KeyValuePair<TKey, TValue> KeyValue<TKey, TValue>(TKey key, TValue value)
+        {
+            return new KeyValuePair<TKey, TValue>(key, value);
+        }
     }
 }

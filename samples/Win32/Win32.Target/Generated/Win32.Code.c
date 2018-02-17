@@ -183,20 +183,23 @@ void __Win32_Code_BoxingTest_IL2C_MarkHandler__(Win32_Code_BoxingTest* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.BoxingTest
-__Win32_Code_BoxingTest_VTABLE_DECL__ __Win32_Code_BoxingTest_VTABLE__ = {
-    /* internalcall */ __Win32_Code_BoxingTest_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_BoxingTest_RUNTIME_TYPE__ = {
     "Win32.Code.BoxingTest",
     sizeof(Win32_Code_BoxingTest),
     /* internalcall */ (void*)__Win32_Code_BoxingTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.BoxingTest
+__Win32_Code_BoxingTest_VTABLE_DECL__ __Win32_Code_BoxingTest_VTABLE__ = {
+    (void*)__Win32_Code_BoxingTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -444,20 +447,23 @@ void __Win32_Code_ClassTypeTestTarget_IL2C_MarkHandler__(Win32_Code_ClassTypeTes
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.ClassTypeTestTarget
-__Win32_Code_ClassTypeTestTarget_VTABLE_DECL__ __Win32_Code_ClassTypeTestTarget_VTABLE__ = {
-    /* internalcall */ __Win32_Code_ClassTypeTestTarget_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_ClassTypeTestTarget_RUNTIME_TYPE__ = {
     "Win32.Code.ClassTypeTestTarget",
     sizeof(Win32_Code_ClassTypeTestTarget),
     /* internalcall */ (void*)__Win32_Code_ClassTypeTestTarget_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.ClassTypeTestTarget
+__Win32_Code_ClassTypeTestTarget_VTABLE_DECL__ __Win32_Code_ClassTypeTestTarget_VTABLE__ = {
+    (void*)__Win32_Code_ClassTypeTestTarget_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -822,20 +828,23 @@ void __Win32_Code_ClassTypeTest_IL2C_MarkHandler__(Win32_Code_ClassTypeTest* thi
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.ClassTypeTest
-__Win32_Code_ClassTypeTest_VTABLE_DECL__ __Win32_Code_ClassTypeTest_VTABLE__ = {
-    /* internalcall */ __Win32_Code_ClassTypeTest_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_ClassTypeTest_RUNTIME_TYPE__ = {
     "Win32.Code.ClassTypeTest",
     sizeof(Win32_Code_ClassTypeTest),
     /* internalcall */ (void*)__Win32_Code_ClassTypeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.ClassTypeTest
+__Win32_Code_ClassTypeTest_VTABLE_DECL__ __Win32_Code_ClassTypeTest_VTABLE__ = {
+    (void*)__Win32_Code_ClassTypeTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1002,20 +1011,23 @@ void __Win32_Code_Hoge1_IL2C_MarkHandler__(Win32_Code_Hoge1* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.Hoge1
-__Win32_Code_Hoge1_VTABLE_DECL__ __Win32_Code_Hoge1_VTABLE__ = {
-    /* internalcall */ __Win32_Code_Hoge1_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_Hoge1_RUNTIME_TYPE__ = {
     "Win32.Code.Hoge1",
     sizeof(Win32_Code_Hoge1),
     /* internalcall */ (void*)__Win32_Code_Hoge1_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.Hoge1
+__Win32_Code_Hoge1_VTABLE_DECL__ __Win32_Code_Hoge1_VTABLE__ = {
+    (void*)__Win32_Code_Hoge1_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1183,20 +1195,23 @@ void __Win32_Code_Hoge2_IL2C_MarkHandler__(Win32_Code_Hoge2* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.Hoge2
-__Win32_Code_Hoge2_VTABLE_DECL__ __Win32_Code_Hoge2_VTABLE__ = {
-    /* internalcall */ __Win32_Code_Hoge2_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_Hoge2_RUNTIME_TYPE__ = {
     "Win32.Code.Hoge2",
     sizeof(Win32_Code_Hoge2),
     /* internalcall */ (void*)__Win32_Code_Hoge2_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.Hoge2
+__Win32_Code_Hoge2_VTABLE_DECL__ __Win32_Code_Hoge2_VTABLE__ = {
+    (void*)__Win32_Code_Hoge2_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1436,21 +1451,24 @@ void __Win32_Code_InheritTestTargetBase1_IL2C_MarkHandler__(Win32_Code_InheritTe
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.InheritTestTargetBase1
-__Win32_Code_InheritTestTargetBase1_VTABLE_DECL__ __Win32_Code_InheritTestTargetBase1_VTABLE__ = {
-    /* internalcall */ __Win32_Code_InheritTestTargetBase1_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_InheritTestTargetBase1_Calc_1__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_InheritTestTargetBase1_RUNTIME_TYPE__ = {
     "Win32.Code.InheritTestTargetBase1",
     sizeof(Win32_Code_InheritTestTargetBase1),
     /* internalcall */ (void*)__Win32_Code_InheritTestTargetBase1_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.InheritTestTargetBase1
+__Win32_Code_InheritTestTargetBase1_VTABLE_DECL__ __Win32_Code_InheritTestTargetBase1_VTABLE__ = {
+    (void*)__Win32_Code_InheritTestTargetBase1_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__Win32_Code_InheritTestTargetBase1_Calc@1__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1691,24 +1709,27 @@ void __Win32_Code_InheritTestTarget2_IL2C_MarkHandler__(Win32_Code_InheritTestTa
 {
 
     // Delegate checking base types
-    __Win32_Code_InheritTestTargetBase1_IL2C_MarkHandler__((Win32_Code_InheritTestTargetBase1*)this__);
+    __Win32_Code_InheritTestTargetBase1*_IL2C_MarkHandler__((Win32_Code_InheritTestTargetBase1*)this__);
 }
-
-// Vtable of Win32.Code.InheritTestTarget2
-__Win32_Code_InheritTestTarget2_VTABLE_DECL__ __Win32_Code_InheritTestTarget2_VTABLE__ = {
-    /* internalcall */ __Win32_Code_InheritTestTarget2_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_InheritTestTarget2_Calc_1__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_InheritTestTarget2_RUNTIME_TYPE__ = {
     "Win32.Code.InheritTestTarget2",
     sizeof(Win32_Code_InheritTestTarget2),
     /* internalcall */ (void*)__Win32_Code_InheritTestTarget2_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.InheritTestTarget2
+__Win32_Code_InheritTestTarget2_VTABLE_DECL__ __Win32_Code_InheritTestTarget2_VTABLE__ = {
+    (void*)__Win32_Code_InheritTestTarget2_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__Win32_Code_InheritTestTarget2_Calc@1__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2162,20 +2183,23 @@ void __Win32_Code_InheritTypeTest_IL2C_MarkHandler__(Win32_Code_InheritTypeTest*
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.InheritTypeTest
-__Win32_Code_InheritTypeTest_VTABLE_DECL__ __Win32_Code_InheritTypeTest_VTABLE__ = {
-    /* internalcall */ __Win32_Code_InheritTypeTest_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_InheritTypeTest_RUNTIME_TYPE__ = {
     "Win32.Code.InheritTypeTest",
     sizeof(Win32_Code_InheritTypeTest),
     /* internalcall */ (void*)__Win32_Code_InheritTypeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.InheritTypeTest
+__Win32_Code_InheritTypeTest_VTABLE_DECL__ __Win32_Code_InheritTypeTest_VTABLE__ = {
+    (void*)__Win32_Code_InheritTypeTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2308,7 +2332,7 @@ void* __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__(Win32_Code_Interf
     if (type == il2c_typeof(Win32_Code_InterfaceTestTargetClass)) return this__;
 
     // Interface types
-    if (type == il2c_typeof(Win32_Code_IInterfaceTestTarget)) return &(this__->vptr_Win32_Code_IInterfaceTestTarget__);
+    if (type == il2c_typeof(Win32_Code_IInterfaceTestTarget)) return (void*)&(this__->vptr_Win32_Code_IInterfaceTestTarget__);
 
     // Delegate checking base types
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
@@ -2323,9 +2347,19 @@ void __Win32_Code_InterfaceTestTargetClass_IL2C_MarkHandler__(Win32_Code_Interfa
     /* Suppressed invoke base mark handler */
 }
 
+// Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Win32_Code_InterfaceTestTargetClass_RUNTIME_TYPE__ = {
+    "Win32.Code.InterfaceTestTargetClass",
+    sizeof(Win32_Code_InterfaceTestTargetClass),
+    /* internalcall */ (void*)__Win32_Code_InterfaceTestTargetClass_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
 // Vtable of Win32.Code.InterfaceTestTargetClass
 __Win32_Code_InterfaceTestTargetClass_VTABLE_DECL__ __Win32_Code_InterfaceTestTargetClass_VTABLE__ = {
-    /* internalcall */ __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__,
+    (void*)__Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
@@ -2333,21 +2367,56 @@ __Win32_Code_InterfaceTestTargetClass_VTABLE_DECL__ __Win32_Code_InterfaceTestTa
     (void*)__Win32_Code_InterfaceTestTargetClass_Calc__,
 };
 
-// Vtable of Win32.Code.IInterfaceTestTarget (with AT)
-__Win32_Code_IInterfaceTestTarget_VTABLE_DECL__ __Win32_Code_InterfaceTestTargetClass_Win32_Code_IInterfaceTestTarget_VTABLE__ = {
-    /* internalcall */ __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_IInterfaceTestTarget_Calc__,
-};
+// Adjustor thunk: Win32_Code_IInterfaceTestTarget.IL2C_RuntimeCast
+static void* __Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast_AT_Win32_Code_IInterfaceTestTarget__(
+    Win32_Code_IInterfaceTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    return __Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast__(this__, type);
+}
 
-// Runtime type information
-IL2C_RUNTIME_TYPE_DECL __Win32_Code_InterfaceTestTargetClass_RUNTIME_TYPE__ = {
-    "Win32.Code.InterfaceTestTargetClass",
-    sizeof(Win32_Code_InterfaceTestTargetClass),
-    /* internalcall */ (void*)__Win32_Code_InterfaceTestTargetClass_IL2C_MarkHandler__,
+// Adjustor thunk: System_Object.ToString
+static System_String* __System_Object_ToString_AT_Win32_Code_IInterfaceTestTarget__(
+    Win32_Code_IInterfaceTestTarget* this__)
+{
+    return __System_Object_ToString__(this__);
+}
+
+// Adjustor thunk: System_Object.GetHashCode
+static int32_t __System_Object_GetHashCode_AT_Win32_Code_IInterfaceTestTarget__(
+    Win32_Code_IInterfaceTestTarget* this__)
+{
+    return __System_Object_GetHashCode__(this__);
+}
+
+// Adjustor thunk: System_Object.Finalize
+static void __System_Object_Finalize_AT_Win32_Code_IInterfaceTestTarget__(
+    Win32_Code_IInterfaceTestTarget* this__)
+{
+    __System_Object_Finalize__(this__);
+}
+
+// Adjustor thunk: System_Object.Equals
+static bool __System_Object_Equals_AT_Win32_Code_IInterfaceTestTarget__(
+    Win32_Code_IInterfaceTestTarget* this__, System_Object* obj)
+{
+    return __System_Object_Equals__(this__, obj);
+}
+
+// Adjustor thunk: Win32_Code_IInterfaceTestTarget.Calc
+static int32_t __Win32_Code_IInterfaceTestTarget_Calc_AT_Win32_Code_IInterfaceTestTarget__(
+    Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b)
+{
+    return __Win32_Code_IInterfaceTestTarget_Calc__(this__, a, b);
+}
+
+// Vtable of Win32.Code.IInterfaceTestTarget (with adjustor thunk)
+__Win32_Code_IInterfaceTestTarget_VTABLE_DECL__ __Win32_Code_InterfaceTestTargetClass_Win32_Code_IInterfaceTestTarget_VTABLE__ = {
+    (void*)__Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast_AT_Win32_Code_IInterfaceTestTarget__,
+    (void*)__System_Object_ToString_AT_Win32_Code_IInterfaceTestTarget__,
+    (void*)__System_Object_GetHashCode_AT_Win32_Code_IInterfaceTestTarget__,
+    (void*)__System_Object_Finalize_AT_Win32_Code_IInterfaceTestTarget__,
+    (void*)__System_Object_Equals_AT_Win32_Code_IInterfaceTestTarget__,
+    (void*)__Win32_Code_IInterfaceTestTarget_Calc_AT_Win32_Code_IInterfaceTestTarget__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2576,20 +2645,23 @@ void __Win32_Code_InterfaceTypeTest_IL2C_MarkHandler__(Win32_Code_InterfaceTypeT
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.InterfaceTypeTest
-__Win32_Code_InterfaceTypeTest_VTABLE_DECL__ __Win32_Code_InterfaceTypeTest_VTABLE__ = {
-    /* internalcall */ __Win32_Code_InterfaceTypeTest_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_InterfaceTypeTest_RUNTIME_TYPE__ = {
     "Win32.Code.InterfaceTypeTest",
     sizeof(Win32_Code_InterfaceTypeTest),
     /* internalcall */ (void*)__Win32_Code_InterfaceTypeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.InterfaceTypeTest
+__Win32_Code_InterfaceTypeTest_VTABLE_DECL__ __Win32_Code_InterfaceTypeTest_VTABLE__ = {
+    (void*)__Win32_Code_InterfaceTypeTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2679,20 +2751,23 @@ void __Win32_Code_Win32_IL2C_MarkHandler__(Win32_Code_Win32* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.Win32
-__Win32_Code_Win32_VTABLE_DECL__ __Win32_Code_Win32_VTABLE__ = {
-    /* internalcall */ __Win32_Code_Win32_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_Win32_RUNTIME_TYPE__ = {
     "Win32.Code.Win32",
     sizeof(Win32_Code_Win32),
     /* internalcall */ (void*)__Win32_Code_Win32_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.Win32
+__Win32_Code_Win32_VTABLE_DECL__ __Win32_Code_Win32_VTABLE__ = {
+    (void*)__Win32_Code_Win32_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2769,20 +2844,23 @@ void __Win32_Code_AbstractNode_IL2C_MarkHandler__(Win32_Code_AbstractNode* this_
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.AbstractNode
-__Win32_Code_AbstractNode_VTABLE_DECL__ __Win32_Code_AbstractNode_VTABLE__ = {
-    /* internalcall */ __Win32_Code_AbstractNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_AbstractNode_RUNTIME_TYPE__ = {
     "Win32.Code.AbstractNode",
     sizeof(Win32_Code_AbstractNode),
     /* internalcall */ (void*)__Win32_Code_AbstractNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.AbstractNode
+__Win32_Code_AbstractNode_VTABLE_DECL__ __Win32_Code_AbstractNode_VTABLE__ = {
+    (void*)__Win32_Code_AbstractNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2860,23 +2938,26 @@ void __Win32_Code_OperatorNode_IL2C_MarkHandler__(Win32_Code_OperatorNode* this_
 {
 
     // Delegate checking base types
-    __Win32_Code_AbstractNode_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
+    __Win32_Code_AbstractNode*_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
 }
-
-// Vtable of Win32.Code.OperatorNode
-__Win32_Code_OperatorNode_VTABLE_DECL__ __Win32_Code_OperatorNode_VTABLE__ = {
-    /* internalcall */ __Win32_Code_OperatorNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_OperatorNode_RUNTIME_TYPE__ = {
     "Win32.Code.OperatorNode",
     sizeof(Win32_Code_OperatorNode),
     /* internalcall */ (void*)__Win32_Code_OperatorNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.OperatorNode
+__Win32_Code_OperatorNode_VTABLE_DECL__ __Win32_Code_OperatorNode_VTABLE__ = {
+    (void*)__Win32_Code_OperatorNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2957,24 +3038,27 @@ void __Win32_Code_ReducibleNode_IL2C_MarkHandler__(Win32_Code_ReducibleNode* thi
 {
 
     // Delegate checking base types
-    __Win32_Code_AbstractNode_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
+    __Win32_Code_AbstractNode*_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
 }
-
-// Vtable of Win32.Code.ReducibleNode
-__Win32_Code_ReducibleNode_VTABLE_DECL__ __Win32_Code_ReducibleNode_VTABLE__ = {
-    /* internalcall */ __Win32_Code_ReducibleNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_ReducibleNode_Reduce__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_ReducibleNode_RUNTIME_TYPE__ = {
     "Win32.Code.ReducibleNode",
     sizeof(Win32_Code_ReducibleNode),
     /* internalcall */ (void*)__Win32_Code_ReducibleNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.ReducibleNode
+__Win32_Code_ReducibleNode_VTABLE_DECL__ __Win32_Code_ReducibleNode_VTABLE__ = {
+    (void*)__Win32_Code_ReducibleNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__Win32_Code_ReducibleNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -3104,24 +3188,27 @@ void __Win32_Code_NumericNode_IL2C_MarkHandler__(Win32_Code_NumericNode* this__)
 {
 
     // Delegate checking base types
-    __Win32_Code_ReducibleNode_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
+    __Win32_Code_ReducibleNode*_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
 }
-
-// Vtable of Win32.Code.NumericNode
-__Win32_Code_NumericNode_VTABLE_DECL__ __Win32_Code_NumericNode_VTABLE__ = {
-    /* internalcall */ __Win32_Code_NumericNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_NumericNode_Reduce__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_NumericNode_RUNTIME_TYPE__ = {
     "Win32.Code.NumericNode",
     sizeof(Win32_Code_NumericNode),
     /* internalcall */ (void*)__Win32_Code_NumericNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.NumericNode
+__Win32_Code_NumericNode_VTABLE_DECL__ __Win32_Code_NumericNode_VTABLE__ = {
+    (void*)__Win32_Code_NumericNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__Win32_Code_NumericNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -3424,24 +3511,27 @@ void __Win32_Code_ExpressionNode_IL2C_MarkHandler__(Win32_Code_ExpressionNode* t
     il2c_try_mark_from_handler(this__->Right);
 
     // Delegate checking base types
-    __Win32_Code_ReducibleNode_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
+    __Win32_Code_ReducibleNode*_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
 }
-
-// Vtable of Win32.Code.ExpressionNode
-__Win32_Code_ExpressionNode_VTABLE_DECL__ __Win32_Code_ExpressionNode_VTABLE__ = {
-    /* internalcall */ __Win32_Code_ExpressionNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_ExpressionNode_Reduce__,
-};
 
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_ExpressionNode_RUNTIME_TYPE__ = {
     "Win32.Code.ExpressionNode",
     sizeof(Win32_Code_ExpressionNode),
     /* internalcall */ (void*)__Win32_Code_ExpressionNode_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.ExpressionNode
+__Win32_Code_ExpressionNode_VTABLE_DECL__ __Win32_Code_ExpressionNode_VTABLE__ = {
+    (void*)__Win32_Code_ExpressionNode_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+    (void*)__Win32_Code_ExpressionNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -4561,20 +4651,23 @@ void __Win32_Code_PolishNotation_IL2C_MarkHandler__(Win32_Code_PolishNotation* t
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.PolishNotation
-__Win32_Code_PolishNotation_VTABLE_DECL__ __Win32_Code_PolishNotation_VTABLE__ = {
-    /* internalcall */ __Win32_Code_PolishNotation_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_PolishNotation_RUNTIME_TYPE__ = {
     "Win32.Code.PolishNotation",
     sizeof(Win32_Code_PolishNotation),
     /* internalcall */ (void*)__Win32_Code_PolishNotation_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.PolishNotation
+__Win32_Code_PolishNotation_VTABLE_DECL__ __Win32_Code_PolishNotation_VTABLE__ = {
+    (void*)__Win32_Code_PolishNotation_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -5024,20 +5117,23 @@ void __Win32_Code_StringTest_IL2C_MarkHandler__(Win32_Code_StringTest* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.StringTest
-__Win32_Code_StringTest_VTABLE_DECL__ __Win32_Code_StringTest_VTABLE__ = {
-    /* internalcall */ __Win32_Code_StringTest_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_StringTest_RUNTIME_TYPE__ = {
     "Win32.Code.StringTest",
     sizeof(Win32_Code_StringTest),
     /* internalcall */ (void*)__Win32_Code_StringTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.StringTest
+__Win32_Code_StringTest_VTABLE_DECL__ __Win32_Code_StringTest_VTABLE__ = {
+    (void*)__Win32_Code_StringTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -5103,20 +5199,23 @@ void __Win32_Code_UnsafeTest_IL2C_MarkHandler__(Win32_Code_UnsafeTest* this__)
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.UnsafeTest
-__Win32_Code_UnsafeTest_VTABLE_DECL__ __Win32_Code_UnsafeTest_VTABLE__ = {
-    /* internalcall */ __Win32_Code_UnsafeTest_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_UnsafeTest_RUNTIME_TYPE__ = {
     "Win32.Code.UnsafeTest",
     sizeof(Win32_Code_UnsafeTest),
     /* internalcall */ (void*)__Win32_Code_UnsafeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.UnsafeTest
+__Win32_Code_UnsafeTest_VTABLE_DECL__ __Win32_Code_UnsafeTest_VTABLE__ = {
+    (void*)__Win32_Code_UnsafeTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -5187,7 +5286,7 @@ IL_000e:
 // Runtime helpers:
 
 // Runtime cast
-void* __Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__(Win32_Code_ValueTypeTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type)
+void* __Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__(Win32_Code_ValueTypeTestTarget this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     // This type
     if (type == il2c_typeof(Win32_Code_ValueTypeTestTarget)) return this__;
@@ -5197,7 +5296,7 @@ void* __Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__(Win32_Code_ValueTypeTe
 }
 
 // GC's mark handler
-void __Win32_Code_ValueTypeTestTarget_IL2C_MarkHandler__(Win32_Code_ValueTypeTestTarget* this__)
+void __Win32_Code_ValueTypeTestTarget_IL2C_MarkHandler__(Win32_Code_ValueTypeTestTarget this__)
 {
     // Try marking each object reference fields
     il2c_try_mark_from_handler(this__->OR2);
@@ -5205,20 +5304,23 @@ void __Win32_Code_ValueTypeTestTarget_IL2C_MarkHandler__(Win32_Code_ValueTypeTes
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.ValueTypeTestTarget
-__Win32_Code_ValueTypeTestTarget_VTABLE_DECL__ __Win32_Code_ValueTypeTestTarget_VTABLE__ = {
-    /* internalcall */ __Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__,
-    (void*)__System_ValueType_ToString__,
-    (void*)__System_ValueType_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_ValueType_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_ValueTypeTestTarget_RUNTIME_TYPE__ = {
     "Win32.Code.ValueTypeTestTarget",
     sizeof(Win32_Code_ValueTypeTestTarget),
     /* internalcall */ (void*)__Win32_Code_ValueTypeTestTarget_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.ValueTypeTestTarget
+__Win32_Code_ValueTypeTestTarget_VTABLE_DECL__ __Win32_Code_ValueTypeTestTarget_VTABLE__ = {
+    (void*)__Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__,
+    (void*)__System_ValueType_ToString__,
+    (void*)__System_ValueType_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_ValueType_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -5437,18 +5539,21 @@ void __Win32_Code_ValueTypeTest_IL2C_MarkHandler__(Win32_Code_ValueTypeTest* thi
     /* Suppressed invoke base mark handler */
 }
 
-// Vtable of Win32.Code.ValueTypeTest
-__Win32_Code_ValueTypeTest_VTABLE_DECL__ __Win32_Code_ValueTypeTest_VTABLE__ = {
-    /* internalcall */ __Win32_Code_ValueTypeTest_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-};
-
 // Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Win32_Code_ValueTypeTest_RUNTIME_TYPE__ = {
     "Win32.Code.ValueTypeTest",
     sizeof(Win32_Code_ValueTypeTest),
     /* internalcall */ (void*)__Win32_Code_ValueTypeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.ValueTypeTest
+__Win32_Code_ValueTypeTest_VTABLE_DECL__ __Win32_Code_ValueTypeTest_VTABLE__ = {
+    (void*)__Win32_Code_ValueTypeTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
 };

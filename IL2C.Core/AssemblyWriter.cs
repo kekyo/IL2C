@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -621,6 +622,64 @@ namespace IL2C
             tw.WriteLine("}");
         }
 
+        private struct VirtualMethodInformation
+        {
+            public readonly string TypeName;
+            public readonly string Name;
+            public readonly string ReturnTypeName;
+            public readonly KeyValuePair<string, string>[] Parameters;
+
+            public VirtualMethodInformation(
+                string typeName,
+                string name,
+                string returnTypeName,
+                KeyValuePair<string, string>[] parameters)
+            {
+                this.TypeName = typeName;
+                this.Name = name;
+                this.ReturnTypeName = returnTypeName;
+                this.Parameters = parameters;
+            }
+        }
+
+        private static VirtualMethodInformation[] GetVirtualMethods(
+            IExtractContext extractContext,
+            TypeReference adjustorThunkTargetType)
+        {
+            var rawTypeName = adjustorThunkTargetType
+                .GetFullMemberName()
+                .ManglingSymbolName();
+            var typeName = extractContext
+                .GetCLanguageTypeName(adjustorThunkTargetType);
+
+            return new []
+                {
+                    new VirtualMethodInformation(
+                        rawTypeName,
+                        "IL2C_RuntimeCast",
+                        "void*",
+                        new[]
+                        {
+                            Utilities.KeyValue(typeName, "this__"),
+                            Utilities.KeyValue("IL2C_RUNTIME_TYPE_DECL*", "type"), 
+                        }), 
+                }
+                .Concat(adjustorThunkTargetType
+                    .EnumerateOrderedOverridedMethods()
+                    .Select(method => new VirtualMethodInformation(
+                        method.DeclaringType
+                            .GetFullMemberName()
+                            .ManglingSymbolName(),
+                        method.GetOverloadedMethodName(),
+                        extractContext.GetCLanguageTypeName(method.ReturnType),
+                        method.GetSafeParameters(adjustorThunkTargetType)
+                            .Select(parameter => Utilities.KeyValue(
+                                extractContext.GetCLanguageTypeName(parameter.ParameterType),
+                                parameter.Name))
+                            .ToArray())))
+                .ToArray();
+        }
+
         private static void InternalConvertTypeHelper(
             TextWriter tw,
             IExtractContext extractContext,
@@ -645,9 +704,9 @@ namespace IL2C
             tw.WriteLine();
             tw.WriteLine("// Runtime cast");
             tw.WriteLine(
-                "void* __{0}_IL2C_RuntimeCast__({1}* this__, IL2C_RUNTIME_TYPE_DECL* type)",
+                "void* __{0}_IL2C_RuntimeCast__({1} this__, IL2C_RUNTIME_TYPE_DECL* type)",
                 rawTypeName,
-                typeName);
+                extractContext.GetCLanguageTypeName(declaredType));
             tw.WriteLine("{");
 
             // RuntimeCast: this type.
@@ -679,7 +738,7 @@ namespace IL2C
                     //  the function is delegated "Adjust thunk" function,
                     //  it will recalculate this pointer offset.
                     tw.WriteLine(
-                        "{0}if (type == il2c_typeof({1})) return &(this__->vptr_{1}__);",
+                        "{0}if (type == il2c_typeof({1})) return (void*)&(this__->vptr_{1}__);",
                         indent,
                         rawInterfaceTypeName);
                 });
@@ -691,16 +750,17 @@ namespace IL2C
                 "{0}// Delegate checking base types",
                 indent);
             tw.WriteLine(
-                "{0}return __{1}_IL2C_RuntimeCast__(({1}*)this__, type);",
+                "{0}return __{1}_IL2C_RuntimeCast__(({2})this__, type);",
                 indent,
-                rawBaseTypeName);
+                rawBaseTypeName,
+                extractContext.GetCLanguageTypeName(declaredType.BaseType));
             tw.WriteLine("}");
 
             // Write mark handler:
             var makrHandlerPrototype = string.Format(
-                "void __{0}_IL2C_MarkHandler__({1}* this__)",
+                "void __{0}_IL2C_MarkHandler__({1} this__)",
                 rawTypeName,
-                typeName);
+                extractContext.GetCLanguageTypeName(declaredType));
 
             tw.WriteLine();
             tw.WriteLine("// GC's mark handler");
@@ -735,9 +795,9 @@ namespace IL2C
                         "{0}// Delegate checking base types",
                         indent);
                     tw.WriteLine(
-                        "{0}__{1}_IL2C_MarkHandler__(({1}*)this__);",
+                        "{0}__{1}_IL2C_MarkHandler__(({1})this__);",
                         indent,
-                        rawBaseTypeName);
+                        extractContext.GetCLanguageTypeName(declaredType.BaseType));
                 }
                 else
                 {
@@ -749,60 +809,6 @@ namespace IL2C
             }
 
             tw.WriteLine("}");
-
-            // Write virtual methods
-            tw.WriteLine();
-            tw.WriteLine(
-                "// Vtable of {0}",
-                declaredType.FullName);
-            tw.WriteLine(
-                "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
-                rawTypeName);
-            tw.WriteLine(
-                "{0}/* internalcall */ __{1}_IL2C_RuntimeCast__,",
-                indent,
-                rawTypeName);
-            declaredType
-                .EnumerateOrderedOverridedMethods()
-                .ForEach(method =>
-                {
-                    tw.WriteLine(
-                        "{0}(void*)__{1}__,",
-                        indent,
-                        method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName());
-                });
-            tw.WriteLine("};");
-
-            declaredType.Interfaces
-                .ForEach(interfaceImpl =>
-                {
-                    var rawInterfaceTypeName = interfaceImpl.InterfaceType
-                        .GetFullMemberName()
-                        .ManglingSymbolName();
-
-                    tw.WriteLine();
-                    tw.WriteLine(
-                        "// Vtable of {0} (with AT)",
-                        interfaceImpl.InterfaceType.FullName);
-                    tw.WriteLine(
-                        "__{0}_VTABLE_DECL__ __{1}_{0}_VTABLE__ = {{",
-                        rawInterfaceTypeName,
-                        rawTypeName);
-                    tw.WriteLine(
-                        "{0}/* internalcall */ __{1}_IL2C_RuntimeCast__,",
-                        indent,
-                        rawTypeName);
-                    interfaceImpl.InterfaceType
-                        .EnumerateOrderedOverridedMethods()
-                        .ForEach(method =>
-                        {
-                            tw.WriteLine(
-                                "{0}(void*)__{1}__,",
-                                indent,
-                                method.GetFullMemberName(MethodNameTypes.Index).ManglingSymbolName());
-                        });
-                    tw.WriteLine("};");
-                });
 
             // Write runtime type information
             tw.WriteLine();
@@ -824,6 +830,104 @@ namespace IL2C
                 rawTypeName);
 
             tw.WriteLine("};");
+
+            tw.WriteLine();
+            tw.WriteLine("//////////////////////");
+            tw.WriteLine("// VTables:");
+
+            // Write virtual methods
+            tw.WriteLine();
+            tw.WriteLine(
+                "// Vtable of {0}",
+                declaredType.FullName);
+            tw.WriteLine(
+                "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
+                rawTypeName);
+
+            GetVirtualMethods(
+                extractContext,
+                declaredType)
+                .ForEach(method =>
+                {
+                    tw.WriteLine(
+                        "{0}(void*)__{1}_{2}__,",
+                        indent,
+                        method.TypeName,
+                        method.Name);
+                });
+
+            tw.WriteLine("};");
+
+            declaredType.Interfaces
+                .Select(interfaceImpl => interfaceImpl.InterfaceType)
+                .ForEach(interfaceType =>
+                {
+                    var rawInterfaceTypeName = interfaceType
+                        .GetFullMemberName()
+                        .ManglingSymbolName();
+
+                    var methods = GetVirtualMethods(
+                        extractContext,
+                        interfaceType);
+
+                    methods.ForEach(method =>
+                    {
+                        // Adjustor thunk will not invoke direct, so try to emit static function.
+                        tw.WriteLine();
+                        tw.WriteLine(
+                            "// Adjustor thunk: {0}.{1}",
+                            method.TypeName,
+                            method.Name);
+                        tw.WriteLine(
+                            "static {0} __{1}_{2}_AT_{3}__(",
+                            method.ReturnTypeName,
+                            method.TypeName,
+                            method.Name,
+                            rawInterfaceTypeName);
+                        tw.WriteLine(
+                            "{0}{1})",
+                            indent,
+                            string.Join(
+                                ", ",
+                                method.Parameters.Select(parameter =>
+                                    string.Format(
+                                        "{0} {1}",
+                                        parameter.Key,
+                                        parameter.Value))));
+                        tw.WriteLine(
+                            "{");
+                        tw.WriteLine(
+                            "{0}{1}__{2}_{3}__({4});",
+                            indent,
+                            (method.ReturnTypeName != "void") ? "return " : string.Empty,
+                            method.TypeName,
+                            method.Name,
+                            string.Join(
+                                ", ",
+                                method.Parameters.Select(parameter => parameter.Value)));
+                        tw.WriteLine(
+                            "}");
+                    });
+
+                    tw.WriteLine();
+                    tw.WriteLine(
+                        "// Vtable of {0} (with adjustor thunk)",
+                        interfaceType.FullName);
+                    tw.WriteLine(
+                        "__{0}_VTABLE_DECL__ __{1}_{0}_VTABLE__ = {{",
+                        rawInterfaceTypeName,
+                        rawTypeName);
+                    methods.ForEach(method =>
+                        {
+                            tw.WriteLine(
+                                "{0}(void*)__{1}_{2}_AT_{3}__,",
+                                indent,
+                                method.TypeName,
+                                method.Name,
+                                rawInterfaceTypeName);
+                        });
+                    tw.WriteLine("};");
+                });
         }
 
         internal static void InternalConvertFromMethod(

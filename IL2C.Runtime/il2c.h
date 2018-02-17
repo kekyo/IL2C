@@ -53,6 +53,10 @@ struct IL2C_REF_HEADER
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 #define il2c_runtime_cast(pReference, typeName) \
     ((typeName##*)((pReference)->vptr0__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
+#define il2c_static_cast(typeName, referenceTypeName, pReference) \
+    ((typeName##*)(((uint8_t*)(pReference)) - \
+     (offsetof(typeName, vptr_##referenceTypeName##__) - \
+      offsetof(typeName, vptr0__))))
 
 /////////////////////////////////////////////////////////////
 // System.Object

@@ -168,35 +168,57 @@ namespace IL2C
         private string GetCLanguageTypeName(
             TypeReference type, TypeNameFlags flags = TypeNameFlags.Strict)
         {
+            var prefix = ((flags == TypeNameFlags.DereferencedWithStructPrefix)
+                || (flags == TypeNameFlags.ForcePointerWithStructPrefix))
+                ? "struct "
+                : string.Empty;
+            var postfix = ((flags == TypeNameFlags.ForcePointer)
+                || (flags == TypeNameFlags.ForcePointerWithStructPrefix))
+                ? "*"
+                : string.Empty;
+
             if (predefinedCTypeNames.TryGetValue(type.FullName, out var cTypeName))
             {
-                return cTypeName;
+                // Predefined type name must not applies prefix.
+                return cTypeName + postfix;
             }
 
             if (type.IsByReference || type.IsPointer)
             {
-                var dereferencedType = type.GetElementType();
-                var name = this.GetCLanguageTypeName(dereferencedType);
-                return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
-                    ? name : (name + "*");
-            }
-            else
-            {
-                var name = type.GetFullMemberName().ManglingSymbolName();
-                if ((flags & TypeNameFlags.StructPrefix) == TypeNameFlags.StructPrefix)
-                {
-                    name = "struct " + name;
-                }
+                var dereferencedType = type
+                    .GetElementType();
+                var dereferencedTypeName = this.GetCLanguageTypeName(
+                    dereferencedType);
 
-                if (!type.IsValueType)
+                if ((flags == TypeNameFlags.Dereferenced)
+                    || (flags == TypeNameFlags.DereferencedWithStructPrefix))
                 {
-                    return ((flags & TypeNameFlags.Dereferenced) == TypeNameFlags.Dereferenced)
-                        ? name : (name + "*");
+                    return prefix + dereferencedTypeName;
                 }
                 else
                 {
-                    return name;
+                    return prefix + dereferencedTypeName + "*";
                 }
+            }
+
+            var fullName = type
+                .GetFullMemberName()
+                .ManglingSymbolName();
+            if (!type.IsValueType)
+            {
+                if ((flags == TypeNameFlags.Dereferenced)
+                    || (flags == TypeNameFlags.DereferencedWithStructPrefix))
+                {
+                    return prefix + fullName;
+                }
+                else
+                {
+                    return prefix + fullName + "*";
+                }
+            }
+            else
+            {
+                return prefix + fullName + postfix;
             }
         }
 

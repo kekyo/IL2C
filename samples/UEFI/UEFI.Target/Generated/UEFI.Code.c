@@ -205,7 +205,7 @@ void __UEFI_Code_OperatorNode_IL2C_MarkHandler__(UEFI_Code_OperatorNode* this__)
 {
 
     // Delegate checking base types
-    __UEFI_Code_AbstractNode*_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
+    __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
 
 // Runtime type information
@@ -305,7 +305,7 @@ void __UEFI_Code_ReducibleNode_IL2C_MarkHandler__(UEFI_Code_ReducibleNode* this_
 {
 
     // Delegate checking base types
-    __UEFI_Code_AbstractNode*_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
+    __UEFI_Code_AbstractNode_IL2C_MarkHandler__((UEFI_Code_AbstractNode*)this__);
 }
 
 // Runtime type information
@@ -455,7 +455,7 @@ void __UEFI_Code_NumericNode_IL2C_MarkHandler__(UEFI_Code_NumericNode* this__)
 {
 
     // Delegate checking base types
-    __UEFI_Code_ReducibleNode*_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
+    __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
 
 // Runtime type information
@@ -778,7 +778,7 @@ void __UEFI_Code_ExpressionNode_IL2C_MarkHandler__(UEFI_Code_ExpressionNode* thi
     il2c_try_mark_from_handler(this__->Right);
 
     // Delegate checking base types
-    __UEFI_Code_ReducibleNode*_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
+    __UEFI_Code_ReducibleNode_IL2C_MarkHandler__((UEFI_Code_ReducibleNode*)this__);
 }
 
 // Runtime type information

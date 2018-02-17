@@ -644,18 +644,22 @@ namespace IL2C
 
         private static VirtualMethodInformation[] GetVirtualMethods(
             IExtractContext extractContext,
-            TypeReference adjustorThunkTargetType)
+            TypeReference adjustorThunkTargetType,
+            TypeReference delegationTargetType)
         {
             var rawTypeName = adjustorThunkTargetType
                 .GetFullMemberName()
                 .ManglingSymbolName();
             var typeName = extractContext
                 .GetCLanguageTypeName(adjustorThunkTargetType);
+            var delegationTargetTypeName = delegationTargetType
+                .GetFullMemberName()
+                .ManglingSymbolName();
 
             return new []
                 {
                     new VirtualMethodInformation(
-                        rawTypeName,
+                        delegationTargetTypeName,
                         "IL2C_RuntimeCast",
                         "void*",
                         new[]
@@ -667,11 +671,15 @@ namespace IL2C
                 .Concat(adjustorThunkTargetType
                     .EnumerateOrderedOverridedMethods()
                     .Select(method => new VirtualMethodInformation(
-                        method.DeclaringType
-                            .GetFullMemberName()
+                        method.DeclaringType.MemberEquals(adjustorThunkTargetType)
+                            ? delegationTargetTypeName
+                            : method.DeclaringType
+                                .GetFullMemberName()
+                                .ManglingSymbolName(),
+                        method.GetOverloadedMethodName()
                             .ManglingSymbolName(),
-                        method.GetOverloadedMethodName(),
-                        extractContext.GetCLanguageTypeName(method.ReturnType),
+                        extractContext.GetCLanguageTypeName(
+                            method.ReturnType),
                         method.GetSafeParameters(adjustorThunkTargetType)
                             .Select(parameter => Utilities.KeyValue(
                                 extractContext.GetCLanguageTypeName(parameter.ParameterType),
@@ -706,7 +714,9 @@ namespace IL2C
             tw.WriteLine(
                 "void* __{0}_IL2C_RuntimeCast__({1} this__, IL2C_RUNTIME_TYPE_DECL* type)",
                 rawTypeName,
-                extractContext.GetCLanguageTypeName(declaredType));
+                extractContext.GetCLanguageTypeName(
+                    declaredType,
+                    TypeNameFlags.ForcePointer));
             tw.WriteLine("{");
 
             // RuntimeCast: this type.
@@ -753,14 +763,16 @@ namespace IL2C
                 "{0}return __{1}_IL2C_RuntimeCast__(({2})this__, type);",
                 indent,
                 rawBaseTypeName,
-                extractContext.GetCLanguageTypeName(declaredType.BaseType));
+                extractContext.GetCLanguageTypeName(
+                    declaredType.BaseType,
+                    TypeNameFlags.ForcePointer));
             tw.WriteLine("}");
 
             // Write mark handler:
             var makrHandlerPrototype = string.Format(
                 "void __{0}_IL2C_MarkHandler__({1} this__)",
                 rawTypeName,
-                extractContext.GetCLanguageTypeName(declaredType));
+                extractContext.GetCLanguageTypeName(declaredType, TypeNameFlags.ForcePointer));
 
             tw.WriteLine();
             tw.WriteLine("// GC's mark handler");
@@ -795,8 +807,9 @@ namespace IL2C
                         "{0}// Delegate checking base types",
                         indent);
                     tw.WriteLine(
-                        "{0}__{1}_IL2C_MarkHandler__(({1})this__);",
+                        "{0}__{1}_IL2C_MarkHandler__(({2})this__);",
                         indent,
+                        rawBaseTypeName,
                         extractContext.GetCLanguageTypeName(declaredType.BaseType));
                 }
                 else
@@ -844,9 +857,7 @@ namespace IL2C
                 "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                 rawTypeName);
 
-            GetVirtualMethods(
-                extractContext,
-                declaredType)
+            GetVirtualMethods(extractContext, declaredType, declaredType)
                 .ForEach(method =>
                 {
                     tw.WriteLine(
@@ -868,7 +879,8 @@ namespace IL2C
 
                     var methods = GetVirtualMethods(
                         extractContext,
-                        interfaceType);
+                        interfaceType,
+                        declaredType);
 
                     methods.ForEach(method =>
                     {
@@ -920,7 +932,7 @@ namespace IL2C
                     methods.ForEach(method =>
                         {
                             tw.WriteLine(
-                                "{0}(void*)__{1}_{2}_AT_{3}__,",
+                                "{0}__{1}_{2}_AT_{3}__,",
                                 indent,
                                 method.TypeName,
                                 method.Name,
@@ -973,6 +985,10 @@ namespace IL2C
                             preparedFunction,
                             indent);
                     }
+                    break;
+
+                case FunctionTypes.InterfaceVirtual:
+                    // Nothing to do
                     break;
 
                 case FunctionTypes.PInvoke:

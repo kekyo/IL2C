@@ -735,7 +735,7 @@ extern void Win32_Code_InheritTypeTest__ctor(Win32_Code_InheritTypeTest* this__)
 
 // Win32.Code.IInterfaceTestTarget
 extern /* internalcall */ void* __Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast__(Win32_Code_IInterfaceTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern /* virtual */ int32_t __Win32_Code_IInterfaceTestTarget_Calc__(Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b);
+extern /* virtual */ int32_t Win32_Code_IInterfaceTestTarget_Calc(Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b);
 #define Win32_Code_IInterfaceTestTarget_ToString(/* Win32_Code_IInterfaceTestTarget* */ this__) \
     ((this__)->vptr_Win32_Code_IInterfaceTestTarget__->ToString(this__))
 #define Win32_Code_IInterfaceTestTarget_GetHashCode(/* Win32_Code_IInterfaceTestTarget* */ this__) \

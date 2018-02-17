@@ -11,6 +11,7 @@ namespace IL2C.Translators
     {
         Standard,
         Virtual,
+        InterfaceVirtual,
         PInvoke
     }
 
@@ -81,6 +82,7 @@ namespace IL2C.Translators
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
+            bool isInterface,
             int? slotIndex)
             : this(
                   methodName,
@@ -88,7 +90,9 @@ namespace IL2C.Translators
                   returnType,
                   parameters,
                   null, null, null, null,
-                  slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.PInvoke,
+                  isInterface
+                    ? FunctionTypes.InterfaceVirtual
+                    : (slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.PInvoke),
                   slotIndex ?? -1)
         {
         }

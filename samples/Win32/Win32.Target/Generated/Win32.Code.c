@@ -1468,7 +1468,7 @@ __Win32_Code_InheritTestTargetBase1_VTABLE_DECL__ __Win32_Code_InheritTestTarget
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
     (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_InheritTestTargetBase1_Calc@1__,
+    (void*)__Win32_Code_InheritTestTargetBase1_Calc_1__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1709,7 +1709,7 @@ void __Win32_Code_InheritTestTarget2_IL2C_MarkHandler__(Win32_Code_InheritTestTa
 {
 
     // Delegate checking base types
-    __Win32_Code_InheritTestTargetBase1*_IL2C_MarkHandler__((Win32_Code_InheritTestTargetBase1*)this__);
+    __Win32_Code_InheritTestTargetBase1_IL2C_MarkHandler__((Win32_Code_InheritTestTargetBase1*)this__);
 }
 
 // Runtime type information
@@ -1729,7 +1729,7 @@ __Win32_Code_InheritTestTarget2_VTABLE_DECL__ __Win32_Code_InheritTestTarget2_VT
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
     (void*)__System_Object_Equals__,
-    (void*)__Win32_Code_InheritTestTarget2_Calc@1__,
+    (void*)__Win32_Code_InheritTestTarget2_Calc_1__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2205,16 +2205,6 @@ __Win32_Code_InheritTypeTest_VTABLE_DECL__ __Win32_Code_InheritTypeTest_VTABLE__
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.IInterfaceTestTarget
 
-///////////////////////////////////////
-// Abstract: Calc
-
-int32_t __Win32_Code_IInterfaceTestTarget_Calc__(Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b)
-{
-    // WARNING: Pure virtual function called.
-    //TODO: throw : assert(0);
-    return (int32_t)0;
-}
-
 ////////////////////////////////////////////////////////////
 // Type: Win32.Code.InterfaceTestTargetClass
 
@@ -2367,11 +2357,11 @@ __Win32_Code_InterfaceTestTargetClass_VTABLE_DECL__ __Win32_Code_InterfaceTestTa
     (void*)__Win32_Code_InterfaceTestTargetClass_Calc__,
 };
 
-// Adjustor thunk: Win32_Code_IInterfaceTestTarget.IL2C_RuntimeCast
-static void* __Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast_AT_Win32_Code_IInterfaceTestTarget__(
+// Adjustor thunk: Win32_Code_InterfaceTestTargetClass.IL2C_RuntimeCast
+static void* __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    return __Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast__(this__, type);
+    return __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__(this__, type);
 }
 
 // Adjustor thunk: System_Object.ToString
@@ -2402,21 +2392,21 @@ static bool __System_Object_Equals_AT_Win32_Code_IInterfaceTestTarget__(
     return __System_Object_Equals__(this__, obj);
 }
 
-// Adjustor thunk: Win32_Code_IInterfaceTestTarget.Calc
-static int32_t __Win32_Code_IInterfaceTestTarget_Calc_AT_Win32_Code_IInterfaceTestTarget__(
+// Adjustor thunk: Win32_Code_InterfaceTestTargetClass.Calc
+static int32_t __Win32_Code_InterfaceTestTargetClass_Calc_AT_Win32_Code_IInterfaceTestTarget__(
     Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b)
 {
-    return __Win32_Code_IInterfaceTestTarget_Calc__(this__, a, b);
+    return __Win32_Code_InterfaceTestTargetClass_Calc__(this__, a, b);
 }
 
 // Vtable of Win32.Code.IInterfaceTestTarget (with adjustor thunk)
 __Win32_Code_IInterfaceTestTarget_VTABLE_DECL__ __Win32_Code_InterfaceTestTargetClass_Win32_Code_IInterfaceTestTarget_VTABLE__ = {
-    (void*)__Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast_AT_Win32_Code_IInterfaceTestTarget__,
-    (void*)__System_Object_ToString_AT_Win32_Code_IInterfaceTestTarget__,
-    (void*)__System_Object_GetHashCode_AT_Win32_Code_IInterfaceTestTarget__,
-    (void*)__System_Object_Finalize_AT_Win32_Code_IInterfaceTestTarget__,
-    (void*)__System_Object_Equals_AT_Win32_Code_IInterfaceTestTarget__,
-    (void*)__Win32_Code_IInterfaceTestTarget_Calc_AT_Win32_Code_IInterfaceTestTarget__,
+    __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast_AT_Win32_Code_IInterfaceTestTarget__,
+    __System_Object_ToString_AT_Win32_Code_IInterfaceTestTarget__,
+    __System_Object_GetHashCode_AT_Win32_Code_IInterfaceTestTarget__,
+    __System_Object_Finalize_AT_Win32_Code_IInterfaceTestTarget__,
+    __System_Object_Equals_AT_Win32_Code_IInterfaceTestTarget__,
+    __Win32_Code_InterfaceTestTargetClass_Calc_AT_Win32_Code_IInterfaceTestTarget__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -2938,7 +2928,7 @@ void __Win32_Code_OperatorNode_IL2C_MarkHandler__(Win32_Code_OperatorNode* this_
 {
 
     // Delegate checking base types
-    __Win32_Code_AbstractNode*_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
+    __Win32_Code_AbstractNode_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
 }
 
 // Runtime type information
@@ -3038,7 +3028,7 @@ void __Win32_Code_ReducibleNode_IL2C_MarkHandler__(Win32_Code_ReducibleNode* thi
 {
 
     // Delegate checking base types
-    __Win32_Code_AbstractNode*_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
+    __Win32_Code_AbstractNode_IL2C_MarkHandler__((Win32_Code_AbstractNode*)this__);
 }
 
 // Runtime type information
@@ -3188,7 +3178,7 @@ void __Win32_Code_NumericNode_IL2C_MarkHandler__(Win32_Code_NumericNode* this__)
 {
 
     // Delegate checking base types
-    __Win32_Code_ReducibleNode*_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
+    __Win32_Code_ReducibleNode_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
 }
 
 // Runtime type information
@@ -3511,7 +3501,7 @@ void __Win32_Code_ExpressionNode_IL2C_MarkHandler__(Win32_Code_ExpressionNode* t
     il2c_try_mark_from_handler(this__->Right);
 
     // Delegate checking base types
-    __Win32_Code_ReducibleNode*_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
+    __Win32_Code_ReducibleNode_IL2C_MarkHandler__((Win32_Code_ReducibleNode*)this__);
 }
 
 // Runtime type information
@@ -5286,7 +5276,7 @@ IL_000e:
 // Runtime helpers:
 
 // Runtime cast
-void* __Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__(Win32_Code_ValueTypeTestTarget this__, IL2C_RUNTIME_TYPE_DECL* type)
+void* __Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__(Win32_Code_ValueTypeTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     // This type
     if (type == il2c_typeof(Win32_Code_ValueTypeTestTarget)) return this__;
@@ -5296,7 +5286,7 @@ void* __Win32_Code_ValueTypeTestTarget_IL2C_RuntimeCast__(Win32_Code_ValueTypeTe
 }
 
 // GC's mark handler
-void __Win32_Code_ValueTypeTestTarget_IL2C_MarkHandler__(Win32_Code_ValueTypeTestTarget this__)
+void __Win32_Code_ValueTypeTestTarget_IL2C_MarkHandler__(Win32_Code_ValueTypeTestTarget* this__)
 {
     // Try marking each object reference fields
     il2c_try_mark_from_handler(this__->OR2);

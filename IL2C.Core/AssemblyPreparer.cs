@@ -162,6 +162,7 @@ namespace IL2C
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
+            bool isInterface,
             int slotIndex)
         {
             // TODO: throw
@@ -172,6 +173,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
+                isInterface,
                 slotIndex);
         }
 
@@ -198,6 +200,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
+                false,
                 null);
         }
 
@@ -243,6 +246,7 @@ namespace IL2C
                     method.Name,
                     returnType,
                     parameters,
+                    method.DeclaringType.IsInterface,
                     method.GetMethodOverloadIndex());
             }
 

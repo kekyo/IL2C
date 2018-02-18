@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
+using System.Reflection;
 using Mono.Cecil;
 
 namespace IL2C
@@ -26,17 +26,17 @@ namespace IL2C
 
             public int Compare(T x, T y)
             {
-                return StringComparer.InvariantCulture.Compare(x.FullName, y.FullName);
+                return StringComparer.Ordinal.Compare(x.FullName, y.FullName);
             }
 
             public bool Equals(T x, T y)
             {
-                return StringComparer.InvariantCulture.Equals(x.FullName, y.FullName);
+                return StringComparer.Ordinal.Equals(x.FullName, y.FullName);
             }
 
             public int GetHashCode(T obj)
             {
-                return StringComparer.InvariantCulture.GetHashCode(obj.FullName);
+                return StringComparer.Ordinal.GetHashCode(obj.FullName);
             }
 
             public static readonly MemberReferenceComparer<T> Instance = new MemberReferenceComparer<T>();
@@ -69,7 +69,7 @@ namespace IL2C
         };
 
         private static readonly TypeDefinition pseudoZeroTypeDefinition = AssemblyDefinition
-            .ReadAssembly(typeof(PseudoZeroType).Assembly.Location)
+            .ReadAssembly(typeof(PseudoZeroType).GetTypeInfo().Assembly.Location)
             .MainModule
             .GetType(typeof(CecilHelper).FullName)
             .NestedTypes

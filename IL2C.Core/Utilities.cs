@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using Mono.Cecil;
@@ -21,10 +22,11 @@ namespace IL2C
         static Utilities()
         {
             ilConverters = typeof(ILConverter)
+                .GetTypeInfo()
                 .Assembly
-                .GetTypes()
-                .Where(type => type.IsSealed && typeof(ILConverter).IsAssignableFrom(type))
-                .Select(type => (ILConverter)Activator.CreateInstance(type))
+                .DefinedTypes
+                .Where(type => type.IsSealed && typeof(ILConverter).GetTypeInfo().IsAssignableFrom(type))
+                .Select(type => (ILConverter)Activator.CreateInstance(type.AsType()))
                 .ToDictionary(ilc => ilc.OpCode);
         }
 

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 
 using Mono.Cecil;
-using Mono.Cecil.Pdb;
 
 using IL2C.Translators;
 

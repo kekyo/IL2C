@@ -156,17 +156,10 @@ namespace IL2C
                 tw.WriteLine("{");
 
                 // Emit vptr:
-                if (declaredType.IsClass)
+                if (declaredType.IsClass || declaredType.IsInterface)
                 {
                     tw.WriteLine(
                         "{0}__{1}_VTABLE_DECL__* vptr0__;",
-                        indent,
-                        rawTypeName);
-                }
-                else if (declaredType.IsInterface)
-                {
-                    tw.WriteLine(
-                        "{0}__{1}_VTABLE_DECL__* vptr_{1}__;",
                         indent,
                         rawTypeName);
                 }
@@ -339,29 +332,11 @@ namespace IL2C
                             method.GetSafeParameters()
                                 .Select(parameter => parameter.Name));
 
-                        if (type.IsValueType || type.IsClass)
-                        {
-                            tw.WriteLine(
-                                "{0}((this__)->vptr0__->{1}({2}))",
-                                indent,
-                                methodName,
-                                functionParameters);
-                        }
-                        else
-                        {
-                            // TODO: If interface's vtable layout same as class vtable.
-                            //   We can use instead to classes.
-                            //   Invoke and space cost efficient because classes directly pointed to function without adjustor thunk.
-                            //     1. First interface type
-                            //     2. Method list sequence equal between class and intrerface.
-                            //   (But we can't remove interface's vptr, because we'll have to do with C++ interoperability)
-                            tw.WriteLine(
-                                "{0}((this__)->vptr_{1}__->{2}({3}))",
-                                indent,
-                                rawTypeName,
-                                methodName,
-                                functionParameters);
-                        }
+                        tw.WriteLine(
+                            "{0}((this__)->vptr0__->{1}({2}))",
+                            indent,
+                            methodName,
+                            functionParameters);
                     }
                 }
             }

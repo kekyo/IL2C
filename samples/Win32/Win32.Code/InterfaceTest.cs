@@ -10,7 +10,12 @@ namespace Win32.Code
         int Calc(int a, int b);
     }
 
-    public class InterfaceTestTargetClass : IInterfaceTestTarget
+    public interface IInterfaceTestTarget2
+    {
+        int Calc2(int a, int b);
+    }
+
+    public class InterfaceTestTargetClass : IInterfaceTestTarget, IInterfaceTestTarget2
     {
         public int Value2;
         public ClassTypeTestTarget OR2;
@@ -22,6 +27,11 @@ namespace Win32.Code
         public int Calc(int a, int b)
         {
             return a + b + Value2;
+        }
+
+        public int Calc2(int a, int b)
+        {
+            return a - b + Value2;
         }
     }
 
@@ -40,9 +50,20 @@ namespace Win32.Code
             var hoge = new InterfaceTestTargetClass();
             hoge.Value2 = 123;
 
-            IInterfaceTestTarget hoge2 = hoge;
+            IInterfaceTestTarget hoge1 = hoge;
 
-            return hoge2.Calc(1, 2);
+            return hoge1.Calc(1, 2);
+        }
+
+        public static int Test3()
+        {
+            var hoge = new InterfaceTestTargetClass();
+            hoge.Value2 = 123;
+
+            IInterfaceTestTarget hoge1 = hoge;
+            IInterfaceTestTarget2 hoge2 = (IInterfaceTestTarget2)hoge1;
+
+            return hoge2.Calc2(1, 2);
         }
     }
 }

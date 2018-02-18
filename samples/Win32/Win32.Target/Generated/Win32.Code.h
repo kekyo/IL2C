@@ -23,6 +23,7 @@ typedef struct Win32_Code_InheritTestTargetBase1 Win32_Code_InheritTestTargetBas
 typedef struct Win32_Code_InheritTestTarget2 Win32_Code_InheritTestTarget2;
 typedef struct Win32_Code_InheritTypeTest Win32_Code_InheritTypeTest;
 typedef struct Win32_Code_IInterfaceTestTarget Win32_Code_IInterfaceTestTarget;
+typedef struct Win32_Code_IInterfaceTestTarget2 Win32_Code_IInterfaceTestTarget2;
 typedef struct Win32_Code_InterfaceTestTargetClass Win32_Code_InterfaceTestTargetClass;
 typedef struct Win32_Code_InterfaceTypeTest Win32_Code_InterfaceTypeTest;
 typedef struct Win32_Code_Win32 Win32_Code_Win32;
@@ -246,12 +247,36 @@ typedef const struct
 // Interface layout
 struct Win32_Code_IInterfaceTestTarget
 {
-    __Win32_Code_IInterfaceTestTarget_VTABLE_DECL__* vptr_Win32_Code_IInterfaceTestTarget__;
+    __Win32_Code_IInterfaceTestTarget_VTABLE_DECL__* vptr0__;
 };
 
 
 // Interface runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_IInterfaceTestTarget_RUNTIME_TYPE__;
+
+////////////////////////////////////////////////////////////
+// Interface: Win32.Code.IInterfaceTestTarget2
+
+// Interface vtable layout
+typedef const struct
+{
+    /* internalcall */ void* (*IL2C_RuntimeCast)(Win32_Code_IInterfaceTestTarget2* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Win32_Code_IInterfaceTestTarget2* this__);
+    int32_t (*GetHashCode)(Win32_Code_IInterfaceTestTarget2* this__);
+    void (*Finalize)(Win32_Code_IInterfaceTestTarget2* this__);
+    bool (*Equals)(Win32_Code_IInterfaceTestTarget2* this__, System_Object* obj);
+    int32_t (*Calc2)(Win32_Code_IInterfaceTestTarget2* this__, int32_t a, int32_t b);
+} __Win32_Code_IInterfaceTestTarget2_VTABLE_DECL__;
+
+// Interface layout
+struct Win32_Code_IInterfaceTestTarget2
+{
+    __Win32_Code_IInterfaceTestTarget2_VTABLE_DECL__* vptr0__;
+};
+
+
+// Interface runtime type information
+extern IL2C_RUNTIME_TYPE_DECL __Win32_Code_IInterfaceTestTarget2_RUNTIME_TYPE__;
 
 ////////////////////////////////////////////////////////////
 // Class: Win32.Code.InterfaceTestTargetClass
@@ -265,6 +290,7 @@ typedef const struct
     void (*Finalize)(Win32_Code_InterfaceTestTargetClass* this__);
     bool (*Equals)(Win32_Code_InterfaceTestTargetClass* this__, System_Object* obj);
     int32_t (*Calc)(Win32_Code_InterfaceTestTargetClass* this__, int32_t a, int32_t b);
+    int32_t (*Calc2)(Win32_Code_InterfaceTestTargetClass* this__, int32_t a, int32_t b);
 } __Win32_Code_InterfaceTestTargetClass_VTABLE_DECL__;
 
 // Class layout
@@ -272,6 +298,7 @@ struct Win32_Code_InterfaceTestTargetClass
 {
     __Win32_Code_InterfaceTestTargetClass_VTABLE_DECL__* vptr0__;
     __Win32_Code_IInterfaceTestTarget_VTABLE_DECL__* vptr_Win32_Code_IInterfaceTestTarget__;
+    __Win32_Code_IInterfaceTestTarget2_VTABLE_DECL__* vptr_Win32_Code_IInterfaceTestTarget2__;
     int32_t Value2;
     Win32_Code_ClassTypeTestTarget* OR2;
 };
@@ -596,6 +623,7 @@ extern Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1;
 
 
 
+
 extern int32_t Win32_Code_ValueTypeTestTarget_Value1;
 
 
@@ -737,21 +765,36 @@ extern void Win32_Code_InheritTypeTest__ctor(Win32_Code_InheritTypeTest* this__)
 extern /* internalcall */ void* __Win32_Code_IInterfaceTestTarget_IL2C_RuntimeCast__(Win32_Code_IInterfaceTestTarget* this__, IL2C_RUNTIME_TYPE_DECL* type);
 extern /* virtual */ int32_t Win32_Code_IInterfaceTestTarget_Calc(Win32_Code_IInterfaceTestTarget* this__, int32_t a, int32_t b);
 #define Win32_Code_IInterfaceTestTarget_ToString(/* Win32_Code_IInterfaceTestTarget* */ this__) \
-    ((this__)->vptr_Win32_Code_IInterfaceTestTarget__->ToString(this__))
+    ((this__)->vptr0__->ToString(this__))
 #define Win32_Code_IInterfaceTestTarget_GetHashCode(/* Win32_Code_IInterfaceTestTarget* */ this__) \
-    ((this__)->vptr_Win32_Code_IInterfaceTestTarget__->GetHashCode(this__))
+    ((this__)->vptr0__->GetHashCode(this__))
 #define Win32_Code_IInterfaceTestTarget_Finalize(/* Win32_Code_IInterfaceTestTarget* */ this__) \
-    ((this__)->vptr_Win32_Code_IInterfaceTestTarget__->Finalize(this__))
+    ((this__)->vptr0__->Finalize(this__))
 #define Win32_Code_IInterfaceTestTarget_Equals(/* Win32_Code_IInterfaceTestTarget* */ this__, /* System_Object* */ obj) \
-    ((this__)->vptr_Win32_Code_IInterfaceTestTarget__->Equals(this__, obj))
+    ((this__)->vptr0__->Equals(this__, obj))
 #define Win32_Code_IInterfaceTestTarget_Calc(/* Win32_Code_IInterfaceTestTarget* */ this__, /* int32_t */ a, /* int32_t */ b) \
-    ((this__)->vptr_Win32_Code_IInterfaceTestTarget__->Calc(this__, a, b))
+    ((this__)->vptr0__->Calc(this__, a, b))
+
+// Win32.Code.IInterfaceTestTarget2
+extern /* internalcall */ void* __Win32_Code_IInterfaceTestTarget2_IL2C_RuntimeCast__(Win32_Code_IInterfaceTestTarget2* this__, IL2C_RUNTIME_TYPE_DECL* type);
+extern /* virtual */ int32_t Win32_Code_IInterfaceTestTarget2_Calc2(Win32_Code_IInterfaceTestTarget2* this__, int32_t a, int32_t b);
+#define Win32_Code_IInterfaceTestTarget2_ToString(/* Win32_Code_IInterfaceTestTarget2* */ this__) \
+    ((this__)->vptr0__->ToString(this__))
+#define Win32_Code_IInterfaceTestTarget2_GetHashCode(/* Win32_Code_IInterfaceTestTarget2* */ this__) \
+    ((this__)->vptr0__->GetHashCode(this__))
+#define Win32_Code_IInterfaceTestTarget2_Finalize(/* Win32_Code_IInterfaceTestTarget2* */ this__) \
+    ((this__)->vptr0__->Finalize(this__))
+#define Win32_Code_IInterfaceTestTarget2_Equals(/* Win32_Code_IInterfaceTestTarget2* */ this__, /* System_Object* */ obj) \
+    ((this__)->vptr0__->Equals(this__, obj))
+#define Win32_Code_IInterfaceTestTarget2_Calc2(/* Win32_Code_IInterfaceTestTarget2* */ this__, /* int32_t */ a, /* int32_t */ b) \
+    ((this__)->vptr0__->Calc2(this__, a, b))
 
 // Win32.Code.InterfaceTestTargetClass
 extern /* internalcall */ void __Win32_Code_InterfaceTestTargetClass_IL2C_MarkHandler__(Win32_Code_InterfaceTestTargetClass* this__);
 extern /* internalcall */ void* __Win32_Code_InterfaceTestTargetClass_IL2C_RuntimeCast__(Win32_Code_InterfaceTestTargetClass* this__, IL2C_RUNTIME_TYPE_DECL* type);
 extern void Win32_Code_InterfaceTestTargetClass__ctor(Win32_Code_InterfaceTestTargetClass* this__);
 extern /* virtual */ int32_t __Win32_Code_InterfaceTestTargetClass_Calc__(Win32_Code_InterfaceTestTargetClass* this__, int32_t a, int32_t b);
+extern /* virtual */ int32_t __Win32_Code_InterfaceTestTargetClass_Calc2__(Win32_Code_InterfaceTestTargetClass* this__, int32_t a, int32_t b);
 #define Win32_Code_InterfaceTestTargetClass_ToString(/* Win32_Code_InterfaceTestTargetClass* */ this__) \
     ((this__)->vptr0__->ToString(this__))
 #define Win32_Code_InterfaceTestTargetClass_GetHashCode(/* Win32_Code_InterfaceTestTargetClass* */ this__) \
@@ -762,12 +805,15 @@ extern /* virtual */ int32_t __Win32_Code_InterfaceTestTargetClass_Calc__(Win32_
     ((this__)->vptr0__->Equals(this__, obj))
 #define Win32_Code_InterfaceTestTargetClass_Calc(/* Win32_Code_InterfaceTestTargetClass* */ this__, /* int32_t */ a, /* int32_t */ b) \
     ((this__)->vptr0__->Calc(this__, a, b))
+#define Win32_Code_InterfaceTestTargetClass_Calc2(/* Win32_Code_InterfaceTestTargetClass* */ this__, /* int32_t */ a, /* int32_t */ b) \
+    ((this__)->vptr0__->Calc2(this__, a, b))
 
 // Win32.Code.InterfaceTypeTest
 extern /* internalcall */ void __Win32_Code_InterfaceTypeTest_IL2C_MarkHandler__(Win32_Code_InterfaceTypeTest* this__);
 extern /* internalcall */ void* __Win32_Code_InterfaceTypeTest_IL2C_RuntimeCast__(Win32_Code_InterfaceTypeTest* this__, IL2C_RUNTIME_TYPE_DECL* type);
 extern int32_t Win32_Code_InterfaceTypeTest_Test1(void);
 extern int32_t Win32_Code_InterfaceTypeTest_Test2(void);
+extern int32_t Win32_Code_InterfaceTypeTest_Test3(void);
 extern void Win32_Code_InterfaceTypeTest__ctor(Win32_Code_InterfaceTypeTest* this__);
 #define Win32_Code_InterfaceTypeTest_ToString(/* Win32_Code_InterfaceTypeTest* */ this__) \
     ((this__)->vptr0__->ToString(this__))

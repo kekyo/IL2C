@@ -4,6 +4,7 @@
 #include <il2c.h>
 #include <stdint.h>
 #include <wchar.h>
+#include <stdbool.h>
 #include <string.h>
 
 #ifdef __cplusplus

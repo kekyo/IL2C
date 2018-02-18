@@ -302,23 +302,6 @@ namespace IL2C
             }
         }
 
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
-        {
-            foreach (var value in enumerable)
-            {
-                action(value);
-            }
-        }
-
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T, int> action)
-        {
-            var index = 0;
-            foreach (var value in enumerable)
-            {
-                action(value, index++);
-            }
-        }
-
         public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
         {
             return dict.TryGetValue(key, out var value) ? value : defaultValue;

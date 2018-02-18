@@ -128,7 +128,10 @@ namespace IL2C.Translators
             this.PrepareContext = prepareContext;
 
             this.instructions = new SortedDictionary<int, Instruction>();
-            instructions.ForEach(instruction => this.instructions.Add(instruction.Offset, instruction));
+            foreach (var instruction in instructions)
+            {
+                this.instructions.Add(instruction.Offset, instruction);
+            }
 
             // First valid process is TryDequeueNextPath.
             this.pathRemains.Enqueue(new StackSnapshot(0, 0, new List<StackInformationHolder>()));

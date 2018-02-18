@@ -92,8 +92,10 @@ namespace IL2C
                 })
                 .ToArray();
 
-            localVariables.ForEach(local =>
-                prepareContext.RegisterType(local.TargetType));
+            foreach (var local in localVariables)
+            {
+                prepareContext.RegisterType(local.TargetType);
+            }
 
             var decodeContext = new DecodeContext(
                 body.Method.Module,
@@ -214,8 +216,10 @@ namespace IL2C
             var parameters = method.GetSafeParameters();
 
             prepareContext.RegisterType(returnType);
-            parameters.ForEach(parameter =>
-                prepareContext.RegisterType(parameter.ParameterType));
+            foreach (var parameter in parameters)
+            {
+                prepareContext.RegisterType(parameter.ParameterType);
+            }
 
             if (method.IsPInvokeImpl)
             {
@@ -276,11 +280,16 @@ namespace IL2C
                 .ToArray();
 
             // Lookup type references.
-            types.ForEach(prepareContext.RegisterType);
+            foreach (var type in types)
+            {
+                prepareContext.RegisterType(type);
+            }
 
             // Lookup fields.
-            types.SelectMany(type => type.Fields)
-                .ForEach(field => prepareContext.RegisterType(field.FieldType));
+            foreach (var field in types.SelectMany(type => type.Fields))
+            {
+                prepareContext.RegisterType(field.FieldType);
+            }
 
             // Construct result.
             return new PreparedFunctions(allTypes

@@ -12,6 +12,15 @@ namespace IL2C.Translators
         Standard,
         Virtual,
         InterfaceVirtual,
+        DelegateVirtual,
+        PInvoke
+    }
+
+    public enum AbstractTypes
+    {
+        Abstract,
+        Interface,
+        Delegate,
         PInvoke
     }
 
@@ -77,12 +86,29 @@ namespace IL2C.Translators
         {
         }
 
+        private static FunctionTypes ToFunctionType(AbstractTypes type)
+        {
+            switch (type)
+            {
+                case AbstractTypes.Abstract:
+                    return FunctionTypes.Virtual;
+                case AbstractTypes.Interface:
+                    return FunctionTypes.InterfaceVirtual;
+                case AbstractTypes.Delegate:
+                    return FunctionTypes.DelegateVirtual;
+                case AbstractTypes.PInvoke:
+                    return FunctionTypes.PInvoke;
+                default:
+                    throw new Exception();
+            }
+        }
+
         internal PreparedFunction(
             string methodName,
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
-            bool isInterface,
+            AbstractTypes type,
             int? slotIndex)
             : this(
                   methodName,
@@ -90,9 +116,7 @@ namespace IL2C.Translators
                   returnType,
                   parameters,
                   null, null, null, null,
-                  isInterface
-                    ? FunctionTypes.InterfaceVirtual
-                    : (slotIndex.HasValue ? FunctionTypes.Virtual : FunctionTypes.PInvoke),
+                  ToFunctionType(type),
                   slotIndex ?? -1)
         {
         }

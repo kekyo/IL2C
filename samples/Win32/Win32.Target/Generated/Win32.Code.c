@@ -57,6 +57,8 @@ Win32_Code_ClassTypeTestTarget* Win32_Code_ClassTypeTestTarget_OR1 = NULL;
 
 
 
+
+
 int32_t Win32_Code_ValueTypeTestTarget_Value1 = 0;
 
 
@@ -842,6 +844,257 @@ IL2C_RUNTIME_TYPE_DECL __Win32_Code_ClassTypeTest_RUNTIME_TYPE__ = {
 // Vtable of Win32.Code.ClassTypeTest
 __Win32_Code_ClassTypeTest_VTABLE_DECL__ __Win32_Code_ClassTypeTest_VTABLE__ = {
     (void*)__Win32_Code_ClassTypeTest_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_Object_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Object_Equals__,
+};
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.DelegateTestTargetDelegate
+
+//////////////////////
+// Runtime helpers:
+
+// Runtime cast
+void* __Win32_Code_DelegateTestTargetDelegate_IL2C_RuntimeCast__(Win32_Code_DelegateTestTargetDelegate* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // This type
+    if (type == il2c_typeof(Win32_Code_DelegateTestTargetDelegate)) return this__;
+
+    // Delegate checking base types
+    return __System_MulticastDelegate_IL2C_RuntimeCast__((System_MulticastDelegate*)this__, type);
+}
+
+// GC's mark handler
+void __Win32_Code_DelegateTestTargetDelegate_IL2C_MarkHandler__(Win32_Code_DelegateTestTargetDelegate* this__)
+{
+
+    // Delegate checking base types
+    __System_MulticastDelegate_IL2C_MarkHandler__((System_MulticastDelegate*)this__);
+}
+
+// Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Win32_Code_DelegateTestTargetDelegate_RUNTIME_TYPE__ = {
+    "Win32.Code.DelegateTestTargetDelegate",
+    sizeof(Win32_Code_DelegateTestTargetDelegate),
+    /* internalcall */ (void*)__Win32_Code_DelegateTestTargetDelegate_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.DelegateTestTargetDelegate
+__Win32_Code_DelegateTestTargetDelegate_VTABLE_DECL__ __Win32_Code_DelegateTestTargetDelegate_VTABLE__ = {
+    (void*)__Win32_Code_DelegateTestTargetDelegate_IL2C_RuntimeCast__,
+    (void*)__System_Object_ToString__,
+    (void*)__System_MulticastDelegate_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_MulticastDelegate_Equals__,
+    (void*)__System_MulticastDelegate_GetInvocationList__,
+    (void*)__System_MulticastDelegate_GetMethodImpl__,
+    (void*)__System_Delegate_Clone__,
+    (void*)__System_MulticastDelegate_GetTarget__,
+    (void*)__System_MulticastDelegate_CombineImpl__,
+    (void*)__System_MulticastDelegate_RemoveImpl__,
+    (void*)__System_Delegate_DynamicInvokeImpl__,
+    (void*)__System_MulticastDelegate_GetObjectData__,
+    (void*)__Win32_Code_DelegateTestTargetDelegate_EndInvoke__,
+    (void*)__Win32_Code_DelegateTestTargetDelegate_Invoke__,
+    (void*)__Win32_Code_DelegateTestTargetDelegate_BeginInvoke__,
+};
+
+////////////////////////////////////////////////////////////
+// Type: Win32.Code.DelegateTypeTest
+
+///////////////////////////////////////
+// AddTarget
+
+int32_t Win32_Code_DelegateTypeTest_AddTarget(int32_t a, int32_t b)
+{
+    //-------------------
+    // Local variables:
+
+    int32_t local__;
+
+    //-------------------
+    // Evaluation stacks:
+
+    int32_t stack0_0__;
+    int32_t stack1_0__;
+
+    //-------------------
+    // IL body:
+
+/* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\DelegateTest.cs(13): */
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ldarg.0 */
+    stack0_0__ = a;
+    /* Path=1, Unique=0: IL_0002: ldarg.1 */
+    stack1_0__ = b;
+    /* Path=1, Unique=0: IL_0003: add */
+    stack0_0__ = stack0_0__ + stack1_0__;
+    /* Path=1, Unique=0: IL_0004: stloc.0 */
+    local__ = stack0_0__;
+    /* Path=1, Unique=0: IL_0005: br.s IL_0007 */
+    goto IL_0007;
+IL_0007:
+/* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\DelegateTest.cs(15): */
+    /* Path=2, Unique=0: IL_0007: ldloc.0 */
+    stack0_0__ = local__;
+    /* Path=2, Unique=0: IL_0008: ret */
+    return stack0_0__;
+}
+
+///////////////////////////////////////
+// Test1
+
+int32_t Win32_Code_DelegateTypeTest_Test1(void)
+{
+    //-------------------
+    // Local variables:
+
+    Win32_Code_DelegateTestTargetDelegate* hoge__ = NULL;
+    int32_t local__;
+
+    //-------------------
+    // Evaluation stacks:
+
+    IL2C_CecilHelper_PseudoZeroType* stack0_0__ = NULL;
+    Win32_Code_DelegateTestTargetDelegate* stack0_1__ = NULL;
+    int32_t stack0_2__;
+    intptr_t stack1_0__;
+    int32_t stack1_1__;
+    int32_t stack2_0__;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* IL2C_EXECUTION_FRAME */
+    {
+        IL2C_EXECUTION_FRAME* pNext;
+        uint8_t targetCount;
+        Win32_Code_DelegateTestTargetDelegate** phoge__;
+        IL2C_CecilHelper_PseudoZeroType** pstack0_0__;
+        Win32_Code_DelegateTestTargetDelegate** pstack0_1__;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 3;
+    __executionFrame__.phoge__ = &hoge__;
+    __executionFrame__.pstack0_0__ = &stack0_0__;
+    __executionFrame__.pstack0_1__ = &stack0_1__;
+    il2c_link_execution_frame(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+/* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\DelegateTest.cs(18): */
+    /* Path=1, Unique=0: IL_0000: nop */
+    /* Path=1, Unique=0: IL_0001: ldnull */
+    stack0_0__ = NULL;
+    /* Path=1, Unique=0: IL_0002: ldftn System.Int32 Win32.Code.DelegateTypeTest::AddTarget(System.Int32,System.Int32) */
+    stack1_0__ = Win32_Code_DelegateTypeTest_AddTarget;
+    /* Path=1, Unique=0: IL_0008: newobj System.Void Win32.Code.DelegateTestTargetDelegate::.ctor(System.Object,System.IntPtr) */
+    stack0_1__ = il2c_get_uninitialized_object(il2c_typeof(Win32_Code_DelegateTestTargetDelegate));
+    stack0_1__->vptr0__ = &__Win32_Code_DelegateTestTargetDelegate_VTABLE__;
+    Win32_Code_DelegateTestTargetDelegate__ctor(stack0_1__, (System_Object*)stack0_0__, stack1_0__);
+    /* Path=1, Unique=0: IL_000d: stloc.0 */
+    hoge__ = stack0_1__;
+/* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\DelegateTest.cs(20): */
+    /* Path=1, Unique=0: IL_000e: ldloc.0 */
+    stack0_1__ = hoge__;
+    /* Path=1, Unique=0: IL_000f: ldc.i4.1 */
+    stack1_1__ = 1;
+    /* Path=1, Unique=0: IL_0010: ldc.i4.2 */
+    stack2_0__ = 2;
+    /* Path=1, Unique=0: IL_0011: callvirt System.Int32 Win32.Code.DelegateTestTargetDelegate::Invoke(System.Int32,System.Int32) */
+    stack0_2__ = Win32_Code_DelegateTestTargetDelegate_Invoke(stack0_1__, stack1_1__, stack2_0__);
+    /* Path=1, Unique=0: IL_0016: stloc.1 */
+    local__ = stack0_2__;
+    /* Path=1, Unique=0: IL_0017: br.s IL_0019 */
+    goto IL_0019;
+IL_0019:
+/* D:\\PROJECT\\IL2C\\samples\\Win32\\Win32.Code\\DelegateTest.cs(21): */
+    /* Path=2, Unique=0: IL_0019: ldloc.1 */
+    stack0_2__ = local__;
+    /* Path=2, Unique=0: IL_001a: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return stack0_2__;
+}
+
+///////////////////////////////////////
+// .ctor
+
+void Win32_Code_DelegateTypeTest__ctor(Win32_Code_DelegateTypeTest* this__)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    Win32_Code_DelegateTypeTest* stack0_0__ = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* IL2C_EXECUTION_FRAME */
+    {
+        IL2C_EXECUTION_FRAME* pNext;
+        uint8_t targetCount;
+        Win32_Code_DelegateTypeTest** pstack0_0__;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.pstack0_0__ = &stack0_0__;
+    il2c_link_execution_frame(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* Path=1, Unique=0: IL_0000: ldarg.0 */
+    stack0_0__ = this__;
+    /* Path=1, Unique=0: IL_0001: call System.Void System.Object::.ctor() */
+    /* Path=1, Unique=0: IL_0006: nop */
+    /* Path=1, Unique=0: IL_0007: ret */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return;
+}
+
+//////////////////////
+// Runtime helpers:
+
+// Runtime cast
+void* __Win32_Code_DelegateTypeTest_IL2C_RuntimeCast__(Win32_Code_DelegateTypeTest* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // This type
+    if (type == il2c_typeof(Win32_Code_DelegateTypeTest)) return this__;
+
+    // Delegate checking base types
+    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
+}
+
+// GC's mark handler
+void __Win32_Code_DelegateTypeTest_IL2C_MarkHandler__(Win32_Code_DelegateTypeTest* this__)
+{
+
+    /* Suppressed invoke base mark handler */
+}
+
+// Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Win32_Code_DelegateTypeTest_RUNTIME_TYPE__ = {
+    "Win32.Code.DelegateTypeTest",
+    sizeof(Win32_Code_DelegateTypeTest),
+    /* internalcall */ (void*)__Win32_Code_DelegateTypeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Win32.Code.DelegateTypeTest
+__Win32_Code_DelegateTypeTest_VTABLE_DECL__ __Win32_Code_DelegateTypeTest_VTABLE__ = {
+    (void*)__Win32_Code_DelegateTypeTest_IL2C_RuntimeCast__,
     (void*)__System_Object_ToString__,
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,

@@ -164,7 +164,7 @@ namespace IL2C
             string rawMethodName,
             TypeReference returnType,
             Parameter[] parameters,
-            bool isInterface,
+            AbstractTypes type,
             int slotIndex)
         {
             // TODO: throw
@@ -175,7 +175,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
-                isInterface,
+                type,
                 slotIndex);
         }
 
@@ -202,7 +202,7 @@ namespace IL2C
                 rawMethodName,
                 returnType,
                 parameters,
-                false,
+                AbstractTypes.PInvoke,
                 null);
         }
 
@@ -250,7 +250,24 @@ namespace IL2C
                     method.Name,
                     returnType,
                     parameters,
-                    method.DeclaringType.IsInterface,
+                    method.DeclaringType.IsInterface ? AbstractTypes.Interface : AbstractTypes.Abstract,
+                    method.GetMethodOverloadIndex());
+            }
+
+            // If delegate's method
+            if (method.DeclaringType.GetSafeDelegateType().IsAssignableFrom(method.DeclaringType))
+            {
+                // "extern internalcall"
+                Debug.Assert(method.Body == null);
+
+                // Make abstract
+                return PrepareAbstractMethod(
+                    prepareContext,
+                    methodName,
+                    method.Name,
+                    returnType,
+                    parameters,
+                    AbstractTypes.Delegate,
                     method.GetMethodOverloadIndex());
             }
 
@@ -293,8 +310,14 @@ namespace IL2C
 
             // Construct result.
             return new PreparedFunctions(allTypes
+                // All methods
                 .SelectMany(type => type.Methods)
+                // Except by predict
                 .Where(predict)
+                // Exclude delegate's constructor
+                .Where(method => !method.IsConstructor
+                    || !method.DeclaringType.GetSafeDelegateType().IsAssignableFrom(method.DeclaringType))
+                // Create results
                 .ToDictionary(
                     method => method,
                     method => PrepareMethod(prepareContext, method),
@@ -305,6 +328,7 @@ namespace IL2C
         {
             return Prepare(
                 translateContext,
+                // Standard methods and instance constructors.
                 method => !method.IsConstructor || !method.IsStatic);
         }
     }

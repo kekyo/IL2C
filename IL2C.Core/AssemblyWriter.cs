@@ -19,6 +19,54 @@ namespace IL2C
 
     public static class AssemblyWriter
     {
+        private static bool IsStandardMethod(MethodDefinition method)
+        {
+            // TODO: Except typed delegate's async methods
+            //   Because currently IL2C not supported async methods.
+            if (method.GetSafeDelegateType().IsAssignableFrom(method.DeclaringType))
+            {
+                // Only "Invoke", exclude "BeginInvoke" and "EndInvoke"
+                return method.Name.Equals("Invoke");
+            }
+
+            // Except type initializer
+            if (method.IsConstructor)
+            {
+                return !method.IsStatic;
+            }
+
+            return true;
+        }
+
+        private static MethodDefinition[] GetStandardMethods(this TypeDefinition declaredType)
+        {
+            return declaredType
+                .Methods
+                .Where(IsStandardMethod)
+                .ToArray();
+        }
+
+        private static MethodDefinition[] GetVirtualMethods(this TypeReference declaredType)
+        {
+            // HACK: Delegate has many virtual methods at System.Delegate and System.MulticastDelegate,
+            //   but IL2C not required/virtuality these methods.
+            //   It code fragment decreases vtable size to System.Object at all delegate types.
+            return (declaredType.GetSafeDelegateType().IsAssignableFrom(declaredType)
+                    ? declaredType.GetSafeObjectType()  // System.Object
+                    : declaredType)
+                .EnumerateOrderedOverridedMethods()
+                .ToArray();
+        }
+
+        private static TypeReference[] GetDeclaredInterfaces(this TypeDefinition declaredType)
+        {
+            return declaredType.GetSafeDelegateType().IsAssignableFrom(declaredType)
+                ? new TypeReference[0]
+                : declaredType.Interfaces
+                    .Select(interfaceImpl => interfaceImpl.InterfaceType)
+                    .ToArray();
+        }
+
         private static void InternalConvertType(
             TextWriter tw,
             IExtractContext extractContext,
@@ -94,9 +142,7 @@ namespace IL2C
                 indent,
                 rawTypeName);
 
-            var virtualMethods = declaredType
-                .EnumerateOrderedOverridedMethods()
-                .ToArray();
+            var virtualMethods = declaredType.GetVirtualMethods();
             foreach (var method in virtualMethods)
             {
                 var functionPrototype = Utilities.GetFunctionTypeString(
@@ -119,20 +165,21 @@ namespace IL2C
                 .Reverse()
                 .SelectMany(type =>
                 {
-                    var vptrs = type.Interfaces
-                        .Select(interfaceImpl => new
+                    var vptrs = type.GetDeclaredInterfaces()
+                        .Select(interfaceType => new
                         {
                             Name = string.Format(
                                 "vptr_{0}__",
-                                interfaceImpl.InterfaceType
+                                interfaceType
                                     .GetFullMemberName()
                                     .ManglingSymbolName()),
                             TypeName = string.Format(
                                 "__{0}_VTABLE_DECL__*",
-                                interfaceImpl.InterfaceType
+                                interfaceType
                                     .GetFullMemberName()
                                     .ManglingSymbolName())
                         });
+
                     var thisFields = type.Fields
                         .Where(field => !field.IsStatic)
                         .Select(field => new
@@ -140,9 +187,11 @@ namespace IL2C
                             field.Name,
                             TypeName = extractContext.GetCLanguageTypeName(field.FieldType)
                         });
+
                     return vptrs.Concat(thisFields);
                 })
                 .ToArray();
+
             if ((declaredType.IsValueType == false) ||
                 (fields.Length >= 1))
             {
@@ -174,17 +223,23 @@ namespace IL2C
                 }
 
                 tw.WriteLine("};");
-                tw.WriteLine();
             }
 
-            var makrHandlerPrototype = string.Format(
-                "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
-                rawTypeName);
             tw.WriteLine();
             tw.WriteLine(
                 "// {0} runtime type information",
                 typeString);
-            tw.WriteLine(makrHandlerPrototype);
+            tw.WriteLine(
+                "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
+                rawTypeName);
+
+            tw.WriteLine();
+            tw.WriteLine(
+                "// {0} vtable",
+                typeString);
+            tw.WriteLine(
+                "extern __{0}_VTABLE_DECL__ __{0}_VTABLE__;",
+                rawTypeName);
         }
 
         private static string GetFunctionNameByFunctionType(PreparedFunction preparedFunction)
@@ -280,64 +335,60 @@ namespace IL2C
                     rawTypeName,
                     typeName);
 
-                foreach (var method in type.Methods
-                    .Where(method => !method.IsConstructor || !method.IsStatic))
+                foreach (var method in type.GetStandardMethods())
                 {
-                    var preparedFunction = preparedFunctions.Functions[method];
+                    if (preparedFunctions.Functions.TryGetValue(method, out var preparedFunction))
+                    {
+                        var functionPrototype = Utilities.GetFunctionPrototypeString(
+                            GetFunctionNameByFunctionType(preparedFunction),
+                            preparedFunction.ReturnType,
+                            preparedFunction.Parameters,
+                            extractContext);
 
-                    var functionPrototype = Utilities.GetFunctionPrototypeString(
-                        GetFunctionNameByFunctionType(preparedFunction),
-                        preparedFunction.ReturnType,
-                        preparedFunction.Parameters,
-                        extractContext);
-
-                    tw.WriteLine(
-                        "extern {0}{1};",
-                        method.IsVirtual ? "/* virtual */ " : string.Empty,
-                        functionPrototype);
+                        tw.WriteLine(
+                            "extern {0}{1};",
+                            ((preparedFunction.FunctionType == FunctionTypes.InterfaceVirtual)
+                            || (preparedFunction.FunctionType == FunctionTypes.Virtual))
+                            ? "/* virtual */ " : string.Empty,
+                            functionPrototype);
+                    }
                 }
 
-                var virtualMethods = type
-                    .EnumerateOrderedOverridedMethods()
-                    .ToArray();
-                if (virtualMethods.Length >= 1)
+                foreach (var method in type.GetVirtualMethods())
                 {
-                    foreach (var method in virtualMethods)
-                    {
-                        var fullMethodName = type
-                            .GetFullMemberName(method, MethodNameTypes.Index)
-                            .ManglingSymbolName();
-                        var functionParametersDeclaration = string.Join(
-                            ", ",
-                            method.GetSafeParameters()
-                                .Select((parameter, index) => (index == 0)
-                                    ? string.Format(
-                                        "/* {0} */ {1}",
-                                        extractContext.GetCLanguageTypeName(type),
-                                        parameter.Name)
-                                    : string.Format(
-                                        "/* {0} */ {1}",
-                                        extractContext.GetCLanguageTypeName(parameter.ParameterType),
-                                        parameter.Name)));
-                        tw.WriteLine(
-                            "#define {0}({1}) \\",
-                            fullMethodName,
-                            functionParametersDeclaration);
+                    var fullMethodName = type
+                        .GetFullMemberName(method, MethodNameTypes.Index)
+                        .ManglingSymbolName();
+                    var functionParametersDeclaration = string.Join(
+                        ", ",
+                        method.GetSafeParameters()
+                            .Select((parameter, index) => (index == 0)
+                                ? string.Format(
+                                    "/* {0} */ {1}",
+                                    extractContext.GetCLanguageTypeName(type),
+                                    parameter.Name)
+                                : string.Format(
+                                    "/* {0} */ {1}",
+                                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
+                                    parameter.Name)));
+                    tw.WriteLine(
+                        "#define {0}({1}) \\",
+                        fullMethodName,
+                        functionParametersDeclaration);
 
-                        var methodName = method
-                            .GetOverloadedMethodName()
-                            .ManglingSymbolName();
-                        var functionParameters = string.Join(
-                            ", ",
-                            method.GetSafeParameters()
-                                .Select(parameter => parameter.Name));
+                    var methodName = method
+                        .GetOverloadedMethodName()
+                        .ManglingSymbolName();
+                    var functionParameters = string.Join(
+                        ", ",
+                        method.GetSafeParameters()
+                            .Select(parameter => parameter.Name));
 
-                        tw.WriteLine(
-                            "{0}((this__)->vptr0__->{1}({2}))",
-                            indent,
-                            methodName,
-                            functionParameters);
-                    }
+                    tw.WriteLine(
+                        "{0}((this__)->vptr0__->{1}({2}))",
+                        indent,
+                        methodName,
+                        functionParameters);
                 }
             }
 
@@ -517,6 +568,45 @@ namespace IL2C
 
                     canWriteSequencePoint = true;
                 }
+            }
+
+            tw.WriteLine("}");
+        }
+
+        private static void InternalConvertFromDelegateFunction(
+            TextWriter tw,
+            IExtractContext extractContext,
+            PreparedFunction preparedFunction,
+            string indent)
+        {
+            var functionPrototype = Utilities.GetFunctionPrototypeString(
+                GetFunctionNameByFunctionType(preparedFunction),
+                preparedFunction.ReturnType,
+                preparedFunction.Parameters,
+                extractContext);
+
+            tw.WriteLine();
+            tw.WriteLine("///////////////////////////////////////");
+            tw.WriteLine("// Abstract: {0}", preparedFunction.RawMethodName);
+            tw.WriteLine();
+
+            tw.WriteLine(functionPrototype);
+            tw.WriteLine("{");
+
+            tw.WriteLine(
+                "{0}// WARNING: Pure virtual function called.",
+                indent);
+            tw.WriteLine(
+                "{0}//TODO: throw : assert(0);",
+                indent);
+
+            if (preparedFunction.ReturnType.IsVoidType() == false)
+            {
+                tw.WriteLine(
+                    "{0}return ({1}){2};",
+                    indent,
+                    extractContext.GetCLanguageTypeName(preparedFunction.ReturnType),
+                    preparedFunction.ReturnType.IsNumericPrimitive() ? "0" : "NULL");
             }
 
             tw.WriteLine("}");
@@ -1138,8 +1228,7 @@ namespace IL2C
                 twSource.WriteLine("// Type: {0}", type.GetFullMemberName());
 
                 // All methods and constructor exclude type initializer
-                foreach (var method in type.Methods
-                    .Where(method => !method.IsConstructor || !method.IsStatic))
+                foreach (var method in type.GetStandardMethods())
                 {
                     InternalConvertFromMethod(
                         twSource,

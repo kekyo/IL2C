@@ -41,9 +41,11 @@ struct UEFI_Code_AbstractNode
     int32_t NextIndex;
 };
 
-
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_AbstractNode_RUNTIME_TYPE__;
+
+// Class vtable
+extern __UEFI_Code_AbstractNode_VTABLE_DECL__ __UEFI_Code_AbstractNode_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.OperatorNode
@@ -66,9 +68,11 @@ struct UEFI_Code_OperatorNode
     wchar_t Operator;
 };
 
-
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_OperatorNode_RUNTIME_TYPE__;
+
+// Class vtable
+extern __UEFI_Code_OperatorNode_VTABLE_DECL__ __UEFI_Code_OperatorNode_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.ReducibleNode
@@ -91,9 +95,11 @@ struct UEFI_Code_ReducibleNode
     int32_t NextIndex;
 };
 
-
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ReducibleNode_RUNTIME_TYPE__;
+
+// Class vtable
+extern __UEFI_Code_ReducibleNode_VTABLE_DECL__ __UEFI_Code_ReducibleNode_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.NumericNode
@@ -117,9 +123,11 @@ struct UEFI_Code_NumericNode
     int32_t Numeric;
 };
 
-
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_NumericNode_RUNTIME_TYPE__;
+
+// Class vtable
+extern __UEFI_Code_NumericNode_VTABLE_DECL__ __UEFI_Code_NumericNode_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.ExpressionNode
@@ -145,9 +153,11 @@ struct UEFI_Code_ExpressionNode
     UEFI_Code_ReducibleNode* Right;
 };
 
-
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_ExpressionNode_RUNTIME_TYPE__;
+
+// Class vtable
+extern __UEFI_Code_ExpressionNode_VTABLE_DECL__ __UEFI_Code_ExpressionNode_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: UEFI.Code.PolishNotation
@@ -168,9 +178,11 @@ struct UEFI_Code_PolishNotation
     __UEFI_Code_PolishNotation_VTABLE_DECL__* vptr0__;
 };
 
-
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __UEFI_Code_PolishNotation_RUNTIME_TYPE__;
+
+// Class vtable
+extern __UEFI_Code_PolishNotation_VTABLE_DECL__ __UEFI_Code_PolishNotation_VTABLE__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:

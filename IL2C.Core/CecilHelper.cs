@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 using Mono.Cecil;
 
 namespace IL2C
@@ -76,7 +77,7 @@ namespace IL2C
             .First(t2 => t2.Name == typeof(PseudoZeroType).Name);
         #endregion
 
-        private static T ResolveIf<T>(MemberReference reference)
+        public static T ResolveIf<T>(this MemberReference reference)
             where T : IMemberDefinition
         {
             var definition = reference as IMemberDefinition;
@@ -114,8 +115,8 @@ namespace IL2C
                 return true;
             }
 
-            var lhsDefinition = ResolveIf<TypeDefinition>(lhsType);
-            var rhsDefinition = ResolveIf<TypeDefinition>(rhsType);
+            var lhsDefinition = lhsType.ResolveIf<TypeDefinition>();
+            var rhsDefinition = rhsType.ResolveIf<TypeDefinition>();
 
             // BaseClass <-- DerivedClass
             if (lhsDefinition.IsClass && rhsDefinition.IsClass)
@@ -347,6 +348,18 @@ namespace IL2C
             return realObject.Module.GetType("System.ValueType");
         }
 
+        public static TypeReference GetSafeDelegateType(this MemberReference member)
+        {
+            var realObject = member.Module.TypeSystem.Object.Resolve();
+            return realObject.Module.GetType("System.Delegate");
+        }
+
+        public static TypeReference GetSafeMulticastDelegateType(this MemberReference member)
+        {
+            var realObject = member.Module.TypeSystem.Object.Resolve();
+            return realObject.Module.GetType("System.MulticastDelegate");
+        }
+
         public static TypeReference GetSafeIntPtrType(this MemberReference member)
         {
             return member.Module.TypeSystem.IntPtr;
@@ -435,6 +448,18 @@ namespace IL2C
             return realObject.Module.GetType("System.ValueType");
         }
 
+        public static TypeReference GetSafeDelegateType(this ModuleDefinition module)
+        {
+            var realObject = module.TypeSystem.Object.Resolve();
+            return realObject.Module.GetType("System.Delegate");
+        }
+
+        public static TypeReference GetSafeMulticastDelegateType(this ModuleDefinition module)
+        {
+            var realObject = module.TypeSystem.Object.Resolve();
+            return realObject.Module.GetType("System.MulticastDelegate");
+        }
+
         public static TypeReference GetSafeIntPtrType(this ModuleDefinition module)
         {
             return module.TypeSystem.IntPtr;
@@ -520,6 +545,16 @@ namespace IL2C
         public static bool IsValueTypeType(this TypeReference type)
         {
             return type.GetSafeValueTypeType().MemberEquals(type);
+        }
+
+        public static bool IsDelegateType(this TypeReference type)
+        {
+            return type.GetSafeDelegateType().MemberEquals(type);
+        }
+
+        public static bool IsMulticastDelegateType(this TypeReference type)
+        {
+            return type.GetSafeMulticastDelegateType().MemberEquals(type);
         }
 
         public static bool IsIntPtrType(this TypeReference type)

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -12,20 +12,20 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{22C45898-CBAE-43D0-83A8-9AB921A3E081}</ProjectGuid>
+    <ProjectGuid>{4DB1CA14-5035-4848-BCDE-10F0A7DC0F50}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>UEFITarget</RootNamespace>
+    <RootNamespace>Win32Target</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -44,47 +44,27 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
-    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
-    <GenerateManifest>false</GenerateManifest>
-    <TargetExt>.efi</TargetExt>
-    <LinkIncremental>false</LinkIncremental>
-    <TargetName>bootx64</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>bin\$(Platform)\$(ConfigurationName)\</OutDir>
-    <IntDir>obj\$(Platform)\$(ConfigurationName)\</IntDir>
-    <GenerateManifest>false</GenerateManifest>
-    <TargetExt>.efi</TargetExt>
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>bootx64</TargetName>
+    <OutDir>bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;UEFI</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;efi;efi/amd64;../../../IL2C.Runtime</AdditionalIncludeDirectories>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <UndefinePreprocessorDefinitions>_WIN32</UndefinePreprocessorDefinitions>
-      <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <DisableSpecificWarnings>4091</DisableSpecificWarnings>
-      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>.;../Generated;../../../IL2C.Runtime</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>EFI Application</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies />
-      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
-      <SetChecksum>true</SetChecksum>
-      <EntryPointSymbol>EfiMain</EntryPointSymbol>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>false</DataExecutionPrevention>
-      <AdditionalOptions>/ignore:4217 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -93,37 +73,29 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;UEFI</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;efi;efi/amd64;../../../IL2C.Runtime</AdditionalIncludeDirectories>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <UndefinePreprocessorDefinitions>_WIN32</UndefinePreprocessorDefinitions>
-      <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <DisableSpecificWarnings>4091</DisableSpecificWarnings>
-      <StringPooling>true</StringPooling>
+      <AdditionalIncludeDirectories>.;../Generated;../../../IL2C.Runtime</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
-      <SubSystem>EFI Application</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies />
-      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
-      <SetChecksum>true</SetChecksum>
-      <EntryPointSymbol>EfiMain</EntryPointSymbol>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention>false</DataExecutionPrevention>
-      <AdditionalOptions>/ignore:4217 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\IL2C.Runtime\il2c.c" />
-    <ClCompile Include="Generated\UEFI.Code.c" />
+    <ClCompile Include="..\Generated\*e.c" />
+    <ClCompile Include="..\..\..\IL2C.Runtime\*.c" />
     <ClCompile Include="Main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\IL2C.Runtime\il2c.h" />
-    <ClInclude Include="Generated\UEFI.Code.h" />
+    <ClInclude Include="..\Generated\*.h" />
+    <ClInclude Include="..\..\..\IL2C.Runtime\*.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

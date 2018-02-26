@@ -1,6 +1,13 @@
-#include "Generated/UEFI.Code.h"
+#include <efi.h>
 
-#include "efi.h"
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <wchar.h>
+
+#include <il2c.h>
+
+#include "Calculator.Code.h"
 
 //////////////////////////////////////////////////////////////////////////
 // IL2C <---> UEFI interop functions
@@ -194,7 +201,7 @@ EFI_STATUS EfiMain(
 
     il2c_initialize();
 
-    UEFI_Code_PolishNotation_Main();
+    Calculator_PolishNotation_Main();
 
     il2c_shutdown();
 

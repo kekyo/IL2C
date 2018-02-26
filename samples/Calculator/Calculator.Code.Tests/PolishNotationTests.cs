@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace UEFI.Code
+namespace Calculator
 {
     [TestFixture]
     public class PolishNotationTests

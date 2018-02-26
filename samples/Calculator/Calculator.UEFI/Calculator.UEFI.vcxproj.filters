@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Generated\Win32.Code.h">
+    <ClInclude Include="..\Generated\*.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\IL2C.Runtime\il2c.h">
+    <ClInclude Include="..\..\..\IL2C.Runtime\*.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -26,10 +26,10 @@
     <ClCompile Include="Main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Generated\Win32.Code.c">
+    <ClCompile Include="..\Generated\*.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\IL2C.Runtime\il2c.c">
+    <ClCompile Include="..\..\..\IL2C.Runtime\*.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -51,11 +51,9 @@ struct IL2C_Tests_BoxingTest
     __IL2C_Tests_BoxingTest_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_BoxingTest_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_BoxingTest_VTABLE_DECL__ __IL2C_Tests_BoxingTest_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.ClassTypeTestTarget
@@ -78,11 +76,9 @@ struct IL2C_Tests_ClassTypeTestTarget
     IL2C_Tests_ClassTypeTestTarget* OR2;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_ClassTypeTestTarget_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_ClassTypeTestTarget_VTABLE_DECL__ __IL2C_Tests_ClassTypeTestTarget_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.ClassTypeTest
@@ -103,11 +99,9 @@ struct IL2C_Tests_ClassTypeTest
     __IL2C_Tests_ClassTypeTest_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_ClassTypeTest_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_ClassTypeTest_VTABLE_DECL__ __IL2C_Tests_ClassTypeTest_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.Hoge1
@@ -128,11 +122,9 @@ struct IL2C_Tests_Hoge1
     __IL2C_Tests_Hoge1_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_Hoge1_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_Hoge1_VTABLE_DECL__ __IL2C_Tests_Hoge1_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.Hoge2
@@ -153,11 +145,9 @@ struct IL2C_Tests_Hoge2
     __IL2C_Tests_Hoge2_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_Hoge2_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_Hoge2_VTABLE_DECL__ __IL2C_Tests_Hoge2_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.InheritTestTargetBase1
@@ -181,11 +171,9 @@ struct IL2C_Tests_InheritTestTargetBase1
     IL2C_Tests_ClassTypeTestTarget* OR2;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_InheritTestTargetBase1_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_InheritTestTargetBase1_VTABLE_DECL__ __IL2C_Tests_InheritTestTargetBase1_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.InheritTestTarget2
@@ -209,11 +197,9 @@ struct IL2C_Tests_InheritTestTarget2
     IL2C_Tests_ClassTypeTestTarget* OR2;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_InheritTestTarget2_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_InheritTestTarget2_VTABLE_DECL__ __IL2C_Tests_InheritTestTarget2_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.InheritTypeTest
@@ -234,11 +220,9 @@ struct IL2C_Tests_InheritTypeTest
     __IL2C_Tests_InheritTypeTest_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_InheritTypeTest_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_InheritTypeTest_VTABLE_DECL__ __IL2C_Tests_InheritTypeTest_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Interface: IL2C.Tests.IInterfaceTestTarget
@@ -260,11 +244,9 @@ struct IL2C_Tests_IInterfaceTestTarget
     __IL2C_Tests_IInterfaceTestTarget_VTABLE_DECL__* vptr0__;
 };
 
+
 // Interface runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_IInterfaceTestTarget_RUNTIME_TYPE__;
-
-// Interface vtable
-extern __IL2C_Tests_IInterfaceTestTarget_VTABLE_DECL__ __IL2C_Tests_IInterfaceTestTarget_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Interface: IL2C.Tests.IInterfaceTestTarget2
@@ -286,11 +268,9 @@ struct IL2C_Tests_IInterfaceTestTarget2
     __IL2C_Tests_IInterfaceTestTarget2_VTABLE_DECL__* vptr0__;
 };
 
+
 // Interface runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_IInterfaceTestTarget2_RUNTIME_TYPE__;
-
-// Interface vtable
-extern __IL2C_Tests_IInterfaceTestTarget2_VTABLE_DECL__ __IL2C_Tests_IInterfaceTestTarget2_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.InterfaceTestTargetClass
@@ -317,11 +297,9 @@ struct IL2C_Tests_InterfaceTestTargetClass
     IL2C_Tests_ClassTypeTestTarget* OR2;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_InterfaceTestTargetClass_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_InterfaceTestTargetClass_VTABLE_DECL__ __IL2C_Tests_InterfaceTestTargetClass_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.InterfaceTypeTest
@@ -342,11 +320,9 @@ struct IL2C_Tests_InterfaceTypeTest
     __IL2C_Tests_InterfaceTypeTest_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_InterfaceTypeTest_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_InterfaceTypeTest_VTABLE_DECL__ __IL2C_Tests_InterfaceTypeTest_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.Win32
@@ -367,11 +343,9 @@ struct IL2C_Tests_Win32
     __IL2C_Tests_Win32_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_Win32_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_Win32_VTABLE_DECL__ __IL2C_Tests_Win32_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.StringTest
@@ -392,11 +366,9 @@ struct IL2C_Tests_StringTest
     __IL2C_Tests_StringTest_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_StringTest_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_StringTest_VTABLE_DECL__ __IL2C_Tests_StringTest_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.UnsafeTest
@@ -417,11 +389,9 @@ struct IL2C_Tests_UnsafeTest
     __IL2C_Tests_UnsafeTest_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_UnsafeTest_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_UnsafeTest_VTABLE_DECL__ __IL2C_Tests_UnsafeTest_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Struct: IL2C.Tests.ValueTypeTestTarget
@@ -444,11 +414,9 @@ struct IL2C_Tests_ValueTypeTestTarget
     IL2C_Tests_ClassTypeTestTarget* OR2;
 };
 
+
 // Struct runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_ValueTypeTestTarget_RUNTIME_TYPE__;
-
-// Struct vtable
-extern __IL2C_Tests_ValueTypeTestTarget_VTABLE_DECL__ __IL2C_Tests_ValueTypeTestTarget_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: IL2C.Tests.ValueTypeTest
@@ -469,11 +437,9 @@ struct IL2C_Tests_ValueTypeTest
     __IL2C_Tests_ValueTypeTest_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_ValueTypeTest_RUNTIME_TYPE__;
-
-// Class vtable
-extern __IL2C_Tests_ValueTypeTest_VTABLE_DECL__ __IL2C_Tests_ValueTypeTest_VTABLE__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:

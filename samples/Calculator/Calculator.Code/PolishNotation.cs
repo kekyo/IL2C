@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.Runtime.CompilerServices;
 
-namespace Win32.Code
+[assembly: InternalsVisibleTo("Calculator.Code.Tests")]
+
+namespace Calculator
 {
     public abstract class AbstractNode
     {

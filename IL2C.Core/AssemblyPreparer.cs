@@ -8,6 +8,7 @@ using Mono.Cecil.Cil;
 
 using IL2C.ILConveters;
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C
 {
@@ -17,13 +18,13 @@ namespace IL2C
         {
             public readonly Label Label;
             public readonly ILConverter ILConverter;
-            public readonly object Operand;
+            public readonly CodeInformation Code;
 
-            public ILBody(Label label, ILConverter ilc, object operand)
+            public ILBody(Label label, ILConverter ilc, CodeInformation code)
             {
                 this.Label = label;
                 this.ILConverter = ilc;
-                this.Operand = operand;
+                this.Code = code;
             }
         }
 
@@ -38,17 +39,17 @@ namespace IL2C
                     break;
                 }
 
-                var instruction = decodeContext.Current;
-                if (Utilities.TryGetILConverter(instruction.OpCode, out var ilc) == false)
+                var code = decodeContext.Current;
+                if (Utilities.TryGetILConverter(code.OpCode, out var ilc) == false)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid opcode: MethodName={0}, OpCode={1}, Offset={2}",
                         decodeContext.MethodName,
-                        instruction.OpCode.Name,
-                        instruction.Offset);
+                        code.OpCode.Name,
+                        code.Offset);
                 }
 
-                yield return new ILBody(new Label(instruction.Offset), ilc, instruction.Operand);
+                yield return new ILBody(new Label(code.Offset), ilc, code);
 
                 if (ilc.IsEndOfPath)
                 {
@@ -63,33 +64,35 @@ namespace IL2C
             IPrepareContext prepareContext,
             string methodName,
             string rawMethodName,
-            TypeReference returnType,
-            Parameter[] parameters,
-            MethodBody body)
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
+            IMethodInformation body)
         {
-            var localVariables = body.Variables
+            var localVariables = body.LocalVariables
                 // If found non named local variable, force named "local[n]__"
-                .GroupBy(v => body.Method.DebugInformation.TryGetName(v, out var name) ? name : "local")
+                .GroupBy(variable => variable.SymbolName)
                 // If contains both named symbol each different scope (in the method by C#'s block), try to named with index number.
                 .SelectMany(g =>
                 {
                     var list = g.ToArray();
                     return (list.Length >= 2)
-                        ? list.Select((v, index) => new {
-                            Name = string.Format("{0}{1}__", g.Key, index),
-                            Type = v.VariableType,
-                            Index = v.Index })
-                        : new[] { new {
-                            Name = string.Format("{0}__", g.Key),
-                            Type = list[0].VariableType,
-                            Index = list[0].Index} };
+                        ? list.Select((variable, index) => new VariableInformation(
+                            variable.Index,
+                            string.Format("{0}{1}__", g.Key, index),
+                            variable.TargetType))
+                        : new[] { new VariableInformation(
+                            list[0].Index,
+                            string.Format("{0}__", g.Key),
+                            list[0].TargetType) };
                 })
                 .OrderBy(e => e.Index)
+#if DEBUG
                 .Select((e, index) =>
                 {
                     Debug.Assert(e.Index == index);
-                    return new SymbolInformation(e.Name, e.Type);
+                    return e;
                 })
+#endif
                 .ToArray();
 
             foreach (var local in localVariables)
@@ -98,24 +101,13 @@ namespace IL2C
             }
 
             var decodeContext = new DecodeContext(
-                body.Method.Module,
+                body.DeclaringType.DeclaringModule,
                 methodName,
                 returnType,
                 parameters,
                 localVariables,
-                body.Instructions.ToArray(),
+                body.CodeStream,
                 prepareContext);
-
-            // It gathers sequence point informations.
-            // It will use writing the line preprocessor directive.
-            var sequencePoints =
-                (from sp in body.Method.DebugInformation.SequencePoints
-                 where !sp.IsHidden
-                 group sp by sp.Offset into g
-                 let sps = g.OrderBy(sp => sp.Offset).ToArray()
-                 where sps.Length >= 1
-                 select new { g.Key, sps })
-                .ToDictionary(g => g.Key, g => g.sps);
 
             // Important:
             //   It's core decoding sequence.
@@ -125,15 +117,12 @@ namespace IL2C
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
-                    let sps = sequencePoints.UnsafeGetValue(ilBody.Label.Offset, empty)
-                    let generator = ilBody.ILConverter.Apply(ilBody.Operand, dc)
+                    let generator = ilBody.ILConverter.Apply(ilBody.Code.Operand, dc)
                     select new PreparedILBody(
                         ilBody.Label,
                         generator,
                         dc.UniqueCodeBlockIndex,
-                        sps,
-                        ilBody.ILConverter.OpCode,
-                        ilBody.Operand,
+                        ilBody.Code,
                         dc.DecodingPathNumber))
                 .OrderBy(ilb => ilb.UniqueCodeBlockIndex)
                 .ThenBy(ilb => ilb.Label.Offset)
@@ -155,15 +144,15 @@ namespace IL2C
                 localVariables,
                 stacks,
                 labelNames,
-                body.Method.IsVirtual ? (int?)body.Method.GetMethodOverloadIndex() : null);
+                body.IsVirtual ? (int?)body.GetMethodOverloadIndex() : null);
         }
 
         private static PreparedFunction PrepareAbstractMethod(
             IPrepareContext prepareContext,
             string methodName,
             string rawMethodName,
-            TypeReference returnType,
-            Parameter[] parameters,
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
             AbstractTypes type,
             int slotIndex)
         {
@@ -183,8 +172,8 @@ namespace IL2C
             IPrepareContext prepareContext,
             string methodName,
             string rawMethodName,
-            TypeReference returnType,
-            Parameter[] parameters,
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
             PInvokeInfo pinvokeInfo)
         {
             // TODO: Switch DllImport.Value include direction to library direction.
@@ -208,17 +197,17 @@ namespace IL2C
 
         private static PreparedFunction PrepareMethod(
             IPrepareContext prepareContext,
-            MethodDefinition method)
+            IMethodInformation method)
         {
             var methodName = method.GetFullMemberName(MethodNameTypes.Index)
                 .ManglingSymbolName();
-            var returnType = method.ReturnType?.Resolve() ?? method.GetSafeVoidType();
-            var parameters = method.GetSafeParameters();
+            var returnType = method.ReturnType;
+            var parameters = method.Parameters;
 
             prepareContext.RegisterType(returnType);
             foreach (var parameter in parameters)
             {
-                prepareContext.RegisterType(parameter.ParameterType);
+                prepareContext.RegisterType(parameter.TargetType);
             }
 
             if (method.IsPInvokeImpl)
@@ -242,7 +231,7 @@ namespace IL2C
 
             if (method.IsAbstract)
             {
-                Debug.Assert(method.Body == null);
+                Debug.Assert(!method.HasBody);
 
                 return PrepareAbstractMethod(
                     prepareContext,
@@ -255,10 +244,10 @@ namespace IL2C
             }
 
             // If delegate's method
-            if (method.DeclaringType.GetSafeDelegateType().IsAssignableFrom(method.DeclaringType))
+            if (method.Context.DelegateType.IsAssignableFrom(method.DeclaringType))
             {
                 // "extern internalcall"
-                Debug.Assert(method.Body == null);
+                Debug.Assert(!method.HasBody);
 
                 // Make abstract
                 return PrepareAbstractMethod(
@@ -271,7 +260,7 @@ namespace IL2C
                     method.GetMethodOverloadIndex());
             }
 
-            Debug.Assert(method.Body != null);
+            Debug.Assert(method.HasBody);
 
             return PrepareMethod(
                 prepareContext,
@@ -279,12 +268,12 @@ namespace IL2C
                 method.Name,
                 returnType,
                 parameters,
-                method.Body);
+                method);
         }
 
         internal static PreparedFunctions Prepare(
             TranslateContext translateContext,
-            Func<MethodDefinition, bool> predict)
+            Func<IMethodInformation, bool> predict)
         {
             IPrepareContext prepareContext = translateContext;
 
@@ -321,7 +310,7 @@ namespace IL2C
                 .ToDictionary(
                     method => method,
                     method => PrepareMethod(prepareContext, method),
-                    CecilHelper.MemberReferenceComparer<MethodDefinition>.Instance));
+                    CecilHelper.MemberReferenceComparer<MethodInformation>.Instance));
         }
 
         public static PreparedFunctions Prepare(TranslateContext translateContext)

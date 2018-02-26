@@ -7,6 +7,7 @@ using System.Linq;
 using Mono.Cecil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C
 {
@@ -19,58 +20,18 @@ namespace IL2C
 
     public static class AssemblyWriter
     {
-        private static bool IsStandardMethod(MethodDefinition method)
-        {
-            // TODO: Except typed delegate's async methods
-            //   Because currently IL2C not supported async methods.
-            if (method.GetSafeDelegateType().IsAssignableFrom(method.DeclaringType))
-            {
-                // Only "Invoke", exclude "BeginInvoke" and "EndInvoke"
-                return method.Name.Equals("Invoke");
-            }
-
-            // Except type initializer
-            if (method.IsConstructor)
-            {
-                return !method.IsStatic;
-            }
-
-            return true;
-        }
-
-        private static MethodDefinition[] GetStandardMethods(this TypeDefinition declaredType)
+        private static IMethodInformation[] GetStandardMethods(this ITypeInformation declaredType)
         {
             return declaredType
-                .Methods
-                .Where(IsStandardMethod)
+                .DeclaredMethods
+                .Where(method => method.IsStandardMethod)
                 .ToArray();
-        }
-
-        private static MethodDefinition[] GetVirtualMethods(this TypeReference declaredType)
-        {
-            // HACK: Delegate has many virtual methods at System.Delegate and System.MulticastDelegate,
-            //   but IL2C not required/virtuality these methods.
-            //   It code fragment decreases vtable size to System.Object at all delegate types.
-            return (declaredType.GetSafeDelegateType().IsAssignableFrom(declaredType)
-                    ? declaredType.GetSafeObjectType()  // System.Object
-                    : declaredType)
-                .EnumerateOrderedOverridedMethods()
-                .ToArray();
-        }
-
-        private static TypeReference[] GetDeclaredInterfaces(this TypeDefinition declaredType)
-        {
-            return declaredType.GetSafeDelegateType().IsAssignableFrom(declaredType)
-                ? new TypeReference[0]
-                : declaredType.Interfaces
-                    .Select(interfaceImpl => interfaceImpl.InterfaceType)
-                    .ToArray();
         }
 
         private static void InternalConvertType(
             TextWriter tw,
             IExtractContext extractContext,
-            TypeDefinition declaredType,
+            ITypeInformation declaredType,
             string indent)
         {
             if (declaredType.IsPrimitive
@@ -84,9 +45,7 @@ namespace IL2C
                 TypeNameFlags.Dereferenced)
                 .ManglingSymbolName();
 
-            var rawTypeName = declaredType
-                .GetFullMemberName()
-                .ManglingSymbolName();
+            var rawTypeName = declaredType.MangledName;
             var typeString = declaredType.IsValueType
                 ? "Struct"
                 : declaredType.IsInterface
@@ -97,7 +56,7 @@ namespace IL2C
             tw.WriteLine(
                 "// {0}: {1}",
                 typeString,
-                declaredType.GetFullMemberName());
+                declaredType.FriendlyName);
             tw.WriteLine();
 
             // IL2C vtable model case [1]:
@@ -142,13 +101,14 @@ namespace IL2C
                 indent,
                 rawTypeName);
 
-            var virtualMethods = declaredType.GetVirtualMethods();
+            var virtualMethods = declaredType.VisibleMethods
+                .Where(method => method.IsVirtual);
             foreach (var method in virtualMethods)
             {
                 var functionPrototype = Utilities.GetFunctionTypeString(
                     method.GetOverloadedMethodName().ManglingSymbolName(),
                     method.ReturnType,
-                    method.GetSafeParameters(declaredType),
+                    method.Parameters(declaredType),
                     extractContext);
                 tw.WriteLine(
                     "{0}{1};",

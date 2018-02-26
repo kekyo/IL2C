@@ -7,13 +7,21 @@ using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Mono.Cecil.Rocks;
 
 using IL2C.ILConveters;
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C
 {
+    internal static class Lazy
+    {
+        public static Lazy<T> Create<T>(Func<T> generator)
+        {
+            return new Lazy<T>(generator);
+        }
+    }
+
     internal static class Utilities
     {
         private static readonly char[] replaceChars = { '.', '@' };
@@ -86,88 +94,30 @@ namespace IL2C
             return sb.ToString();
         }
 
-        public static TypeReference GetStackableType(this TypeReference type)
+        public static string GetMarshaledInExpression(this VariableInformation parameter)
         {
-            if (type.IsByteType()
-                || type.IsSByteType()
-                || type.IsInt16Type()
-                || type.IsUInt16Type()
-                || type.IsUInt32Type()
-                || type.IsBooleanType()
-                || type.IsCharType())
+            if (parameter.TargetType.IsStringType)
             {
-                return type.GetSafeInt32Type();
-            }
-
-            if (type.IsUInt64Type())
-            {
-                return type.GetSafeInt64Type();
-            }
-
-            if (type.IsUIntPtrType())
-            {
-                return type.GetSafeIntPtrType();
-            }
-
-            return type;
-        }
-
-        public static Parameter[] GetSafeParameters(this MethodReference method, TypeReference thisType = null)
-        {
-            var parameters = method.Parameters
-                .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
-            if (method.HasThis)
-            {
-                var type = method.DeclaringType;
-                thisType = thisType ?? (type.IsValueType ? type.MakeByReferenceType() : type);
-                parameters = new[]
-                    {
-                        new Parameter("this__", thisType)
-                    }
-                    .Concat(parameters);
-            }
-
-            return parameters.ToArray();
-        }
-
-        public static string GetMarshaledInExpression(this Parameter parameter)
-        {
-            if (parameter.ParameterType.IsStringType())
-            {
-                return string.Format("{0}->string_body__", parameter.Name);
+                return string.Format("{0}->string_body__", parameter.SymbolName);
             }
             else
             {
-                return parameter.Name;
+                return parameter.SymbolName;
             }
-        }
-
-        public static string ManglingSymbolName(this string rawSymbolName)
-        {
-            var sb = new StringBuilder(rawSymbolName);
-            foreach (var ch in replaceChars)
-            {
-                sb.Replace(ch, '_');
-            }
-
-            Debug.Assert(!rawSymbolName.Contains("*"));
-
-            sb.Replace("*", "_reference");
-            return sb.ToString();
         }
 
         public static string GetFunctionPrototypeString(
             string methodName,
-            TypeReference returnType,
-            Parameter[] parameters,
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
             IExtractContext extractContext)
         {
             var parametersString = string.Join(
                 ", ",
                 parameters.Select(parameter => string.Format(
                     "{0} {1}",
-                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
-                    parameter.Name)));
+                    extractContext.GetCLanguageTypeName(parameter.TargetType),
+                    parameter.SymbolName)));
 
             var returnTypeName =
                 extractContext.GetCLanguageTypeName(returnType);
@@ -181,16 +131,16 @@ namespace IL2C
 
         public static string GetFunctionTypeString(
             string methodName,
-            TypeReference returnType,
-            Parameter[] parameters,
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
             IExtractContext extractContext)
         {
             var parametersString = string.Join(
                 ", ",
                 parameters.Select(parameter => string.Format(
                     "{0} {1}",
-                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
-                    parameter.Name)));
+                    extractContext.GetCLanguageTypeName(parameter.TargetType),
+                    parameter.SymbolName)));
 
             var returnTypeName =
                 extractContext.GetCLanguageTypeName(returnType);
@@ -203,23 +153,22 @@ namespace IL2C
         }
 
         public static string GetStaticFieldPrototypeString(
-            FieldReference field,
+            IFieldInformation field,
             bool requireInitializerExpression,
             IExtractContext extractContext)
         {
             var initializer = String.Empty;
             if (requireInitializerExpression)
             {
-                if (field.FieldType.IsNumericPrimitive())
+                if (field.FieldType.IsNumericPrimitive)
                 {
                     // TODO: numericPrimitive and (literal or readonly static) ?
-                    var fieldDefinition = field.Resolve();
-                    Debug.Assert(fieldDefinition.IsStatic);
-                    var value = fieldDefinition.HasConstant ? fieldDefinition.Constant : 0;
+                    Debug.Assert(field.IsStatic);
+                    var value = field.HasConstant ? field.ConstantValue : 0;
 
                     Debug.Assert(value != null);
 
-                    initializer = fieldDefinition.FieldType.IsInt64Type()
+                    initializer = field.FieldType.IsInt64Type
                         ? String.Format(" = {0}LL", value)
                         : String.Format(" = {0}", value);
                 }
@@ -238,11 +187,11 @@ namespace IL2C
 
         public struct RightExpressionGivenParameter
         {
-            public readonly TypeReference TargetType;
+            public readonly TypeInformation TargetType;
             public readonly SymbolInformation SymbolInformation;
 
             public RightExpressionGivenParameter(
-                TypeReference targetType, SymbolInformation symbolinformation)
+                TypeInformation targetType, SymbolInformation symbolinformation)
             {
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;

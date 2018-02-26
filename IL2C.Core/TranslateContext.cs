@@ -8,10 +8,13 @@ using System.Reflection;
 using Mono.Cecil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C
 {
-    public sealed class TranslateContext : IPrepareContext, IExtractContext
+    public sealed class TranslateContext
+        : IPrepareContext
+        , IExtractContext
     {
         #region  Fields
         private static readonly Dictionary<string, string> predefinedIncludeHints = new Dictionary<string, string>
@@ -50,8 +53,8 @@ namespace IL2C
 
         private readonly HashSet<string> includes = new HashSet<string>();
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
-        private readonly Dictionary<string, FieldReference> staticFields =
-            new Dictionary<string, FieldReference>();
+        private readonly Dictionary<string, IFieldInformation> staticFields =
+            new Dictionary<string, IFieldInformation>();
         private readonly Dictionary<string, string> constStrings =
             new Dictionary<string, string>();
         #endregion
@@ -65,20 +68,14 @@ namespace IL2C
 
         public TranslateContext(string assemblyPath)
         {
-            var resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
-            var parameter = new ReaderParameters
-            {
-                AssemblyResolver = resolver,
-                ReadSymbols = true
-            };
-
-            this.Assembly = AssemblyDefinition.ReadAssembly(assemblyPath, parameter);
+            var context = new MetadataContext(assemblyPath);
+            this.Assembly = context.MainAssembly;
 
             includes.Add("il2c.h");
         }
         #endregion
 
-        public AssemblyDefinition Assembly { get; }
+        public IAssemblyInformation Assembly { get; }
 
         #region IPrepareContext
         private void RegisterIncludeFile(string includeFileName)
@@ -101,32 +98,32 @@ namespace IL2C
             this.RegisterPrivateIncludeFile(includeFileName);
         }
 
-        private void RegisterType(TypeReference type)
+        private void RegisterType(ITypeInformation type)
         {
-            if (predefinedIncludeHints.TryGetValue(type.FullName, out var includeFile))
+            if (predefinedIncludeHints.TryGetValue(type.UniqueName, out var includeFile))
             {
                 this.RegisterIncludeFile(includeFile);
             }
             else if (type.IsByReference)
             {
-                var dereferencedType = type.GetElementType();
+                var dereferencedType = type.ElementType;
                 this.RegisterType(dereferencedType);
             }
         }
 
-        void IPrepareContext.RegisterType(TypeReference type)
+        void IPrepareContext.RegisterType(ITypeInformation type)
         {
             this.RegisterType(type);
         }
 
-        private void RegisterStaticField(FieldReference staticField)
+        private void RegisterStaticField(IFieldInformation staticField)
         {
-            Debug.Assert(staticField.Resolve().IsStatic);
+            Debug.Assert(staticField.IsStatic);
 
-            staticFields.Add(staticField.FullName, staticField);
+            staticFields.Add(staticField.UniqueName, staticField);
         }
 
-        void IPrepareContext.RegisterStaticField(FieldReference staticField)
+        void IPrepareContext.RegisterStaticField(IFieldInformation staticField)
         {
             this.RegisterStaticField(staticField);
         }
@@ -159,13 +156,13 @@ namespace IL2C
             return privateIncludes;
         }
 
-        IEnumerable<FieldReference> IExtractContext.ExtractStaticFields()
+        IEnumerable<IFieldInformation> IExtractContext.ExtractStaticFields()
         {
             return staticFields.Values;
         }
 
         private string GetCLanguageTypeName(
-            TypeReference type, TypeNameFlags flags = TypeNameFlags.Strict)
+            ITypeInformation type, TypeNameFlags flags = TypeNameFlags.Strict)
         {
             var prefix = ((flags == TypeNameFlags.DereferencedWithStructPrefix)
                 || (flags == TypeNameFlags.ForcePointerWithStructPrefix))
@@ -176,7 +173,7 @@ namespace IL2C
                 ? "*"
                 : string.Empty;
 
-            if (predefinedCTypeNames.TryGetValue(type.FullName, out var cTypeName))
+            if (predefinedCTypeNames.TryGetValue(type.UniqueName, out var cTypeName))
             {
                 // Predefined type name must not applies prefix.
                 return cTypeName + postfix;
@@ -185,7 +182,7 @@ namespace IL2C
             if (type.IsByReference || type.IsPointer)
             {
                 var dereferencedType = type
-                    .GetElementType();
+                    .ElementType;
                 var dereferencedTypeName = this.GetCLanguageTypeName(
                     dereferencedType);
 
@@ -200,35 +197,33 @@ namespace IL2C
                 }
             }
 
-            var fullName = type
-                .GetFullMemberName()
-                .ManglingSymbolName();
+            var mangledName = type.MangledName;
             if (!type.IsValueType)
             {
                 if ((flags == TypeNameFlags.Dereferenced)
                     || (flags == TypeNameFlags.DereferencedWithStructPrefix))
                 {
-                    return prefix + fullName;
+                    return prefix + mangledName;
                 }
                 else
                 {
-                    return prefix + fullName + "*";
+                    return prefix + mangledName + "*";
                 }
             }
             else
             {
-                return prefix + fullName + postfix;
+                return prefix + mangledName + postfix;
             }
         }
 
-        string IExtractContext.GetCLanguageTypeName(TypeReference type, TypeNameFlags flags)
+        string IExtractContext.GetCLanguageTypeName(ITypeInformation type, TypeNameFlags flags)
         {
             return this.GetCLanguageTypeName(type, flags);
         }
 
-        private string GetRightExpression(TypeReference lhsType, SymbolInformation rhs)
+        private string GetRightExpression(ITypeInformation lhsType, SymbolInformation rhs)
         {
-            if (lhsType.MemberEquals(rhs.TargetType))
+            if (lhsType.Equals(rhs.TargetType))
             {
                 return rhs.SymbolName;
             }
@@ -238,11 +233,8 @@ namespace IL2C
                 Debug.Assert(lhsType.IsValueType == false);
                 Debug.Assert(rhs.TargetType.IsValueType == false);
 
-                var lhsResolved = lhsType.Resolve();
-                var rhsResolved = rhs.TargetType.Resolve();
-
                 // IHoge <-- Hoge  (use il2c_cast_to_interface() macro)
-                if (lhsResolved.IsInterface && !rhsResolved.IsInterface)
+                if (lhsType.IsInterface && !rhs.TargetType.IsInterface)
                 {
                     return string.Format(
                         "il2c_cast_to_interface({0}, {1}, {2})",
@@ -259,16 +251,16 @@ namespace IL2C
                 }
             }
 
-            if (rhs.TargetType.IsNumericPrimitive())
+            if (rhs.TargetType.IsNumericPrimitive)
             {
-                if (lhsType.IsNumericPrimitive())
+                if (lhsType.IsNumericPrimitive)
                 {
                     return String.Format(
                         "({0}){1}",
                         this.GetCLanguageTypeName(lhsType),
                         rhs.SymbolName);
                 }
-                else if (lhsType.IsBooleanType())
+                else if (lhsType.IsBooleanType)
                 {
                     return String.Format(
                         "{0} ? true : false",
@@ -276,9 +268,9 @@ namespace IL2C
                 }
 
             }
-            else if (rhs.TargetType.IsBooleanType())
+            else if (rhs.TargetType.IsBooleanType)
             {
-                if (lhsType.IsNumericPrimitive())
+                if (lhsType.IsNumericPrimitive)
                 {
                     return String.Format(
                         "{0} ? 1 : 0",
@@ -295,7 +287,7 @@ namespace IL2C
                         rhs.SymbolName);
                 }
             }
-            else if (!lhsType.IsValueType && rhs.TargetType.IsPseudoZeroType())
+            else if (!lhsType.IsValueType && rhs.TargetType.IsPseudoZeroType)
             {
                 return String.Format(
                     "({0}){1}",
@@ -306,38 +298,38 @@ namespace IL2C
             return null;
         }
 
-        string IExtractContext.GetRightExpression(TypeReference lhsType, SymbolInformation rhs)
+        string IExtractContext.GetRightExpression(ITypeInformation lhsType, SymbolInformation rhs)
         {
             return this.GetRightExpression(lhsType, rhs);
         }
 
         private string GetRightExpression(
-            TypeReference lhsType, TypeReference rhsType, string rhsExpression)
+            ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
         {
             if (lhsType.IsAssignableFrom(rhsType))
             {
                 return rhsExpression;
             }
 
-            if (rhsType.IsNumericPrimitive())
+            if (rhsType.IsNumericPrimitive)
             {
-                if (lhsType.IsNumericPrimitive())
+                if (lhsType.IsNumericPrimitive)
                 {
                     return String.Format(
                         "({0})({1})",
                         this.GetCLanguageTypeName(lhsType),
                         rhsExpression);
                 }
-                else if (lhsType.IsBooleanType())
+                else if (lhsType.IsBooleanType)
                 {
                     return String.Format(
                         "({0}) ? true : false",
                         rhsExpression);
                 }
             }
-            else if (rhsType.IsBooleanType())
+            else if (rhsType.IsBooleanType)
             {
-                if (lhsType.IsNumericPrimitive())
+                if (lhsType.IsNumericPrimitive)
                 {
                     return String.Format(
                         "({0}) ? 1 : 0",
@@ -359,7 +351,7 @@ namespace IL2C
         }
 
         string IExtractContext.GetRightExpression(
-            TypeReference lhsType, TypeReference rhsType, string rhsExpression)
+            ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
         {
             return this.GetRightExpression(lhsType, rhsType, rhsExpression);
         }

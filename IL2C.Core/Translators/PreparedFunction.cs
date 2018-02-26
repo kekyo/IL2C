@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using Mono.Cecil;
-using Mono.Cecil.Cil;
+using IL2C.Metadata;
 
 namespace IL2C.Translators
 {
@@ -29,8 +28,8 @@ namespace IL2C.Translators
         public readonly FunctionTypes FunctionType;
         public readonly string MethodName;
         internal readonly string RawMethodName;
-        internal readonly TypeReference ReturnType;
-        public readonly Parameter[] Parameters;
+        internal readonly ITypeInformation ReturnType;
+        public readonly VariableInformation[] Parameters;
         internal readonly PreparedILBody[] PreparedILBodies;
         internal readonly SymbolInformation[] LocalVariables;
         internal readonly SymbolInformation[] Stacks;
@@ -41,8 +40,8 @@ namespace IL2C.Translators
         private PreparedFunction(
             string methodName,
             string rawMethodName,
-            TypeReference returnType,
-            Parameter[] parameters,
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
             PreparedILBody[] preparedILBodies,
             SymbolInformation[] localVariables,
             SymbolInformation[] stacks,
@@ -65,8 +64,8 @@ namespace IL2C.Translators
         internal PreparedFunction(
             string methodName,
             string rawMethodName,
-            TypeReference returnType,
-            Parameter[] parameters,
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
             PreparedILBody[] preparedILBodies,
             SymbolInformation[] localVariables,
             SymbolInformation[] stacks,
@@ -106,8 +105,8 @@ namespace IL2C.Translators
         internal PreparedFunction(
             string methodName,
             string rawMethodName,
-            TypeReference returnType,
-            Parameter[] parameters,
+            ITypeInformation returnType,
+            VariableInformation[] parameters,
             AbstractTypes type,
             int? slotIndex)
             : this(
@@ -120,8 +119,6 @@ namespace IL2C.Translators
                   slotIndex ?? -1)
         {
         }
-
-        public string ReturnTypeName => this.ReturnType.GetFullMemberName();
 
         public bool TryGetLabelName(Label label, out string labelName)
         {

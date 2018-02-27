@@ -199,6 +199,8 @@ namespace Calculator
         {
             Console.WriteLine("Polish notation calculator.");
             Console.WriteLine("This is proof of code for IL2C.");
+            Console.WriteLine("https://github.com/kekyo/IL2C");
+            Console.WriteLine();
             Console.WriteLine("Type \"exit\" to exit.");
 
             while (true)

@@ -5,11 +5,12 @@
 
 IL2C_CONST_STRING(string0__, L"Polish notation calculator.");
 IL2C_CONST_STRING(string1__, L"This is proof of code for IL2C.");
-IL2C_CONST_STRING(string2__, L"Type \"exit\" to exit.");
-IL2C_CONST_STRING(string3__, L"PN> ");
-IL2C_CONST_STRING(string4__, L"exit");
-IL2C_CONST_STRING(string5__, L"Syntax error.");
-IL2C_CONST_STRING(string6__, L"Reuslt=");
+IL2C_CONST_STRING(string2__, L"https://github.com/kekyo/IL2C");
+IL2C_CONST_STRING(string3__, L"Type \"exit\" to exit.");
+IL2C_CONST_STRING(string4__, L"PN> ");
+IL2C_CONST_STRING(string5__, L"exit");
+IL2C_CONST_STRING(string6__, L"Syntax error.");
+IL2C_CONST_STRING(string7__, L"Reuslt=");
 
 #ifdef __cplusplus
 extern "C" {
@@ -1427,84 +1428,92 @@ void Calculator_PolishNotation_Main(void)
     /* Path=1, Unique=0: IL_000f: call System.Void System.Console::WriteLine(System.String) */
     System_Console_WriteLine_10(stack0_0__);
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(202): */
-    /* Path=1, Unique=0: IL_0014: ldstr "Type "exit" to exit." */
+    /* Path=1, Unique=0: IL_0014: ldstr "https://github.com/kekyo/IL2C" */
     stack0_0__ = string2__;
     /* Path=1, Unique=0: IL_0019: call System.Void System.Console::WriteLine(System.String) */
     System_Console_WriteLine_10(stack0_0__);
-IL_001e:
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(206): */
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(203): */
     /* Path=1, Unique=0: IL_001e: call System.Void System.Console::WriteLine() */
     System_Console_WriteLine();
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(207): */
-    /* Path=1, Unique=0: IL_0023: ldstr "PN> " */
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(204): */
+    /* Path=1, Unique=0: IL_0023: ldstr "Type "exit" to exit." */
     stack0_0__ = string3__;
-    /* Path=1, Unique=0: IL_0028: call System.Void System.Console::Write(System.String) */
-    System_Console_Write_9(stack0_0__);
+    /* Path=1, Unique=0: IL_0028: call System.Void System.Console::WriteLine(System.String) */
+    System_Console_WriteLine_10(stack0_0__);
+IL_002d:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(208): */
-    /* Path=1, Unique=0: IL_002d: call System.String System.Console::ReadLine() */
-    stack0_0__ = System_Console_ReadLine();
-    /* Path=1, Unique=0: IL_0032: stloc.0 */
-    line__ = stack0_0__;
+    /* Path=1, Unique=0: IL_002d: call System.Void System.Console::WriteLine() */
+    System_Console_WriteLine();
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(209): */
-    /* Path=1, Unique=0: IL_0033: ldloc.0 */
-    stack0_0__ = line__;
-    /* Path=1, Unique=0: IL_0034: call System.Boolean System.String::IsNullOrWhiteSpace(System.String) */
-    stack0_1__ = System_String_IsNullOrWhiteSpace(stack0_0__);
-    /* Path=1, Unique=0: IL_0039: brtrue.s IL_001e */
-    if (stack0_1__ != 0) goto IL_001e;
+    /* Path=1, Unique=0: IL_0032: ldstr "PN> " */
+    stack0_0__ = string4__;
+    /* Path=1, Unique=0: IL_0037: call System.Void System.Console::Write(System.String) */
+    System_Console_Write_9(stack0_0__);
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(210): */
+    /* Path=1, Unique=0: IL_003c: call System.String System.Console::ReadLine() */
+    stack0_0__ = System_Console_ReadLine();
+    /* Path=1, Unique=0: IL_0041: stloc.0 */
+    line__ = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(211): */
-    /* Path=1, Unique=0: IL_003b: ldloc.0 */
+    /* Path=1, Unique=0: IL_0042: ldloc.0 */
     stack0_0__ = line__;
-    /* Path=1, Unique=0: IL_003c: ldstr "exit" */
-    stack1_0__ = string4__;
-    /* Path=1, Unique=0: IL_0041: call System.Boolean System.String::op_Equality(System.String,System.String) */
-    stack0_1__ = System_String_op_Equality(stack0_0__, stack1_0__);
-    /* Path=1, Unique=0: IL_0046: brfalse.s IL_0049 */
-    if (stack0_1__ == 0) goto IL_0049;
+    /* Path=1, Unique=0: IL_0043: call System.Boolean System.String::IsNullOrWhiteSpace(System.String) */
+    stack0_1__ = System_String_IsNullOrWhiteSpace(stack0_0__);
+    /* Path=1, Unique=0: IL_0048: brtrue.s IL_002d */
+    if (stack0_1__ != 0) goto IL_002d;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(213): */
-    /* Path=1, Unique=0: IL_0048: ret */
+    /* Path=1, Unique=0: IL_004a: ldloc.0 */
+    stack0_0__ = line__;
+    /* Path=1, Unique=0: IL_004b: ldstr "exit" */
+    stack1_0__ = string5__;
+    /* Path=1, Unique=0: IL_0050: call System.Boolean System.String::op_Equality(System.String,System.String) */
+    stack0_1__ = System_String_op_Equality(stack0_0__, stack1_0__);
+    /* Path=1, Unique=0: IL_0055: brfalse.s IL_0058 */
+    if (stack0_1__ == 0) goto IL_0058;
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(215): */
+    /* Path=1, Unique=0: IL_0057: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
-IL_0049:
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(216): */
-    /* Path=2, Unique=0: IL_0049: ldloc.0 */
+IL_0058:
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(218): */
+    /* Path=2, Unique=0: IL_0058: ldloc.0 */
     stack0_0__ = line__;
-    /* Path=2, Unique=0: IL_004a: ldc.i4.0 */
+    /* Path=2, Unique=0: IL_0059: ldc.i4.0 */
     stack1_1__ = 0;
-    /* Path=2, Unique=0: IL_004b: call Calculator.ExpressionNode Calculator.PolishNotation::ParseExpression(System.String,System.Int32) */
+    /* Path=2, Unique=0: IL_005a: call Calculator.ExpressionNode Calculator.PolishNotation::ParseExpression(System.String,System.Int32) */
     stack0_2__ = Calculator_PolishNotation_ParseExpression(stack0_0__, stack1_1__);
-    /* Path=2, Unique=0: IL_0050: stloc.1 */
+    /* Path=2, Unique=0: IL_005f: stloc.1 */
     expr__ = stack0_2__;
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(217): */
-    /* Path=2, Unique=0: IL_0051: ldloc.1 */
-    stack0_2__ = expr__;
-    /* Path=2, Unique=0: IL_0052: brtrue.s IL_0060 */
-    if (stack0_2__ != NULL) goto IL_0060;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(219): */
-    /* Path=2, Unique=0: IL_0054: ldstr "Syntax error." */
-    stack0_0__ = string5__;
-    /* Path=2, Unique=0: IL_0059: call System.Void System.Console::WriteLine(System.String) */
-    System_Console_WriteLine_10(stack0_0__);
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(220): */
-    /* Path=2, Unique=0: IL_005e: br.s IL_001e */
-    goto IL_001e;
-IL_0060:
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(223): */
-    /* Path=3, Unique=0: IL_0060: ldloc.1 */
+    /* Path=2, Unique=0: IL_0060: ldloc.1 */
     stack0_2__ = expr__;
-    /* Path=3, Unique=0: IL_0061: callvirt System.Int32 Calculator.ReducibleNode::Reduce() */
-    stack0_1__ = Calculator_ReducibleNode_Reduce((Calculator_ReducibleNode*)stack0_2__);
+    /* Path=2, Unique=0: IL_0061: brtrue.s IL_006f */
+    if (stack0_2__ != NULL) goto IL_006f;
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(221): */
+    /* Path=2, Unique=0: IL_0063: ldstr "Syntax error." */
+    stack0_0__ = string6__;
+    /* Path=2, Unique=0: IL_0068: call System.Void System.Console::WriteLine(System.String) */
+    System_Console_WriteLine_10(stack0_0__);
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(222): */
+    /* Path=2, Unique=0: IL_006d: br.s IL_002d */
+    goto IL_002d;
+IL_006f:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(225): */
-    /* Path=3, Unique=0: IL_0066: ldstr "Reuslt=" */
-    stack1_0__ = string6__;
-    /* Path=3, Unique=0: IL_006b: call System.Void System.Console::Write(System.String) */
+    /* Path=3, Unique=0: IL_006f: ldloc.1 */
+    stack0_2__ = expr__;
+    /* Path=3, Unique=0: IL_0070: callvirt System.Int32 Calculator.ReducibleNode::Reduce() */
+    stack0_1__ = Calculator_ReducibleNode_Reduce((Calculator_ReducibleNode*)stack0_2__);
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(227): */
+    /* Path=3, Unique=0: IL_0075: ldstr "Reuslt=" */
+    stack1_0__ = string7__;
+    /* Path=3, Unique=0: IL_007a: call System.Void System.Console::Write(System.String) */
     System_Console_Write_9(stack1_0__);
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(226): */
-    /* Path=3, Unique=0: IL_0070: call System.Void System.Console::WriteLine(System.Int32) */
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(228): */
+    /* Path=3, Unique=0: IL_007f: call System.Void System.Console::WriteLine(System.Int32) */
     System_Console_WriteLine_6(stack0_1__);
-/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(204): */
-    /* Path=3, Unique=0: IL_0075: br.s IL_001e */
-    goto IL_001e;
+/* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(206): */
+    /* Path=3, Unique=0: IL_0084: br.s IL_002d */
+    goto IL_002d;
 }
 
 ///////////////////////////////////////

@@ -32,5 +32,8 @@
     <ClCompile Include="..\..\..\IL2C.Runtime\*.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="memory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

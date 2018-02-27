@@ -197,6 +197,10 @@ namespace Calculator
 
         public static void Main()
         {
+            Console.WriteLine("Polish notation calculator.");
+            Console.WriteLine("This is proof of code for IL2C.");
+            Console.WriteLine("Type \"exit\" to exit.");
+
             while (true)
             {
                 Console.WriteLine();

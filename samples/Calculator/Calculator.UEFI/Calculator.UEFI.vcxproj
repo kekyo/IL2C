@@ -130,6 +130,10 @@
     <ClCompile Include="..\..\..\IL2C.Runtime\*.c" />
     <ClCompile Include="..\Generated\*.c" />
     <ClCompile Include="Main.c" />
+    <ClCompile Include="memory.c">
+      <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IntrinsicFunctions>
+      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Disabled</InlineFunctionExpansion>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\IL2C.Runtime\*.h" />

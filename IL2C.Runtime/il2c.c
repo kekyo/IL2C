@@ -18,7 +18,7 @@ extern void il2c_free(void* p);
 
 extern void WriteLineToError(const wchar_t* pMessage);
 
-#if !defined(_DEBUG)
+#if defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
     WriteLineToError(L## #message); }
 #define il2c_assert(actual) if (!(actual)) DEBUG_WRITE(0, #actual)

@@ -79,74 +79,6 @@ void itow(int32_t value, wchar_t* p)
     } while (*j);
 }
 
-void ReadLine(wchar_t* pBuffer, uint16_t length)
-{
-    wchar_t buffer[4];
-    uint16_t index = 0;
-
-    while ((index + 1) < length)
-    {
-        buffer[0] = L'_';
-        buffer[1] = L'\0';
-        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
-
-        unsigned long long waitIndex = 0;
-        g_pSystemTable->BootServices->WaitForEvent(
-            1, &(g_pSystemTable->ConIn->WaitForKey), &waitIndex);
-
-        EFI_INPUT_KEY efi_input_key;
-        if (g_pSystemTable->ConIn->ReadKeyStroke(
-            g_pSystemTable->ConIn, &efi_input_key) != 0)
-        {
-            continue;
-        }
-
-        if (efi_input_key.UnicodeChar < 0x20)
-        {
-            if (efi_input_key.UnicodeChar == L'\r')
-            {
-                break;
-            }
-
-            if (efi_input_key.UnicodeChar == L'\b')
-            {
-                if (index >= 1)
-                {
-                    index--;
-
-                    buffer[0] = L'\b';
-                    buffer[1] = L'\0';
-                    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
-                }
-            }
-
-            buffer[0] = L'\b';
-            buffer[1] = L'\0';
-            g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
-
-            continue;
-        }
-        else
-        {
-            pBuffer[index++] = efi_input_key.UnicodeChar;
-        }
-
-        buffer[0] = L'\b';
-        buffer[1] = efi_input_key.UnicodeChar;
-        buffer[2] = L'\0';
-        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
-    }
-
-    pBuffer[index] = L'\0';
-
-    buffer[0] = L'\b';
-    buffer[1] = L'\r';
-    buffer[2] = L'\n';
-    buffer[3] = L'\0';
-
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
-}
-
 void Write(const wchar_t* pMessage)
 {
     g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (wchar_t*)pMessage);
@@ -162,6 +94,78 @@ void WriteLineToError(const wchar_t* pMessage)
 {
     g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (wchar_t*)pMessage);
     g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"\r\n");
+}
+
+void ReadLine(wchar_t* pBuffer, uint16_t length)
+{
+    wchar_t buffer[4];
+    uint16_t index = 0;
+
+    while ((index + 1) < length)
+    {
+        unsigned long long waitIndex;
+
+        buffer[0] = L'_';
+        buffer[1] = CHAR_NULL;
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+
+    loop:
+        waitIndex = 0;
+        g_pSystemTable->BootServices->WaitForEvent(
+            1, &(g_pSystemTable->ConIn->WaitForKey), &waitIndex);
+
+        EFI_INPUT_KEY efi_input_key;
+        if (g_pSystemTable->ConIn->ReadKeyStroke(
+            g_pSystemTable->ConIn, &efi_input_key) != 0)
+        {
+            goto loop;
+        }
+
+        if (efi_input_key.ScanCode != SCAN_NULL)
+        {
+            goto loop;
+        }
+
+        buffer[0] = CHAR_BACKSPACE;
+        buffer[1] = L' ';
+        buffer[2] = CHAR_BACKSPACE;
+        buffer[3] = CHAR_NULL;
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+
+        if (efi_input_key.UnicodeChar < 0x20)
+        {
+            if (efi_input_key.UnicodeChar == CHAR_BACKSPACE)
+            {
+                if (index >= 1)
+                {
+                    index--;
+
+                    buffer[0] = CHAR_BACKSPACE;
+                    buffer[1] = CHAR_NULL;
+                    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+                }
+            }
+            else if (efi_input_key.UnicodeChar == CHAR_CARRIAGE_RETURN)
+            {
+                break;
+            }
+
+            continue;
+        }
+
+        pBuffer[index++] = efi_input_key.UnicodeChar;
+
+        buffer[0] = efi_input_key.UnicodeChar;
+        buffer[1] = CHAR_NULL;
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+    }
+
+    pBuffer[index] = CHAR_NULL;
+
+    buffer[0] = CHAR_CARRIAGE_RETURN;
+    buffer[1] = CHAR_LINEFEED;
+    buffer[2] = CHAR_NULL;
+    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
 }
 
 void* il2c_malloc(size_t _Size)
@@ -181,25 +185,6 @@ void* il2c_malloc(size_t _Size)
 void il2c_free(void* _Block)
 {
     g_pSystemTable->BootServices->FreePool(_Block);
-}
-
-// Can't enable intrinsic inlined memcpy/memset with /GL and /LTCG options.
-// So these are simple implementations for thiers.
-void* il2c_memcpy(void* to, const void* from, size_t n)
-{
-    uint8_t* t = to;
-    const uint8_t* f = from;
-    while (--n >= 0)
-        *t++ = *f++;
-    return to;
-}
-
-void* il2c_memset(void* target, int ch, size_t n)
-{
-    uint8_t* p = target;
-    while (--n >= 0)
-        *p++ = ch;
-    return target;
 }
 
 //////////////////////////////////////////////////////////////////////////

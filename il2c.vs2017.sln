@@ -10,7 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		circle.yml = circle.yml
-		library.properties = library.properties
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -108,6 +107,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Calculator.UEFI", "samples\
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator.Code.Tests", "samples\Calculator\Calculator.Code.Tests\Calculator.Code.Tests.csproj", "{8AA7526E-F258-4D1E-92C7-D637B86BB4D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{320AEE33-F62E-4CB6-9F06-A97071ED954D}"
+	ProjectSection(SolutionItems) = preProject
+		Arduino\library.properties = Arduino\library.properties
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

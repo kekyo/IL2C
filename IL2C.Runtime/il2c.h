@@ -1,10 +1,6 @@
 #ifndef __IL2C_H__
 #define __IL2C_H__
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <wchar.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -12,13 +8,15 @@ extern "C" {
 #if defined(_WIN32) || defined(_WDM) || defined(UEFI)
 #include <intrin.h>
 
-#pragma intrinsic(memset)
-#pragma intrinsic(memcpy)
-
 typedef long interlock_t;
+#include <stdint.h>
 #else
+#include <stdint.h>
 typedef uint8_t interlock_t;
 #endif
+
+#include <stdbool.h>
+#include <wchar.h>
 
 ///////////////////////////////////////////////////////
 // Runtime stack frame types

@@ -1,5 +1,7 @@
 # Actual proof code of P/Invoke on IL2C
 
+* TODO: Sorry, this sample code still broken.
+
 ## What's this?
 
 * These code are very preliminary translated code for Seeed WioLTE (JP) arduino environments.

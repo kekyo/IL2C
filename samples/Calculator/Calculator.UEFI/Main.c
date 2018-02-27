@@ -1,11 +1,11 @@
+#include <il2c.h>
+
 #include <efi.h>
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <wchar.h>
-
-#include <il2c.h>
 
 #include "Calculator.Code.h"
 
@@ -181,6 +181,25 @@ void* il2c_malloc(size_t _Size)
 void il2c_free(void* _Block)
 {
     g_pSystemTable->BootServices->FreePool(_Block);
+}
+
+// Can't enable intrinsic inlined memcpy/memset with /GL and /LTCG options.
+// So these are simple implementations for thiers.
+void* il2c_memcpy(void* to, const void* from, size_t n)
+{
+    uint8_t* t = to;
+    const uint8_t* f = from;
+    while (--n >= 0)
+        *t++ = *f++;
+    return to;
+}
+
+void* il2c_memset(void* target, int ch, size_t n)
+{
+    uint8_t* p = target;
+    while (--n >= 0)
+        *p++ = ch;
+    return target;
 }
 
 //////////////////////////////////////////////////////////////////////////

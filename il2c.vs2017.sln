@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		circle.yml = circle.yml
+		library.properties = library.properties
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection

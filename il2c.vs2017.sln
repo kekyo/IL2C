@@ -84,6 +84,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Tests", "tests\IL2C.Te
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculator", "Calculator", "{FC7FF28D-167D-4F21-BCA3-860021F88A5E}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Calculator\README.md = samples\Calculator\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator.Code", "samples\Calculator\Calculator.Code\Calculator.Code.csproj", "{5BC8A67C-A85D-4FF0-88EB-36C7CBC78460}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -111,6 +114,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{320AEE33-F62E-4CB6-9F06-A97071ED954D}"
 	ProjectSection(SolutionItems) = preProject
 		Arduino\library.properties = Arduino\library.properties
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2028AEB8-BA9A-40A1-8933-04C1DA8F5344}"
+	ProjectSection(SolutionItems) = preProject
+		Arduino\src\il2c.c = Arduino\src\il2c.c
+		Arduino\src\il2c.h = Arduino\src\il2c.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculator.M5Stack", "Calculator.M5Stack", "{52F2FBE2-D8B8-4515-BED2-5AF6659327C2}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Calculator\Calculator.M5Stack\Calculator.Code.c = samples\Calculator\Calculator.M5Stack\Calculator.Code.c
+		samples\Calculator\Calculator.M5Stack\Calculator.Code.h = samples\Calculator\Calculator.M5Stack\Calculator.Code.h
+		samples\Calculator\Calculator.M5Stack\Calculator.M5Stack.ino = samples\Calculator\Calculator.M5Stack\Calculator.M5Stack.ino
+		samples\Calculator\Calculator.M5Stack\main.cpp = samples\Calculator\Calculator.M5Stack\main.cpp
 	EndProjectSection
 EndProject
 Global
@@ -241,6 +258,8 @@ Global
 		{4DB1CA14-5035-4848-BCDE-10F0A7DC0F50} = {FC7FF28D-167D-4F21-BCA3-860021F88A5E}
 		{B4BC66C2-9D98-40BC-BB24-94CA3D0E3DD5} = {FC7FF28D-167D-4F21-BCA3-860021F88A5E}
 		{8AA7526E-F258-4D1E-92C7-D637B86BB4D1} = {FC7FF28D-167D-4F21-BCA3-860021F88A5E}
+		{2028AEB8-BA9A-40A1-8933-04C1DA8F5344} = {320AEE33-F62E-4CB6-9F06-A97071ED954D}
+		{52F2FBE2-D8B8-4515-BED2-5AF6659327C2} = {FC7FF28D-167D-4F21-BCA3-860021F88A5E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

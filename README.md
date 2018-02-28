@@ -66,6 +66,11 @@ Under Apache v2.
 
 ## Related informations
 
+
+* Polish notation calculator project for IL2C proof of concept
+  * [Minimum, but useful impls for "Win32", "UEFI" and "M5Stack(ESP32)"](samples/Calculator)
+  * ![Calculator.M5Stack](images/Calculator.M5Stack.jpg)
+
 * Center CLR video letter: "Tested IL2C on micro:bit and arduino platform #8"
   * [![Tested IL2C on micro:bit and arduino platform #8](images/microbit.jpg)](http://bit.ly/2xGFo9J)
 

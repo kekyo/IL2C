@@ -121,6 +121,8 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 #define il2c_memset memset
 #define il2c_malloc malloc
 #define il2c_free free
+
+#include <assert.h>
 #define il2c_assert assert
 
 #define DEBUG_WRITE(step, message)

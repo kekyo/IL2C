@@ -10,6 +10,11 @@
 * It's very neutral implementation, not included any platform dependent code.
 * Target platform is .NET Standard 1.3, but IL2C can't understand external libraries currently :)
 
+## The rule fot unit tests
+
+* "Calculator.Code" already independent. So we can unit test this library with standard .NET test technics.
+* The "Calculator.Code.Tests" project contains same test code using for NUnit library.
+
 ## Platform implementations
 
 * IL2C translated to c language code and stored to "Generated" directory.

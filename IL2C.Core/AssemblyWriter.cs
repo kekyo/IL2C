@@ -1072,7 +1072,7 @@ namespace IL2C
 
             foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
             {
-                twSource.WriteLine("#include <{0}>", fileName);
+                twSource.WriteLine("#include \"{0}\"", fileName);
             }
 
             var assemblyName = extractContext.Assembly.Name.Name;

@@ -2,6 +2,8 @@
 #define __MODULE_Accelometer_Code__
 
 #include <il2c.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,13 +12,30 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // Types:
 
-typedef struct Accelometer_Code_Class1 Accelometer_Code_Class1;
+typedef struct Accelometer_Demo Accelometer_Demo;
 
 ////////////////////////////////////////////////////////////
-// Class: Accelometer.Code.Class1
+// Class: Accelometer.Demo
+
+// Class vtable layout
+typedef const struct
+{
+    /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Accelometer_Demo* this__);
+    int32_t (*GetHashCode)(Accelometer_Demo* this__);
+    void (*Finalize)(Accelometer_Demo* this__);
+    bool (*Equals)(Accelometer_Demo* this__, System_Object* obj);
+} __Accelometer_Demo_VTABLE_DECL__;
+
+// Class layout
+struct Accelometer_Demo
+{
+    __Accelometer_Demo_VTABLE_DECL__* vptr0__;
+};
 
 
-extern const __RUNTIME_TYPE__ __Accelometer_Code_Class1_RUNTIME_TYPE__;
+// Class runtime type information
+extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_RUNTIME_TYPE__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:
@@ -25,19 +44,27 @@ extern const __RUNTIME_TYPE__ __Accelometer_Code_Class1_RUNTIME_TYPE__;
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
 
-extern void Accelometer_Code_Class1__ctor(Accelometer_Code_Class1* __this);
-
-typedef const struct
-{
-    intptr_t __reserved0__;
-    intptr_t __reserved1__;
-    intptr_t __reserved2__;
-    System_String* (*ToString)(System_Object* __this);
-    int32_t (*GetHashCode)(System_Object* __this);
-    void (*Finalize)(System_Object* __this);
-    bool (*Equals)(System_Object* __this, System_Object* obj);
-} __Accelometer_Code_Class1_TYPE_DEF_TYPE__;
-
+// Accelometer.Demo
+extern /* internalcall */ void __Accelometer_Demo_IL2C_MarkHandler__(Accelometer_Demo* this__);
+extern /* internalcall */ void* __Accelometer_Demo_IL2C_RuntimeCast__(Accelometer_Demo* this__, IL2C_RUNTIME_TYPE_DECL* type);
+extern void Accelometer_Demo_BeginAccelometer(bool highResolution, uint8_t scale);
+extern uint8_t Accelometer_Demo_UpdateAccelometer(void);
+extern int8_t Accelometer_Demo_GetAccelometerX(void);
+extern int8_t Accelometer_Demo_GetAccelometerY(void);
+extern int8_t Accelometer_Demo_GetAccelometerZ(void);
+extern int8_t Accelometer_Demo_ShowArrow(Accelometer_Demo_ArrowNames direction, uint32_t interval);
+extern int8_t Accelometer_Demo_ShowIcon(Accelometer_Demo_IconNames icon, uint32_t interval);
+extern void Accelometer_Demo_Delay(int32_t millis);
+extern void Accelometer_Demo_Main(void);
+extern void Accelometer_Demo__ctor(Accelometer_Demo* this__);
+#define Accelometer_Demo_ToString(/* Accelometer_Demo* */ this__) \
+    ((this__)->vptr0__->ToString(this__))
+#define Accelometer_Demo_GetHashCode(/* Accelometer_Demo* */ this__) \
+    ((this__)->vptr0__->GetHashCode(this__))
+#define Accelometer_Demo_Finalize(/* Accelometer_Demo* */ this__) \
+    ((this__)->vptr0__->Finalize(this__))
+#define Accelometer_Demo_Equals(/* Accelometer_Demo* */ this__, /* System_Object* */ obj) \
+    ((this__)->vptr0__->Equals(this__, obj))
 
 #ifdef __cplusplus
 }

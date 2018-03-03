@@ -275,6 +275,20 @@ namespace IL2C
                         rhs.SymbolName);
                 }
 
+                var lhsResolved = lhsType.Resolve();
+                if (lhsResolved.IsEnum)
+                {
+                    var lhsElementType = lhsResolved.Fields
+                        .First(f => f.Name == "value__")
+                        .FieldType;
+                    if (lhsElementType.IsAssignableFrom(rhs.TargetType))
+                    {
+                        return String.Format(
+                            "({0}){1}",
+                            this.GetCLanguageTypeName(lhsType),
+                            rhs.SymbolName);
+                    }
+                }
             }
             else if (rhs.TargetType.IsBooleanType())
             {

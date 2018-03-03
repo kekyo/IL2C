@@ -132,11 +132,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculator.M5Stack", "Calcu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microbit", "microbit", "{B1753A72-2D2D-4381-8C13-B149BBB41F54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accelometer.Code", "samples\microbit\Accelometer.Code\Accelometer.Code.csproj", "{9958E13C-C1EA-4D14-897C-0F7814F4F15C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accelometer.Code", "samples\microbit\Accelometer.Code\Accelometer.Code.csproj", "{9958E13C-C1EA-4D14-897C-0F7814F4F15C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generated", "Generated", "{1C57C110-1742-4141-988D-D094A3A60E25}"
 	ProjectSection(SolutionItems) = preProject
-		samples\microbit\Generated\Accelometer.Code.c = samples\microbit\Generated\Accelometer.Code.c
 		samples\microbit\Generated\Accelometer.Code.h = samples\microbit\Generated\Accelometer.Code.h
 	EndProjectSection
 EndProject

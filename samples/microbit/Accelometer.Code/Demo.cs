@@ -33,7 +33,7 @@ namespace Accelometer
         }
 
         [DllImport("Accelometer.h", EntryPoint = "SCREEN.showArrow")]
-        private static extern sbyte ShowArrow(int direction, uint interval = 750);
+        private static extern sbyte ShowArrow(ArrowNames direction, uint interval = 750);
 
         private enum IconNames
         {
@@ -80,7 +80,7 @@ namespace Accelometer
         }
 
         [DllImport("Accelometer.h", EntryPoint = "SCREEN.showIcon")]
-        private static extern sbyte ShowIcon(int icon, uint interval = 750);
+        private static extern sbyte ShowIcon(IconNames icon, uint interval = 750);
 
         [DllImport("Accelometer.h", EntryPoint = "delay")]
         private static extern void Delay(int millis);
@@ -101,15 +101,15 @@ namespace Accelometer
                 var fw = x > 20;
                 var fe = x < -20;
 
-                if (fn && fe) ShowArrow((int)ArrowNames.NorthEast);
-                else if (fn && fw) ShowArrow((int)ArrowNames.NorthWest);
-                else if (fn) ShowArrow((int)ArrowNames.North);
-                else if (fs && fe) ShowArrow((int)ArrowNames.SouthEast);
-                else if (fs && fw) ShowArrow((int)ArrowNames.SouthWest);
-                else if (fs) ShowArrow((int)ArrowNames.South);
-                else if (fe) ShowArrow((int)ArrowNames.East);
-                else if (fw) ShowArrow((int)ArrowNames.West);
-                else ShowIcon((int)IconNames.Heart);
+                if (fn && fe) ShowArrow(ArrowNames.NorthEast);
+                else if (fn && fw) ShowArrow(ArrowNames.NorthWest);
+                else if (fn) ShowArrow(ArrowNames.North);
+                else if (fs && fe) ShowArrow(ArrowNames.SouthEast);
+                else if (fs && fw) ShowArrow(ArrowNames.SouthWest);
+                else if (fs) ShowArrow(ArrowNames.South);
+                else if (fe) ShowArrow(ArrowNames.East);
+                else if (fw) ShowArrow(ArrowNames.West);
+                else ShowIcon(IconNames.Heart);
 
                 Delay(100);
             }

@@ -76,11 +76,11 @@ namespace IL2C
                     var list = g.ToArray();
                     return (list.Length >= 2)
                         ? list.Select((v, index) => new {
-                            Name = string.Format("{0}{1}__", g.Key, index),
+                            Name = string.Format("{0}{1}", g.Key, index),
                             Type = v.VariableType,
                             Index = v.Index })
                         : new[] { new {
-                            Name = string.Format("{0}__", g.Key),
+                            Name = string.Format("{0}", g.Key),
                             Type = list[0].VariableType,
                             Index = list[0].Index} };
                 })

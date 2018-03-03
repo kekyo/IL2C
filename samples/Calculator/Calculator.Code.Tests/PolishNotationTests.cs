@@ -204,13 +204,33 @@ namespace Calculator
 
         #region Reduce
         [Test]
-        public void ReduceTest()
+        public void ReducePattern1Test()
         {
             var expr = PolishNotation.ParseExpression("+ - 123 456 * 789 111  ", 0);
 
             var result = expr.Reduce();
 
             Assert.AreEqual(-333 + 87579, result);
+        }
+
+        [Test]
+        public void ReducePattern2Test()
+        {
+            var expr = PolishNotation.ParseExpression("+ * 2 3 4", 0);
+
+            var result = expr.Reduce();
+
+            Assert.AreEqual(10, result);
+        }
+
+        [Test]
+        public void ReducePattern3Test()
+        {
+            var expr = PolishNotation.ParseExpression("* + 2 3 4", 0);
+
+            var result = expr.Reduce();
+
+            Assert.AreEqual(20, result);
         }
         #endregion
     }

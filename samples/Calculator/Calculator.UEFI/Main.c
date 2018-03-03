@@ -16,7 +16,7 @@ static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
 
 bool twtoi(const wchar_t *_Str, int32_t* value)
 {
-    bool sign = false;
+    char sign = 0;
 
     for (;; _Str++)
     {
@@ -28,11 +28,12 @@ bool twtoi(const wchar_t *_Str, int32_t* value)
 
         if (ch == L'-')
         {
-            sign = true;
+            sign = -1;
             _Str++;
         }
         else if (ch == L'+')
         {
+            sign = 1;
             _Str++;
         }
         else if ((*_Str < L'0') || (*_Str > L'9'))
@@ -43,13 +44,19 @@ bool twtoi(const wchar_t *_Str, int32_t* value)
         break;
     }
 
+    bool f = false;
     int32_t n = 0;
     while ((*_Str >= L'0') && (*_Str <= L'9'))
     {
         n = n * 10 + *_Str++ - L'0';
+        f = true;
     }
 
-    *value = sign ? -n : n;
+    if (!f) return false;
+
+    if (sign != 0) *value = sign * n;
+    else *value = n;
+
     return true;
 }
 

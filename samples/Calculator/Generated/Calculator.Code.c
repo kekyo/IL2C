@@ -4,7 +4,7 @@
 // Const strings:
 
 IL2C_CONST_STRING(string0__, L"Polish notation calculator.");
-IL2C_CONST_STRING(string1__, L"This is proof of code for IL2C.");
+IL2C_CONST_STRING(string1__, L"This is proof of concept for IL2C.");
 IL2C_CONST_STRING(string2__, L"https://github.com/kekyo/IL2C");
 IL2C_CONST_STRING(string3__, L"Type \"exit\" to exit.");
 IL2C_CONST_STRING(string4__, L"PN> ");
@@ -548,8 +548,8 @@ int32_t __Calculator_ExpressionNode_Reduce__(Calculator_ExpressionNode* this__)
     //-------------------
     // Local variables:
 
-    int32_t leftResult__;
-    int32_t rightResult__;
+    int32_t leftResult;
+    int32_t rightResult;
 
     //-------------------
     // Evaluation stacks:
@@ -589,7 +589,7 @@ int32_t __Calculator_ExpressionNode_Reduce__(Calculator_ExpressionNode* this__)
     /* Path=1, Unique=0: IL_0006: callvirt System.Int32 Calculator.ReducibleNode::Reduce() */
     stack0_2__ = Calculator_ReducibleNode_Reduce(stack0_1__);
     /* Path=1, Unique=0: IL_000b: stloc.0 */
-    leftResult__ = stack0_2__;
+    leftResult = stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(68): */
     /* Path=1, Unique=0: IL_000c: ldarg.0 */
     stack0_0__ = this__;
@@ -598,7 +598,7 @@ int32_t __Calculator_ExpressionNode_Reduce__(Calculator_ExpressionNode* this__)
     /* Path=1, Unique=0: IL_0012: callvirt System.Int32 Calculator.ReducibleNode::Reduce() */
     stack0_2__ = Calculator_ReducibleNode_Reduce(stack0_1__);
     /* Path=1, Unique=0: IL_0017: stloc.1 */
-    rightResult__ = stack0_2__;
+    rightResult = stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(69): */
     /* Path=1, Unique=0: IL_0018: ldarg.0 */
     stack0_0__ = this__;
@@ -612,9 +612,9 @@ int32_t __Calculator_ExpressionNode_Reduce__(Calculator_ExpressionNode* this__)
     if (stack0_2__ != stack1_0__) goto IL_002b;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(71): */
     /* Path=1, Unique=0: IL_0027: ldloc.0 */
-    stack0_2__ = leftResult__;
+    stack0_2__ = leftResult;
     /* Path=1, Unique=0: IL_0028: ldloc.1 */
-    stack1_0__ = rightResult__;
+    stack1_0__ = rightResult;
     /* Path=1, Unique=0: IL_0029: add */
     stack0_2__ = stack0_2__ + stack1_0__;
     /* Path=1, Unique=0: IL_002a: ret */
@@ -634,9 +634,9 @@ IL_002b:
     if (stack0_2__ != stack1_0__) goto IL_003e;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(75): */
     /* Path=2, Unique=0: IL_003a: ldloc.0 */
-    stack0_2__ = leftResult__;
+    stack0_2__ = leftResult;
     /* Path=2, Unique=0: IL_003b: ldloc.1 */
-    stack1_0__ = rightResult__;
+    stack1_0__ = rightResult;
     /* Path=2, Unique=0: IL_003c: sub */
     stack0_2__ = stack0_2__ - stack1_0__;
     /* Path=2, Unique=0: IL_003d: ret */
@@ -656,9 +656,9 @@ IL_003e:
     if (stack0_2__ != stack1_0__) goto IL_0051;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(79): */
     /* Path=3, Unique=0: IL_004d: ldloc.0 */
-    stack0_2__ = leftResult__;
+    stack0_2__ = leftResult;
     /* Path=3, Unique=0: IL_004e: ldloc.1 */
-    stack1_0__ = rightResult__;
+    stack1_0__ = rightResult;
     /* Path=3, Unique=0: IL_004f: mul */
     stack0_2__ = stack0_2__ * stack1_0__;
     /* Path=3, Unique=0: IL_0050: ret */
@@ -678,9 +678,9 @@ IL_0051:
     if (stack0_2__ != stack1_0__) goto IL_0064;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(83): */
     /* Path=4, Unique=0: IL_0060: ldloc.0 */
-    stack0_2__ = leftResult__;
+    stack0_2__ = leftResult;
     /* Path=4, Unique=0: IL_0061: ldloc.1 */
-    stack1_0__ = rightResult__;
+    stack1_0__ = rightResult;
     /* Path=4, Unique=0: IL_0062: div */
     stack0_2__ = stack0_2__ / stack1_0__;
     /* Path=4, Unique=0: IL_0063: ret */
@@ -751,8 +751,8 @@ int32_t Calculator_PolishNotation_SkipWhiteSpace(System_String* line, int32_t st
     //-------------------
     // Local variables:
 
-    int32_t index__;
-    wchar_t ch__;
+    int32_t index;
+    wchar_t ch;
 
     //-------------------
     // Evaluation stacks:
@@ -787,7 +787,7 @@ int32_t Calculator_PolishNotation_SkipWhiteSpace(System_String* line, int32_t st
     /* Path=1, Unique=0: IL_0000: ldarg.1 */
     stack0_0__ = startIndex;
     /* Path=1, Unique=0: IL_0001: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
     /* Path=1, Unique=0: IL_0002: br.s IL_001a */
     goto IL_001a;
 IL_0004:
@@ -795,20 +795,20 @@ IL_0004:
     /* Path=3, Unique=0: IL_0004: ldarg.0 */
     stack0_1__ = line;
     /* Path=3, Unique=0: IL_0005: ldloc.0 */
-    stack1_2__ = index__;
+    stack1_2__ = index;
     /* Path=3, Unique=0: IL_0006: callvirt System.Char System.String::get_Chars(System.Int32) */
     stack0_2__ = System_String_get_Chars(stack0_1__, stack1_2__);
     /* Path=3, Unique=0: IL_000b: stloc.1 */
-    ch__ = (wchar_t)stack0_2__;
+    ch = (wchar_t)stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(99): */
     /* Path=3, Unique=0: IL_000c: ldloc.1 */
-    stack0_0__ = ch__;
+    stack0_0__ = ch;
     /* Path=3, Unique=0: IL_000d: ldc.i4.s 32 */
     stack1_2__ = 32;
     /* Path=3, Unique=0: IL_000f: beq.s IL_0016 */
     if (stack0_0__ == stack1_2__) goto IL_0016;
     /* Path=3, Unique=0: IL_0011: ldloc.1 */
-    stack0_0__ = ch__;
+    stack0_0__ = ch;
     /* Path=3, Unique=0: IL_0012: ldc.i4.s 9 */
     stack1_2__ = 9;
     /* Path=3, Unique=0: IL_0014: bne.un.s IL_0023 */
@@ -816,17 +816,17 @@ IL_0004:
 IL_0016:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(103): */
     /* Path=3, Unique=0: IL_0016: ldloc.0 */
-    stack0_0__ = index__;
+    stack0_0__ = index;
     /* Path=3, Unique=0: IL_0017: ldc.i4.1 */
     stack1_2__ = 1;
     /* Path=3, Unique=0: IL_0018: add */
     stack0_0__ = stack0_0__ + stack1_2__;
     /* Path=3, Unique=0: IL_0019: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
 IL_001a:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(96): */
     /* Path=2, Unique=0: IL_001a: ldloc.0 */
-    stack0_0__ = index__;
+    stack0_0__ = index;
     /* Path=2, Unique=0: IL_001b: ldarg.0 */
     stack1_0__ = line;
     /* Path=2, Unique=0: IL_001c: callvirt System.Int32 System.String::get_Length() */
@@ -836,7 +836,7 @@ IL_001a:
 IL_0023:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(106): */
     /* Path=2, Unique=0: IL_0023: ldloc.0 */
-    stack0_0__ = index__;
+    stack0_0__ = index;
     /* Path=2, Unique=0: IL_0024: ret */
     il2c_unlink_execution_frame(&__executionFrame__);
     return stack0_0__;
@@ -850,8 +850,8 @@ Calculator_OperatorNode* Calculator_PolishNotation_ParseOperator(System_String* 
     //-------------------
     // Local variables:
 
-    int32_t index__;
-    wchar_t ch__;
+    int32_t index;
+    wchar_t ch;
 
     //-------------------
     // Evaluation stacks:
@@ -908,37 +908,37 @@ IL_000b:
     /* Path=2, Unique=0: IL_000b: ldarg.1 */
     stack0_0__ = startIndex;
     /* Path=2, Unique=0: IL_000c: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(117): */
     /* Path=2, Unique=0: IL_000d: ldarg.0 */
     stack0_2__ = line;
     /* Path=2, Unique=0: IL_000e: ldloc.0 */
-    stack1_2__ = index__;
+    stack1_2__ = index;
     /* Path=2, Unique=0: IL_000f: callvirt System.Char System.String::get_Chars(System.Int32) */
     stack0_3__ = System_String_get_Chars(stack0_2__, stack1_2__);
     /* Path=2, Unique=0: IL_0014: stloc.1 */
-    ch__ = (wchar_t)stack0_3__;
+    ch = (wchar_t)stack0_3__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(118): */
     /* Path=2, Unique=0: IL_0015: ldloc.1 */
-    stack0_0__ = ch__;
+    stack0_0__ = ch;
     /* Path=2, Unique=0: IL_0016: ldc.i4.s 43 */
     stack1_2__ = 43;
     /* Path=2, Unique=0: IL_0018: beq.s IL_002b */
     if (stack0_0__ == stack1_2__) goto IL_002b;
     /* Path=2, Unique=0: IL_001a: ldloc.1 */
-    stack0_0__ = ch__;
+    stack0_0__ = ch;
     /* Path=2, Unique=0: IL_001b: ldc.i4.s 45 */
     stack1_2__ = 45;
     /* Path=2, Unique=0: IL_001d: beq.s IL_002b */
     if (stack0_0__ == stack1_2__) goto IL_002b;
     /* Path=2, Unique=0: IL_001f: ldloc.1 */
-    stack0_0__ = ch__;
+    stack0_0__ = ch;
     /* Path=2, Unique=0: IL_0020: ldc.i4.s 42 */
     stack1_2__ = 42;
     /* Path=2, Unique=0: IL_0022: beq.s IL_002b */
     if (stack0_0__ == stack1_2__) goto IL_002b;
     /* Path=2, Unique=0: IL_0024: ldloc.1 */
-    stack0_0__ = ch__;
+    stack0_0__ = ch;
     /* Path=2, Unique=0: IL_0025: ldc.i4.s 47 */
     stack1_2__ = 47;
     /* Path=2, Unique=0: IL_0027: beq.s IL_002b */
@@ -952,27 +952,27 @@ IL_000b:
 IL_002b:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(122): */
     /* Path=3, Unique=0: IL_002b: ldloc.0 */
-    stack0_0__ = index__;
+    stack0_0__ = index;
     /* Path=3, Unique=0: IL_002c: ldc.i4.1 */
     stack1_2__ = 1;
     /* Path=3, Unique=0: IL_002d: add */
     stack0_0__ = stack0_0__ + stack1_2__;
     /* Path=3, Unique=0: IL_002e: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(124): */
     /* Path=3, Unique=0: IL_002f: ldarg.0 */
     stack0_2__ = line;
     /* Path=3, Unique=0: IL_0030: ldloc.0 */
-    stack1_2__ = index__;
+    stack1_2__ = index;
     /* Path=3, Unique=0: IL_0031: call System.Int32 Calculator.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
     stack0_0__ = Calculator_PolishNotation_SkipWhiteSpace(stack0_2__, stack1_2__);
     /* Path=3, Unique=0: IL_0036: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(125): */
     /* Path=3, Unique=0: IL_0037: ldloc.1 */
-    stack0_0__ = ch__;
+    stack0_0__ = ch;
     /* Path=3, Unique=0: IL_0038: ldloc.0 */
-    stack1_2__ = index__;
+    stack1_2__ = index;
     /* Path=3, Unique=0: IL_0039: newobj System.Void Calculator.OperatorNode::.ctor(System.Char,System.Int32) */
     stack0_4__ = il2c_get_uninitialized_object(il2c_typeof(Calculator_OperatorNode));
     stack0_4__->vptr0__ = &__Calculator_OperatorNode_VTABLE__;
@@ -990,8 +990,8 @@ Calculator_NumericNode* Calculator_PolishNotation_ParseNumeric(System_String* li
     //-------------------
     // Local variables:
 
-    int32_t index__;
-    int32_t numeric__;
+    int32_t index;
+    int32_t numeric;
 
     //-------------------
     // Evaluation stacks:
@@ -1056,7 +1056,7 @@ IL_000b:
     /* Path=2, Unique=0: IL_000b: ldarg.1 */
     stack0_0__ = startIndex;
     /* Path=2, Unique=0: IL_000c: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
     /* Path=2, Unique=0: IL_000d: br.s IL_001e */
     goto IL_001e;
 IL_000f:
@@ -1064,7 +1064,7 @@ IL_000f:
     /* Path=4, Unique=0: IL_000f: ldarg.0 */
     stack0_2__ = line;
     /* Path=4, Unique=0: IL_0010: ldloc.0 */
-    stack1_2__ = index__;
+    stack1_2__ = index;
     /* Path=4, Unique=0: IL_0011: callvirt System.Char System.String::get_Chars(System.Int32) */
     stack0_3__ = System_String_get_Chars(stack0_2__, stack1_2__);
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(139): */
@@ -1074,17 +1074,17 @@ IL_000f:
     if (stack0_3__ == stack1_2__) goto IL_0027;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(143): */
     /* Path=4, Unique=0: IL_001a: ldloc.0 */
-    stack0_0__ = index__;
+    stack0_0__ = index;
     /* Path=4, Unique=0: IL_001b: ldc.i4.1 */
     stack1_2__ = 1;
     /* Path=4, Unique=0: IL_001c: add */
     stack0_0__ = stack0_0__ + stack1_2__;
     /* Path=4, Unique=0: IL_001d: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
 IL_001e:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(136): */
     /* Path=3, Unique=0: IL_001e: ldloc.0 */
-    stack0_0__ = index__;
+    stack0_0__ = index;
     /* Path=3, Unique=0: IL_001f: ldarg.0 */
     stack1_0__ = line;
     /* Path=3, Unique=0: IL_0020: callvirt System.Int32 System.String::get_Length() */
@@ -1094,7 +1094,7 @@ IL_001e:
 IL_0027:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(146): */
     /* Path=3, Unique=0: IL_0027: ldloc.0 */
-    stack0_0__ = index__;
+    stack0_0__ = index;
     /* Path=3, Unique=0: IL_0028: ldarg.1 */
     stack1_2__ = startIndex;
     /* Path=3, Unique=0: IL_0029: bne.un.s IL_002d */
@@ -1112,7 +1112,7 @@ IL_002d:
     /* Path=5, Unique=0: IL_002e: ldarg.1 */
     stack1_2__ = startIndex;
     /* Path=5, Unique=0: IL_002f: ldloc.0 */
-    stack2_0__ = index__;
+    stack2_0__ = index;
     /* Path=5, Unique=0: IL_0030: ldarg.1 */
     stack3_0__ = startIndex;
     /* Path=5, Unique=0: IL_0031: sub */
@@ -1121,7 +1121,7 @@ IL_002d:
     stack0_4__ = System_String_Substring_1(stack0_2__, stack1_2__, stack2_0__);
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(152): */
     /* Path=5, Unique=0: IL_0037: ldloca.s local1 */
-    stack1_3__ = &numeric__;
+    stack1_3__ = &numeric;
     /* Path=5, Unique=0: IL_0039: call System.Boolean System.Int32::TryParse(System.String,System.Int32&) */
     stack0_0__ = System_Int32_TryParse(stack0_4__, stack1_3__);
     /* Path=5, Unique=0: IL_003e: brtrue.s IL_0042 */
@@ -1137,16 +1137,16 @@ IL_0042:
     /* Path=6, Unique=0: IL_0042: ldarg.0 */
     stack0_2__ = line;
     /* Path=6, Unique=0: IL_0043: ldloc.0 */
-    stack1_2__ = index__;
+    stack1_2__ = index;
     /* Path=6, Unique=0: IL_0044: call System.Int32 Calculator.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
     stack0_0__ = Calculator_PolishNotation_SkipWhiteSpace(stack0_2__, stack1_2__);
     /* Path=6, Unique=0: IL_0049: stloc.0 */
-    index__ = stack0_0__;
+    index = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(158): */
     /* Path=6, Unique=0: IL_004a: ldloc.1 */
-    stack0_0__ = numeric__;
+    stack0_0__ = numeric;
     /* Path=6, Unique=0: IL_004b: ldloc.0 */
-    stack1_2__ = index__;
+    stack1_2__ = index;
     /* Path=6, Unique=0: IL_004c: newobj System.Void Calculator.NumericNode::.ctor(System.Int32,System.Int32) */
     stack0_5__ = il2c_get_uninitialized_object(il2c_typeof(Calculator_NumericNode));
     stack0_5__->vptr0__ = &__Calculator_NumericNode_VTABLE__;
@@ -1164,10 +1164,10 @@ Calculator_ExpressionNode* Calculator_PolishNotation_ParseExpression(System_Stri
     //-------------------
     // Local variables:
 
-    Calculator_OperatorNode* oper__ = NULL;
-    Calculator_ReducibleNode* left__ = NULL;
-    Calculator_ReducibleNode* right__ = NULL;
-    int32_t index__;
+    Calculator_OperatorNode* oper = NULL;
+    Calculator_ReducibleNode* left = NULL;
+    Calculator_ReducibleNode* right = NULL;
+    int32_t index;
 
     //-------------------
     // Evaluation stacks:
@@ -1194,9 +1194,9 @@ Calculator_ExpressionNode* Calculator_PolishNotation_ParseExpression(System_Stri
     {
         IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
-        Calculator_OperatorNode** poper__;
-        Calculator_ReducibleNode** pleft__;
-        Calculator_ReducibleNode** pright__;
+        Calculator_OperatorNode** poper;
+        Calculator_ReducibleNode** pleft;
+        Calculator_ReducibleNode** pright;
         IL2C_CecilHelper_PseudoZeroType** pstack0_1__;
         System_String** pstack0_2__;
         Calculator_OperatorNode** pstack0_3__;
@@ -1210,9 +1210,9 @@ Calculator_ExpressionNode* Calculator_PolishNotation_ParseExpression(System_Stri
     } __executionFrame__;
 
     __executionFrame__.targetCount = 13;
-    __executionFrame__.poper__ = &oper__;
-    __executionFrame__.pleft__ = &left__;
-    __executionFrame__.pright__ = &right__;
+    __executionFrame__.poper = &oper;
+    __executionFrame__.pleft = &left;
+    __executionFrame__.pright = &right;
     __executionFrame__.pstack0_1__ = &stack0_1__;
     __executionFrame__.pstack0_2__ = &stack0_2__;
     __executionFrame__.pstack0_3__ = &stack0_3__;
@@ -1252,10 +1252,10 @@ IL_000b:
     /* Path=2, Unique=0: IL_000d: call Calculator.OperatorNode Calculator.PolishNotation::ParseOperator(System.String,System.Int32) */
     stack0_3__ = Calculator_PolishNotation_ParseOperator(stack0_2__, stack1_2__);
     /* Path=2, Unique=0: IL_0012: stloc.0 */
-    oper__ = stack0_3__;
+    oper = stack0_3__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(169): */
     /* Path=2, Unique=0: IL_0013: ldloc.0 */
-    stack0_3__ = oper__;
+    stack0_3__ = oper;
     /* Path=2, Unique=0: IL_0014: brtrue.s IL_0018 */
     if (stack0_3__ != NULL) goto IL_0018;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(171): */
@@ -1269,32 +1269,32 @@ IL_0018:
     /* Path=3, Unique=0: IL_0018: ldarg.0 */
     stack0_2__ = line;
     /* Path=3, Unique=0: IL_0019: ldloc.0 */
-    stack1_3__ = oper__;
+    stack1_3__ = oper;
     /* Path=3, Unique=0: IL_001a: ldfld System.Int32 Calculator.AbstractNode::NextIndex */
     stack1_2__ = stack1_3__->NextIndex;
     /* Path=3, Unique=0: IL_001f: call Calculator.NumericNode Calculator.PolishNotation::ParseNumeric(System.String,System.Int32) */
     stack0_4__ = Calculator_PolishNotation_ParseNumeric(stack0_2__, stack1_2__);
     /* Path=3, Unique=0: IL_0024: stloc.1 */
-    left__ = (Calculator_ReducibleNode*)stack0_4__;
+    left = (Calculator_ReducibleNode*)stack0_4__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(175): */
     /* Path=3, Unique=0: IL_0025: ldloc.1 */
-    stack0_5__ = left__;
+    stack0_5__ = left;
     /* Path=3, Unique=0: IL_0026: brtrue.s IL_003a */
     if (stack0_5__ != NULL) goto IL_003a;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(177): */
     /* Path=3, Unique=0: IL_0028: ldarg.0 */
     stack0_2__ = line;
     /* Path=3, Unique=0: IL_0029: ldloc.0 */
-    stack1_3__ = oper__;
+    stack1_3__ = oper;
     /* Path=3, Unique=0: IL_002a: ldfld System.Int32 Calculator.AbstractNode::NextIndex */
     stack1_2__ = stack1_3__->NextIndex;
     /* Path=3, Unique=0: IL_002f: call Calculator.ExpressionNode Calculator.PolishNotation::ParseExpression(System.String,System.Int32) */
     stack0_6__ = Calculator_PolishNotation_ParseExpression(stack0_2__, stack1_2__);
     /* Path=3, Unique=0: IL_0034: stloc.1 */
-    left__ = (Calculator_ReducibleNode*)stack0_6__;
+    left = (Calculator_ReducibleNode*)stack0_6__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(178): */
     /* Path=3, Unique=0: IL_0035: ldloc.1 */
-    stack0_5__ = left__;
+    stack0_5__ = left;
     /* Path=3, Unique=0: IL_0036: brtrue.s IL_003a */
     if (stack0_5__ != NULL) goto IL_003a;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(180): */
@@ -1308,32 +1308,32 @@ IL_003a:
     /* Path=4, Unique=0: IL_003a: ldarg.0 */
     stack0_2__ = line;
     /* Path=4, Unique=0: IL_003b: ldloc.1 */
-    stack1_4__ = left__;
+    stack1_4__ = left;
     /* Path=4, Unique=0: IL_003c: ldfld System.Int32 Calculator.AbstractNode::NextIndex */
     stack1_2__ = stack1_4__->NextIndex;
     /* Path=4, Unique=0: IL_0041: call Calculator.NumericNode Calculator.PolishNotation::ParseNumeric(System.String,System.Int32) */
     stack0_4__ = Calculator_PolishNotation_ParseNumeric(stack0_2__, stack1_2__);
     /* Path=4, Unique=0: IL_0046: stloc.2 */
-    right__ = (Calculator_ReducibleNode*)stack0_4__;
+    right = (Calculator_ReducibleNode*)stack0_4__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(185): */
     /* Path=4, Unique=0: IL_0047: ldloc.2 */
-    stack0_5__ = right__;
+    stack0_5__ = right;
     /* Path=4, Unique=0: IL_0048: brtrue.s IL_005c */
     if (stack0_5__ != NULL) goto IL_005c;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(187): */
     /* Path=4, Unique=0: IL_004a: ldarg.0 */
     stack0_2__ = line;
     /* Path=4, Unique=0: IL_004b: ldloc.1 */
-    stack1_4__ = left__;
+    stack1_4__ = left;
     /* Path=4, Unique=0: IL_004c: ldfld System.Int32 Calculator.AbstractNode::NextIndex */
     stack1_2__ = stack1_4__->NextIndex;
     /* Path=4, Unique=0: IL_0051: call Calculator.ExpressionNode Calculator.PolishNotation::ParseExpression(System.String,System.Int32) */
     stack0_6__ = Calculator_PolishNotation_ParseExpression(stack0_2__, stack1_2__);
     /* Path=4, Unique=0: IL_0056: stloc.2 */
-    right__ = (Calculator_ReducibleNode*)stack0_6__;
+    right = (Calculator_ReducibleNode*)stack0_6__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(188): */
     /* Path=4, Unique=0: IL_0057: ldloc.2 */
-    stack0_5__ = right__;
+    stack0_5__ = right;
     /* Path=4, Unique=0: IL_0058: brtrue.s IL_005c */
     if (stack0_5__ != NULL) goto IL_005c;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(190): */
@@ -1347,22 +1347,22 @@ IL_005c:
     /* Path=5, Unique=0: IL_005c: ldarg.0 */
     stack0_2__ = line;
     /* Path=5, Unique=0: IL_005d: ldloc.2 */
-    stack1_4__ = right__;
+    stack1_4__ = right;
     /* Path=5, Unique=0: IL_005e: ldfld System.Int32 Calculator.AbstractNode::NextIndex */
     stack1_2__ = stack1_4__->NextIndex;
     /* Path=5, Unique=0: IL_0063: call System.Int32 Calculator.PolishNotation::SkipWhiteSpace(System.String,System.Int32) */
     stack0_0__ = Calculator_PolishNotation_SkipWhiteSpace(stack0_2__, stack1_2__);
     /* Path=5, Unique=0: IL_0068: stloc.3 */
-    index__ = stack0_0__;
+    index = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(195): */
     /* Path=5, Unique=0: IL_0069: ldloc.0 */
-    stack0_3__ = oper__;
+    stack0_3__ = oper;
     /* Path=5, Unique=0: IL_006a: ldloc.1 */
-    stack1_4__ = left__;
+    stack1_4__ = left;
     /* Path=5, Unique=0: IL_006b: ldloc.2 */
-    stack2_0__ = right__;
+    stack2_0__ = right;
     /* Path=5, Unique=0: IL_006c: ldloc.3 */
-    stack3_0__ = index__;
+    stack3_0__ = index;
     /* Path=5, Unique=0: IL_006d: newobj System.Void Calculator.ExpressionNode::.ctor(Calculator.OperatorNode,Calculator.ReducibleNode,Calculator.ReducibleNode,System.Int32) */
     stack0_6__ = il2c_get_uninitialized_object(il2c_typeof(Calculator_ExpressionNode));
     stack0_6__->vptr0__ = &__Calculator_ExpressionNode_VTABLE__;
@@ -1380,8 +1380,8 @@ void Calculator_PolishNotation_Main(void)
     //-------------------
     // Local variables:
 
-    System_String* line__ = NULL;
-    Calculator_ExpressionNode* expr__ = NULL;
+    System_String* line = NULL;
+    Calculator_ExpressionNode* expr = NULL;
 
     //-------------------
     // Evaluation stacks:
@@ -1399,16 +1399,16 @@ void Calculator_PolishNotation_Main(void)
     {
         IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
-        System_String** pline__;
-        Calculator_ExpressionNode** pexpr__;
+        System_String** pline;
+        Calculator_ExpressionNode** pexpr;
         System_String** pstack0_0__;
         Calculator_ExpressionNode** pstack0_2__;
         System_String** pstack1_0__;
     } __executionFrame__;
 
     __executionFrame__.targetCount = 5;
-    __executionFrame__.pline__ = &line__;
-    __executionFrame__.pexpr__ = &expr__;
+    __executionFrame__.pline = &line;
+    __executionFrame__.pexpr = &expr;
     __executionFrame__.pstack0_0__ = &stack0_0__;
     __executionFrame__.pstack0_2__ = &stack0_2__;
     __executionFrame__.pstack1_0__ = &stack1_0__;
@@ -1423,7 +1423,7 @@ void Calculator_PolishNotation_Main(void)
     /* Path=1, Unique=0: IL_0005: call System.Void System.Console::WriteLine(System.String) */
     System_Console_WriteLine_10(stack0_0__);
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(201): */
-    /* Path=1, Unique=0: IL_000a: ldstr "This is proof of code for IL2C." */
+    /* Path=1, Unique=0: IL_000a: ldstr "This is proof of concept for IL2C." */
     stack0_0__ = string1__;
     /* Path=1, Unique=0: IL_000f: call System.Void System.Console::WriteLine(System.String) */
     System_Console_WriteLine_10(stack0_0__);
@@ -1453,17 +1453,17 @@ IL_002d:
     /* Path=1, Unique=0: IL_003c: call System.String System.Console::ReadLine() */
     stack0_0__ = System_Console_ReadLine();
     /* Path=1, Unique=0: IL_0041: stloc.0 */
-    line__ = stack0_0__;
+    line = stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(211): */
     /* Path=1, Unique=0: IL_0042: ldloc.0 */
-    stack0_0__ = line__;
+    stack0_0__ = line;
     /* Path=1, Unique=0: IL_0043: call System.Boolean System.String::IsNullOrWhiteSpace(System.String) */
     stack0_1__ = System_String_IsNullOrWhiteSpace(stack0_0__);
     /* Path=1, Unique=0: IL_0048: brtrue.s IL_002d */
     if (stack0_1__ != 0) goto IL_002d;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(213): */
     /* Path=1, Unique=0: IL_004a: ldloc.0 */
-    stack0_0__ = line__;
+    stack0_0__ = line;
     /* Path=1, Unique=0: IL_004b: ldstr "exit" */
     stack1_0__ = string5__;
     /* Path=1, Unique=0: IL_0050: call System.Boolean System.String::op_Equality(System.String,System.String) */
@@ -1477,16 +1477,16 @@ IL_002d:
 IL_0058:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(218): */
     /* Path=2, Unique=0: IL_0058: ldloc.0 */
-    stack0_0__ = line__;
+    stack0_0__ = line;
     /* Path=2, Unique=0: IL_0059: ldc.i4.0 */
     stack1_1__ = 0;
     /* Path=2, Unique=0: IL_005a: call Calculator.ExpressionNode Calculator.PolishNotation::ParseExpression(System.String,System.Int32) */
     stack0_2__ = Calculator_PolishNotation_ParseExpression(stack0_0__, stack1_1__);
     /* Path=2, Unique=0: IL_005f: stloc.1 */
-    expr__ = stack0_2__;
+    expr = stack0_2__;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(219): */
     /* Path=2, Unique=0: IL_0060: ldloc.1 */
-    stack0_2__ = expr__;
+    stack0_2__ = expr;
     /* Path=2, Unique=0: IL_0061: brtrue.s IL_006f */
     if (stack0_2__ != NULL) goto IL_006f;
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(221): */
@@ -1500,7 +1500,7 @@ IL_0058:
 IL_006f:
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(225): */
     /* Path=3, Unique=0: IL_006f: ldloc.1 */
-    stack0_2__ = expr__;
+    stack0_2__ = expr;
     /* Path=3, Unique=0: IL_0070: callvirt System.Int32 Calculator.ReducibleNode::Reduce() */
     stack0_1__ = Calculator_ReducibleNode_Reduce((Calculator_ReducibleNode*)stack0_2__);
 /* D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Code\\PolishNotation.cs(227): */

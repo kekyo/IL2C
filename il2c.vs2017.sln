@@ -139,6 +139,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accelometer.Code", "samples
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generated", "Generated", "{1C57C110-1742-4141-988D-D094A3A60E25}"
 	ProjectSection(SolutionItems) = preProject
+		samples\microbit\Generated\Accelometer.Code.cpp = samples\microbit\Generated\Accelometer.Code.cpp
 		samples\microbit\Generated\Accelometer.Code.h = samples\microbit\Generated\Accelometer.Code.h
 	EndProjectSection
 EndProject

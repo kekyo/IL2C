@@ -136,10 +136,17 @@ namespace IL2C
             {
                 return string.Format("{0}->string_body__", parameter.Name);
             }
-            else
+
+            var resolved = parameter.ParameterType.Resolve();
+            if (resolved.IsEnum)
             {
-                return parameter.Name;
+                return string.Format(
+                    "({0}){1}",
+                    resolved.Name,      // Simple enum type name for use P/Invoke.
+                    parameter.Name);
             }
+
+            return parameter.Name;
         }
 
         public static string ManglingSymbolName(this string rawSymbolName)

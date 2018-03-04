@@ -47,14 +47,6 @@ extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_RUNTIME_TYPE__;
 // Accelometer.Demo
 extern /* internalcall */ void __Accelometer_Demo_IL2C_MarkHandler__(Accelometer_Demo* this__);
 extern /* internalcall */ void* __Accelometer_Demo_IL2C_RuntimeCast__(Accelometer_Demo* this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern void Accelometer_Demo_BeginAccelometer(bool highResolution, uint8_t scale);
-extern uint8_t Accelometer_Demo_UpdateAccelometer(void);
-extern int8_t Accelometer_Demo_GetAccelometerX(void);
-extern int8_t Accelometer_Demo_GetAccelometerY(void);
-extern int8_t Accelometer_Demo_GetAccelometerZ(void);
-extern int8_t Accelometer_Demo_ShowArrow(Accelometer_Demo_ArrowNames direction, uint32_t interval);
-extern int8_t Accelometer_Demo_ShowIcon(Accelometer_Demo_IconNames icon, uint32_t interval);
-extern void Accelometer_Demo_Delay(int32_t millis);
 extern void Accelometer_Demo_Main(void);
 extern void Accelometer_Demo__ctor(Accelometer_Demo* this__);
 #define Accelometer_Demo_ToString(/* Accelometer_Demo* */ this__) \

@@ -39,11 +39,14 @@ namespace IL2C
             var rawTypeName = declaredType
                 .GetFullMemberName()
                 .ManglingSymbolName();
-            var typeString = declaredType.IsValueType
-                ? "Struct"
-                : declaredType.IsInterface
-                    ? "Interface"
-                    : "Class";
+            var typeString =
+                declaredType.IsEnum
+                ? "Enum"
+                : declaredType.IsValueType
+                    ? "Struct"
+                    : declaredType.IsInterface
+                        ? "Interface"
+                        : "Class";
 
             tw.WriteLine("////////////////////////////////////////////////////////////");
             tw.WriteLine(
@@ -199,6 +202,7 @@ namespace IL2C
             TypeDefinition[] types,
             IExtractContext extractContext,
             PreparedFunctions preparedFunctions,
+            Func<MethodDefinition, bool> predictMethod,
             string indent)
         {
             tw.WriteLine();
@@ -280,8 +284,11 @@ namespace IL2C
                     rawTypeName,
                     typeName);
 
+                // TODO: Support enum type methods
                 foreach (var method in type.Methods
-                    .Where(method => !method.IsConstructor || !method.IsStatic))
+                    .Where(method =>
+                        (!method.IsConstructor || !method.IsStatic)
+                        && predictMethod(method)))
                 {
                     var preparedFunction = preparedFunctions.Functions[method];
 
@@ -299,45 +306,43 @@ namespace IL2C
 
                 var virtualMethods = type
                     .EnumerateOrderedOverridedMethods()
+                    .Where(predictMethod)
                     .ToArray();
-                if (virtualMethods.Length >= 1)
+                foreach (var method in virtualMethods)
                 {
-                    foreach (var method in virtualMethods)
-                    {
-                        var fullMethodName = type
-                            .GetFullMemberName(method, MethodNameTypes.Index)
-                            .ManglingSymbolName();
-                        var functionParametersDeclaration = string.Join(
-                            ", ",
-                            method.GetSafeParameters()
-                                .Select((parameter, index) => (index == 0)
-                                    ? string.Format(
-                                        "/* {0} */ {1}",
-                                        extractContext.GetCLanguageTypeName(type),
-                                        parameter.Name)
-                                    : string.Format(
-                                        "/* {0} */ {1}",
-                                        extractContext.GetCLanguageTypeName(parameter.ParameterType),
-                                        parameter.Name)));
-                        tw.WriteLine(
-                            "#define {0}({1}) \\",
-                            fullMethodName,
-                            functionParametersDeclaration);
+                    var fullMethodName = type
+                        .GetFullMemberName(method, MethodNameTypes.Index)
+                        .ManglingSymbolName();
+                    var functionParametersDeclaration = string.Join(
+                        ", ",
+                        method.GetSafeParameters()
+                            .Select((parameter, index) => (index == 0)
+                                ? string.Format(
+                                    "/* {0} */ {1}",
+                                    extractContext.GetCLanguageTypeName(type),
+                                    parameter.Name)
+                                : string.Format(
+                                    "/* {0} */ {1}",
+                                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
+                                    parameter.Name)));
+                    tw.WriteLine(
+                        "#define {0}({1}) \\",
+                        fullMethodName,
+                        functionParametersDeclaration);
 
-                        var methodName = method
-                            .GetOverloadedMethodName()
-                            .ManglingSymbolName();
-                        var functionParameters = string.Join(
-                            ", ",
-                            method.GetSafeParameters()
-                                .Select(parameter => parameter.Name));
+                    var methodName = method
+                        .GetOverloadedMethodName()
+                        .ManglingSymbolName();
+                    var functionParameters = string.Join(
+                        ", ",
+                        method.GetSafeParameters()
+                            .Select(parameter => parameter.Name));
 
-                        tw.WriteLine(
-                            "{0}((this__)->vptr0__->{1}({2}))",
-                            indent,
-                            methodName,
-                            functionParameters);
-                    }
+                    tw.WriteLine(
+                        "{0}((this__)->vptr0__->{1}({2}))",
+                        indent,
+                        methodName,
+                        functionParameters);
                 }
             }
 
@@ -1045,8 +1050,9 @@ namespace IL2C
 
             var types = extractContext.Assembly.Modules
                 .SelectMany(module => module.Types)
+                .SelectMany(type => new[] { type }.Concat(type.NestedTypes))
                 // All types exclude privates
-                .Where(type => (type.IsValueType || type.IsClass || type.IsInterface)
+                .Where(type => type.IsValidDefinition()
                     && (type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly))
                 .ToArray();
 
@@ -1055,6 +1061,7 @@ namespace IL2C
                 types,
                 extractContext,
                 preparedFunctions,
+                method => method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly,
                 indent);
 
             twHeader.WriteLine();
@@ -1094,6 +1101,7 @@ namespace IL2C
 
             var allTypes = extractContext.Assembly.Modules
                 .SelectMany(module => module.Types)
+                .SelectMany(type => new[] { type }.Concat(type.NestedTypes))
                 .Where(type => type.IsValidDefinition())
                 .ToArray();
 
@@ -1107,6 +1115,7 @@ namespace IL2C
                 types,
                 extractContext,
                 preparedFunctions,
+                method => !(method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly),
                 indent);
 
             twSource.WriteLine();

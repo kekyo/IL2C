@@ -12,12 +12,224 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // Types:
 
+typedef struct Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames;
+typedef struct Accelometer_Demo_IconNames Accelometer_Demo_IconNames;
+
+////////////////////////////////////////////////////////////
+// Enum: Accelometer.Demo.ArrowNames
+
+// Enum vtable layout
+typedef const struct
+{
+    /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo_ArrowNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Accelometer_Demo_ArrowNames this__);
+    int32_t (*GetHashCode)(Accelometer_Demo_ArrowNames this__);
+    void (*Finalize)(Accelometer_Demo_ArrowNames this__);
+    bool (*Equals)(Accelometer_Demo_ArrowNames this__, System_Object* obj);
+    System_TypeCode (*GetTypeCode)(Accelometer_Demo_ArrowNames this__);
+    System_String* (*ToString_1)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    bool (*System_IConvertible_ToBoolean)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    wchar_t (*System_IConvertible_ToChar)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    int8_t (*System_IConvertible_ToSByte)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    uint8_t (*System_IConvertible_ToByte)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    int16_t (*System_IConvertible_ToInt16)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    uint16_t (*System_IConvertible_ToUInt16)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    int32_t (*System_IConvertible_ToInt32)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    uint32_t (*System_IConvertible_ToUInt32)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    int64_t (*System_IConvertible_ToInt64)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    uint64_t (*System_IConvertible_ToUInt64)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    System_Single (*System_IConvertible_ToSingle)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    System_Double (*System_IConvertible_ToDouble)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    System_Decimal (*System_IConvertible_ToDecimal)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    System_DateTime (*System_IConvertible_ToDateTime)(Accelometer_Demo_ArrowNames this__, System_IFormatProvider* provider);
+    int32_t (*CompareTo)(Accelometer_Demo_ArrowNames this__, System_Object* target);
+    System_String* (*ToString_3)(Accelometer_Demo_ArrowNames this__, System_String* format, System_IFormatProvider* provider);
+    System_Object* (*System_IConvertible_ToType)(Accelometer_Demo_ArrowNames this__, System_Type* type, System_IFormatProvider* provider);
+} __Accelometer_Demo_ArrowNames_VTABLE_DECL__;
+
+// Enum layout
+struct Accelometer_Demo_ArrowNames
+{
+    __Accelometer_Demo_ArrowNames_VTABLE_DECL__* vptr0__;
+    __System_IComparable_VTABLE_DECL__* vptr_System_IComparable__;
+    __System_IFormattable_VTABLE_DECL__* vptr_System_IFormattable__;
+    __System_IConvertible_VTABLE_DECL__* vptr_System_IConvertible__;
+    int32_t value__;
+};
+
+
+// Enum runtime type information
+extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_ArrowNames_RUNTIME_TYPE__;
+
+////////////////////////////////////////////////////////////
+// Enum: Accelometer.Demo.IconNames
+
+// Enum vtable layout
+typedef const struct
+{
+    /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo_IconNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* (*ToString)(Accelometer_Demo_IconNames this__);
+    int32_t (*GetHashCode)(Accelometer_Demo_IconNames this__);
+    void (*Finalize)(Accelometer_Demo_IconNames this__);
+    bool (*Equals)(Accelometer_Demo_IconNames this__, System_Object* obj);
+    System_TypeCode (*GetTypeCode)(Accelometer_Demo_IconNames this__);
+    System_String* (*ToString_1)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    bool (*System_IConvertible_ToBoolean)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    wchar_t (*System_IConvertible_ToChar)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    int8_t (*System_IConvertible_ToSByte)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    uint8_t (*System_IConvertible_ToByte)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    int16_t (*System_IConvertible_ToInt16)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    uint16_t (*System_IConvertible_ToUInt16)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    int32_t (*System_IConvertible_ToInt32)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    uint32_t (*System_IConvertible_ToUInt32)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    int64_t (*System_IConvertible_ToInt64)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    uint64_t (*System_IConvertible_ToUInt64)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    System_Single (*System_IConvertible_ToSingle)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    System_Double (*System_IConvertible_ToDouble)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    System_Decimal (*System_IConvertible_ToDecimal)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    System_DateTime (*System_IConvertible_ToDateTime)(Accelometer_Demo_IconNames this__, System_IFormatProvider* provider);
+    int32_t (*CompareTo)(Accelometer_Demo_IconNames this__, System_Object* target);
+    System_String* (*ToString_3)(Accelometer_Demo_IconNames this__, System_String* format, System_IFormatProvider* provider);
+    System_Object* (*System_IConvertible_ToType)(Accelometer_Demo_IconNames this__, System_Type* type, System_IFormatProvider* provider);
+} __Accelometer_Demo_IconNames_VTABLE_DECL__;
+
+// Enum layout
+struct Accelometer_Demo_IconNames
+{
+    __Accelometer_Demo_IconNames_VTABLE_DECL__* vptr0__;
+    __System_IComparable_VTABLE_DECL__* vptr_System_IComparable__;
+    __System_IFormattable_VTABLE_DECL__* vptr_System_IFormattable__;
+    __System_IConvertible_VTABLE_DECL__* vptr_System_IConvertible__;
+    int32_t value__;
+};
+
+
+// Enum runtime type information
+extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_IconNames_RUNTIME_TYPE__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:
 
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_North;
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_NorthEast;
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_East;
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_SouthEast;
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_South;
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_SouthWest;
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_West;
+extern Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_NorthWest;
+
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Heart;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_SmallHeart;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Yes;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_No;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Happy;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Sad;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Confused;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Angry;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Asleep;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Surprised;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Silly;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Fabulous;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Meh;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_TShirt;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Rollerskate;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Duck;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_House;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Tortoise;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Butterfly;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_StickFigure;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Ghost;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Sword;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Giraffe;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Skull;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Umbrella;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Snake;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Rabbit;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Cow;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_QuarterNote;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_EigthNote;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Pitchfork;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Target;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Triangle;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_LeftTriangle;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Chessboard;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Diamond;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_SmallDiamond;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Square;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_SmallSquare;
+extern Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Scissors;
+
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
+
+// Accelometer.Demo/ArrowNames
+extern /* internalcall */ void __Accelometer_Demo_ArrowNames_IL2C_MarkHandler__(Accelometer_Demo_ArrowNames* this__);
+extern /* internalcall */ void* __Accelometer_Demo_ArrowNames_IL2C_RuntimeCast__(Accelometer_Demo_ArrowNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToBoolean(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToBoolean(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToChar(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToChar(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToSByte(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToSByte(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToByte(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToByte(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToInt16(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToInt16(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToUInt16(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToUInt16(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToInt32(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToInt32(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToUInt32(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToUInt32(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToInt64(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToInt64(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToUInt64(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToUInt64(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToSingle(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToSingle(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToDouble(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToDouble(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToDecimal(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToDecimal(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToDateTime(/* Accelometer_Demo_ArrowNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToDateTime(this__, provider))
+#define Accelometer_Demo_ArrowNames_System_IConvertible_ToType(/* Accelometer_Demo_ArrowNames */ this__, /* System_Type* */ type, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToType(this__, type, provider))
+
+// Accelometer.Demo/IconNames
+extern /* internalcall */ void __Accelometer_Demo_IconNames_IL2C_MarkHandler__(Accelometer_Demo_IconNames* this__);
+extern /* internalcall */ void* __Accelometer_Demo_IconNames_IL2C_RuntimeCast__(Accelometer_Demo_IconNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
+#define Accelometer_Demo_IconNames_System_IConvertible_ToBoolean(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToBoolean(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToChar(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToChar(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToSByte(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToSByte(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToByte(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToByte(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToInt16(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToInt16(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToUInt16(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToUInt16(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToInt32(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToInt32(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToUInt32(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToUInt32(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToInt64(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToInt64(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToUInt64(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToUInt64(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToSingle(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToSingle(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToDouble(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToDouble(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToDecimal(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToDecimal(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToDateTime(/* Accelometer_Demo_IconNames */ this__, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToDateTime(this__, provider))
+#define Accelometer_Demo_IconNames_System_IConvertible_ToType(/* Accelometer_Demo_IconNames */ this__, /* System_Type* */ type, /* System_IFormatProvider* */ provider) \
+    ((this__)->vptr0__->System_IConvertible_ToType(this__, type, provider))
 
 #ifdef __cplusplus
 }
@@ -26,6 +238,56 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // Static fields:
 
+
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_North;
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_NorthEast;
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_East;
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_SouthEast;
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_South;
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_SouthWest;
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_West;
+Accelometer_Demo_ArrowNames Accelometer_Demo_ArrowNames_NorthWest;
+
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Heart;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_SmallHeart;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Yes;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_No;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Happy;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Sad;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Confused;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Angry;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Asleep;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Surprised;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Silly;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Fabulous;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Meh;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_TShirt;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Rollerskate;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Duck;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_House;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Tortoise;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Butterfly;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_StickFigure;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Ghost;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Sword;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Giraffe;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Skull;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Umbrella;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Snake;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Rabbit;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Cow;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_QuarterNote;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_EigthNote;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Pitchfork;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Target;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Triangle;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_LeftTriangle;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Chessboard;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Diamond;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_SmallDiamond;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Square;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_SmallSquare;
+Accelometer_Demo_IconNames Accelometer_Demo_IconNames_Scissors;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Methods:
@@ -78,7 +340,7 @@ int8_t Accelometer_Demo_GetAccelometerZ(void)
 
 int8_t Accelometer_Demo_ShowArrow(Accelometer_Demo_ArrowNames direction, uint32_t interval)
 {
-    return SCREEN.showArrow(direction, interval);
+    return SCREEN.showArrow((ArrowNames)direction, interval);
 }
 
 ///////////////////////////////////////
@@ -86,7 +348,7 @@ int8_t Accelometer_Demo_ShowArrow(Accelometer_Demo_ArrowNames direction, uint32_
 
 int8_t Accelometer_Demo_ShowIcon(Accelometer_Demo_IconNames icon, uint32_t interval)
 {
-    return SCREEN.showIcon(icon, interval);
+    return SCREEN.showIcon((IconNames)icon, interval);
 }
 
 ///////////////////////////////////////
@@ -472,4 +734,128 @@ __Accelometer_Demo_VTABLE_DECL__ __Accelometer_Demo_VTABLE__ = {
     (void*)__System_Object_GetHashCode__,
     (void*)__System_Object_Finalize__,
     (void*)__System_Object_Equals__,
+};
+
+////////////////////////////////////////////////////////////
+// Type: Accelometer.Demo.ArrowNames
+
+//////////////////////
+// Runtime helpers:
+
+// Runtime cast
+void* __Accelometer_Demo_ArrowNames_IL2C_RuntimeCast__(Accelometer_Demo_ArrowNames* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // This type
+    if (type == il2c_typeof(Accelometer_Demo_ArrowNames)) return this__;
+
+    // Delegate checking base types
+    return __System_Enum_IL2C_RuntimeCast__((System_Enum*)this__, type);
+}
+
+// GC's mark handler
+void __Accelometer_Demo_ArrowNames_IL2C_MarkHandler__(Accelometer_Demo_ArrowNames* this__)
+{
+
+    // Delegate checking base types
+    __System_Enum_IL2C_MarkHandler__((System_Enum*)this__);
+}
+
+// Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_ArrowNames_RUNTIME_TYPE__ = {
+    "Accelometer.Demo.ArrowNames",
+    sizeof(Accelometer_Demo_ArrowNames),
+    /* internalcall */ (void*)__Accelometer_Demo_ArrowNames_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Accelometer.Demo/ArrowNames
+__Accelometer_Demo_ArrowNames_VTABLE_DECL__ __Accelometer_Demo_ArrowNames_VTABLE__ = {
+    (void*)__Accelometer_Demo_ArrowNames_IL2C_RuntimeCast__,
+    (void*)__System_Enum_ToString__,
+    (void*)__System_Enum_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Enum_Equals__,
+    (void*)__System_Enum_GetTypeCode__,
+    (void*)__System_Enum_ToString_1__,
+    (void*)__System_Enum_System_IConvertible_ToBoolean__,
+    (void*)__System_Enum_System_IConvertible_ToChar__,
+    (void*)__System_Enum_System_IConvertible_ToSByte__,
+    (void*)__System_Enum_System_IConvertible_ToByte__,
+    (void*)__System_Enum_System_IConvertible_ToInt16__,
+    (void*)__System_Enum_System_IConvertible_ToUInt16__,
+    (void*)__System_Enum_System_IConvertible_ToInt32__,
+    (void*)__System_Enum_System_IConvertible_ToUInt32__,
+    (void*)__System_Enum_System_IConvertible_ToInt64__,
+    (void*)__System_Enum_System_IConvertible_ToUInt64__,
+    (void*)__System_Enum_System_IConvertible_ToSingle__,
+    (void*)__System_Enum_System_IConvertible_ToDouble__,
+    (void*)__System_Enum_System_IConvertible_ToDecimal__,
+    (void*)__System_Enum_System_IConvertible_ToDateTime__,
+    (void*)__System_Enum_CompareTo__,
+    (void*)__System_Enum_ToString_3__,
+    (void*)__System_Enum_System_IConvertible_ToType__,
+};
+
+////////////////////////////////////////////////////////////
+// Type: Accelometer.Demo.IconNames
+
+//////////////////////
+// Runtime helpers:
+
+// Runtime cast
+void* __Accelometer_Demo_IconNames_IL2C_RuntimeCast__(Accelometer_Demo_IconNames* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // This type
+    if (type == il2c_typeof(Accelometer_Demo_IconNames)) return this__;
+
+    // Delegate checking base types
+    return __System_Enum_IL2C_RuntimeCast__((System_Enum*)this__, type);
+}
+
+// GC's mark handler
+void __Accelometer_Demo_IconNames_IL2C_MarkHandler__(Accelometer_Demo_IconNames* this__)
+{
+
+    // Delegate checking base types
+    __System_Enum_IL2C_MarkHandler__((System_Enum*)this__);
+}
+
+// Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_IconNames_RUNTIME_TYPE__ = {
+    "Accelometer.Demo.IconNames",
+    sizeof(Accelometer_Demo_IconNames),
+    /* internalcall */ (void*)__Accelometer_Demo_IconNames_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// VTables:
+
+// Vtable of Accelometer.Demo/IconNames
+__Accelometer_Demo_IconNames_VTABLE_DECL__ __Accelometer_Demo_IconNames_VTABLE__ = {
+    (void*)__Accelometer_Demo_IconNames_IL2C_RuntimeCast__,
+    (void*)__System_Enum_ToString__,
+    (void*)__System_Enum_GetHashCode__,
+    (void*)__System_Object_Finalize__,
+    (void*)__System_Enum_Equals__,
+    (void*)__System_Enum_GetTypeCode__,
+    (void*)__System_Enum_ToString_1__,
+    (void*)__System_Enum_System_IConvertible_ToBoolean__,
+    (void*)__System_Enum_System_IConvertible_ToChar__,
+    (void*)__System_Enum_System_IConvertible_ToSByte__,
+    (void*)__System_Enum_System_IConvertible_ToByte__,
+    (void*)__System_Enum_System_IConvertible_ToInt16__,
+    (void*)__System_Enum_System_IConvertible_ToUInt16__,
+    (void*)__System_Enum_System_IConvertible_ToInt32__,
+    (void*)__System_Enum_System_IConvertible_ToUInt32__,
+    (void*)__System_Enum_System_IConvertible_ToInt64__,
+    (void*)__System_Enum_System_IConvertible_ToUInt64__,
+    (void*)__System_Enum_System_IConvertible_ToSingle__,
+    (void*)__System_Enum_System_IConvertible_ToDouble__,
+    (void*)__System_Enum_System_IConvertible_ToDecimal__,
+    (void*)__System_Enum_System_IConvertible_ToDateTime__,
+    (void*)__System_Enum_CompareTo__,
+    (void*)__System_Enum_ToString_3__,
+    (void*)__System_Enum_System_IConvertible_ToType__,
 };

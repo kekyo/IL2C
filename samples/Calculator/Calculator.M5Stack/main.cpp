@@ -183,11 +183,6 @@ private:
     boolean change_colour;
     boolean selected;
 
-    // We have to blank the top line each time the display is scrolled, but this takes up to 13 milliseconds
-    // for a full width line, meanwhile the serial buffer may be filling... and overflowing
-    // We can speed up scrolling of short text lines by just blanking the character we drew
-    //int blank[19]; // We keep all the strings pixel lengths to optimise the speed of the top line blanking
-
     // ##############################################################################################
     // Setup the vertical scrolling start address pointer
     // ##############################################################################################
@@ -236,7 +231,7 @@ private:
 public:
     M5_Terminal()
         : yStart(0), yArea(YMAX-TOP_FIXED_AREA-BOT_FIXED_AREA),
-        yDraw(0), xPos(0), data(0), change_colour(1), selected(1)
+        yDraw(0), xPos(0), data(0), change_colour(1), selected(1), width(0)
     {
         //memset(blank, 0, sizeof blank);
     }
@@ -248,8 +243,11 @@ public:
         M5.Lcd.setCursor(0, 0, 2);
         M5.Lcd.setTextColor(TFT_WHITE,TFT_BLACK);  
         M5.Lcd.setTextSize(1);
+        width = M5.Lcd.textWidth(" ", 2);
 
         setupScrollArea(0, 0);
+        yDraw = 0;
+        xPos = 0;
     }
 
     void feed()
@@ -265,10 +263,26 @@ public:
         {
             feed();
         }
-        if (ch > 31)
+        // If it is a backspace
+        else if (ch == '\b')
+        {
+            if (xPos >= 1)
+            {
+                if (xPos >= width) xPos -= width;
+                else xPos = 0;
+            }
+            else if (yDraw >= 1)
+            {
+                if (yDraw >= TEXT_HEIGHT) yDraw -= TEXT_HEIGHT;
+                else yDraw = 0;
+                xPos = 311;
+            }
+
+            M5.Lcd.drawChar(' ', xPos, yDraw, 2);
+        }
+        else if (ch > 31)
         {
             xPos += M5.Lcd.drawChar(ch, xPos, yDraw, 2);
-            // blank[(18+(yStart-TOP_FIXED_AREA)/TEXT_HEIGHT)%19]=xPos; // Keep a record of line lengths
         }
     }
 };
@@ -335,7 +349,19 @@ extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
         }
 
         terminal.drawChar(ch);
-        pBuffer[index++] = ch;
+
+        if (ch == L'\b')
+        {
+            if (index == 0)
+            {
+                continue;
+            }
+            index--;
+        }
+        else
+        {
+            pBuffer[index++] = ch;
+        }
     }
 
     pBuffer[index] = L'\0';

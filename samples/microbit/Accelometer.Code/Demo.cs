@@ -5,6 +5,7 @@ namespace Accelometer
 {
     public class Demo
     {
+        #region Interop
         [DllImport("Accelometer.h", EntryPoint="accelometer.begin")]
         private static extern void BeginAccelometer(bool highResolution = true, byte scale = 2);
 
@@ -20,6 +21,9 @@ namespace Accelometer
         [DllImport("Accelometer.h", EntryPoint = "accelometer.getZ")]
         private static extern sbyte GetAccelometerZ();
 
+        [DllImport("Accelometer.h", EntryPoint = "SCREEN.begin")]
+        private static extern void BeginScreen();
+
         private enum ArrowNames
         {
             North = 0,
@@ -33,7 +37,7 @@ namespace Accelometer
         }
 
         [DllImport("Accelometer.h", EntryPoint = "SCREEN.showArrow")]
-        private static extern sbyte ShowArrow(ArrowNames direction, uint interval = 750);
+        private static extern void ShowArrow(ArrowNames direction, uint interval = 750);
 
         private enum IconNames
         {
@@ -80,13 +84,15 @@ namespace Accelometer
         }
 
         [DllImport("Accelometer.h", EntryPoint = "SCREEN.showIcon")]
-        private static extern sbyte ShowIcon(IconNames icon, uint interval = 750);
+        private static extern void ShowIcon(IconNames icon, uint interval = 750);
 
         [DllImport("Accelometer.h", EntryPoint = "delay")]
         private static extern void Delay(int millis);
+        #endregion
 
         public static void Main()
         {
+            BeginScreen();
             BeginAccelometer(false, 2);
 
             while (true)
@@ -101,17 +107,19 @@ namespace Accelometer
                 var fw = x > 20;
                 var fe = x < -20;
 
-                if (fn && fe) ShowArrow(ArrowNames.NorthEast);
-                else if (fn && fw) ShowArrow(ArrowNames.NorthWest);
-                else if (fn) ShowArrow(ArrowNames.North);
-                else if (fs && fe) ShowArrow(ArrowNames.SouthEast);
-                else if (fs && fw) ShowArrow(ArrowNames.SouthWest);
-                else if (fs) ShowArrow(ArrowNames.South);
-                else if (fe) ShowArrow(ArrowNames.East);
-                else if (fw) ShowArrow(ArrowNames.West);
-                else ShowIcon(IconNames.Heart);
+                uint interval = 100;
 
-                Delay(100);
+                if (fn && fe) ShowArrow(ArrowNames.NorthEast, interval);
+                else if (fn && fw) ShowArrow(ArrowNames.NorthWest, interval);
+                else if (fn) ShowArrow(ArrowNames.North, interval);
+                else if (fs && fe) ShowArrow(ArrowNames.SouthEast, interval);
+                else if (fs && fw) ShowArrow(ArrowNames.SouthWest, interval);
+                else if (fs) ShowArrow(ArrowNames.South, interval);
+                else if (fe) ShowArrow(ArrowNames.East, interval);
+                else if (fw) ShowArrow(ArrowNames.West, interval);
+                else ShowIcon(IconNames.Heart, 500);
+
+                Delay(10);
             }
         }
     }

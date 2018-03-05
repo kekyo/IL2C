@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
-    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" --debug --cpp "$(OutDir)Accelometer.Code.dll" "..\..\..\..\Generated"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" --debug --cpp "$(OutDir)Accelometer.Code.dll" "..\..\..\..\Arduino"</PostBuildEvent>
   </PropertyGroup>
 
 </Project>

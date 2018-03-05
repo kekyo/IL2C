@@ -209,6 +209,25 @@ namespace IL2C
                 (parametersString.Length >= 1) ? parametersString : "void");
         }
 
+        public static string GetFunctionTypeString(
+            TypeReference returnType,
+            TypeReference[] parameterTypes,
+            IExtractContext extractContext)
+        {
+            var parametersString = string.Join(
+                ", ",
+                parameterTypes.Select(parameterType =>
+                    extractContext.GetCLanguageTypeName(parameterType)));
+
+            var returnTypeName =
+                extractContext.GetCLanguageTypeName(returnType);
+
+            return string.Format(
+                "{0} (*)({1})",
+                returnTypeName,
+                (parametersString.Length >= 1) ? parametersString : "void");
+        }
+
         public static string GetStaticFieldPrototypeString(
             FieldReference field,
             bool requireInitializerExpression,

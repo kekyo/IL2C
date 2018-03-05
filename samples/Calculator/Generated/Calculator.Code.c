@@ -120,7 +120,7 @@ void __Calculator_AbstractNode_IL2C_MarkHandler__(Calculator_AbstractNode* this_
 IL2C_RUNTIME_TYPE_DECL __Calculator_AbstractNode_RUNTIME_TYPE__ = {
     "Calculator.AbstractNode",
     sizeof(Calculator_AbstractNode),
-    /* internalcall */ (void*)__Calculator_AbstractNode_IL2C_MarkHandler__,
+    /* internalcall */ (IL2C_MARK_HANDLER)__Calculator_AbstractNode_IL2C_MarkHandler__,
 };
 
 //////////////////////
@@ -128,11 +128,11 @@ IL2C_RUNTIME_TYPE_DECL __Calculator_AbstractNode_RUNTIME_TYPE__ = {
 
 // Vtable of Calculator.AbstractNode
 __Calculator_AbstractNode_VTABLE_DECL__ __Calculator_AbstractNode_VTABLE__ = {
-    (void*)__Calculator_AbstractNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
+    (void* (*)(Calculator_AbstractNode*, IL2C_RUNTIME_TYPE_DECL*))__Calculator_AbstractNode_IL2C_RuntimeCast__,
+    (System_String* (*)(Calculator_AbstractNode*))__System_Object_ToString__,
+    (int32_t (*)(Calculator_AbstractNode*))__System_Object_GetHashCode__,
+    (void (*)(Calculator_AbstractNode*))__System_Object_Finalize__,
+    (bool (*)(Calculator_AbstractNode*, System_Object*))__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -217,7 +217,7 @@ void __Calculator_OperatorNode_IL2C_MarkHandler__(Calculator_OperatorNode* this_
 IL2C_RUNTIME_TYPE_DECL __Calculator_OperatorNode_RUNTIME_TYPE__ = {
     "Calculator.OperatorNode",
     sizeof(Calculator_OperatorNode),
-    /* internalcall */ (void*)__Calculator_OperatorNode_IL2C_MarkHandler__,
+    /* internalcall */ (IL2C_MARK_HANDLER)__Calculator_OperatorNode_IL2C_MarkHandler__,
 };
 
 //////////////////////
@@ -225,11 +225,11 @@ IL2C_RUNTIME_TYPE_DECL __Calculator_OperatorNode_RUNTIME_TYPE__ = {
 
 // Vtable of Calculator.OperatorNode
 __Calculator_OperatorNode_VTABLE_DECL__ __Calculator_OperatorNode_VTABLE__ = {
-    (void*)__Calculator_OperatorNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
+    (void* (*)(Calculator_OperatorNode*, IL2C_RUNTIME_TYPE_DECL*))__Calculator_OperatorNode_IL2C_RuntimeCast__,
+    (System_String* (*)(Calculator_OperatorNode*))__System_Object_ToString__,
+    (int32_t (*)(Calculator_OperatorNode*))__System_Object_GetHashCode__,
+    (void (*)(Calculator_OperatorNode*))__System_Object_Finalize__,
+    (bool (*)(Calculator_OperatorNode*, System_Object*))__System_Object_Equals__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -317,7 +317,7 @@ void __Calculator_ReducibleNode_IL2C_MarkHandler__(Calculator_ReducibleNode* thi
 IL2C_RUNTIME_TYPE_DECL __Calculator_ReducibleNode_RUNTIME_TYPE__ = {
     "Calculator.ReducibleNode",
     sizeof(Calculator_ReducibleNode),
-    /* internalcall */ (void*)__Calculator_ReducibleNode_IL2C_MarkHandler__,
+    /* internalcall */ (IL2C_MARK_HANDLER)__Calculator_ReducibleNode_IL2C_MarkHandler__,
 };
 
 //////////////////////
@@ -325,12 +325,12 @@ IL2C_RUNTIME_TYPE_DECL __Calculator_ReducibleNode_RUNTIME_TYPE__ = {
 
 // Vtable of Calculator.ReducibleNode
 __Calculator_ReducibleNode_VTABLE_DECL__ __Calculator_ReducibleNode_VTABLE__ = {
-    (void*)__Calculator_ReducibleNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Calculator_ReducibleNode_Reduce__,
+    (void* (*)(Calculator_ReducibleNode*, IL2C_RUNTIME_TYPE_DECL*))__Calculator_ReducibleNode_IL2C_RuntimeCast__,
+    (System_String* (*)(Calculator_ReducibleNode*))__System_Object_ToString__,
+    (int32_t (*)(Calculator_ReducibleNode*))__System_Object_GetHashCode__,
+    (void (*)(Calculator_ReducibleNode*))__System_Object_Finalize__,
+    (bool (*)(Calculator_ReducibleNode*, System_Object*))__System_Object_Equals__,
+    (int32_t (*)(Calculator_ReducibleNode*))__Calculator_ReducibleNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -467,7 +467,7 @@ void __Calculator_NumericNode_IL2C_MarkHandler__(Calculator_NumericNode* this__)
 IL2C_RUNTIME_TYPE_DECL __Calculator_NumericNode_RUNTIME_TYPE__ = {
     "Calculator.NumericNode",
     sizeof(Calculator_NumericNode),
-    /* internalcall */ (void*)__Calculator_NumericNode_IL2C_MarkHandler__,
+    /* internalcall */ (IL2C_MARK_HANDLER)__Calculator_NumericNode_IL2C_MarkHandler__,
 };
 
 //////////////////////
@@ -475,12 +475,12 @@ IL2C_RUNTIME_TYPE_DECL __Calculator_NumericNode_RUNTIME_TYPE__ = {
 
 // Vtable of Calculator.NumericNode
 __Calculator_NumericNode_VTABLE_DECL__ __Calculator_NumericNode_VTABLE__ = {
-    (void*)__Calculator_NumericNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Calculator_NumericNode_Reduce__,
+    (void* (*)(Calculator_NumericNode*, IL2C_RUNTIME_TYPE_DECL*))__Calculator_NumericNode_IL2C_RuntimeCast__,
+    (System_String* (*)(Calculator_NumericNode*))__System_Object_ToString__,
+    (int32_t (*)(Calculator_NumericNode*))__System_Object_GetHashCode__,
+    (void (*)(Calculator_NumericNode*))__System_Object_Finalize__,
+    (bool (*)(Calculator_NumericNode*, System_Object*))__System_Object_Equals__,
+    (int32_t (*)(Calculator_NumericNode*))__Calculator_NumericNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -790,7 +790,7 @@ void __Calculator_ExpressionNode_IL2C_MarkHandler__(Calculator_ExpressionNode* t
 IL2C_RUNTIME_TYPE_DECL __Calculator_ExpressionNode_RUNTIME_TYPE__ = {
     "Calculator.ExpressionNode",
     sizeof(Calculator_ExpressionNode),
-    /* internalcall */ (void*)__Calculator_ExpressionNode_IL2C_MarkHandler__,
+    /* internalcall */ (IL2C_MARK_HANDLER)__Calculator_ExpressionNode_IL2C_MarkHandler__,
 };
 
 //////////////////////
@@ -798,12 +798,12 @@ IL2C_RUNTIME_TYPE_DECL __Calculator_ExpressionNode_RUNTIME_TYPE__ = {
 
 // Vtable of Calculator.ExpressionNode
 __Calculator_ExpressionNode_VTABLE_DECL__ __Calculator_ExpressionNode_VTABLE__ = {
-    (void*)__Calculator_ExpressionNode_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
-    (void*)__Calculator_ExpressionNode_Reduce__,
+    (void* (*)(Calculator_ExpressionNode*, IL2C_RUNTIME_TYPE_DECL*))__Calculator_ExpressionNode_IL2C_RuntimeCast__,
+    (System_String* (*)(Calculator_ExpressionNode*))__System_Object_ToString__,
+    (int32_t (*)(Calculator_ExpressionNode*))__System_Object_GetHashCode__,
+    (void (*)(Calculator_ExpressionNode*))__System_Object_Finalize__,
+    (bool (*)(Calculator_ExpressionNode*, System_Object*))__System_Object_Equals__,
+    (int32_t (*)(Calculator_ExpressionNode*))__Calculator_ExpressionNode_Reduce__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -1954,7 +1954,7 @@ void __Calculator_PolishNotation_IL2C_MarkHandler__(Calculator_PolishNotation* t
 IL2C_RUNTIME_TYPE_DECL __Calculator_PolishNotation_RUNTIME_TYPE__ = {
     "Calculator.PolishNotation",
     sizeof(Calculator_PolishNotation),
-    /* internalcall */ (void*)__Calculator_PolishNotation_IL2C_MarkHandler__,
+    /* internalcall */ (IL2C_MARK_HANDLER)__Calculator_PolishNotation_IL2C_MarkHandler__,
 };
 
 //////////////////////
@@ -1962,9 +1962,9 @@ IL2C_RUNTIME_TYPE_DECL __Calculator_PolishNotation_RUNTIME_TYPE__ = {
 
 // Vtable of Calculator.PolishNotation
 __Calculator_PolishNotation_VTABLE_DECL__ __Calculator_PolishNotation_VTABLE__ = {
-    (void*)__Calculator_PolishNotation_IL2C_RuntimeCast__,
-    (void*)__System_Object_ToString__,
-    (void*)__System_Object_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
+    (void* (*)(Calculator_PolishNotation*, IL2C_RUNTIME_TYPE_DECL*))__Calculator_PolishNotation_IL2C_RuntimeCast__,
+    (System_String* (*)(Calculator_PolishNotation*))__System_Object_ToString__,
+    (int32_t (*)(Calculator_PolishNotation*))__System_Object_GetHashCode__,
+    (void (*)(Calculator_PolishNotation*))__System_Object_Finalize__,
+    (bool (*)(Calculator_PolishNotation*, System_Object*))__System_Object_Equals__,
 };

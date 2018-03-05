@@ -347,42 +347,21 @@ extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
 
 void setup()
 {
-  // initialize the M5Stack object
-  M5.begin();
-  
-  terminal.clear();
+    // initialize the M5Stack object
+    M5.begin();
 
-  gpio_set_direction((gpio_num_t)5, GPIO_MODE_INPUT);
-  gpio_pullup_en((gpio_num_t)5);
-  i2c_keyboard_master_init();
+    // initialize console (output)    
+    terminal.clear();
 
-  il2c_initialize();
+    // initialize M5Stack FACES keyboard (by I2C)
+    gpio_set_direction((gpio_num_t)5, GPIO_MODE_INPUT);
+    gpio_pullup_en((gpio_num_t)5);
+    i2c_keyboard_master_init();
+
+    il2c_initialize();
 }
-
-int index1 = 0;
 
 void loop()
 {
-#if 1
     Calculator_PolishNotation_Main();
-#else
-    auto ch = i2c_keyboard_read();
-    if (ch != 0)
-    {
-        //terminal.drawChar(ch);
-        //M5.Lcd.drawChar(ch, 0, 0, 2);
-        M5.Lcd.printf("[%d] 0x%02x    ", index1++, ch);
-    }
-    else
-    {
-        delay(100);
-        M5.update();
-    }
-    /*
-    auto ch = i2c_keyboard_read();
-    M5.Lcd.printf("[%d] 0x%02x    ", index1++, ch);
-    delay(1000);
-    M5.update();
-    */
-#endif
 }

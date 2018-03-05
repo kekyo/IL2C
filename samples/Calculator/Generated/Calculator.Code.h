@@ -4,6 +4,7 @@
 #include <il2c.h>
 #include <stdint.h>
 #include <wchar.h>
+#include <stdbool.h>
 #include <string.h>
 
 #ifdef __cplusplus
@@ -260,10 +261,6 @@ extern /* virtual */ int32_t __Calculator_ExpressionNode_Reduce__(Calculator_Exp
 // Calculator.PolishNotation
 extern /* internalcall */ void __Calculator_PolishNotation_IL2C_MarkHandler__(Calculator_PolishNotation* this__);
 extern /* internalcall */ void* __Calculator_PolishNotation_IL2C_RuntimeCast__(Calculator_PolishNotation* this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern int32_t Calculator_PolishNotation_SkipWhiteSpace(System_String* line, int32_t startIndex);
-extern Calculator_OperatorNode* Calculator_PolishNotation_ParseOperator(System_String* line, int32_t startIndex);
-extern Calculator_NumericNode* Calculator_PolishNotation_ParseNumeric(System_String* line, int32_t startIndex);
-extern Calculator_ExpressionNode* Calculator_PolishNotation_ParseExpression(System_String* line, int32_t startIndex);
 extern void Calculator_PolishNotation_Main(void);
 extern void Calculator_PolishNotation__ctor(Calculator_PolishNotation* this__);
 #define Calculator_PolishNotation_ToString(/* Calculator_PolishNotation* */ this__) \

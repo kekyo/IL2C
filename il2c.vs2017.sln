@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C", "IL2C\IL2C.csproj", "{2CBC90EC-5581-452F-8231-086E4553D20E}"
 EndProject
@@ -130,6 +130,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculator.M5Stack", "Calcu
 		samples\Calculator\Calculator.M5Stack\main.cpp = samples\Calculator\Calculator.M5Stack\main.cpp
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microbit", "microbit", "{B1753A72-2D2D-4381-8C13-B149BBB41F54}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accelometer.Code", "samples\microbit\Accelometer.Code\Accelometer.Code.csproj", "{9958E13C-C1EA-4D14-897C-0F7814F4F15C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generated", "Generated", "{1C57C110-1742-4141-988D-D094A3A60E25}"
+	ProjectSection(SolutionItems) = preProject
+		samples\microbit\Generated\Accelometer.Code.cpp = samples\microbit\Generated\Accelometer.Code.cpp
+		samples\microbit\Generated\Accelometer.Code.h = samples\microbit\Generated\Accelometer.Code.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -236,6 +249,14 @@ Global
 		{8AA7526E-F258-4D1E-92C7-D637B86BB4D1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8AA7526E-F258-4D1E-92C7-D637B86BB4D1}.Release|x64.ActiveCfg = Release|Any CPU
 		{8AA7526E-F258-4D1E-92C7-D637B86BB4D1}.Release|x64.Build.0 = Release|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Debug|x64.Build.0 = Debug|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Release|x64.ActiveCfg = Release|Any CPU
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -260,6 +281,9 @@ Global
 		{8AA7526E-F258-4D1E-92C7-D637B86BB4D1} = {FC7FF28D-167D-4F21-BCA3-860021F88A5E}
 		{2028AEB8-BA9A-40A1-8933-04C1DA8F5344} = {320AEE33-F62E-4CB6-9F06-A97071ED954D}
 		{52F2FBE2-D8B8-4515-BED2-5AF6659327C2} = {FC7FF28D-167D-4F21-BCA3-860021F88A5E}
+		{B1753A72-2D2D-4381-8C13-B149BBB41F54} = {3910CC6E-4D5E-42CD-8E2B-77931A5DC30E}
+		{9958E13C-C1EA-4D14-897C-0F7814F4F15C} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
+		{1C57C110-1742-4141-988D-D094A3A60E25} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

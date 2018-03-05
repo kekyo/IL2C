@@ -2,7 +2,7 @@
   "profiles": {
     "IL2C": {
       "commandName": "Project",
-      "commandLineArgs": "\"$(ProjectDir)..\\samples\\Win32\\Win32.Code\\bin\\$(ConfigurationName)\\netstandard1.3\\Win32.Code.dll\" --debug \"$(ProjectDir)..\\samples\\Win32\\Win32.Target\\Generated\""
+      "commandLineArgs": "\"$(ProjectDir)..\\samples\\microbit\\Accelometer.Code\\bin\\$(ConfigurationName)\\netstandard2.0\\Accelometer.Code.dll\" --debug --cpp \"$(ProjectDir)..\\samples\\microbit\\Arduino\""
     }
   }
 }

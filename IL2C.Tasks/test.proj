@@ -1,0 +1,6 @@
+﻿<Project DefaultTargets="Build">
+    <UsingTask TaskName="IL2C.Tasks.Translate" AssemblyFile="./bin/Debug/netstandard1.6/IL2C.Tasks.dll" />
+    <Target Name="Build">
+        <Translate AssemblyPaths="hoge.dll" OutputPath="hoehoe" DebugInformation="Full"/>
+    </Target>
+</Project>

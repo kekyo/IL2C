@@ -107,7 +107,7 @@ namespace Accelometer
                 var fw = x > 20;
                 var fe = x < -20;
 
-                uint interval = 100;
+                uint interval = 30;
 
                 if (fn && fe) ShowArrow(ArrowNames.NorthEast, interval);
                 else if (fn && fw) ShowArrow(ArrowNames.NorthWest, interval);
@@ -119,7 +119,7 @@ namespace Accelometer
                 else if (fw) ShowArrow(ArrowNames.West, interval);
                 else ShowIcon(IconNames.Heart, 500);
 
-                Delay(10);
+                Delay(5);
             }
         }
     }

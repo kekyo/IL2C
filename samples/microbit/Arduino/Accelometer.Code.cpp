@@ -224,8 +224,8 @@ void Accelometer_Demo_Main(void)
     /* Path=1, Unique=0: IL_0009: call System.Void Accelometer.Demo::BeginAccelometer(System.Boolean,System.Byte) */
     Accelometer_Demo_BeginAccelometer(stack0_0__ ? true : false, (uint8_t)stack1_0__);
     /* Path=1, Unique=0: IL_000e: nop */
-    /* Path=1, Unique=0: IL_000f: br IL_00fe */
-    goto IL_00fe;
+    /* Path=1, Unique=0: IL_000f: br IL_00fd */
+    goto IL_00fd;
 IL_0014:
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(99): */
     /* Path=3, Unique=0: IL_0014: nop */
@@ -279,8 +279,8 @@ IL_0014:
     /* Path=3, Unique=0: IL_003f: stloc.s local5 */
     fe = stack0_0__ ? true : false;
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(110): */
-    /* Path=3, Unique=0: IL_0041: ldc.i4.s 100 */
-    stack0_0__ = 100;
+    /* Path=3, Unique=0: IL_0041: ldc.i4.s 30 */
+    stack0_0__ = 30;
     /* Path=3, Unique=0: IL_0043: stloc.s local6 */
     interval = (uint32_t)stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(112): */
@@ -469,19 +469,19 @@ IL_00e9:
     /* Path=12, Unique=0: IL_00f4: nop */
 IL_00f5:
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(122): */
-    /* Path=5, Unique=0: IL_00f5: ldc.i4.s 10 */
-    stack0_0__ = 10;
-    /* Path=5, Unique=0: IL_00f7: call System.Void Accelometer.Demo::Delay(System.Int32) */
+    /* Path=5, Unique=0: IL_00f5: ldc.i4.5 */
+    stack0_0__ = 5;
+    /* Path=5, Unique=0: IL_00f6: call System.Void Accelometer.Demo::Delay(System.Int32) */
     Accelometer_Demo_Delay(stack0_0__);
-    /* Path=5, Unique=0: IL_00fc: nop */
+    /* Path=5, Unique=0: IL_00fb: nop */
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(123): */
-    /* Path=5, Unique=0: IL_00fd: nop */
-IL_00fe:
-    /* Path=2, Unique=0: IL_00fe: ldc.i4.1 */
+    /* Path=5, Unique=0: IL_00fc: nop */
+IL_00fd:
+    /* Path=2, Unique=0: IL_00fd: ldc.i4.1 */
     stack0_0__ = 1;
-    /* Path=2, Unique=0: IL_00ff: stloc.s local15 */
+    /* Path=2, Unique=0: IL_00fe: stloc.s local15 */
     local8 = stack0_0__ ? true : false;
-    /* Path=2, Unique=0: IL_0101: br IL_0014 */
+    /* Path=2, Unique=0: IL_0100: br IL_0014 */
     goto IL_0014;
 }
 

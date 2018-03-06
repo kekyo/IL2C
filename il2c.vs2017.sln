@@ -137,10 +137,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accelometer.Code", "samples
 		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generated", "Generated", "{1C57C110-1742-4141-988D-D094A3A60E25}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{6693EF0B-6925-4C08-BF76-D890084D2642}"
 	ProjectSection(SolutionItems) = preProject
-		samples\microbit\Generated\Accelometer.Code.cpp = samples\microbit\Generated\Accelometer.Code.cpp
-		samples\microbit\Generated\Accelometer.Code.h = samples\microbit\Generated\Accelometer.Code.h
+		samples\microbit\Arduino\Accelometer.Code.cpp = samples\microbit\Arduino\Accelometer.Code.cpp
+		samples\microbit\Arduino\Accelometer.Code.h = samples\microbit\Arduino\Accelometer.Code.h
+		samples\microbit\Arduino\Accelometer.h = samples\microbit\Arduino\Accelometer.h
+		samples\microbit\Arduino\microbit.ino = samples\microbit\Arduino\microbit.ino
 	EndProjectSection
 EndProject
 Global
@@ -283,7 +285,7 @@ Global
 		{52F2FBE2-D8B8-4515-BED2-5AF6659327C2} = {FC7FF28D-167D-4F21-BCA3-860021F88A5E}
 		{B1753A72-2D2D-4381-8C13-B149BBB41F54} = {3910CC6E-4D5E-42CD-8E2B-77931A5DC30E}
 		{9958E13C-C1EA-4D14-897C-0F7814F4F15C} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
-		{1C57C110-1742-4141-988D-D094A3A60E25} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
+		{6693EF0B-6925-4C08-BF76-D890084D2642} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

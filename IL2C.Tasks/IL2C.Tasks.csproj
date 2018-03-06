@@ -17,12 +17,24 @@
     <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <!-- Change the default location where NuGet will put the build output -->
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build/IL2C.Build.props" PackagePath="build/" />
+    <Content Include="buildMultiTargeting/IL2C.Build.props" PackagePath="buildMultiTargeting/" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" />
+    <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj" />
+    <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" />
   </ItemGroup>
 </Project>

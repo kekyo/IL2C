@@ -145,7 +145,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{6693
 		samples\microbit\Arduino\microbit.ino = samples\microbit\Arduino\microbit.ino
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IL2C.Tasks", "IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Tasks", "IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

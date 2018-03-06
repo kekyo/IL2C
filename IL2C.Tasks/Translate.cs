@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Build.Framework;
 
-namespace IL2C.Tasks
+namespace IL2C
 {
     public sealed class Translate : Microsoft.Build.Utilities.Task
     {

@@ -556,6 +556,20 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
     return twtoi(s->string_body__, result);
 }
 
+System_String* System_Int32_ToString(int32_t value)
+{
+    char buffer[14];
+    wchar_t wbuffer[14];
+    
+    const char*p = itoa(value, buffer, 10);
+    for (int i = 0; i < 14; i++)
+    {
+        wbuffer[i] = buffer[i];
+    }
+
+    return il2c_new_string(wbuffer);
+}
+
 /////////////////////////////////////////////////////////////
 // System.String
 

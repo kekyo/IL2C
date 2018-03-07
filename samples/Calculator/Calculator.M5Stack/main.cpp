@@ -1,4 +1,8 @@
 #include <M5Stack.h>
+#include <WiFi.h>
+#include <WiFiMulti.h>
+#include <HTTPClient.h>
+
 #include <il2c.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -176,6 +180,8 @@ private:
     // Keep track of the drawing x coordinate
     uint16_t xPos;
 
+    uint16_t width;
+
     // For the byte we read from the serial port
     byte data;
 
@@ -289,7 +295,10 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
+#include "Calculator.Code.h"
+
 static M5_Terminal terminal;
+static WiFiMulti wifiMulti;
 
 extern "C" void Write(const wchar_t* pMessage)
 {
@@ -367,9 +376,30 @@ extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
     pBuffer[index] = L'\0';
 }
 
-//////////////////////////////////////////////////////////////////////////
+static char buffer1[64], buffer2[128];
 
-#include "Calculator.Code.h"
+extern "C" void SendExternalTicker(const wchar_t* message)
+{
+    HTTPClient http;
+    int i = 0;
+
+    while (message[i] != L'\0')
+    {
+        buffer1[i] = (char)message[i];
+        i++;
+    }
+    buffer1[i] = '\0';
+
+    strcpy(buffer2, "http://maker.ifttt.com/trigger/tweet/with/key/1l0_6K4nW5vm4bVB9AM2I?value1=");
+    strcat(buffer2, buffer1);
+
+    http.begin(buffer2);
+    http.GET();
+
+    http.end();
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 void setup()
 {
@@ -384,7 +414,16 @@ void setup()
     gpio_pullup_en((gpio_num_t)5);
     i2c_keyboard_master_init();
 
+    wifiMulti.addAP("MGSVTPP", "mogemoge-1234");
+
     il2c_initialize();
+
+    WriteLine(L"Connecting...");
+    while ((wifiMulti.run() != WL_CONNECTED))
+    {
+        delay(1000);
+        M5.update();
+    }
 }
 
 void loop()

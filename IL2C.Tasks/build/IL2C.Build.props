@@ -1,7 +1,7 @@
-﻿<Project TreatAsLocalProperty="TaskFolder;TaskAssembly" ToolsVersion="15.0">
+﻿<Project TreatAsLocalProperty="TaskFolder;TaskAssembly">
   <PropertyGroup>
-    <TaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard1.6</TaskFolder>
-    <TaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</TaskFolder>
+    <TaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">netstandard1.6</TaskFolder>
+    <TaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net46</TaskFolder>
     <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(TaskFolder)\IL2C.Tasks.dll</TaskAssembly>
   </PropertyGroup>
   <UsingTask TaskName="IL2C.Tasks.Translate" AssemblyFile="$(TaskAssembly)" />

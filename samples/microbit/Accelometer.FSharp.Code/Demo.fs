@@ -51,14 +51,15 @@ module Demo =
 
             let interval = 30u
 
-            if (fn && fe) then ShowArrow(ArrowNames.NorthEast, interval)
-            else if (fn && fw) then ShowArrow(ArrowNames.NorthWest, interval)
-            else if (fn) then ShowArrow(ArrowNames.North, interval)
-            else if (fs && fe) then ShowArrow(ArrowNames.SouthEast, interval)
-            else if (fs && fw) then ShowArrow(ArrowNames.SouthWest, interval)
-            else if (fs) then ShowArrow(ArrowNames.South, interval)
-            else if (fe) then ShowArrow(ArrowNames.East, interval)
-            else if (fw) then ShowArrow(ArrowNames.West, interval)
-            else ShowIcon(IconNames.Heart, 500u)
+            match fn, fe, fw, fs with
+                | true, true, _, _ -> ShowArrow(ArrowNames.NorthEast, interval)
+                | true, _, true, _ -> ShowArrow(ArrowNames.NorthWest, interval)
+                | true, _, _, _ -> ShowArrow(ArrowNames.North, interval)
+                | _, true, _, true -> ShowArrow(ArrowNames.SouthEast, interval)
+                | _, _, true, true -> ShowArrow(ArrowNames.SouthWest, interval)
+                | _, _, _, true -> ShowArrow(ArrowNames.South, interval)
+                | _, true, _, _ -> ShowArrow(ArrowNames.East, interval)
+                | _, _, true, _ -> ShowArrow(ArrowNames.West, interval)
+                | _ -> ShowIcon(IconNames.Heart, 500u)
 
             Delay(5) |> ignore

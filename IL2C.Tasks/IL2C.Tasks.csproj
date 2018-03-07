@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.6</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net46;netstandard1.6</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AssemblyName>IL2C.Tasks</AssemblyName>
+    <RootNamespace>IL2C</RootNamespace>
+    <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
+    <VersionPrefix>0.3.1</VersionPrefix>
+    <Product>IL2C</Product>
+    <Trademark>IL2C</Trademark>
+    <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
+    <Description>A translator implementation of .NET intermediate language to C language.</Description>
+    <Company>Kouji Matsui (@kozy_kekyo)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <!-- Change the default location where NuGet will put the build output -->
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build/IL2C.Build.props" PackagePath="build/" />
+    <Content Include="buildMultiTargeting/IL2C.Build.props" PackagePath="buildMultiTargeting/" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" />
+    <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" />
+  </ItemGroup>
+</Project>

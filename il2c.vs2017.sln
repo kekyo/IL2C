@@ -155,6 +155,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer.FSharp", "Accel
 		samples\microbit\Accelometer.FSharp\Accelometer.h = samples\microbit\Accelometer.FSharp\Accelometer.h
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Tasks", "IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -277,6 +279,14 @@ Global
 		{E09A88C6-03B3-4309-9974-994B63763094}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E09A88C6-03B3-4309-9974-994B63763094}.Release|x64.ActiveCfg = Release|Any CPU
 		{E09A88C6-03B3-4309-9974-994B63763094}.Release|x64.Build.0 = Release|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Debug|x64.Build.0 = Debug|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

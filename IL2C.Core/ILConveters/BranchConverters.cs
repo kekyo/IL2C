@@ -36,6 +36,34 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal sealed class BrfalseConverter : InlineBrTargetConverter
+    {
+        public override OpCode OpCode => OpCodes.Brfalse;
+
+        public override Func<IExtractContext, string[]> Apply(
+            Instruction operand, DecodeContext decodeContext)
+        {
+            var si = decodeContext.PopStack();
+
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
+
+            if (si.TargetType.IsNumericPrimitive())
+            {
+                return _ => new[] { string.Format(
+                    "if ({0} == 0) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
+            else
+            {
+                return _ => new[] { string.Format(
+                    "if ({0} == NULL) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
+        }
+    }
+
     internal sealed class Brfalse_sConverter : ShortInlineBrTargetConverter
     {
         public override OpCode OpCode => OpCodes.Brfalse_S;

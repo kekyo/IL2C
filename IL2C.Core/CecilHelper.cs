@@ -99,7 +99,8 @@ namespace IL2C
 
         public static bool IsValidDefinition(this TypeDefinition type)
         {
-            return ((type.IsValueType || type.IsClass) && (type.BaseType != null)) || type.IsInterface;
+            return (((type.IsValueType || type.IsClass) && (type.BaseType != null)) || type.IsInterface)
+                && (type.Name != "<Module>");
         }
 
         public static bool IsNumericPrimitive(this TypeReference type)

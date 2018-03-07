@@ -16,7 +16,7 @@ namespace IL2C
 {
     internal static class Utilities
     {
-        private static readonly char[] replaceChars = { '.', '@' };
+        private static readonly char[] replaceChars = { '.', '@', '<', '>', '$', '-', '=', ',', '.' };
         private static readonly Dictionary<OpCode, ILConverter> ilConverters;
 
         static Utilities()

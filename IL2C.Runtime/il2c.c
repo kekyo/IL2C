@@ -12,6 +12,7 @@ typedef long interlock_t;
 
 extern void* il2c_memcpy(void* to, const void* from, size_t n);
 extern void* il2c_memset(void* target, int ch, size_t n);
+extern char* il2c_itoa(int i, char* d);
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
@@ -39,6 +40,8 @@ typedef long interlock_t;
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_itoa(i, d) itoa(i, d, 10)
+
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 
@@ -64,6 +67,8 @@ typedef long interlock_t;
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_itoa(i, d) itoa(i, d, 10)
+
 #define il2c_malloc malloc
 #define il2c_free free
 
@@ -119,6 +124,8 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_itoa(i, d) itoa(i, d, 10)
+
 #define il2c_malloc malloc
 #define il2c_free free
 
@@ -556,12 +563,12 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
     return twtoi(s->string_body__, result);
 }
 
-System_String* System_Int32_ToString(int32_t value)
+System_String* System_Int32_ToString(int32_t* this__)
 {
     char buffer[14];
     wchar_t wbuffer[14];
     
-    const char*p = itoa(value, buffer, 10);
+    const char*p = il2c_itoa(*this__, buffer);
     for (int i = 0; i < 14; i++)
     {
         wbuffer[i] = buffer[i];

@@ -1,16 +1,27 @@
-#include <windows.h>
 
-#include <stdio.h>
-#include <stdbool.h>
 #include <stdint.h>
-#include <wchar.h>
+#include <stdbool.h>
 
-#include <il2c.h>
+// Can't enable intrinsic inlined memcpy/memset with VC++'s /GL and /LTCG options.
+// So these are simple implementations for thiers.
+void* il2c_memcpy(void* to, const void* from, size_t n)
+{
+    uint8_t* t = to;
+    const uint8_t* f = from;
+    n++;
+    while (--n >= 1)
+        *t++ = *f++;
+    return to;
+}
 
-#include "Calculator.Code.h"
-
-//////////////////////////////////////////////////////////////////////////
-// IL2C <---> UEFI interop functions
+void* il2c_memset(void* target, int ch, size_t n)
+{
+    uint8_t* p = target;
+    n++;
+    while (--n >= 1)
+        *p++ = ch;
+    return target;
+}
 
 bool twtoi(const wchar_t *_Str, int32_t* value)
 {
@@ -84,42 +95,27 @@ void itow(int32_t value, wchar_t* p)
     } while (*j);
 }
 
-void ReadLine(wchar_t* pBuffer, uint16_t length)
+char* il2c_itoa(int i, char* d)
 {
-    fgetws(pBuffer, length, stdin);
-    size_t l = wcslen(pBuffer);
-    pBuffer[l - 1] = L'\0';
-}
+    char *j, *a = d;
+    char b[6];
 
-void Write(const wchar_t* pMessage)
-{
-    wprintf(L"%ls", pMessage);
-}
+    if (i < 0)
+    {
+        *a++ = '-';
+        i = -i;
+    }
+    j = &b[5];
+    *j-- = 0;
+    do
+    {
+        *j-- = i % 10 + '0';
+        i /= 10;
+    } while (i);
+    do
+    {
+        *a++ = *++j;
+    } while (*j);
 
-void WriteLine(const wchar_t* pMessage)
-{
-    wprintf(L"%ls\r\n", pMessage);
-}
-
-void WriteLineToError(const wchar_t* pMessage)
-{
-    fwprintf(stderr, L"%ls\r\n", pMessage);
-}
-
-void SendExternalTicker(const wchar_t* message)
-{
-    fwprintf(stderr, L"%ls\r\n", message);
-}
-
-///////////////////////////////////////////////////////////
-
-IL2C_CONST_STRING(hoge, L"Hoge\r\n");
-
-int main()
-{
-    il2c_initialize();
-
-    Calculator_PolishNotation_Main();
-
-    il2c_shutdown();
+    return d;
 }

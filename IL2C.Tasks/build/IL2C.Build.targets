@@ -1,0 +1,13 @@
+﻿<Project>
+    <PropertyGroup>
+        <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == 'CommentOnly'"></IL2CDebugInformation>
+        <IL2COutputPath Condition="'$(IL2COutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(IntermediateOutputPath)','IL2C'))</IL2COutputPath>
+    </PropertyGroup>
+    <CoreBuildDependsOn>
+        $(CoreBuildDependsOn);
+        IL2CBuild;
+    </CoreBuildDependsOn>
+    <Target Name="IL2CBuild" BeforeTargets="AfterCompile" Outputs="$(IL2COutputPath)">
+        <Translate AssemblyPaths="hoge.dll" OutputPath="$(IL2COutputPath)" DebugInformation="$(IL2CDebugInformation)" />
+    </Target>
+</Project>

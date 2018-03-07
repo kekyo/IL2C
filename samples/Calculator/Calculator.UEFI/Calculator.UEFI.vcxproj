@@ -130,7 +130,7 @@
     <ClCompile Include="..\..\..\IL2C.Runtime\*.c" />
     <ClCompile Include="..\Generated\*.c" />
     <ClCompile Include="Main.c" />
-    <ClCompile Include="memory.c">
+    <ClCompile Include="il2c_bridges.c">
       <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IntrinsicFunctions>
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Disabled</InlineFunctionExpansion>
     </ClCompile>
@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\IL2C.Runtime\*.h" />
     <ClInclude Include="..\Generated\*.h" />
+    <ClInclude Include="Calculator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

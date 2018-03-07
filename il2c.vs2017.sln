@@ -137,7 +137,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accelometer.Code", "samples
 		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{6693EF0B-6925-4C08-BF76-D890084D2642}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer", "Accelometer", "{6693EF0B-6925-4C08-BF76-D890084D2642}"
 	ProjectSection(SolutionItems) = preProject
 		samples\microbit\Arduino\Accelometer.Code.cpp = samples\microbit\Arduino\Accelometer.Code.cpp
 		samples\microbit\Arduino\Accelometer.Code.h = samples\microbit\Arduino\Accelometer.Code.h
@@ -145,9 +145,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Arduino", "Arduino", "{6693
 		samples\microbit\Arduino\microbit.ino = samples\microbit\Arduino\microbit.ino
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Accelometer.FSharp.Code", "samples\microbit\Accelometer.FSharp.Code\Accelometer.FSharp.Code.fsproj", "{E09A88C6-03B3-4309-9974-994B63763094}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Accelometer.FSharp.Code", "samples\microbit\Accelometer.FSharp.Code\Accelometer.FSharp.Code.fsproj", "{E09A88C6-03B3-4309-9974-994B63763094}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ardino.FSharp", "Ardino.FSharp", "{244FE49F-28E3-414E-ABA8-C35885602B31}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer.FSharp", "Accelometer.FSharp", "{244FE49F-28E3-414E-ABA8-C35885602B31}"
 	ProjectSection(SolutionItems) = preProject
 		samples\microbit\Arduino.FSharp\Accelometer.FSharp.Code.cpp = samples\microbit\Arduino.FSharp\Accelometer.FSharp.Code.cpp
 		samples\microbit\Arduino.FSharp\Accelometer.FSharp.Code.h = samples\microbit\Arduino.FSharp\Accelometer.FSharp.Code.h

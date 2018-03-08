@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.6</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net46;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net46;netcoreapp2.0</TargetFrameworks>
 
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -25,7 +25,10 @@
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <!-- Change the default location where NuGet will put the build output -->
-    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <!-- <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder> -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
+    <!-- <TaskPublishOutput>D:\PROJECT\IL2C\IL2C.Tasks\bin\Debug\netstandard1.6\publish</TaskPublishOutput> -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,4 +46,11 @@
   <ItemGroup>
     <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" />
   </ItemGroup>
+
+  <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
+    <ItemGroup>
+
+      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="build/tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)"/>
+    </ItemGroup>
+  </Target>
 </Project>

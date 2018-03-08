@@ -2,13 +2,13 @@
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.6</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net46;netstandard1.6</TargetFrameworks>
+
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <AssemblyName>IL2C.Tasks</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>
     <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-    <VersionPrefix>0.3.1</VersionPrefix>
     <Product>IL2C</Product>
     <Trademark>IL2C</Trademark>
     <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
@@ -26,7 +26,9 @@
 
   <ItemGroup>
     <Content Include="build/IL2C.Build.props" PackagePath="build/" />
+    <Content Include="build/IL2C.Build.targets" PackagePath="build/" />
     <Content Include="buildMultiTargeting/IL2C.Build.props" PackagePath="buildMultiTargeting/" />
+    <Content Include="buildMultiTargeting/IL2C.Build.targets" PackagePath="buildMultiTargeting/" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" />

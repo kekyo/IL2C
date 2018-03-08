@@ -126,6 +126,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculator.M5Stack", "Calcu
 	ProjectSection(SolutionItems) = preProject
 		samples\Calculator\Calculator.M5Stack\Calculator.Code.c = samples\Calculator\Calculator.M5Stack\Calculator.Code.c
 		samples\Calculator\Calculator.M5Stack\Calculator.Code.h = samples\Calculator\Calculator.M5Stack\Calculator.Code.h
+		samples\Calculator\Calculator.M5Stack\Calculator.h = samples\Calculator\Calculator.M5Stack\Calculator.h
 		samples\Calculator\Calculator.M5Stack\Calculator.M5Stack.ino = samples\Calculator\Calculator.M5Stack\Calculator.M5Stack.ino
 		samples\Calculator\Calculator.M5Stack\main.cpp = samples\Calculator\Calculator.M5Stack\main.cpp
 	EndProjectSection

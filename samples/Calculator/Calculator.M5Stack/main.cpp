@@ -5,6 +5,15 @@
 
 #include <il2c.h>
 
+#define WIFI_SSID "MGSVTPP"
+#define WIFI_PASSWORD "mogemoge-1234"
+
+// This sample is using for IFTTT's makers webhook.
+// https://ifttt.com/maker_webhooks
+
+#define IFTTT_EVENT "tweet"
+#define IFTTT_KEY "1l0_6K4nW5vm4bVB9AM2I"
+
 //////////////////////////////////////////////////////////////////////////
 
 extern "C" bool twtoi(const wchar_t *_Str, int32_t* value)
@@ -84,12 +93,12 @@ extern "C" void itow(int32_t value, wchar_t* p)
 #include "driver/i2c.h"
 
 /* i2c - Example
-   For other examples please check:
-   https://github.com/espressif/esp-idf/tree/master/examples
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
+For other examples please check:
+https://github.com/espressif/esp-idf/tree/master/examples
+This example code is in the Public Domain (or CC0 licensed, at your option.)
+Unless required by applicable law or agreed to in writing, this
+software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied.
 */
 
 #define DATA_LENGTH                        512              /*!<Data buffer length for test buffer*/
@@ -126,23 +135,23 @@ void i2c_keyboard_master_init()
     conf.master.clk_speed = I2C_KEYBOARD_FREQ_HZ;
     i2c_param_config((i2c_port_t)i2c_master_port, &conf);
     i2c_driver_install((i2c_port_t)i2c_master_port, conf.mode,
-                       I2C_KEYBOARD_RX_BUF_DISABLE,
-                       I2C_KEYBOARD_TX_BUF_DISABLE, 0);
+        I2C_KEYBOARD_RX_BUF_DISABLE,
+        I2C_KEYBOARD_TX_BUF_DISABLE, 0);
 }
 
 /**
- * @brief test code to write esp-i2c-slave
- *
- * 1. set mode
- * _________________________________________________________________
- * | start | slave_addr + wr_bit + ack | write 1 byte + ack  | stop |
- * --------|---------------------------|---------------------|------|
- * 2. wait more than 24 ms
- * 3. read data
- * ______________________________________________________________________________________
- * | start | slave_addr + rd_bit + ack | read 1 byte + ack  | read 1 byte + nack | stop |
- * --------|---------------------------|--------------------|--------------------|------|
- */
+* @brief test code to write esp-i2c-slave
+*
+* 1. set mode
+* _________________________________________________________________
+* | start | slave_addr + wr_bit + ack | write 1 byte + ack  | stop |
+* --------|---------------------------|---------------------|------|
+* 2. wait more than 24 ms
+* 3. read data
+* ______________________________________________________________________________________
+* | start | slave_addr + rd_bit + ack | read 1 byte + ack  | read 1 byte + nack | stop |
+* --------|---------------------------|--------------------|--------------------|------|
+*/
 uint8_t i2c_keyboard_read()
 {
     uint8_t ret;
@@ -197,7 +206,7 @@ private:
     void scrollAddress(uint16_t vsp)
     {
         M5.Lcd.writecommand(ILI9341_VSCRSADD); // Vertical scrolling pointer
-        M5.Lcd.writedata(vsp>>8);
+        M5.Lcd.writedata(vsp >> 8);
         M5.Lcd.writedata(vsp);
     }
 
@@ -207,12 +216,12 @@ private:
     int scroll_line()
     {
         int yTemp = yStart; // Store the old yStart, this is where we draw the next line
-        // Use the record of line lengths to optimise the rectangle size we need to erase the top line
-        // M5.Lcd.fillRect(0,yStart,blank[(yStart-TOP_FIXED_AREA)/TEXT_HEIGHT],TEXT_HEIGHT, TFT_BLACK);
-        M5.Lcd.fillRect(0,yStart,320,TEXT_HEIGHT, TFT_BLACK);
+                            // Use the record of line lengths to optimise the rectangle size we need to erase the top line
+                            // M5.Lcd.fillRect(0,yStart,blank[(yStart-TOP_FIXED_AREA)/TEXT_HEIGHT],TEXT_HEIGHT, TFT_BLACK);
+        M5.Lcd.fillRect(0, yStart, 320, TEXT_HEIGHT, TFT_BLACK);
 
         // Change the top of the scroll area
-        yStart+=TEXT_HEIGHT;
+        yStart += TEXT_HEIGHT;
         // The value must wrap around as the screen memory is a circular buffer
         // if (yStart >= YMAX - BOT_FIXED_AREA) yStart = TOP_FIXED_AREA + (yStart - YMAX + BOT_FIXED_AREA);
         if (yStart >= YMAX) yStart = 0;
@@ -230,15 +239,15 @@ private:
         M5.Lcd.writecommand(ILI9341_VSCRDEF); // Vertical scroll definition
         M5.Lcd.writedata(tfa >> 8);           // Top Fixed Area line count
         M5.Lcd.writedata(tfa);
-        M5.Lcd.writedata((YMAX-tfa-bfa)>>8);  // Vertical Scrolling Area line count
-        M5.Lcd.writedata(YMAX-tfa-bfa);
+        M5.Lcd.writedata((YMAX - tfa - bfa) >> 8);  // Vertical Scrolling Area line count
+        M5.Lcd.writedata(YMAX - tfa - bfa);
         M5.Lcd.writedata(bfa >> 8);           // Bottom Fixed Area line count
         M5.Lcd.writedata(bfa);
     }
 
 public:
     M5_Terminal()
-        : yStart(0), yArea(YMAX-TOP_FIXED_AREA-BOT_FIXED_AREA),
+        : yStart(0), yArea(YMAX - TOP_FIXED_AREA - BOT_FIXED_AREA),
         yDraw(0), xPos(0), data(0), change_colour(1), selected(1), width(0)
     {
         //memset(blank, 0, sizeof blank);
@@ -249,7 +258,7 @@ public:
         M5.Lcd.fillScreen(TFT_BLACK);
         M5.Lcd.setWindow(0, 0, 320, 240);
         M5.Lcd.setCursor(0, 0, FONT_TYPE);
-        M5.Lcd.setTextColor(TFT_WHITE,TFT_BLACK);  
+        M5.Lcd.setTextColor(TFT_WHITE, TFT_BLACK);
         M5.Lcd.setTextSize(FONT_SIZE);
         width = M5.Lcd.textWidth(" ", FONT_TYPE);
 
@@ -293,6 +302,14 @@ public:
             xPos += M5.Lcd.drawChar(ch, xPos, yDraw, FONT_TYPE);
         }
     }
+
+    void drawString(const char* p)
+    {
+        while (*p != '\0')
+        {
+            drawChar(*p++);
+        }
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -304,21 +321,29 @@ static WiFiMulti wifiMulti;
 
 extern "C" void Write(const wchar_t* pMessage)
 {
-  for (int index = 0; pMessage[index] != 0; index++)
-  {
-    wchar_t ch = pMessage[index];
-    terminal.drawChar(ch);
-  }
+    for (int index = 0; pMessage[index] != 0; index++)
+    {
+        wchar_t ch = pMessage[index];
+        terminal.drawChar(ch);
+    }
 }
 
 extern "C" void WriteLine(const wchar_t* pMessage)
 {
-  Write(pMessage);
-  terminal.feed();
+    Write(pMessage);
+    terminal.feed();
 }
 
 extern "C" void WriteLineToError(const wchar_t* pMessage)
 {
+    String buffer;
+    while (*pMessage != L'\0')
+    {
+        buffer += (char)*pMessage;
+        pMessage++;
+    }
+
+    Serial.println(buffer);
 }
 
 extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
@@ -378,27 +403,72 @@ extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
     pBuffer[index] = L'\0';
 }
 
-static char buffer1[64], buffer2[128];
 
 extern "C" void SendExternalTicker(const wchar_t* message)
 {
-    HTTPClient http;
     int i = 0;
 
+    String buffer1;
     while (message[i] != L'\0')
     {
-        buffer1[i] = (char)message[i];
-        i++;
+        char ch = (char)message[i++];
+        switch (ch)
+        {
+        case ' ':
+        case '(':
+        case ')':
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+            buffer1 += String('%') + String(ch, HEX);
+            break;
+        default:
+            if ((ch >= 0x20) && (ch < 0x7f))
+            {
+                buffer1 += ch;
+            }
+            break;
+        }
     }
-    buffer1[i] = '\0';
 
-    strcpy(buffer2, "http://maker.ifttt.com/trigger/tweet/with/key/1l0_6K4nW5vm4bVB9AM2I?value1=");
-    strcat(buffer2, buffer1);
+    buffer1 += " %23il2c %23m5stack";
 
-    http.begin(buffer2);
-    http.GET();
+    // Use WiFiClient class to create TCP connections
+    WiFiClient client;
 
-    http.end();
+    const char* host = "maker.ifttt.com";
+    const int httpPort = 80;
+
+    Serial.print("IFTTT ...");
+    while (!client.connect(host, httpPort))
+    {
+        Serial.print(".");
+        delay(500);
+    }
+
+    // This will send the request to the server
+    String body = String("GET /trigger/" IFTTT_EVENT "/with/key/" IFTTT_KEY "?value1=") + buffer1 + " HTTP/1.1\r\n" +
+        "Host: " + host + "\r\n" +
+        "Connection: close\r\n\r\n";
+
+    Serial.print(" Posting ...");
+
+    client.print(body);
+
+    while (client.available() == 0) {
+        Serial.print(".");
+        delay(500);
+    }
+
+    String line = client.readStringUntil('\r');
+
+    client.stop();
+
+    Serial.println(" Done.");
+
+    Serial.println(body);
+    Serial.println(line);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -407,28 +477,38 @@ void setup()
 {
     // initialize the M5Stack object
     M5.begin();
+    delay(10);
+
+    // Initialize debugging output
+    Serial.begin(115200);
+    delay(10);
 
     // initialize console (output)    
     terminal.clear();
+    delay(10);
 
     // initialize M5Stack FACES keyboard (by I2C)
     gpio_set_direction((gpio_num_t)5, GPIO_MODE_INPUT);
     gpio_pullup_en((gpio_num_t)5);
     i2c_keyboard_master_init();
-
-    wifiMulti.addAP("MGSVTPP", "mogemoge-1234");
-
-    il2c_initialize();
-
-    WriteLine(L"Connecting...");
-    while ((wifiMulti.run() != WL_CONNECTED))
-    {
-        delay(1000);
-        M5.update();
-    }
+    delay(10);
 }
 
 void loop()
 {
+    wifiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
+
+    Serial.print("Connecting ...");
+    while ((wifiMulti.run() != WL_CONNECTED))
+    {
+        delay(1000);
+        Serial.print(".");
+    }
+    Serial.println(" Done, IP=" + WiFi.localIP());
+
+    il2c_initialize();
+
+    delay(1000);
+
     Calculator_PolishNotation_Main();
 }

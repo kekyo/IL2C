@@ -1,6 +1,6 @@
 @echo off
 
-set VERSION=0.3.2
+set VERSION=0.3.3
 
 rmdir /s /q artifacts
 mkdir artifacts

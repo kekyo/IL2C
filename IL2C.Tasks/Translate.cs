@@ -39,7 +39,10 @@ namespace IL2C
                 ? DebugInformationOptions.CommentOnly
                 : (DebugInformationOptions) Enum.Parse(typeof(DebugInformationOptions), this.DebugInformation);
 
-            var tw = new LogWriter(this.Log);
+            var tw = new LogWriter(message =>
+                this.Log.LogMessage(
+                    MessageImportance.High,
+                    "{0}", message));
 
             foreach (var assemblyPath in this.AssemblyPaths)
             {

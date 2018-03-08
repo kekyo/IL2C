@@ -11,7 +11,7 @@
         </CoreBuildDependsOn>
     </PropertyGroup>
     <Target Name="IL2CBuild" Outputs="$(IL2COutputPath)">
-        <Message Text="IL2C Assemblies = $(IL2CAssemblyPaths)" Importance="High" />
-        <Translate AssemblyPaths="@(IL2CAssemblyPaths)" OutputPath="$(IL2COutputPath)" DebugInformation="$(IL2CDebugInformation)" />
+        <!-- TODO: Can't use @(IL2CAssemblyPaths) -->
+        <Translate AssemblyPaths="$(IL2CTargetAssemblyPath)" OutputPath="$(IL2COutputPath)" DebugInformation="$(IL2CDebugInformation)" />
     </Target>
 </Project>

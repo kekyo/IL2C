@@ -8,13 +8,13 @@ namespace IL2C
 {
     internal sealed class LogWriter : System.IO.TextWriter
     {
-        private readonly TaskLoggingHelper taskLogger;
+        private readonly Action<string> writer;
         private readonly StringBuilder sb = new StringBuilder();
 
-        public LogWriter(TaskLoggingHelper taskLogger)
+        public LogWriter(Action<string> writer)
             : base(CultureInfo.InvariantCulture)
         {
-            this.taskLogger = taskLogger;
+            this.writer = writer;
         }
 
         public override Encoding Encoding
@@ -53,11 +53,8 @@ namespace IL2C
 
         public override void WriteLine(string value)
         {
-            taskLogger.LogMessage(
-                MessageImportance.High,
-                "{0}{1}",
-                sb,
-                value);
+            sb.Append(value);
+            writer(sb.ToString());
             sb.Clear();
         }
 

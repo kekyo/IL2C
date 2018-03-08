@@ -17,7 +17,10 @@
     <Company>Kouji Matsui (@kozy_kekyo)</Company>
     <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
     <RepositoryType>git</RepositoryType>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+    <PackageTags>il2c;il;translate;transpile;convert;c;c++;assembly;multi-platform</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

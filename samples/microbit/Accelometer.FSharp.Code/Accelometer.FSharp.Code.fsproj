@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <AssemblyName>Accelometer.Code</AssemblyName>
+    <AssemblyName>Accelometer.FSharp.Code</AssemblyName>
     <RootNamespace>Accelometer</RootNamespace>
     <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
     <VersionPrefix>0.3.1</VersionPrefix>
@@ -18,8 +18,12 @@
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="Demo.fs" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
-    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" --debug --cpp "$(OutDir)Accelometer.Code.dll" "..\..\..\..\Accelometer"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)IL2C\bin\$(Configuration)\net45\IL2C.exe" --debug --cpp "$(OutDir)Accelometer.FSharp.Code.dll" "..\..\..\..\Accelometer.FSharp"</PostBuildEvent>
   </PropertyGroup>
 
 </Project>

@@ -161,6 +161,8 @@ uint8_t i2c_keyboard_read()
 #define TOP_FIXED_AREA 14 // Number of lines in top fixed area (lines counted from top of screen)
 #define BOT_FIXED_AREA 0 // Number of lines in bottom fixed area (lines counted from bottom of screen)
 #define YMAX 240 // Bottom of screen area
+#define FONT_TYPE 1
+#define FONT_SIZE 2
 
 class M5_Terminal
 {
@@ -175,6 +177,8 @@ private:
 
     // Keep track of the drawing x coordinate
     uint16_t xPos;
+
+    uint16_t width;
 
     // For the byte we read from the serial port
     byte data;
@@ -240,10 +244,10 @@ public:
     {
         M5.Lcd.fillScreen(TFT_BLACK);
         M5.Lcd.setWindow(0, 0, 320, 240);
-        M5.Lcd.setCursor(0, 0, 2);
+        M5.Lcd.setCursor(0, 0, FONT_TYPE);
         M5.Lcd.setTextColor(TFT_WHITE,TFT_BLACK);  
-        M5.Lcd.setTextSize(1);
-        width = M5.Lcd.textWidth(" ", 2);
+        M5.Lcd.setTextSize(FONT_SIZE);
+        width = M5.Lcd.textWidth(" ", FONT_TYPE);
 
         setupScrollArea(0, 0);
         yDraw = 0;
@@ -278,11 +282,11 @@ public:
                 xPos = 311;
             }
 
-            M5.Lcd.drawChar(' ', xPos, yDraw, 2);
+            M5.Lcd.drawChar(' ', xPos, yDraw, FONT_TYPE);
         }
         else if (ch > 31)
         {
-            xPos += M5.Lcd.drawChar(ch, xPos, yDraw, 2);
+            xPos += M5.Lcd.drawChar(ch, xPos, yDraw, FONT_TYPE);
         }
     }
 };
@@ -348,8 +352,6 @@ extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
             break;
         }
 
-        terminal.drawChar(ch);
-
         if (ch == L'\b')
         {
             if (index == 0)
@@ -362,6 +364,8 @@ extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
         {
             pBuffer[index++] = ch;
         }
+
+        terminal.drawChar(ch);
     }
 
     pBuffer[index] = L'\0';

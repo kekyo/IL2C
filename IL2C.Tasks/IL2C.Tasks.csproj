@@ -49,8 +49,7 @@
 
   <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
     <ItemGroup>
-
-      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="build/tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)"/>
+      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>
 </Project>

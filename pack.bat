@@ -1,8 +1,9 @@
 @echo off
 
-set VERSION=0.3.1
+set VERSION=0.3.2
 
-mkdir /p artifacts
+rmdir /s /q artifacts
+mkdir artifacts
 
 echo.
 echo ///////////////////////////////////////////////

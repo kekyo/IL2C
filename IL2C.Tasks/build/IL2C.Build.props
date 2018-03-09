@@ -4,5 +4,5 @@
     <TaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net46</TaskFolder>
     <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(TaskFolder)\IL2C.Tasks.dll</TaskAssembly>
   </PropertyGroup>
-  <UsingTask TaskName="IL2C.Tasks.Translate" AssemblyFile="$(TaskAssembly)" />
+  <UsingTask TaskName="Translate" AssemblyFile="$(TaskAssembly)" />
 </Project>

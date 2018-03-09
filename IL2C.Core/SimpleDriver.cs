@@ -12,7 +12,7 @@ namespace IL2C
             bool enableCpp,
             DebugInformationOptions debugInformationOptions)
         {
-            tw.Write("IL2C: Preparing assembly: \"{0}\" ...", Path.GetFileName(assemblyPath));
+            tw.Write("IL2C: Preparing assembly: \"{0}\" ...", Path.GetFullPath(assemblyPath));
 
             if (Directory.Exists(outputPath) == false)
             {
@@ -34,7 +34,7 @@ namespace IL2C
             var filePath = Path.Combine(outputPath, assemblyName);
             var sourceFilePath = filePath + (enableCpp ? ".cpp" : ".c");
 
-            tw.Write("IL2C: Writing source code: \"{0}\" ...", Path.GetFileName(sourceFilePath));
+            tw.Write("IL2C: Writing source code: \"{0}\" ...", Path.GetFullPath(sourceFilePath));
 
             using (var fsSource = new FileStream(
                 sourceFilePath,
@@ -52,7 +52,7 @@ namespace IL2C
 
             var headerFilePath = filePath + ".h";
 
-            tw.Write("IL2C: Writing header: \"{0}\" ...", Path.GetFileName(headerFilePath));
+            tw.Write("IL2C: Writing header: \"{0}\" ...", Path.GetFullPath(headerFilePath));
 
             using (var fsHeader = new FileStream(
                 headerFilePath,

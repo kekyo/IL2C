@@ -34,16 +34,22 @@ namespace IL2C
 
         public override bool Execute()
         {
+            var outputPath = this.OutputPath.ItemSpec.Trim();
             var debugInformation = string.IsNullOrWhiteSpace(this.DebugInformation)
                 ? DebugInformationOptions.CommentOnly
                 : (DebugInformationOptions) Enum.Parse(typeof(DebugInformationOptions), this.DebugInformation);
 
+            var tw = new LogWriter(message =>
+                this.Log.LogMessage(
+                    MessageImportance.High,
+                    "{0}", message));
+
             foreach (var assemblyPath in this.AssemblyPaths)
             {
                 SimpleDriver.Translate(
-                    Console.Out,
-                    assemblyPath.ItemSpec,
-                    this.OutputPath.ItemSpec,
+                    tw,
+                    assemblyPath.ItemSpec.Trim(),
+                    outputPath,
                     this.EnableCpp,
                     debugInformation);
             }

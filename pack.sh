@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo `pwd`
-
 VERSION=0.3.3
 
 rm -rf artifacts

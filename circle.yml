@@ -10,3 +10,5 @@ jobs:
     steps:
       - checkout
       - run: bash ./pack.sh
+    artifacts:
+      - "artifacts"

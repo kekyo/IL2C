@@ -9,4 +9,4 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
     steps:
       - checkout
-      - run: pack.sh
+      - run: ./pack.sh

@@ -1,7 +1,5 @@
 #include <M5Stack.h>
 #include <WiFi.h>
-#include <WiFiMulti.h>
-#include <HTTPClient.h>
 
 #include <il2c.h>
 
@@ -432,7 +430,7 @@ extern "C" void SendExternalTicker(const wchar_t* message)
         }
     }
 
-    buffer1 += " %23il2c %23m5stack";
+    buffer1 += "%20%23il2c%20%23m5stack";
 
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
@@ -477,38 +475,46 @@ void setup()
 {
     // initialize the M5Stack object
     M5.begin();
-    delay(10);
+    delay(100);
 
     // Initialize debugging output
     Serial.begin(115200);
-    delay(10);
+    delay(100);
 
     // initialize console (output)    
     terminal.clear();
-    delay(10);
+    delay(100);
 
     // initialize M5Stack FACES keyboard (by I2C)
     gpio_set_direction((gpio_num_t)5, GPIO_MODE_INPUT);
     gpio_pullup_en((gpio_num_t)5);
     i2c_keyboard_master_init();
-    delay(10);
-}
+    delay(100);
 
-void loop()
-{
-    wifiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
+    Serial.println("Boot up...");
 
-    Serial.print("Connecting ...");
-    while ((wifiMulti.run() != WL_CONNECTED))
+    delay(1000);
+
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+    Serial.print("Connecting WiFi [");
+    Serial.print(WIFI_SSID);
+    Serial.print("] ...");
+    while ((WiFi.status() != WL_CONNECTED))
     {
         delay(1000);
         Serial.print(".");
     }
-    Serial.println(" Done, IP=" + WiFi.localIP());
+
+    IPAddress localIP = WiFi.localIP();
+    Serial.println(" Done, IP=" + localIP.toString());
 
     il2c_initialize();
 
     delay(1000);
+}
 
+void loop()
+{
     Calculator_PolishNotation_Main();
 }

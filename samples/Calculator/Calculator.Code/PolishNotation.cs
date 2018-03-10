@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("Calculator.Code.Tests")]
 
@@ -195,6 +196,9 @@ namespace Calculator
             return new ExpressionNode(oper, left, right, index);
         }
 
+        [DllImport("Calculator.h")]
+        private static extern void SendExternalTicker(string message);
+
         public static void Main()
         {
             Console.WriteLine("Polish notation calculator.");
@@ -226,6 +230,12 @@ namespace Calculator
 
                     Console.Write("Reuslt=");
                     Console.WriteLine(result);
+
+                    var message = "(";
+                    message += line;
+                    message += ") = ";
+                    message += result.ToString();
+                    SendExternalTicker(message);
                 }
             }
         }

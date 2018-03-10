@@ -215,6 +215,7 @@ static bool System_IntPtr_op_Inequality(System_IntPtr lhs, System_IntPtr rhs)
 }
 
 extern bool System_Int32_TryParse(System_String* s, int32_t* result);
+extern System_String* System_Int32_ToString(int32_t* this__);
 
 /////////////////////////////////////////////////////////////
 // System.String

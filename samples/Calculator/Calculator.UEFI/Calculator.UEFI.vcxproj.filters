@@ -21,6 +21,9 @@
     <ClInclude Include="..\..\..\IL2C.Runtime\*.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Calculator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.c">
@@ -32,7 +35,7 @@
     <ClCompile Include="..\..\..\IL2C.Runtime\*.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="memory.c">
+    <ClCompile Include="il2c_bridges.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

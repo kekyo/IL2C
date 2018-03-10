@@ -117,6 +117,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Calculator.M5Stack", "Calcu
 	ProjectSection(SolutionItems) = preProject
 		samples\Calculator\Calculator.M5Stack\Calculator.Code.c = samples\Calculator\Calculator.M5Stack\Calculator.Code.c
 		samples\Calculator\Calculator.M5Stack\Calculator.Code.h = samples\Calculator\Calculator.M5Stack\Calculator.Code.h
+		samples\Calculator\Calculator.M5Stack\Calculator.h = samples\Calculator\Calculator.M5Stack\Calculator.h
 		samples\Calculator\Calculator.M5Stack\Calculator.M5Stack.ino = samples\Calculator\Calculator.M5Stack\Calculator.M5Stack.ino
 		samples\Calculator\Calculator.M5Stack\main.cpp = samples\Calculator\Calculator.M5Stack\main.cpp
 	EndProjectSection
@@ -138,7 +139,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer", "Accelometer"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Accelometer.FSharp.Code", "samples\microbit\Accelometer.FSharp.Code\Accelometer.FSharp.Code.fsproj", "{E09A88C6-03B3-4309-9974-994B63763094}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer.FSharp", "Accelometer.FSharp", "{244FE49F-28E3-414E-ABA8-C35885602B31}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer.FSharp", "Accelometer.FSharp", "{EE73A0D8-25A7-4832-90C8-2E82D3AAC6C2}"
 	ProjectSection(SolutionItems) = preProject
 		samples\microbit\Accelometer.FSharp\Accelometer.FSharp.Code.cpp = samples\microbit\Accelometer.FSharp\Accelometer.FSharp.Code.cpp
 		samples\microbit\Accelometer.FSharp\Accelometer.FSharp.Code.h = samples\microbit\Accelometer.FSharp\Accelometer.FSharp.Code.h
@@ -305,7 +306,7 @@ Global
 		{9958E13C-C1EA-4D14-897C-0F7814F4F15C} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
 		{6693EF0B-6925-4C08-BF76-D890084D2642} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
 		{E09A88C6-03B3-4309-9974-994B63763094} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
-		{244FE49F-28E3-414E-ABA8-C35885602B31} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
+		{EE73A0D8-25A7-4832-90C8-2E82D3AAC6C2} = {B1753A72-2D2D-4381-8C13-B149BBB41F54}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

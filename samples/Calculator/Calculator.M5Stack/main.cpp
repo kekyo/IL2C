@@ -3,11 +3,15 @@
 
 #include <il2c.h>
 
+// Step1:
+//   Replace your WiFi network environment.
 #define WIFI_SSID "MGSVTPP"
 #define WIFI_PASSWORD "mogemoge-1234"
 
-// This sample is using for IFTTT's makers webhook.
-// https://ifttt.com/maker_webhooks
+// Step2:
+//   This sample is using for IFTTT's makers webhook.
+//   https://ifttt.com/maker_webhooks
+//   Please replaace your account's event and key (Already revoked these parameters).
 
 #define IFTTT_EVENT "tweet"
 #define IFTTT_KEY "1l0_6K4nW5vm4bVB9AM2I"
@@ -119,54 +123,6 @@ CONDITIONS OF ANY KIND, either express or implied.
 #define ACK_VAL                            0x0              /*!< I2C ack value */
 #define NACK_VAL                           0x1              /*!< I2C nack value */
 
-// SemaphoreHandle_t print_mux = NULL;
-
-void i2c_keyboard_master_init()
-{
-    int i2c_master_port = I2C_KEYBOARD_NUM;
-    i2c_config_t conf;
-    conf.mode = I2C_MODE_MASTER;
-    conf.sda_io_num = GPIO_NUM_21;
-    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.scl_io_num = GPIO_NUM_22;
-    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-    conf.master.clk_speed = I2C_KEYBOARD_FREQ_HZ;
-    i2c_param_config((i2c_port_t)i2c_master_port, &conf);
-    i2c_driver_install((i2c_port_t)i2c_master_port, conf.mode,
-        I2C_KEYBOARD_RX_BUF_DISABLE,
-        I2C_KEYBOARD_TX_BUF_DISABLE, 0);
-}
-
-/**
-* @brief test code to write esp-i2c-slave
-*
-* 1. set mode
-* _________________________________________________________________
-* | start | slave_addr + wr_bit + ack | write 1 byte + ack  | stop |
-* --------|---------------------------|---------------------|------|
-* 2. wait more than 24 ms
-* 3. read data
-* ______________________________________________________________________________________
-* | start | slave_addr + rd_bit + ack | read 1 byte + ack  | read 1 byte + nack | stop |
-* --------|---------------------------|--------------------|--------------------|------|
-*/
-uint8_t i2c_keyboard_read()
-{
-    uint8_t ret;
-    // i2c_port_t i2c_num = I2C_KEYBOARD_NUM;
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (uint8_t)(I2C_KEYBOARD_ADDR << 1) | READ_BIT, ACK_CHECK_EN);
-    i2c_master_read_byte(cmd, &ret, (i2c_ack_type_t)NACK_VAL);
-    i2c_master_stop(cmd);
-    i2c_master_cmd_begin(I2C_KEYBOARD_NUM, cmd, 1000 / portTICK_RATE_MS);
-    i2c_cmd_link_delete(cmd);
-    return ret;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 // The scrolling area must be a integral multiple of TEXT_HEIGHT
 #define TEXT_HEIGHT 16 // Height of text to be printed and scrolled
 #define TOP_FIXED_AREA 14 // Number of lines in top fixed area (lines counted from top of screen)
@@ -232,7 +188,7 @@ private:
     // Setup a portion of the screen for vertical scrolling
     // ##############################################################################################
     // We are using a hardware feature of the display, so we can only scroll in portrait orientation
-    void setupScrollArea(uint16_t tfa, uint16_t bfa)
+    static void setupScrollArea(uint16_t tfa, uint16_t bfa)
     {
         M5.Lcd.writecommand(ILI9341_VSCRDEF); // Vertical scroll definition
         M5.Lcd.writedata(tfa >> 8);           // Top Fixed Area line count
@@ -241,6 +197,50 @@ private:
         M5.Lcd.writedata(YMAX - tfa - bfa);
         M5.Lcd.writedata(bfa >> 8);           // Bottom Fixed Area line count
         M5.Lcd.writedata(bfa);
+    }
+
+    static void i2c_keyboard_master_init()
+    {
+        int i2c_master_port = I2C_KEYBOARD_NUM;
+        i2c_config_t conf;
+        conf.mode = I2C_MODE_MASTER;
+        conf.sda_io_num = GPIO_NUM_21;
+        conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
+        conf.scl_io_num = GPIO_NUM_22;
+        conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
+        conf.master.clk_speed = I2C_KEYBOARD_FREQ_HZ;
+        i2c_param_config((i2c_port_t)i2c_master_port, &conf);
+        i2c_driver_install((i2c_port_t)i2c_master_port, conf.mode,
+            I2C_KEYBOARD_RX_BUF_DISABLE,
+            I2C_KEYBOARD_TX_BUF_DISABLE, 0);
+    }
+
+    /**
+    * @brief test code to write esp-i2c-slave
+    *
+    * 1. set mode
+    * _________________________________________________________________
+    * | start | slave_addr + wr_bit + ack | write 1 byte + ack  | stop |
+    * --------|---------------------------|---------------------|------|
+    * 2. wait more than 24 ms
+    * 3. read data
+    * ______________________________________________________________________________________
+    * | start | slave_addr + rd_bit + ack | read 1 byte + ack  | read 1 byte + nack | stop |
+    * --------|---------------------------|--------------------|--------------------|------|
+    */
+    static uint8_t i2c_keyboard_read()
+    {
+        uint8_t ret;
+        // i2c_port_t i2c_num = I2C_KEYBOARD_NUM;
+        i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+        cmd = i2c_cmd_link_create();
+        i2c_master_start(cmd);
+        i2c_master_write_byte(cmd, (uint8_t)(I2C_KEYBOARD_ADDR << 1) | READ_BIT, ACK_CHECK_EN);
+        i2c_master_read_byte(cmd, &ret, (i2c_ack_type_t)NACK_VAL);
+        i2c_master_stop(cmd);
+        i2c_master_cmd_begin(I2C_KEYBOARD_NUM, cmd, 1000 / portTICK_RATE_MS);
+        i2c_cmd_link_delete(cmd);
+        return ret;
     }
 
 public:
@@ -263,6 +263,11 @@ public:
         setupScrollArea(0, 0);
         yDraw = 0;
         xPos = 0;
+
+        // initialize M5Stack FACES keyboard (by I2C)
+        gpio_set_direction((gpio_num_t)5, GPIO_MODE_INPUT);
+        gpio_pullup_en((gpio_num_t)5);
+        i2c_keyboard_master_init();
     }
 
     void feed()
@@ -308,6 +313,11 @@ public:
             drawChar(*p++);
         }
     }
+
+    uint8_t read()
+    {
+        return i2c_keyboard_read();
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -315,7 +325,6 @@ public:
 #include "Calculator.Code.h"
 
 static M5_Terminal terminal;
-static WiFiMulti wifiMulti;
 
 extern "C" void Write(const wchar_t* pMessage)
 {
@@ -349,7 +358,7 @@ extern "C" void ReadLine(wchar_t* pBuffer, uint16_t length)
     int index = 0;
     while (index < (length - 1))
     {
-        wchar_t ch = i2c_keyboard_read();
+        wchar_t ch = terminal.read();
         if (ch == L'\0')
         {
             delay(100);
@@ -481,14 +490,8 @@ void setup()
     Serial.begin(115200);
     delay(100);
 
-    // initialize console (output)    
+    // initialize console
     terminal.clear();
-    delay(100);
-
-    // initialize M5Stack FACES keyboard (by I2C)
-    gpio_set_direction((gpio_num_t)5, GPIO_MODE_INPUT);
-    gpio_pullup_en((gpio_num_t)5);
-    i2c_keyboard_master_init();
     delay(100);
 
     Serial.println("Boot up...");

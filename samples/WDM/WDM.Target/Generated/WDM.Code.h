@@ -38,11 +38,9 @@ struct WDM_Code_InterceptCDRomDevice
     int32_t size;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__;
-
-// Class vtable
-extern __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VTABLE__;
 
 ////////////////////////////////////////////////////////////
 // Class: WDM.Code.Wdm
@@ -63,11 +61,9 @@ struct WDM_Code_Wdm
     __WDM_Code_Wdm_VTABLE_DECL__* vptr0__;
 };
 
+
 // Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __WDM_Code_Wdm_RUNTIME_TYPE__;
-
-// Class vtable
-extern __WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // Public static fields:

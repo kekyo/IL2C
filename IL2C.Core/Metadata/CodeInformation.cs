@@ -37,6 +37,8 @@ namespace IL2C.Metadata
             this.Debug = debug;
         }
 
+        public string Label => string.Format("IL_{0:x4}", this.Offset);
+
         private string GetOperandForPrintable()
         {
             if (this.Operand == null)
@@ -74,8 +76,8 @@ namespace IL2C.Metadata
         public override string ToString()
         {
             return string.Format(
-                "IL_{0:x4}: {1}{2}",
-                this.Offset,
+                "{0}: {1}{2}",
+                this.Label,
                 this.OpCode,
                 this.GetOperandForPrintable());
         }

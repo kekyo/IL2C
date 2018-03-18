@@ -24,7 +24,7 @@ namespace IL2C
 
     internal static class Utilities
     {
-        private static readonly char[] replaceChars = { '.', '@' };
+        private static readonly char[] replaceChars = { '.', '@', '<', '>', '$', '-', '=', ',', '.' };
         private static readonly Dictionary<OpCode, ILConverter> ilConverters;
 
         static Utilities()
@@ -100,10 +100,17 @@ namespace IL2C
             {
                 return string.Format("{0}->string_body__", parameter.SymbolName);
             }
-            else
+
+            var resolved = parameter.ParameterType.Resolve();
+            if (resolved.IsEnum)
             {
-                return parameter.SymbolName;
+                return string.Format(
+                    "({0}){1}",
+                    resolved.Name,      // Simple enum type name for use P/Invoke.
+                    parameter.SymbolName);
             }
+
+            return parameter.Name;
         }
 
         public static string GetFunctionPrototypeString(
@@ -149,6 +156,25 @@ namespace IL2C
                 "{0} (*{1})({2})",
                 returnTypeName,
                 methodName.ManglingSymbolName(),
+                (parametersString.Length >= 1) ? parametersString : "void");
+        }
+
+        public static string GetFunctionTypeString(
+            TypeReference returnType,
+            TypeReference[] parameterTypes,
+            IExtractContext extractContext)
+        {
+            var parametersString = string.Join(
+                ", ",
+                parameterTypes.Select(parameterType =>
+                    extractContext.GetCLanguageTypeName(parameterType)));
+
+            var returnTypeName =
+                extractContext.GetCLanguageTypeName(returnType);
+
+            return string.Format(
+                "{0} (*)({1})",
+                returnTypeName,
                 (parametersString.Length >= 1) ? parametersString : "void");
         }
 

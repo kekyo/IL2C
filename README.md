@@ -66,6 +66,10 @@ Under Apache v2.
 
 ## Related informations
 
+* Polish notation calculator project for IL2C proof of concept
+  * [Minimum, but useful impls for "Win32", "UEFI" and "M5Stack(ESP32)"](samples/Calculator)
+  * ![Calculator.M5Stack](images/Calculator.M5Stack.jpg)
+
 * Center CLR video letter: "Tested IL2C on micro:bit and arduino platform #8"
   * [![Tested IL2C on micro:bit and arduino platform #8](images/microbit.jpg)](http://bit.ly/2xGFo9J)
 
@@ -75,6 +79,23 @@ Under Apache v2.
 
 * Milestone 2+ informations included the book of "Extensive Xamarin - Techbook Fest part 3"
   * [Extensive Xamarin - Xamaritans (In japanese)](http://bit.ly/2ycNVzW)
+
+* Public conference session: "Making archive IL2C #6-51 at .NET 600"
+  * [.NET 600 conference (In japanese)](https://centerclr.connpass.com/event/71414/)
+  * [YouTube video](http://bit.ly/2DiaoKZ)
+  * [Slide](https://www.slideshare.net/kekyo/write-common-run-anywhere)
+
+* Public conference session: "How to make the calculator at .NET Fringe Japan 2018 / Making archive IL2C #6-52"
+  * [.NET Fringe Japan 2018 New Year Party (In Japanese)](https://dotnetfringe-japan.connpass.com/event/74536/)
+  * [Slide](https://www.slideshare.net/kekyo/how-to-make-the-calculator)
+
+* Public conference session: "Making archive IL2C #6-53 at MVP Summit F# Meetup / SEATTLE F# USERS GROUP"
+  * [MVP Summit F# Meetup / F# Seattle User Group](https://www.meetup.com/en-US/FSharpSeattle/events/247905452/)
+  * [Slide](https://www.slideshare.net/kekyo/mvp-summit-f-meetup-making-archive-il2c-653)
+
+* Public conference session: "Making archive IL2C #6-54 at MVP SUMMIT – VS HACKATHON"
+  * [Microsoft MVP Global Summit 2018](https://mvp.microsoft.com/en-us/Summit/Agenda)
+  * [Slide](https://www.slideshare.net/kekyo/making-archive-il2c-654-at-mvp-summit-2018-vs-hackathon)
 
 ## Overall status
 

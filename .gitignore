@@ -237,3 +237,7 @@ _Pvt_Extensions
 .vscode/
 *.swp
 
+# for Arduino
+.build/
+
+artifacts/

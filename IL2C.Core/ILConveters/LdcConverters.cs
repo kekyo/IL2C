@@ -50,6 +50,17 @@ namespace IL2C.ILConveters
         }
     }
 
+    internal sealed class Ldc_i4_4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_4;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            return _ => new[] { string.Format("{0} = 4", symbolName) };
+        }
+    }
+
     internal sealed class Ldc_i4_5Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_5;
@@ -58,6 +69,28 @@ namespace IL2C.ILConveters
         {
             var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
             return _ => new[] { string.Format("{0} = 5", symbolName) };
+        }
+    }
+
+    internal sealed class Ldc_i4_6Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_6;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            return _ => new[] { string.Format("{0} = 6", symbolName) };
+        }
+    }
+
+    internal sealed class Ldc_i4_7Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_7;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            return _ => new[] { string.Format("{0} = 7", symbolName) };
         }
     }
 

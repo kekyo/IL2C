@@ -40,60 +40,12 @@ namespace IL2C
             var assemblyPath = paths[0];
             var outputPath = paths[1];
 
-            Console.Write("IL2C: Preparing assembly: \"{0}\" ...", Path.GetFileName(assemblyPath));
-
-            if (Directory.Exists(outputPath) == false)
-            {
-                try
-                {
-                    Directory.CreateDirectory(outputPath);
-                }
-                catch
-                {
-                }
-            }
-
-            var translateContext = new TranslateContext(assemblyPath);
-            var preparedFunctions = AssemblyPreparer.Prepare(translateContext);
-
-            Console.WriteLine(" done.");
-
-            var assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
-            var filePath = Path.Combine(outputPath, assemblyName);
-            var sourceFilePath = filePath + (enableCpp ? ".cpp" : ".c");
-
-            Console.Write("IL2C: Writing source code: \"{0}\" ...", Path.GetFileName(sourceFilePath));
-
-            using (var fsSource = new FileStream(
-                sourceFilePath,
-                FileMode.Create,
-                FileAccess.ReadWrite,
-                FileShare.None))
-            {
-                var twSource = new StreamWriter(fsSource, Encoding.UTF8);
-                AssemblyWriter.WriteSourceCode(
-                    twSource, translateContext, preparedFunctions, "    ", debugInformationOptions);
-                twSource.Flush();
-            }
-
-            Console.WriteLine(" done.");
-
-            var headerFilePath = filePath + ".h";
-
-            Console.Write("IL2C: Writing header: \"{0}\" ...", Path.GetFileName(headerFilePath));
-
-            using (var fsHeader = new FileStream(
-                headerFilePath,
-                FileMode.Create,
-                FileAccess.ReadWrite,
-                FileShare.None))
-            {
-                var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
-                AssemblyWriter.WriteHeader(twHeader, translateContext, preparedFunctions, "    ");
-                twHeader.Flush();
-            }
-
-            Console.WriteLine(" done.");
+            SimpleDriver.Translate(
+                Console.Out,
+                assemblyPath,
+                outputPath,
+                enableCpp,
+                debugInformationOptions);
 
             return 0;
         }

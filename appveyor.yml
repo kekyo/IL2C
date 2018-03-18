@@ -3,7 +3,8 @@ image: Visual Studio 2017
 environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-before_build:
-- cmd: dotnet restore il2c.sln
-build:
-  project: il2c.sln
+shallow_clone: true
+build_script:
+- cmd: pack.bat
+artifacts:
+- path: artifacts

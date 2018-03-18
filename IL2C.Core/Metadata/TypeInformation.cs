@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+
 using Mono.Cecil;
 
 namespace IL2C.Metadata
@@ -10,9 +10,18 @@ namespace IL2C.Metadata
     {
         IModuleInformation DeclaringModule { get; }
 
+        bool IsValidDefinition { get; }
+
+        bool IsPublic { get; }
+        bool IsNestedPublic { get; }
+        bool IsNestedFamily { get; }
+        bool IsNestedFamilyOrAssembly { get; }
+
         bool IsValueType { get; }
         bool IsClass { get; }
         bool IsInterface { get; }
+        bool IsEnum { get; }
+        bool IsDelegate { get; }
         bool IsByReference { get; }
         bool IsPointer { get; }
         bool IsPrimitive { get; }
@@ -21,8 +30,10 @@ namespace IL2C.Metadata
         [Obsolete("Will remove")]
         bool IsPseudoZeroType { get; }
 
+        bool IsVoidType { get; }
         bool IsObjectType { get; }
         bool IsValueTypeType { get; }
+        bool IsDelegateType { get; }
         bool IsBooleanType { get; }
         bool IsByteType { get; }
         bool IsSByteType { get; }
@@ -40,9 +51,14 @@ namespace IL2C.Metadata
         ITypeInformation BaseType { get; }
         ITypeInformation ElementType { get; }
         ITypeInformation[] InterfaceTypes { get; }
+        ITypeInformation[] NestedTypes { get; }
+
         ITypeInformation StackableType { get; }
+
+        IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
-        IMethodInformation[] VisibleMethods { get; }
+        IMethodInformation[] OverridedMethods { get; }
+        IMethodInformation[] VirtualMethods { get; }
 
         string CLanguageName { get; }
 
@@ -56,9 +72,12 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation> baseType;
         private readonly Lazy<TypeInformation> elementType;
         private readonly Lazy<TypeInformation[]> interfaceTypes;
+        private readonly Lazy<TypeInformation[]> nestedTypes;
         private readonly Lazy<ITypeInformation> stackableType;
+        private readonly Lazy<FieldInformation[]> fields;
         private readonly Lazy<MethodInformation[]> declaredMethods;
-        private readonly Lazy<MethodInformation[]> visibleMethods;
+        private readonly Lazy<MethodInformation[]> overridedMethods;
+        private readonly Lazy<MethodInformation[]> virtualMethods;
 
         public TypeInformation(TypeReference type, ModuleInformation module)
             : base(type, module)
@@ -72,6 +91,9 @@ namespace IL2C.Metadata
             interfaceTypes = this.Context.LazyGetOrAddMember(
                 () => this.Definition.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType),
                 interfaceType => new TypeInformation(interfaceType, module));
+            nestedTypes = this.Context.LazyGetOrAddMember(
+                () => this.Definition.NestedTypes,
+                nestedType => new TypeInformation(nestedType, module));
             stackableType = Lazy.Create(() =>
                 {
                     if (this.IsByteType
@@ -97,17 +119,44 @@ namespace IL2C.Metadata
 
                     return this;
                 });
+            fields = this.Context.LazyGetOrAddMember(
+                () => this.Definition.Fields,
+                field => new FieldInformation(field, module));
             declaredMethods = this.Context.LazyGetOrAddMember(
                 () => this.Definition.Methods,
                 method => new MethodInformation(method, module));
-            visibleMethods = this.Context.LazyGetOrAddMember(
-                () => this.EnumerateVisibleMethods(),
+            overridedMethods = this.Context.LazyGetOrAddMember(
+                () => this.EnumerateOverridedMethods(),
+                method => new MethodInformation(method, module));
+            virtualMethods = this.Context.LazyGetOrAddMember(
+                () => this.EnumerateOverridedMethods().Where(method => method.IsVirtual),
                 method => new MethodInformation(method, module));
         }
+
+        public override string MemberTypeName => this.IsEnum
+            ? "Enum"
+            : this.IsValueType
+                ? "Struct"
+                : this.IsInterface
+                ? "Interface"
+                : "Class";
+
+        public bool IsValidDefinition =>
+            (((this.Member.IsValueType || this.Definition.IsClass)
+                && (this.Definition.BaseType != null))
+             || this.Definition.IsInterface)
+            && (this.Member.Name != "<Module>");
+
+        public bool IsPublic => this.Definition.IsPublic;
+        public bool IsNestedPublic => this.Definition.IsNestedPublic;
+        public bool IsNestedFamily => this.Definition.IsNestedFamily;
+        public bool IsNestedFamilyOrAssembly => this.Definition.IsNestedFamilyOrAssembly;
 
         public bool IsValueType => this.Member.IsValueType;
         public bool IsClass => this.Definition.IsClass;
         public bool IsInterface => this.Definition.IsInterface;
+        public bool IsEnum => this.Definition.IsEnum;
+        public bool IsDelegate => this.Context.DelegateType.IsAssignableFrom(this);
         public bool IsByReference => this.Member.IsByReference;
         public bool IsPointer => this.Member.IsPointer;
         public bool IsPrimitive => this.Member.IsPrimitive;
@@ -123,12 +172,11 @@ namespace IL2C.Metadata
             || this.Equals(this.Context.IntPtrType)
             || this.Equals(this.Context.UIntPtrType)
             || this.Equals(this.Context.CharType));
-        public bool IsValidDefinition =>
-            ((this.Member.IsValueType || this.Definition.IsClass)
-            && (this.Definition.BaseType != null)) || this.Definition.IsInterface;
 
+        public bool IsVoidType => this.Equals(this.Context.VoidType);
         public bool IsObjectType => this.Equals(this.Context.ObjectType);
         public bool IsValueTypeType => this.Equals(this.Context.ValueTypeType);
+        public bool IsDelegateType => this.Equals(this.Context.DelegateType);
 
         public bool IsByteType => this.Equals(this.Context.ByteType);
         public bool IsSByteType => this.Equals(this.Context.SByteType);
@@ -156,9 +204,13 @@ namespace IL2C.Metadata
         public ITypeInformation BaseType => baseType.Value;
         public ITypeInformation ElementType => elementType.Value;
         public ITypeInformation[] InterfaceTypes => interfaceTypes.Value;
+        public ITypeInformation[] NestedTypes => nestedTypes.Value;
         public ITypeInformation StackableType => stackableType.Value;
+
+        public IFieldInformation[] Fields => fields.Value;
         public IMethodInformation[] DeclaredMethods => declaredMethods.Value;
-        public IMethodInformation[] VisibleMethods => visibleMethods.Value;
+        public IMethodInformation[] OverridedMethods => overridedMethods.Value;
+        public IMethodInformation[] VirtualMethods => virtualMethods.Value;
 
         public string CLanguageName =>
             (!this.Member.IsValueType || this.Member.IsByReference || this.Member.IsPointer)
@@ -207,7 +259,7 @@ namespace IL2C.Metadata
             return member.Resolve();
         }
 
-        private IEnumerable<MethodDefinition> EnumerateVisibleMethods()
+        private IEnumerable<MethodDefinition> EnumerateOverridedMethods()
         {
             var results = new List<MethodDefinition>();
 

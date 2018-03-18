@@ -14,6 +14,8 @@ namespace IL2C.Metadata
         string FriendlyName { get; }
         string MangledName { get; }
 
+        string MemberTypeName { get; }
+
         ITypeInformation DeclaringType { get; }
     }
 
@@ -74,6 +76,13 @@ namespace IL2C.Metadata
 
         public string MangledName => ToMangledName(this.FriendlyName);
 
+        public abstract string MemberTypeName { get; }
+
         public ITypeInformation DeclaringType => declaringType.Value;
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", this.MemberTypeName, base.ToString());
+        }
     }
 }

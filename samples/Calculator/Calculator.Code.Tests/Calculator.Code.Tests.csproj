@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AssemblyName>Calculator.Code.Tests</AssemblyName>
+    <RootNamespace>Calculator</RootNamespace>
+    <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
+    <VersionPrefix>0.3.1</VersionPrefix>
+    <Product>IL2C</Product>
+    <Trademark>IL2C</Trademark>
+    <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
+    <Description>A translator implementation of .NET intermediate language to C language.</Description>
+    <Company>Kouji Matsui (@kozy_kekyo)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NUnit" Version="3.9.0" />
+    <packagereference Include="NUnit3TestAdapter" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Calculator.Code\Calculator.Code.csproj" />
+  </ItemGroup>
+
+</Project>

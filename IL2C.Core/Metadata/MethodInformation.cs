@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace IL2C.Metadata
 {
@@ -20,15 +21,20 @@ namespace IL2C.Metadata
 
     public interface IMethodInformation : IMemberInformation
     {
+        bool IsPublic { get; }
+        bool IsFamily { get; }
+        bool IsFamilyOrAssembly { get; }
+
         bool IsConstructor { get; }
         bool IsStatic { get; }
         bool IsVirtual { get; }
         bool IsAbstract { get; }
         bool IsSealed { get; }
         bool IsNewSlot { get; }
+        bool IsExtern { get; }
         bool HasBody { get; }
 
-        bool IsStandardMethod { get; }
+        bool IsCallableMethod { get; }
 
         ITypeInformation ReturnType { get; }
         VariableInformation[] Parameters { get; }
@@ -37,12 +43,13 @@ namespace IL2C.Metadata
         int OverloadIndex { get; }
 
         string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full);
-        VariableInformation[] GetInstanceParameters(ITypeInformation thisType);
+        VariableInformation[] GetParameters(ITypeInformation thisType);
 
-        string RawFunctionPrototype { get; }
-        string FunctionPrototype { get; }
-        string FunctionTypePrototype { get; }
+        PInvokeInfo PInvokeInfo { get; }
 
+        string CLanguageRawFunctionPrototype { get; }
+        string CLanguageFunctionPrototype { get; }
+        string CLanguageFunctionTypePrototype { get; }
     }
 
     internal sealed class MethodInformation
@@ -56,6 +63,7 @@ namespace IL2C.Metadata
         private readonly Lazy<VariableInformation[]> variables;
         private readonly Lazy<CodeStream> codeStreams;
         private readonly Lazy<int> overloadIndex;
+        private readonly Lazy<IReadOnlyDictionary<int, Instruction>> body;
 
         public MethodInformation(MethodReference method, ModuleInformation module)
             : base(method, module)
@@ -133,6 +141,14 @@ namespace IL2C.Metadata
                 });
         }
 
+        public override string MemberTypeName => this.IsStatic
+            ? "Static method"
+            : this.IsAbstract
+                ? this.DeclaringType.IsInterface
+                    ? "Interface method"
+                    : "Abstract method"
+                : "Method";
+
         private VariableInformation CreateThisParameterInformation(ITypeInformation thisType)
         {
             return new VariableInformation(
@@ -160,7 +176,12 @@ namespace IL2C.Metadata
                                     assembly__ => new AssemblyInformation(assembly__, this.Context)))))));
         }
 
-        public override string FriendlyName => this.GetFriendlyName(FriendlyNameTypes.Full);
+        public override string FriendlyName =>
+            this.GetFriendlyName(FriendlyNameTypes.Full);
+
+        public bool IsPublic => this.Definition.IsPublic;
+        public bool IsFamily => this.Definition.IsFamily;
+        public bool IsFamilyOrAssembly => this.Definition.IsFamilyOrAssembly;
 
         public bool IsConstructor => this.Definition.IsConstructor;
         public bool IsStatic => this.Definition.IsStatic;
@@ -168,9 +189,11 @@ namespace IL2C.Metadata
         public bool IsAbstract => this.Definition.IsAbstract;
         public bool IsSealed => this.Definition.IsFinal;
         public bool IsNewSlot => this.Definition.IsNewSlot;
+        public bool IsExtern =>
+            this.Definition.IsPInvokeImpl || this.Definition.IsInternalCall;
         public bool HasBody => this.Definition.HasBody;
 
-        public bool IsStandardMethod
+        public bool IsCallableMethod
         {
             get
             {
@@ -249,7 +272,7 @@ namespace IL2C.Metadata
             return Mangled(type) ? ToMangledName(name) : name;
         }
 
-        public VariableInformation[] GetInstanceParameters(ITypeInformation thisType)
+        public VariableInformation[] GetParameters(ITypeInformation thisType)
         {
             Debug.Assert(this.Member.HasThis);
 
@@ -257,6 +280,8 @@ namespace IL2C.Metadata
                 .Concat(this.Member.Parameters.Select(this.ToParameterInformation))
                 .ToArray();
         }
+
+        public PInvokeInfo PInvokeInfo => this.Definition.PInvokeInfo;
 
         private string GetFunctionPrototype(bool decorate)
         {
@@ -277,10 +302,10 @@ namespace IL2C.Metadata
                 parametersString);
         }
 
-        public string RawFunctionPrototype => this.GetFunctionPrototype(false);
-        public string FunctionPrototype => this.GetFunctionPrototype(this.IsVirtual);
+        public string CLanguageRawFunctionPrototype => this.GetFunctionPrototype(false);
+        public string CLanguageFunctionPrototype => this.GetFunctionPrototype(this.IsVirtual);
 
-        public string FunctionTypePrototype
+        public string CLanguageFunctionTypePrototype
         {
             get
             {

@@ -4,22 +4,24 @@
 #if defined(UEFI)
 
 #include <intrin.h>
+
 #include <stdint.h>
 #include <wchar.h>
 
-#pragma intrinsic(memset)
-#pragma intrinsic(memcpy)
-
 typedef long interlock_t;
+
+extern void* il2c_memcpy(void* to, const void* from, size_t n);
+extern void* il2c_memset(void* target, int ch, size_t n);
+extern char* il2c_itoa(int i, char* d);
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 
 extern void WriteLineToError(const wchar_t* pMessage);
 
-#if !defined(_DEBUG)
+#if defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
-    WriteLineToError(L##step); }
+    WriteLineToError(L## #message); }
 #define il2c_assert(actual) if (!(actual)) DEBUG_WRITE(0, #actual)
 #else
 #define DEBUG_WRITE(step, message)
@@ -30,13 +32,15 @@ extern void WriteLineToError(const wchar_t* pMessage);
 
 #include <intrin.h>
 #include <wdm.h>
+
 #include <stdint.h>
 #include <wchar.h>
 
-#pragma intrinsic(memset)
-#pragma intrinsic(memcpy)
-
 typedef long interlock_t;
+
+#define il2c_memcpy memcpy
+#define il2c_memset memset
+#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
@@ -60,20 +64,22 @@ typedef long interlock_t;
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRTDBG_MAP_ALLOC 1
 #include <crtdbg.h>
-#include <intrin.h>
+
+#define il2c_memcpy memcpy
+#define il2c_memset memset
+#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc malloc
 #define il2c_free free
 
+#include <intrin.h>
+
+#include <windows.h>
+
 #include <stdint.h>
 #include <wchar.h>
 
-#pragma intrinsic(memset)
-#pragma intrinsic(memcpy)
-
 typedef long interlock_t;
-
-#include <windows.h>
 
 #ifdef _DEBUG
 #define DEBUG_WRITE(step, message) { \
@@ -116,8 +122,14 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
     return cv;
 }
 
+#define il2c_memcpy memcpy
+#define il2c_memset memset
+#define il2c_itoa(i, d) itoa(i, d, 10)
+
 #define il2c_malloc malloc
 #define il2c_free free
+
+#include <assert.h>
 #define il2c_assert assert
 
 #define DEBUG_WRITE(step, message)
@@ -185,7 +197,7 @@ static void* il2c_get_uninitialized_object_internal__(
     if (bodySize >= 1)
     {
         // Guarantee cleared body
-        memset(pReference, 0, bodySize);
+        il2c_memset(pReference, 0, bodySize);
     }
 
     pHeader->pNext = NULL;
@@ -393,7 +405,7 @@ System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(type, bodySize);
 
     pBoxed->vptr0__ = &__System_ValueType_VTABLE__;
-    memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, type->bodySize);
+    il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, type->bodySize);
 
     return (System_Object*)pBoxed;
 }
@@ -499,7 +511,7 @@ bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj)
     return false;
 }
 
-static __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
+__System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
     /* internalcall */ __System_ValueType_IL2C_RuntimeCast__,
     __System_ValueType_ToString__,
     __System_ValueType_GetHashCode__,
@@ -549,6 +561,20 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
     il2c_assert(s->string_body__ != NULL);
 
     return twtoi(s->string_body__, result);
+}
+
+System_String* System_Int32_ToString(int32_t* this__)
+{
+    char buffer[14];
+    wchar_t wbuffer[14];
+    
+    const char*p = il2c_itoa(*this__, buffer);
+    for (int i = 0; i < 14; i++)
+    {
+        wbuffer[i] = buffer[i];
+    }
+
+    return il2c_new_string(wbuffer);
 }
 
 /////////////////////////////////////////////////////////////
@@ -621,7 +647,7 @@ System_String* il2c_new_string(const wchar_t* string_body__)
     System_String* pString = __new_string_internal__(size);
 
     // Copy string at below
-    memcpy((wchar_t*)(pString->string_body__), string_body__, size);
+    il2c_memcpy((wchar_t*)(pString->string_body__), string_body__, size);
 
     return pString;
 }
@@ -637,8 +663,8 @@ System_String* System_String_Concat_6(System_String* str0, System_String* str1)
     uintptr_t str1Size = (uintptr_t)wcslen(str1->string_body__) * sizeof(wchar_t);
 
     System_String* pString = __new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
-    memcpy((wchar_t*)(pString->string_body__), str0->string_body__, str0Size);
-    memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size + sizeof(wchar_t));
+    il2c_memcpy((wchar_t*)(pString->string_body__), str0->string_body__, str0Size);
+    il2c_memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size + sizeof(wchar_t));
 
     return pString;
 }
@@ -662,7 +688,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
 
     uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
     System_String* pString = __new_string_internal__(newSize);
-    memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
+    il2c_memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
 
     return pString;
 }
@@ -687,7 +713,7 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
 
     uintptr_t newSize = (uintptr_t)length * sizeof(wchar_t);
     System_String* pString = __new_string_internal__(newSize + sizeof(wchar_t));
-    memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
+    il2c_memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
     ((wchar_t*)(pString->string_body__))[length] = L'\0';
 
     return pString;

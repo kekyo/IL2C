@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.ILConveters;
@@ -101,123 +100,24 @@ namespace IL2C
                 return string.Format("{0}->string_body__", parameter.SymbolName);
             }
 
-            var resolved = parameter.ParameterType.Resolve();
-            if (resolved.IsEnum)
+            if (parameter.TargetType.IsEnum)
             {
                 return string.Format(
                     "({0}){1}",
-                    resolved.Name,      // Simple enum type name for use P/Invoke.
+                    parameter.TargetType.Name,      // Simple enum type name for use P/Invoke.
                     parameter.SymbolName);
             }
 
-            return parameter.Name;
-        }
-
-        public static string GetFunctionPrototypeString(
-            string methodName,
-            ITypeInformation returnType,
-            VariableInformation[] parameters,
-            IExtractContext extractContext)
-        {
-            var parametersString = string.Join(
-                ", ",
-                parameters.Select(parameter => string.Format(
-                    "{0} {1}",
-                    extractContext.GetCLanguageTypeName(parameter.TargetType),
-                    parameter.SymbolName)));
-
-            var returnTypeName =
-                extractContext.GetCLanguageTypeName(returnType);
-
-            return string.Format(
-                "{0} {1}({2})",
-                returnTypeName,
-                methodName.ManglingSymbolName(),
-                (parametersString.Length >= 1) ? parametersString : "void");
-        }
-
-        public static string GetFunctionTypeString(
-            string methodName,
-            ITypeInformation returnType,
-            VariableInformation[] parameters,
-            IExtractContext extractContext)
-        {
-            var parametersString = string.Join(
-                ", ",
-                parameters.Select(parameter => string.Format(
-                    "{0} {1}",
-                    extractContext.GetCLanguageTypeName(parameter.TargetType),
-                    parameter.SymbolName)));
-
-            var returnTypeName =
-                extractContext.GetCLanguageTypeName(returnType);
-
-            return string.Format(
-                "{0} (*{1})({2})",
-                returnTypeName,
-                methodName.ManglingSymbolName(),
-                (parametersString.Length >= 1) ? parametersString : "void");
-        }
-
-        public static string GetFunctionTypeString(
-            TypeReference returnType,
-            TypeReference[] parameterTypes,
-            IExtractContext extractContext)
-        {
-            var parametersString = string.Join(
-                ", ",
-                parameterTypes.Select(parameterType =>
-                    extractContext.GetCLanguageTypeName(parameterType)));
-
-            var returnTypeName =
-                extractContext.GetCLanguageTypeName(returnType);
-
-            return string.Format(
-                "{0} (*)({1})",
-                returnTypeName,
-                (parametersString.Length >= 1) ? parametersString : "void");
-        }
-
-        public static string GetStaticFieldPrototypeString(
-            IFieldInformation field,
-            bool requireInitializerExpression,
-            IExtractContext extractContext)
-        {
-            var initializer = String.Empty;
-            if (requireInitializerExpression)
-            {
-                if (field.FieldType.IsNumericPrimitive)
-                {
-                    // TODO: numericPrimitive and (literal or readonly static) ?
-                    Debug.Assert(field.IsStatic);
-                    var value = field.HasConstant ? field.ConstantValue : 0;
-
-                    Debug.Assert(value != null);
-
-                    initializer = field.FieldType.IsInt64Type
-                        ? String.Format(" = {0}LL", value)
-                        : String.Format(" = {0}", value);
-                }
-                else if (field.FieldType.IsValueType == false)
-                {
-                    initializer = " = NULL";
-                }
-            }
-
-            return string.Format(
-                "{0} {1}{2}",
-                extractContext.GetCLanguageTypeName(field.FieldType),
-                field.GetFullMemberName().ManglingSymbolName(),
-                initializer);
+            return parameter.SymbolName;
         }
 
         public struct RightExpressionGivenParameter
         {
-            public readonly TypeInformation TargetType;
-            public readonly SymbolInformation SymbolInformation;
+            public readonly ITypeInformation TargetType;
+            public readonly VariableInformation SymbolInformation;
 
             public RightExpressionGivenParameter(
-                TypeInformation targetType, SymbolInformation symbolinformation)
+                ITypeInformation targetType, VariableInformation symbolinformation)
             {
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;
@@ -225,7 +125,7 @@ namespace IL2C
 
             public override string ToString()
             {
-                return string.Format("{0} <-- {1}", this.TargetType.GetFullMemberName(), this.SymbolInformation);
+                return string.Format("{0} <-- {1}", this.TargetType.FriendlyName, this.SymbolInformation);
             }
         }
 
@@ -243,8 +143,8 @@ namespace IL2C
                     throw new InvalidProgramSequenceException(
                         "Invalid parameter type: Offset={0}, StackType={1}, ParameterType={2}",
                         offset,
-                        entry.SymbolInformation.TargetType.FullName,
-                        entry.TargetType.FullName);
+                        entry.SymbolInformation.TargetType.FriendlyName,
+                        entry.TargetType.FriendlyName);
                 }
                 return rightExpression;
             }));
@@ -282,6 +182,17 @@ namespace IL2C
         public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
         {
             return dict.TryGetValue(key, out var value) ? value : defaultValue;
+        }
+
+        public static U GetOrAdd<T, U>(this Dictionary<T, U> dict, T key, U value)
+        {
+            if (dict.TryGetValue(key, out var v) == false)
+            {
+                v = value;
+                dict.Add(key, v);
+            }
+
+            return v;
         }
 
         public static KeyValuePair<TKey, TValue> KeyValue<TKey, TValue>(TKey key, TValue value)

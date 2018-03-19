@@ -1047,7 +1047,7 @@ namespace IL2C
                 {
                     twSource.WriteLine(
                         "{0};",
-                        Utilities.GetStaticFieldPrototypeString(field, true, extractContext));
+                        field.GetCLanguagePrototype(true));
                 }
             }
 

@@ -3,6 +3,7 @@
 namespace IL2C.Metadata
 {
     public struct VariableInformation
+        : IOperandPrintable
     {
         public readonly int Index;
         public readonly string SymbolName;
@@ -45,5 +46,7 @@ namespace IL2C.Metadata
         {
             return string.Format("{0}: {1}", this.SymbolName, this.TargetType.UniqueName);
         }
+
+        string IOperandPrintable.PrintableString => this.SymbolName;
     }
 }

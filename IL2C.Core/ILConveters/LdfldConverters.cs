@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -13,22 +14,19 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldsfld;
 
         public override Func<IExtractContext, string[]> Apply(
-            FieldReference field, DecodeContext decodeContext)
+            IFieldInformation field, DecodeContext decodeContext)
         {
-            Debug.Assert(field.Resolve().IsStatic);
+            Debug.Assert(field.IsStatic);
 
             decodeContext.PrepareContext.RegisterStaticField(field);
 
-            var fieldName = field.GetFullMemberName();
-            var fqFieldName = fieldName.ManglingSymbolName();
-
-            var targetType = field.FieldType.GetStackableType();
+            var targetType = field.FieldType.StackableType;
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new [] { string.Format(
                 "{0} = {1}",
                 symbolName,
-                extractContext.GetRightExpression(targetType, field.FieldType, fqFieldName)) };
+                extractContext.GetRightExpression(targetType, field.FieldType, field.MangledName)) };
         }
     }
 
@@ -37,7 +35,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldfld;
 
         public override Func<IExtractContext, string[]> Apply(
-            FieldReference field, DecodeContext decodeContext)
+            IFieldInformation field, DecodeContext decodeContext)
         {
             var siReference = decodeContext.PopStack();
 

@@ -1,8 +1,8 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -28,13 +28,13 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            if (decodeContext.ReturnType.IsVoidType())
+            if (decodeContext.Method.ReturnType.IsVoidType)
             {
                 return _ => new [] { "return" };
             }
 
             var si = decodeContext.PopStack();
-            var returnType = decodeContext.ReturnType;
+            var returnType = decodeContext.Method.ReturnType;
 
             decodeContext.PrepareContext.RegisterType(returnType);
 
@@ -48,8 +48,8 @@ namespace IL2C.ILConveters
                     throw new InvalidProgramSequenceException(
                         "Invalid return operation: Offset={0}, StackType={1}, ReturnType={2}",
                         offset,
-                        si.TargetType.FullName,
-                        returnType.FullName);
+                        si.TargetType.FriendlyName,
+                        returnType.FriendlyName);
                 }
 
                 return new[] { string.Format(
@@ -66,7 +66,7 @@ namespace IL2C.ILConveters
                 string operand, DecodeContext decodeContext)
             {
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.Module.GetSafeStringType());
+                    decodeContext.Context.StringType);
                 var constStringName = decodeContext.PrepareContext
                     .RegisterConstString(operand);
 
@@ -88,7 +88,7 @@ namespace IL2C.ILConveters
                 DecodeContext decodeContext)
             {
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.Module.GetPseudoZeroType());
+                    decodeContext.Context.PseudoZeroType);
 
                 return _ => new[] { string.Format(
                     "{0} = NULL",
@@ -133,7 +133,7 @@ namespace IL2C.ILConveters
             public override OpCode OpCode => OpCodes.Castclass;
 
             public override Func<IExtractContext, string[]> Apply(
-                TypeReference operand, DecodeContext decodeContext)
+                ITypeInformation operand, DecodeContext decodeContext)
             {
                 var si = decodeContext.PopStack();
                 var symbolName = decodeContext.PushStack(operand);

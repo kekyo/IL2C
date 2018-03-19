@@ -109,21 +109,70 @@ namespace IL2C.Metadata
                          let sps = g
                             .OrderBy(sp => sp.Offset)
                             .Select(sp => new DebugInformation(
-                                paths.TryGetValue(sp.Document.Url, out var url) ? url : sp.Document.Url,
+                                paths.GetOrAdd(sp.Document.Url, sp.Document.Url),
                                 sp.StartLine,
                                 sp.StartColumn))
                             .ToArray()
                          where sps.Length >= 1
                          select new { g.Key, sps })
                         .ToDictionary(g => g.Key, g => g.sps);
-                    return new CodeStream(this.Definition.Body.Instructions
+
+                    var codeStream = new CodeStream();
+
+                    object translateOperand(object operand)
+                    {
+                        var inst = operand as Instruction;
+                        if (inst != null)
+                        {
+                            return codeStream[inst.Offset];
+                        }
+
+                        var parameter = operand as ParameterReference;
+                        if (parameter != null)
+                        {
+                            return this.Parameters[parameter.Index];
+                        }
+
+                        var local = operand as VariableReference;
+                        if (local != null)
+                        {
+                            return this.LocalVariables[local.Index];
+                        }
+
+                        var typeRef = operand as TypeReference;
+                        if (typeRef != null)
+                        {
+                            return this.Context.GetOrAddMember(typeRef, t => new TypeInformation(t, module));
+                        }
+
+                        var fieldRef = operand as FieldReference;
+                        if (fieldRef != null)
+                        {
+                            return this.Context.GetOrAddMember(fieldRef, f => new FieldInformation(f, module));
+                        }
+
+                        var methodRef = operand as MethodReference;
+                        if (methodRef != null)
+                        {
+                            return this.Context.GetOrAddMember(methodRef, m => new MethodInformation(m, module));
+                        }
+
+                        return operand;
+                    }
+
+                    foreach (var inst in this.Definition.Body.Instructions
                         .OrderBy(instruction => instruction.Offset)
                         .Select(instruction => new CodeInformation(
                             instruction.Offset,
                             instruction.OpCode,
                             instruction.Operand,
                             instruction.GetSize(),
-                            spd.TryGetValue(instruction.Offset, out var sps) ? sps : empty)));
+                            spd.TryGetValue(instruction.Offset, out var sps) ? sps : empty,
+                            translateOperand)))
+                    {
+                        codeStream.Add(inst.Offset, inst);
+                    }
+                    return codeStream;
                 });
             overloadIndex = Lazy.Create(() =>
                 {

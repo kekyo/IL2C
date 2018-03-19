@@ -102,10 +102,12 @@ namespace IL2C
                 method,
                 prepareContext);
 
+            //////////////////////////////////////////////////////////////////////////////
             // Important:
             //   It's core decoding sequence.
             //   The flow analysis can't predict by sequential path.
             //   So, it reorders by IL offset.
+
             var generators = decodeContext
                 .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
                 .SelectMany(dc =>
@@ -120,6 +122,8 @@ namespace IL2C
                 .OrderBy(ilb => ilb.UniqueCodeBlockIndex)
                 .ThenBy(ilb => ilb.Label.Offset)
                 .ToDictionary(ilb => ilb.Label.Offset, ilb => ilb.Generator);
+
+            //////////////////////////////////////////////////////////////////////////////
 
             var stacks = decodeContext
                 .ExtractStacks()

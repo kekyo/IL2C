@@ -22,6 +22,7 @@ namespace IL2C.Metadata
     internal abstract class MemberInformation<TReference, TDefinition>
         : MetadataInformation<TReference, TDefinition>
         , IMemberInformation
+        , IOperandPrintable
         where TReference : MemberReference
         where TDefinition : TReference
     {
@@ -84,5 +85,7 @@ namespace IL2C.Metadata
         {
             return string.Format("{0}: {1}", this.MemberTypeName, base.ToString());
         }
+
+        string IOperandPrintable.PrintableString => this.FriendlyName;
     }
 }

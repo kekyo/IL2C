@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Mono.Cecil;
-
 using IL2C.Metadata;
 
 namespace IL2C.Translators
@@ -11,7 +9,7 @@ namespace IL2C.Translators
         IAssemblyInformation Assembly { get; }
 
         string GetCLanguageTypeName(ITypeInformation type, TypeNameFlags flags = TypeNameFlags.Strict);
-        string GetRightExpression(ITypeInformation lhsType, SymbolInformation rhs);
+        string GetRightExpression(ITypeInformation lhsType, VariableInformation rhs);
         string GetRightExpression(ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression);
         IEnumerable<string> EnumerateRequiredIncludeFileNames();
         IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();

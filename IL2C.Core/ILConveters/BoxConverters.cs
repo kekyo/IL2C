@@ -1,6 +1,6 @@
 ﻿using System;
+using IL2C.Metadata;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
@@ -12,20 +12,20 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Box;
 
         public override Func<IExtractContext, string[]> Apply(
-            TypeReference operand, DecodeContext decodeContext)
+            ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            if (!si.TargetType.IsValueType || !si.TargetType.MemberEquals(operand))
+            if (!si.TargetType.IsValueType || !si.TargetType.Equals(operand))
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
                     decodeContext.Current.Offset,
-                    operand.FullName,
-                    si.TargetType.FullName);
+                    operand.FriendlyName,
+                    si.TargetType.FriendlyName);
             }
 
             var symbolName = decodeContext.PushStack(
-                decodeContext.Module.GetSafeObjectType());
+                decodeContext.Context.ObjectType);
 
             return _ =>
             {
@@ -33,7 +33,7 @@ namespace IL2C.ILConveters
                     "{0} = il2c_box(&{1}, il2c_typeof({2}))",
                     symbolName,
                     si.SymbolName,
-                    si.TargetType.GetFullMemberName().ManglingSymbolName()) };
+                    si.TargetType.MangledName) };
             };
         }
     }
@@ -43,34 +43,34 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Unbox_Any;
 
         public override Func<IExtractContext, string[]> Apply(
-            TypeReference operand, DecodeContext decodeContext)
+            ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
-            if (!si.TargetType.IsObjectType())
+            if (!si.TargetType.IsObjectType)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
                     decodeContext.Current.Offset,
-                    operand.FullName,
-                    si.TargetType.FullName);
+                    operand.FriendlyName,
+                    si.TargetType.FriendlyName);
             }
 
             var symbolName = decodeContext.PushStack(
-                operand.GetStackableType());
+                operand.StackableType);
 
             return extractContext =>
             {
                 var typeName = extractContext.GetCLanguageTypeName(operand);
                 var rhs = extractContext.GetRightExpression(
-                    operand.GetSafeObjectType(), si);
+                    decodeContext.Context.ObjectType, si);
 
                 return new[] { string.Format(
                     "{0} = *(({1}*)il2c_unbox({2}, il2c_typeof({3})))",
                     symbolName,
                     typeName,
                     rhs,
-                    operand.GetFullMemberName().ManglingSymbolName()) };
+                    operand.MangledName) };
             };
         }
     }

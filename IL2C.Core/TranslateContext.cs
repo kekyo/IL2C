@@ -221,7 +221,7 @@ namespace IL2C
             return this.GetCLanguageTypeName(type, flags);
         }
 
-        private string GetRightExpression(ITypeInformation lhsType, SymbolInformation rhs)
+        private string GetRightExpression(ITypeInformation lhsType, VariableInformation rhs)
         {
             if (lhsType.Equals(rhs.TargetType))
             {
@@ -267,10 +267,9 @@ namespace IL2C
                         rhs.SymbolName);
                 }
 
-                var lhsResolved = lhsType.Resolve();
-                if (lhsResolved.IsEnum)
+                if (lhsType.IsEnum)
                 {
-                    var lhsElementType = lhsResolved.Fields
+                    var lhsElementType = lhsType.Fields
                         .First(f => f.Name == "value__")
                         .FieldType;
                     if (lhsElementType.IsAssignableFrom(rhs.TargetType))
@@ -312,7 +311,7 @@ namespace IL2C
             return null;
         }
 
-        string IExtractContext.GetRightExpression(ITypeInformation lhsType, SymbolInformation rhs)
+        string IExtractContext.GetRightExpression(ITypeInformation lhsType, VariableInformation rhs)
         {
             return this.GetRightExpression(lhsType, rhs);
         }

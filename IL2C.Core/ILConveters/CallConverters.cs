@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Linq;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -12,28 +12,24 @@ namespace IL2C.ILConveters
     internal static class CallConverterUtilities
     {
         public static Func<IExtractContext, string[]> Apply(
-            MethodReference method, DecodeContext decodeContext)
+            IMethodInformation method, DecodeContext decodeContext)
         {
-            var parameters = method.GetSafeParameters();
-            var pairParameters = parameters
+            var pairParameters = method.Parameters
                 .Reverse()
                 .Select(parameter => new Utilities.RightExpressionGivenParameter(
-                    parameter.ParameterType, decodeContext.PopStack()))
+                    parameter.TargetType, decodeContext.PopStack()))
                 .Reverse()
                 .ToArray();
 
-            var methodName = method.GetFullMemberName(MethodNameTypes.Index);
-            var functionName = methodName.ManglingSymbolName();
             var offset = decodeContext.Current.Offset;
 
             // System.Object's constructor calls ignored.
-            var md = method.Resolve();
-            if (md.IsConstructor && md.DeclaringType.IsObjectType())
+            if (method.IsConstructor && method.DeclaringType.IsObjectType)
             {
                 return _ => new string[0];
             }
 
-            if (method.ReturnType.IsVoidType())
+            if (method.ReturnType.IsVoidType)
             {
                 return extractContext =>
                 {
@@ -43,15 +39,15 @@ namespace IL2C.ILConveters
                     {
                         string.Format(
                             "{0}({1})",
-                            functionName,
+                            method.MangledName,
                             parameterString)
                     };
                 };
             }
             else
             {
-                var targetType = method.ReturnType.GetStackableType();
-                var resultName = decodeContext.PushStack(targetType);
+                var resultName = decodeContext.PushStack(
+                    method.ReturnType.StackableType);
 
                 return extractContext =>
                 {
@@ -62,7 +58,7 @@ namespace IL2C.ILConveters
                         string.Format(
                             "{0} = {1}({2})",
                             resultName,
-                            functionName,
+                            method.MangledName,
                             parameterString)
                     };
                 };
@@ -75,7 +71,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Call;
 
         public override Func<IExtractContext, string[]> Apply(
-            MethodReference method, DecodeContext decodeContext)
+            IMethodInformation method, DecodeContext decodeContext)
         {
             return CallConverterUtilities.Apply(method, decodeContext);
         }
@@ -86,21 +82,19 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Callvirt;
 
         public override Func<IExtractContext, string[]> Apply(
-            MethodReference method, DecodeContext decodeContext)
+            IMethodInformation method, DecodeContext decodeContext)
         {
-            var md = method.Resolve();
-
-            if (md.IsStatic)
+            if (method.IsStatic)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid method token (static): Offset={0}, Method={1}",
                     decodeContext.Current.Offset,
-                    md.GetFullMemberName());
+                    method.FriendlyName);
             }
 
             // TODO: Support virtual method
 
-            return CallConverterUtilities.Apply(md, decodeContext);
+            return CallConverterUtilities.Apply(method, decodeContext);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace IL2C
                     declaredType.MemberTypeName);
                 tw.WriteLine(
                     "typedef enum {0}",
-                    declaredType.CLanguageName);
+                    declaredType.CLanguageDeclaration);
                 tw.WriteLine("{");
 
                 // Emit enum values
@@ -61,7 +61,7 @@ namespace IL2C
                     tw.WriteLine(
                         "{0}{1}_{2} = {3},",
                         indent,
-                        declaredType.CLanguageName,
+                        declaredType.CLanguageDeclaration,
                         field.Name,
                         field.ConstantValue);
                 }
@@ -120,7 +120,7 @@ namespace IL2C
                         .Select(field => new
                         {
                             field.Name,
-                            TypeName = field.FieldType.CLanguageName
+                            TypeName = field.FieldType.CLanguageDeclaration
                         });
 
                     return vptrs.Concat(thisFields);
@@ -159,7 +159,7 @@ namespace IL2C
                     declaredType.MemberTypeName);
                 tw.WriteLine(
                     "struct {0}",
-                    declaredType.CLanguageName);
+                    declaredType.CLanguageDeclaration);
                 tw.WriteLine("{");
 
                 // Emit vptr:
@@ -222,7 +222,7 @@ namespace IL2C
             {
                 tw.WriteLine(
                     "typedef struct {0} {0};",
-                    type.CLanguageName);
+                    type.CLanguageDeclaration);
             }
 
             // Output value type and object reference type.
@@ -268,13 +268,13 @@ namespace IL2C
                     tw.WriteLine(
                         "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1}* this__);",
                         type.MangledName,
-                        type.CLanguageName);
+                        type.CLanguageDeclaration);
                 }
 
                 tw.WriteLine(
                     "extern /* internalcall */ void* __{0}_IL2C_RuntimeCast__({1}* this__, IL2C_RUNTIME_TYPE_DECL* type);",
                     type.MangledName,
-                    type.CLanguageName);
+                    type.CLanguageDeclaration);
 
                 foreach (var method in type.GetCallableMethods()
                     .Where(predictMethod))
@@ -293,7 +293,7 @@ namespace IL2C
                         method.Parameters
                             .Select(parameter => string.Format(
                                 "/* {0} */ {1}",
-                                parameter.TargetType.CLanguageName,
+                                parameter.TargetType.CLanguageDeclaration,
                                 parameter.SymbolName)));
                     tw.WriteLine(
                         "#define {0}({1}) \\",
@@ -351,7 +351,7 @@ namespace IL2C
                 tw.WriteLine(
                     "{0}{1} {2}{3};",
                     indent,
-                    local.TargetType.CLanguageName,
+                    local.TargetType.CLanguageDeclaration,
                     local.SymbolName,
                     local.TargetType.IsValueType ? string.Empty : " = NULL");
             }
@@ -366,7 +366,7 @@ namespace IL2C
                 tw.WriteLine(
                     "{0}{1} {2}{3};",
                     indent,
-                    stack.TargetType.CLanguageName,
+                    stack.TargetType.CLanguageDeclaration,
                     stack.SymbolName,
                     stack.TargetType.IsValueType ? string.Empty : " = NULL");
             }
@@ -393,7 +393,7 @@ namespace IL2C
                     tw.WriteLine(
                         "{0}{0}{1}* p{2};",
                         indent,
-                        frameEntry.TargetType.CLanguageName,
+                        frameEntry.TargetType.CLanguageDeclaration,
                         frameEntry.SymbolName);
                 }
 
@@ -509,7 +509,7 @@ namespace IL2C
                 tw.WriteLine(
                     "{0}return ({1}){2};",
                     indent,
-                    method.ReturnType.CLanguageName,
+                    method.ReturnType.CLanguageDeclaration,
                     method.ReturnType.IsNumericPrimitive ? "0" : "NULL");
             }
 
@@ -541,7 +541,7 @@ namespace IL2C
                 tw.WriteLine(
                     "{0}return ({1}){2};",
                     indent,
-                    method.ReturnType.CLanguageName,
+                    method.ReturnType.CLanguageDeclaration,
                     method.ReturnType.IsNumericPrimitive ? "0" : "NULL");
             }
 
@@ -639,7 +639,7 @@ namespace IL2C
             tw.WriteLine(
                 "void* __{0}_IL2C_RuntimeCast__({1} this__, IL2C_RUNTIME_TYPE_DECL* type)",
                 declaredType.MangledName,
-                declaredType.CLanguageName);
+                declaredType.CLanguageDeclaration);
             tw.WriteLine("{");
 
             // RuntimeCast: this type.
@@ -680,19 +680,15 @@ namespace IL2C
                 "{0}// Delegate checking base types",
                 indent);
             tw.WriteLine(
-                "{0}return __{1}_IL2C_RuntimeCast__(({2})this__, type);",
+                "{0}return __{1}_IL2C_RuntimeCast__(({1}*)this__, type);",
                 indent,
-                declaredType.BaseType.MangledName,
-                extractContext.GetCLanguageTypeName(
-                    declaredType.BaseType,
-                    TypeNameFlags.ForcePointer));
+                declaredType.BaseType.MangledName);
             tw.WriteLine("}");
 
             // Write mark handler:
             var makrHandlerPrototype = string.Format(
-                "void __{0}_IL2C_MarkHandler__({1} this__)",
-                declaredType.MangledName,
-                extractContext.GetCLanguageTypeName(declaredType, TypeNameFlags.ForcePointer));
+                "void __{0}_IL2C_MarkHandler__({0}* this__)",
+                declaredType.MangledName);
 
             tw.WriteLine();
             tw.WriteLine("// GC's mark handler");
@@ -727,10 +723,9 @@ namespace IL2C
                         "{0}// Delegate checking base types",
                         indent);
                     tw.WriteLine(
-                        "{0}__{1}_IL2C_MarkHandler__(({2})this__);",
+                        "{0}__{1}_IL2C_MarkHandler__(({1}*)this__);",
                         indent,
-                        declaredType.BaseType.MangledName,
-                        extractContext.GetCLanguageTypeName(declaredType.BaseType));
+                        declaredType.BaseType.MangledName);
                 }
                 else
                 {
@@ -756,7 +751,7 @@ namespace IL2C
             tw.WriteLine(
                 "{0}sizeof({1}),",
                 indent,
-                declaredType.CLanguageName);
+                declaredType.CLanguageDeclaration);
             tw.WriteLine(
                 "{0}/* internalcall */ (IL2C_MARK_HANDLER)__{1}_IL2C_MarkHandler__,",
                 indent,

@@ -1,8 +1,8 @@
 ﻿using System;
-using IL2C.Metadata;
 
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -61,14 +61,13 @@ namespace IL2C.ILConveters
 
             return extractContext =>
             {
-                var typeName = extractContext.GetCLanguageTypeName(operand);
                 var rhs = extractContext.GetRightExpression(
                     decodeContext.PrepareContext.MetadataContext.ObjectType, si);
 
                 return new[] { string.Format(
                     "{0} = *(({1}*)il2c_unbox({2}, il2c_typeof({3})))",
                     symbolName,
-                    typeName,
+                    operand.CLanguageDeclaration,
                     rhs,
                     operand.MangledName) };
             };

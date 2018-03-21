@@ -342,11 +342,11 @@ namespace IL2C.Metadata
                 ", ",
                 this.Parameters.Select(parameter => string.Format(
                     "{0} {1}",
-                    parameter.TargetType.CLanguageName,
+                    parameter.TargetType.CLanguageDeclaration,
                     parameter.SymbolName)));
 
             var returnTypeName =
-                this.ReturnType.CLanguageName;
+                this.ReturnType.CLanguageDeclaration;
 
             return string.Format(
                 decorate ? "{0} __{1}__({2})" : "{0} {1}({2})",
@@ -366,11 +366,11 @@ namespace IL2C.Metadata
                     ", ",
                     this.Parameters.Select(parameter => string.Format(
                         "{0} {1}",
-                        parameter.TargetType.CLanguageName,
+                        parameter.TargetType.CLanguageDeclaration,
                         parameter.SymbolName)));
 
                 var returnTypeName =
-                    this.ReturnType.CLanguageName;
+                    this.ReturnType.CLanguageDeclaration;
 
                 return string.Format(
                     "{0} (*{1})({2})",

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-
-using Mono.Cecil;
 
 using IL2C.Translators;
 using IL2C.Metadata;
@@ -164,67 +161,7 @@ namespace IL2C
             return staticFields.Values;
         }
 
-        private string GetCLanguageTypeName(
-            ITypeInformation type, TypeNameFlags flags = TypeNameFlags.Strict)
-        {
-            var prefix = ((flags == TypeNameFlags.DereferencedWithStructPrefix)
-                || (flags == TypeNameFlags.ForcePointerWithStructPrefix))
-                ? "struct "
-                : string.Empty;
-            var postfix = ((flags == TypeNameFlags.ForcePointer)
-                || (flags == TypeNameFlags.ForcePointerWithStructPrefix))
-                ? "*"
-                : string.Empty;
-
-            if (predefinedCTypeNames.TryGetValue(type.UniqueName, out var cTypeName))
-            {
-                // Predefined type name must not applies prefix.
-                return cTypeName + postfix;
-            }
-
-            if (type.IsByReference || type.IsPointer)
-            {
-                var dereferencedType = type
-                    .ElementType;
-                var dereferencedTypeName = this.GetCLanguageTypeName(
-                    dereferencedType);
-
-                if ((flags == TypeNameFlags.Dereferenced)
-                    || (flags == TypeNameFlags.DereferencedWithStructPrefix))
-                {
-                    return prefix + dereferencedTypeName;
-                }
-                else
-                {
-                    return prefix + dereferencedTypeName + "*";
-                }
-            }
-
-            var mangledName = type.MangledName;
-            if (!type.IsValueType)
-            {
-                if ((flags == TypeNameFlags.Dereferenced)
-                    || (flags == TypeNameFlags.DereferencedWithStructPrefix))
-                {
-                    return prefix + mangledName;
-                }
-                else
-                {
-                    return prefix + mangledName + "*";
-                }
-            }
-            else
-            {
-                return prefix + mangledName + postfix;
-            }
-        }
-
-        string IExtractContext.GetCLanguageTypeName(ITypeInformation type, TypeNameFlags flags)
-        {
-            return this.GetCLanguageTypeName(type, flags);
-        }
-
-        private string GetRightExpression(ITypeInformation lhsType, VariableInformation rhs)
+        private string GetRightExpression(ITypeInformation lhsType, IVariableInformation rhs)
         {
             if (lhsType.Equals(rhs.TargetType))
             {
@@ -241,15 +178,15 @@ namespace IL2C
                 {
                     return string.Format(
                         "il2c_cast_to_interface({0}, {1}, {2})",
-                        this.GetCLanguageTypeName(lhsType, TypeNameFlags.Dereferenced),
-                        this.GetCLanguageTypeName(rhs.TargetType, TypeNameFlags.Dereferenced),
+                        lhsType.CLanguageDeclaration,
+                        rhs.TargetType.CLanguageDeclaration,
                         rhs.SymbolName);
                 }
                 else
                 {
                     return string.Format(
                         "({0}){1}",
-                        this.GetCLanguageTypeName(lhsType),
+                        lhsType.CLanguageDeclaration,
                         rhs.SymbolName);
                 }
             }
@@ -260,7 +197,7 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0}){1}",
-                        this.GetCLanguageTypeName(lhsType),
+                        lhsType.CLanguageDeclaration,
                         rhs.SymbolName);
                 }
                 else if (lhsType.IsBooleanType)
@@ -279,7 +216,7 @@ namespace IL2C
                     {
                         return String.Format(
                             "({0}){1}",
-                            this.GetCLanguageTypeName(lhsType),
+                            lhsType.CLanguageDeclaration,
                             rhs.SymbolName);
                     }
                 }
@@ -299,22 +236,22 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0}){1}",
-                        this.GetCLanguageTypeName(lhsType),
+                        lhsType.CLanguageDeclaration,
                         rhs.SymbolName);
                 }
             }
-            else if (!lhsType.IsValueType && rhs.TargetType.IsPseudoZeroType)
+            else if (!lhsType.IsValueType && rhs.TargetType.IsIntPtrType)
             {
                 return String.Format(
                     "({0}){1}",
-                    this.GetCLanguageTypeName(lhsType),
+                    lhsType.CLanguageDeclaration,
                     rhs.SymbolName);
             }
 
             return null;
         }
 
-        string IExtractContext.GetRightExpression(ITypeInformation lhsType, VariableInformation rhs)
+        string IExtractContext.GetRightExpression(ITypeInformation lhsType, IVariableInformation rhs)
         {
             return this.GetRightExpression(lhsType, rhs);
         }
@@ -333,7 +270,7 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0})({1})",
-                        this.GetCLanguageTypeName(lhsType),
+                        lhsType.CLanguageDeclaration,
                         rhsExpression);
                 }
                 else if (lhsType.IsBooleanType)
@@ -358,7 +295,7 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0}){1}",
-                        this.GetCLanguageTypeName(lhsType),
+                        lhsType.CLanguageDeclaration,
                         rhsExpression);
                 }
             }

@@ -88,7 +88,7 @@ namespace IL2C.ILConveters
                 DecodeContext decodeContext)
             {
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.PrepareContext.MetadataContext.PseudoZeroType);
+                    decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
                 return _ => new[] { string.Format(
                     "{0} = NULL",
@@ -143,13 +143,10 @@ namespace IL2C.ILConveters
                 {
                     return extractContext =>
                     {
-                        var operandTypeName = extractContext.GetCLanguageTypeName(
-                            operand);
-
                         return new[] { string.Format(
                             "{0} = ({1}){2}",
                             symbolName,
-                            operandTypeName,
+                            operand.CLanguageDeclaration,
                             si.SymbolName) };
                     };
                 }
@@ -157,15 +154,11 @@ namespace IL2C.ILConveters
                 {
                     return extractContext =>
                     {
-                        var operandDereferencedTypeName = extractContext.GetCLanguageTypeName(
-                            operand,
-                            TypeNameFlags.Dereferenced);
-
                         return new[] { string.Format(
                             "{0} = il2c_runtime_cast({1}, {2})",
                             symbolName,
                             si.SymbolName,
-                            operandDereferencedTypeName) };
+                            operand.MangledName) };
                     };
                 }
             }

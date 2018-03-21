@@ -67,7 +67,7 @@ namespace IL2C.Metadata
 
             return string.Format(
                 "{0} {1}{2}",
-                this.FieldType.CLanguageName,
+                this.FieldType.CLanguageDeclaration,
                 this.MangledName,
                 initializer);
         }

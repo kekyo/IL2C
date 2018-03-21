@@ -9,8 +9,7 @@ namespace IL2C.Translators
         IMetadataContext MetadataContext { get; }
         IAssemblyInformation Assembly { get; }
 
-        string GetCLanguageTypeName(ITypeInformation type, TypeNameFlags flags = TypeNameFlags.Strict);
-        string GetRightExpression(ITypeInformation lhsType, VariableInformation rhs);
+        string GetRightExpression(ITypeInformation lhsType, IVariableInformation rhs);
         string GetRightExpression(ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression);
         IEnumerable<string> EnumerateRequiredIncludeFileNames();
         IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();

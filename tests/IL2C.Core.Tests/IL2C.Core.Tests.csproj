@@ -22,6 +22,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ConverterTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ConverterTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
     <packagereference Include="NUnit3TestAdapter" Version="3.9.0" />

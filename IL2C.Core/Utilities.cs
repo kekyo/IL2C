@@ -93,7 +93,7 @@ namespace IL2C
             return sb.ToString();
         }
 
-        public static string GetMarshaledInExpression(this VariableInformation parameter)
+        public static string GetMarshaledInExpression(this IVariableInformation parameter)
         {
             if (parameter.TargetType.IsStringType)
             {

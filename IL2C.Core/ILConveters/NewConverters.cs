@@ -29,12 +29,10 @@ namespace IL2C.ILConveters
 
             return extractContext =>
             {
-                var typeName = extractContext.GetCLanguageTypeName(type);
-
                 return new[] { string.Format(
                     "memset({0}, 0x00, sizeof({1}))",
                     si.SymbolName,
-                    typeName) };
+                    type.MangledName) };
             };
         }
     }
@@ -81,8 +79,7 @@ namespace IL2C.ILConveters
                 // newobj opcode can handle value type with parameter applied constructor.
                 if (type.IsValueType)
                 {
-                    var typeName = extractContext.GetCLanguageTypeName(
-                        type);
+                    var typeName = type.CLanguageDeclaration;
                     // If constructor's arguments greater than or equal 2 (this and others)
                     if (pairParameters.Count >= 2)
                     {
@@ -115,15 +112,12 @@ namespace IL2C.ILConveters
                 // Object reference types.
                 else
                 {
-                    var dereferencedTypeName = extractContext.GetCLanguageTypeName(
-                        type, TypeNameFlags.Dereferenced);
-
                     var get = new[]
                     {
                         string.Format(
                             "{0} = il2c_get_uninitialized_object(il2c_typeof({1}))",
                             thisSymbolName,
-                            dereferencedTypeName)
+                            type.MangledName)
                     };
 
                     // Setup vptr from vtables.
@@ -133,7 +127,7 @@ namespace IL2C.ILConveters
                         string.Format(
                             "{0}->vptr0__ = &__{1}_VTABLE__",
                             thisSymbolName,
-                            dereferencedTypeName)
+                            type.MangledName)
                     }.Concat(type.InterfaceTypes.Select(interfaceType =>
                     {
                         // Interface's vptr:
@@ -143,7 +137,7 @@ namespace IL2C.ILConveters
                             "{0}->vptr_{1}__ = &__{2}_{1}_VTABLE__",
                             thisSymbolName,
                             interfaceType.MangledName,
-                            dereferencedTypeName);
+                            type.MangledName);
                     }));
 
                     var ctor = new[]
@@ -151,12 +145,12 @@ namespace IL2C.ILConveters
                         (overloadIndex >= 1)
                             ? string.Format(
                                 "{0}__ctor_{1}({2})",
-                                dereferencedTypeName,
+                                type.MangledName,
                                 overloadIndex,
                                 parameterString)
                             : string.Format(
                                 "{0}__ctor({1})",
-                                dereferencedTypeName,
+                                type.MangledName,
                                 parameterString)
                     };
 

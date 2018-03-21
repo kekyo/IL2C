@@ -26,9 +26,6 @@ namespace IL2C.Metadata
         bool IsPrimitive { get; }
         bool IsNumericPrimitive { get; }
 
-        [Obsolete("Will remove")]
-        bool IsPseudoZeroType { get; }
-
         bool IsVoidType { get; }
         bool IsObjectType { get; }
         bool IsValueTypeType { get; }
@@ -59,7 +56,7 @@ namespace IL2C.Metadata
         IMethodInformation[] OverridedMethods { get; }
         IMethodInformation[] VirtualMethods { get; }
 
-        string CLanguageName { get; }
+        string CLanguageDeclaration { get; }
 
         bool IsAssignableFrom(ITypeInformation rhs);
 
@@ -193,15 +190,6 @@ namespace IL2C.Metadata
         public bool IsStringType => this.Equals(this.Context.StringType);
         public bool IsBooleanType => this.Equals(this.Context.BooleanType);
 
-        [Obsolete("Will remove")]
-        public bool IsPseudoZeroType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public ITypeInformation BaseType => baseType.Value;
         public ITypeInformation ElementType => elementType.Value;
         public ITypeInformation[] InterfaceTypes => interfaceTypes.Value;
@@ -213,7 +201,7 @@ namespace IL2C.Metadata
         public IMethodInformation[] OverridedMethods => overridedMethods.Value;
         public IMethodInformation[] VirtualMethods => virtualMethods.Value;
 
-        public string CLanguageName =>
+        public string CLanguageDeclaration =>
             (!this.Member.IsValueType || this.Member.IsByReference || this.Member.IsPointer)
                 ? string.Format("{0}*", this.MangledName)
                 : this.MangledName;

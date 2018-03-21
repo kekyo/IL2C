@@ -28,7 +28,7 @@ namespace IL2C.Translators
             {
             }
 
-            public string GetOrAdd(ITypeInformation targetType)
+            public string GetOrAdd(ITypeInformation targetType, IMethodInformation method)
             {
                 var index = typedStackInformation
                     .FindIndex(si => si.TargetType == targetType);
@@ -45,6 +45,7 @@ namespace IL2C.Translators
 
                 selectedStackInformation = typedStackInformation.Count;
                 var stackInformation = new VariableInformation(
+                    method,
                     stackPointer,
                     symbolName,
                     targetType);
@@ -87,13 +88,11 @@ namespace IL2C.Translators
         #endregion
 
         #region Fields
-        public readonly IMetadataContext Context;
         public readonly IMethodInformation Method;
         public readonly IPrepareContext PrepareContext;
 
-        private readonly ICodeStream instructions;
         private int nextOffset = -1;
-        private CodeInformation? current;
+        private ICodeInformation currentCode;
 
         private int decodingPathNumber = 0;
         private readonly Dictionary<int, StackSnapshot> stackSnapshortsAtOffset =
@@ -102,22 +101,19 @@ namespace IL2C.Translators
         private readonly List<StackInformationHolder> stackList =
             new List<StackInformationHolder>();
         private int stackPointer = -1;
-        private readonly Dictionary<int, CodeInformation> labelNames = 
-            new Dictionary<int, CodeInformation>();
+        private readonly Dictionary<int, ICodeInformation> labelNames = 
+            new Dictionary<int, ICodeInformation>();
         private readonly Queue<StackSnapshot> pathRemains =
             new Queue<StackSnapshot>();
         #endregion
 
         public DecodeContext(
-            IMetadataContext context,
             IMethodInformation method,
             IPrepareContext prepareContext)
         {
             Debug.Assert(method.HasBody && (method.CodeStream.Count >= 1));
 
-            this.Context = context;
             this.Method = method;
-
             this.PrepareContext = prepareContext;
 
             // First valid process is TryDequeueNextPath.
@@ -130,27 +126,27 @@ namespace IL2C.Translators
             // Finish if current position already decoded.
             if (stackSnapshortsAtOffset.TryGetValue(nextOffset, out var stackSnapshot))
             {
-                current = null;
+                currentCode = null;
                 return false;
             }
 
             stackSnapshot = new StackSnapshot(decodingPathNumber, stackPointer, stackList);
             stackSnapshortsAtOffset.Add(nextOffset, stackSnapshot);
 
-            if (instructions.TryGetValue(nextOffset, out var instruction) == false)
+            if (this.Method.CodeStream.TryGetValue(nextOffset, out var codeInformation) == false)
             {
                 throw new InvalidProgramSequenceException(
                     "End of method body reached: Method={0}",
                     this.Method.FriendlyName);
             }
-            current = instruction;
+            currentCode = codeInformation;
 
-            nextOffset = instruction.Offset + instruction.Size;
+            nextOffset = codeInformation.Offset + codeInformation.Size;
 
             return true;
         }
 
-        public CodeInformation Current => current.Value;
+        public ICodeInformation CurrentCode => currentCode;
 
         public int CalculateByRelativeOffset(int offsetValue)
         {
@@ -163,13 +159,13 @@ namespace IL2C.Translators
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            if (instructions.Contains(newOffset) == false)
+            if (this.Method.CodeStream.Contains(newOffset) == false)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid branch target: Method={0}, Target={1}, CurrentOffset={2}",
                     this.Method.FriendlyName,
                     newOffset,
-                    this.Current.Offset);
+                    this.CurrentCode.Offset);
             }
 
             nextOffset = newOffset;
@@ -207,7 +203,7 @@ namespace IL2C.Translators
 
             stackPointer++;
 
-            return stackInformationHolder.GetOrAdd(targetType);
+            return stackInformationHolder.GetOrAdd(targetType, this.Method);
         }
 
         public VariableInformation PopStack()
@@ -246,7 +242,7 @@ namespace IL2C.Translators
             if (labelNames.TryGetValue(
                 targetOffset, out var codeInformation) == false)
             {
-                codeInformation = current.Value;
+                codeInformation = currentCode;
                 labelNames.Add(targetOffset, codeInformation);
             }
 
@@ -290,7 +286,8 @@ namespace IL2C.Translators
                     index++)
                 {
                     stackList[index].GetOrAdd(
-                        beforeBranchStackSnapshot.StackInformations[index].TargetType);
+                        beforeBranchStackSnapshot.StackInformations[index].TargetType,
+                        this.Method);
                 }
                 stackPointer = beforeBranchStackSnapshot.StackInformations.Length;
 
@@ -309,7 +306,7 @@ namespace IL2C.Translators
                 .SelectMany(stackInformations => stackInformations.ExtractStacks());
         }
 
-        public IReadOnlyDictionary<int, CodeInformation> ExtractLabelNames()
+        public IReadOnlyDictionary<int, ICodeInformation> ExtractLabelNames()
         {
             return labelNames;
         }

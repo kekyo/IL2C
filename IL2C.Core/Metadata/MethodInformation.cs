@@ -32,18 +32,19 @@ namespace IL2C.Metadata
         bool IsSealed { get; }
         bool IsNewSlot { get; }
         bool IsExtern { get; }
+        bool HasThis { get; }
         bool HasBody { get; }
 
         bool IsCallableMethod { get; }
 
         ITypeInformation ReturnType { get; }
-        VariableInformation[] Parameters { get; }
-        VariableInformation[] LocalVariables { get; }
+        IVariableInformation[] Parameters { get; }
+        IVariableInformation[] LocalVariables { get; }
         ICodeStream CodeStream { get; }
         int OverloadIndex { get; }
 
         string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full);
-        VariableInformation[] GetParameters(ITypeInformation thisType);
+        IVariableInformation[] GetParameters(ITypeInformation thisType);
 
         PInvokeInfo PInvokeInfo { get; }
 
@@ -63,7 +64,6 @@ namespace IL2C.Metadata
         private readonly Lazy<VariableInformation[]> variables;
         private readonly Lazy<CodeStream> codeStreams;
         private readonly Lazy<int> overloadIndex;
-        private readonly Lazy<IReadOnlyDictionary<int, Instruction>> body;
 
         public MethodInformation(MethodReference method, ModuleInformation module)
             : base(method, module)
@@ -80,6 +80,7 @@ namespace IL2C.Metadata
                     .ToArray());
             variables = Lazy.Create(() => this.Definition.Body.Variables
                 .Select(variable => new VariableInformation(
+                    this,
                     variable.Index,
                     this.Definition.Body.Method.DebugInformation.TryGetName(variable, out var name)
                         ? name
@@ -201,6 +202,7 @@ namespace IL2C.Metadata
         private VariableInformation CreateThisParameterInformation(ITypeInformation thisType)
         {
             return new VariableInformation(
+                this,
                 0,
                 "this__",
                 thisType);
@@ -209,6 +211,7 @@ namespace IL2C.Metadata
         private VariableInformation ToParameterInformation(ParameterReference parameter)
         {
             return new VariableInformation(
+                this,
                 parameter.Index,
                 parameter.Name,
                 this.Context.GetOrAddMember(
@@ -240,6 +243,7 @@ namespace IL2C.Metadata
         public bool IsNewSlot => this.Definition.IsNewSlot;
         public bool IsExtern =>
             this.Definition.IsPInvokeImpl || this.Definition.IsInternalCall;
+        public bool HasThis => this.Definition.HasThis;
         public bool HasBody => this.Definition.HasBody;
 
         public bool IsCallableMethod
@@ -265,8 +269,8 @@ namespace IL2C.Metadata
         }
 
         public ITypeInformation ReturnType => returnType.Value;
-        public VariableInformation[] Parameters => parameters.Value;
-        public VariableInformation[] LocalVariables => variables.Value;
+        public IVariableInformation[] Parameters => parameters.Value;
+        public IVariableInformation[] LocalVariables => variables.Value;
         public ICodeStream CodeStream => codeStreams.Value;
         public int OverloadIndex => overloadIndex.Value;
 
@@ -321,7 +325,7 @@ namespace IL2C.Metadata
             return Mangled(type) ? ToMangledName(name) : name;
         }
 
-        public VariableInformation[] GetParameters(ITypeInformation thisType)
+        public IVariableInformation[] GetParameters(ITypeInformation thisType)
         {
             Debug.Assert(this.Member.HasThis);
 

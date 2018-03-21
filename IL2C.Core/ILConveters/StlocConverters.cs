@@ -1,8 +1,8 @@
 ﻿using System;
-using IL2C.Metadata;
-using Mono.Cecil;
+
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -16,7 +16,7 @@ namespace IL2C.ILConveters
         {
             var si = decodeContext.PopStack();
 
-            var offset = decodeContext.Current.Offset;
+            var offset = decodeContext.CurrentCode.Offset;
 
             return extractContext =>
             {
@@ -47,7 +47,7 @@ namespace IL2C.ILConveters
         }
 
         public static Func<IExtractContext, string[]> Apply(
-            VariableReference localVariable,
+            IVariableInformation localVariable,
             DecodeContext decodeContext)
         {
             var local = decodeContext.Method.LocalVariables[localVariable.Index];
@@ -100,7 +100,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Stloc_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            VariableInformation operand, DecodeContext decodeContext)
+            IVariableInformation operand, DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(operand, decodeContext);
         }

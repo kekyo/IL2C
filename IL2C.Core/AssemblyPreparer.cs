@@ -18,9 +18,9 @@ namespace IL2C
         {
             public readonly Label Label;
             public readonly ILConverter ILConverter;
-            public readonly CodeInformation Code;
+            public readonly ICodeInformation Code;
 
-            public ILBody(Label label, ILConverter ilc, CodeInformation code)
+            public ILBody(Label label, ILConverter ilc, ICodeInformation code)
             {
                 this.Label = label;
                 this.ILConverter = ilc;
@@ -39,7 +39,7 @@ namespace IL2C
                     break;
                 }
 
-                var code = decodeContext.Current;
+                var code = decodeContext.CurrentCode;
                 if (Utilities.TryGetILConverter(code.OpCode, out var ilc) == false)
                 {
                     throw new InvalidProgramSequenceException(
@@ -61,10 +61,10 @@ namespace IL2C
         private static readonly SequencePoint[] empty = new SequencePoint[0];
 
         private static PreparedMethodInformation PrepareMethodBody(
-            IMetadataContext metadataContext,
             IPrepareContext prepareContext,
             IMethodInformation method)
         {
+            // TODO: move into MethodInformation
             var localVariables = method.LocalVariables
                 // If found non named local variable, force named "local[n]__"
                 .GroupBy(variable => variable.SymbolName)
@@ -74,12 +74,14 @@ namespace IL2C
                     var list = g.ToArray();
                     return (list.Length >= 2)
                         ? list.Select((variable, index) => new VariableInformation(
+                            method,
                             variable.Index,
-                            string.Format("{0}{1}__", g.Key, index),
+                            string.Format("{0}{1}", g.Key, index),
                             variable.TargetType))
                         : new[] { new VariableInformation(
+                            method,
                             list[0].Index,
-                            string.Format("{0}__", g.Key),
+                            string.Format("{0}", g.Key),
                             list[0].TargetType) };
                 })
                 .OrderBy(e => e.Index)
@@ -98,7 +100,6 @@ namespace IL2C
             }
 
             var decodeContext = new DecodeContext(
-                metadataContext,
                 method,
                 prepareContext);
 
@@ -140,7 +141,6 @@ namespace IL2C
         }
 
         private static PreparedMethodInformation PrepareMethod(
-            IMetadataContext metadataContext,
             IPrepareContext prepareContext,
             IMethodInformation method)
         {
@@ -195,13 +195,11 @@ namespace IL2C
             Debug.Assert(method.HasBody);
 
             return PrepareMethodBody(
-                metadataContext,
                 prepareContext,
                 method);
         }
 
         internal static PreparedMethodInformations Prepare(
-            IMetadataContext metadataContext,
             TranslateContext translateContext,
             Func<IMethodInformation, bool> predict)
         {
@@ -234,7 +232,7 @@ namespace IL2C
                  where predict(method) &&
                     // Exclude delegate's constructor
                     (!method.IsConstructor || !method.DeclaringType.IsDelegate)
-                 let preparedMethod = PrepareMethod(metadataContext, prepareContext, method)
+                 let preparedMethod = PrepareMethod(prepareContext, method)
                  where preparedMethod != null
                  select preparedMethod)
                 .ToDictionary(

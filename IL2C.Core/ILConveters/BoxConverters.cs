@@ -19,13 +19,13 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                    decodeContext.Current.Offset,
+                    decodeContext.CurrentCode.Offset,
                     operand.FriendlyName,
                     si.TargetType.FriendlyName);
             }
 
             var symbolName = decodeContext.PushStack(
-                decodeContext.Context.ObjectType);
+                decodeContext.PrepareContext.MetadataContext.ObjectType);
 
             return _ =>
             {
@@ -51,7 +51,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                    decodeContext.Current.Offset,
+                    decodeContext.CurrentCode.Offset,
                     operand.FriendlyName,
                     si.TargetType.FriendlyName);
             }
@@ -63,7 +63,7 @@ namespace IL2C.ILConveters
             {
                 var typeName = extractContext.GetCLanguageTypeName(operand);
                 var rhs = extractContext.GetRightExpression(
-                    decodeContext.Context.ObjectType, si);
+                    decodeContext.PrepareContext.MetadataContext.ObjectType, si);
 
                 return new[] { string.Format(
                     "{0} = *(({1}*)il2c_unbox({2}, il2c_typeof({3})))",

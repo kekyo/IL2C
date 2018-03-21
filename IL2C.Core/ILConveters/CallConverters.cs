@@ -21,7 +21,7 @@ namespace IL2C.ILConveters
                 .Reverse()
                 .ToArray();
 
-            var offset = decodeContext.Current.Offset;
+            var offset = decodeContext.CurrentCode.Offset;
 
             // System.Object's constructor calls ignored.
             if (method.IsConstructor && method.DeclaringType.IsObjectType)
@@ -88,7 +88,7 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid method token (static): Offset={0}, Method={1}",
-                    decodeContext.Current.Offset,
+                    decodeContext.CurrentCode.Offset,
                     method.FriendlyName);
             }
 

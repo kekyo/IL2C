@@ -42,28 +42,28 @@ namespace IL2C.ILConveters
             var oper = "->";
             if (siReference.TargetType.IsByReference)
             {
-                var dereferencedType = siReference.TargetType.GetElementType();
+                var dereferencedType = siReference.TargetType.ElementType;
                 if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid managed reference: Offset={0}, StackType={1}, Name={2}",
-                        decodeContext.Current.Offset,
-                        siReference.TargetType.FullName,
-                        field.GetFullMemberName());
+                        decodeContext.CurrentCode.Offset,
+                        siReference.TargetType.FriendlyName,
+                        field.FriendlyName);
                 }
             }
             else if (!siReference.TargetType.IsValueType)
             {
-                Debug.Assert(siReference.TargetType.Resolve().IsClass
-                    || siReference.TargetType.Resolve().IsInterface);
+                Debug.Assert(siReference.TargetType.IsClass
+                    || siReference.TargetType.IsInterface);
 
                 if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid object reference: Offset={0}, StackType={1}, Name={2}",
-                        decodeContext.Current.Offset,
-                        siReference.TargetType.FullName,
-                        field.GetFullMemberName());
+                        decodeContext.CurrentCode.Offset,
+                        siReference.TargetType.FriendlyName,
+                        field.FriendlyName);
                 }
             }
             else if (!siReference.TargetType.IsPrimitive)
@@ -74,9 +74,9 @@ namespace IL2C.ILConveters
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid managed reference: Offset={0}, StackType={1}, Name={2}",
-                        decodeContext.Current.Offset,
-                        siReference.TargetType.FullName,
-                        field.GetFullMemberName());
+                        decodeContext.CurrentCode.Offset,
+                        siReference.TargetType.FriendlyName,
+                        field.FriendlyName);
                 }
 
                 oper = ".";
@@ -85,14 +85,14 @@ namespace IL2C.ILConveters
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Offset={0}, StackType={1}",
-                    decodeContext.Current.Offset,
-                    siReference.TargetType.FullName);
+                    decodeContext.CurrentCode.Offset,
+                    siReference.TargetType.FriendlyName);
             }
 
-            var targetType = field.FieldType.GetStackableType();
+            var targetType = field.FieldType.StackableType;
             var resultName = decodeContext.PushStack(targetType);
 
-            var offset = decodeContext.Current.Offset;
+            var offset = decodeContext.CurrentCode.Offset;
 
             return extractContext =>
             {
@@ -105,8 +105,8 @@ namespace IL2C.ILConveters
                     throw new InvalidProgramSequenceException(
                         "Invalid load operation: Offset={0}, StackType={1}, FieldType={2}",
                         offset,
-                        targetType.FullName,
-                        field.FieldType.FullName);
+                        targetType.FriendlyName,
+                        field.FieldType.FriendlyName);
                 }
 
                 return new[] { string.Format(

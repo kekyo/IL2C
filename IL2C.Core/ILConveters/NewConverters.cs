@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConveters
 {
@@ -13,16 +13,16 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Initobj;
 
         public override Func<IExtractContext, string[]> Apply(
-            TypeReference type, DecodeContext decodeContext)
+            ITypeInformation type, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
             if (si.TargetType.IsByReference == false)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                    decodeContext.Current.Offset,
-                    type.FullName,
-                    si.TargetType.FullName);
+                    decodeContext.CurrentCode.Offset,
+                    type.FriendlyName,
+                    si.TargetType.FriendlyName);
             }
 
             decodeContext.PrepareContext.RegisterIncludeFile("string.h");
@@ -44,34 +44,34 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Newobj;
 
         public override Func<IExtractContext, string[]> Apply(
-            MethodReference method, DecodeContext decodeContext)
+            IMethodInformation method, DecodeContext decodeContext)
         {
-            var md = method.Resolve();
-            if (!md.IsConstructor)
+            if (!method.IsConstructor)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid new object constructor: Offset={0}, Method={1}",
-                    decodeContext.Current.Offset,
-                    md.GetFullMemberName());
+                    decodeContext.CurrentCode.Offset,
+                    method.FriendlyName);
             }
 
-            var pairParameters = md.Parameters
+            var pairParameters = method.Parameters
                 .Reverse()
                 .Select(parameter => new Utilities.RightExpressionGivenParameter(
-                    parameter.ParameterType, decodeContext.PopStack()))
+                    parameter.TargetType, decodeContext.PopStack()))
                 .Reverse()
                 .ToList();
-            var overloadIndex = method.GetMethodOverloadIndex();
 
-            var type = md.DeclaringType;
+            var overloadIndex = method.OverloadIndex;
+            var type = method.DeclaringType;
             var thisSymbolName = decodeContext.PushStack(type);
 
             // Insert this reference.
             pairParameters.Insert(0,
                 new Utilities.RightExpressionGivenParameter(
-                    type, new SymbolInformation(thisSymbolName, type)));
+                    type,
+                    new VariableInformation(method, 0, thisSymbolName, type)));
 
-            var offset = decodeContext.Current.Offset;
+            var offset = decodeContext.CurrentCode.Offset;
 
             return extractContext =>
             {
@@ -134,17 +134,15 @@ namespace IL2C.ILConveters
                             "{0}->vptr0__ = &__{1}_VTABLE__",
                             thisSymbolName,
                             dereferencedTypeName)
-                    }.Concat(type.Interfaces.Select(interfaceImpl =>
+                    }.Concat(type.InterfaceTypes.Select(interfaceType =>
                     {
                         // Interface's vptr:
                         //   These are unique tables by pair of instance type and interface type.
                         //   Because vtable has function pointers from unique adjustor thunk by instance type layout offset.
-                        var tn = extractContext.GetCLanguageTypeName(
-                            interfaceImpl.InterfaceType, TypeNameFlags.Dereferenced);
                         return string.Format(
                             "{0}->vptr_{1}__ = &__{2}_{1}_VTABLE__",
                             thisSymbolName,
-                            tn,
+                            interfaceType.MangledName,
                             dereferencedTypeName);
                     }));
 

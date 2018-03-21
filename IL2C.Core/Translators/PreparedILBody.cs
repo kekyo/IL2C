@@ -9,7 +9,7 @@ namespace IL2C.Translators
         public readonly Label Label;
         internal readonly Func<IExtractContext, string[]> Generator;
         public readonly int UniqueCodeBlockIndex;
-        public readonly CodeInformation Code;
+        public readonly ICodeInformation Code;
 
         private readonly int decodingPathNumber;  // For use debugging
 
@@ -17,7 +17,7 @@ namespace IL2C.Translators
             Label label,
             Func<IExtractContext, string[]> generator,
             int uniqueCodeBlockIndex,
-            CodeInformation code,
+            ICodeInformation code,
             int decodingPathNumber)
         {
             this.Label = label;

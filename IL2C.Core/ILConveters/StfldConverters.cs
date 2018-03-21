@@ -1,9 +1,9 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConveters
 {
@@ -12,21 +12,21 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Stfld;
 
         public override Func<IExtractContext, string[]> Apply(
-            FieldReference field, DecodeContext decodeContext)
+            IFieldInformation field, DecodeContext decodeContext)
         {
             var siValue = decodeContext.PopStack();
             var siReference = decodeContext.PopStack();
 
             if (siReference.TargetType.IsByReference)
             {
-                var dereferencedType = siReference.TargetType.GetElementType();
+                var dereferencedType = siReference.TargetType.ElementType;
                 if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid managed reference: Offset={0}, StackType={1}, Name={2}",
-                        decodeContext.Current.Offset,
-                        siReference.TargetType.FullName,
-                        field.GetFullMemberName());
+                        decodeContext.CurrentCode.Offset,
+                        siReference.TargetType.FriendlyName,
+                        field.FriendlyName);
                 }
             }
             else if (siReference.TargetType.IsValueType == false)
@@ -35,20 +35,20 @@ namespace IL2C.ILConveters
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid object reference: Offset={0}, StackType={1}, Name={2}",
-                        decodeContext.Current.Offset,
-                        siReference.TargetType.FullName,
-                        field.GetFullMemberName());
+                        decodeContext.CurrentCode.Offset,
+                        siReference.TargetType.FriendlyName,
+                        field.FriendlyName);
                 }
             }
             else
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Offset={0}, StackType={1}",
-                    decodeContext.Current.Offset,
-                    siReference.TargetType.FullName);
+                    decodeContext.CurrentCode.Offset,
+                    siReference.TargetType.FriendlyName);
             }
 
-            var offset = decodeContext.Current.Offset;
+            var offset = decodeContext.CurrentCode.Offset;
 
             return extractContext =>
             {
@@ -59,8 +59,8 @@ namespace IL2C.ILConveters
                     throw new InvalidProgramSequenceException(
                         "Invalid store operation: Offset={0}, StackType={1}, FieldType={2}",
                         offset,
-                        siValue.TargetType.FullName,
-                        field.FieldType.FullName);
+                        siValue.TargetType.FriendlyName,
+                        field.FieldType.FriendlyName);
                 }
 
                 return new[] { string.Format(

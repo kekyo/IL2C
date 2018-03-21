@@ -38,7 +38,7 @@ namespace IL2C.ILConveters
 
             decodeContext.PrepareContext.RegisterType(returnType);
 
-            var offset = decodeContext.Current.Offset;
+            var offset = decodeContext.CurrentCode.Offset;
 
             return extractContext =>
             {
@@ -66,7 +66,7 @@ namespace IL2C.ILConveters
                 string operand, DecodeContext decodeContext)
             {
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.Context.StringType);
+                    decodeContext.PrepareContext.MetadataContext.StringType);
                 var constStringName = decodeContext.PrepareContext
                     .RegisterConstString(operand);
 
@@ -88,7 +88,7 @@ namespace IL2C.ILConveters
                 DecodeContext decodeContext)
             {
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.Context.PseudoZeroType);
+                    decodeContext.PrepareContext.MetadataContext.PseudoZeroType);
 
                 return _ => new[] { string.Format(
                     "{0} = NULL",

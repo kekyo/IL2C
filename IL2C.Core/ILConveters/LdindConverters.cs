@@ -1,7 +1,6 @@
 ﻿using System;
 
 using Mono.Cecil.Cil;
-using Mono.Cecil.Rocks;
 
 using IL2C.Translators;
 
@@ -15,8 +14,8 @@ namespace IL2C.ILConveters
         {
             var siFrom = decodeContext.PopStack();
 
-            var targetType = decodeContext.Module.GetSafeByteType();
-            var symbolName = decodeContext.PushStack(targetType.GetStackableType());
+            var targetType = decodeContext.PrepareContext.MetadataContext.ByteType;
+            var symbolName = decodeContext.PushStack(targetType.StackableType);
 
             return extractContext => new[] { string.Format(
                 "{0} = *((uint8_t*){1})",

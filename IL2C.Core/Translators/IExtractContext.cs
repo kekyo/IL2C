@@ -6,6 +6,7 @@ namespace IL2C.Translators
 {
     internal interface IExtractContext
     {
+        IMetadataContext MetadataContext { get; }
         IAssemblyInformation Assembly { get; }
 
         string GetCLanguageTypeName(ITypeInformation type, TypeNameFlags flags = TypeNameFlags.Strict);

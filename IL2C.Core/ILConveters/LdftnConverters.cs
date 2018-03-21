@@ -1,9 +1,9 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConveters
 {
@@ -12,15 +12,14 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldftn;
 
         public override Func<IExtractContext, string[]> Apply(
-            MethodReference operand, DecodeContext decodeContext)
+            IMethodInformation operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.Module.GetSafeIntPtrType());
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
             return _ => new[] { string.Format(
                 "{0} = {1}",
                 symbolName,
-                operand.GetFullMemberName(MethodNameTypes.Index)
-                    .ManglingSymbolName()) };
+                operand.MangledName) };
         }
     }
 }

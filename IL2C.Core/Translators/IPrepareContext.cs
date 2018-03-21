@@ -6,6 +6,9 @@ namespace IL2C.Translators
 {
     internal interface IPrepareContext
     {
+        IMetadataContext MetadataContext { get; }
+        IAssemblyInformation Assembly { get; }
+
         void RegisterIncludeFile(string includeFileName);
         void RegisterPrivateIncludeFile(string includeFileName);
         void RegisterType(ITypeInformation type);

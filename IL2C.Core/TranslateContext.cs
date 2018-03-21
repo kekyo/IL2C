@@ -69,11 +69,14 @@ namespace IL2C
         public TranslateContext(string assemblyPath)
         {
             var context = new MetadataContext(assemblyPath);
+            this.MetadataContext = context;
             this.Assembly = context.MainAssembly;
 
             includes.Add("il2c.h");
         }
         #endregion
+
+        public IMetadataContext MetadataContext { get; }
 
         public IAssemblyInformation Assembly { get; }
 

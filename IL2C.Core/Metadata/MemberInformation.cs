@@ -41,7 +41,8 @@ namespace IL2C.Metadata
         }
 
         public override string UniqueName => this.Member.FullName;
-        public IModuleInformation DeclaringModule { get; }
+
+        internal ModuleInformation DeclaringModule { get; }
 
         public string Name => this.Member.Name;
 
@@ -57,23 +58,7 @@ namespace IL2C.Metadata
             return sb.ToString();
         }
 
-        public virtual string FriendlyName
-        {
-            get
-            {
-                var declaringTypes = this.Member.DeclaringType
-                    .Traverse(current => current.DeclaringType)
-                    .Reverse()
-                    .ToArray();
-                var namespaceName = declaringTypes.First().Namespace;
-
-                return string.Format(
-                    "{0}.{1}.{2}",
-                    namespaceName,
-                    string.Join(".", declaringTypes.Select(type => type.Name)),
-                    this.Member.Name);
-            }
-        }
+        public virtual string FriendlyName => this.Member.GetFriendlyName();
 
         public string MangledName => ToMangledName(this.FriendlyName);
 

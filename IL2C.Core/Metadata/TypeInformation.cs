@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Mono.Cecil;
+using Mono.Cecil.Rocks;
 
 namespace IL2C.Metadata
 {
     public interface ITypeInformation : IMemberInformation
     {
-        IModuleInformation DeclaringModule { get; }
-
         bool IsValidDefinition { get; }
 
         bool IsPublic { get; }
@@ -63,6 +62,8 @@ namespace IL2C.Metadata
         string CLanguageName { get; }
 
         bool IsAssignableFrom(ITypeInformation rhs);
+
+        ITypeInformation MakeByReference();
     }
 
     internal sealed class TypeInformation
@@ -312,6 +313,13 @@ namespace IL2C.Metadata
             }
 
             return results;
+        }
+
+        public ITypeInformation MakeByReference()
+        {
+            return this.Context.GetOrAddMember(
+                this.Definition.MakeByReferenceType(),
+                type => new TypeInformation(type, this.DeclaringModule));
         }
     }
 }

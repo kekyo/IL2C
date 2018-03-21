@@ -2,21 +2,36 @@
 
 namespace IL2C.Metadata
 {
-    public struct VariableInformation
-        : IOperandPrintable
+    public interface IVariableInformation
     {
-        public readonly int Index;
-        public readonly string SymbolName;
-        public readonly ITypeInformation TargetType;
+        int Index { get; }
+        string SymbolName { get; }
+        ITypeInformation TargetType { get; }
+        IMethodInformation DeclaredMethod { get; }
+    }
 
-        internal VariableInformation(int index, string symbolName, ITypeInformation targetType)
+    internal sealed class VariableInformation
+        : IVariableInformation
+        , IOperandPrintable
+    {
+        public VariableInformation(
+            IMethodInformation declaredMethod,
+            int index,
+            string symbolName, 
+            ITypeInformation targetType)
         {
             this.Index = index;
             this.SymbolName = symbolName;
             this.TargetType = targetType;
+            this.DeclaredMethod = declaredMethod;
         }
 
-        public bool Equals(VariableInformation rhs)
+        public int Index { get; }
+        public string SymbolName { get; }
+        public ITypeInformation TargetType { get; }
+        public IMethodInformation DeclaredMethod { get; }
+
+        public bool Equals(IVariableInformation rhs)
         {
             return this.Index.Equals(rhs.Index)
                 && this.SymbolName.Equals(rhs.SymbolName)
@@ -25,14 +40,7 @@ namespace IL2C.Metadata
 
         public override bool Equals(object rhs)
         {
-            if (rhs is VariableInformation)
-            {
-                return this.Equals((VariableInformation)rhs);
-            }
-            else
-            {
-                return false;
-            }
+            return this.Equals(rhs as IVariableInformation);
         }
 
         public override int GetHashCode()

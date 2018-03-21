@@ -15,10 +15,10 @@ namespace IL2C.ILConveters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            if (si0.TargetType.IsNumericPrimitive()
-                && si1.TargetType.IsNumericPrimitive())
+            if (si0.TargetType.IsNumericPrimitive
+                && si1.TargetType.IsNumericPrimitive)
             {
-                var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = ({1} > {2}) ? 1 : 0",
                     resultName,
@@ -28,9 +28,9 @@ namespace IL2C.ILConveters
 
             throw new InvalidProgramSequenceException(
                 "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.Current.Offset,
-                si0.TargetType.FullName,
-                si1.TargetType.FullName);
+                decodeContext.CurrentCode.Offset,
+                si0.TargetType.FriendlyName,
+                si1.TargetType.FriendlyName);
         }
     }
 
@@ -43,10 +43,10 @@ namespace IL2C.ILConveters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            if (si0.TargetType.IsNumericPrimitive()
-                && si1.TargetType.IsNumericPrimitive())
+            if (si0.TargetType.IsNumericPrimitive
+                && si1.TargetType.IsNumericPrimitive)
             {
-                var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = ({1} < {2}) ? 1 : 0",
                     resultName,
@@ -56,9 +56,9 @@ namespace IL2C.ILConveters
 
             throw new InvalidProgramSequenceException(
                 "Unknown clt operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.Current.Offset,
-                si0.TargetType.FullName,
-                si1.TargetType.FullName);
+                decodeContext.CurrentCode.Offset,
+                si0.TargetType.FriendlyName,
+                si1.TargetType.FriendlyName);
         }
     }
 
@@ -71,10 +71,10 @@ namespace IL2C.ILConveters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
 
-            if (si0.TargetType.IsNumericPrimitive()
-                && si1.TargetType.IsNumericPrimitive())
+            if (si0.TargetType.IsNumericPrimitive
+                && si1.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "{0} = ({1} == {2}) ? 1 : 0",
@@ -90,9 +90,9 @@ namespace IL2C.ILConveters
                 {
                     throw new InvalidProgramSequenceException(
                         "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
-                        decodeContext.Current.Offset,
-                        si0.TargetType.FullName,
-                        si1.TargetType.FullName);
+                        decodeContext.CurrentCode.Offset,
+                        si0.TargetType.FriendlyName,
+                        si1.TargetType.FriendlyName);
                 }
 
                 return new[] { string.Format(
@@ -103,5 +103,4 @@ namespace IL2C.ILConveters
             };
         }
     }
-
 }

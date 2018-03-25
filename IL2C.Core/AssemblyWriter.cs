@@ -159,7 +159,7 @@ namespace IL2C
                     declaredType.MemberTypeName);
                 tw.WriteLine(
                     "struct {0}",
-                    declaredType.CLanguageDeclaration);
+                    declaredType.MangledName);
                 tw.WriteLine("{");
 
                 // Emit vptr:
@@ -222,7 +222,7 @@ namespace IL2C
             {
                 tw.WriteLine(
                     "typedef struct {0} {0};",
-                    type.CLanguageDeclaration);
+                    type.MangledName);
             }
 
             // Output value type and object reference type.

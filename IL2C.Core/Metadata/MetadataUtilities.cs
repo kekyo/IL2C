@@ -14,13 +14,15 @@ namespace IL2C.Metadata
                 .Traverse(current => current.DeclaringType)
                 .Reverse()
                 .ToArray();
-            var namespaceName = declaringTypes.First().Namespace;
+            var namespaceName = declaringTypes.FirstOrDefault()
+                ?.Namespace
+                ??(member as TypeReference)?.Namespace;
 
-            return string.Format(
-                "{0}.{1}.{2}",
-                namespaceName,
-                string.Join(".", declaringTypes.Select(type => type.Name)),
-                member.Name);
+            return string.Join(
+                ".",
+                new[] { namespaceName }
+                    .Concat(declaringTypes.Select(type => type.Name))
+                    .Concat(new[] { member.Name }));
         }
 
         public static IOrderedEnumerable<MethodDefinition> OrderByParameters(

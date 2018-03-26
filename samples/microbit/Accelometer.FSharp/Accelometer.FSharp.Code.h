@@ -1,45 +1,49 @@
-﻿#ifndef __MODULE_Accelometer_FSharp_Code, Version=0_0_0_0, Culture=neutral, PublicKeyToken=null__
-#define __MODULE_Accelometer_FSharp_Code, Version=0_0_0_0, Culture=neutral, PublicKeyToken=null__
+﻿#ifndef __Accelometer_FSharp_Code_H__
+#define __Accelometer_FSharp_Code_H__
 
 #include <il2c.h>
-#include <stdbool.h>
-#include <stdint.h>
+
+#include <il2c.h>
+#include <Accelometer.FSharp.Code.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-// Types:
+// [2-1] Types:
 
 typedef struct Accelometer_Demo Accelometer_Demo;
 
 ////////////////////////////////////////////////////////////
-// Class: Accelometer.Demo
+// [1] Accelometer.Demo
 
-// Class vtable layout
+// [1-2] Class vtable layout
 typedef const struct
 {
     /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    System_String* __System_Object_ToString__(System_Object* this__);
+    int32_t __System_Object_GetHashCode__(System_Object* this__);
+    void __System_Object_Finalize__(System_Object* this__);
+    bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
 } __Accelometer_Demo_VTABLE_DECL__;
 
-// Class layout
+// [1-3] Class layout
 struct Accelometer_Demo
 {
     __Accelometer_Demo_VTABLE_DECL__* vptr0__;
 };
 
-
-// Class runtime type information
+// [1-4] Class runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_RUNTIME_TYPE__;
 
-// Class vtable
+// [1-5] Class vtable
 extern __Accelometer_Demo_VTABLE_DECL__ __Accelometer_Demo_VTABLE__;
 
 ////////////////////////////////////////////////////////////
-// Enum: Accelometer.Demo/ArrowNames
+// [1] Accelometer.Demo.ArrowNames
 
-// Enum layout
+// [1-1] Enum layout
 typedef enum Accelometer_Demo_ArrowNames
 {
     Accelometer_Demo_ArrowNames_North = 0,
@@ -50,81 +54,56 @@ typedef enum Accelometer_Demo_ArrowNames
     Accelometer_Demo_ArrowNames_SouthWest = 5,
     Accelometer_Demo_ArrowNames_West = 6,
     Accelometer_Demo_ArrowNames_NorthWest = 7,
+} Accelometer_Demo_ArrowNames;
 
-// Enum vtable layout
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo_ArrowNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
-} __Accelometer_Demo_ArrowNames_VTABLE_DECL__;
-
-// Enum layout
-struct Accelometer_Demo_ArrowNames
-{
-    __Accelometer_Demo_ArrowNames_VTABLE_DECL__* vptr0__;
-    __System_IComparable_VTABLE_DECL__* vptr_System_IComparable__;
-    __System_IFormattable_VTABLE_DECL__* vptr_System_IFormattable__;
-    __System_IConvertible_VTABLE_DECL__* vptr_System_IConvertible__;
-    System_Int32 value__;
-};
-
-
-// Enum runtime type information
+// [1-4] Enum runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_ArrowNames_RUNTIME_TYPE__;
 
-// Enum vtable
+// [1-5] Enum vtable
 extern __Accelometer_Demo_ArrowNames_VTABLE_DECL__ __Accelometer_Demo_ArrowNames_VTABLE__;
 
 ////////////////////////////////////////////////////////////
-// Enum: Accelometer.Demo/IconNames
+// [1] Accelometer.Demo.IconNames
 
-// Enum layout
+// [1-1] Enum layout
 typedef enum Accelometer_Demo_IconNames
 {
     Accelometer_Demo_IconNames_Heart = 0,
+} Accelometer_Demo_IconNames;
 
-// Enum vtable layout
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo_IconNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
-} __Accelometer_Demo_IconNames_VTABLE_DECL__;
-
-// Enum layout
-struct Accelometer_Demo_IconNames
-{
-    __Accelometer_Demo_IconNames_VTABLE_DECL__* vptr0__;
-    __System_IComparable_VTABLE_DECL__* vptr_System_IComparable__;
-    __System_IFormattable_VTABLE_DECL__* vptr_System_IFormattable__;
-    __System_IConvertible_VTABLE_DECL__* vptr_System_IConvertible__;
-    System_Int32 value__;
-};
-
-
-// Enum runtime type information
+// [1-4] Enum runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_IconNames_RUNTIME_TYPE__;
 
-// Enum vtable
+// [1-5] Enum vtable
 extern __Accelometer_Demo_IconNames_VTABLE_DECL__ __Accelometer_Demo_IconNames_VTABLE__;
 
 //////////////////////////////////////////////////////////////////////////////////
-// Public static fields:
+// [2-2] Public static fields:
+
+
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// Methods:
+// [2-3] Methods:
 
-// Accelometer_Demo
-extern /* internalcall */ void __Accelometer_Demo_IL2C_MarkHandler__(Accelometer_Demo** this__);
-extern /* internalcall */ void* __Accelometer_Demo_IL2C_RuntimeCast__(Accelometer_Demo** this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern System_Void* Accelometer_Demo_BeginAccelometer_0(System_Boolean highResolution, System_Byte scale)(System_Boolean highResolution, System_Byte scale);
-extern System_Byte Accelometer_Demo_UpdateAccelometer_0()();
-extern System_SByte Accelometer_Demo_GetAccelometerX_0()();
-extern System_SByte Accelometer_Demo_GetAccelometerY_0()();
-extern System_SByte Accelometer_Demo_GetAccelometerZ_0()();
-extern System_Void* Accelometer_Demo_BeginScreen_0()();
-extern System_Void* Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)(Accelometer_Demo_ArrowNames direction, System_UInt32 interval);
-extern System_Void* Accelometer_Demo_ShowIcon_0(Accelometer_Demo_IconNames icon, System_UInt32 interval)(Accelometer_Demo_IconNames icon, System_UInt32 interval);
-extern System_Void* Accelometer_Demo_Delay_0(System_Int32 millis)(System_Int32 millis);
-extern System_Void* Accelometer_Demo_Main_0()();
+// [2-4] Member methods: <StartupCode$Accelometer-FSharp-Code>.$.NETStandard,Version=v2.0.AssemblyAttributes
+
+
+// [2-4] Member methods: Accelometer.Demo
+
+extern void Accelometer_Demo_BeginAccelometer(bool highResolution, uint8_t scale);
+extern uint8_t Accelometer_Demo_UpdateAccelometer();
+extern int8_t Accelometer_Demo_GetAccelometerX();
+extern int8_t Accelometer_Demo_GetAccelometerY();
+extern int8_t Accelometer_Demo_GetAccelometerZ();
+extern void Accelometer_Demo_BeginScreen();
+extern void Accelometer_Demo_ShowArrow(Accelometer_Demo_ArrowNames direction, uint32_t interval);
+extern void Accelometer_Demo_ShowIcon(Accelometer_Demo_IconNames icon, uint32_t interval);
+extern void Accelometer_Demo_Delay(int32_t millis);
+extern void Accelometer_Demo_Main();
+
+// [2-4] Member methods: <StartupCode$Accelometer-FSharp-Code>.$Demo
+
 
 #ifdef __cplusplus
 }

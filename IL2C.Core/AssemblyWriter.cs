@@ -1004,6 +1004,8 @@ namespace IL2C
             twHeader.WriteLine("#ifndef __{0}_H__", assemblyName);
             twHeader.WriteLine("#define __{0}_H__", assemblyName);
             twHeader.WriteLine();
+            twHeader.WriteLine("#include <il2c.h>");
+            twHeader.WriteLine();
 
             foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
             {
@@ -1037,6 +1039,10 @@ namespace IL2C
             DebugInformationOptions debugInformationOption = DebugInformationOptions.Full)
         {
             IExtractContext extractContext = translateContext;
+
+            twSource.WriteLine();
+            twSource.WriteLine("#include <il2c.h>");
+            twSource.WriteLine();
 
             foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
             {

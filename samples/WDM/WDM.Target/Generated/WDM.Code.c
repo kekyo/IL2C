@@ -1,4 +1,7 @@
-﻿#include "memmem.h"
+﻿
+#include <il2c.h>
+
+#include "memmem.h"
 #include "WDM.Code.h"
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -6,6 +9,9 @@
 
 IL2C_CONST_STRING(string0__, L"Hello driver constructor called!!\r\n");
 IL2C_CONST_STRING(string1__, L"Draw BABEL!!\r\n");
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-2] File scope prototypes:
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,20 +24,38 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // [2-2] Public static fields:
 
+
+
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods:
+
+// [2-4] Member methods: WDM.Code.InterceptCDRomDevice
+
+extern /* internalcall */ void __WDM_Code_InterceptCDRomDevice_IL2C_MarkHandler__(WDM_Code_InterceptCDRomDevice* this__);
+extern /* internalcall */ void* __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__(WDM_Code_InterceptCDRomDevice* this__, IL2C_RUNTIME_TYPE_DECL* type);
+
+// [2-5] Virtual methods: WDM.Code.InterceptCDRomDevice
+
+
+// [2-4] Member methods: WDM.Code.Wdm
+
+extern /* internalcall */ void __WDM_Code_Wdm_IL2C_MarkHandler__(WDM_Code_Wdm* this__);
+extern /* internalcall */ void* __WDM_Code_Wdm_IL2C_RuntimeCast__(WDM_Code_Wdm* this__, IL2C_RUNTIME_TYPE_DECL* type);
+
+// [2-5] Virtual methods: WDM.Code.Wdm
+
 
 #ifdef __cplusplus
 }
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9-2] Static fields:
+// [9-3] Declare static fields:
 
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9-3] Methods:
+// [9-4] Declare methods:
 
 ////////////////////////////////////////////////////////////
 // [9-4] Type: WDM.Code.InterceptCDRomDevice
@@ -196,7 +220,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     /* IL_0027: ldloc.1  */
     stack0_1__ = local1__;
     /* IL_0028: brfalse.s IL_004a */
-    if (stack0_1__ == 0) goto IL_0028;
+    if (stack0_1__ == 0) goto IL_004a;
 /* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(24): */
     /* IL_002a: nop  */
     /* IL_002b: ldstr "Draw BABEL!!
@@ -227,7 +251,7 @@ IL_004a:
     /* IL_004b: stloc.2  */
     local2__ = (uint32_t)stack0_1__;
     /* IL_004c: br.s IL_004e */
-    goto IL_004c;
+    goto IL_004e;
 IL_004e:
 /* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(31): */
     /* IL_004e: ldloc.2  */
@@ -270,19 +294,16 @@ IL2C_RUNTIME_TYPE_DECL __WDM_Code_InterceptCDRomDevice_RUNTIME_TYPE__ = {
 
 // [7-10] Vtable of WDM.Code.InterceptCDRomDevice
 __WDM_Code_InterceptCDRomDevice_VTABLE_DECL__ __WDM_Code_InterceptCDRomDevice_VTABLE__ = {
-    __WDM_Code_InterceptCDRomDevice_IL2C_RuntimeCast__,
-    
-
-    System_String* (*ToString)(WDM_Code_InterceptCDRomDevice*),
-    int32_t (*GetHashCode)(WDM_Code_InterceptCDRomDevice*),
-    System_Type* (*GetType)(WDM_Code_InterceptCDRomDevice*),
-    void (*Finalize)(WDM_Code_InterceptCDRomDevice*),
-    System_Object* (*MemberwiseClone)(WDM_Code_InterceptCDRomDevice*),
-    bool (*Equals)(WDM_Code_InterceptCDRomDevice*, System_Object*),
-    System_Reflection_FieldInfo* (*GetFieldInfo)(WDM_Code_InterceptCDRomDevice*, System_String*, System_String*),
-    void (*FieldSetter)(WDM_Code_InterceptCDRomDevice*, System_String*, System_String*, System_Object*),
-    void (*FieldGetter)(WDM_Code_InterceptCDRomDevice*, System_String*, System_String*, System_Object**),
-    uint32_t (*ReadCompleted)(WDM_Code_InterceptCDRomDevice*, intptr_t, int32_t, int32_t),
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_GetType__,
+    __System_Object_Finalize__,
+    __System_Object_MemberwiseClone__,
+    __System_Object_Equals__,
+    __System_Object_GetFieldInfo__,
+    __System_Object_FieldSetter__,
+    __System_Object_FieldGetter__,
+    __WDM_Code_InterceptCDRomDevice_ReadCompleted__,
 };
 
 ////////////////////////////////////////////////////////////
@@ -421,13 +442,13 @@ IL2C_RUNTIME_TYPE_DECL __WDM_Code_Wdm_RUNTIME_TYPE__ = {
 
 // [7-10] Vtable of WDM.Code.Wdm
 __WDM_Code_Wdm_VTABLE_DECL__ __WDM_Code_Wdm_VTABLE__ = {
-    System_String* (*ToString)(WDM_Code_Wdm*),
-    int32_t (*GetHashCode)(WDM_Code_Wdm*),
-    System_Type* (*GetType)(WDM_Code_Wdm*),
-    void (*Finalize)(WDM_Code_Wdm*),
-    System_Object* (*MemberwiseClone)(WDM_Code_Wdm*),
-    bool (*Equals)(WDM_Code_Wdm*, System_Object*),
-    System_Reflection_FieldInfo* (*GetFieldInfo)(WDM_Code_Wdm*, System_String*, System_String*),
-    void (*FieldSetter)(WDM_Code_Wdm*, System_String*, System_String*, System_Object*),
-    void (*FieldGetter)(WDM_Code_Wdm*, System_String*, System_String*, System_Object**),
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_GetType__,
+    __System_Object_Finalize__,
+    __System_Object_MemberwiseClone__,
+    __System_Object_Equals__,
+    __System_Object_GetFieldInfo__,
+    __System_Object_FieldSetter__,
+    __System_Object_FieldGetter__,
 };

@@ -2,6 +2,8 @@
 #define __Accelometer_Code_H__
 
 #include <il2c.h>
+
+#include <il2c.h>
 #include <Accelometer.Code.h>
 
 #ifdef __cplusplus

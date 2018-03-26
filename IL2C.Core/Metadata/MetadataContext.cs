@@ -59,6 +59,8 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation> uint64Type;
         private readonly Lazy<TypeInformation> intPtrType;
         private readonly Lazy<TypeInformation> uintPtrType;
+        private readonly Lazy<TypeInformation> singleType;
+        private readonly Lazy<TypeInformation> doubleType;
         private readonly Lazy<TypeInformation> charType;
         private readonly Lazy<TypeInformation> stringType;
         private readonly Lazy<TypeInformation> booleanType;
@@ -128,6 +130,12 @@ namespace IL2C.Metadata
             uintPtrType = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.TypeSystem.UIntPtr,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
+            singleType = this.LazyGetOrAddMember(
+                () => resolvedCoreModule.TypeSystem.Single,
+                type => new TypeInformation(type, resolvedCoreModuleInformation));
+            doubleType = this.LazyGetOrAddMember(
+                () => resolvedCoreModule.TypeSystem.Double,
+                type => new TypeInformation(type, resolvedCoreModuleInformation));
             charType = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.TypeSystem.Char,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
@@ -167,7 +175,7 @@ namespace IL2C.Metadata
             }
         }
 
-        internal TInformation[] GetOrAddAssembly<TInformation>(
+        internal TInformation[] GetOrAddAssemblies<TInformation>(
             IEnumerable<AssemblyDefinition> assemblyDefinitions,
             Func<AssemblyDefinition, TInformation> factory)
             where TInformation : IAssemblyInformation
@@ -185,7 +193,7 @@ namespace IL2C.Metadata
             return Lazy.Create(() => this.GetOrAddAssembly(extractor(), factory));
         }
 
-        internal Lazy<TInformation[]> LazyGetOrAddAssembly<TInformation>(
+        internal Lazy<TInformation[]> LazyGetOrAddAssemblies<TInformation>(
             Func<IEnumerable<AssemblyDefinition>> extractor,
             Func<AssemblyDefinition, TInformation> factory)
             where TInformation : IAssemblyInformation
@@ -236,7 +244,7 @@ namespace IL2C.Metadata
             }
         }
 
-        internal TInformation[] GetOrAddModule<TInformation>(
+        internal TInformation[] GetOrAddModules<TInformation>(
             AssemblyDefinition assemblyDefinition,
             IEnumerable<ModuleReference> moduleReferences,
             Func<AssemblyDefinition, ModuleReference, TInformation> factory)
@@ -256,7 +264,7 @@ namespace IL2C.Metadata
             return Lazy.Create(() => this.GetOrAddModule(assemblyDefinition, extractor(), factory));
         }
 
-        internal Lazy<TInformation[]> LazyGetOrAddModule<TInformation>(
+        internal Lazy<TInformation[]> LazyGetOrAddModules<TInformation>(
             AssemblyDefinition assemblyDefinition,
             Func<IEnumerable<ModuleReference>> extractor,
             Func<AssemblyDefinition, ModuleReference, TInformation> factory)
@@ -291,7 +299,7 @@ namespace IL2C.Metadata
             }
         }
 
-        internal TInformation[] GetOrAddMember<TReference, TInformation>(
+        internal TInformation[] GetOrAddMembers<TReference, TInformation>(
             IEnumerable<TReference> memberReferences,
             Func<TReference, TInformation> factory)
             where TReference : MemberReference
@@ -311,7 +319,7 @@ namespace IL2C.Metadata
             return Lazy.Create(() => this.GetOrAddMember(extractor(), factory));
         }
 
-        internal Lazy<TInformation[]> LazyGetOrAddMember<TReference, TInformation>(
+        internal Lazy<TInformation[]> LazyGetOrAddMembers<TReference, TInformation>(
             Func<IEnumerable<TReference>> extractor,
             Func<TReference, TInformation> factory)
             where TReference : MemberReference
@@ -339,6 +347,8 @@ namespace IL2C.Metadata
         public ITypeInformation UInt64Type => uint64Type.Value;
         public ITypeInformation IntPtrType => intPtrType.Value;
         public ITypeInformation UIntPtrType => uintPtrType.Value;
+        public ITypeInformation SingleType => singleType.Value;
+        public ITypeInformation DoubleType => doubleType.Value;
         public ITypeInformation CharType => charType.Value;
         public ITypeInformation StringType => stringType.Value;
         public ITypeInformation BooleanType => booleanType.Value;

@@ -6,6 +6,8 @@ namespace IL2C.Metadata
 {
     public interface IAssemblyInformation : IMetadataInformation
     {
+        string CLanguageIncludeFileName { get; }
+
         IModuleInformation[] Modules { get; }
     }
 
@@ -16,18 +18,23 @@ namespace IL2C.Metadata
         private readonly AssemblyDefinition assembly;
         private readonly Lazy<ModuleInformation[]> modules;
 
-        internal AssemblyInformation(AssemblyDefinition assembly, MetadataContext context)
-            : base(context)
+        internal AssemblyInformation(AssemblyDefinition assembly, MetadataContext metadataContext)
+            : base(metadataContext)
         {
             this.assembly = assembly;
 
-            modules = context.LazyGetOrAddModule(
+            modules = metadataContext.LazyGetOrAddModules(
                 assembly,
                 () => assembly.Modules,
                 (_, module) => new ModuleInformation(module, this));
         }
 
         public override string UniqueName => assembly.FullName;
+        public override string Name => assembly.Name.Name;
+        public override string FriendlyName => assembly.Name.Name;
+
+        // TODO: mscorlib --> il2c.h?
+        public string CLanguageIncludeFileName => assembly.Name.Name + ".h";
 
         public IModuleInformation[] Modules => modules.Value;
 

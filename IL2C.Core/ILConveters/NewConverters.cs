@@ -79,7 +79,7 @@ namespace IL2C.ILConveters
                 // newobj opcode can handle value type with parameter applied constructor.
                 if (type.IsValueType)
                 {
-                    var typeName = type.CLanguageDeclaration;
+                    var typeName = type.CLanguageTypeName;
                     // If constructor's arguments greater than or equal 2 (this and others)
                     if (pairParameters.Count >= 2)
                     {

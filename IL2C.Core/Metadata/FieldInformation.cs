@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+
 using Mono.Cecil;
 
 namespace IL2C.Metadata
@@ -7,6 +8,9 @@ namespace IL2C.Metadata
     public interface IFieldInformation : IMemberInformation
     {
         bool IsPublic { get; }
+        bool IsFamily { get; }
+        bool IsFamilyOrAssembly { get; }
+
         bool IsStatic { get; }
         bool HasConstant { get; }
 
@@ -25,7 +29,7 @@ namespace IL2C.Metadata
         public FieldInformation(FieldReference field, ModuleInformation module)
             : base(field, module)
         {
-            fieldType = this.Context.LazyGetOrAddMember(
+            fieldType = this.MetadataContext.LazyGetOrAddMember(
                 () => this.Member.FieldType,
                 type => new TypeInformation(type, module));
         }
@@ -35,6 +39,9 @@ namespace IL2C.Metadata
             : "Field";
 
         public bool IsPublic => this.Definition.IsPublic;
+        public bool IsFamily => this.Definition.IsFamily;
+        public bool IsFamilyOrAssembly => this.Definition.IsFamilyOrAssembly;
+
         public bool IsStatic => this.Definition.IsStatic;
         public bool HasConstant => this.Definition.HasConstant;
 
@@ -67,10 +74,14 @@ namespace IL2C.Metadata
 
             return string.Format(
                 "{0} {1}{2}",
-                this.FieldType.CLanguageDeclaration,
+                this.FieldType.CLanguageTypeName,
                 this.MangledName,
                 initializer);
         }
+
+        public override bool IsCLanguagePublicScope => this.Definition.IsPublic;
+        public override bool IsCLanguageLinkageScope => !this.Definition.IsPublic && !this.Definition.IsPrivate;
+        public override bool IsCLanguageFileScope => this.Definition.IsPrivate;
 
         protected override FieldDefinition OnResolve(FieldReference member)
         {

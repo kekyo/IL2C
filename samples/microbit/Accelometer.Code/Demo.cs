@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Accelometer
 {
-    public class Demo
+    public static class Demo
     {
         #region Interop
         [DllImport("Accelometer.h", EntryPoint="accelometer.begin")]

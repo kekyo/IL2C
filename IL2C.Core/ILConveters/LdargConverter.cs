@@ -1,6 +1,5 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace IL2C.Metadata
 {
@@ -8,6 +9,9 @@ namespace IL2C.Metadata
         , IComparable
     {
         string UniqueName { get; }
+        string Name { get; }
+        string FriendlyName { get; }
+        string MangledName { get; }
 
         IMetadataContext Context { get; }
     }
@@ -15,53 +19,61 @@ namespace IL2C.Metadata
     internal abstract class MetadataInformation
         : IMetadataInformation
     {
-        protected MetadataInformation(MetadataContext context)
+        private static readonly char[] replaceChars = {
+            '.', ',', '@', '+', '-', '*', '/', '^', '\\', '#', '%', '&', '$', '?', '!', '=', '~', '|',
+            '(', ')', '<', '>', '[', ']', '{', '}', '\'', '"', '`', ';', ':', ' ' };
+
+        protected MetadataInformation(MetadataContext metadataContext)
         {
-            this.Context = context;
+            this.MetadataContext = metadataContext;
         }
 
-        internal readonly MetadataContext Context;
+        internal readonly MetadataContext MetadataContext;
+        IMetadataContext IMetadataInformation.Context =>
+            this.MetadataContext;
 
-        IMetadataContext IMetadataInformation.Context => this.Context;
         public abstract string UniqueName { get; }
+        public abstract string Name { get; }
+        public abstract string FriendlyName { get; }
 
-        public int CompareTo(IMetadataInformation other)
+        protected static string ToMangledName(string name)
         {
-            return StringComparer.Ordinal.Compare(this.UniqueName, other.UniqueName);
+            var sb = new StringBuilder(name);
+            foreach (var ch in replaceChars)
+            {
+                sb.Replace(ch, '_');
+            }
+            return sb.ToString();
         }
 
-        int IComparable.CompareTo(object obj)
-        {
-            return StringComparer.Ordinal.Compare(this.UniqueName, ((IMetadataInformation)obj).UniqueName);
-        }
+        public virtual string MangledName =>
+            ToMangledName(this.FriendlyName);
 
-        public bool Equals(IMetadataInformation other)
-        {
-            return StringComparer.Ordinal.Equals(this.UniqueName, other.UniqueName);
-        }
+        public int CompareTo(IMetadataInformation other) =>
+            StringComparer.Ordinal.Compare(this.UniqueName, other.UniqueName);
 
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as IMetadataInformation);
-        }
+        int IComparable.CompareTo(object obj) =>
+            StringComparer.Ordinal.Compare(this.UniqueName, ((IMetadataInformation)obj).UniqueName);
 
-        public override int GetHashCode()
-        {
-            return this.UniqueName.GetHashCode();
-        }
+        public bool Equals(IMetadataInformation other) =>
+            StringComparer.Ordinal.Equals(this.UniqueName, other.UniqueName);
 
-        public override string ToString()
-        {
-            return this.UniqueName;
-        }
+        public override bool Equals(object obj) =>
+            this.Equals(obj as IMetadataInformation);
+
+        public override int GetHashCode() =>
+            this.UniqueName.GetHashCode();
+
+        public override string ToString() =>
+            this.UniqueName;
     }
 
     internal abstract class MetadataInformation<TReference, TDefinition>
         : MetadataInformation
         where TDefinition : class, TReference
     {
-        protected MetadataInformation(TReference member, MetadataContext context)
-            : base(context)
+        protected MetadataInformation(TReference member, MetadataContext metadataContext)
+            : base(metadataContext)
         {
             this.Member = member;
         }
@@ -90,9 +102,7 @@ namespace IL2C.Metadata
             }
         }
 
-        protected virtual TDefinition OnResolve(TReference member)
-        {
-            return (TDefinition)member;
-        }
+        protected virtual TDefinition OnResolve(TReference member) =>
+            (TDefinition)member;
     }
 }

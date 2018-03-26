@@ -146,7 +146,7 @@ namespace IL2C.ILConveters
                         return new[] { string.Format(
                             "{0} = ({1}){2}",
                             symbolName,
-                            operand.CLanguageDeclaration,
+                            operand.CLanguageTypeName,
                             si.SymbolName) };
                     };
                 }

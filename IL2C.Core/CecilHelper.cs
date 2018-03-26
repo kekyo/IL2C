@@ -7,14 +7,6 @@ using Mono.Cecil;
 
 namespace IL2C
 {
-    internal enum MethodNameTypes
-    {
-        Nothing,
-        Full,
-        Types,
-        Index
-    }
-
     internal static class CecilHelper
     {
         #region PseudoZeroType

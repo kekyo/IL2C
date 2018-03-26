@@ -9,18 +9,18 @@ namespace IL2C.Translators
     {
         public readonly IMethodInformation Method;
         public readonly IVariableInformation[] Stacks;
-        public readonly IReadOnlyDictionary<int, ICodeInformation> Labels;
+        public readonly IReadOnlyDictionary<int, string> LabelNames;
         internal readonly IReadOnlyDictionary<int, Func<IExtractContext, string[]>> Generators;
 
         internal PreparedMethodInformation(
             IMethodInformation method,
             IVariableInformation[] stacks,
-            IReadOnlyDictionary<int, ICodeInformation> labels,
+            IReadOnlyDictionary<int, string> labelNames,
             IReadOnlyDictionary<int, Func<IExtractContext, string[]>> generators)
         {
             this.Method = method;
             this.Stacks = stacks;
-            this.Labels = labels;
+            this.LabelNames = labelNames;
             this.Generators = generators;
         }
     }

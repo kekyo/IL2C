@@ -18,16 +18,18 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation[]> types;
 
         public ModuleInformation(ModuleReference module, AssemblyInformation assembly)
-            : base(module, assembly.Context)
+            : base(module, assembly.MetadataContext)
         {
             this.DeclaringAssembly = assembly;
 
-            types = this.Context.LazyGetOrAddMember(
+            types = this.MetadataContext.LazyGetOrAddMembers(
                 () => this.Definition.Types,
                 type => new TypeInformation(type, this));
         }
 
         public override string UniqueName => this.Member.Name;
+        public override string Name => this.Member.Name;
+        public override string FriendlyName => this.Member.Name;
 
         public IAssemblyInformation DeclaringAssembly { get; }
 

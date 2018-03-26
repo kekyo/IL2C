@@ -1,8 +1,8 @@
 ﻿#include "Accelometer.h"
-#include "Accelometer.Code, Version=0.3.1.0, Culture=neutral, PublicKeyToken=null.h"
+#include "Accelometer.Code.h"
 
 //////////////////////////////////////////////////////////////////////////////////
-// Const strings:
+// [9-1] Const strings:
 
 
 #ifdef __cplusplus
@@ -10,13 +10,13 @@ extern "C" {
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-// Types:
+// [2-1] Types:
 
 
 ////////////////////////////////////////////////////////////
-// Enum: Accelometer.Demo/ArrowNames
+// [1] Accelometer.Demo.ArrowNames
 
-// Enum layout
+// [1-1] Enum layout
 typedef enum Accelometer_Demo_ArrowNames
 {
     Accelometer_Demo_ArrowNames_North = 0,
@@ -27,34 +27,18 @@ typedef enum Accelometer_Demo_ArrowNames
     Accelometer_Demo_ArrowNames_SouthWest = 5,
     Accelometer_Demo_ArrowNames_West = 6,
     Accelometer_Demo_ArrowNames_NorthWest = 7,
+} Accelometer_Demo_ArrowNames;
 
-// Enum vtable layout
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo_ArrowNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
-} __Accelometer_Demo_ArrowNames_VTABLE_DECL__;
-
-// Enum layout
-struct Accelometer_Demo_ArrowNames
-{
-    __Accelometer_Demo_ArrowNames_VTABLE_DECL__* vptr0__;
-    __System_IComparable_VTABLE_DECL__* vptr_System_IComparable__;
-    __System_IFormattable_VTABLE_DECL__* vptr_System_IFormattable__;
-    __System_IConvertible_VTABLE_DECL__* vptr_System_IConvertible__;
-    System_Int32 value__;
-};
-
-
-// Enum runtime type information
+// [1-4] Enum runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_ArrowNames_RUNTIME_TYPE__;
 
-// Enum vtable
+// [1-5] Enum vtable
 extern __Accelometer_Demo_ArrowNames_VTABLE_DECL__ __Accelometer_Demo_ArrowNames_VTABLE__;
 
 ////////////////////////////////////////////////////////////
-// Enum: Accelometer.Demo/IconNames
+// [1] Accelometer.Demo.IconNames
 
-// Enum layout
+// [1-1] Enum layout
 typedef enum Accelometer_Demo_IconNames
 {
     Accelometer_Demo_IconNames_Heart = 0,
@@ -97,187 +81,171 @@ typedef enum Accelometer_Demo_IconNames
     Accelometer_Demo_IconNames_Square = 37,
     Accelometer_Demo_IconNames_SmallSquare = 38,
     Accelometer_Demo_IconNames_Scissors = 39,
+} Accelometer_Demo_IconNames;
 
-// Enum vtable layout
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo_IconNames* this__, IL2C_RUNTIME_TYPE_DECL* type);
-} __Accelometer_Demo_IconNames_VTABLE_DECL__;
-
-// Enum layout
-struct Accelometer_Demo_IconNames
-{
-    __Accelometer_Demo_IconNames_VTABLE_DECL__* vptr0__;
-    __System_IComparable_VTABLE_DECL__* vptr_System_IComparable__;
-    __System_IFormattable_VTABLE_DECL__* vptr_System_IFormattable__;
-    __System_IConvertible_VTABLE_DECL__* vptr_System_IConvertible__;
-    System_Int32 value__;
-};
-
-
-// Enum runtime type information
+// [1-4] Enum runtime type information
 extern IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_IconNames_RUNTIME_TYPE__;
 
-// Enum vtable
+// [1-5] Enum vtable
 extern __Accelometer_Demo_IconNames_VTABLE_DECL__ __Accelometer_Demo_IconNames_VTABLE__;
 
 //////////////////////////////////////////////////////////////////////////////////
-// Public static fields:
+// [2-2] Public static fields:
 
 //////////////////////////////////////////////////////////////////////////////////
-// Methods:
+// [2-3] Methods:
 
 #ifdef __cplusplus
 }
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-// Static fields:
+// [9-2] Static fields:
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// Methods:
+// [9-3] Methods:
 
 ////////////////////////////////////////////////////////////
-// Type: Accelometer.Demo
+// [9-4] Type: Accelometer.Demo
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.BeginAccelometer@0(System.Boolean highResolution, System.Byte scale)
+// [6] P/Invoke: Accelometer.Demo.BeginAccelometer(System.Boolean highResolution, System.Byte scale)
 
-System_Void* Accelometer_Demo_BeginAccelometer_0(System_Boolean highResolution, System_Byte scale)(System_Boolean highResolution, System_Byte scale)
+void Accelometer_Demo_BeginAccelometer(bool highResolution, uint8_t scale)
 {
     accelometer.begin(highResolution, scale);
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.UpdateAccelometer@0()
+// [6] P/Invoke: Accelometer.Demo.UpdateAccelometer()
 
-System_Byte Accelometer_Demo_UpdateAccelometer_0()()
+uint8_t Accelometer_Demo_UpdateAccelometer()
 {
     return accelometer.update();
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.GetAccelometerX@0()
+// [6] P/Invoke: Accelometer.Demo.GetAccelometerX()
 
-System_SByte Accelometer_Demo_GetAccelometerX_0()()
+int8_t Accelometer_Demo_GetAccelometerX()
 {
     return accelometer.getX();
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.GetAccelometerY@0()
+// [6] P/Invoke: Accelometer.Demo.GetAccelometerY()
 
-System_SByte Accelometer_Demo_GetAccelometerY_0()()
+int8_t Accelometer_Demo_GetAccelometerY()
 {
     return accelometer.getY();
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.GetAccelometerZ@0()
+// [6] P/Invoke: Accelometer.Demo.GetAccelometerZ()
 
-System_SByte Accelometer_Demo_GetAccelometerZ_0()()
+int8_t Accelometer_Demo_GetAccelometerZ()
 {
     return accelometer.getZ();
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.BeginScreen@0()
+// [6] P/Invoke: Accelometer.Demo.BeginScreen()
 
-System_Void* Accelometer_Demo_BeginScreen_0()()
+void Accelometer_Demo_BeginScreen()
 {
     SCREEN.begin();
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval)
+// [6] P/Invoke: Accelometer.Demo.ShowArrow(Accelometer.Demo.ArrowNames direction, System.UInt32 interval)
 
-System_Void* Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)
+void Accelometer_Demo_ShowArrow(Accelometer_Demo_ArrowNames direction, uint32_t interval)
 {
     SCREEN.showArrow((ArrowNames)direction, interval);
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.ShowIcon@0(Accelometer.Demo.IconNames icon, System.UInt32 interval)
+// [6] P/Invoke: Accelometer.Demo.ShowIcon(Accelometer.Demo.IconNames icon, System.UInt32 interval)
 
-System_Void* Accelometer_Demo_ShowIcon_0(Accelometer_Demo_IconNames icon, System_UInt32 interval)(Accelometer_Demo_IconNames icon, System_UInt32 interval)
+void Accelometer_Demo_ShowIcon(Accelometer_Demo_IconNames icon, uint32_t interval)
 {
     SCREEN.showIcon((IconNames)icon, interval);
 }
 
 ///////////////////////////////////////
-// P/Invoke: Accelometer.Demo.Delay@0(System.Int32 millis)
+// [6] P/Invoke: Accelometer.Demo.Delay(System.Int32 millis)
 
-System_Void* Accelometer_Demo_Delay_0(System_Int32 millis)(System_Int32 millis)
+void Accelometer_Demo_Delay(int32_t millis)
 {
     delay(millis);
 }
 
 ///////////////////////////////////////
-// Accelometer.Demo.Main@0()
+// [3] Accelometer.Demo.Main()
 
-System_Void* Accelometer_Demo_Main_0()()
+void Accelometer_Demo_Main()
 {
     //-------------------
     // Local variables:
 
-    System_SByte x;
-    System_SByte y;
-    System_Boolean fn;
-    System_Boolean fs;
-    System_Boolean fw;
-    System_Boolean fe;
-    System_UInt32 interval;
-    System_Boolean local7__;
-    System_Boolean local8__;
-    System_Boolean local9__;
-    System_Boolean local10__;
-    System_Boolean local11__;
-    System_Boolean local12__;
-    System_Boolean local13__;
-    System_Boolean local14__;
-    System_Boolean local15__;
+    int8_t x;
+    int8_t y;
+    bool fn;
+    bool fs;
+    bool fw;
+    bool fe;
+    uint32_t interval;
+    bool local7__;
+    bool local8__;
+    bool local9__;
+    bool local10__;
+    bool local11__;
+    bool local12__;
+    bool local13__;
+    bool local14__;
+    bool local15__;
 
     //-------------------
     // Evaluation stacks:
 
-    System_Int32 stack0_0__;
-    System_Int32 stack1_0__;
+    int32_t stack0_0__;
+    int32_t stack1_0__;
 
     //-------------------
     // IL body:
 
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(94): */
     /* IL_0000: nop  */
-    /* IL_0001: call Accelometer.Demo.BeginScreen@0() */
-    Accelometer_Demo_BeginScreen_0()();
+    /* IL_0001: call Accelometer.Demo.BeginScreen */
+    BeginScreen();
     /* IL_0006: nop  */
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(96): */
     /* IL_0007: ldc.i4.0  */
     stack0_0__ = 0;
     /* IL_0008: ldc.i4.2  */
     stack1_0__ = 2;
-    /* IL_0009: call Accelometer.Demo.BeginAccelometer@0(System.Boolean highResolution, System.Byte scale) */
-    Accelometer_Demo_BeginAccelometer_0(System_Boolean highResolution, System_Byte scale)(stack0_0__ ? true : false, (System_Byte)stack1_0__);
+    /* IL_0009: call Accelometer.Demo.BeginAccelometer */
+    BeginAccelometer(stack0_0__ ? true : false, (uint8_t)stack1_0__);
     /* IL_000e: nop  */
     /* IL_000f: br IL_00fd */
     goto IL_000f;
 IL_0014:
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(99): */
     /* IL_0014: nop  */
-    /* IL_0015: call Accelometer.Demo.UpdateAccelometer@0() */
-    stack0_0__ = Accelometer_Demo_UpdateAccelometer_0()();
+    /* IL_0015: call Accelometer.Demo.UpdateAccelometer */
+    stack0_0__ = UpdateAccelometer();
     /* IL_001a: pop  */
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(102): */
-    /* IL_001b: call Accelometer.Demo.GetAccelometerX@0() */
-    stack0_0__ = Accelometer_Demo_GetAccelometerX_0()();
+    /* IL_001b: call Accelometer.Demo.GetAccelometerX */
+    stack0_0__ = GetAccelometerX();
     /* IL_0020: stloc.0  */
-    x = (System_SByte)stack0_0__;
+    x = (int8_t)stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(103): */
-    /* IL_0021: call Accelometer.Demo.GetAccelometerY@0() */
-    stack0_0__ = Accelometer_Demo_GetAccelometerY_0()();
+    /* IL_0021: call Accelometer.Demo.GetAccelometerY */
+    stack0_0__ = GetAccelometerY();
     /* IL_0026: stloc.1  */
-    y = (System_SByte)stack0_0__;
+    y = (int8_t)stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(105): */
     /* IL_0027: ldloc.1  */
     stack0_0__ = y;
@@ -318,7 +286,7 @@ IL_0014:
     /* IL_0041: ldc.i4.s 30 */
     stack0_0__ = 30;
     /* IL_0043: stloc.s interval */
-    interval = (System_UInt32)stack0_0__;
+    interval = (uint32_t)stack0_0__;
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(112): */
     /* IL_0045: ldloc.2  */
     stack0_0__ = fn;
@@ -337,8 +305,8 @@ IL_0014:
     stack0_0__ = 1;
     /* IL_0050: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_0052: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_0052: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_0057: nop  */
     /* IL_0058: br IL_00f5 */
     goto IL_0058;
@@ -361,8 +329,8 @@ IL_005d:
     stack0_0__ = 7;
     /* IL_0068: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_006a: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_006a: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_006f: nop  */
     /* IL_0070: br IL_00f5 */
     goto IL_0058;
@@ -381,8 +349,8 @@ IL_0075:
     stack0_0__ = 0;
     /* IL_007d: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_007f: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_007f: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_0084: nop  */
     /* IL_0085: br.s IL_00f5 */
     goto IL_0058;
@@ -405,8 +373,8 @@ IL_0087:
     stack0_0__ = 3;
     /* IL_0092: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_0094: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_0094: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_0099: nop  */
     /* IL_009a: br.s IL_00f5 */
     goto IL_0058;
@@ -429,8 +397,8 @@ IL_009c:
     stack0_0__ = 5;
     /* IL_00a7: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_00a9: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_00a9: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_00ae: nop  */
     /* IL_00af: br.s IL_00f5 */
     goto IL_0058;
@@ -449,8 +417,8 @@ IL_00b1:
     stack0_0__ = 4;
     /* IL_00b9: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_00bb: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_00bb: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_00c0: nop  */
     /* IL_00c1: br.s IL_00f5 */
     goto IL_0058;
@@ -469,8 +437,8 @@ IL_00c3:
     stack0_0__ = 2;
     /* IL_00cc: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_00ce: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_00ce: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_00d3: nop  */
     /* IL_00d4: br.s IL_00f5 */
     goto IL_0058;
@@ -489,8 +457,8 @@ IL_00d6:
     stack0_0__ = 6;
     /* IL_00df: ldloc.s interval */
     stack1_0__ = interval;
-    /* IL_00e1: call Accelometer.Demo.ShowArrow@0(Accelometer.Demo.ArrowNames direction, System.UInt32 interval) */
-    Accelometer_Demo_ShowArrow_0(Accelometer_Demo_ArrowNames direction, System_UInt32 interval)((Accelometer_Demo_ArrowNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_00e1: call Accelometer.Demo.ShowArrow */
+    ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_00e6: nop  */
     /* IL_00e7: br.s IL_00f5 */
     goto IL_0058;
@@ -500,15 +468,15 @@ IL_00e9:
     stack0_0__ = 0;
     /* IL_00ea: ldc.i4 500 */
     stack1_0__ = 500;
-    /* IL_00ef: call Accelometer.Demo.ShowIcon@0(Accelometer.Demo.IconNames icon, System.UInt32 interval) */
-    Accelometer_Demo_ShowIcon_0(Accelometer_Demo_IconNames icon, System_UInt32 interval)((Accelometer_Demo_IconNames)stack0_0__, (System_UInt32)stack1_0__);
+    /* IL_00ef: call Accelometer.Demo.ShowIcon */
+    ShowIcon((Accelometer_Demo_IconNames)stack0_0__, (uint32_t)stack1_0__);
     /* IL_00f4: nop  */
 IL_00f5:
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(122): */
     /* IL_00f5: ldc.i4.5  */
     stack0_0__ = 5;
-    /* IL_00f6: call Accelometer.Demo.Delay@0(System.Int32 millis) */
-    Accelometer_Demo_Delay_0(System_Int32 millis)(stack0_0__);
+    /* IL_00f6: call Accelometer.Demo.Delay */
+    Delay(stack0_0__);
     /* IL_00fb: nop  */
 /* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(123): */
     /* IL_00fc: nop  */
@@ -522,9 +490,9 @@ IL_00fd:
 }
 
 ///////////////////////////////////////
-// Accelometer.Demo..ctor@0(Accelometer.Demo this__)
+// [3] Accelometer.Demo..ctor(Accelometer.Demo this__)
 
-System_Void* Accelometer_Demo__ctor_0(Accelometer_Demo this__)(Accelometer_Demo* this__)
+void Accelometer_Demo__ctor(Accelometer_Demo* this__)
 {
     //-------------------
     // Local variables:
@@ -554,7 +522,7 @@ System_Void* Accelometer_Demo__ctor_0(Accelometer_Demo this__)(Accelometer_Demo*
 
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
-    /* IL_0001: call System.Object..ctor@0(System.Object this__) */
+    /* IL_0001: call System.Object..ctor */
     /* IL_0006: nop  */
     /* IL_0007: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -562,35 +530,198 @@ System_Void* Accelometer_Demo__ctor_0(Accelometer_Demo this__)(Accelometer_Demo*
 }
 
 //////////////////////
-// Runtime helpers:
+// [7] Runtime helpers:
 
-// Runtime cast
+// [7-1] Runtime cast
 void* __Accelometer_Demo_IL2C_RuntimeCast__(Accelometer_Demo* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    // This type
+    // [7-2] This type
     if (type == il2c_typeof(Accelometer_Demo)) return this__;
 
-    // Delegate checking base types
+    // [7-4] Delegate checking base types
     return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
 }
 
-// GC's mark handler
+// [7-5] GC's mark handler
 void __Accelometer_Demo_IL2C_MarkHandler__(Accelometer_Demo* this__)
 {
 
     /* Suppressed invoke base mark handler */
 }
 
-// Runtime type information
+// [7-8] Runtime type information
 IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_RUNTIME_TYPE__ = {
     "Accelometer.Demo",
-    sizeof(Accelometer_Demo*),
+    sizeof(Accelometer_Demo),
     /* internalcall */ (IL2C_MARK_HANDLER)__Accelometer_Demo_IL2C_MarkHandler__,
 };
 
 //////////////////////
-// VTables:
+// [7-9] VTables:
 
-// Vtable of Accelometer.Demo
+// [7-8] Vtable of Accelometer.Demo
 __Accelometer_Demo_VTABLE_DECL__ __Accelometer_Demo_VTABLE__ = {
+    System_String* (*ToString)(Accelometer_Demo*),
+    int32_t (*GetHashCode)(Accelometer_Demo*),
+    System_Type* (*GetType)(Accelometer_Demo*),
+    void (*Finalize)(Accelometer_Demo*),
+    System_Object* (*MemberwiseClone)(Accelometer_Demo*),
+    bool (*Equals)(Accelometer_Demo*, System_Object*),
+    System_Reflection_FieldInfo* (*GetFieldInfo)(Accelometer_Demo*, System_String*, System_String*),
+    void (*FieldSetter)(Accelometer_Demo*, System_String*, System_String*, System_Object*),
+    void (*FieldGetter)(Accelometer_Demo*, System_String*, System_String*, System_Object**),
+};
+
+////////////////////////////////////////////////////////////
+// [9-4] Type: Accelometer.Demo.ArrowNames
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-1] Runtime cast
+void* __Accelometer_Demo_ArrowNames_IL2C_RuntimeCast__(Accelometer_Demo_ArrowNames* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // [7-2] This type
+    if (type == il2c_typeof(Accelometer_Demo_ArrowNames)) return this__;
+
+    // [7-4] Delegate checking base types
+    return __System_Enum_IL2C_RuntimeCast__((System_Enum*)this__, type);
+}
+
+// [7-5] GC's mark handler
+void __Accelometer_Demo_ArrowNames_IL2C_MarkHandler__(Accelometer_Demo_ArrowNames* this__)
+{
+
+    // [7-7] Delegate checking base types
+    __System_Enum_IL2C_MarkHandler__((System_Enum*)this__);
+}
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_ArrowNames_RUNTIME_TYPE__ = {
+    "Accelometer.Demo.ArrowNames",
+    sizeof(Accelometer_Demo_ArrowNames),
+    /* internalcall */ (IL2C_MARK_HANDLER)__Accelometer_Demo_ArrowNames_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// [7-9] VTables:
+
+// [7-8] Vtable of Accelometer.Demo.ArrowNames
+__Accelometer_Demo_ArrowNames_VTABLE_DECL__ __Accelometer_Demo_ArrowNames_VTABLE__ = {
+    System_String* (*ToString)(Accelometer_Demo_ArrowNames),
+    int32_t (*GetHashCode)(Accelometer_Demo_ArrowNames),
+    System_Type* (*GetType)(Accelometer_Demo_ArrowNames),
+    void (*Finalize)(Accelometer_Demo_ArrowNames),
+    System_Object* (*MemberwiseClone)(Accelometer_Demo_ArrowNames),
+    bool (*Equals)(Accelometer_Demo_ArrowNames, System_Object*),
+    System_Reflection_FieldInfo* (*GetFieldInfo)(Accelometer_Demo_ArrowNames, System_String*, System_String*),
+    void (*FieldSetter)(Accelometer_Demo_ArrowNames, System_String*, System_String*, System_Object*),
+    void (*FieldGetter)(Accelometer_Demo_ArrowNames, System_String*, System_String*, System_Object**),
+    int32_t (*GetHashCode)(Accelometer_Demo_ArrowNames),
+    System_String* (*ToString)(Accelometer_Demo_ArrowNames),
+    bool (*Equals)(Accelometer_Demo_ArrowNames, System_Object*),
+    System_Object* (*GetValue)(Accelometer_Demo_ArrowNames),
+    System_Reflection_CorElementType (*InternalGetCorElementType)(Accelometer_Demo_ArrowNames),
+    int32_t (*GetHashCode)(Accelometer_Demo_ArrowNames),
+    System_String* (*ToString)(Accelometer_Demo_ArrowNames),
+    System_TypeCode (*GetTypeCode)(Accelometer_Demo_ArrowNames),
+    bool (*InternalHasFlag)(Accelometer_Demo_ArrowNames, System_Enum*),
+    bool (*HasFlag)(Accelometer_Demo_ArrowNames, System_Enum*),
+    System_String* (*ToString_1)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    bool (*System_IConvertible_ToBoolean)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    wchar_t (*System_IConvertible_ToChar)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    int8_t (*System_IConvertible_ToSByte)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    uint8_t (*System_IConvertible_ToByte)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    int16_t (*System_IConvertible_ToInt16)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    uint16_t (*System_IConvertible_ToUInt16)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    int32_t (*System_IConvertible_ToInt32)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    uint32_t (*System_IConvertible_ToUInt32)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    int64_t (*System_IConvertible_ToInt64)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    uint64_t (*System_IConvertible_ToUInt64)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    float (*System_IConvertible_ToSingle)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    double (*System_IConvertible_ToDouble)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    System_Decimal (*System_IConvertible_ToDecimal)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    System_DateTime (*System_IConvertible_ToDateTime)(Accelometer_Demo_ArrowNames, System_IFormatProvider*),
+    bool (*Equals)(Accelometer_Demo_ArrowNames, System_Object*),
+    int32_t (*CompareTo)(Accelometer_Demo_ArrowNames, System_Object*),
+    System_String* (*ToString_2)(Accelometer_Demo_ArrowNames, System_String*),
+    System_String* (*ToString_3)(Accelometer_Demo_ArrowNames, System_String*, System_IFormatProvider*),
+    System_Object* (*System_IConvertible_ToType)(Accelometer_Demo_ArrowNames, System_Type*, System_IFormatProvider*),
+};
+
+////////////////////////////////////////////////////////////
+// [9-4] Type: Accelometer.Demo.IconNames
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-1] Runtime cast
+void* __Accelometer_Demo_IconNames_IL2C_RuntimeCast__(Accelometer_Demo_IconNames* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // [7-2] This type
+    if (type == il2c_typeof(Accelometer_Demo_IconNames)) return this__;
+
+    // [7-4] Delegate checking base types
+    return __System_Enum_IL2C_RuntimeCast__((System_Enum*)this__, type);
+}
+
+// [7-5] GC's mark handler
+void __Accelometer_Demo_IconNames_IL2C_MarkHandler__(Accelometer_Demo_IconNames* this__)
+{
+
+    // [7-7] Delegate checking base types
+    __System_Enum_IL2C_MarkHandler__((System_Enum*)this__);
+}
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_DECL __Accelometer_Demo_IconNames_RUNTIME_TYPE__ = {
+    "Accelometer.Demo.IconNames",
+    sizeof(Accelometer_Demo_IconNames),
+    /* internalcall */ (IL2C_MARK_HANDLER)__Accelometer_Demo_IconNames_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// [7-9] VTables:
+
+// [7-8] Vtable of Accelometer.Demo.IconNames
+__Accelometer_Demo_IconNames_VTABLE_DECL__ __Accelometer_Demo_IconNames_VTABLE__ = {
+    System_String* (*ToString)(Accelometer_Demo_IconNames),
+    int32_t (*GetHashCode)(Accelometer_Demo_IconNames),
+    System_Type* (*GetType)(Accelometer_Demo_IconNames),
+    void (*Finalize)(Accelometer_Demo_IconNames),
+    System_Object* (*MemberwiseClone)(Accelometer_Demo_IconNames),
+    bool (*Equals)(Accelometer_Demo_IconNames, System_Object*),
+    System_Reflection_FieldInfo* (*GetFieldInfo)(Accelometer_Demo_IconNames, System_String*, System_String*),
+    void (*FieldSetter)(Accelometer_Demo_IconNames, System_String*, System_String*, System_Object*),
+    void (*FieldGetter)(Accelometer_Demo_IconNames, System_String*, System_String*, System_Object**),
+    int32_t (*GetHashCode)(Accelometer_Demo_IconNames),
+    System_String* (*ToString)(Accelometer_Demo_IconNames),
+    bool (*Equals)(Accelometer_Demo_IconNames, System_Object*),
+    System_Object* (*GetValue)(Accelometer_Demo_IconNames),
+    System_Reflection_CorElementType (*InternalGetCorElementType)(Accelometer_Demo_IconNames),
+    int32_t (*GetHashCode)(Accelometer_Demo_IconNames),
+    System_String* (*ToString)(Accelometer_Demo_IconNames),
+    System_TypeCode (*GetTypeCode)(Accelometer_Demo_IconNames),
+    bool (*InternalHasFlag)(Accelometer_Demo_IconNames, System_Enum*),
+    bool (*HasFlag)(Accelometer_Demo_IconNames, System_Enum*),
+    System_String* (*ToString_1)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    bool (*System_IConvertible_ToBoolean)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    wchar_t (*System_IConvertible_ToChar)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    int8_t (*System_IConvertible_ToSByte)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    uint8_t (*System_IConvertible_ToByte)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    int16_t (*System_IConvertible_ToInt16)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    uint16_t (*System_IConvertible_ToUInt16)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    int32_t (*System_IConvertible_ToInt32)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    uint32_t (*System_IConvertible_ToUInt32)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    int64_t (*System_IConvertible_ToInt64)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    uint64_t (*System_IConvertible_ToUInt64)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    float (*System_IConvertible_ToSingle)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    double (*System_IConvertible_ToDouble)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    System_Decimal (*System_IConvertible_ToDecimal)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    System_DateTime (*System_IConvertible_ToDateTime)(Accelometer_Demo_IconNames, System_IFormatProvider*),
+    bool (*Equals)(Accelometer_Demo_IconNames, System_Object*),
+    int32_t (*CompareTo)(Accelometer_Demo_IconNames, System_Object*),
+    System_String* (*ToString_2)(Accelometer_Demo_IconNames, System_String*),
+    System_String* (*ToString_3)(Accelometer_Demo_IconNames, System_String*, System_IFormatProvider*),
+    System_Object* (*System_IConvertible_ToType)(Accelometer_Demo_IconNames, System_Type*, System_IFormatProvider*),
 };

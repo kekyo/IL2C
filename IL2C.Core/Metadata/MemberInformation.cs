@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 using Mono.Cecil;
 
@@ -10,13 +7,14 @@ namespace IL2C.Metadata
     public interface IMemberInformation
         : IMetadataInformation
     {
-        string Name { get; }
-        string FriendlyName { get; }
-        string MangledName { get; }
-
         string MemberTypeName { get; }
 
+        IModuleInformation DeclaringModule { get; }
         ITypeInformation DeclaringType { get; }
+
+        bool IsCLanguagePublicScope { get; }
+        bool IsCLanguageLinkageScope { get; }
+        bool IsCLanguageFileScope { get; }
     }
 
     internal abstract class MemberInformation<TReference, TDefinition>
@@ -26,51 +24,40 @@ namespace IL2C.Metadata
         where TReference : MemberReference
         where TDefinition : TReference
     {
-        private static readonly char[] replaceChars = { '.', '@', '*' };
-
         private readonly Lazy<TypeInformation> declaringType;
 
         public MemberInformation(TReference member, ModuleInformation module)
-            : base(member, module.Context)
+            : base(member, module.MetadataContext)
         {
             this.DeclaringModule = module;
 
-            declaringType = this.Context.LazyGetOrAddMember(
+            declaringType = this.MetadataContext.LazyGetOrAddMember(
                 () => this.Member.DeclaringType,
                 type => new TypeInformation(type, module));
         }
 
-        public override string UniqueName => this.Member.FullName;
-
-        internal ModuleInformation DeclaringModule { get; }
-
-        public string Name => this.Member.Name;
-
-        protected static string ToMangledName(string name)
-        {
-            Debug.Assert(!name.Contains("*"));
-
-            var sb = new StringBuilder(name);
-            foreach (var ch in replaceChars)
-            {
-                sb.Replace(ch, '_');
-            }
-            return sb.ToString();
-        }
-
-        public virtual string FriendlyName => this.Member.GetFriendlyName();
-
-        public string MangledName => ToMangledName(this.FriendlyName);
+        public override string UniqueName =>
+            this.Member.FullName;
+        public override string Name =>
+            this.Member.Name;
+        public override string FriendlyName =>
+            this.Member.GetFriendlyName();
 
         public abstract string MemberTypeName { get; }
 
+        internal ModuleInformation DeclaringModule { get; }
+        IModuleInformation IMemberInformation.DeclaringModule => this.DeclaringModule;
+
         public ITypeInformation DeclaringType => declaringType.Value;
 
-        public override string ToString()
-        {
-            return string.Format("{0}: {1}", this.MemberTypeName, base.ToString());
-        }
+        public abstract bool IsCLanguagePublicScope { get; }
+        public abstract bool IsCLanguageLinkageScope { get; }
+        public abstract bool IsCLanguageFileScope { get; }
 
-        string IOperandPrintable.PrintableString => this.FriendlyName;
+        public override string ToString() =>
+            string.Format("{0}: {1}", this.MemberTypeName, base.ToString());
+
+        string IOperandPrintable.PrintableString =>
+            this.Member.GetFriendlyName();
     }
 }

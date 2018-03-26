@@ -209,18 +209,15 @@ namespace IL2C
                 .SelectMany(module => module.Types)
                 .Where(type => type.IsValidDefinition)
                 .ToArray();
-            var types = allTypes
-                .Where(type => !(type.IsPublic || type.IsNestedPublic || type.IsNestedFamily || type.IsNestedFamilyOrAssembly))
-                .ToArray();
 
             // Lookup type references.
-            foreach (var type in types)
+            foreach (var type in allTypes)
             {
                 prepareContext.RegisterType(type);
             }
 
             // Lookup fields.
-            foreach (var field in types.SelectMany(type => type.Fields))
+            foreach (var field in allTypes.SelectMany(type => type.Fields))
             {
                 prepareContext.RegisterType(field.FieldType);
             }

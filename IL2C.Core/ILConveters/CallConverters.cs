@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 
 using Mono.Cecil.Cil;
@@ -39,7 +38,7 @@ namespace IL2C.ILConveters
                     {
                         string.Format(
                             "{0}({1})",
-                            method.MangledName,
+                            method.CLanguageFunctionName,
                             parameterString)
                     };
                 };
@@ -58,7 +57,7 @@ namespace IL2C.ILConveters
                         string.Format(
                             "{0} = {1}({2})",
                             resultName,
-                            method.MangledName,
+                            method.CLanguageFunctionName,
                             parameterString)
                     };
                 };

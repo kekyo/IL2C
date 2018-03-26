@@ -11,12 +11,13 @@ namespace IL2C.Metadata
     [Flags]
     public enum FriendlyNameTypes
     {
-        Standard = 0x00,
-        ArgumentTypes = 0x01,
-        ArgumentNames = 0x02,
-        Index = 0x04,
-        Full = 0x07,
-        Mangled = 0x08,
+        Less = 0x00,
+        FullName = 0x01,
+        ArgumentTypes = 0x02,
+        ArgumentNames = 0x03,
+        Index = 0x08,
+        Full = 0x0f,
+        Mangled = 0x10,
     }
 
     public interface IMethodInformation : IMemberInformation
@@ -48,6 +49,8 @@ namespace IL2C.Metadata
 
         PInvokeInfo PInvokeInfo { get; }
 
+        string CLanguageFunctionName { get; }
+        string CLanguageVirtualFunctionDeclarationName { get; }
         string CLanguageRawFunctionPrototype { get; }
         string CLanguageFunctionPrototype { get; }
         string CLanguageFunctionTypePrototype { get; }
@@ -68,9 +71,10 @@ namespace IL2C.Metadata
         public MethodInformation(MethodReference method, ModuleInformation module)
             : base(method, module)
         {
-            returnType = this.Context.LazyGetOrAddMember(
+            returnType = this.MetadataContext.LazyGetOrAddMember(
                 () => this.Member.ReturnType,
-                type => (type != null) ? new TypeInformation(type, module) : this.Context.VoidType);
+                type => (type != null) ? new TypeInformation(type, module) : this.MetadataContext.VoidType);
+
             parameters = Lazy.Create(() => (method.HasThis)
                 ? new[] { this.CreateThisParameterInformation(this.DeclaringType) }
                     .Concat(this.Member.Parameters.Select(this.ToParameterInformation))
@@ -78,6 +82,7 @@ namespace IL2C.Metadata
                 : this.Member.Parameters
                     .Select(ToParameterInformation)
                     .ToArray());
+
             variables = Lazy.Create(() => this.Definition.Body.Variables
                 .Select(variable => new VariableInformation(
                     this,
@@ -85,19 +90,20 @@ namespace IL2C.Metadata
                     this.Definition.Body.Method.DebugInformation.TryGetName(variable, out var name)
                         ? name
                         : string.Format("local{0}__", variable.Index),
-                    this.Context.GetOrAddMember(
+                    this.MetadataContext.GetOrAddMember(
                         variable.VariableType,
                         variableType => new TypeInformation(
                             variableType,
-                            this.Context.GetOrAddModule(
+                            this.MetadataContext.GetOrAddModule(
                                 variableType.Module.Assembly,
                                 variableType.Module,
                                 (assembly, module_) => new ModuleInformation(
                                     module_,
-                                    this.Context.GetOrAddAssembly(
+                                    this.MetadataContext.GetOrAddAssembly(
                                         assembly,
-                                        assembly_ => new AssemblyInformation(assembly_, this.Context))))))))
+                                        assembly_ => new AssemblyInformation(assembly_, this.MetadataContext))))))))
                 .ToArray());
+
             codeStreams = Lazy.Create(() =>
                 {
                     // It gathers sequence point informations.
@@ -143,19 +149,19 @@ namespace IL2C.Metadata
                         var typeRef = operand as TypeReference;
                         if (typeRef != null)
                         {
-                            return this.Context.GetOrAddMember(typeRef, t => new TypeInformation(t, module));
+                            return this.MetadataContext.GetOrAddMember(typeRef, t => new TypeInformation(t, module));
                         }
 
                         var fieldRef = operand as FieldReference;
                         if (fieldRef != null)
                         {
-                            return this.Context.GetOrAddMember(fieldRef, f => new FieldInformation(f, module));
+                            return this.MetadataContext.GetOrAddMember(fieldRef, f => new FieldInformation(f, module));
                         }
 
                         var methodRef = operand as MethodReference;
                         if (methodRef != null)
                         {
-                            return this.Context.GetOrAddMember(methodRef, m => new MethodInformation(m, module));
+                            return this.MetadataContext.GetOrAddMember(methodRef, m => new MethodInformation(m, module));
                         }
 
                         return operand;
@@ -175,76 +181,83 @@ namespace IL2C.Metadata
                     }
                     return codeStream;
                 });
+
             overloadIndex = Lazy.Create(() =>
                 {
-                    if (this.Definition.DeclaringType.Methods.Count < 2)
-                    {
-                        return 0;
-                    }
-
-                    var found = this.Definition.DeclaringType.Methods
+                    var found = this.DeclaringType.DeclaredMethods
                         .Where(m => m.Name == this.Member.Name)
                         .OrderByParameters()     // Stable by overload types.
                         .Select((m, i) => new { m, i })
-                        .First(e => MemberReferenceComparer.Instance.Equals(e.m, method));
+                        .First(e => this.Equals(e.m));
                     return found.i;
                 });
         }
 
-        public override string MemberTypeName => this.IsStatic
-            ? "Static method"
-            : this.IsAbstract
-                ? this.DeclaringType.IsInterface
-                    ? "Interface method"
-                    : "Abstract method"
-                : "Method";
+        public override string MemberTypeName =>
+            this.IsStatic
+                ? "Static method"
+                : this.IsAbstract
+                    ? this.DeclaringType.IsInterface
+                        ? "Interface method"
+                        : "Abstract method"
+                    : "Method";
 
-        private VariableInformation CreateThisParameterInformation(ITypeInformation thisType)
-        {
-            return new VariableInformation(
+        private VariableInformation CreateThisParameterInformation(ITypeInformation thisType) =>
+            new VariableInformation(
                 this,
                 0,
                 "this__",
                 thisType);
-        }
 
-        private VariableInformation ToParameterInformation(ParameterReference parameter)
-        {
-            return new VariableInformation(
+        private VariableInformation ToParameterInformation(ParameterReference parameter) =>
+            new VariableInformation(
                 this,
                 parameter.Index,
                 parameter.Name,
-                this.Context.GetOrAddMember(
+                this.MetadataContext.GetOrAddMember(
                     parameter.ParameterType,
                     type_ => new TypeInformation(
                         type_,
-                        this.Context.GetOrAddModule(
+                        this.MetadataContext.GetOrAddModule(
                             type_.Module.Assembly,
                             type_.Module,
                             (assembly_, module_) => new ModuleInformation(
                                 module_,
-                                this.Context.GetOrAddAssembly(
+                                this.MetadataContext.GetOrAddAssembly(
                                     assembly_,
-                                    assembly__ => new AssemblyInformation(assembly__, this.Context)))))));
-        }
+                                    assembly__ => new AssemblyInformation(assembly__, this.MetadataContext)))))));
 
         public override string FriendlyName =>
-            this.GetFriendlyName(FriendlyNameTypes.Full);
+            this.GetFriendlyName(FriendlyNameTypes.ArgumentTypes | FriendlyNameTypes.ArgumentNames);
 
-        public bool IsPublic => this.Definition.IsPublic;
-        public bool IsFamily => this.Definition.IsFamily;
-        public bool IsFamilyOrAssembly => this.Definition.IsFamilyOrAssembly;
+        public override string MangledName =>
+            this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
 
-        public bool IsConstructor => this.Definition.IsConstructor;
-        public bool IsStatic => this.Definition.IsStatic;
-        public bool IsVirtual => this.Definition.IsVirtual;
-        public bool IsAbstract => this.Definition.IsAbstract;
-        public bool IsSealed => this.Definition.IsFinal;
-        public bool IsNewSlot => this.Definition.IsNewSlot;
+        public bool IsPublic =>
+            this.Definition.IsPublic;
+        public bool IsFamily =>
+            this.Definition.IsFamily;
+        public bool IsFamilyOrAssembly =>
+            this.Definition.IsFamilyOrAssembly;
+
+        public bool IsConstructor =>
+            this.Definition.IsConstructor;
+        public bool IsStatic =>
+            this.Definition.IsStatic;
+        public bool IsVirtual =>
+            this.Definition.IsVirtual;
+        public bool IsAbstract =>
+            this.Definition.IsAbstract;
+        public bool IsSealed =>
+            this.Definition.IsFinal;
+        public bool IsNewSlot =>
+            this.Definition.IsNewSlot;
         public bool IsExtern =>
             this.Definition.IsPInvokeImpl || this.Definition.IsInternalCall;
-        public bool HasThis => this.Definition.HasThis;
-        public bool HasBody => this.Definition.HasBody;
+        public bool HasThis =>
+            this.Definition.HasThis;
+        public bool HasBody => 
+            this.Definition.HasBody;
 
         public bool IsCallableMethod
         {
@@ -252,7 +265,7 @@ namespace IL2C.Metadata
             {
                 // TODO: Except typed delegate's async methods
                 //   Because currently IL2C not supported async methods.
-                if (this.Context.DelegateType.IsAssignableFrom(this.DeclaringType))
+                if (this.DeclaringType.IsDelegate)
                 {
                     // Only "Invoke", exclude "BeginInvoke" and "EndInvoke"
                     return this.Name.Equals("Invoke");
@@ -268,35 +281,36 @@ namespace IL2C.Metadata
             }
         }
 
-        public ITypeInformation ReturnType => returnType.Value;
-        public IVariableInformation[] Parameters => parameters.Value;
-        public IVariableInformation[] LocalVariables => variables.Value;
-        public ICodeStream CodeStream => codeStreams.Value;
-        public int OverloadIndex => overloadIndex.Value;
+        public ITypeInformation ReturnType =>
+            returnType.Value;
+        public IVariableInformation[] Parameters =>
+            parameters.Value;
+        public IVariableInformation[] LocalVariables =>
+            variables.Value;
+        public ICodeStream CodeStream =>
+            codeStreams.Value;
+        public int OverloadIndex =>
+            overloadIndex.Value;
 
-        private static bool IncludeNames(FriendlyNameTypes type)
-        {
-            return (type & FriendlyNameTypes.ArgumentNames) == FriendlyNameTypes.ArgumentNames;
-        }
+        private static bool FullName(FriendlyNameTypes type) =>
+            (type & FriendlyNameTypes.FullName) == FriendlyNameTypes.FullName;
 
-        private static bool IncludeTypes(FriendlyNameTypes type)
-        {
-            return (type & FriendlyNameTypes.ArgumentTypes) == FriendlyNameTypes.ArgumentTypes;
-        }
+        private static bool IncludeNames(FriendlyNameTypes type) =>
+            (type & FriendlyNameTypes.ArgumentNames) == FriendlyNameTypes.ArgumentNames;
 
-        private static bool IncludeIndex(FriendlyNameTypes type)
-        {
-            return (type & FriendlyNameTypes.Index) == FriendlyNameTypes.Index;
-        }
+        private static bool IncludeTypes(FriendlyNameTypes type) =>
+            (type & FriendlyNameTypes.ArgumentTypes) == FriendlyNameTypes.ArgumentTypes;
 
-        private static bool Mangled(FriendlyNameTypes type)
-        {
-            return (type & FriendlyNameTypes.Mangled) == FriendlyNameTypes.Mangled;
-        }
+        private static bool IncludeIndex(FriendlyNameTypes type) =>
+            (type & FriendlyNameTypes.Index) == FriendlyNameTypes.Index;
+
+        private static bool Mangled(FriendlyNameTypes type) =>
+            (type & FriendlyNameTypes.Mangled) == FriendlyNameTypes.Mangled;
 
         public string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full)
         {
-            var index = IncludeIndex(type)
+            // Apply index number if NOT default method (method have no arguments)
+            var index = (IncludeIndex(type) && (this.OverloadIndex >= 1))
                 ? string.Format("@{0}", this.OverloadIndex)
                 : string.Empty;
 
@@ -318,7 +332,7 @@ namespace IL2C.Metadata
 
             var name = string.Format(
                 "{0}{1}{2}",
-                base.FriendlyName,
+                FullName(type) ? this.Member.GetFriendlyName() : this.Member.Name,
                 index,
                 arguments);
 
@@ -334,7 +348,15 @@ namespace IL2C.Metadata
                 .ToArray();
         }
 
-        public PInvokeInfo PInvokeInfo => this.Definition.PInvokeInfo;
+        public PInvokeInfo PInvokeInfo =>
+            this.Definition.PInvokeInfo;
+
+        public override bool IsCLanguagePublicScope =>
+            this.Definition.IsPublic;
+        public override bool IsCLanguageLinkageScope =>
+            !this.Definition.IsPublic && !this.Definition.IsPrivate;
+        public override bool IsCLanguageFileScope =>
+            this.Definition.IsPrivate;
 
         private string GetFunctionPrototype(bool decorate)
         {
@@ -342,21 +364,28 @@ namespace IL2C.Metadata
                 ", ",
                 this.Parameters.Select(parameter => string.Format(
                     "{0} {1}",
-                    parameter.TargetType.CLanguageDeclaration,
+                    parameter.TargetType.CLanguageTypeName,
                     parameter.SymbolName)));
 
             var returnTypeName =
-                this.ReturnType.CLanguageDeclaration;
+                this.ReturnType.CLanguageTypeName;
 
             return string.Format(
                 decorate ? "{0} __{1}__({2})" : "{0} {1}({2})",
                 returnTypeName,
-                this.MangledName,
+                this.CLanguageFunctionName,
                 parametersString);
         }
 
-        public string CLanguageRawFunctionPrototype => this.GetFunctionPrototype(false);
-        public string CLanguageFunctionPrototype => this.GetFunctionPrototype(this.IsVirtual);
+        public string CLanguageFunctionName =>
+            this.GetFriendlyName(FriendlyNameTypes.FullName | FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
+        public string CLanguageVirtualFunctionDeclarationName =>
+            this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
+
+        public string CLanguageRawFunctionPrototype =>
+            this.GetFunctionPrototype(false);
+        public string CLanguageFunctionPrototype =>
+            this.GetFunctionPrototype(this.IsVirtual);
 
         public string CLanguageFunctionTypePrototype
         {
@@ -366,11 +395,11 @@ namespace IL2C.Metadata
                     ", ",
                     this.Parameters.Select(parameter => string.Format(
                         "{0} {1}",
-                        parameter.TargetType.CLanguageDeclaration,
+                        parameter.TargetType.CLanguageTypeName,
                         parameter.SymbolName)));
 
                 var returnTypeName =
-                    this.ReturnType.CLanguageDeclaration;
+                    this.ReturnType.CLanguageTypeName;
 
                 return string.Format(
                     "{0} (*{1})({2})",
@@ -380,9 +409,7 @@ namespace IL2C.Metadata
             }
         }
 
-        protected override MethodDefinition OnResolve(MethodReference member)
-        {
-            return member.Resolve();
-        }
+        protected override MethodDefinition OnResolve(MethodReference member) =>
+            member.Resolve();
     }
 }

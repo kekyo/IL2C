@@ -62,10 +62,10 @@ namespace IL2C.Translators
                 return typedStackInformation[selectedStackInformation];
             }
 
-            public IEnumerable<VariableInformation> ExtractStacks()
-            {
-                return typedStackInformation;
-            }
+            public IEnumerable<VariableInformation> ExtractStacks() => typedStackInformation;
+
+            public override string ToString() =>
+                string.Format("[{0}]", string.Join(", ", typedStackInformation.Select(si => si.TargetType.FriendlyName)));
         }
 
         private struct StackSnapshot
@@ -101,8 +101,8 @@ namespace IL2C.Translators
         private readonly List<StackInformationHolder> stackList =
             new List<StackInformationHolder>();
         private int stackPointer = -1;
-        private readonly Dictionary<int, ICodeInformation> labelNames = 
-            new Dictionary<int, ICodeInformation>();
+        private readonly Dictionary<int, string> labelNames = 
+            new Dictionary<int, string>();
         private readonly Queue<StackSnapshot> pathRemains =
             new Queue<StackSnapshot>();
         #endregion
@@ -210,7 +210,7 @@ namespace IL2C.Translators
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
-            Debug.Assert(stackPointer >= 0);
+            Debug.Assert(stackPointer >= 1);
 
             if (stackPointer <= 0)
             {
@@ -240,13 +240,13 @@ namespace IL2C.Translators
                 targetOffset, stackPointer, stackList));
 
             if (labelNames.TryGetValue(
-                targetOffset, out var codeInformation) == false)
+                targetOffset, out var labelName) == false)
             {
-                codeInformation = currentCode;
-                labelNames.Add(targetOffset, codeInformation);
+                labelName = MetadataUtilities.GetLabelName(targetOffset);
+                labelNames.Add(targetOffset, labelName);
             }
 
-            return codeInformation.Label;
+            return labelName;
         }
 
         public bool TryDequeueNextPath()
@@ -306,7 +306,7 @@ namespace IL2C.Translators
                 .SelectMany(stackInformations => stackInformations.ExtractStacks());
         }
 
-        public IReadOnlyDictionary<int, ICodeInformation> ExtractLabelNames()
+        public IReadOnlyDictionary<int, string> ExtractLabelNames()
         {
             return labelNames;
         }

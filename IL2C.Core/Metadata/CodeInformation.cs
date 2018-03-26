@@ -54,11 +54,10 @@ namespace IL2C.Metadata
         public int Offset { get; }
         public OpCode OpCode { get; }
         public int Size { get; }
+        public string Label => MetadataUtilities.GetLabelName(this.Offset);
         public DebugInformation[] Debug { get; }
 
         public object Operand => operand.Value;
-
-        public string Label => string.Format("IL_{0:x4}", this.Offset);
 
         private string GetOperandForPrintable()
         {

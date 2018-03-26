@@ -8,6 +8,9 @@ namespace IL2C.Metadata
 {
     internal static class MetadataUtilities
     {
+        public static string GetLabelName(int offset) =>
+            string.Format("IL_{0:x4}", offset);
+
         public static string GetFriendlyName(this MemberReference member)
         {
             var declaringTypes = member.DeclaringType
@@ -25,13 +28,13 @@ namespace IL2C.Metadata
                     .Concat(new[] { member.Name }));
         }
 
-        public static IOrderedEnumerable<MethodDefinition> OrderByParameters(
-           this IEnumerable<MethodDefinition> methods)
+        public static IOrderedEnumerable<IMethodInformation> OrderByParameters(
+            this IEnumerable<IMethodInformation> methods)
         {
             var ms = methods.ToArray();
-            var maxParameterCount = (ms.Length >= 1) ? ms.Max(m => m.Parameters.Count) : 0;
+            var maxParameterCount = (ms.Length >= 1) ? ms.Max(m => m.Parameters.Length) : 0;
 
-            var expr = ms.OrderBy(m => m.Parameters.Count);
+            var expr = ms.OrderBy(m => m.Parameters.Length);
             for (var index = 0; index < maxParameterCount; index++)
             {
                 // HACK: C# lambda captured inner incremented value.
@@ -40,8 +43,8 @@ namespace IL2C.Metadata
                 // TODO: Improve human predictivity and stable compatibility.
                 expr = expr.ThenBy(m =>
                     m.Parameters.ElementAtOrDefault(capturedIndex)
-                        ?.ParameterType.GetFriendlyName()
-                        ?? string.Empty);
+                        ?.TargetType.FriendlyName
+                    ?? string.Empty);
             }
 
             return expr;

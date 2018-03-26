@@ -14,40 +14,6 @@ namespace IL2C
         , IExtractContext
     {
         #region  Fields
-        private static readonly Dictionary<string, string> predefinedIncludeHints = new Dictionary<string, string>
-        {
-            { typeof(bool).FullName, "stdbool.h" },
-            { typeof(byte).FullName, "stdint.h" },
-            { typeof(sbyte).FullName, "stdint.h" },
-            { typeof(short).FullName, "stdint.h" },
-            { typeof(ushort).FullName, "stdint.h" },
-            { typeof(int).FullName, "stdint.h" },
-            { typeof(uint).FullName, "stdint.h" },
-            { typeof(long).FullName, "stdint.h" },
-            { typeof(ulong).FullName, "stdint.h" },
-            { typeof(string).FullName, "string.h" },
-            { typeof(IntPtr).FullName, "stdint.h" },
-            { typeof(UIntPtr).FullName, "stdint.h" },
-            { typeof(char).FullName, "wchar.h" }
-        };
-
-        private static readonly Dictionary<string, string> predefinedCTypeNames = new Dictionary<string, string>
-        {
-            { typeof(void).FullName, "void" },
-            { typeof(bool).FullName, "bool" },
-            { typeof(byte).FullName, "uint8_t" },
-            { typeof(sbyte).FullName, "int8_t" },
-            { typeof(short).FullName, "int16_t" },
-            { typeof(ushort).FullName, "uint16_t" },
-            { typeof(int).FullName, "int32_t" },
-            { typeof(uint).FullName, "uint32_t" },
-            { typeof(long).FullName, "int64_t" },
-            { typeof(ulong).FullName, "uint64_t" },
-            { typeof(IntPtr).FullName, "intptr_t" },
-            { typeof(UIntPtr).FullName, "uintptr_t" },
-            { typeof(char).FullName, "wchar_t" }
-        };
-
         private readonly HashSet<string> includes = new HashSet<string>();
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
         private readonly Dictionary<string, IFieldInformation> staticFields =
@@ -100,14 +66,14 @@ namespace IL2C
 
         private void RegisterType(ITypeInformation type)
         {
-            if (predefinedIncludeHints.TryGetValue(type.UniqueName, out var includeFile))
-            {
-                this.RegisterIncludeFile(includeFile);
-            }
-            else if (type.IsByReference)
+            if (type.IsByReference || type.IsPointer)
             {
                 var dereferencedType = type.ElementType;
                 this.RegisterType(dereferencedType);
+            }
+            else
+            {
+                this.RegisterIncludeFile(type.DeclaringModule.DeclaringAssembly.CLanguageIncludeFileName);
             }
         }
 
@@ -178,15 +144,15 @@ namespace IL2C
                 {
                     return string.Format(
                         "il2c_cast_to_interface({0}, {1}, {2})",
-                        lhsType.CLanguageDeclaration,
-                        rhs.TargetType.CLanguageDeclaration,
+                        lhsType.CLanguageTypeName,
+                        rhs.TargetType.CLanguageTypeName,
                         rhs.SymbolName);
                 }
                 else
                 {
                     return string.Format(
                         "({0}){1}",
-                        lhsType.CLanguageDeclaration,
+                        lhsType.CLanguageTypeName,
                         rhs.SymbolName);
                 }
             }
@@ -197,7 +163,7 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0}){1}",
-                        lhsType.CLanguageDeclaration,
+                        lhsType.CLanguageTypeName,
                         rhs.SymbolName);
                 }
                 else if (lhsType.IsBooleanType)
@@ -216,7 +182,7 @@ namespace IL2C
                     {
                         return String.Format(
                             "({0}){1}",
-                            lhsType.CLanguageDeclaration,
+                            lhsType.CLanguageTypeName,
                             rhs.SymbolName);
                     }
                 }
@@ -236,7 +202,7 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0}){1}",
-                        lhsType.CLanguageDeclaration,
+                        lhsType.CLanguageTypeName,
                         rhs.SymbolName);
                 }
             }
@@ -244,7 +210,7 @@ namespace IL2C
             {
                 return String.Format(
                     "({0}){1}",
-                    lhsType.CLanguageDeclaration,
+                    lhsType.CLanguageTypeName,
                     rhs.SymbolName);
             }
 
@@ -270,7 +236,7 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0})({1})",
-                        lhsType.CLanguageDeclaration,
+                        lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
                 else if (lhsType.IsBooleanType)
@@ -295,7 +261,7 @@ namespace IL2C
                 {
                     return String.Format(
                         "({0}){1}",
-                        lhsType.CLanguageDeclaration,
+                        lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
             }

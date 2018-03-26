@@ -1,7 +1,8 @@
 ﻿using System;
-using IL2C.Metadata;
+
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters

@@ -67,7 +67,7 @@ namespace IL2C.ILConveters
                 return new[] { string.Format(
                     "{0} = *(({1}*)il2c_unbox({2}, il2c_typeof({3})))",
                     symbolName,
-                    operand.CLanguageDeclaration,
+                    operand.CLanguageTypeName,
                     rhs,
                     operand.MangledName) };
             };

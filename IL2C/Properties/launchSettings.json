@@ -1,8 +1,8 @@
 {
   "profiles": {
     "IL2C": {
-      "commandName": "Project",
-      "commandLineArgs": "\"$(ProjectDir)..\\samples\\microbit\\Accelometer.Code\\bin\\$(ConfigurationName)\\netstandard2.0\\Accelometer.Code.dll\" --debug --cpp \"$(ProjectDir)..\\samples\\microbit\\Accelometer\""
+        "commandName": "Project",
+        "commandLineArgs": "\"$(ProjectDir)..\\samples\\Calculator\\Calculator.Code\\bin\\$(ConfigurationName)\\netstandard1.3\\Calculator.Code.dll\" --debug --cpp \"$(ProjectDir)..\\samples\\Calculator\\Generated\""
     }
   }
 }

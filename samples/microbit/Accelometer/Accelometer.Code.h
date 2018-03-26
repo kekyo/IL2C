@@ -2,8 +2,7 @@
 #define __Accelometer_Code_H__
 
 #include <il2c.h>
-#include <stdbool.h>
-#include <stdint.h>
+#include <Accelometer.Code.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,19 +45,9 @@ extern __Accelometer_Demo_VTABLE_DECL__ __Accelometer_Demo_VTABLE__;
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods:
 
-// Accelometer_Demo
-extern /* internalcall */ void __Accelometer_Demo_IL2C_MarkHandler__(Accelometer_Demo* this__);
-extern /* internalcall */ void* __Accelometer_Demo_IL2C_RuntimeCast__(Accelometer_Demo* this__, IL2C_RUNTIME_TYPE_DECL* type);
+// [2-4] Member methods: Accelometer.Demo
+
 extern void Accelometer_Demo_Main();
-extern void Accelometer_Demo__ctor(Accelometer_Demo* this__);
-#define System_Object_ToString(/* System_Object* */ this__) \
-    ((this__)->vptr0__->ToString(this__))
-#define System_Object_GetHashCode(/* System_Object* */ this__) \
-    ((this__)->vptr0__->GetHashCode(this__))
-#define System_Object_Finalize(/* System_Object* */ this__) \
-    ((this__)->vptr0__->Finalize(this__))
-#define System_Object_Equals(/* System_Object* */ this__, /* System_Object* */ obj) \
-    ((this__)->vptr0__->Equals(this__, obj))
 
 #ifdef __cplusplus
 }

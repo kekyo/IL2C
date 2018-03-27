@@ -20,7 +20,6 @@ namespace IL2C.ILConveters
                 .Reverse()
                 .ToArray();
 
-            var i = decodeContext.stacksnap;
             var offset = decodeContext.CurrentCode.Offset;
 
             // System.Object's constructor calls ignored.
@@ -29,15 +28,10 @@ namespace IL2C.ILConveters
                 return _ => new string[0];
             }
 
-            var m = decodeContext.Method;
-
             if (method.ReturnType.IsVoidType)
             {
                 return extractContext =>
                 {
-                    var mm = m;
-                    var ii = i;
-
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters, extractContext, offset);
                     return new[]

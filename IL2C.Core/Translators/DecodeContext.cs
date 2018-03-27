@@ -107,8 +107,6 @@ namespace IL2C.Translators
             new Queue<StackSnapshot>();
         #endregion
 
-        internal object[] stacksnap => stackList.ToArray();
-
         public DecodeContext(
             IMethodInformation method,
             IPrepareContext prepareContext)

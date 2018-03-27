@@ -8,13 +8,13 @@ namespace IL2C.Translators
     public sealed class PreparedMethodInformation
     {
         public readonly IMethodInformation Method;
-        public readonly IVariableInformation[] Stacks;
+        public readonly VariableInformation[] Stacks;
         public readonly IReadOnlyDictionary<int, string> LabelNames;
         internal readonly IReadOnlyDictionary<int, Func<IExtractContext, string[]>> Generators;
 
         internal PreparedMethodInformation(
             IMethodInformation method,
-            IVariableInformation[] stacks,
+            VariableInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames,
             IReadOnlyDictionary<int, Func<IExtractContext, string[]>> generators)
         {

@@ -39,13 +39,13 @@ namespace IL2C.Metadata
         bool IsCallableMethod { get; }
 
         ITypeInformation ReturnType { get; }
-        IVariableInformation[] Parameters { get; }
-        IVariableInformation[] LocalVariables { get; }
+        VariableInformation[] Parameters { get; }
+        VariableInformation[] LocalVariables { get; }
         ICodeStream CodeStream { get; }
         int OverloadIndex { get; }
 
         string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full);
-        IVariableInformation[] GetParameters(ITypeInformation thisType);
+        VariableInformation[] GetParameters(ITypeInformation thisType);
 
         PInvokeInfo PInvokeInfo { get; }
 
@@ -137,7 +137,7 @@ namespace IL2C.Metadata
                         var parameter = operand as ParameterReference;
                         if (parameter != null)
                         {
-                            return this.Parameters[parameter.Index];
+                            return this.Parameters[this.HasThis ? (parameter.Index + 1) : parameter.Index];
                         }
 
                         var local = operand as VariableReference;
@@ -212,7 +212,7 @@ namespace IL2C.Metadata
         private VariableInformation ToParameterInformation(ParameterReference parameter) =>
             new VariableInformation(
                 this,
-                parameter.Index,
+                this.HasThis ? (parameter.Index + 1) : parameter.Index,
                 parameter.Name,
                 this.MetadataContext.GetOrAddMember(
                     parameter.ParameterType,
@@ -283,9 +283,9 @@ namespace IL2C.Metadata
 
         public ITypeInformation ReturnType =>
             returnType.Value;
-        public IVariableInformation[] Parameters =>
+        public VariableInformation[] Parameters =>
             parameters.Value;
-        public IVariableInformation[] LocalVariables =>
+        public VariableInformation[] LocalVariables =>
             variables.Value;
         public ICodeStream CodeStream =>
             codeStreams.Value;
@@ -339,7 +339,7 @@ namespace IL2C.Metadata
             return Mangled(type) ? ToMangledName(name) : name;
         }
 
-        public IVariableInformation[] GetParameters(ITypeInformation thisType)
+        public VariableInformation[] GetParameters(ITypeInformation thisType)
         {
             Debug.Assert(this.Member.HasThis);
 

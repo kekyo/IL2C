@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 
 using Mono.Cecil.Cil;
@@ -52,22 +55,31 @@ namespace IL2C.ILConveters
                     method.FriendlyName);
             }
 
-            var pairParameters = method.Parameters
-                .Reverse()
-                .Select(parameter => new Utilities.RightExpressionGivenParameter(
-                    parameter.TargetType, decodeContext.PopStack()))
-                .Reverse()
-                .ToList();
-
             var overloadIndex = method.OverloadIndex;
             var type = method.DeclaringType;
-            var thisSymbolName = decodeContext.PushStack(type);
+            string thisSymbolName = null;
 
-            // Insert this reference.
-            pairParameters.Insert(0,
-                new Utilities.RightExpressionGivenParameter(
-                    type,
-                    new VariableInformation(method, 0, thisSymbolName, type)));
+            var pairParameters = new LinkedList<Utilities.RightExpressionGivenParameter>();
+            foreach (var parameter in method.Parameters.Reverse())
+            {
+                // Except this parameter
+                if (pairParameters.Count < (method.Parameters.Length) - 1)
+                {
+                    pairParameters.AddFirst(new Utilities.RightExpressionGivenParameter(
+                        parameter.TargetType,
+                        decodeContext.PopStack()));
+                }
+                // This parameter
+                else
+                {
+                    thisSymbolName = decodeContext.PushStack(type);
+                    pairParameters.AddFirst(new Utilities.RightExpressionGivenParameter(
+                        parameter.TargetType,
+                        new VariableInformation(method, 0, thisSymbolName, type)));
+                }
+            }
+
+            Debug.Assert(!string.IsNullOrWhiteSpace(thisSymbolName));
 
             var offset = decodeContext.CurrentCode.Offset;
 

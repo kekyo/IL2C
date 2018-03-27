@@ -47,7 +47,7 @@ namespace IL2C.ILConveters
         }
 
         public static Func<IExtractContext, string[]> Apply(
-            IVariableInformation localVariable,
+            VariableInformation localVariable,
             DecodeContext decodeContext)
         {
             var local = decodeContext.Method.LocalVariables[localVariable.Index];
@@ -100,7 +100,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Stloc_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            IVariableInformation operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(operand, decodeContext);
         }

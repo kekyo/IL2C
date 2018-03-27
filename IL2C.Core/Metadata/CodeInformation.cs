@@ -36,7 +36,7 @@ namespace IL2C.Metadata
     {
         private readonly Lazy<object> operand;
 
-        internal CodeInformation(
+        public CodeInformation(
             int offset,
             OpCode opCode,
             object operand,

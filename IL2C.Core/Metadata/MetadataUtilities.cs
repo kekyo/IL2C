@@ -41,10 +41,9 @@ namespace IL2C.Metadata
                 var capturedIndex = index;
 
                 // TODO: Improve human predictivity and stable compatibility.
-                expr = expr.ThenBy(m =>
-                    m.Parameters.ElementAtOrDefault(capturedIndex)
-                        ?.TargetType.FriendlyName
-                    ?? string.Empty);
+                expr = expr.ThenBy(m => (capturedIndex < m.Parameters.Length)
+                    ? m.Parameters[capturedIndex].TargetType.FriendlyName
+                    : string.Empty);
             }
 
             return expr;

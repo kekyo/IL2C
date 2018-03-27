@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -126,7 +125,7 @@ namespace IL2C
                     tw.WriteLine(
                         "{0}{1};",
                         indent,
-                        method.CLanguageFunctionPrototype);
+                        method.CLanguageFunctionTypePrototype);
                 }
 
                 tw.WriteLine(
@@ -951,12 +950,13 @@ namespace IL2C
             {
                 if (method.IsAbstract)
                 {
-                    Debug.Assert(method.DeclaringType.IsInterface == false);
-
-                    InternalConvertFromAbstractFunction(
-                        tw,
-                        method,
-                        indent);
+                    if (!method.DeclaringType.IsInterface)
+                    {
+                        InternalConvertFromAbstractFunction(
+                            tw,
+                            method,
+                            indent);
+                    }
                     return;
                 }
             }

@@ -32,7 +32,7 @@ namespace IL2C.ILConveters
         }
 
         public static Func<IExtractContext, string[]> Apply(
-            IVariableInformation localVariable, DecodeContext decodeContext, bool isReference = false)
+            VariableInformation localVariable, DecodeContext decodeContext, bool isReference = false)
         {
             var local = decodeContext.Method.LocalVariables[localVariable.Index];
             return Apply(local.SymbolName, local.TargetType, decodeContext, isReference);
@@ -84,7 +84,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldloc_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            IVariableInformation operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(operand, decodeContext);
         }
@@ -95,7 +95,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldloca_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            IVariableInformation operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(operand, decodeContext, true);
         }

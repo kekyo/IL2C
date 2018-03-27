@@ -127,107 +127,35 @@ namespace IL2C
             return staticFields.Values;
         }
 
-        private string GetRightExpression(ITypeInformation lhsType, IVariableInformation rhs)
+        private string GetRightExpression(
+            ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
         {
-            if (lhsType.Equals(rhs.TargetType))
+            if (lhsType.Equals(rhsType))
             {
-                return rhs.SymbolName;
+                return rhsExpression;
             }
 
-            if (lhsType.IsAssignableFrom(rhs.TargetType))
+            if (lhsType.IsAssignableFrom(rhsType))
             {
                 Debug.Assert(lhsType.IsValueType == false);
-                Debug.Assert(rhs.TargetType.IsValueType == false);
+                Debug.Assert(rhsType.IsValueType == false);
 
                 // IHoge <-- Hoge  (use il2c_cast_to_interface() macro)
-                if (lhsType.IsInterface && !rhs.TargetType.IsInterface)
+                if (lhsType.IsInterface && !rhsType.IsInterface)
                 {
                     return string.Format(
                         "il2c_cast_to_interface({0}, {1}, {2})",
                         lhsType.CLanguageTypeName,
-                        rhs.TargetType.CLanguageTypeName,
-                        rhs.SymbolName);
+                        rhsType.CLanguageTypeName,
+                        rhsExpression);
                 }
                 else
                 {
                     return string.Format(
                         "({0}){1}",
                         lhsType.CLanguageTypeName,
-                        rhs.SymbolName);
+                        rhsExpression);
                 }
-            }
-
-            if (rhs.TargetType.IsNumericPrimitive)
-            {
-                if (lhsType.IsNumericPrimitive)
-                {
-                    return String.Format(
-                        "({0}){1}",
-                        lhsType.CLanguageTypeName,
-                        rhs.SymbolName);
-                }
-                else if (lhsType.IsBooleanType)
-                {
-                    return String.Format(
-                        "{0} ? true : false",
-                        rhs.SymbolName);
-                }
-
-                if (lhsType.IsEnum)
-                {
-                    var lhsElementType = lhsType.Fields
-                        .First(f => f.Name == "value__")
-                        .FieldType;
-                    if (lhsElementType.IsAssignableFrom(rhs.TargetType))
-                    {
-                        return String.Format(
-                            "({0}){1}",
-                            lhsType.CLanguageTypeName,
-                            rhs.SymbolName);
-                    }
-                }
-            }
-            else if (rhs.TargetType.IsBooleanType)
-            {
-                if (lhsType.IsNumericPrimitive)
-                {
-                    return String.Format(
-                        "{0} ? 1 : 0",
-                        rhs.SymbolName);
-                }
-            }
-            else if (rhs.TargetType.IsPointer)
-            {
-                if (lhsType.IsPointer)
-                {
-                    return String.Format(
-                        "({0}){1}",
-                        lhsType.CLanguageTypeName,
-                        rhs.SymbolName);
-                }
-            }
-            else if (!lhsType.IsValueType && rhs.TargetType.IsIntPtrType)
-            {
-                return String.Format(
-                    "({0}){1}",
-                    lhsType.CLanguageTypeName,
-                    rhs.SymbolName);
-            }
-
-            return null;
-        }
-
-        string IExtractContext.GetRightExpression(ITypeInformation lhsType, IVariableInformation rhs)
-        {
-            return this.GetRightExpression(lhsType, rhs);
-        }
-
-        private string GetRightExpression(
-            ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
-        {
-            if (lhsType.IsAssignableFrom(rhsType))
-            {
-                return rhsExpression;
             }
 
             if (rhsType.IsNumericPrimitive)
@@ -239,11 +167,34 @@ namespace IL2C
                         lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
-                else if (lhsType.IsBooleanType)
+
+                if (lhsType.IsBooleanType)
                 {
                     return String.Format(
                         "({0}) ? true : false",
                         rhsExpression);
+                }
+
+                if (!lhsType.IsValueType && rhsType.IsIntPtrType)
+                {
+                    return String.Format(
+                        "({0}){1}",
+                        lhsType.CLanguageTypeName,
+                        rhsExpression);
+                }
+
+                if (lhsType.IsEnum)
+                {
+                    var lhsElementType = lhsType.Fields
+                        .First(f => f.Name == "value__")
+                        .FieldType;
+                    if (lhsElementType.IsAssignableFrom(rhsType))
+                    {
+                        return String.Format(
+                            "({0}){1}",
+                            lhsType.CLanguageTypeName,
+                            rhsExpression);
+                    }
                 }
             }
             else if (rhsType.IsBooleanType)
@@ -267,6 +218,11 @@ namespace IL2C
             }
 
             return null;
+        }
+
+        string IExtractContext.GetRightExpression(ITypeInformation lhsType, VariableInformation rhs)
+        {
+            return this.GetRightExpression(lhsType, rhs.TargetType, rhs.SymbolName);
         }
 
         string IExtractContext.GetRightExpression(

@@ -67,10 +67,9 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldarg_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            IVariableInformation operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
-            var index = operand.DeclaredMethod.HasThis ? (operand.Index + 1) : operand.Index;
-            return LdargConverterUtilities.Apply(index, decodeContext);
+            return LdargConverterUtilities.Apply(operand.Index, decodeContext);
         }
     }
 }

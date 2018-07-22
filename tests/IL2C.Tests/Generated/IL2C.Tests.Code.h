@@ -2,10 +2,7 @@
 #define __IL2C_Tests_Code_H__
 
 #include <il2c.h>
-
-#include <il2c.h>
 #include <IL2C.Tests.Code.h>
-#include <mscorlib.h>
 #include <string.h>
 
 #ifdef __cplusplus

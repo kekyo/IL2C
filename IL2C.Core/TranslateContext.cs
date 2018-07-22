@@ -73,7 +73,11 @@ namespace IL2C
             }
             else
             {
-                this.RegisterIncludeFile(type.DeclaringModule.DeclaringAssembly.CLanguageIncludeFileName);
+                var assembly = type.DeclaringModule.DeclaringAssembly;
+                if (!assembly.Equals(this.MetadataContext.ObjectType.DeclaringModule.DeclaringAssembly))
+                {
+                    this.RegisterIncludeFile(assembly.CLanguageIncludeFileName);
+                }
             }
         }
 

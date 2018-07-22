@@ -2,10 +2,7 @@
 #define __Calculator_Code_H__
 
 #include <il2c.h>
-
-#include <il2c.h>
 #include <Calculator.Code.h>
-#include <mscorlib.h>
 
 #ifdef __cplusplus
 extern "C" {

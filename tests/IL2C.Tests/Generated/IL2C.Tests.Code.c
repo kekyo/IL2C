@@ -1,6 +1,4 @@
 ﻿
-#include <il2c.h>
-
 #include "windows.h"
 #include "IL2C.Tests.Code.h"
 
@@ -249,7 +247,7 @@ void IL2C_Tests_BoxingTest_BoxingInt32(int32_t a)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\BoxingTest.cs(13): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\BoxingTest.cs(13): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = a;
@@ -257,14 +255,14 @@ void IL2C_Tests_BoxingTest_BoxingInt32(int32_t a)
     stack0_1__ = il2c_box(&stack0_0__, il2c_typeof(System_Int32));
     /* IL_0007: stloc.0  */
     value = stack0_1__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\BoxingTest.cs(16): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\BoxingTest.cs(16): */
     /* IL_0008: ldloc.0  */
     stack0_1__ = value;
     /* IL_0009: unbox.any System.Int32 */
     stack0_0__ = *((int32_t*)il2c_unbox(stack0_1__, il2c_typeof(System_Int32)));
     /* IL_000e: stloc.1  */
     r = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\BoxingTest.cs(17): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\BoxingTest.cs(17): */
     /* IL_000f: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -388,12 +386,12 @@ void IL2C_Tests_ClassTypeTestTarget__ctor(IL2C_Tests_ClassTypeTestTarget* this__
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(16): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(16): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: call System.Object..ctor */
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(17): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(17): */
     /* IL_0007: nop  */
     /* IL_0008: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -432,12 +430,12 @@ void IL2C_Tests_ClassTypeTestTarget__ctor_1(IL2C_Tests_ClassTypeTestTarget* this
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(20): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(20): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: call System.Object..ctor */
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(21): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(21): */
     /* IL_0007: nop  */
     /* IL_0008: ldarg.0  */
     stack0_0__ = this__;
@@ -445,7 +443,7 @@ void IL2C_Tests_ClassTypeTestTarget__ctor_1(IL2C_Tests_ClassTypeTestTarget* this
     stack1_0__ = value;
     /* IL_000a: stfld IL2C.Tests.ClassTypeTestTarget.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(23): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(23): */
     /* IL_000f: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -485,7 +483,7 @@ int32_t IL2C_Tests_ClassTypeTestTarget_GetValue2(IL2C_Tests_ClassTypeTestTarget*
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(26): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(26): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
@@ -504,7 +502,7 @@ int32_t IL2C_Tests_ClassTypeTestTarget_GetValue2(IL2C_Tests_ClassTypeTestTarget*
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(28): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(28): */
     /* IL_000e: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_000f: ret  */
@@ -546,7 +544,7 @@ int32_t IL2C_Tests_ClassTypeTestTarget_GetValue2_1(IL2C_Tests_ClassTypeTestTarge
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(31): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(31): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
@@ -569,7 +567,7 @@ int32_t IL2C_Tests_ClassTypeTestTarget_GetValue2_1(IL2C_Tests_ClassTypeTestTarge
     /* IL_000e: br.s IL_0010 */
     goto IL_0010;
 IL_0010:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(33): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(33): */
     /* IL_0010: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_0011: ret  */
@@ -665,7 +663,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test4()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(39): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(39): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.ClassTypeTestTarget..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_ClassTypeTestTarget));
@@ -673,14 +671,14 @@ int32_t IL2C_Tests_ClassTypeTest_Test4()
     IL2C_Tests_ClassTypeTestTarget__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge3 = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(41): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(41): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge3;
     /* IL_0008: ldc.i4 456 */
     stack1_0__ = 456;
     /* IL_000d: stfld IL2C.Tests.ClassTypeTestTarget.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(43): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(43): */
     /* IL_0012: ldloc.0  */
     stack0_0__ = hoge3;
     /* IL_0013: ldfld IL2C.Tests.ClassTypeTestTarget.Value2 */
@@ -690,7 +688,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test4()
     /* IL_0019: br.s IL_001b */
     goto IL_001b;
 IL_001b:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(44): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(44): */
     /* IL_001b: ldloc.1  */
     stack0_1__ = local1__;
     /* IL_001c: ret  */
@@ -737,7 +735,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test5()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(47): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(47): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.ClassTypeTestTarget..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_ClassTypeTestTarget));
@@ -745,14 +743,14 @@ int32_t IL2C_Tests_ClassTypeTest_Test5()
     IL2C_Tests_ClassTypeTestTarget__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge3 = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(49): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(49): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge3;
     /* IL_0008: ldc.i4 789 */
     stack1_0__ = 789;
     /* IL_000d: stfld IL2C.Tests.ClassTypeTestTarget.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(51): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(51): */
     /* IL_0012: ldloc.0  */
     stack0_0__ = hoge3;
     /* IL_0013: ldc.i4.s 123 */
@@ -763,7 +761,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test5()
     stack0_1__ = IL2C_Tests_ClassTypeTestTarget_GetValue2(stack0_0__, stack1_0__, stack2_0__);
     /* IL_001f: stloc.1  */
     result = stack0_1__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(52): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(52): */
     /* IL_0020: ldloc.1  */
     stack0_1__ = result;
     /* IL_0021: stloc.2  */
@@ -771,7 +769,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test5()
     /* IL_0022: br.s IL_0024 */
     goto IL_0024;
 IL_0024:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(53): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(53): */
     /* IL_0024: ldloc.2  */
     stack0_1__ = local2__;
     /* IL_0025: ret  */
@@ -819,7 +817,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test6()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(56): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(56): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.ClassTypeTestTarget..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_ClassTypeTestTarget));
@@ -827,14 +825,14 @@ int32_t IL2C_Tests_ClassTypeTest_Test6()
     IL2C_Tests_ClassTypeTestTarget__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge3 = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(58): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(58): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge3;
     /* IL_0008: ldc.i4 789 */
     stack1_0__ = 789;
     /* IL_000d: stfld IL2C.Tests.ClassTypeTestTarget.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(60): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(60): */
     /* IL_0012: ldloc.0  */
     stack0_0__ = hoge3;
     /* IL_0013: ldc.i4.s 123 */
@@ -847,7 +845,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test6()
     stack0_1__ = IL2C_Tests_ClassTypeTestTarget_GetValue2_1(stack0_0__, stack1_0__, stack2_0__, stack3_0__);
     /* IL_0024: stloc.1  */
     result = stack0_1__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(61): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(61): */
     /* IL_0025: ldloc.1  */
     stack0_1__ = result;
     /* IL_0026: stloc.2  */
@@ -855,7 +853,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test6()
     /* IL_0027: br.s IL_0029 */
     goto IL_0029;
 IL_0029:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(62): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(62): */
     /* IL_0029: ldloc.2  */
     stack0_1__ = local2__;
     /* IL_002a: ret  */
@@ -899,7 +897,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test7()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(65): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(65): */
     /* IL_0000: nop  */
     /* IL_0001: ldc.i4.s 123 */
     stack0_0__ = 123;
@@ -909,7 +907,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test7()
     IL2C_Tests_ClassTypeTestTarget__ctor_1(stack0_1__, stack0_0__);
     /* IL_0008: stloc.0  */
     hoge3 = stack0_1__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(68): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(68): */
     /* IL_0009: ldloc.0  */
     stack0_1__ = hoge3;
     /* IL_000a: ldfld IL2C.Tests.ClassTypeTestTarget.Value2 */
@@ -919,7 +917,7 @@ int32_t IL2C_Tests_ClassTypeTest_Test7()
     /* IL_0010: br.s IL_0012 */
     goto IL_0012;
 IL_0012:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(69): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ClassTypeTest.cs(69): */
     /* IL_0012: ldloc.1  */
     stack0_0__ = local1__;
     /* IL_0013: ret  */
@@ -1033,7 +1031,7 @@ int32_t IL2C_Tests_Hoge1_Add1(int32_t a, bool isTwo)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(11): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(11): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = a;
@@ -1056,7 +1054,7 @@ IL_0009:
     /* IL_000b: br.s IL_000d */
     goto IL_000d;
 IL_000d:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(13): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(13): */
     /* IL_000d: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_000e: ret  */
@@ -1083,7 +1081,7 @@ int64_t IL2C_Tests_Hoge1_Add2(int64_t a, bool isTwo)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(16): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(16): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = a;
@@ -1108,7 +1106,7 @@ IL_0009:
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(18): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge1.cs(18): */
     /* IL_000e: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_000f: ret  */
@@ -1221,7 +1219,7 @@ uint8_t IL2C_Tests_Hoge2_Add3(uint8_t a, bool isTwo)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(11): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(11): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = (int32_t)(a);
@@ -1246,7 +1244,7 @@ IL_0009:
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(13): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(13): */
     /* IL_000e: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_000f: ret  */
@@ -1272,7 +1270,7 @@ uint16_t IL2C_Tests_Hoge2_Add4(uint16_t a, bool isTwo)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(16): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(16): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = (int32_t)(a);
@@ -1297,7 +1295,7 @@ IL_0009:
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(18): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\Hoge2.cs(18): */
     /* IL_000e: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_000f: ret  */
@@ -1422,12 +1420,12 @@ void IL2C_Tests_InheritTestTargetBase1__ctor(IL2C_Tests_InheritTestTargetBase1* 
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(13): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(13): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: call System.Object..ctor */
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(14): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(14): */
     /* IL_0007: nop  */
     /* IL_0008: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1466,12 +1464,12 @@ void IL2C_Tests_InheritTestTargetBase1__ctor_1(IL2C_Tests_InheritTestTargetBase1
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(17): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(17): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: call System.Object..ctor */
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(18): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(18): */
     /* IL_0007: nop  */
     /* IL_0008: ldarg.0  */
     stack0_0__ = this__;
@@ -1479,7 +1477,7 @@ void IL2C_Tests_InheritTestTargetBase1__ctor_1(IL2C_Tests_InheritTestTargetBase1
     stack1_0__ = value;
     /* IL_000a: stfld IL2C.Tests.InheritTestTargetBase1.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(20): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(20): */
     /* IL_000f: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -1519,7 +1517,7 @@ int32_t IL2C_Tests_InheritTestTargetBase1_Calc(IL2C_Tests_InheritTestTargetBase1
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(23): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(23): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
@@ -1534,7 +1532,7 @@ int32_t IL2C_Tests_InheritTestTargetBase1_Calc(IL2C_Tests_InheritTestTargetBase1
     /* IL_000a: br.s IL_000c */
     goto IL_000c;
 IL_000c:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(25): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(25): */
     /* IL_000c: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_000d: ret  */
@@ -1576,7 +1574,7 @@ int32_t __IL2C_Tests_InheritTestTargetBase1_Calc_1__(IL2C_Tests_InheritTestTarge
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(28): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(28): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
@@ -1595,7 +1593,7 @@ int32_t __IL2C_Tests_InheritTestTargetBase1_Calc_1__(IL2C_Tests_InheritTestTarge
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(30): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(30): */
     /* IL_000e: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_000f: ret  */
@@ -1685,13 +1683,13 @@ void IL2C_Tests_InheritTestTarget2__ctor(IL2C_Tests_InheritTestTarget2* this__)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(35): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(35): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: call IL2C.Tests.InheritTestTargetBase1..ctor */
     IL2C_Tests_InheritTestTargetBase1__ctor((IL2C_Tests_InheritTestTargetBase1*)stack0_0__);
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(36): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(36): */
     /* IL_0007: nop  */
     /* IL_0008: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1730,7 +1728,7 @@ void IL2C_Tests_InheritTestTarget2__ctor_1(IL2C_Tests_InheritTestTarget2* this__
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(40): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(40): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: ldarg.1  */
@@ -1738,7 +1736,7 @@ void IL2C_Tests_InheritTestTarget2__ctor_1(IL2C_Tests_InheritTestTarget2* this__
     /* IL_0002: call IL2C.Tests.InheritTestTargetBase1..ctor */
     IL2C_Tests_InheritTestTargetBase1__ctor_1((IL2C_Tests_InheritTestTargetBase1*)stack0_0__, stack1_0__);
     /* IL_0007: nop  */
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(41): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(41): */
     /* IL_0008: nop  */
     /* IL_0009: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -1779,7 +1777,7 @@ int32_t IL2C_Tests_InheritTestTarget2_Calc(IL2C_Tests_InheritTestTarget2* this__
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(45): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(45): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
@@ -1798,7 +1796,7 @@ int32_t IL2C_Tests_InheritTestTarget2_Calc(IL2C_Tests_InheritTestTarget2* this__
     /* IL_0010: br.s IL_0012 */
     goto IL_0012;
 IL_0012:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(47): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(47): */
     /* IL_0012: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_0013: ret  */
@@ -1840,7 +1838,7 @@ int32_t __IL2C_Tests_InheritTestTarget2_Calc_1__(IL2C_Tests_InheritTestTarget2* 
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(50): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(50): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
@@ -1863,7 +1861,7 @@ int32_t __IL2C_Tests_InheritTestTarget2_Calc_1__(IL2C_Tests_InheritTestTarget2* 
     /* IL_0012: br.s IL_0014 */
     goto IL_0014;
 IL_0014:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(52): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(52): */
     /* IL_0014: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_0015: ret  */
@@ -1958,7 +1956,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test1()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(58): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(58): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InheritTestTargetBase1..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InheritTestTargetBase1));
@@ -1966,14 +1964,14 @@ int32_t IL2C_Tests_InheritTypeTest_Test1()
     IL2C_Tests_InheritTestTargetBase1__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(60): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(60): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0008: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_000a: stfld IL2C.Tests.InheritTestTargetBase1.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(62): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(62): */
     /* IL_000f: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0010: ldc.i4.1  */
@@ -1985,7 +1983,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test1()
     /* IL_0017: br.s IL_0019 */
     goto IL_0019;
 IL_0019:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(63): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(63): */
     /* IL_0019: ldloc.1  */
     stack0_1__ = local1__;
     /* IL_001a: ret  */
@@ -2031,7 +2029,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test2()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(66): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(66): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InheritTestTargetBase1..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InheritTestTargetBase1));
@@ -2039,14 +2037,14 @@ int32_t IL2C_Tests_InheritTypeTest_Test2()
     IL2C_Tests_InheritTestTargetBase1__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(68): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(68): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0008: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_000a: stfld IL2C.Tests.InheritTestTargetBase1.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(70): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(70): */
     /* IL_000f: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0010: ldc.i4.1  */
@@ -2060,7 +2058,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test2()
     /* IL_0018: br.s IL_001a */
     goto IL_001a;
 IL_001a:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(71): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(71): */
     /* IL_001a: ldloc.1  */
     stack0_1__ = local1__;
     /* IL_001b: ret  */
@@ -2106,7 +2104,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test3()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(74): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(74): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InheritTestTarget2..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InheritTestTarget2));
@@ -2114,14 +2112,14 @@ int32_t IL2C_Tests_InheritTypeTest_Test3()
     IL2C_Tests_InheritTestTarget2__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(76): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(76): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0008: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_000a: stfld IL2C.Tests.InheritTestTargetBase1.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(78): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(78): */
     /* IL_000f: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0010: ldc.i4.1  */
@@ -2135,7 +2133,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test3()
     /* IL_0018: br.s IL_001a */
     goto IL_001a;
 IL_001a:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(79): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(79): */
     /* IL_001a: ldloc.1  */
     stack0_1__ = local1__;
     /* IL_001b: ret  */
@@ -2184,7 +2182,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test4()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(82): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(82): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InheritTestTarget2..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InheritTestTarget2));
@@ -2192,14 +2190,14 @@ int32_t IL2C_Tests_InheritTypeTest_Test4()
     IL2C_Tests_InheritTestTarget2__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = (IL2C_Tests_InheritTestTargetBase1*)stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(84): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(84): */
     /* IL_0007: ldloc.0  */
     stack0_1__ = hoge;
     /* IL_0008: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_000a: stfld IL2C.Tests.InheritTestTargetBase1.Value2 */
     stack0_1__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(86): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(86): */
     /* IL_000f: ldloc.0  */
     stack0_1__ = hoge;
     /* IL_0010: ldc.i4.1  */
@@ -2213,7 +2211,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test4()
     /* IL_0018: br.s IL_001a */
     goto IL_001a;
 IL_001a:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(87): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(87): */
     /* IL_001a: ldloc.1  */
     stack0_2__ = local1__;
     /* IL_001b: ret  */
@@ -2265,7 +2263,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test5()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(90): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(90): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InheritTestTarget2..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InheritTestTarget2));
@@ -2273,21 +2271,21 @@ int32_t IL2C_Tests_InheritTypeTest_Test5()
     IL2C_Tests_InheritTestTarget2__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = (System_Object*)stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(92): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(92): */
     /* IL_0007: ldloc.0  */
     stack0_1__ = hoge;
     /* IL_0008: castclass IL2C.Tests.InheritTestTarget2 */
     stack0_0__ = il2c_runtime_cast(stack0_1__, IL2C_Tests_InheritTestTarget2);
     /* IL_000d: stloc.1  */
     hoge2 = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(93): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(93): */
     /* IL_000e: ldloc.1  */
     stack0_0__ = hoge2;
     /* IL_000f: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_0011: stfld IL2C.Tests.InheritTestTargetBase1.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(95): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(95): */
     /* IL_0016: ldloc.1  */
     stack0_0__ = hoge2;
     /* IL_0017: ldc.i4.1  */
@@ -2301,7 +2299,7 @@ int32_t IL2C_Tests_InheritTypeTest_Test5()
     /* IL_001f: br.s IL_0021 */
     goto IL_0021;
 IL_0021:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(96): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InheritTest.cs(96): */
     /* IL_0021: ldloc.2  */
     stack0_2__ = local2__;
     /* IL_0022: ret  */
@@ -2449,12 +2447,12 @@ void IL2C_Tests_InterfaceTestTargetClass__ctor(IL2C_Tests_InterfaceTestTargetCla
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(23): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(23): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: call System.Object..ctor */
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(24): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(24): */
     /* IL_0007: nop  */
     /* IL_0008: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
@@ -2495,7 +2493,7 @@ int32_t __IL2C_Tests_InterfaceTestTargetClass_Calc__(IL2C_Tests_InterfaceTestTar
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(28): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(28): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.1  */
     stack0_0__ = a;
@@ -2514,7 +2512,7 @@ int32_t __IL2C_Tests_InterfaceTestTargetClass_Calc__(IL2C_Tests_InterfaceTestTar
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(30): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(30): */
     /* IL_000e: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_000f: ret  */
@@ -2556,7 +2554,7 @@ int32_t __IL2C_Tests_InterfaceTestTargetClass_Calc2__(IL2C_Tests_InterfaceTestTa
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(33): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(33): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.1  */
     stack0_0__ = a;
@@ -2575,7 +2573,7 @@ int32_t __IL2C_Tests_InterfaceTestTargetClass_Calc2__(IL2C_Tests_InterfaceTestTa
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(35): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(35): */
     /* IL_000e: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_000f: ret  */
@@ -2844,7 +2842,7 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test1()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(41): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(41): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InterfaceTestTargetClass..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InterfaceTestTargetClass));
@@ -2854,14 +2852,14 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test1()
     IL2C_Tests_InterfaceTestTargetClass__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(43): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(43): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0008: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_000a: stfld IL2C.Tests.InterfaceTestTargetClass.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(45): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(45): */
     /* IL_000f: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0010: ldc.i4.1  */
@@ -2875,7 +2873,7 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test1()
     /* IL_0018: br.s IL_001a */
     goto IL_001a;
 IL_001a:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(46): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(46): */
     /* IL_001a: ldloc.1  */
     stack0_1__ = local1__;
     /* IL_001b: ret  */
@@ -2927,7 +2925,7 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test2()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(49): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(49): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InterfaceTestTargetClass..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InterfaceTestTargetClass));
@@ -2937,19 +2935,19 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test2()
     IL2C_Tests_InterfaceTestTargetClass__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(51): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(51): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0008: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_000a: stfld IL2C.Tests.InterfaceTestTargetClass.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(53): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(53): */
     /* IL_000f: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0010: stloc.1  */
     hoge1 = il2c_cast_to_interface(IL2C_Tests_IInterfaceTestTarget*, IL2C_Tests_InterfaceTestTargetClass*, stack0_0__);
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(55): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(55): */
     /* IL_0011: ldloc.1  */
     stack0_1__ = hoge1;
     /* IL_0012: ldc.i4.1  */
@@ -2963,7 +2961,7 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test2()
     /* IL_001a: br.s IL_001c */
     goto IL_001c;
 IL_001c:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(56): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(56): */
     /* IL_001c: ldloc.2  */
     stack0_2__ = local2__;
     /* IL_001d: ret  */
@@ -3021,7 +3019,7 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test3()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(59): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(59): */
     /* IL_0000: nop  */
     /* IL_0001: newobj IL2C.Tests.InterfaceTestTargetClass..ctor */
     stack0_0__ = il2c_get_uninitialized_object(il2c_typeof(IL2C_Tests_InterfaceTestTargetClass));
@@ -3031,26 +3029,26 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test3()
     IL2C_Tests_InterfaceTestTargetClass__ctor(stack0_0__);
     /* IL_0006: stloc.0  */
     hoge = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(61): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(61): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0008: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_000a: stfld IL2C.Tests.InterfaceTestTargetClass.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(63): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(63): */
     /* IL_000f: ldloc.0  */
     stack0_0__ = hoge;
     /* IL_0010: stloc.1  */
     hoge1 = il2c_cast_to_interface(IL2C_Tests_IInterfaceTestTarget*, IL2C_Tests_InterfaceTestTargetClass*, stack0_0__);
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(64): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(64): */
     /* IL_0011: ldloc.1  */
     stack0_1__ = hoge1;
     /* IL_0012: castclass IL2C.Tests.IInterfaceTestTarget2 */
     stack0_2__ = il2c_runtime_cast(stack0_1__, IL2C_Tests_IInterfaceTestTarget2);
     /* IL_0017: stloc.2  */
     hoge2 = stack0_2__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(66): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(66): */
     /* IL_0018: ldloc.2  */
     stack0_2__ = hoge2;
     /* IL_0019: ldc.i4.1  */
@@ -3064,7 +3062,7 @@ int32_t IL2C_Tests_InterfaceTypeTest_Test3()
     /* IL_0021: br.s IL_0023 */
     goto IL_0023;
 IL_0023:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(67): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\InterfaceTest.cs(67): */
     /* IL_0023: ldloc.3  */
     stack0_3__ = local3__;
     /* IL_0024: ret  */
@@ -3304,13 +3302,13 @@ void IL2C_Tests_StringTest_LiteralString()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(12): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(12): */
     /* IL_0000: nop  */
     /* IL_0001: ldstr "ABC" */
     stack0_0__ = string0__;
     /* IL_0006: stloc.0  */
     a = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(14): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(14): */
     /* IL_0007: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -3350,7 +3348,7 @@ System_String* IL2C_Tests_StringTest_InOutString(System_String* a)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(17): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(17): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = a;
@@ -3359,7 +3357,7 @@ System_String* IL2C_Tests_StringTest_InOutString(System_String* a)
     /* IL_0003: br.s IL_0005 */
     goto IL_0005;
 IL_0005:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(19): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(19): */
     /* IL_0005: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_0006: ret  */
@@ -3410,18 +3408,18 @@ System_String* IL2C_Tests_StringTest_LiteralCombinedString()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(22): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(22): */
     /* IL_0000: nop  */
     /* IL_0001: ldstr "ABC" */
     stack0_0__ = string0__;
     /* IL_0006: stloc.0  */
     a = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(24): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(24): */
     /* IL_0007: ldstr "DEF" */
     stack0_0__ = string1__;
     /* IL_000c: stloc.1  */
     b = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(25): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(25): */
     /* IL_000d: ldloc.0  */
     stack0_0__ = a;
     /* IL_000e: ldloc.1  */
@@ -3433,7 +3431,7 @@ System_String* IL2C_Tests_StringTest_LiteralCombinedString()
     /* IL_0015: br.s IL_0017 */
     goto IL_0017;
 IL_0017:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(26): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(26): */
     /* IL_0017: ldloc.2  */
     stack0_0__ = local2__;
     /* IL_0018: ret  */
@@ -3479,13 +3477,13 @@ System_String* IL2C_Tests_StringTest_LiteralSubstring()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(29): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(29): */
     /* IL_0000: nop  */
     /* IL_0001: ldstr "ABCDEFGHIJKLMN" */
     stack0_0__ = string2__;
     /* IL_0006: stloc.0  */
     a = stack0_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(31): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(31): */
     /* IL_0007: ldloc.0  */
     stack0_0__ = a;
     /* IL_0008: ldc.i4.3  */
@@ -3497,7 +3495,7 @@ System_String* IL2C_Tests_StringTest_LiteralSubstring()
     /* IL_000f: br.s IL_0011 */
     goto IL_0011;
 IL_0011:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(32): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(32): */
     /* IL_0011: ldloc.1  */
     stack0_0__ = local1__;
     /* IL_0012: ret  */
@@ -3523,7 +3521,7 @@ wchar_t IL2C_Tests_StringTest_GetChar()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(35): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(35): */
     /* IL_0000: nop  */
     /* IL_0001: ldc.i4.s 65 */
     stack0_0__ = 65;
@@ -3532,7 +3530,7 @@ wchar_t IL2C_Tests_StringTest_GetChar()
     /* IL_0004: br.s IL_0006 */
     goto IL_0006;
 IL_0006:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(37): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(37): */
     /* IL_0006: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_0007: ret  */
@@ -3573,7 +3571,7 @@ wchar_t IL2C_Tests_StringTest_GetCharByIndex(System_String* str, int32_t index)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(40): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(40): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = str;
@@ -3586,7 +3584,7 @@ wchar_t IL2C_Tests_StringTest_GetCharByIndex(System_String* str, int32_t index)
     /* IL_0009: br.s IL_000b */
     goto IL_000b;
 IL_000b:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(42): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(42): */
     /* IL_000b: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_000c: ret  */
@@ -3628,7 +3626,7 @@ System_String* IL2C_Tests_StringTest_GetString()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(45): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(45): */
     /* IL_0000: nop  */
     /* IL_0001: ldstr "ABC" */
     stack0_0__ = string0__;
@@ -3639,7 +3637,7 @@ System_String* IL2C_Tests_StringTest_GetString()
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(47): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\StringTest.cs(47): */
     /* IL_000e: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_000f: ret  */
@@ -3822,9 +3820,9 @@ __IL2C_Tests_UnsafeTest_VTABLE_DECL__ __IL2C_Tests_UnsafeTest_VTABLE__ = {
 // [9-4] Type: IL2C.Tests.ValueTypeTestTarget
 
 ///////////////////////////////////////
-// [3] IL2C.Tests.ValueTypeTestTarget.GetValue2(IL2C.Tests.ValueTypeTestTarget this__, System.Int32 a, System.Int32 b)
+// [3] IL2C.Tests.ValueTypeTestTarget.GetValue2(IL2C.Tests.ValueTypeTestTarget& this__, System.Int32 a, System.Int32 b)
 
-int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget this__, int32_t a, int32_t b)
+int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget* this__, int32_t a, int32_t b)
 {
     //-------------------
     // Local variables:
@@ -3834,19 +3832,33 @@ int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget 
     //-------------------
     // Evaluation stacks:
 
-    IL2C_Tests_ValueTypeTestTarget stack0_0__;
+    IL2C_Tests_ValueTypeTestTarget* stack0_0__ = NULL;
     int32_t stack0_1__;
     int32_t stack1_0__;
 
     //-------------------
+    // Setup stack frame:
+
+    struct /* IL2C_EXECUTION_FRAME */
+    {
+        IL2C_EXECUTION_FRAME* pNext;
+        uint8_t targetCount;
+        IL2C_Tests_ValueTypeTestTarget** pstack0_0__;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.pstack0_0__ = &stack0_0__;
+    il2c_link_execution_frame(&__executionFrame__);
+
+    //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(15): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(15): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0002: ldfld IL2C.Tests.ValueTypeTestTarget.Value2 */
-    stack0_1__ = stack0_0__.Value2;
+    stack0_1__ = stack0_0__->Value2;
     /* IL_0007: ldarg.1  */
     stack1_0__ = a;
     /* IL_0008: add  */
@@ -3860,10 +3872,11 @@ int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget 
     /* IL_000c: br.s IL_000e */
     goto IL_000e;
 IL_000e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(17): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(17): */
     /* IL_000e: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_000f: ret  */
+    il2c_unlink_execution_frame(&__executionFrame__);
     return stack0_1__;
 }
 
@@ -3954,20 +3967,20 @@ int32_t IL2C_Tests_ValueTypeTest_Test4()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(23): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(23): */
     /* IL_0000: nop  */
     /* IL_0001: ldloca.s hoge3 */
     stack0_0__ = &hoge3;
     /* IL_0003: initobj IL2C.Tests.ValueTypeTestTarget */
     memset(stack0_0__, 0x00, sizeof(IL2C_Tests_ValueTypeTestTarget));
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(25): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(25): */
     /* IL_0009: ldloca.s hoge3 */
     stack0_0__ = &hoge3;
     /* IL_000b: ldc.i4 456 */
     stack1_0__ = 456;
     /* IL_0010: stfld IL2C.Tests.ValueTypeTestTarget.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(27): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(27): */
     /* IL_0015: ldloc.0  */
     stack0_1__ = hoge3;
     /* IL_0016: ldfld IL2C.Tests.ValueTypeTestTarget.Value2 */
@@ -3977,7 +3990,7 @@ int32_t IL2C_Tests_ValueTypeTest_Test4()
     /* IL_001c: br.s IL_001e */
     goto IL_001e;
 IL_001e:
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(28): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(28): */
     /* IL_001e: ldloc.1  */
     stack0_2__ = local1__;
     /* IL_001f: ret  */
@@ -4022,22 +4035,126 @@ int32_t IL2C_Tests_ValueTypeTest_Test5()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(31): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(31): */
     /* IL_0000: nop  */
     /* IL_0001: ldloca.s hoge3 */
     stack0_0__ = &hoge3;
     /* IL_0003: initobj IL2C.Tests.ValueTypeTestTarget */
     memset(stack0_0__, 0x00, sizeof(IL2C_Tests_ValueTypeTestTarget));
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(33): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(33): */
     /* IL_0009: ldloca.s hoge3 */
     stack0_0__ = &hoge3;
     /* IL_000b: ldc.i4 789 */
     stack1_0__ = 789;
     /* IL_0010: stfld IL2C.Tests.ValueTypeTestTarget.Value2 */
     stack0_0__->Value2 = stack1_0__;
-/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(35): */
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(35): */
     /* IL_0015: ldloca.s hoge3 */
     stack0_0__ = &hoge3;
     /* IL_0017: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_0019: ldc.i4 456 */
+    stack2_0__ = 456;
+    /* IL_001e: call IL2C.Tests.ValueTypeTestTarget.GetValue2 */
+    stack0_1__ = IL2C_Tests_ValueTypeTestTarget_GetValue2(stack0_0__, stack1_0__, stack2_0__);
+    /* IL_0023: stloc.1  */
+    result = stack0_1__;
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(36): */
+    /* IL_0024: ldloc.1  */
+    stack0_1__ = result;
+    /* IL_0025: stloc.2  */
+    local2__ = stack0_1__;
+    /* IL_0026: br.s IL_0028 */
+    goto IL_0028;
+IL_0028:
+/* D:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(37): */
+    /* IL_0028: ldloc.2  */
+    stack0_1__ = local2__;
+    /* IL_0029: ret  */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return stack0_1__;
+}
+
+///////////////////////////////////////
+// [3] IL2C.Tests.ValueTypeTest..ctor(IL2C.Tests.ValueTypeTest this__)
+
+void IL2C_Tests_ValueTypeTest__ctor(IL2C_Tests_ValueTypeTest* this__)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    IL2C_Tests_ValueTypeTest* stack0_0__ = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* IL2C_EXECUTION_FRAME */
+    {
+        IL2C_EXECUTION_FRAME* pNext;
+        uint8_t targetCount;
+        IL2C_Tests_ValueTypeTest** pstack0_0__;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.pstack0_0__ = &stack0_0__;
+    il2c_link_execution_frame(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* IL_0000: ldarg.0  */
+    stack0_0__ = this__;
+    /* IL_0001: call System.Object..ctor */
+    /* IL_0006: nop  */
+    /* IL_0007: ret  */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return;
+}
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-1] Runtime cast
+void* __IL2C_Tests_ValueTypeTest_IL2C_RuntimeCast__(IL2C_Tests_ValueTypeTest* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // [7-2] This type
+    if (type == il2c_typeof(IL2C_Tests_ValueTypeTest)) return this__;
+
+    // [7-4] Delegate checking base types
+    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
+}
+
+// [7-5] GC's mark handler
+void __IL2C_Tests_ValueTypeTest_IL2C_MarkHandler__(IL2C_Tests_ValueTypeTest* this__)
+{
+
+    // [7-7] Delegate checking base types
+    __System_Object_IL2C_MarkHandler__((System_Object*)this__);
+}
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_ValueTypeTest_RUNTIME_TYPE__ = {
+    "IL2C.Tests.ValueTypeTest",
+    sizeof(IL2C_Tests_ValueTypeTest),
+    /* internalcall */ (IL2C_MARK_HANDLER)__IL2C_Tests_ValueTypeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// [7-9] VTables:
+
+// [7-10] Vtable of IL2C.Tests.ValueTypeTest
+__IL2C_Tests_ValueTypeTest_VTABLE_DECL__ __IL2C_Tests_ValueTypeTest_VTABLE__ = {
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_GetType__,
+    __System_Object_Finalize__,
+    __System_Object_MemberwiseClone__,
+    __System_Object_Equals__,
+    __System_Object_GetFieldInfo__,
+    __System_Object_FieldSetter__,
+    __System_Object_FieldGetter__,
+};

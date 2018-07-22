@@ -22,10 +22,10 @@ typedef struct Accelometer_Demo Accelometer_Demo;
 typedef const struct
 {
     /* internalcall */ void* (*IL2C_RuntimeCast)(Accelometer_Demo* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* __System_Object_ToString__(System_Object* this__);
-    int32_t __System_Object_GetHashCode__(System_Object* this__);
-    void __System_Object_Finalize__(System_Object* this__);
-    bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } __Accelometer_Demo_VTABLE_DECL__;
 
 // [1-3] Class layout

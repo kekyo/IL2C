@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 namespace IL2C.Metadata
@@ -22,21 +22,26 @@ namespace IL2C.Metadata
 
     public interface ICodeInformation
     {
+        IMethodInformation Method { get; }
         int Offset { get; }
         OpCode OpCode { get; }
         object Operand { get; }
         int Size { get; }
         string Label { get; }
         DebugInformation[] Debug { get; }
+
+        // For debugging friendly string
+        string RawLocation { get; }
     }
 
     internal sealed class CodeInformation
         : ICodeInformation
-        , IOperandPrintable
+            , IOperandPrintable
     {
         private readonly Lazy<object> operand;
 
         public CodeInformation(
+            MethodInformation method,
             int offset,
             OpCode opCode,
             object operand,
@@ -44,6 +49,7 @@ namespace IL2C.Metadata
             DebugInformation[] debug,
             Func<object, object> translateOperand)
         {
+            this.Method = method;
             this.Offset = offset;
             this.OpCode = opCode;
             this.Size = size;
@@ -51,6 +57,7 @@ namespace IL2C.Metadata
             this.operand = Lazy.Create(() => translateOperand(operand));
         }
 
+        public IMethodInformation Method { get; }
         public int Offset { get; }
         public OpCode OpCode { get; }
         public int Size { get; }
@@ -88,6 +95,12 @@ namespace IL2C.Metadata
         }
 
         string IOperandPrintable.PrintableString => this.Label;
+
+        public string RawLocation =>
+            string.Format(
+                "{0}:{1}",
+                this.Method.FriendlyName,
+                this.Label);
     }
 
     public interface ICodeStream : IReadOnlyCollection<ICodeInformation>

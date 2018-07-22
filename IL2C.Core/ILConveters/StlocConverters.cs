@@ -16,7 +16,7 @@ namespace IL2C.ILConveters
         {
             var si = decodeContext.PopStack();
 
-            var offset = decodeContext.CurrentCode.Offset;
+            var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>
             {
@@ -24,8 +24,8 @@ namespace IL2C.ILConveters
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid store operation: Offset={0}, StackType={1}, LocalType={2}, SymbolName={3}",
-                        offset,
+                        "Invalid store operation: Location={0}, StackType={1}, LocalType={2}, SymbolName={3}",
+                        codeInformation.RawLocation,
                         si.TargetType.FriendlyName,
                         targetType.FriendlyName,
                         targetName);

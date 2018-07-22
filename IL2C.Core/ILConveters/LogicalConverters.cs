@@ -30,8 +30,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown and operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.Offset,
+                "Unknown and operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
                 si0.TargetType.FriendlyName,
                 si1.TargetType.FriendlyName);
         }

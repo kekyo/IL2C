@@ -162,10 +162,9 @@ namespace IL2C.Translators
             if (this.Method.CodeStream.Contains(newOffset) == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid branch target: Method={0}, Target={1}, CurrentOffset={2}",
-                    this.Method.FriendlyName,
-                    newOffset,
-                    this.CurrentCode.Offset);
+                    "Invalid branch target: Location={0}, Target={1}",
+                    this.CurrentCode.RawLocation,
+                    newOffset);
             }
 
             nextOffset = newOffset;

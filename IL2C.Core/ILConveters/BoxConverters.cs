@@ -18,8 +18,8 @@ namespace IL2C.ILConveters
             if (!si.TargetType.IsValueType || !si.TargetType.Equals(operand))
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                    decodeContext.CurrentCode.Offset,
+                    "Invalid type at stack: Location={0}, TokenType={1}, StackType={2}",
+                    decodeContext.CurrentCode.RawLocation,
                     operand.FriendlyName,
                     si.TargetType.FriendlyName);
             }
@@ -50,8 +50,8 @@ namespace IL2C.ILConveters
             if (!si.TargetType.IsObjectType)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                    decodeContext.CurrentCode.Offset,
+                    "Invalid type at stack: Location={0}, TokenType={1}, StackType={2}",
+                    decodeContext.CurrentCode.RawLocation,
                     operand.FriendlyName,
                     si.TargetType.FriendlyName);
             }

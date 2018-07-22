@@ -50,8 +50,8 @@ namespace IL2C.ILConveters
             if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     siFrom.TargetType.FriendlyName);
             }
 
@@ -70,8 +70,8 @@ namespace IL2C.ILConveters
             if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     siFrom.TargetType.FriendlyName);
             }
 
@@ -90,8 +90,8 @@ namespace IL2C.ILConveters
             if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     siFrom.TargetType.FriendlyName);
             }
 
@@ -110,8 +110,8 @@ namespace IL2C.ILConveters
             if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     siFrom.TargetType.FriendlyName);
             }
 
@@ -130,8 +130,8 @@ namespace IL2C.ILConveters
             if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     siFrom.TargetType.FriendlyName);
             }
 

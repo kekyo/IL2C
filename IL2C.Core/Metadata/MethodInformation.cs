@@ -170,6 +170,7 @@ namespace IL2C.Metadata
                     foreach (var inst in this.Definition.Body.Instructions
                         .OrderBy(instruction => instruction.Offset)
                         .Select(instruction => new CodeInformation(
+                            this,
                             instruction.Offset,
                             instruction.OpCode,
                             instruction.Operand,
@@ -207,7 +208,7 @@ namespace IL2C.Metadata
                 this,
                 0,
                 "this__",
-                thisType);
+                thisType.IsValueType ? thisType.MakeByReference() : thisType);
 
         private VariableInformation ToParameterInformation(ParameterReference parameter) =>
             new VariableInformation(

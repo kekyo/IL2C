@@ -3822,9 +3822,9 @@ __IL2C_Tests_UnsafeTest_VTABLE_DECL__ __IL2C_Tests_UnsafeTest_VTABLE__ = {
 // [9-4] Type: IL2C.Tests.ValueTypeTestTarget
 
 ///////////////////////////////////////
-// [3] IL2C.Tests.ValueTypeTestTarget.GetValue2(IL2C.Tests.ValueTypeTestTarget this__, System.Int32 a, System.Int32 b)
+// [3] IL2C.Tests.ValueTypeTestTarget.GetValue2(IL2C.Tests.ValueTypeTestTarget& this__, System.Int32 a, System.Int32 b)
 
-int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget this__, int32_t a, int32_t b)
+int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget* this__, int32_t a, int32_t b)
 {
     //-------------------
     // Local variables:
@@ -3834,9 +3834,23 @@ int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget 
     //-------------------
     // Evaluation stacks:
 
-    IL2C_Tests_ValueTypeTestTarget stack0_0__;
+    IL2C_Tests_ValueTypeTestTarget* stack0_0__ = NULL;
     int32_t stack0_1__;
     int32_t stack1_0__;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* IL2C_EXECUTION_FRAME */
+    {
+        IL2C_EXECUTION_FRAME* pNext;
+        uint8_t targetCount;
+        IL2C_Tests_ValueTypeTestTarget** pstack0_0__;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.pstack0_0__ = &stack0_0__;
+    il2c_link_execution_frame(&__executionFrame__);
 
     //-------------------
     // IL body:
@@ -3846,7 +3860,7 @@ int32_t IL2C_Tests_ValueTypeTestTarget_GetValue2(IL2C_Tests_ValueTypeTestTarget 
     /* IL_0001: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0002: ldfld IL2C.Tests.ValueTypeTestTarget.Value2 */
-    stack0_1__ = stack0_0__.Value2;
+    stack0_1__ = stack0_0__->Value2;
     /* IL_0007: ldarg.1  */
     stack1_0__ = a;
     /* IL_0008: add  */
@@ -3864,6 +3878,7 @@ IL_000e:
     /* IL_000e: ldloc.0  */
     stack0_1__ = local0__;
     /* IL_000f: ret  */
+    il2c_unlink_execution_frame(&__executionFrame__);
     return stack0_1__;
 }
 
@@ -4041,3 +4056,107 @@ int32_t IL2C_Tests_ValueTypeTest_Test5()
     /* IL_0017: ldc.i4.s 123 */
     stack1_0__ = 123;
     /* IL_0019: ldc.i4 456 */
+    stack2_0__ = 456;
+    /* IL_001e: call IL2C.Tests.ValueTypeTestTarget.GetValue2 */
+    stack0_1__ = IL2C_Tests_ValueTypeTestTarget_GetValue2(stack0_0__, stack1_0__, stack2_0__);
+    /* IL_0023: stloc.1  */
+    result = stack0_1__;
+/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(36): */
+    /* IL_0024: ldloc.1  */
+    stack0_1__ = result;
+    /* IL_0025: stloc.2  */
+    local2__ = stack0_1__;
+    /* IL_0026: br.s IL_0028 */
+    goto IL_0028;
+IL_0028:
+/* E:\\PROJECT\\IL2C\\tests\\IL2C.Tests.Code\\ValueTypeTest.cs(37): */
+    /* IL_0028: ldloc.2  */
+    stack0_1__ = local2__;
+    /* IL_0029: ret  */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return stack0_1__;
+}
+
+///////////////////////////////////////
+// [3] IL2C.Tests.ValueTypeTest..ctor(IL2C.Tests.ValueTypeTest this__)
+
+void IL2C_Tests_ValueTypeTest__ctor(IL2C_Tests_ValueTypeTest* this__)
+{
+    //-------------------
+    // Local variables:
+
+
+    //-------------------
+    // Evaluation stacks:
+
+    IL2C_Tests_ValueTypeTest* stack0_0__ = NULL;
+
+    //-------------------
+    // Setup stack frame:
+
+    struct /* IL2C_EXECUTION_FRAME */
+    {
+        IL2C_EXECUTION_FRAME* pNext;
+        uint8_t targetCount;
+        IL2C_Tests_ValueTypeTest** pstack0_0__;
+    } __executionFrame__;
+
+    __executionFrame__.targetCount = 1;
+    __executionFrame__.pstack0_0__ = &stack0_0__;
+    il2c_link_execution_frame(&__executionFrame__);
+
+    //-------------------
+    // IL body:
+
+    /* IL_0000: ldarg.0  */
+    stack0_0__ = this__;
+    /* IL_0001: call System.Object..ctor */
+    /* IL_0006: nop  */
+    /* IL_0007: ret  */
+    il2c_unlink_execution_frame(&__executionFrame__);
+    return;
+}
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-1] Runtime cast
+void* __IL2C_Tests_ValueTypeTest_IL2C_RuntimeCast__(IL2C_Tests_ValueTypeTest* this__, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    // [7-2] This type
+    if (type == il2c_typeof(IL2C_Tests_ValueTypeTest)) return this__;
+
+    // [7-4] Delegate checking base types
+    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
+}
+
+// [7-5] GC's mark handler
+void __IL2C_Tests_ValueTypeTest_IL2C_MarkHandler__(IL2C_Tests_ValueTypeTest* this__)
+{
+
+    // [7-7] Delegate checking base types
+    __System_Object_IL2C_MarkHandler__((System_Object*)this__);
+}
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_DECL __IL2C_Tests_ValueTypeTest_RUNTIME_TYPE__ = {
+    "IL2C.Tests.ValueTypeTest",
+    sizeof(IL2C_Tests_ValueTypeTest),
+    /* internalcall */ (IL2C_MARK_HANDLER)__IL2C_Tests_ValueTypeTest_IL2C_MarkHandler__,
+};
+
+//////////////////////
+// [7-9] VTables:
+
+// [7-10] Vtable of IL2C.Tests.ValueTypeTest
+__IL2C_Tests_ValueTypeTest_VTABLE_DECL__ __IL2C_Tests_ValueTypeTest_VTABLE__ = {
+    __System_Object_ToString__,
+    __System_Object_GetHashCode__,
+    __System_Object_GetType__,
+    __System_Object_Finalize__,
+    __System_Object_MemberwiseClone__,
+    __System_Object_Equals__,
+    __System_Object_GetFieldInfo__,
+    __System_Object_FieldSetter__,
+    __System_Object_FieldGetter__,
+};

@@ -206,15 +206,22 @@ namespace IL2C
                         rhsExpression);
                 }
             }
-            else if (rhsType.IsPointer)
+            else if (rhsType.IsByReference)
             {
-                if (lhsType.IsPointer)
+                if (lhsType.IsByReference)
                 {
                     return String.Format(
                         "({0}){1}",
                         lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
+            }
+            else if (lhsType.IsByReference)
+            {
+                return String.Format(
+                    "({0}){1}",
+                    lhsType.CLanguageTypeName,
+                    rhsExpression);
             }
 
             return null;

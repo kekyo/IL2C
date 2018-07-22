@@ -22,8 +22,8 @@ namespace IL2C.ILConveters
             if (si.TargetType.IsByReference == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid type at stack: Offset={0}, TokenType={1}, StackType={2}",
-                    decodeContext.CurrentCode.Offset,
+                    "Invalid type at stack: Location={0}, TokenType={1}, StackType={2}",
+                    decodeContext.CurrentCode.RawLocation,
                     type.FriendlyName,
                     si.TargetType.FriendlyName);
             }
@@ -50,8 +50,8 @@ namespace IL2C.ILConveters
             if (!method.IsConstructor)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid new object constructor: Offset={0}, Method={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Invalid new object constructor: Location={0}, Method={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     method.FriendlyName);
             }
 
@@ -81,12 +81,12 @@ namespace IL2C.ILConveters
 
             Debug.Assert(!string.IsNullOrWhiteSpace(thisSymbolName));
 
-            var offset = decodeContext.CurrentCode.Offset;
+            var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>
             {
                 var parameterString = Utilities.GetGivenParameterDeclaration(
-                    pairParameters.ToArray(), extractContext, offset);
+                    pairParameters.ToArray(), extractContext, codeInformation);
 
                 // newobj opcode can handle value type with parameter applied constructor.
                 if (type.IsValueType)

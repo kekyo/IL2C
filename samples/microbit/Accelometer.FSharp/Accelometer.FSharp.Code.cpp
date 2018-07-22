@@ -28,10 +28,10 @@ typedef struct _StartupCode_Accelometer_FSharp_Code___Demo _StartupCode_Accelome
 typedef const struct
 {
     /* internalcall */ void* (*IL2C_RuntimeCast)(_StartupCode_Accelometer_FSharp_Code____NETStandard_Version_v2_0_AssemblyAttributes* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* __System_Object_ToString__(System_Object* this__);
-    int32_t __System_Object_GetHashCode__(System_Object* this__);
-    void __System_Object_Finalize__(System_Object* this__);
-    bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } ___StartupCode_Accelometer_FSharp_Code____NETStandard_Version_v2_0_AssemblyAttributes_VTABLE_DECL__;
 
 // [1-3] Class layout
@@ -53,10 +53,10 @@ extern ___StartupCode_Accelometer_FSharp_Code____NETStandard_Version_v2_0_Assemb
 typedef const struct
 {
     /* internalcall */ void* (*IL2C_RuntimeCast)(_StartupCode_Accelometer_FSharp_Code___Demo* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* __System_Object_ToString__(System_Object* this__);
-    int32_t __System_Object_GetHashCode__(System_Object* this__);
-    void __System_Object_Finalize__(System_Object* this__);
-    bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
+    System_String* (*ToString)(System_Object* this__);
+    int32_t (*GetHashCode)(System_Object* this__);
+    void (*Finalize)(System_Object* this__);
+    bool (*Equals)(System_Object* this__, System_Object* obj);
 } ___StartupCode_Accelometer_FSharp_Code___Demo_VTABLE_DECL__;
 
 // [1-3] Class layout
@@ -260,7 +260,7 @@ void Accelometer_Demo_Main()
     /* IL_0007: ldc.i4.2  */
     stack1_0__ = 2;
     /* IL_0008: call Accelometer.Demo.BeginAccelometer */
-    Accelometer_Demo_BeginAccelometer(stack0_0__ ? true : false, (uint8_t)stack1_0__);
+    Accelometer_Demo_BeginAccelometer((stack0_0__) ? true : false, (uint8_t)(stack1_0__));
     /* IL_000d: nop  */
 IL_000e:
     /* IL_000e: ldc.i4.1  */
@@ -270,19 +270,19 @@ IL_000e:
     /* IL_0014: call Accelometer.Demo.UpdateAccelometer */
     stack0_0__ = Accelometer_Demo_UpdateAccelometer();
     /* IL_0019: stloc.0  */
-    local0__ = (uint8_t)stack0_0__;
+    local0__ = (uint8_t)(stack0_0__);
     /* IL_001a: ldloc.0  */
     stack0_0__ = local0__;
     /* IL_001b: stloc.1  */
-    local1__ = (uint8_t)stack0_0__;
+    local1__ = (uint8_t)(stack0_0__);
     /* IL_001c: call Accelometer.Demo.GetAccelometerX */
     stack0_0__ = Accelometer_Demo_GetAccelometerX();
     /* IL_0021: stloc.2  */
-    x = (int8_t)stack0_0__;
+    x = (int8_t)(stack0_0__);
     /* IL_0022: call Accelometer.Demo.GetAccelometerY */
     stack0_0__ = Accelometer_Demo_GetAccelometerY();
     /* IL_0027: stloc.3  */
-    y = (int8_t)stack0_0__;
+    y = (int8_t)(stack0_0__);
     /* IL_0028: ldloc.3  */
     stack0_0__ = y;
     /* IL_0029: ldc.i4.s 20 */
@@ -290,7 +290,7 @@ IL_000e:
     /* IL_002b: cgt  */
     stack0_0__ = (stack0_0__ > stack1_0__) ? 1 : 0;
     /* IL_002d: stloc.s fn */
-    fn = stack0_0__ ? true : false;
+    fn = (stack0_0__) ? true : false;
     /* IL_002f: ldloc.3  */
     stack0_0__ = y;
     /* IL_0030: ldc.i4.s -20 */
@@ -298,7 +298,7 @@ IL_000e:
     /* IL_0032: clt  */
     stack0_0__ = (stack0_0__ < stack1_0__) ? 1 : 0;
     /* IL_0034: stloc.s fs */
-    fs = stack0_0__ ? true : false;
+    fs = (stack0_0__) ? true : false;
     /* IL_0036: ldloc.2  */
     stack0_0__ = x;
     /* IL_0037: ldc.i4.s 20 */
@@ -306,7 +306,7 @@ IL_000e:
     /* IL_0039: cgt  */
     stack0_0__ = (stack0_0__ > stack1_0__) ? 1 : 0;
     /* IL_003b: stloc.s fw */
-    fw = stack0_0__ ? true : false;
+    fw = (stack0_0__) ? true : false;
     /* IL_003d: ldloc.2  */
     stack0_0__ = x;
     /* IL_003e: ldc.i4.s -20 */
@@ -314,11 +314,11 @@ IL_000e:
     /* IL_0040: clt  */
     stack0_0__ = (stack0_0__ < stack1_0__) ? 1 : 0;
     /* IL_0042: stloc.s fe */
-    fe = stack0_0__ ? true : false;
+    fe = (stack0_0__) ? true : false;
     /* IL_0044: ldc.i4.s 30 */
     stack0_0__ = 30;
     /* IL_0046: stloc.s interval */
-    interval = (uint32_t)stack0_0__;
+    interval = (uint32_t)(stack0_0__);
     /* IL_0048: ldloc.s fn */
     stack0_0__ = fn;
     /* IL_004a: brfalse.s IL_004e */
@@ -352,7 +352,7 @@ IL_005d:
     /* IL_005e: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_0060: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_0065: nop  */
     /* IL_0066: nop  */
     /* IL_0067: br IL_0135 */
@@ -391,7 +391,7 @@ IL_0081:
     /* IL_0082: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_0084: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_0089: nop  */
     /* IL_008a: nop  */
     /* IL_008b: br IL_0135 */
@@ -412,7 +412,7 @@ IL_0098:
     /* IL_0099: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_009b: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_00a0: nop  */
     /* IL_00a1: nop  */
     /* IL_00a2: br IL_0135 */
@@ -451,7 +451,7 @@ IL_00bc:
     /* IL_00bd: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_00bf: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_00c4: nop  */
     /* IL_00c5: nop  */
     /* IL_00c6: br IL_0135 */
@@ -490,7 +490,7 @@ IL_00e0:
     /* IL_00e1: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_00e3: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_00e8: nop  */
     /* IL_00e9: nop  */
     /* IL_00ea: br.s IL_0135 */
@@ -511,7 +511,7 @@ IL_00f4:
     /* IL_00f5: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_00f7: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_00fc: nop  */
     /* IL_00fd: nop  */
     /* IL_00fe: br.s IL_0135 */
@@ -532,7 +532,7 @@ IL_0108:
     /* IL_0109: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_010b: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_0110: nop  */
     /* IL_0111: nop  */
     /* IL_0112: br.s IL_0135 */
@@ -553,7 +553,7 @@ IL_011c:
     /* IL_011d: ldloc.s interval */
     stack1_0__ = interval;
     /* IL_011f: call Accelometer.Demo.ShowArrow */
-    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowArrow((Accelometer_Demo_ArrowNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_0124: nop  */
     /* IL_0125: nop  */
     /* IL_0126: br.s IL_0135 */
@@ -564,7 +564,7 @@ IL_0128:
     /* IL_0129: ldc.i4 500 */
     stack1_0__ = 500;
     /* IL_012e: call Accelometer.Demo.ShowIcon */
-    Accelometer_Demo_ShowIcon((Accelometer_Demo_IconNames)stack0_0__, (uint32_t)stack1_0__);
+    Accelometer_Demo_ShowIcon((Accelometer_Demo_IconNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_0133: nop  */
     /* IL_0134: nop  */
 IL_0135:

@@ -51,8 +51,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown add operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.Offset,
+                "Unknown add operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
                 si0.TargetType.FriendlyName,
                 si1.TargetType.FriendlyName);
         }
@@ -103,8 +103,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown sub operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.Offset,
+                "Unknown sub operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
                 si0.TargetType.FriendlyName,
                 si1.TargetType.FriendlyName);
         }
@@ -155,8 +155,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown mul operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.Offset,
+                "Unknown mul operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
                 si0.TargetType.FriendlyName,
                 si1.TargetType.FriendlyName);
         }
@@ -207,8 +207,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown div operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.Offset,
+                "Unknown div operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
                 si0.TargetType.FriendlyName,
                 si1.TargetType.FriendlyName);
         }

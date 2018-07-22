@@ -1,8 +1,8 @@
 {
   "profiles": {
     "IL2C": {
-        "commandName": "Project",
-        "commandLineArgs": "\"$(ProjectDir)..\\samples\\Calculator\\Calculator.Code\\bin\\$(ConfigurationName)\\netstandard1.3\\Calculator.Code.dll\" --debug --cpp \"$(ProjectDir)..\\samples\\Calculator\\Generated\""
+      "commandName": "Project",
+      "commandLineArgs": "\"$(ProjectDir)..\\tests\\IL2C.Tests.Code\\bin\\$(ConfigurationName)\\netstandard1.3\\IL2C.Tests.Code.dll\" --debug --cpp \"$(ProjectDir)..\\tests\\IL2C.Tests\\Generated\""
     }
   }
 }

@@ -27,8 +27,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.Offset,
+                "Unknown cgt operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
                 si0.TargetType.FriendlyName,
                 si1.TargetType.FriendlyName);
         }
@@ -55,8 +55,8 @@ namespace IL2C.ILConveters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown clt operation: Offset={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.Offset,
+                "Unknown clt operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
                 si0.TargetType.FriendlyName,
                 si1.TargetType.FriendlyName);
         }
@@ -89,8 +89,8 @@ namespace IL2C.ILConveters
                 if (rhsExpr == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Unknown cgt operation: Offset={0}, Type0={1}, Type1={2}",
-                        decodeContext.CurrentCode.Offset,
+                        "Unknown cgt operation: Location={0}, Type0={1}, Type1={2}",
+                        decodeContext.CurrentCode.RawLocation,
                         si0.TargetType.FriendlyName,
                         si1.TargetType.FriendlyName);
                 }

@@ -132,17 +132,19 @@ namespace IL2C
         public static string GetGivenParameterDeclaration(
             RightExpressionGivenParameter[] parameters,
             IExtractContext extractContext,
-            int offset)
+            ICodeInformation codeInformation)
         {
             return string.Join(", ", parameters.Select(entry =>
             {
+                //Debug.Assert(codeInformation.RawLocation != "IL2C.Tests.ValueTypeTest.Test5():IL_001e");
+
                 var rightExpression = extractContext.GetRightExpression(
                     entry.TargetType, entry.SymbolInformation);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid parameter type: Offset={0}, StackType={1}, ParameterType={2}",
-                        offset,
+                        "Invalid parameter type: Location={0}, StackType={1}, ParameterType={2}",
+                        codeInformation.RawLocation,
                         entry.SymbolInformation.TargetType.FriendlyName,
                         entry.TargetType.FriendlyName);
                 }

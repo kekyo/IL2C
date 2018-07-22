@@ -38,7 +38,7 @@ namespace IL2C.ILConveters
 
             decodeContext.PrepareContext.RegisterType(returnType);
 
-            var offset = decodeContext.CurrentCode.Offset;
+            var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>
             {
@@ -46,8 +46,8 @@ namespace IL2C.ILConveters
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid return operation: Offset={0}, StackType={1}, ReturnType={2}",
-                        offset,
+                        "Invalid return operation: Location={0}, StackType={1}, ReturnType={2}",
+                        codeInformation.RawLocation,
                         si.TargetType.FriendlyName,
                         returnType.FriendlyName);
                 }

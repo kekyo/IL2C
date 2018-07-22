@@ -20,7 +20,7 @@ namespace IL2C.ILConveters
                 .Reverse()
                 .ToArray();
 
-            var offset = decodeContext.CurrentCode.Offset;
+            var codeInformation = decodeContext.CurrentCode;
 
             // System.Object's constructor calls ignored.
             if (method.IsConstructor && method.DeclaringType.IsObjectType)
@@ -33,7 +33,7 @@ namespace IL2C.ILConveters
                 return extractContext =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters, extractContext, offset);
+                        pairParameters, extractContext, codeInformation);
                     return new[]
                     {
                         string.Format(
@@ -51,7 +51,7 @@ namespace IL2C.ILConveters
                 return extractContext =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters, extractContext, offset);
+                        pairParameters, extractContext, codeInformation);
                     return new[]
                     {
                         string.Format(
@@ -86,8 +86,8 @@ namespace IL2C.ILConveters
             if (method.IsStatic)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid method token (static): Offset={0}, Method={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Invalid method token (static): Location={0}, Method={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     method.FriendlyName);
             }
 

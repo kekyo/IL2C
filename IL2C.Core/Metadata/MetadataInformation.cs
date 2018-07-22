@@ -72,34 +72,34 @@ namespace IL2C.Metadata
         : MetadataInformation
         where TDefinition : class, TReference
     {
+        private TReference member;
+        private TDefinition definition;
+
         protected MetadataInformation(TReference member, MetadataContext metadataContext)
             : base(metadataContext)
         {
-            this.Member = member;
+            this.member = member;
         }
 
-        protected TReference Member { get; private set; }
+        protected TReference Member => definition ?? member;
 
-        protected TDefinition Definition
+        protected TDefinition Definition => this.GetDefinition();
+
+        private TDefinition GetDefinition()
         {
-            get
+            if (definition == null)
             {
-                TDefinition member = this.Member as TDefinition;
-                if (member == null)
+                // Lazy evaluator for TDefinition
+                lock (this)
                 {
-                    lock (this)
+                    if (definition == null)
                     {
-                        member = this.Member as TDefinition;
-                        if (member == null)
-                        {
-                            member = this.OnResolve(this.Member);
-                            this.Member = member;
-                        }
+                        definition = this.OnResolve(member);
                     }
                 }
-
-                return member;
             }
+
+            return definition;
         }
 
         protected virtual TDefinition OnResolve(TReference member) =>

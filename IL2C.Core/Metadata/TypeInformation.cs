@@ -70,8 +70,8 @@ namespace IL2C.Metadata
     }
 
     internal sealed class TypeInformation
-        : MemberInformation<TypeReference, TypeDefinition>
-        , ITypeInformation
+        : MemberInformation<TypeReference, TypeReference>
+            , ITypeInformation
     {
         private readonly Lazy<TypeInformation> baseType;
         private readonly Lazy<TypeInformation> elementType;
@@ -88,7 +88,7 @@ namespace IL2C.Metadata
             : base(type, module)
         {
             baseType = this.MetadataContext.LazyGetOrAddMember(
-                () => this.Definition.BaseType,
+                () => (this.Definition as TypeDefinition)?.BaseType,
                 baseType => new TypeInformation(baseType, module));
 
             elementType = this.MetadataContext.LazyGetOrAddMember(
@@ -96,45 +96,45 @@ namespace IL2C.Metadata
                 elementType => new TypeInformation(elementType, module));
 
             interfaceTypes = this.MetadataContext.LazyGetOrAddMembers(
-                () => this.Definition.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType),
+                () => (this.Definition as TypeDefinition)?.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType),
                 interfaceType => new TypeInformation(interfaceType, module));
 
             nestedTypes = this.MetadataContext.LazyGetOrAddMembers(
-                () => this.Definition.NestedTypes,
+                () => (this.Definition as TypeDefinition)?.NestedTypes,
                 nestedType => new TypeInformation(nestedType, module));
 
             stackableType = Lazy.Create(() =>
+            {
+                if (this.IsByteType
+                    || this.IsSByteType
+                    || this.IsInt16Type
+                    || this.IsUInt16Type
+                    || this.IsUInt32Type
+                    || this.IsBooleanType
+                    || this.IsCharType)
                 {
-                    if (this.IsByteType
-                        || this.IsSByteType
-                        || this.IsInt16Type
-                        || this.IsUInt16Type
-                        || this.IsUInt32Type
-                        || this.IsBooleanType
-                        || this.IsCharType)
-                    {
-                        return this.MetadataContext.Int32Type;
-                    }
+                    return this.MetadataContext.Int32Type;
+                }
 
-                    if (this.IsUInt64Type)
-                    {
-                        return this.MetadataContext.Int64Type;
-                    }
+                if (this.IsUInt64Type)
+                {
+                    return this.MetadataContext.Int64Type;
+                }
 
-                    if (this.IsUIntPtrType)
-                    {
-                        return this.MetadataContext.IntPtrType;
-                    }
+                if (this.IsUIntPtrType)
+                {
+                    return this.MetadataContext.IntPtrType;
+                }
 
-                    return this;
-                });
+                return this;
+            });
 
             fields = this.MetadataContext.LazyGetOrAddMembers(
-                () => this.Definition.Fields,
+                () => (this.Definition as TypeDefinition)?.Fields,
                 field => new FieldInformation(field, module));
 
             declaredMethods = this.MetadataContext.LazyGetOrAddMembers(
-                () => this.Definition.Methods,
+                () => (this.Definition as TypeDefinition)?.Methods,
                 method => new MethodInformation(method, module));
 
             overridedMethods = Lazy.Create(
@@ -237,42 +237,62 @@ namespace IL2C.Metadata
             : this.IsValueType
                 ? "Struct"
                 : this.IsInterface
-                ? "Interface"
-                : "Class";
+                    ? "Interface"
+                    : "Class";
 
-        public bool IsValidDefinition =>
-            (((this.Member.IsValueType || this.Definition.IsClass)
-                && (this.Definition.BaseType != null))
-             || this.Definition.IsInterface)
-            && (this.Member.Name != "<Module>");
+        public bool IsValidDefinition
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                if (definition != null)
+                {
+                    return (((this.Member.IsValueType || definition.IsClass)
+                        && (definition.BaseType != null))
+                        || definition.IsInterface)
+                        && (this.Member.Name != "<Module>");
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
 
-        public bool IsPublic => this.Definition.IsPublic;
-        public bool IsNestedPublic => this.Definition.IsNestedPublic;
-        public bool IsNestedFamily => this.Definition.IsNestedFamily;
-        public bool IsNestedFamilyOrAssembly => this.Definition.IsNestedFamilyOrAssembly;
+        public bool IsPublic => (this.Definition as TypeDefinition)?.IsPublic ?? false;
+        public bool IsNestedPublic => (this.Definition as TypeDefinition)?.IsNestedPublic ?? false;
+        public bool IsNestedFamily => (this.Definition as TypeDefinition)?.IsNestedFamily ?? false;
+        public bool IsNestedFamilyOrAssembly => (this.Definition as TypeDefinition)?.IsNestedFamilyOrAssembly ?? false;
 
-        public bool IsStatic => this.Definition.IsAbstract && this.Definition.IsSealed;
+        public bool IsStatic
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                return (definition?.IsAbstract ?? false) && (definition?.IsSealed ?? false);
+            }
+        }
 
         public bool IsValueType => this.Member.IsValueType;
-        public bool IsClass => this.Definition.IsClass;
-        public bool IsInterface => this.Definition.IsInterface;
-        public bool IsEnum => this.Definition.IsEnum;
+        public bool IsClass => (this.Definition as TypeDefinition)?.IsClass ?? false;
+        public bool IsInterface => (this.Definition as TypeDefinition)?.IsInterface ?? false;
+        public bool IsEnum => (this.Definition as TypeDefinition)?.IsEnum ?? false;
         public bool IsDelegate => this.MetadataContext.DelegateType.IsAssignableFrom(this);
         public bool IsByReference => this.Member.IsByReference;
         public bool IsPointer => this.Member.IsPointer;
         public bool IsPrimitive => this.Member.IsPrimitive;
         public bool IsNumericPrimitive => this.Member.IsPrimitive
             && (this.Equals(this.MetadataContext.ByteType)
-            || this.Equals(this.MetadataContext.SByteType)
-            || this.Equals(this.MetadataContext.Int16Type)
-            || this.Equals(this.MetadataContext.UInt16Type)
-            || this.Equals(this.MetadataContext.Int32Type)
-            || this.Equals(this.MetadataContext.UInt32Type)
-            || this.Equals(this.MetadataContext.Int64Type)
-            || this.Equals(this.MetadataContext.UInt64Type)
-            || this.Equals(this.MetadataContext.IntPtrType)
-            || this.Equals(this.MetadataContext.UIntPtrType)
-            || this.Equals(this.MetadataContext.CharType));
+                || this.Equals(this.MetadataContext.SByteType)
+                || this.Equals(this.MetadataContext.Int16Type)
+                || this.Equals(this.MetadataContext.UInt16Type)
+                || this.Equals(this.MetadataContext.Int32Type)
+                || this.Equals(this.MetadataContext.UInt32Type)
+                || this.Equals(this.MetadataContext.Int64Type)
+                || this.Equals(this.MetadataContext.UInt64Type)
+                || this.Equals(this.MetadataContext.IntPtrType)
+                || this.Equals(this.MetadataContext.UIntPtrType)
+                || this.Equals(this.MetadataContext.CharType));
 
         public bool IsVoidType => this.Equals(this.MetadataContext.VoidType);
         public bool IsObjectType => this.Equals(this.MetadataContext.ObjectType);
@@ -306,12 +326,41 @@ namespace IL2C.Metadata
         public IMethodInformation[] OverridedMethods => overridedMethods.Value;
         public IMethodInformation[] VirtualMethods => virtualMethods.Value;
 
-        public override bool IsCLanguagePublicScope =>
-            this.Definition.IsPublic || this.Definition.IsNestedPublic || this.Definition.IsNestedFamily || this.Definition.IsNestedFamilyOrAssembly;
-        public override bool IsCLanguageLinkageScope =>
-            this.Definition.IsNotPublic || this.Definition.IsNestedAssembly;
+        public override bool IsCLanguagePublicScope
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                if (definition != null)
+                {
+                    return definition.IsPublic || definition.IsNestedPublic
+                        || definition.IsNestedFamily || definition.IsNestedFamilyOrAssembly;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public override bool IsCLanguageLinkageScope
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                if (definition != null)
+                {
+                    return definition.IsNotPublic || definition.IsNestedAssembly;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+            
         public override bool IsCLanguageFileScope =>
-            this.Definition.IsNestedPrivate;
+            (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
 
         public string CLanguageTypeName => cLanguageTypeName.Value;
         public string CLanguageThisTypeName =>
@@ -416,9 +465,9 @@ namespace IL2C.Metadata
                 type => new TypeInformation(type, this.DeclaringModule));
         }
 
-        protected override TypeDefinition OnResolve(TypeReference member)
+        protected override TypeReference OnResolve(TypeReference member)
         {
-            return member.Resolve();
+            return (member.GetType() == typeof(TypeReference)) ? member.Resolve() : member;
         }
     }
 }

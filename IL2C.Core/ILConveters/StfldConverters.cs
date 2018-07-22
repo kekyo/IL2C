@@ -23,8 +23,8 @@ namespace IL2C.ILConveters
                 if (field.DeclaringType.IsAssignableFrom(dereferencedType) == false)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid managed reference: Offset={0}, StackType={1}, Name={2}",
-                        decodeContext.CurrentCode.Offset,
+                        "Invalid managed reference: Location={0}, StackType={1}, Name={2}",
+                        decodeContext.CurrentCode.RawLocation,
                         siReference.TargetType.FriendlyName,
                         field.FriendlyName);
                 }
@@ -34,8 +34,8 @@ namespace IL2C.ILConveters
                 if (field.DeclaringType.IsAssignableFrom(siReference.TargetType) == false)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid object reference: Offset={0}, StackType={1}, Name={2}",
-                        decodeContext.CurrentCode.Offset,
+                        "Invalid object reference: Location={0}, StackType={1}, Name={2}",
+                        decodeContext.CurrentCode.RawLocation,
                         siReference.TargetType.FriendlyName,
                         field.FriendlyName);
                 }
@@ -43,12 +43,12 @@ namespace IL2C.ILConveters
             else
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid type at stack: Offset={0}, StackType={1}",
-                    decodeContext.CurrentCode.Offset,
+                    "Invalid type at stack: Location={0}, StackType={1}",
+                    decodeContext.CurrentCode.RawLocation,
                     siReference.TargetType.FriendlyName);
             }
 
-            var offset = decodeContext.CurrentCode.Offset;
+            var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>
             {
@@ -57,8 +57,8 @@ namespace IL2C.ILConveters
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid store operation: Offset={0}, StackType={1}, FieldType={2}",
-                        offset,
+                        "Invalid store operation: Location={0}, StackType={1}, FieldType={2}",
+                        codeInformation.RawLocation,
                         siValue.TargetType.FriendlyName,
                         field.FieldType.FriendlyName);
                 }

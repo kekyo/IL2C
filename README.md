@@ -4,6 +4,7 @@
 |:--|:--|
 |AppVeyor (.NET 4.5 / .NET Core 2.0)|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master)|
 |CircleCI (.NET Core 2.0)|[![CircleCI (.NET Core 2.0)](https://circleci.com/gh/kekyo/IL2C/tree/master.svg?style=svg)](https://circleci.com/gh/kekyo/IL2C/tree/master)|
+|SonerCloud|[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=il2c&metric=alert_status)](https://sonarqube.com/dashboard/index/il2c)|
 
 ## What's this?
 

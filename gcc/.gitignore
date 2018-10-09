@@ -1,0 +1,10 @@
+fetch/
+bin/
+mingw32/
+include/
+lib/
+libexec/
+doc/
+share/
+etc/
+test.exe

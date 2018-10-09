@@ -1,6 +1,4 @@
 ﻿
-#include <il2c.h>
-
 #include "Accelometer.h"
 #include "Accelometer.FSharp.Code.h"
 

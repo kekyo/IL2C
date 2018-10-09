@@ -2,8 +2,6 @@
 #define __Accelometer_FSharp_Code_H__
 
 #include <il2c.h>
-
-#include <il2c.h>
 #include <Accelometer.FSharp.Code.h>
 
 #ifdef __cplusplus

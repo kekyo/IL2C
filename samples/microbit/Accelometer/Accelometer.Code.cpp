@@ -1,6 +1,4 @@
 ﻿
-#include <il2c.h>
-
 #include "Accelometer.h"
 #include "Accelometer.Code.h"
 
@@ -234,12 +232,12 @@ void Accelometer_Demo_Main()
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(94): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(94): */
     /* IL_0000: nop  */
     /* IL_0001: call Accelometer.Demo.BeginScreen */
     Accelometer_Demo_BeginScreen();
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(96): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(96): */
     /* IL_0007: ldc.i4.0  */
     stack0_0__ = 0;
     /* IL_0008: ldc.i4.2  */
@@ -250,22 +248,22 @@ void Accelometer_Demo_Main()
     /* IL_000f: br IL_00fd */
     goto IL_00fd;
 IL_0014:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(99): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(99): */
     /* IL_0014: nop  */
     /* IL_0015: call Accelometer.Demo.UpdateAccelometer */
     stack0_0__ = Accelometer_Demo_UpdateAccelometer();
     /* IL_001a: pop  */
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(102): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(102): */
     /* IL_001b: call Accelometer.Demo.GetAccelometerX */
     stack0_0__ = Accelometer_Demo_GetAccelometerX();
     /* IL_0020: stloc.0  */
     x = (int8_t)(stack0_0__);
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(103): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(103): */
     /* IL_0021: call Accelometer.Demo.GetAccelometerY */
     stack0_0__ = Accelometer_Demo_GetAccelometerY();
     /* IL_0026: stloc.1  */
     y = (int8_t)(stack0_0__);
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(105): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(105): */
     /* IL_0027: ldloc.1  */
     stack0_0__ = y;
     /* IL_0028: ldc.i4.s 20 */
@@ -274,7 +272,7 @@ IL_0014:
     stack0_0__ = (stack0_0__ > stack1_0__) ? 1 : 0;
     /* IL_002c: stloc.2  */
     fn = (stack0_0__) ? true : false;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(106): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(106): */
     /* IL_002d: ldloc.1  */
     stack0_0__ = y;
     /* IL_002e: ldc.i4.s -20 */
@@ -283,7 +281,7 @@ IL_0014:
     stack0_0__ = (stack0_0__ < stack1_0__) ? 1 : 0;
     /* IL_0032: stloc.3  */
     fs = (stack0_0__) ? true : false;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(107): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(107): */
     /* IL_0033: ldloc.0  */
     stack0_0__ = x;
     /* IL_0034: ldc.i4.s 20 */
@@ -292,7 +290,7 @@ IL_0014:
     stack0_0__ = (stack0_0__ > stack1_0__) ? 1 : 0;
     /* IL_0038: stloc.s fw */
     fw = (stack0_0__) ? true : false;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(108): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(108): */
     /* IL_003a: ldloc.0  */
     stack0_0__ = x;
     /* IL_003b: ldc.i4.s -20 */
@@ -301,12 +299,12 @@ IL_0014:
     stack0_0__ = (stack0_0__ < stack1_0__) ? 1 : 0;
     /* IL_003f: stloc.s fe */
     fe = (stack0_0__) ? true : false;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(110): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(110): */
     /* IL_0041: ldc.i4.s 30 */
     stack0_0__ = 30;
     /* IL_0043: stloc.s interval */
     interval = (uint32_t)(stack0_0__);
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(112): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(112): */
     /* IL_0045: ldloc.2  */
     stack0_0__ = fn;
     /* IL_0046: ldloc.s fe */
@@ -319,7 +317,7 @@ IL_0014:
     stack0_0__ = local7__;
     /* IL_004d: brfalse.s IL_005d */
     if (stack0_0__ == 0) goto IL_005d;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(112): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(112): */
     /* IL_004f: ldc.i4.1  */
     stack0_0__ = 1;
     /* IL_0050: ldloc.s interval */
@@ -330,7 +328,7 @@ IL_0014:
     /* IL_0058: br IL_00f5 */
     goto IL_00f5;
 IL_005d:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(113): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(113): */
     /* IL_005d: ldloc.2  */
     stack0_0__ = fn;
     /* IL_005e: ldloc.s fw */
@@ -343,7 +341,7 @@ IL_005d:
     stack0_0__ = local8__;
     /* IL_0065: brfalse.s IL_0075 */
     if (stack0_0__ == 0) goto IL_0075;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(113): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(113): */
     /* IL_0067: ldc.i4.7  */
     stack0_0__ = 7;
     /* IL_0068: ldloc.s interval */
@@ -354,7 +352,7 @@ IL_005d:
     /* IL_0070: br IL_00f5 */
     goto IL_00f5;
 IL_0075:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(114): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(114): */
     /* IL_0075: ldloc.2  */
     stack0_0__ = fn;
     /* IL_0076: stloc.s local9__ */
@@ -363,7 +361,7 @@ IL_0075:
     stack0_0__ = local9__;
     /* IL_007a: brfalse.s IL_0087 */
     if (stack0_0__ == 0) goto IL_0087;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(114): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(114): */
     /* IL_007c: ldc.i4.0  */
     stack0_0__ = 0;
     /* IL_007d: ldloc.s interval */
@@ -374,7 +372,7 @@ IL_0075:
     /* IL_0085: br.s IL_00f5 */
     goto IL_00f5;
 IL_0087:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(115): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(115): */
     /* IL_0087: ldloc.3  */
     stack0_0__ = fs;
     /* IL_0088: ldloc.s fe */
@@ -387,7 +385,7 @@ IL_0087:
     stack0_0__ = local10__;
     /* IL_008f: brfalse.s IL_009c */
     if (stack0_0__ == 0) goto IL_009c;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(115): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(115): */
     /* IL_0091: ldc.i4.3  */
     stack0_0__ = 3;
     /* IL_0092: ldloc.s interval */
@@ -398,7 +396,7 @@ IL_0087:
     /* IL_009a: br.s IL_00f5 */
     goto IL_00f5;
 IL_009c:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(116): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(116): */
     /* IL_009c: ldloc.3  */
     stack0_0__ = fs;
     /* IL_009d: ldloc.s fw */
@@ -411,7 +409,7 @@ IL_009c:
     stack0_0__ = local11__;
     /* IL_00a4: brfalse.s IL_00b1 */
     if (stack0_0__ == 0) goto IL_00b1;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(116): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(116): */
     /* IL_00a6: ldc.i4.5  */
     stack0_0__ = 5;
     /* IL_00a7: ldloc.s interval */
@@ -422,7 +420,7 @@ IL_009c:
     /* IL_00af: br.s IL_00f5 */
     goto IL_00f5;
 IL_00b1:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(117): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(117): */
     /* IL_00b1: ldloc.3  */
     stack0_0__ = fs;
     /* IL_00b2: stloc.s local12__ */
@@ -431,7 +429,7 @@ IL_00b1:
     stack0_0__ = local12__;
     /* IL_00b6: brfalse.s IL_00c3 */
     if (stack0_0__ == 0) goto IL_00c3;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(117): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(117): */
     /* IL_00b8: ldc.i4.4  */
     stack0_0__ = 4;
     /* IL_00b9: ldloc.s interval */
@@ -442,7 +440,7 @@ IL_00b1:
     /* IL_00c1: br.s IL_00f5 */
     goto IL_00f5;
 IL_00c3:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(118): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(118): */
     /* IL_00c3: ldloc.s fe */
     stack0_0__ = fe;
     /* IL_00c5: stloc.s local13__ */
@@ -451,7 +449,7 @@ IL_00c3:
     stack0_0__ = local13__;
     /* IL_00c9: brfalse.s IL_00d6 */
     if (stack0_0__ == 0) goto IL_00d6;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(118): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(118): */
     /* IL_00cb: ldc.i4.2  */
     stack0_0__ = 2;
     /* IL_00cc: ldloc.s interval */
@@ -462,7 +460,7 @@ IL_00c3:
     /* IL_00d4: br.s IL_00f5 */
     goto IL_00f5;
 IL_00d6:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(119): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(119): */
     /* IL_00d6: ldloc.s fw */
     stack0_0__ = fw;
     /* IL_00d8: stloc.s local14__ */
@@ -471,7 +469,7 @@ IL_00d6:
     stack0_0__ = local14__;
     /* IL_00dc: brfalse.s IL_00e9 */
     if (stack0_0__ == 0) goto IL_00e9;
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(119): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(119): */
     /* IL_00de: ldc.i4.6  */
     stack0_0__ = 6;
     /* IL_00df: ldloc.s interval */
@@ -482,7 +480,7 @@ IL_00d6:
     /* IL_00e7: br.s IL_00f5 */
     goto IL_00f5;
 IL_00e9:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(120): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(120): */
     /* IL_00e9: ldc.i4.0  */
     stack0_0__ = 0;
     /* IL_00ea: ldc.i4 500 */
@@ -491,13 +489,13 @@ IL_00e9:
     Accelometer_Demo_ShowIcon((Accelometer_Demo_IconNames)stack0_0__, (uint32_t)(stack1_0__));
     /* IL_00f4: nop  */
 IL_00f5:
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(122): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(122): */
     /* IL_00f5: ldc.i4.5  */
     stack0_0__ = 5;
     /* IL_00f6: call Accelometer.Demo.Delay */
     Accelometer_Demo_Delay(stack0_0__);
     /* IL_00fb: nop  */
-/* E:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(123): */
+/* D:\\PROJECT\\IL2C\\samples\\microbit\\Accelometer.Code\\Demo.cs(123): */
     /* IL_00fc: nop  */
 IL_00fd:
     /* IL_00fd: ldc.i4.1  */

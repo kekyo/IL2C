@@ -1,6 +1,4 @@
 ﻿
-#include <il2c.h>
-
 #include "memmem.h"
 #include "WDM.Code.h"
 
@@ -96,12 +94,12 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* this__, 
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(11): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(11): */
     /* IL_0000: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0001: call System.Object..ctor */
     /* IL_0006: nop  */
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(12): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(12): */
     /* IL_0007: nop  */
     /* IL_0008: ldstr "Hello driver constructor called!!
 " */
@@ -109,28 +107,28 @@ void WDM_Code_InterceptCDRomDevice__ctor(WDM_Code_InterceptCDRomDevice* this__, 
     /* IL_000d: call WDM.Code.Wdm.DbgPrint */
     WDM_Code_Wdm_DbgPrint(stack0_1__);
     /* IL_0012: nop  */
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(15): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(15): */
     /* IL_0013: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0014: ldarg.1  */
     stack1_0__ = pFrom;
     /* IL_0015: stfld WDM.Code.InterceptCDRomDevice.pFrom */
     stack0_0__->pFrom = stack1_0__;
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(16): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(16): */
     /* IL_001a: ldarg.0  */
     stack0_0__ = this__;
     /* IL_001b: ldarg.2  */
     stack1_0__ = pTo;
     /* IL_001c: stfld WDM.Code.InterceptCDRomDevice.pTo */
     stack0_0__->pTo = stack1_0__;
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(17): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(17): */
     /* IL_0021: ldarg.0  */
     stack0_0__ = this__;
     /* IL_0022: ldarg.3  */
     stack1_1__ = size;
     /* IL_0023: stfld WDM.Code.InterceptCDRomDevice.size */
     stack0_0__->size = stack1_1__;
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(18): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(18): */
     /* IL_0028: ret  */
     il2c_unlink_execution_frame(&__executionFrame__);
     return;
@@ -186,7 +184,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(21): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(21): */
     /* IL_0000: nop  */
     /* IL_0001: ldarg.1  */
     stack0_0__ = pBuffer;
@@ -208,7 +206,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     stack0_0__ = WDM_Code_Wdm_memmem(stack0_0__, stack1_0__, stack2_1__, stack3_1__);
     /* IL_001a: stloc.0  */
     result = stack0_0__;
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(23): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(23): */
     /* IL_001b: ldloc.0  */
     stack0_0__ = result;
     /* IL_001c: ldsfld System.IntPtr.Zero */
@@ -221,7 +219,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     stack0_1__ = local1__;
     /* IL_0028: brfalse.s IL_004a */
     if (stack0_1__ == 0) goto IL_004a;
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(24): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(24): */
     /* IL_002a: nop  */
     /* IL_002b: ldstr "Draw BABEL!!
 " */
@@ -229,7 +227,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     /* IL_0030: call WDM.Code.Wdm.DbgPrint */
     WDM_Code_Wdm_DbgPrint(stack0_2__);
     /* IL_0035: nop  */
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(27): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(27): */
     /* IL_0036: ldloc.0  */
     stack0_0__ = result;
     /* IL_0037: ldarg.0  */
@@ -243,7 +241,7 @@ uint32_t WDM_Code_InterceptCDRomDevice_ReadCompleted(WDM_Code_InterceptCDRomDevi
     /* IL_0043: call WDM.Code.Wdm.memcpy */
     WDM_Code_Wdm_memcpy(stack0_0__, stack1_1__, stack2_2__);
     /* IL_0048: nop  */
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(28): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(28): */
     /* IL_0049: nop  */
 IL_004a:
     /* IL_004a: ldc.i4.0  */
@@ -253,7 +251,7 @@ IL_004a:
     /* IL_004c: br.s IL_004e */
     goto IL_004e;
 IL_004e:
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(31): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\InterceptCDRomDevice.cs(31): */
     /* IL_004e: ldloc.2  */
     stack0_1__ = local2__;
     /* IL_004f: ret  */
@@ -325,7 +323,7 @@ void WDM_Code_Wdm_DbgPrint(System_String* message)
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\Wdm.cs(10): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\Wdm.cs(10): */
     /* IL_0000: nop  */
     /* IL_0001: ret  */
     return;
@@ -347,7 +345,7 @@ void WDM_Code_Wdm_DbgPrint_1(uint32_t componentId, uint32_t level, System_String
     //-------------------
     // IL body:
 
-/* E:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\Wdm.cs(14): */
+/* D:\\PROJECT\\IL2C\\samples\\WDM\\WDM.Code\\Wdm.cs(14): */
     /* IL_0000: nop  */
     /* IL_0001: ret  */
     return;

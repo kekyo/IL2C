@@ -2,10 +2,7 @@
 #define __WDM_Code_H__
 
 #include <il2c.h>
-
-#include <il2c.h>
 #include <WDM.Code.h>
-#include <mscorlib.h>
 
 #ifdef __cplusplus
 extern "C" {

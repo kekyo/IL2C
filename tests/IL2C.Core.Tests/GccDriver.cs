@@ -141,7 +141,7 @@ namespace IL2C
             }
         }
 
-        public static async Task<string> CompileAndRunAsync(TextReader tr)
+        public static async Task<string> CompileAndRunAsync(TextReader tr, params string[] includePaths)
         {
             if (!Directory.Exists(gccBasePath))
             {
@@ -155,6 +155,7 @@ namespace IL2C
             Directory.CreateDirectory(basePath);
             try
             {
+                // Step3: Construct source file
                 var path = Path.Combine(basePath, "test");
                 using (var tw = File.CreateText(path + ".c"))
                 {
@@ -171,17 +172,24 @@ namespace IL2C
                     await tw.FlushAsync().ConfigureAwait(false);
                 }
 
+                // Step2: Compile by gcc
                 var gccBinPath = Path.Combine(gccBasePath, "bin");
-                var gccPath = Path.Combine(gccBinPath, "cc.exe");
+                var gccPath = Path.Combine(gccBinPath, "gcc.exe");
+
+                var gccArguments = includePaths
+                    .SelectMany(p => new[] { "-I", p })
+                    .Concat(new[] { "-o", path + ".exe", path + ".c" })
+                    .ToArray();
 
                 var (compileExitCode, compileLog) = await ExecuteAsync(
-                    basePath, new[] { gccBinPath }, gccPath, "-o", path + ".exe", path + ".c");
+                    basePath, new[] { gccBinPath }, gccPath, gccArguments);
                 if ((compileExitCode != 0) || !string.IsNullOrWhiteSpace(compileLog)
                     || !File.Exists(path + ".exe"))
                 {
                     throw new Exception("gcc [ExitCode=" + compileExitCode + "]: " + compileLog);
                 }
 
+                // Step3: Execute native binary
                 var (exitCode, log) = await ExecuteAsync(
                     basePath, new[] { basePath }, path + ".exe");
                 if (exitCode != 0)

@@ -13,6 +13,16 @@ namespace IL2C
     public sealed class Test
     {
         private static readonly Assembly targetAssembly = typeof(Target).Assembly;
+        private static readonly string il2cIncludePath =
+            Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(targetAssembly.Location),
+                    "..",
+                    "..",
+                    "..",
+                    "..",
+                    "..",
+                    "IL2C.Runtime"));
 
         [Test]
         public async Task SimpleTestAsync()
@@ -29,14 +39,13 @@ namespace IL2C
                 .First(method => method.Name == "ByteMainBody");
 
             var tw = new StringWriter();
-            tw.WriteLine("#include <stdio.h>");
-            tw.WriteLine("#include <stdint.h>");
-            tw.WriteLine("#include <stdbool.h>");
-            tw.WriteLine("#include <string.h>");
+            tw.WriteLine("#include <il2c.h>");
             tw.WriteLine();
 
             AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, targetMethod, "  ");
 
+            tw.WriteLine();
+            tw.WriteLine("#include <stdio.h>");
             tw.WriteLine();
             tw.WriteLine("int main()");
             tw.WriteLine("{");
@@ -47,7 +56,7 @@ namespace IL2C
 
             var sourceCode = tw.ToString();
 
-            var result = await GccDriver.CompileAndRunAsync(new StringReader(sourceCode));
+            var result = await GccDriver.CompileAndRunAsync(new StringReader(sourceCode), il2cIncludePath);
             var lines = result.Split(new[] { '\r', '\n' });
 
             Assert.AreEqual(Target.ByteMainBody().ToString(), lines[0]);

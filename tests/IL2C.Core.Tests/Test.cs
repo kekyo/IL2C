@@ -12,10 +12,10 @@ namespace IL2C
     [TestFixture]
     public sealed class Test
     {
-        [TestCase("ByteMainBody")]
-        public static Task TestTarget(string testName)
+        [TestCaseExplicit("Square", 2)]
+        public static Task TestTarget(string testName, object[] args)
         {
-            return TestFramework.ExecuteTestAsync(typeof(Target), testName);
+            return TestFramework.ExecuteTestAsync(typeof(TestTarget), testName, args);
         }
     }
 }

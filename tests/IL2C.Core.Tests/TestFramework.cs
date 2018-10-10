@@ -1,14 +1,22 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using IL2C.Metadata;
 using NUnit.Framework;
 
 namespace IL2C
 {
+    public sealed class TestCaseExplicitAttribute : TestCaseAttribute
+    {
+        public TestCaseExplicitAttribute(string name, params object[] args)
+            : base((object)name, (object)args)
+        {
+        }
+    }
+
     public static class TestFramework
     {
         private static readonly string il2cIncludePath =
@@ -22,11 +30,45 @@ namespace IL2C
                     "..",
                     "IL2C.Runtime"));
 
-        public static async Task ExecuteTestAsync(MethodInfo method)
+        private static string GetCLanguageLiteralExpression(object value)
+        {
+            if (value == null) return "NULL";
+            // String instance will leak but no problem for test.
+            if (value is string) return "il2c_new_string(L\"" + value + "\")";
+            if (value is char) return "il2c_new_string(L\"" + value + "\")";
+            if (value is long) return string.Format("INT64_C({0})", value);
+            if (value is ulong) return string.Format("UINT64_C({0})", value);
+            if (value is int) return string.Format("INT32_C({0})", value);
+            if (value is uint) return string.Format("UINT32_C({0})", value);
+            if (value is short) return string.Format("INT16_C({0})", value);
+            if (value is ushort) return string.Format("UINT16_C({0})", value);
+            if (value is byte) return string.Format("UINT8_C({0})", value);
+            if (value is sbyte) return string.Format("INT8_C({0})", value);
+            return value.ToString();
+        }
+
+        private static string GetCLanguagePrintFormatFromType(ITypeInformation type)
+        {
+            return
+                (type.IsByteType) ? "%u" :
+                (type.IsSByteType) ? "%d" :
+                (type.IsUInt16Type) ? "%u" :
+                (type.IsInt16Type) ? "%d" :
+                (type.IsUInt32Type) ? "%u" :
+                (type.IsInt32Type) ? "%d" :
+                (type.IsUInt64Type) ? "%\" PRIu64 \"" :
+                (type.IsInt64Type) ? "%\" PRId64 \"" :
+                (type.IsSingleType) ? "%f" :
+                (type.IsSingleType) ? "%f" :
+                (type.IsDoubleType) ? "%lf" :
+                "%s";
+        }
+
+        public static async Task ExecuteTestAsync(MethodInfo method, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
 
-            var expected = method.Invoke(null, null);
+            var expected = method.Invoke(null, args);
 
             var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
 
@@ -40,7 +82,10 @@ namespace IL2C
                 .First(m => m.Name == method.Name);
 
             var translatedPath = Path.GetFullPath(
-                Path.Combine(Path.GetDirectoryName(method.DeclaringType.Assembly.Location), "translated"));
+                Path.Combine(
+                    Path.GetDirectoryName(method.DeclaringType.Assembly.Location),
+                    "translated",
+                    targetMethod.CLanguageFunctionName));
             await Task.Run(() =>
             {
                 if (!Directory.Exists(translatedPath))
@@ -55,64 +100,52 @@ namespace IL2C
                 }
             }).ConfigureAwait(false);
 
-            using (var ms = new MemoryStream())
+            var sourcePath = Path.Combine(translatedPath, "test.c");
+            using (var fs = new FileStream(sourcePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
             {
-                var tw = new StreamWriter(ms);
+                var tw = new StreamWriter(fs);
 
                 await tw.WriteLineAsync("#include <il2c.h>");
+
+                AssemblyWriter.InternalConvertFromMethod(
+                    tw, translateContext, prepared, targetMethod, "  ", DebugInformationOptions.Full);
+
+                var formatChar = GetCLanguagePrintFormatFromType(targetMethod.ReturnType);
+
                 await tw.WriteLineAsync();
-
-                AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, targetMethod, "  ");
-
-                var formatChar =
-                    (targetMethod.ReturnType.IsByteType) ? "%u" :
-                    (targetMethod.ReturnType.IsSByteType) ? "%d" :
-                    (targetMethod.ReturnType.IsUInt16Type) ? "%u" :
-                    (targetMethod.ReturnType.IsInt16Type) ? "%d" :
-                    (targetMethod.ReturnType.IsUInt32Type) ? "%u" :
-                    (targetMethod.ReturnType.IsInt32Type) ? "%d" :
-                    (targetMethod.ReturnType.IsUInt64Type) ? "%\" PRIu64 \"" :
-                    (targetMethod.ReturnType.IsInt64Type) ? "%\" PRId64 \"" :
-                    (targetMethod.ReturnType.IsSingleType) ? "%f" :
-                    (targetMethod.ReturnType.IsSingleType) ? "%f" :
-                    (targetMethod.ReturnType.IsDoubleType) ? "%lf" :
-                    "%s";
-
+                await tw.WriteLineAsync("//////////////////////////////////////////////////////");
                 await tw.WriteLineAsync();
                 await tw.WriteLineAsync("#include <stdio.h>");
                 await tw.WriteLineAsync();
                 await tw.WriteLineAsync("int main()");
                 await tw.WriteLineAsync("{");
-                await tw.WriteLineAsync(string.Format("  auto result = {0}();", targetMethod.CLanguageFunctionName));
-                await tw.WriteLineAsync(string.Format("  printf(\"{0}\", result);", formatChar));
-                await tw.WriteLineAsync(string.Format("  return 0;"));
+                await tw.WriteLineAsync(
+                    string.Format("  const {0} expected = {1};",
+                        targetMethod.ReturnType.CLanguageTypeName,
+                        GetCLanguageLiteralExpression(expected)));
+                await tw.WriteLineAsync(
+                    string.Format("  const {0} actual = {1}({2});",
+                        targetMethod.ReturnType.CLanguageTypeName,
+                        targetMethod.CLanguageFunctionName,
+                        string.Join(",", args.Select(GetCLanguageLiteralExpression))));
+                await tw.WriteLineAsync();
+                await tw.WriteLineAsync("  if (expected == actual) { printf(\"Success\\n\"); return 0; }");
+                await tw.WriteLineAsync(string.Format("  else {{ printf(\"Failed: {0}\\n\", actual); return 1; }}", formatChar));
                 await tw.WriteLineAsync("}");
 
                 await tw.FlushAsync();
-
-                ms.Position = 0;
-                var tr = new StreamReader(ms);
-
-                var result = await GccDriver.CompileAndRunAsync(
-                    translatedPath, targetMethod.CLanguageFunctionName, tr, il2cIncludePath);
-                var lines = result.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-                Assert.AreEqual(expected?.ToString(), lines[0]);
             }
+
+            var result = await GccDriver.CompileAndRunAsync(sourcePath, il2cIncludePath);
+            var sanitized = result.Trim(' ', '\r', '\n');
+
+            Assert.AreEqual("Success", sanitized);
         }
 
-        public static Task ExecuteTestAsync(Type targetType, string methodName)
+        public static Task ExecuteTestAsync(Type targetType, string methodName, object[] args)
         {
             var method = targetType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
-            return ExecuteTestAsync(method);
-        }
-
-        public static Task ExecuteTestAsync<T>(Expression<Func<T>> testFunction)
-        {
-            var body = (MethodCallExpression)testFunction.Body;
-            var method = body.Method;
-
-            return ExecuteTestAsync(method);
+            return ExecuteTestAsync(method, args);
         }
     }
 }

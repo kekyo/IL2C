@@ -2,10 +2,10 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C
 {
-    public static class Target
+    public static class TestTarget
     {
-        //[MethodImpl(MethodImplOptions.ForwardRef)]
-        //public static extern int Square(int number);
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern int Square(int num);
 
         public static byte ByteMainBody()
         {

@@ -14,3 +14,4 @@ build_script:
   - cmd: pack.bat
 artifacts:
   - path: artifacts
+  - path: tests/IL2C.Core.Tests/bin/Debug/net462/translated

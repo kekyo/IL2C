@@ -6,9 +6,9 @@ extern "C" {
 #endif
 
 #ifdef _MSC_VER
-#  include <intrin.h>
+#include <intrin.h>
 #else
-#  include <x86intrin.h>
+#include <x86intrin.h>
 #endif
 
 #if defined(_WIN32) || defined(_WDM) || defined(UEFI)

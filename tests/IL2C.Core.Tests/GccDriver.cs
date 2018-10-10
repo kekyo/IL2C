@@ -73,6 +73,8 @@ namespace IL2C
 
                 var exitCode = await tcs.Task;
 
+                p.WaitForExit();
+
                 p.CancelOutputRead();
                 p.CancelErrorRead();
 
@@ -102,15 +104,6 @@ namespace IL2C
 
         private static async Task DownloadGccRequirementsAsync(string basePath)
         {
-            await Task.Run(() =>
-            {
-                if (Directory.Exists(basePath))
-                {
-                    Directory.Delete(basePath, true);
-                }
-                Directory.CreateDirectory(basePath);
-            }).ConfigureAwait(false);
-
             try
             {
                 var fetchPath = Path.Combine(basePath, "fetch");
@@ -132,6 +125,11 @@ namespace IL2C
                             var decompressionFlag = Path.GetExtension(path) == ".lzma" ? "--lzma" : "-j";
                             var (exitCode, log) = await ExecuteAsync(
                                 basePath, new[] { basePath }, bsdTarPath, decompressionFlag, "-xf", path);
+                            if (exitCode != 0)
+                            {
+                                throw new Exception("Failed extraction gcc asset: " + Path.GetFileName(path));
+                            }
+                            Trace.WriteLine("Downloaded and extracted gcc asset: " + Path.GetFileName(path));
                             return path;
                         }));
                 }
@@ -148,54 +146,36 @@ namespace IL2C
         }
 
         public static async Task<string> CompileAndRunAsync(
-            string tempPath, string baseFolderName, TextReader tr, params string[] includePaths)
+            string sourcePath, params string[] includePaths)
         {
             if (!Directory.Exists(gccBasePath))
             {
                 await DownloadGccRequirementsAsync(gccBasePath).ConfigureAwait(false);
             }
 
-            var basePath = Path.Combine(tempPath, baseFolderName);
+            var basePath = Path.GetDirectoryName(sourcePath);
+            var executablePath = Path.Combine(basePath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
 
-            await Task.Run(() => Directory.CreateDirectory(basePath));
-
-            // Step3: Construct source file
-            var path = Path.Combine(basePath, "test");
-            using (var tw = File.CreateText(path + ".c"))
-            {
-                while (true)
-                {
-                    var line = await tr.ReadLineAsync().ConfigureAwait(false);
-                    if (line == null)
-                    {
-                        break;
-                    }
-
-                    await tw.WriteLineAsync(line);
-                }
-                await tw.FlushAsync();
-            }
-
-            // Step2: Compile by gcc
+            // Step1: Compile by gcc
             var gccBinPath = Path.Combine(gccBasePath, "bin");
             var gccPath = Path.Combine(gccBinPath, "gcc.exe");
 
             var gccArguments = includePaths
                 .SelectMany(p => new[] { "-I", p })
-                .Concat(new[] { "-o", path + ".exe", path + ".c" })
+                .Concat(new[] { "-o", executablePath, sourcePath })
                 .ToArray();
 
             var (compileExitCode, compileLog) = await ExecuteAsync(
                 basePath, new[] { gccBinPath }, gccPath, gccArguments);
             if ((compileExitCode != 0) || !string.IsNullOrWhiteSpace(compileLog)
-                || !File.Exists(path + ".exe"))
+                || !File.Exists(executablePath))
             {
                 throw new Exception("gcc [ExitCode=" + compileExitCode + "]: " + compileLog);
             }
 
-            // Step3: Execute native binary
+            // Step2: Execute native binary
             var (exitCode, log) = await ExecuteAsync(
-                basePath, new[] { basePath }, path + ".exe");
+                basePath, new[] { basePath }, executablePath);
             if (exitCode != 0)
             {
                 throw new Exception("test [ExitCode=" + exitCode + "]: " + log);

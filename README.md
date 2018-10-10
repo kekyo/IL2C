@@ -103,23 +103,7 @@ TODO: Writing...
 
 ### IL translation features
 
-#### Support IL opcodes
-
-| Issue | Status | Milestone
-|:---|:---|:---|
-| add | Partial supported | M1
-| ldc family | Partial supported | M1
-| ldarg family | Partial supported | M2
-| ldloc family | Partial supported | M2
-| stloc family | Partial supported | M2
-| ldfld family | Partial supported | M2
-| stfld family | Partial supported | M3
-| call family | Partial supported | M3
-| ret | Supported | M1
-| initobj | Supported | M3
-| newobj | Partial supported |
-
-TODO:
+* [Support IL opcodes list](supported-opcodes.md)
 
 #### Support primitive types
 

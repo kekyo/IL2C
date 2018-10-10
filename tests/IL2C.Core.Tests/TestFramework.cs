@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
 
 namespace IL2C
 {
-    [TestFixture]
-    public sealed class Test
+    public static class TestFramework
     {
-        private static readonly Assembly targetAssembly = typeof(Target).Assembly;
         private static readonly string il2cIncludePath =
             Path.GetFullPath(
                 Path.Combine(
-                    Path.GetDirectoryName(targetAssembly.Location),
+                    Path.GetDirectoryName(typeof(TestFramework).Assembly.Location),
                     "..",
                     "..",
                     "..",
@@ -24,25 +21,25 @@ namespace IL2C
                     "..",
                     "IL2C.Runtime"));
 
-        [Test]
-        public Task TestAsync()
+        public static async Task ExecuteTestAsync<T>(Expression<Func<T>> testFunction)
         {
-            return TestFramework.ExecuteTestAsync(() => Target.ByteMainBody());
-        }
+            var body = (MethodCallExpression)testFunction.Body;
+            var method = body.Method;
 
-       // [Test]
-        public async Task SimpleTestAsync()
-        {
-            var translateContext = new TranslateContext(targetAssembly.Location, false);
+            Assert.IsTrue(method.IsPublic && method.IsStatic);
+
+            var expected = method.Invoke(null, null);
+
+            var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
 
             var prepared = AssemblyPreparer.Prepare(
-                translateContext, method => method.DeclaringType.FriendlyName == "IL2C.Target");
+                translateContext, m => m.Name == method.Name);
 
             var targetMethod =
                 translateContext.Assembly.Modules
                 .First().Types
-                .First(type => type.FriendlyName == "IL2C.Target").DeclaredMethods
-                .First(method => method.Name == "ByteMainBody");
+                .First(t => t.FriendlyName == method.DeclaringType.FullName).DeclaredMethods
+                .First(m => m.Name == method.Name);
 
             var tw = new StringWriter();
             tw.WriteLine("#include <il2c.h>");
@@ -63,9 +60,9 @@ namespace IL2C
             var sourceCode = tw.ToString();
 
             var result = await GccDriver.CompileAndRunAsync(new StringReader(sourceCode), il2cIncludePath);
-            var lines = result.Split(new[] { '\r', '\n' });
+            var lines = result.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
-            Assert.AreEqual(Target.ByteMainBody().ToString(), lines[0]);
+            Assert.AreEqual(expected?.ToString(), lines[0]);
         }
     }
 }

@@ -9,6 +9,8 @@ namespace IL2C
 
     internal struct IL2COption
     {
+        [Option("Read symbols from same folder placed")]
+        public bool ReadSymbols;
         [Option("Produce C++ files (apply extension *.cpp instead *.c, body will not changed)")]
         public bool Cpp;
         [Option("Emit debug informations (contains only comments)")]
@@ -40,6 +42,7 @@ namespace IL2C
                     Console.Out,
                     option.AssemblyPath,
                     option.OutputPath,
+                    option.ReadSymbols,
                     option.Cpp,
                     debugInformationOptions);
 

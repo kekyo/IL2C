@@ -22,6 +22,11 @@ namespace IL2C
             get; set;
         }
 
+        public bool ReadSymbols
+        {
+            get; set;
+        }
+
         public bool EnableCpp
         {
             get; set;
@@ -50,6 +55,7 @@ namespace IL2C
                     tw,
                     assemblyPath.ItemSpec.Trim(),
                     outputPath,
+                    this.ReadSymbols,
                     this.EnableCpp,
                     debugInformation);
             }

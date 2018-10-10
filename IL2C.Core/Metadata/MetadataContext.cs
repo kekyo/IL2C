@@ -65,13 +65,13 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation> stringType;
         private readonly Lazy<TypeInformation> booleanType;
 
-        internal MetadataContext(string assemblyPath)
+        internal MetadataContext(string assemblyPath, bool readSymbols)
         {
             var resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
             var parameter = new ReaderParameters
             {
                 AssemblyResolver = resolver,
-                ReadSymbols = true
+                ReadSymbols = readSymbols
             };
 
             var mainAssembly = AssemblyDefinition.ReadAssembly(assemblyPath, parameter);

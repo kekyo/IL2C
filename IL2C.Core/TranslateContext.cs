@@ -23,15 +23,15 @@ namespace IL2C
         #endregion
 
         #region Constructors
-        public TranslateContext(Assembly assembly)
-            : this(assembly.Location)
+        public TranslateContext(Assembly assembly, bool readSymbols)
+            : this(assembly.Location, readSymbols)
         {
             includes.Add("il2c.h");
         }
 
-        public TranslateContext(string assemblyPath)
+        public TranslateContext(string assemblyPath, bool readSymbols)
         {
-            var context = new MetadataContext(assemblyPath);
+            var context = new MetadataContext(assemblyPath, readSymbols);
             this.MetadataContext = context;
             this.Assembly = context.MainAssembly;
 

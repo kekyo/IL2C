@@ -1,7 +1,12 @@
+using System.Runtime.CompilerServices;
+
 namespace IL2C
 {
-    public static class TestTargetClass
+    public static class Target
     {
+        //[MethodImpl(MethodImplOptions.ForwardRef)]
+        //public static extern int Square(int number);
+
         public static byte ByteMainBody()
         {
             var a = (byte) 1;

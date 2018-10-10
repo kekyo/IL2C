@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
+using Nito.AsyncEx;
+
 namespace IL2C
 {
     internal static class GccDriver
@@ -39,6 +41,8 @@ namespace IL2C
 
         private static readonly string gccBasePath = Path.GetFullPath(Path.Combine(
             Path.GetDirectoryName(typeof(GccDriver).Assembly.Location), "gcc"));
+
+        private static readonly AsyncLock gccLock = new AsyncLock();
 
         private static async Task<(int, string)> ExecuteAsync(
             string workingPath, string[] searchPaths, string executablePath, params object[] args)
@@ -148,9 +152,16 @@ namespace IL2C
         public static async Task<string> CompileAndRunAsync(
             string sourcePath, params string[] includePaths)
         {
+            // Download requirements for gcc (single)
             if (!Directory.Exists(gccBasePath))
             {
-                await DownloadGccRequirementsAsync(gccBasePath).ConfigureAwait(false);
+                using (var l = await gccLock.LockAsync().ConfigureAwait(false))
+                {
+                    if (!Directory.Exists(gccBasePath))
+                    {
+                        await DownloadGccRequirementsAsync(gccBasePath);
+                    }
+                }
             }
 
             var basePath = Path.GetDirectoryName(sourcePath);

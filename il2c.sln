@@ -30,6 +30,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5710A57F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Tasks", "IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gcc", "gcc", "{808A625C-5258-441C-8BAB-D9B523B3C44B}"
+	ProjectSection(SolutionItems) = preProject
+		gcc\.gitignore = gcc\.gitignore
+		gcc\fetch-gcc.bat = gcc\fetch-gcc.bat
+		gcc\tar.exe = gcc\tar.exe
+		gcc\test.c = gcc\test.c
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

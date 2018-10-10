@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
 namespace IL2C
 {

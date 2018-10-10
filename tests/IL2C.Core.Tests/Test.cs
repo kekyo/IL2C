@@ -19,13 +19,13 @@ namespace IL2C
                 {
                     "#include <stdio.h>",
                     "int main() {",
-                    "printf(\"This is test.\");",
+                    "printf(\"This is test.\\nAAA\");",
                     "return 0;",
                     "}"
                 }));
             var result = await GccDriver.CompileAndRunAsync(tr);
 
-            Assert.AreEqual("This is test.", result);
+            Assert.AreEqual("This is test.\r\nAAA\r\n", result);
         }
     }
 }

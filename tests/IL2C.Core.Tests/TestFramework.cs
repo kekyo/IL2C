@@ -39,12 +39,28 @@ namespace IL2C
                 .First(t => t.FriendlyName == method.DeclaringType.FullName).DeclaredMethods
                 .First(m => m.Name == method.Name);
 
+            var translatedPath = Path.GetFullPath(
+                Path.Combine(Path.GetDirectoryName(method.DeclaringType.Assembly.Location), "translated"));
+            await Task.Run(() =>
+            {
+                if (!Directory.Exists(translatedPath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(translatedPath);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }).ConfigureAwait(false);
+
             using (var ms = new MemoryStream())
             {
                 var tw = new StreamWriter(ms);
 
-                tw.WriteLine("#include <il2c.h>");
-                tw.WriteLine();
+                await tw.WriteLineAsync("#include <il2c.h>");
+                await tw.WriteLineAsync();
 
                 AssemblyWriter.InternalConvertFromMethod(tw, translateContext, prepared, targetMethod, "  ");
 
@@ -62,23 +78,24 @@ namespace IL2C
                     (targetMethod.ReturnType.IsDoubleType) ? "%lf" :
                     "%s";
 
-                tw.WriteLine();
-                tw.WriteLine("#include <stdio.h>");
-                tw.WriteLine();
-                tw.WriteLine("int main()");
-                tw.WriteLine("{");
-                tw.WriteLine(string.Format("  auto result = {0}();", targetMethod.CLanguageFunctionName));
-                tw.WriteLine(string.Format("  printf(\"{0}\", result);", formatChar));
-                tw.WriteLine(string.Format("  return 0;"));
-                tw.WriteLine("}");
+                await tw.WriteLineAsync();
+                await tw.WriteLineAsync("#include <stdio.h>");
+                await tw.WriteLineAsync();
+                await tw.WriteLineAsync("int main()");
+                await tw.WriteLineAsync("{");
+                await tw.WriteLineAsync(string.Format("  auto result = {0}();", targetMethod.CLanguageFunctionName));
+                await tw.WriteLineAsync(string.Format("  printf(\"{0}\", result);", formatChar));
+                await tw.WriteLineAsync(string.Format("  return 0;"));
+                await tw.WriteLineAsync("}");
 
-                tw.Flush();
+                await tw.FlushAsync();
 
                 ms.Position = 0;
                 var tr = new StreamReader(ms);
 
-                var result = await GccDriver.CompileAndRunAsync(tr, il2cIncludePath);
-                var lines = result.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                var result = await GccDriver.CompileAndRunAsync(
+                    translatedPath, targetMethod.CLanguageFunctionName, tr, il2cIncludePath);
+                var lines = result.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 Assert.AreEqual(expected?.ToString(), lines[0]);
             }

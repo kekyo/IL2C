@@ -31,9 +31,10 @@ namespace IL2C
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-bin.tar.lzma",
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dev.tar.lzma",
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-bin.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dev.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma"
+            // Require C++
+            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-bin.tar.lzma",
+            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dev.tar.lzma",
+            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma"
         };
 
         private static readonly string gccBasePath = Path.GetFullPath(Path.Combine(
@@ -48,6 +49,7 @@ namespace IL2C
                 p.StartInfo.Arguments = string.Join(" ", args);
                 p.StartInfo.UseShellExecute = false;
                 p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.ErrorDialog = false;
                 p.StartInfo.WorkingDirectory = workingPath;
 
                 var pathEnv = p.StartInfo.Environment["PATH"];
@@ -65,6 +67,7 @@ namespace IL2C
                 p.EnableRaisingEvents = true;
 
                 p.Start();
+
                 p.BeginOutputReadLine();
                 p.BeginErrorReadLine();
 
@@ -88,8 +91,8 @@ namespace IL2C
                 {
                     using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
                     {
-                        await stream.CopyToAsync(fs).ConfigureAwait(false); ;
-                        await fs.FlushAsync().ConfigureAwait(false); ;
+                        await stream.CopyToAsync(fs);
+                        await fs.FlushAsync();
                     }
                 }
             }
@@ -99,110 +102,106 @@ namespace IL2C
 
         private static async Task DownloadGccRequirementsAsync(string basePath)
         {
-            if (Directory.Exists(basePath))
+            await Task.Run(() =>
             {
-                Directory.Delete(basePath, true);
-            }
-            Directory.CreateDirectory(basePath);
+                if (Directory.Exists(basePath))
+                {
+                    Directory.Delete(basePath, true);
+                }
+                Directory.CreateDirectory(basePath);
+            }).ConfigureAwait(false);
 
             try
             {
                 var fetchPath = Path.Combine(basePath, "fetch");
-                Directory.CreateDirectory(fetchPath);
+                await Task.Run(() => Directory.CreateDirectory(fetchPath));
 
                 try
                 {
                     var bsdTarArchivePath =
-                        await DownloadFromUrlAsync(bsdTarUrl, fetchPath).ConfigureAwait(false);
+                        await DownloadFromUrlAsync(bsdTarUrl, fetchPath);
                     await Task.Run(() =>
-                    ZipFile.ExtractToDirectory(bsdTarArchivePath, fetchPath)).ConfigureAwait(false);
+                        ZipFile.ExtractToDirectory(bsdTarArchivePath, fetchPath));
 
                     var bsdTarPath = Path.Combine(fetchPath, "basic-bsdtar.exe");
 
                     var archivePaths = await Task.WhenAll(
                         gccRequirementUrls.Select(async url =>
                         {
-                            var path = await DownloadFromUrlAsync(url, fetchPath).ConfigureAwait(false);
+                            var path = await DownloadFromUrlAsync(url, fetchPath);
                             var decompressionFlag = Path.GetExtension(path) == ".lzma" ? "--lzma" : "-j";
                             var (exitCode, log) = await ExecuteAsync(
-                                basePath, new[] { basePath }, bsdTarPath, decompressionFlag, "-xf", path).ConfigureAwait(false);
+                                basePath, new[] { basePath }, bsdTarPath, decompressionFlag, "-xf", path);
                             return path;
-                        })).ConfigureAwait(false);
+                        }));
                 }
                 finally
                 {
-                    Directory.Delete(fetchPath, true);
+                    await Task.Run(() => Directory.Delete(fetchPath, true));
                 }
             }
             catch
             {
-                Directory.Delete(basePath, true);
+                await Task.Run(() => Directory.Delete(basePath, true));
                 throw;
             }
         }
 
-        public static async Task<string> CompileAndRunAsync(TextReader tr, params string[] includePaths)
+        public static async Task<string> CompileAndRunAsync(
+            string tempPath, string baseFolderName, TextReader tr, params string[] includePaths)
         {
             if (!Directory.Exists(gccBasePath))
             {
                 await DownloadGccRequirementsAsync(gccBasePath).ConfigureAwait(false);
             }
 
-            var tempPath = Path.GetTempPath();
-            var baseFolderName = string.Format("{0}", Guid.NewGuid().ToString("N"));
             var basePath = Path.Combine(tempPath, baseFolderName);
 
-            Directory.CreateDirectory(basePath);
-            try
+            await Task.Run(() => Directory.CreateDirectory(basePath));
+
+            // Step3: Construct source file
+            var path = Path.Combine(basePath, "test");
+            using (var tw = File.CreateText(path + ".c"))
             {
-                // Step3: Construct source file
-                var path = Path.Combine(basePath, "test");
-                using (var tw = File.CreateText(path + ".c"))
+                while (true)
                 {
-                    while (true)
+                    var line = await tr.ReadLineAsync().ConfigureAwait(false);
+                    if (line == null)
                     {
-                        var line = await tr.ReadLineAsync().ConfigureAwait(false);
-                        if (line == null)
-                        {
-                            break;
-                        }
-
-                        await tw.WriteLineAsync(line).ConfigureAwait(false);
+                        break;
                     }
-                    await tw.FlushAsync().ConfigureAwait(false);
+
+                    await tw.WriteLineAsync(line);
                 }
-
-                // Step2: Compile by gcc
-                var gccBinPath = Path.Combine(gccBasePath, "bin");
-                var gccPath = Path.Combine(gccBinPath, "gcc.exe");
-
-                var gccArguments = includePaths
-                    .SelectMany(p => new[] { "-I", p })
-                    .Concat(new[] { "-o", path + ".exe", path + ".c" })
-                    .ToArray();
-
-                var (compileExitCode, compileLog) = await ExecuteAsync(
-                    basePath, new[] { gccBinPath }, gccPath, gccArguments);
-                if ((compileExitCode != 0) || !string.IsNullOrWhiteSpace(compileLog)
-                    || !File.Exists(path + ".exe"))
-                {
-                    throw new Exception("gcc [ExitCode=" + compileExitCode + "]: " + compileLog);
-                }
-
-                // Step3: Execute native binary
-                var (exitCode, log) = await ExecuteAsync(
-                    basePath, new[] { basePath }, path + ".exe");
-                if (exitCode != 0)
-                {
-                    throw new Exception("test [ExitCode=" + exitCode + "]: " + log);
-                }
-
-                return log;
+                await tw.FlushAsync();
             }
-            finally
+
+            // Step2: Compile by gcc
+            var gccBinPath = Path.Combine(gccBasePath, "bin");
+            var gccPath = Path.Combine(gccBinPath, "gcc.exe");
+
+            var gccArguments = includePaths
+                .SelectMany(p => new[] { "-I", p })
+                .Concat(new[] { "-o", path + ".exe", path + ".c" })
+                .ToArray();
+
+            var (compileExitCode, compileLog) = await ExecuteAsync(
+                basePath, new[] { gccBinPath }, gccPath, gccArguments);
+            if ((compileExitCode != 0) || !string.IsNullOrWhiteSpace(compileLog)
+                || !File.Exists(path + ".exe"))
             {
-                Directory.Delete(basePath, true);
+                throw new Exception("gcc [ExitCode=" + compileExitCode + "]: " + compileLog);
             }
+
+            // Step3: Execute native binary
+            var (exitCode, log) = await ExecuteAsync(
+                basePath, new[] { basePath }, path + ".exe");
+            if (exitCode != 0)
+            {
+                throw new Exception("test [ExitCode=" + exitCode + "]: " + log);
+            }
+
+            return log;
         }
     }
 }

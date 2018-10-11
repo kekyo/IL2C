@@ -478,7 +478,7 @@ static __System_Object_VTABLE_DECL__ __System_Object_VTABLE__ = {
 IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
     "System.Object",
     sizeof(System_Object),
-    /* internalcall */ __System_Object_IL2C_MarkHandler__
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__
 };
 
 /////////////////////////////////////////////////////////////
@@ -526,30 +526,30 @@ __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
 IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__ = {
     "System.ValueType",
     sizeof(System_ValueType),
-    /* internalcall */ __System_ValueType_IL2C_MarkHandler__
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_ValueType_IL2C_MarkHandler__
 };
 
 /////////////////////////////////////////////////////////////
 // Basic type informations
 
 IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__ = {
-    "System.IntPtr", sizeof(System_IntPtr), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.IntPtr", sizeof(System_IntPtr), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__ = {
-    "System.Byte", sizeof(System_Byte), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Byte", sizeof(System_Byte), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE__ = {
-    "System.SByte", sizeof(System_SByte), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.SByte", sizeof(System_SByte), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Int16_RUNTIME_TYPE__ = {
-    "System.Int16", sizeof(System_Int16), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Int16", sizeof(System_Int16), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE__ = {
-    "System.UInt16", sizeof(System_UInt16), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.UInt16", sizeof(System_UInt16), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE__ = {
-    "System.Int32", sizeof(System_Int32), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Int32", sizeof(System_Int32), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_UInt32_RUNTIME_TYPE__ = {
-    "System.UInt32", sizeof(System_UInt32), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.UInt32", sizeof(System_UInt32), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Int64_RUNTIME_TYPE__ = {
-    "System.Int64", sizeof(System_Int64), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Int64", sizeof(System_Int64), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE__ = {
-    "System.UInt64", sizeof(System_UInt64), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.UInt64", sizeof(System_UInt64), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 
 const System_IntPtr System_IntPtr_Zero = 0;
 
@@ -571,9 +571,10 @@ System_String* System_Int32_ToString(int32_t* this__)
 {
     char buffer[14];
     wchar_t wbuffer[14];
+	int i;
     
     const char*p = il2c_itoa(*this__, buffer);
-    for (int i = 0; i < 14; i++)
+    for (i = 0; i < 14; i++)
     {
         wbuffer[i] = buffer[i];
     }
@@ -617,7 +618,7 @@ __System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
 };
 
 IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
-    "System.String", UINTPTR_MAX, /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.String", UINTPTR_MAX, /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 
 static System_String* __new_string_internal__(uintptr_t byteSize)
 {

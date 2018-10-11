@@ -1,6 +1,7 @@
 /////////////////////////////////////////////////////////////
 // For platform specifics:
 
+#if defined(_MSC_VER)
 #if defined(UEFI)
 
 #include <intrin.h>
@@ -96,7 +97,10 @@ typedef long interlock_t;
 #include <assert.h>
 #define il2c_assert assert
 
-#else
+#endif
+#endif
+
+#if !defined(_MSC_VER)
 
 #include <stdint.h>
 

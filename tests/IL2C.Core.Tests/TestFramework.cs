@@ -11,7 +11,7 @@ namespace IL2C
 {
     public static class TestFramework
     {
-        private static readonly string il2cIncludePath =
+        private static readonly string il2cRuntimePath =
             Path.GetFullPath(
                 Path.Combine(
                     Path.GetDirectoryName(typeof(TestFramework).Assembly.Location),
@@ -131,7 +131,8 @@ namespace IL2C
                 await tw.FlushAsync();
             }
 
-            var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cIncludePath);
+            var il2cRuntimeSourcePath = Path.Combine(il2cRuntimePath, "il2c.c");
+            var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, new[] { il2cRuntimeSourcePath }, il2cRuntimePath);
             var sanitized = executedResult.Trim(' ', '\r', '\n');
 
             Assert.AreEqual("Success", sanitized);

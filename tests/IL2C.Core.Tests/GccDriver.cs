@@ -150,7 +150,7 @@ namespace IL2C
         }
 
         public static async Task<string> CompileAndRunAsync(
-            string sourcePath, params string[] includePaths)
+            string sourcePath, string[] sourcePaths, params string[] includePaths)
         {
             // Download requirements for gcc (single)
             if (!Directory.Exists(gccBasePath))
@@ -174,6 +174,7 @@ namespace IL2C
             var gccArguments = includePaths
                 .SelectMany(p => new[] { "-I", p })
                 .Concat(new[] { "-o", executablePath, sourcePath })
+                .Concat(sourcePaths)
                 .ToArray();
 
             var (compileExitCode, compileLog) = await ExecuteAsync(

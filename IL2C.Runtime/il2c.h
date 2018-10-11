@@ -5,13 +5,13 @@
 extern "C" {
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 #include <intrin.h>
 #else
 #include <x86intrin.h>
 #endif
 
-#if defined(_WIN32) || defined(_WDM) || defined(UEFI)
+#if defined(_MSC_VER) && (defined(_WIN32) || defined(_WDM) || defined(UEFI))
 typedef long interlock_t;
 #include <stdint.h>
 #else

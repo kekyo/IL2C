@@ -1,6 +1,6 @@
 ﻿.class public IL2C.TestTarget
 {
-	.method public static int32 Square(int32 num) cil managed
+	.method public static int32 Ldarg_0(int32 num) cil managed
 	{
 		.maxstack 2
 		ldarg.0

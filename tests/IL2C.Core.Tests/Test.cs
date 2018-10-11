@@ -25,15 +25,48 @@ namespace IL2C
                     && (type.GetConstructor(Type.EmptyTypes) != null))
                 .Select(type => (ILConverter)Activator.CreateInstance(type))
                 .ToDictionary(ilConverter => ilConverter.OpCode.Name);
+
+            var refOpCodeNames =
+                typeof(System.Reflection.Emit.OpCodes)
+                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                .Where(field => field.FieldType == typeof(System.Reflection.Emit.OpCode))
+                .Select(field =>
+                {
+                    var opCode = (System.Reflection.Emit.OpCode)field.GetValue(null);
+                    return (opCode.Value, field.Name);
+                })
+                .ToDictionary(entry => entry.Item1, entry => entry.Item2);
+
             var opCodes =
                 typeof(OpCodes)
                 .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(field => field.FieldType == typeof(OpCode))
-                .Select(field => (OpCode)field.GetValue(null))
-                .OrderBy(opCode => opCode.Name)
+                .Select(field =>
+                {
+                    var opCode = (OpCode)field.GetValue(null);
+                    var isEmitRelated = refOpCodeNames.TryGetValue(opCode.Value, out var refOpCodeName);
+                    var name = isEmitRelated ? refOpCodeName : opCode.Name;
+                    return (name, isEmitRelated, opCode);
+                })
+                .OrderBy(entry => (ushort)entry.opCode.Value)
                 .ToArray();
 
-            var basePath = Path.GetDirectoryName(typeof(Test).Assembly.Location);
+            var ilConverterTests =
+                typeof(ILConverterTest)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                .SelectMany(method => method.GetCustomAttributes<TestCaseExplicitAttribute>(true))
+                .Select(attribute => (string)attribute.Arguments[0])
+                .GroupBy(name => name)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            var basePath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(typeof(Test).Assembly.Location),
+                    "..",
+                    "..",
+                    "..",
+                    "..",
+                    ".."));
             var path = Path.Combine(basePath, "supported-opcodes.md");
 
             using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
@@ -42,25 +75,29 @@ namespace IL2C
 
                 await tw.WriteLineAsync("# Supported IL opcodes");
                 await tw.WriteLineAsync();
-                await tw.WriteLineAsync("OpCode | Status | ILConverter");
-                await tw.WriteLineAsync("|:---|:---|:---|");
+                await tw.WriteLineAsync("OpCode | Binary | Implement | Test | ILConverter");
+                await tw.WriteLineAsync("|:---|:---|:---|:---|:---|");
 
-                foreach (var opCode in opCodes)
+                foreach (var (name, isEmitRelated, opCode) in opCodes)
                 {
                     ilConverters.TryGetValue(opCode.Name, out var ilConverter);
+
+                    var opCodeName = opCode.Name.TrimEnd('.');
                     await tw.WriteLineAsync(
-                        string.Format("| {0} | {1} | {2} |",
-                            opCode.Name,
+                        string.Format("| {0} | 0x{1:x} | {2} | {3} | {4} |",
+                            isEmitRelated ?
+                                string.Format(
+                                    "[{0}](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.{1})",
+                                    opCodeName, name) :
+                                opCodeName,
+                            (ushort)opCode.Value,
                             (ilConverter != null) ? "Implemented" : string.Empty,
+                            ilConverterTests.TryGetValue(name, out var count) ? string.Format("Tested [{0}]", count) : string.Empty,
                             ilConverter?.GetType().FullName ?? string.Empty));
                 }
-            }
-        }
 
-        [TestCaseExplicit("Square", 2)]
-        public static Task TestTarget(string testName, object[] args)
-        {
-            return TestFramework.ExecuteTestAsync(typeof(TestTarget), testName, args);
+                await tw.FlushAsync();
+            }
         }
     }
 }

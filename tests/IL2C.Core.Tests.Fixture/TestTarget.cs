@@ -5,7 +5,7 @@ namespace IL2C
     public static class TestTarget
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int Square(int num);
+        public static extern int Ldarg_0(int num);
 
         public static byte ByteMainBody()
         {

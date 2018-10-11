@@ -103,7 +103,7 @@ TODO: Writing...
 
 ### IL translation features
 
-* [Support IL opcodes list](supported-opcodes.md)
+[Support IL opcodes list](supported-opcodes.md)
 
 #### Support primitive types
 

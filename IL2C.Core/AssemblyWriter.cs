@@ -1029,6 +1029,27 @@ namespace IL2C
             twHeader.WriteLine("#endif");
         }
 
+        internal static void WriteConstStrings(
+            TextWriter twSource,
+            TranslateContext translateContext)
+        {
+            IExtractContext extractContext = translateContext;
+
+            twSource.WriteLine();
+            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+            twSource.WriteLine("// [9-1] Const strings:");
+            twSource.WriteLine();
+
+            foreach (var kv in extractContext.ExtractConstStrings())
+            {
+                var escaped = Utilities.GetEscapedCString(kv.Value);
+                twSource.WriteLine(
+                    "IL2C_CONST_STRING({0}, L\"{1}\");",
+                    kv.Key,
+                    escaped);
+            }
+        }
+
         public static void WriteSourceCode(
             TextWriter twSource,
             TranslateContext translateContext,
@@ -1047,19 +1068,7 @@ namespace IL2C
 
             twSource.WriteLine("#include \"{0}.h\"", extractContext.Assembly.Name);
 
-            twSource.WriteLine();
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// [9-1] Const strings:");
-            twSource.WriteLine();
-
-            foreach (var kv in extractContext.ExtractConstStrings())
-            {
-                var escaped = Utilities.GetEscapedCString(kv.Value);
-                twSource.WriteLine(
-                    "IL2C_CONST_STRING({0}, L\"{1}\");",
-                    kv.Key,
-                    escaped);
-            }
+            WriteConstStrings(twSource, translateContext);
 
             twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");

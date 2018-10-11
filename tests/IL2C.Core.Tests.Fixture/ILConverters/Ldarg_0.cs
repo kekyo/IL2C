@@ -6,6 +6,7 @@ namespace IL2C.ILConverters
     [Case("Int16", short.MaxValue - 1, short.MaxValue)]
     [Case("Int32", int.MaxValue - 1, int.MaxValue)]
     [Case("Int64", long.MaxValue - 1, long.MaxValue)]
+    [Case("String", "ABCD", "ABC")]
     public static class Ldarg_0
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -19,5 +20,8 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64(long num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string String(string value);
     }
 }

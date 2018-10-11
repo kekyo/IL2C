@@ -35,4 +35,13 @@
 		sub
 		ret
 	}
+
+	.method public static string String(string num) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldstr "D"
+		call string System.String::Concat(string, string)
+		ret
+	}
 }

@@ -100,6 +100,8 @@ namespace IL2C
 
                 await tw.WriteLineAsync("#include <il2c.h>");
 
+                AssemblyWriter.WriteConstStrings(
+                    tw, translateContext);
                 AssemblyWriter.InternalConvertFromMethod(
                     tw, translateContext, prepared, targetMethod, "  ", DebugInformationOptions.Full);
 

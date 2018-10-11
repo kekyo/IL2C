@@ -9,14 +9,6 @@ using NUnit.Framework;
 
 namespace IL2C
 {
-    public sealed class TestCaseExplicitAttribute : TestCaseAttribute
-    {
-        public TestCaseExplicitAttribute(string name, params object[] args)
-            : base((object)name, (object)args)
-        {
-        }
-    }
-
     public static class TestFramework
     {
         private static readonly string il2cIncludePath =
@@ -56,19 +48,20 @@ namespace IL2C
                 (type.IsInt16Type) ? "%d" :
                 (type.IsUInt32Type) ? "%u" :
                 (type.IsInt32Type) ? "%d" :
-                (type.IsUInt64Type) ? "%\" PRIu64 \"" :
-                (type.IsInt64Type) ? "%\" PRId64 \"" :
-                (type.IsSingleType) ? "%f" :
+                (type.IsUInt64Type) ? "%lld" :
+                (type.IsInt64Type) ? "%llu" :
                 (type.IsSingleType) ? "%f" :
                 (type.IsDoubleType) ? "%lf" :
+                (type.IsBooleanType) ? "%d" :
                 "%s";
         }
 
-        public static async Task ExecuteTestAsync(MethodInfo method, object[] args)
+        public static async Task ExecuteTestAsync(MethodInfo method, object expected, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
 
-            var expected = method.Invoke(null, args);
+            var rawResult = method.Invoke(null, args);
+            Assert.AreEqual(expected, rawResult);
 
             var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
 
@@ -136,16 +129,10 @@ namespace IL2C
                 await tw.FlushAsync();
             }
 
-            var result = await GccDriver.CompileAndRunAsync(sourcePath, il2cIncludePath);
-            var sanitized = result.Trim(' ', '\r', '\n');
+            var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cIncludePath);
+            var sanitized = executedResult.Trim(' ', '\r', '\n');
 
             Assert.AreEqual("Success", sanitized);
-        }
-
-        public static Task ExecuteTestAsync(Type targetType, string methodName, object[] args)
-        {
-            var method = targetType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
-            return ExecuteTestAsync(method, args);
         }
     }
 }

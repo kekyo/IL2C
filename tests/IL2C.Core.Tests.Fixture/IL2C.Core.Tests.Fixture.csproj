@@ -28,10 +28,11 @@
     <None Include="ConverterTest.cs" />
   </ItemGroup>
 
-  <!-- IL Support -->
   <ItemGroup>
-    <IL Include="TestTarget.il" />
+    <IL Include="ILConverters/Ldarg_0.il" />
   </ItemGroup>
+
+  <!-- IL Support -->
   <Target Name="ProcessILAfterCompile" AfterTargets="Compile">
     <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL" />
   </Target>

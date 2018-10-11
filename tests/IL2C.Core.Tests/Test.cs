@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using IL2C.ILConveters;
 using Mono.Cecil.Cil;
+using IL2C.ILConverters;
 
 namespace IL2C
 {
@@ -52,11 +53,8 @@ namespace IL2C
                 .ToArray();
 
             var ilConverterTests =
-                typeof(ILConverterTest)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                .SelectMany(method => method.GetCustomAttributes<TestCaseExplicitAttribute>(true))
-                .Select(attribute => (string)attribute.Arguments[0])
-                .GroupBy(name => name)
+                ILConverterTest.TargetCases
+                .GroupBy(entry => entry.Method.DeclaringType.Name)
                 .ToDictionary(g => g.Key, g => g.Count());
 
             var basePath = Path.GetFullPath(
@@ -92,7 +90,7 @@ namespace IL2C
                                 opCodeName,
                             (ushort)opCode.Value,
                             (ilConverter != null) ? "Implemented" : string.Empty,
-                            ilConverterTests.TryGetValue(name, out var count) ? string.Format("Tested [{0}]", count) : string.Empty,
+                            ilConverterTests.TryGetValue(name, out var count) ? string.Format("Test [{0}]", count) : string.Empty,
                             ilConverter?.GetType().FullName ?? string.Empty));
                 }
 

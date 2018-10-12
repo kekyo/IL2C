@@ -2,4 +2,4 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: InternalsVisibleTo("IL2C.Core.Tests")]
+[assembly: InternalsVisibleTo("IL2C.Core.Test.Fixture")]

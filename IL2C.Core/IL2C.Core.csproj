@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0;netcoreapp2.0</TargetFrameworks>
 
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <AssemblyName>IL2C.Core</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>

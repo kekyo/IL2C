@@ -11,14 +11,9 @@ extern "C" {
 #include <x86intrin.h>
 #endif
 
-#if defined(_MSC_VER) && (defined(_WIN32) || defined(_WDM) || defined(UEFI))
 typedef long interlock_t;
-#include <stdint.h>
-#else
-#include <stdint.h>
-typedef uint8_t interlock_t;
-#endif
 
+#include <stdint.h>
 #include <stdbool.h>
 #include <wchar.h>
 

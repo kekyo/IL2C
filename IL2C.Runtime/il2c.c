@@ -1,6 +1,8 @@
 /////////////////////////////////////////////////////////////
 // For platform specifics:
 
+typedef long interlock_t;
+
 #if defined(_MSC_VER)
 #if defined(UEFI)
 
@@ -9,11 +11,8 @@
 #include <stdint.h>
 #include <wchar.h>
 
-typedef long interlock_t;
-
 extern void* il2c_memcpy(void* to, const void* from, size_t n);
 extern void* il2c_memset(void* target, int ch, size_t n);
-extern char* il2c_itoa(int i, char* d);
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
@@ -37,11 +36,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <stdint.h>
 #include <wchar.h>
 
-typedef long interlock_t;
-
 #define il2c_memcpy memcpy
 #define il2c_memset memset
-#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
@@ -68,7 +64,6 @@ typedef long interlock_t;
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
-#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc malloc
 #define il2c_free free
@@ -79,8 +74,6 @@ typedef long interlock_t;
 
 #include <stdint.h>
 #include <wchar.h>
-
-typedef long interlock_t;
 
 #ifdef _DEBUG
 #define DEBUG_WRITE(step, message) { \
@@ -102,9 +95,11 @@ typedef long interlock_t;
 
 #if !defined(_MSC_VER)
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
-
-typedef uint8_t interlock_t;
+#include <stdbool.h>
+#include <wchar.h>
 
 static interlock_t _InterlockedCompareExchange(interlock_t* p, interlock_t v, interlock_t c)
 {
@@ -128,7 +123,6 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
-#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc malloc
 #define il2c_free free
@@ -553,33 +547,26 @@ IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE__ = {
 
 const System_IntPtr System_IntPtr_Zero = 0;
 
-// TODO: Reimplement by managed code.
-extern bool twtoi(const wchar_t *_Str, int32_t* value);
-
 bool System_Int32_TryParse(System_String* s, int32_t* result)
 {
+	wchar_t* endPtr;
+
     // TODO: NullReferenceException
     il2c_assert(s != NULL);
 
     il2c_assert(result != NULL);
     il2c_assert(s->string_body__ != NULL);
 
-    return twtoi(s->string_body__, result);
+	*result = wcstol(s->string_body__, &endPtr, 10);
+	return ((s->string_body__ != endPtr) && (errno == 0)) ? true : false;
 }
 
 System_String* System_Int32_ToString(int32_t* this__)
 {
-    char buffer[14];
-    wchar_t wbuffer[14];
-	int i;
+    wchar_t buffer[14];
     
-    const char*p = il2c_itoa(*this__, buffer);
-    for (i = 0; i < 14; i++)
-    {
-        wbuffer[i] = buffer[i];
-    }
-
-    return il2c_new_string(wbuffer);
+    _itow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
 }
 
 /////////////////////////////////////////////////////////////
@@ -754,7 +741,7 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
     il2c_assert(value->string_body__ != NULL);
 
     uint32_t index = 0;
-    while (true)
+    while (1)
     {
         wchar_t ch = value->string_body__[index];
         switch (ch)
@@ -787,8 +774,6 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
 /////////////////////////////////////////////////////////////
 // System.Console
 
-extern void Write(const wchar_t* pMessage);
-extern void WriteLine(const wchar_t* pMessage);
 extern void ReadLine(wchar_t* pBuffer, uint16_t length);
 
 void System_Console_Write_9(System_String* value)
@@ -797,22 +782,19 @@ void System_Console_Write_9(System_String* value)
     il2c_assert(value != NULL);
 
     il2c_assert(value->string_body__ != NULL);
-    Write(value->string_body__);
+	fputws(value->string_body__, stdout);
 }
 
 void System_Console_WriteLine()
 {
-    WriteLine(L"");
+	_putws(L"");
 }
-
-// TODO: Reimplement by managed code.
-extern void itow(int32_t value, wchar_t* p);
 
 void System_Console_WriteLine_6(int32_t value)
 {
     wchar_t buf[20];
-    itow(value, buf);
-    WriteLine(buf);
+    _itow(value, buf, 10);
+	_putws(buf);
 }
 
 void System_Console_WriteLine_10(System_String* value)
@@ -821,15 +803,16 @@ void System_Console_WriteLine_10(System_String* value)
     il2c_assert(value != NULL);
 
     il2c_assert(value->string_body__ != NULL);
-    WriteLine(value->string_body__);
+	_putws(value->string_body__);
 }
 
+// TODO: limitation
 #define MAX_READLINE 128
 
 System_String* System_Console_ReadLine()
 {
     wchar_t buffer[MAX_READLINE];
 
-    ReadLine(buffer, MAX_READLINE);
+	fgetws(buffer, MAX_READLINE, stdin);
     return il2c_new_string(buffer);
 }

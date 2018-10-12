@@ -34,7 +34,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldc.i4.7](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_7) | 0x1d | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4_7Converter |
 | [ldc.i4.8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_8) | 0x1e | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4_8Converter |
 | [ldc.i4.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_s) | 0x1f | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4_sConverter |
-| [ldc.i4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4) | 0x20 | Implemented |  | IL2C.ILConverters.Ldc_i4Converter |
+| [ldc.i4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4) | 0x20 | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4Converter |
 | [ldc.i8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i8) | 0x21 | Implemented |  | IL2C.ILConverters.Ldc_i8Converter |
 | [ldc.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_r4) | 0x22 | Implemented |  | IL2C.ILConverters.Ldc_R4Converter |
 | [ldc.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_r8) | 0x23 | Implemented |  | IL2C.ILConverters.Ldc_R8Converter |

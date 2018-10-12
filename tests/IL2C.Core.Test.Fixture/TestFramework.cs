@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-using IL2C.Metadata;
 using NUnit.Framework;
+using IL2C.Metadata;
 
 namespace IL2C
 {
@@ -31,13 +31,10 @@ namespace IL2C
             if (value is char) return "il2c_new_string(L\"" + value + "\")";
             if (value is long) return string.Format("INT64_C({0})", value);
             if (value is ulong) return string.Format("UINT64_C({0})", value);
-            if (value is int) return string.Format("INT32_C({0})", value);
             if (value is uint) return string.Format("UINT32_C({0})", value);
-            if (value is short) return string.Format("INT16_C({0})", value);
-            if (value is ushort) return string.Format("UINT16_C({0})", value);
-            if (value is byte) return string.Format("UINT8_C({0})", value);
-            if (value is sbyte) return string.Format("INT8_C({0})", value);
             if (value is bool) return (bool)value ? "true" : "false";
+            if (value.Equals(int.MinValue)) return "INT32_MIN";
+            if (value.Equals(long.MinValue)) return "INT64_MIN";
             return value.ToString();
         }
 

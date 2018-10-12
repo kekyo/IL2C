@@ -7,7 +7,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\IL2C.Runtime\il2c.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\IL2C.Runtime\il2c.c" />
     <ClCompile Include="test.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -38,7 +38,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <AdditionalIncludeDirectories>.;..\..\..\..\..\..\..\IL2C.Runtime</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\..\..\..\..\..\..\IL2C.Runtime</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>All</AssemblerOutput>

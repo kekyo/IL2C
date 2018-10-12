@@ -116,17 +116,6 @@ namespace IL2C.ILConverters
         }
     }
 
-    internal sealed class Ldc_i4Converter : InlineI4Converter
-    {
-        public override OpCode OpCode => OpCodes.Ldc_I4;
-
-        public override Func<IExtractContext, string[]> Apply(int operand, DecodeContext decodeContext)
-        {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
-        }
-    }
-
     internal sealed class Ldc_i4_sConverter : ShortInlineI1Converter
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_S;
@@ -138,6 +127,23 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Ldc_i4Converter : InlineI4Converter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4;
+
+        public override Func<IExtractContext, string[]> Apply(int operand, DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+
+            // HACK: if operand is int.MinValue, compiler will cause constant literal warning:
+            //   "warning: this decimal constant is unsigned only in ISO C90 [enabled by default]" (it's gcc, but vc causes same)
+            //   IL2C makes the expression it special case.
+            return _ => (operand != int.MinValue)
+                ? new[] { string.Format("{0} = {1}", symbolName, operand) }
+                : new[] { string.Format("{0} = INT32_MIN", symbolName) };
+        }
+    }
+
     internal sealed class Ldc_i8Converter : InlineI8Converter
     {
         public override OpCode OpCode => OpCodes.Ldc_I8;
@@ -145,7 +151,13 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(long operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
-            return _ => new[] { string.Format("{0} = {1}LL", symbolName, operand) };
+
+            // HACK: if operand is int.MinValue, compiler will cause constant literal warning:
+            //   "warning: this decimal constant is unsigned only in ISO C90 [enabled by default]" (it's gcc, but vc causes same)
+            //   IL2C makes the expression it special case.
+            return _ => (operand != long.MinValue)
+                ? new[] { string.Format("{0} = INT64_C({1})", symbolName, operand) }
+                : new[] { string.Format("{0} = INT64_MIN", symbolName) };
         }
     }
 

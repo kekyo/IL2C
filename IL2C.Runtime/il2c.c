@@ -273,6 +273,7 @@ void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ void* pFrame)
 {
     il2c_assert(pFrame != NULL);
 
+    // TODO: always collect
     il2c_collect();
 
     g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext;

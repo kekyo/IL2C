@@ -26,8 +26,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="test.c" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="ConverterTest.cs" />
-    <EmbeddedResource Include="test.vcxproj" />
+    <EmbeddedResource Include="Templates\test.c" />
+    <EmbeddedResource Include="Templates\test.vcxproj" />
   </ItemGroup>
 
   <ItemGroup>

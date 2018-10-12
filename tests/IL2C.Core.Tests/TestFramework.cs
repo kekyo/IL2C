@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 using IL2C.Metadata;
@@ -36,6 +37,7 @@ namespace IL2C
             if (value is ushort) return string.Format("UINT16_C({0})", value);
             if (value is byte) return string.Format("UINT8_C({0})", value);
             if (value is sbyte) return string.Format("INT8_C({0})", value);
+            if (value is bool) return (bool)value ? "true" : "false";
             return value.ToString();
         }
 
@@ -74,6 +76,12 @@ namespace IL2C
                 .First(t => t.FriendlyName == method.DeclaringType.FullName).DeclaredMethods
                 .First(m => m.Name == method.Name);
 
+            var body = new StringWriter();
+            AssemblyWriter.WriteConstStrings(
+                body, translateContext);
+            AssemblyWriter.InternalConvertFromMethod(
+                body, translateContext, prepared, targetMethod, "  ", DebugInformationOptions.Full);
+
             var translatedPath = Path.GetFullPath(
                 Path.Combine(
                     Path.GetDirectoryName(method.DeclaringType.Assembly.Location),
@@ -97,54 +105,39 @@ namespace IL2C
             var templatePath = Path.Combine(translatedPath, "test.vcxproj");
             using (var fs = new FileStream(templatePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
             {
-                using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream("IL2C.test.vcxproj"))
+                using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream("IL2C.Templates.test.vcxproj"))
                 {
                     await ts.CopyToAsync(fs);
                     await fs.FlushAsync();
                 }
             }
 
+            var sourceCode = new StringBuilder();
+            using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream("IL2C.Templates.test.c"))
+            {
+                var tr = new StreamReader(ts);
+                sourceCode.Append(await tr.ReadToEndAsync());
+            }
+
+            sourceCode.Replace("{body}", body.ToString());
+
+            var expectedType = targetMethod.ReturnType;
+            sourceCode.Replace("{isRefType}", (expectedType.IsByReference || expectedType.IsClass) ? "1" : "0");
+
+            sourceCode.Replace("{type}", targetMethod.ReturnType.CLanguageTypeName);
+            sourceCode.Replace("{expected}", GetCLanguageLiteralExpression(expected));
+            sourceCode.Replace("{function}", targetMethod.CLanguageFunctionName);
+            sourceCode.Replace("{arguments}", string.Join(", ", args.Select(GetCLanguageLiteralExpression)));
+            sourceCode.Replace("{equality}", expectedType.IsStringType ? "wcscmp(expected->string_body__, actual->string_body__) == 0" : "expected == actual");
+            sourceCode.Replace("{actualFormat}", GetCLanguagePrintFormatFromType(targetMethod.ReturnType));
+            sourceCode.Replace("{actualExpression}", expectedType.IsBooleanType ? "actual ? \"true\" : \"false\"" : "actual");
+
             var sourcePath = Path.Combine(translatedPath, "test.c");
             using (var fs = new FileStream(sourcePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
             {
                 var tw = new StreamWriter(fs);
 
-                await tw.WriteLineAsync("#include <il2c.h>");
-
-                AssemblyWriter.WriteConstStrings(
-                    tw, translateContext);
-                AssemblyWriter.InternalConvertFromMethod(
-                    tw, translateContext, prepared, targetMethod, "  ", DebugInformationOptions.Full);
-
-                var formatChar = GetCLanguagePrintFormatFromType(targetMethod.ReturnType);
-
-                await tw.WriteLineAsync();
-                await tw.WriteLineAsync("//////////////////////////////////////////////////////");
-                await tw.WriteLineAsync();
-                await tw.WriteLineAsync("#include <stdio.h>");
-                await tw.WriteLineAsync();
-                await tw.WriteLineAsync("int main()");
-                await tw.WriteLineAsync("{");
-                await tw.WriteLineAsync("  il2c_initialize();");
-                await tw.WriteLineAsync();
-                await tw.WriteLineAsync(
-                    string.Format("  const {0} expected = {1};",
-                        targetMethod.ReturnType.CLanguageTypeName,
-                        GetCLanguageLiteralExpression(expected)));
-                await tw.WriteLineAsync(
-                    string.Format("  const {0} actual = {1}({2});",
-                        targetMethod.ReturnType.CLanguageTypeName,
-                        targetMethod.CLanguageFunctionName,
-                        string.Join(",", args.Select(GetCLanguageLiteralExpression))));
-                await tw.WriteLineAsync();
-                await tw.WriteLineAsync("  int result;");
-                await tw.WriteLineAsync("  if (expected == actual) { printf(\"Success\\n\"); result = 0; }");
-                await tw.WriteLineAsync(string.Format("  else {{ printf(\"Failed: {0}\\n\", actual); result = 1; }}", formatChar));
-                await tw.WriteLineAsync();
-                await tw.WriteLineAsync("  il2c_shutdown();");
-                await tw.WriteLineAsync("  return result;");
-                await tw.WriteLineAsync("}");
-
+                await tw.WriteAsync(sourceCode.ToString());
                 await tw.FlushAsync();
             }
 

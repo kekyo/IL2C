@@ -1,5 +1,18 @@
 ﻿.class public IL2C.ILConverters.Ldarg_0
 {
+	.method public static bool Boolean(bool v) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+        ldc.i4.0
+		ceq
+        brfalse.s end
+        ldc.i4.1
+		ret
+    end:ldc.i4.0
+        ret
+	}
+
 	.method public static uint8 Byte(uint8 num) cil managed
 	{
 		.maxstack 2

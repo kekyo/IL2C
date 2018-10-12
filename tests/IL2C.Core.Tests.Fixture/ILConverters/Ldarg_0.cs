@@ -2,6 +2,8 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
+    [Case("Boolean", true, false)]
+    [Case("Boolean", false, true)]
     [Case("Byte", byte.MaxValue - 1, byte.MaxValue)]
     [Case("Int16", short.MaxValue - 1, short.MaxValue)]
     [Case("Int32", int.MaxValue - 1, int.MaxValue)]
@@ -9,6 +11,9 @@ namespace IL2C.ILConverters
     [Case("String", "ABCD", "ABC")]
     public static class Ldarg_0
     {
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern bool Boolean(bool value);
+
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte Byte(byte num);
 
@@ -22,6 +27,6 @@ namespace IL2C.ILConverters
         public static extern long Int64(long num);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string String(string str);
+        public static extern string String(string v);
     }
 }

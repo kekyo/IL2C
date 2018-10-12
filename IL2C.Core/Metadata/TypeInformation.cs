@@ -274,7 +274,7 @@ namespace IL2C.Metadata
         }
 
         public bool IsValueType => this.Member.IsValueType;
-        public bool IsClass => (this.Definition as TypeDefinition)?.IsClass ?? false;
+        public bool IsClass => !this.Member.IsValueType && ((this.Definition as TypeDefinition)?.IsClass ?? false);
         public bool IsInterface => (this.Definition as TypeDefinition)?.IsInterface ?? false;
         public bool IsEnum => (this.Definition as TypeDefinition)?.IsEnum ?? false;
         public bool IsDelegate => this.MetadataContext.DelegateType.IsAssignableFrom(this);

@@ -94,6 +94,17 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Ldc_i4_8Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_I4_8;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+            return _ => new[] { string.Format("{0} = 8", symbolName) };
+        }
+    }
+
     internal sealed class Ldc_i4Converter : InlineI4Converter
     {
         public override OpCode OpCode => OpCodes.Ldc_I4;

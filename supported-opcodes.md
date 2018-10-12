@@ -23,7 +23,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldloca.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloca_s) | 0x12 | Implemented |  | IL2C.ILConverters.Ldloca_sConverter |
 | [stloc.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_s) | 0x13 | Implemented |  | IL2C.ILConverters.Stloc_SConverter |
 | [ldnull](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldnull) | 0x14 | Implemented |  | IL2C.ILConverters.RetConverter+LdnullConverter |
-| [ldc.i4.m1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_m1) | 0x15 |  |  |  |
+| [ldc.i4.m1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_m1) | 0x15 | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4_m1Converter |
 | [ldc.i4.0](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_0) | 0x16 | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4_0Converter |
 | [ldc.i4.1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_1) | 0x17 | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4_1Converter |
 | [ldc.i4.2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldc_i4_2) | 0x18 | Implemented | Test [2] | IL2C.ILConverters.Ldc_i4_2Converter |

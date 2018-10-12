@@ -9,7 +9,7 @@ using Mono.Cecil.Cil;
 using IL2C.Translators;
 using IL2C.Metadata;
 
-namespace IL2C.ILConveters
+namespace IL2C.ILConverters
 {
     internal sealed class InitobjConverter : InlineTypeConverter
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using NUnit.Framework;
-using IL2C.ILConveters;
 using Mono.Cecil.Cil;
+using NUnit.Framework;
+
 using IL2C.ILConverters;
 
 namespace IL2C

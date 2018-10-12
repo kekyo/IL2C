@@ -6,7 +6,7 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using IL2C.ILConveters;
+using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
 

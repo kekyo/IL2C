@@ -6,7 +6,7 @@ using Mono.Cecil.Cil;
 
 using IL2C.Translators;
 
-namespace IL2C.ILConveters
+namespace IL2C.ILConverters
 {
     internal abstract class InlineNoneConverter : ILConverter
     {

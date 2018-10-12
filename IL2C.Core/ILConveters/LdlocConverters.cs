@@ -1,20 +1,19 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Mono.Cecil.Rocks;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConveters
 {
     internal static class LdlocConverterUtilities
     {
         private static Func<IExtractContext, string[]> Apply(
-            string targetName, TypeReference targetType, DecodeContext decodeContext, bool isReference)
+            string targetName, ITypeInformation targetType, DecodeContext decodeContext, bool isReference)
         {
-            targetType = targetType.GetStackableType();
-            targetType = isReference ? targetType.MakeByReferenceType() : targetType;
+            targetType = targetType.StackableType;
+            targetType = isReference ? targetType.MakeByReference() : targetType;
                 
             var symbolName = decodeContext.PushStack(targetType);
 
@@ -28,14 +27,14 @@ namespace IL2C.ILConveters
         public static Func<IExtractContext, string[]> Apply(
             int localIndex, DecodeContext decodeContext, bool isReference = false)
         {
-            var local = decodeContext.Locals[localIndex];
+            var local = decodeContext.Method.LocalVariables[localIndex];
             return Apply(local.SymbolName, local.TargetType, decodeContext, isReference);
         }
 
         public static Func<IExtractContext, string[]> Apply(
-            VariableReference localVariable, DecodeContext decodeContext, bool isReference = false)
+            VariableInformation localVariable, DecodeContext decodeContext, bool isReference = false)
         {
-            var local = decodeContext.Locals[localVariable.Index];
+            var local = decodeContext.Method.LocalVariables[localVariable.Index];
             return Apply(local.SymbolName, local.TargetType, decodeContext, isReference);
         }
     }
@@ -85,7 +84,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldloc_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            VariableReference operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(operand, decodeContext);
         }
@@ -96,7 +95,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldloca_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            VariableReference operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
             return LdlocConverterUtilities.Apply(operand, decodeContext, true);
         }

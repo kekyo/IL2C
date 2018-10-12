@@ -5,15 +5,22 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Mono.Cecil.Rocks;
 
 using IL2C.ILConveters;
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C
 {
+    internal static class Lazy
+    {
+        public static Lazy<T> Create<T>(Func<T> generator)
+        {
+            return new Lazy<T>(generator);
+        }
+    }
+
     internal static class Utilities
     {
         private static readonly char[] replaceChars = { '.', '@', '<', '>', '$', '-', '=', ',', '.' };
@@ -86,189 +93,31 @@ namespace IL2C
             return sb.ToString();
         }
 
-        public static TypeReference GetStackableType(this TypeReference type)
+        public static string GetMarshaledInExpression(this VariableInformation parameter)
         {
-            if (type.IsByteType()
-                || type.IsSByteType()
-                || type.IsInt16Type()
-                || type.IsUInt16Type()
-                || type.IsUInt32Type()
-                || type.IsBooleanType()
-                || type.IsCharType())
+            if (parameter.TargetType.IsStringType)
             {
-                return type.GetSafeInt32Type();
+                return string.Format("{0}->string_body__", parameter.SymbolName);
             }
 
-            if (type.IsUInt64Type())
-            {
-                return type.GetSafeInt64Type();
-            }
-
-            if (type.IsUIntPtrType())
-            {
-                return type.GetSafeIntPtrType();
-            }
-
-            return type;
-        }
-
-        public static Parameter[] GetSafeParameters(this MethodReference method, TypeReference thisType = null)
-        {
-            var parameters = method.Parameters
-                .Select(parameter => new Parameter(parameter.Name, parameter.ParameterType));
-            if (method.HasThis)
-            {
-                var type = method.DeclaringType;
-                thisType = thisType ?? (type.IsValueType ? type.MakeByReferenceType() : type);
-                parameters = new[]
-                    {
-                        new Parameter("this__", thisType)
-                    }
-                    .Concat(parameters);
-            }
-
-            return parameters.ToArray();
-        }
-
-        public static string GetMarshaledInExpression(this Parameter parameter)
-        {
-            if (parameter.ParameterType.IsStringType())
-            {
-                return string.Format("{0}->string_body__", parameter.Name);
-            }
-
-            var resolved = parameter.ParameterType.Resolve();
-            if (resolved.IsEnum)
+            if (parameter.TargetType.IsEnum)
             {
                 return string.Format(
                     "({0}){1}",
-                    resolved.Name,      // Simple enum type name for use P/Invoke.
-                    parameter.Name);
+                    parameter.TargetType.Name,      // Simple enum type name for use P/Invoke.
+                    parameter.SymbolName);
             }
 
-            return parameter.Name;
-        }
-
-        public static string ManglingSymbolName(this string rawSymbolName)
-        {
-            var sb = new StringBuilder(rawSymbolName);
-            foreach (var ch in replaceChars)
-            {
-                sb.Replace(ch, '_');
-            }
-
-            Debug.Assert(!rawSymbolName.Contains("*"));
-
-            sb.Replace("*", "_reference");
-            return sb.ToString();
-        }
-
-        public static string GetFunctionPrototypeString(
-            string methodName,
-            TypeReference returnType,
-            Parameter[] parameters,
-            IExtractContext extractContext)
-        {
-            var parametersString = string.Join(
-                ", ",
-                parameters.Select(parameter => string.Format(
-                    "{0} {1}",
-                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
-                    parameter.Name)));
-
-            var returnTypeName =
-                extractContext.GetCLanguageTypeName(returnType);
-
-            return string.Format(
-                "{0} {1}({2})",
-                returnTypeName,
-                methodName.ManglingSymbolName(),
-                (parametersString.Length >= 1) ? parametersString : "void");
-        }
-
-        public static string GetFunctionTypeString(
-            string methodName,
-            TypeReference returnType,
-            Parameter[] parameters,
-            IExtractContext extractContext)
-        {
-            var parametersString = string.Join(
-                ", ",
-                parameters.Select(parameter => string.Format(
-                    "{0} {1}",
-                    extractContext.GetCLanguageTypeName(parameter.ParameterType),
-                    parameter.Name)));
-
-            var returnTypeName =
-                extractContext.GetCLanguageTypeName(returnType);
-
-            return string.Format(
-                "{0} (*{1})({2})",
-                returnTypeName,
-                methodName.ManglingSymbolName(),
-                (parametersString.Length >= 1) ? parametersString : "void");
-        }
-
-        public static string GetFunctionTypeString(
-            TypeReference returnType,
-            TypeReference[] parameterTypes,
-            IExtractContext extractContext)
-        {
-            var parametersString = string.Join(
-                ", ",
-                parameterTypes.Select(parameterType =>
-                    extractContext.GetCLanguageTypeName(parameterType)));
-
-            var returnTypeName =
-                extractContext.GetCLanguageTypeName(returnType);
-
-            return string.Format(
-                "{0} (*)({1})",
-                returnTypeName,
-                (parametersString.Length >= 1) ? parametersString : "void");
-        }
-
-        public static string GetStaticFieldPrototypeString(
-            FieldReference field,
-            bool requireInitializerExpression,
-            IExtractContext extractContext)
-        {
-            var initializer = String.Empty;
-            if (requireInitializerExpression)
-            {
-                if (field.FieldType.IsNumericPrimitive())
-                {
-                    // TODO: numericPrimitive and (literal or readonly static) ?
-                    var fieldDefinition = field.Resolve();
-                    Debug.Assert(fieldDefinition.IsStatic);
-                    var value = fieldDefinition.HasConstant ? fieldDefinition.Constant : 0;
-
-                    Debug.Assert(value != null);
-
-                    initializer = fieldDefinition.FieldType.IsInt64Type()
-                        ? String.Format(" = {0}LL", value)
-                        : String.Format(" = {0}", value);
-                }
-                else if (field.FieldType.IsValueType == false)
-                {
-                    initializer = " = NULL";
-                }
-            }
-
-            return string.Format(
-                "{0} {1}{2}",
-                extractContext.GetCLanguageTypeName(field.FieldType),
-                field.GetFullMemberName().ManglingSymbolName(),
-                initializer);
+            return parameter.SymbolName;
         }
 
         public struct RightExpressionGivenParameter
         {
-            public readonly TypeReference TargetType;
-            public readonly SymbolInformation SymbolInformation;
+            public readonly ITypeInformation TargetType;
+            public readonly VariableInformation SymbolInformation;
 
             public RightExpressionGivenParameter(
-                TypeReference targetType, SymbolInformation symbolinformation)
+                ITypeInformation targetType, VariableInformation symbolinformation)
             {
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;
@@ -276,26 +125,28 @@ namespace IL2C
 
             public override string ToString()
             {
-                return string.Format("{0} <-- {1}", this.TargetType.GetFullMemberName(), this.SymbolInformation);
+                return string.Format("{0} <-- {1}", this.TargetType.FriendlyName, this.SymbolInformation);
             }
         }
 
         public static string GetGivenParameterDeclaration(
             RightExpressionGivenParameter[] parameters,
             IExtractContext extractContext,
-            int offset)
+            ICodeInformation codeInformation)
         {
             return string.Join(", ", parameters.Select(entry =>
             {
+                //Debug.Assert(codeInformation.RawLocation != "IL2C.Tests.ValueTypeTest.Test5():IL_001e");
+
                 var rightExpression = extractContext.GetRightExpression(
                     entry.TargetType, entry.SymbolInformation);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid parameter type: Offset={0}, StackType={1}, ParameterType={2}",
-                        offset,
-                        entry.SymbolInformation.TargetType.FullName,
-                        entry.TargetType.FullName);
+                        "Invalid parameter type: Location={0}, StackType={1}, ParameterType={2}",
+                        codeInformation.RawLocation,
+                        entry.SymbolInformation.TargetType.FriendlyName,
+                        entry.TargetType.FriendlyName);
                 }
                 return rightExpression;
             }));
@@ -333,6 +184,17 @@ namespace IL2C
         public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
         {
             return dict.TryGetValue(key, out var value) ? value : defaultValue;
+        }
+
+        public static U GetOrAdd<T, U>(this Dictionary<T, U> dict, T key, U value)
+        {
+            if (dict.TryGetValue(key, out var v) == false)
+            {
+                v = value;
+                dict.Add(key, v);
+            }
+
+            return v;
         }
 
         public static KeyValuePair<TKey, TValue> KeyValue<TKey, TValue>(TKey key, TValue value)

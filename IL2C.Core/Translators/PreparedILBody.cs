@@ -1,5 +1,5 @@
 ﻿using System;
-
+using IL2C.Metadata;
 using Mono.Cecil.Cil;
 
 namespace IL2C.Translators
@@ -9,39 +9,33 @@ namespace IL2C.Translators
         public readonly Label Label;
         internal readonly Func<IExtractContext, string[]> Generator;
         public readonly int UniqueCodeBlockIndex;
-        public readonly SequencePoint[] SequencePoints;
+        public readonly ICodeInformation Code;
 
-        private readonly OpCode opCode;   // For use debugging
-        private readonly object operand;  // For use debugging
         private readonly int decodingPathNumber;  // For use debugging
 
         internal PreparedILBody(
             Label label,
             Func<IExtractContext, string[]> generator,
             int uniqueCodeBlockIndex,
-            SequencePoint[] sequencePoints,
-            OpCode opCode,
-            object operand,
+            ICodeInformation code,
             int decodingPathNumber)
         {
             this.Label = label;
             this.Generator = generator;
             this.UniqueCodeBlockIndex = uniqueCodeBlockIndex;
-            this.SequencePoints = sequencePoints;
+            this.Code = code;
 
-            this.opCode = opCode;
-            this.operand = operand;
             this.decodingPathNumber = decodingPathNumber;
         }
 
         private string GetOperandPrintable()
         {
-            if (operand == null)
+            if (this.Code.Operand == null)
             {
                 return string.Empty;
             }
 
-            var inst = operand as Instruction;
+            var inst = this.Code.Operand as Instruction;
             if (inst != null)
             {
                 return string.Format(
@@ -49,7 +43,7 @@ namespace IL2C.Translators
                     inst.Offset);
             }
 
-            var varRef = operand as VariableReference;
+            var varRef = this.Code.Operand as VariableReference;
             if (varRef != null)
             {
                 return string.Format(
@@ -57,7 +51,7 @@ namespace IL2C.Translators
                     varRef.Index);
             }
 
-            var str = operand as string;
+            var str = this.Code.Operand as string;
             if (str != null)
             {
                 return string.Format(
@@ -65,18 +59,16 @@ namespace IL2C.Translators
                     str);
             }
 
-            return " " + operand;
+            return " " + this.Code.Operand;
         }
 
         public override string ToString()
         {
             return string.Format(
-                "Path={0}, Unique={1}: IL_{2:x4}: {3}{4}",
+                "Path={0}, Unique={1}: {2}",
                 this.decodingPathNumber,
                 this.UniqueCodeBlockIndex,
-                this.Label.Offset,
-                opCode,
-                this.GetOperandPrintable());
+                this.Code);
         }
     }
 }

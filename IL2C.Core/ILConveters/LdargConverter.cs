@@ -1,9 +1,9 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConveters
 {
@@ -11,14 +11,14 @@ namespace IL2C.ILConveters
     {
         public static Func<IExtractContext, string[]> Apply(int parameterIndex, DecodeContext decodeContext)
         {
-            var parameter = decodeContext.Parameters[parameterIndex];
-            var targetType = parameter.ParameterType.GetStackableType();
+            var parameter = decodeContext.Method.Parameters[parameterIndex];
+            var targetType = parameter.TargetType.StackableType;
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
                 "{0} = {1}",
                 symbolName,
-                extractContext.GetRightExpression(targetType, parameter.ParameterType, parameter.Name)) };
+                extractContext.GetRightExpression(targetType, parameter.TargetType, parameter.SymbolName)) };
         }
     }
 
@@ -67,10 +67,9 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Ldarg_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            ParameterReference operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
-            var index = operand.Resolve().Method.HasThis ? (operand.Index + 1) : operand.Index;
-            return LdargConverterUtilities.Apply(index, decodeContext);
+            return LdargConverterUtilities.Apply(operand.Index, decodeContext);
         }
     }
 }

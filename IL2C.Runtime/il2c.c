@@ -1,6 +1,9 @@
 /////////////////////////////////////////////////////////////
 // For platform specifics:
 
+typedef long interlock_t;
+
+#if defined(_MSC_VER)
 #if defined(UEFI)
 
 #include <intrin.h>
@@ -8,11 +11,8 @@
 #include <stdint.h>
 #include <wchar.h>
 
-typedef long interlock_t;
-
 extern void* il2c_memcpy(void* to, const void* from, size_t n);
 extern void* il2c_memset(void* target, int ch, size_t n);
-extern char* il2c_itoa(int i, char* d);
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
@@ -36,11 +36,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <stdint.h>
 #include <wchar.h>
 
-typedef long interlock_t;
-
 #define il2c_memcpy memcpy
 #define il2c_memset memset
-#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
@@ -67,7 +64,6 @@ typedef long interlock_t;
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
-#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc malloc
 #define il2c_free free
@@ -78,8 +74,6 @@ typedef long interlock_t;
 
 #include <stdint.h>
 #include <wchar.h>
-
-typedef long interlock_t;
 
 #ifdef _DEBUG
 #define DEBUG_WRITE(step, message) { \
@@ -96,11 +90,16 @@ typedef long interlock_t;
 #include <assert.h>
 #define il2c_assert assert
 
-#else
+#endif
+#endif
 
+#if !defined(_MSC_VER)
+
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
-
-typedef uint8_t interlock_t;
+#include <stdbool.h>
+#include <wchar.h>
 
 static interlock_t _InterlockedCompareExchange(interlock_t* p, interlock_t v, interlock_t c)
 {
@@ -124,7 +123,6 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
-#define il2c_itoa(i, d) itoa(i, d, 10)
 
 #define il2c_malloc malloc
 #define il2c_free free
@@ -275,6 +273,7 @@ void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ void* pFrame)
 {
     il2c_assert(pFrame != NULL);
 
+    // TODO: always collect
     il2c_collect();
 
     g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext;
@@ -474,7 +473,7 @@ static __System_Object_VTABLE_DECL__ __System_Object_VTABLE__ = {
 IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
     "System.Object",
     sizeof(System_Object),
-    /* internalcall */ __System_Object_IL2C_MarkHandler__
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__
 };
 
 /////////////////////////////////////////////////////////////
@@ -522,59 +521,53 @@ __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
 IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__ = {
     "System.ValueType",
     sizeof(System_ValueType),
-    /* internalcall */ __System_ValueType_IL2C_MarkHandler__
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_ValueType_IL2C_MarkHandler__
 };
 
 /////////////////////////////////////////////////////////////
 // Basic type informations
 
 IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__ = {
-    "System.IntPtr", sizeof(System_IntPtr), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.IntPtr", sizeof(System_IntPtr), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__ = {
-    "System.Byte", sizeof(System_Byte), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Byte", sizeof(System_Byte), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE__ = {
-    "System.SByte", sizeof(System_SByte), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.SByte", sizeof(System_SByte), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Int16_RUNTIME_TYPE__ = {
-    "System.Int16", sizeof(System_Int16), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Int16", sizeof(System_Int16), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE__ = {
-    "System.UInt16", sizeof(System_UInt16), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.UInt16", sizeof(System_UInt16), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE__ = {
-    "System.Int32", sizeof(System_Int32), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Int32", sizeof(System_Int32), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_UInt32_RUNTIME_TYPE__ = {
-    "System.UInt32", sizeof(System_UInt32), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.UInt32", sizeof(System_UInt32), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Int64_RUNTIME_TYPE__ = {
-    "System.Int64", sizeof(System_Int64), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.Int64", sizeof(System_Int64), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE__ = {
-    "System.UInt64", sizeof(System_UInt64), /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.UInt64", sizeof(System_UInt64), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 
 const System_IntPtr System_IntPtr_Zero = 0;
 
-// TODO: Reimplement by managed code.
-extern bool twtoi(const wchar_t *_Str, int32_t* value);
-
 bool System_Int32_TryParse(System_String* s, int32_t* result)
 {
+	wchar_t* endPtr;
+
     // TODO: NullReferenceException
     il2c_assert(s != NULL);
 
     il2c_assert(result != NULL);
     il2c_assert(s->string_body__ != NULL);
 
-    return twtoi(s->string_body__, result);
+	*result = wcstol(s->string_body__, &endPtr, 10);
+	return ((s->string_body__ != endPtr) && (errno == 0)) ? true : false;
 }
 
 System_String* System_Int32_ToString(int32_t* this__)
 {
-    char buffer[14];
-    wchar_t wbuffer[14];
+    wchar_t buffer[14];
     
-    const char*p = il2c_itoa(*this__, buffer);
-    for (int i = 0; i < 14; i++)
-    {
-        wbuffer[i] = buffer[i];
-    }
-
-    return il2c_new_string(wbuffer);
+    _itow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
 }
 
 /////////////////////////////////////////////////////////////
@@ -613,7 +606,7 @@ __System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
 };
 
 IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
-    "System.String", UINTPTR_MAX, /* internalcall */ __System_Object_IL2C_MarkHandler__ };
+    "System.String", UINTPTR_MAX, /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 
 static System_String* __new_string_internal__(uintptr_t byteSize)
 {
@@ -749,7 +742,7 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
     il2c_assert(value->string_body__ != NULL);
 
     uint32_t index = 0;
-    while (true)
+    while (1)
     {
         wchar_t ch = value->string_body__[index];
         switch (ch)
@@ -782,8 +775,6 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
 /////////////////////////////////////////////////////////////
 // System.Console
 
-extern void Write(const wchar_t* pMessage);
-extern void WriteLine(const wchar_t* pMessage);
 extern void ReadLine(wchar_t* pBuffer, uint16_t length);
 
 void System_Console_Write_9(System_String* value)
@@ -792,22 +783,19 @@ void System_Console_Write_9(System_String* value)
     il2c_assert(value != NULL);
 
     il2c_assert(value->string_body__ != NULL);
-    Write(value->string_body__);
+	fputws(value->string_body__, stdout);
 }
 
 void System_Console_WriteLine()
 {
-    WriteLine(L"");
+	_putws(L"");
 }
-
-// TODO: Reimplement by managed code.
-extern void itow(int32_t value, wchar_t* p);
 
 void System_Console_WriteLine_6(int32_t value)
 {
     wchar_t buf[20];
-    itow(value, buf);
-    WriteLine(buf);
+    _itow(value, buf, 10);
+	_putws(buf);
 }
 
 void System_Console_WriteLine_10(System_String* value)
@@ -816,15 +804,16 @@ void System_Console_WriteLine_10(System_String* value)
     il2c_assert(value != NULL);
 
     il2c_assert(value->string_body__ != NULL);
-    WriteLine(value->string_body__);
+	_putws(value->string_body__);
 }
 
+// TODO: limitation
 #define MAX_READLINE 128
 
 System_String* System_Console_ReadLine()
 {
     wchar_t buffer[MAX_READLINE];
 
-    ReadLine(buffer, MAX_READLINE);
+	fgetws(buffer, MAX_READLINE, stdin);
     return il2c_new_string(buffer);
 }

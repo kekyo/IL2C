@@ -13,7 +13,7 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            var targetType = decodeContext.Module.GetSafeInt64Type().GetStackableType();
+            var targetType = decodeContext.PrepareContext.MetadataContext.Int64Type;
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
@@ -30,7 +30,7 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            var targetType = decodeContext.Module.GetSafeUInt64Type().GetStackableType();
+            var targetType = decodeContext.PrepareContext.MetadataContext.Int64Type;
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
@@ -47,15 +47,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (siFrom.TargetType.IsNumericPrimitive() == false)
+            if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.Current.Offset,
-                    siFrom.TargetType.FullName);
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
             return _ => new[] { string.Format("{0} = (uint8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -67,15 +67,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (siFrom.TargetType.IsNumericPrimitive() == false)
+            if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.Current.Offset,
-                    siFrom.TargetType.FullName);
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
             return _ => new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -87,15 +87,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (siFrom.TargetType.IsNumericPrimitive() == false)
+            if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.Current.Offset,
-                    siFrom.TargetType.FullName);
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
             return _ => new[] { string.Format("{0} = (int16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -107,15 +107,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (siFrom.TargetType.IsNumericPrimitive() == false)
+            if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.Current.Offset,
-                    siFrom.TargetType.FullName);
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeInt32Type());
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
             return _ => new[] { string.Format("{0} = (uint16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -127,15 +127,15 @@ namespace IL2C.ILConveters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (siFrom.TargetType.IsNumericPrimitive() == false)
+            if (siFrom.TargetType.IsNumericPrimitive == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Cannot convert to numeric type: ILByteOffset={0}, FromType={1}",
-                    decodeContext.Current.Offset,
-                    siFrom.TargetType.FullName);
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.Module.GetSafeIntPtrType());
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
             return _ => new[] { string.Format("{0} = (intptr_t)(uintptr_t){1}", resultName, siFrom.SymbolName) };
         }
     }

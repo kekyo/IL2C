@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-
+using IL2C.Metadata;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -27,15 +27,15 @@ namespace IL2C.ILConveters
     {
     }
 
-    internal abstract class InlineMethodConverter : ILConverter<MethodReference>
+    internal abstract class InlineMethodConverter : ILConverter<IMethodInformation>
     {
     }
 
-    internal abstract class InlineFieldConverter : ILConverter<FieldReference>
+    internal abstract class InlineFieldConverter : ILConverter<IFieldInformation>
     {
     }
 
-    internal abstract class InlineTypeConverter : ILConverter<TypeReference>
+    internal abstract class InlineTypeConverter : ILConverter<ITypeInformation>
     {
     }
 
@@ -43,11 +43,11 @@ namespace IL2C.ILConveters
     {
     }
 
-    internal abstract class InlineBrTargetConverter : ILConverter<Instruction>
+    internal abstract class InlineBrTargetConverter : ILConverter<ICodeInformation>
     {
     }
 
-    internal abstract class ShortInlineBrTargetConverter : ILConverter<Instruction>
+    internal abstract class ShortInlineBrTargetConverter : ILConverter<ICodeInformation>
     {
     }
 
@@ -55,11 +55,11 @@ namespace IL2C.ILConveters
     {
     }
 
-    internal abstract class ShortInlineParamConverter : ILConverter<ParameterReference>
+    internal abstract class ShortInlineParamConverter : ILConverter<VariableInformation>
     {
     }
 
-    internal abstract class ShortInlineVarConverter : ILConverter<VariableReference>
+    internal abstract class ShortInlineVarConverter : ILConverter<VariableInformation>
     {
     }
 }

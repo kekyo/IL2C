@@ -2,6 +2,7 @@
 
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -13,7 +14,7 @@ namespace IL2C.ILConveters
         public override bool IsEndOfPath => true;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
@@ -28,7 +29,7 @@ namespace IL2C.ILConveters
         public override bool IsEndOfPath => true;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
@@ -41,13 +42,13 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Brfalse;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive())
+            if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -69,13 +70,13 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Brfalse_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive())
+            if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -97,13 +98,13 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Brtrue;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive())
+            if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} != 0) goto {1}",
@@ -125,13 +126,13 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Brtrue_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive())
+            if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} != 0) goto {1}",
@@ -153,7 +154,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Beq_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -173,7 +174,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Blt_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -193,7 +194,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Bne_Un_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            Instruction operand, DecodeContext decodeContext)
+            ICodeInformation operand, DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();

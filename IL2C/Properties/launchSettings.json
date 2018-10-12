@@ -2,7 +2,7 @@
   "profiles": {
     "IL2C": {
       "commandName": "Project",
-      "commandLineArgs": "\"$(ProjectDir)..\\samples\\microbit\\Accelometer.FSharp.Code\\bin\\$(ConfigurationName)\\netstandard2.0\\Accelometer.FSharp.Code.dll\" --debug --cpp \"$(ProjectDir)..\\samples\\microbit\\Accelometer.FSharp\""
+      "commandLineArgs": "\"$(ProjectDir)..\\tests\\IL2C.Tests.Code\\bin\\$(ConfigurationName)\\netstandard1.3\\IL2C.Tests.Code.dll\" --debug --cpp \"$(ProjectDir)..\\tests\\IL2C.Tests\\Generated\""
     }
   }
 }

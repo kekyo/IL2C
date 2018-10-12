@@ -9,6 +9,7 @@ namespace IL2C
             TextWriter tw,
             string assemblyPath,
             string outputPath,
+            bool readSymbols,
             bool enableCpp,
             DebugInformationOptions debugInformationOptions)
         {
@@ -25,7 +26,7 @@ namespace IL2C
                 }
             }
 
-            var translateContext = new TranslateContext(assemblyPath);
+            var translateContext = new TranslateContext(assemblyPath, readSymbols);
             var preparedFunctions = AssemblyPreparer.Prepare(translateContext);
 
             tw.WriteLine(" done.");

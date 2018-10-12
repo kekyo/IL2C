@@ -3,7 +3,6 @@
 |Provider|Result|
 |:--|:--|
 |AppVeyor (.NET 4.5 / .NET Core 2.0)|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master)|
-|CircleCI (.NET Core 2.0)|[![CircleCI (.NET Core 2.0)](https://circleci.com/gh/kekyo/IL2C/tree/master.svg?style=svg)](https://circleci.com/gh/kekyo/IL2C/tree/master)|
 |SonerCloud|[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=il2c&metric=alert_status)](https://sonarqube.com/dashboard/index/il2c)|
 
 ## What's this?
@@ -104,23 +103,7 @@ TODO: Writing...
 
 ### IL translation features
 
-#### Support IL opcodes
-
-| Issue | Status | Milestone
-|:---|:---|:---|
-| add | Partial supported | M1
-| ldc family | Partial supported | M1
-| ldarg family | Partial supported | M2
-| ldloc family | Partial supported | M2
-| stloc family | Partial supported | M2
-| ldfld family | Partial supported | M2
-| stfld family | Partial supported | M3
-| call family | Partial supported | M3
-| ret | Supported | M1
-| initobj | Supported | M3
-| newobj | Partial supported |
-
-TODO:
+[Support IL opcodes list](supported-opcodes.md)
 
 #### Support primitive types
 

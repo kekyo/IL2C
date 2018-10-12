@@ -138,6 +138,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer", "Accelometer"
 	EndProjectSection
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Accelometer.FSharp.Code", "samples\microbit\Accelometer.FSharp.Code\Accelometer.FSharp.Code.fsproj", "{E09A88C6-03B3-4309-9974-994B63763094}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accelometer.FSharp", "Accelometer.FSharp", "{EE73A0D8-25A7-4832-90C8-2E82D3AAC6C2}"
 	ProjectSection(SolutionItems) = preProject

@@ -5,16 +5,15 @@
 extern "C" {
 #endif
 
-#if defined(_WIN32) || defined(_WDM) || defined(UEFI)
+#if defined(_MSC_VER)
 #include <intrin.h>
-
-typedef long interlock_t;
-#include <stdint.h>
 #else
-#include <stdint.h>
-typedef uint8_t interlock_t;
+#include <x86intrin.h>
 #endif
 
+typedef long interlock_t;
+
+#include <stdint.h>
 #include <stdbool.h>
 #include <wchar.h>
 
@@ -37,11 +36,7 @@ struct IL2C_REF_HEADER
 {
     IL2C_REF_HEADER* pNext;
     IL2C_RUNTIME_TYPE_DECL* type;
-    union
-    {
-        interlock_t gcMark;
-        intptr_t reserved0__;
-    };
+    interlock_t gcMark;
 };
 
 /////////////////////////////////////////////////////////////

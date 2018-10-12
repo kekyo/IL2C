@@ -1,8 +1,8 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -11,12 +11,12 @@ namespace IL2C.ILConveters
     {
         private static Func<IExtractContext, string[]> Apply(
             string targetName,
-            TypeReference targetType,
+            ITypeInformation targetType,
             DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
 
-            var offset = decodeContext.Current.Offset;
+            var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>
             {
@@ -24,10 +24,10 @@ namespace IL2C.ILConveters
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid store operation: Offset={0}, StackType={1}, LocalType={2}, SymbolName={3}",
-                        offset,
-                        si.TargetType.FullName,
-                        targetType.FullName,
+                        "Invalid store operation: Location={0}, StackType={1}, LocalType={2}, SymbolName={3}",
+                        codeInformation.RawLocation,
+                        si.TargetType.FriendlyName,
+                        targetType.FriendlyName,
                         targetName);
                 }
 
@@ -42,15 +42,15 @@ namespace IL2C.ILConveters
             int localIndex,
             DecodeContext decodeContext)
         {
-            var local = decodeContext.Locals[localIndex];
+            var local = decodeContext.Method.LocalVariables[localIndex];
             return Apply(local.SymbolName, local.TargetType, decodeContext);
         }
 
         public static Func<IExtractContext, string[]> Apply(
-            VariableReference localVariable,
+            VariableInformation localVariable,
             DecodeContext decodeContext)
         {
-            var local = decodeContext.Locals[localVariable.Index];
+            var local = decodeContext.Method.LocalVariables[localVariable.Index];
             return Apply(local.SymbolName, local.TargetType, decodeContext);
         }
     }
@@ -100,7 +100,7 @@ namespace IL2C.ILConveters
         public override OpCode OpCode => OpCodes.Stloc_S;
 
         public override Func<IExtractContext, string[]> Apply(
-            VariableReference operand, DecodeContext decodeContext)
+            VariableInformation operand, DecodeContext decodeContext)
         {
             return StlocConverterUtilities.Apply(operand, decodeContext);
         }

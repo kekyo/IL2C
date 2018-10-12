@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net45</TargetFrameworks>
+    <TargetFramework>net462</TargetFramework>
 
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -19,17 +18,36 @@
     <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="NUnit" Version="3.9.0" />
-    <packagereference Include="NUnit3TestAdapter" Version="3.9.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.0-beta7" />
+    <Compile Remove="ConverterTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="test.c" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ConverterTest.cs" />
+    <EmbeddedResource Include="Templates\test.c" />
+    <EmbeddedResource Include="Templates\test.vcxproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Nito.AsyncEx" Version="4.0.1" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <packagereference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.10.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\IL2C.Core\IL2C.Core.csproj" />
+    <ProjectReference Include="..\IL2C.Core.Tests.Fixture\IL2C.Core.Tests.Fixture.csproj" />
   </ItemGroup>
 
 </Project>

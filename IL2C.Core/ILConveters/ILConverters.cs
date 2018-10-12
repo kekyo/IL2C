@@ -1,8 +1,8 @@
 ﻿using System;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConveters
@@ -28,17 +28,17 @@ namespace IL2C.ILConveters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            if (decodeContext.ReturnType.IsVoidType())
+            if (decodeContext.Method.ReturnType.IsVoidType)
             {
                 return _ => new [] { "return" };
             }
 
             var si = decodeContext.PopStack();
-            var returnType = decodeContext.ReturnType;
+            var returnType = decodeContext.Method.ReturnType;
 
             decodeContext.PrepareContext.RegisterType(returnType);
 
-            var offset = decodeContext.Current.Offset;
+            var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>
             {
@@ -46,10 +46,10 @@ namespace IL2C.ILConveters
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid return operation: Offset={0}, StackType={1}, ReturnType={2}",
-                        offset,
-                        si.TargetType.FullName,
-                        returnType.FullName);
+                        "Invalid return operation: Location={0}, StackType={1}, ReturnType={2}",
+                        codeInformation.RawLocation,
+                        si.TargetType.FriendlyName,
+                        returnType.FriendlyName);
                 }
 
                 return new[] { string.Format(
@@ -66,7 +66,7 @@ namespace IL2C.ILConveters
                 string operand, DecodeContext decodeContext)
             {
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.Module.GetSafeStringType());
+                    decodeContext.PrepareContext.MetadataContext.StringType);
                 var constStringName = decodeContext.PrepareContext
                     .RegisterConstString(operand);
 
@@ -88,7 +88,7 @@ namespace IL2C.ILConveters
                 DecodeContext decodeContext)
             {
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.Module.GetPseudoZeroType());
+                    decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
                 return _ => new[] { string.Format(
                     "{0} = NULL",
@@ -133,7 +133,7 @@ namespace IL2C.ILConveters
             public override OpCode OpCode => OpCodes.Castclass;
 
             public override Func<IExtractContext, string[]> Apply(
-                TypeReference operand, DecodeContext decodeContext)
+                ITypeInformation operand, DecodeContext decodeContext)
             {
                 var si = decodeContext.PopStack();
                 var symbolName = decodeContext.PushStack(operand);
@@ -143,13 +143,10 @@ namespace IL2C.ILConveters
                 {
                     return extractContext =>
                     {
-                        var operandTypeName = extractContext.GetCLanguageTypeName(
-                            operand);
-
                         return new[] { string.Format(
                             "{0} = ({1}){2}",
                             symbolName,
-                            operandTypeName,
+                            operand.CLanguageTypeName,
                             si.SymbolName) };
                     };
                 }
@@ -157,15 +154,11 @@ namespace IL2C.ILConveters
                 {
                     return extractContext =>
                     {
-                        var operandDereferencedTypeName = extractContext.GetCLanguageTypeName(
-                            operand,
-                            TypeNameFlags.Dereferenced);
-
                         return new[] { string.Format(
                             "{0} = il2c_runtime_cast({1}, {2})",
                             symbolName,
                             si.SymbolName,
-                            operandDereferencedTypeName) };
+                            operand.MangledName) };
                     };
                 }
             }

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using Mono.Cecil;
-using Mono.Cecil.Cil;
+using IL2C.Metadata;
 
 namespace IL2C.Translators
 {
@@ -13,23 +12,23 @@ namespace IL2C.Translators
         #region Private types
         private sealed class StackInformationHolder
         {
-            private readonly List<SymbolInformation> typedStackInformation;
+            private readonly List<VariableInformation> typedStackInformation;
             private readonly int stackPointer;
             private int selectedStackInformation = -1;
 
             private StackInformationHolder(
-                int stackPointer, List<SymbolInformation> typedStackInformation)
+                int stackPointer, List<VariableInformation> typedStackInformation)
             {
                 this.stackPointer = stackPointer;
                 this.typedStackInformation = typedStackInformation;
             }
 
             public StackInformationHolder(int stackPointer)
-                : this(stackPointer, new List<SymbolInformation>())
+                : this(stackPointer, new List<VariableInformation>())
             {
             }
 
-            public string GetOrAdd(TypeReference targetType)
+            public string GetOrAdd(ITypeInformation targetType, IMethodInformation method)
             {
                 var index = typedStackInformation
                     .FindIndex(si => si.TargetType == targetType);
@@ -44,14 +43,18 @@ namespace IL2C.Translators
                     stackPointer,
                     typedStackInformation.Count);
 
-                var stackInformation = new SymbolInformation(symbolName, targetType);
                 selectedStackInformation = typedStackInformation.Count;
+                var stackInformation = new VariableInformation(
+                    method,
+                    stackPointer,
+                    symbolName,
+                    targetType);
                 typedStackInformation.Add(stackInformation);
 
                 return symbolName;
             }
 
-            public SymbolInformation GetCurrent()
+            public VariableInformation GetCurrent()
             {
                 Debug.Assert(selectedStackInformation >= 0);
                 Debug.Assert(typedStackInformation.Any());
@@ -59,16 +62,16 @@ namespace IL2C.Translators
                 return typedStackInformation[selectedStackInformation];
             }
 
-            public IEnumerable<SymbolInformation> ExtractStacks()
-            {
-                return typedStackInformation;
-            }
+            public IEnumerable<VariableInformation> ExtractStacks() => typedStackInformation;
+
+            public override string ToString() =>
+                string.Format("[{0}]", string.Join(", ", typedStackInformation.Select(si => si.TargetType.FriendlyName)));
         }
 
         private struct StackSnapshot
         {
             public readonly int Key;
-            public readonly SymbolInformation[] StackInformations;
+            public readonly VariableInformation[] StackInformations;
 
             public StackSnapshot(
                 int key,
@@ -85,15 +88,11 @@ namespace IL2C.Translators
         #endregion
 
         #region Fields
-        public readonly ModuleDefinition Module;
-        public readonly string MethodName;
-        public readonly TypeReference ReturnType;
-        public readonly Parameter[] Parameters;
-        public readonly SymbolInformation[] Locals;
+        public readonly IMethodInformation Method;
         public readonly IPrepareContext PrepareContext;
 
-        private readonly SortedDictionary<int, Instruction> instructions;
         private int nextOffset = -1;
+        private ICodeInformation currentCode;
 
         private int decodingPathNumber = 0;
         private readonly Dictionary<int, StackSnapshot> stackSnapshortsAtOffset =
@@ -109,29 +108,13 @@ namespace IL2C.Translators
         #endregion
 
         public DecodeContext(
-            ModuleDefinition module,
-            string methodName,
-            TypeReference returnType,
-            Parameter[] parameters,
-            SymbolInformation[] locals,
-            Instruction[] instructions,
+            IMethodInformation method,
             IPrepareContext prepareContext)
         {
-            Debug.Assert(instructions.Length >= 1);
+            Debug.Assert(method.HasBody && (method.CodeStream.Count >= 1));
 
-            this.Module = module;
-            this.MethodName = methodName;
-            this.ReturnType = returnType;
-            this.Parameters = parameters;
-            this.Locals = locals;
-
+            this.Method = method;
             this.PrepareContext = prepareContext;
-
-            this.instructions = new SortedDictionary<int, Instruction>();
-            foreach (var instruction in instructions)
-            {
-                this.instructions.Add(instruction.Offset, instruction);
-            }
 
             // First valid process is TryDequeueNextPath.
             this.pathRemains.Enqueue(new StackSnapshot(0, 0, new List<StackInformationHolder>()));
@@ -143,27 +126,27 @@ namespace IL2C.Translators
             // Finish if current position already decoded.
             if (stackSnapshortsAtOffset.TryGetValue(nextOffset, out var stackSnapshot))
             {
-                this.Current = null;
+                currentCode = null;
                 return false;
             }
 
             stackSnapshot = new StackSnapshot(decodingPathNumber, stackPointer, stackList);
             stackSnapshortsAtOffset.Add(nextOffset, stackSnapshot);
 
-            if (instructions.TryGetValue(nextOffset, out var instruction) == false)
+            if (this.Method.CodeStream.TryGetValue(nextOffset, out var codeInformation) == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "End of method body reached: MethodName={0}",
-                    this.MethodName);
+                    "End of method body reached: Method={0}",
+                    this.Method.FriendlyName);
             }
-            this.Current = instruction;
+            currentCode = codeInformation;
 
-            nextOffset = instruction.Offset + instruction.GetSize();
+            nextOffset = codeInformation.Offset + codeInformation.Size;
 
             return true;
         }
 
-        public Instruction Current { get; private set; }
+        public ICodeInformation CurrentCode => currentCode;
 
         public int CalculateByRelativeOffset(int offsetValue)
         {
@@ -176,13 +159,12 @@ namespace IL2C.Translators
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            if (instructions.ContainsKey(newOffset) == false)
+            if (this.Method.CodeStream.Contains(newOffset) == false)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid branch target: Method={0}, Target={1}, CurrentOffset={2}",
-                    this.MethodName,
-                    newOffset,
-                    this.Current.Offset);
+                    "Invalid branch target: Location={0}, Target={1}",
+                    this.CurrentCode.RawLocation,
+                    newOffset);
             }
 
             nextOffset = newOffset;
@@ -190,22 +172,22 @@ namespace IL2C.Translators
         #endregion
 
         #region Stack
-        public string PushStack(TypeReference targetType)
+        public string PushStack(ITypeInformation targetType)
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            Debug.Assert(!targetType.IsUInt32Type());
-            Debug.Assert(!targetType.IsUInt64Type());
-            Debug.Assert(!targetType.IsUIntPtrType());
+            Debug.Assert(!targetType.IsUInt32Type);
+            Debug.Assert(!targetType.IsUInt64Type);
+            Debug.Assert(!targetType.IsUIntPtrType);
 
-            Debug.Assert(!targetType.IsByteType());
-            Debug.Assert(!targetType.IsSByteType());
-            Debug.Assert(!targetType.IsInt16Type());
-            Debug.Assert(!targetType.IsUInt16Type());
+            Debug.Assert(!targetType.IsByteType);
+            Debug.Assert(!targetType.IsSByteType);
+            Debug.Assert(!targetType.IsInt16Type);
+            Debug.Assert(!targetType.IsUInt16Type);
 
-            Debug.Assert(!targetType.IsBooleanType());
+            Debug.Assert(!targetType.IsBooleanType);
 
             StackInformationHolder stackInformationHolder;
             if (stackPointer >= stackList.Count)
@@ -220,20 +202,20 @@ namespace IL2C.Translators
 
             stackPointer++;
 
-            return stackInformationHolder.GetOrAdd(targetType);
+            return stackInformationHolder.GetOrAdd(targetType, this.Method);
         }
 
-        public SymbolInformation PopStack()
+        public VariableInformation PopStack()
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
-            Debug.Assert(stackPointer >= 0);
+            Debug.Assert(stackPointer >= 1);
 
             if (stackPointer <= 0)
             {
                 throw new InvalidProgramSequenceException(
                     "Evaluation stack underflow: Method={0}, CurrentIndex={1}",
-                    this.MethodName,
+                    this.Method.FriendlyName,
                     nextOffset);
             }
 
@@ -259,7 +241,7 @@ namespace IL2C.Translators
             if (labelNames.TryGetValue(
                 targetOffset, out var labelName) == false)
             {
-                labelName = string.Format("IL_{0:x4}", targetOffset);
+                labelName = MetadataUtilities.GetLabelName(targetOffset);
                 labelNames.Add(targetOffset, labelName);
             }
 
@@ -275,7 +257,9 @@ namespace IL2C.Translators
                 var beforeBranchStackSnapshot = pathRemains.Dequeue();
 
                 // If current position already decoded:
-                if (stackSnapshortsAtOffset.TryGetValue(beforeBranchStackSnapshot.Key, out var stackSnapshot))
+                if (stackSnapshortsAtOffset.TryGetValue(
+                    beforeBranchStackSnapshot.Key,
+                    out var stackSnapshot))
                 {
                     // Skip if stack information equals.
                     if (stackSnapshot.StackInformations.SequenceEqual(
@@ -301,7 +285,8 @@ namespace IL2C.Translators
                     index++)
                 {
                     stackList[index].GetOrAdd(
-                        beforeBranchStackSnapshot.StackInformations[index].TargetType);
+                        beforeBranchStackSnapshot.StackInformations[index].TargetType,
+                        this.Method);
                 }
                 stackPointer = beforeBranchStackSnapshot.StackInformations.Length;
 
@@ -314,7 +299,7 @@ namespace IL2C.Translators
         #endregion
 
         #region Extractors
-        public IEnumerable<SymbolInformation> ExtractStacks()
+        public IEnumerable<VariableInformation> ExtractStacks()
         {
             return stackList
                 .SelectMany(stackInformations => stackInformations.ExtractStacks());

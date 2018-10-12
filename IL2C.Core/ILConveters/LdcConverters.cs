@@ -137,4 +137,15 @@ namespace IL2C.ILConveters
             return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
         }
     }
+
+    internal sealed class Ldc_R8Converter : InlineR8Converter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_R8;
+
+        public override Func<IExtractContext, string[]> Apply(double operand, DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
+        }
+    }
 }

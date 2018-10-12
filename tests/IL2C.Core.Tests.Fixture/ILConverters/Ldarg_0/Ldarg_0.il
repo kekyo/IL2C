@@ -58,6 +58,15 @@
 		ret
 	}
 
+	.method public static float64 Double(float64 num) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldc.r8 100.0
+		add
+		ret
+	}
+
 	.method public static string String(string str) cil managed
 	{
 		.maxstack 2

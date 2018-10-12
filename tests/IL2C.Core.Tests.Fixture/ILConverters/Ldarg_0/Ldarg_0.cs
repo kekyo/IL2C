@@ -9,6 +9,7 @@ namespace IL2C.ILConverters
     [Case("Int32", int.MaxValue - 1, int.MaxValue)]
     [Case("Int64", long.MaxValue - 1, long.MaxValue)]
     [Case("Single", (float)223.45, (float)123.45)]
+    [Case("Double", 223.45, 123.45)]
     [Case("String", "ABCD", "ABC")]
     public static class Ldarg_0
     {
@@ -29,6 +30,9 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single(float num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern double Double(double num);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string String(string v);

@@ -41,6 +41,14 @@ namespace IL2C.ILConveters
                     "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // Double = Double + Double
+            if (si0.TargetType.IsDoubleType && si1.TargetType.IsDoubleType)
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+                return _ => new[] { string.Format(
+                    "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
+            }
+
             // IntPtr = Pointer + Int32
             if (si0.TargetType.IsPointer && si1.TargetType.IsInt32Type)
             {
@@ -102,6 +110,14 @@ namespace IL2C.ILConveters
             if (si0.TargetType.IsSingleType && si1.TargetType.IsSingleType)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
+                return _ => new[] { string.Format(
+                    "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
+            }
+
+            // Double = Double - Double
+            if (si0.TargetType.IsDoubleType && si1.TargetType.IsDoubleType)
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
                 return _ => new[] { string.Format(
                     "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }

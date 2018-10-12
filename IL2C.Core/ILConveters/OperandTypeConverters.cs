@@ -31,6 +31,10 @@ namespace IL2C.ILConveters
     {
     }
 
+    internal abstract class InlineR8Converter : ILConverter<double>
+    {
+    }
+
     internal abstract class InlineMethodConverter : ILConverter<IMethodInformation>
     {
     }

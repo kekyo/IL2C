@@ -49,6 +49,15 @@
 		ret
 	}
 
+	.method public static float32 Single(float32 num) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldc.r4 100.0
+		add
+		ret
+	}
+
 	.method public static string String(string str) cil managed
 	{
 		.maxstack 2

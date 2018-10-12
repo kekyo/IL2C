@@ -25,6 +25,8 @@ namespace IL2C.Metadata
         ITypeInformation UInt32Type { get; }
         ITypeInformation Int64Type { get; }
         ITypeInformation UInt64Type { get; }
+        ITypeInformation SingleType { get; }
+        ITypeInformation DoubleType { get; }
         ITypeInformation IntPtrType { get; }
         ITypeInformation UIntPtrType { get; }
         ITypeInformation CharType { get; }
@@ -57,10 +59,10 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation> uint32Type;
         private readonly Lazy<TypeInformation> int64Type;
         private readonly Lazy<TypeInformation> uint64Type;
-        private readonly Lazy<TypeInformation> intPtrType;
-        private readonly Lazy<TypeInformation> uintPtrType;
         private readonly Lazy<TypeInformation> singleType;
         private readonly Lazy<TypeInformation> doubleType;
+        private readonly Lazy<TypeInformation> intPtrType;
+        private readonly Lazy<TypeInformation> uintPtrType;
         private readonly Lazy<TypeInformation> charType;
         private readonly Lazy<TypeInformation> stringType;
         private readonly Lazy<TypeInformation> booleanType;
@@ -124,17 +126,17 @@ namespace IL2C.Metadata
             uint64Type = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.TypeSystem.UInt64,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            intPtrType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.IntPtr,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            uintPtrType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.UIntPtr,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
             singleType = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.TypeSystem.Single,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
             doubleType = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.TypeSystem.Double,
+                type => new TypeInformation(type, resolvedCoreModuleInformation));
+            intPtrType = this.LazyGetOrAddMember(
+                () => resolvedCoreModule.TypeSystem.IntPtr,
+                type => new TypeInformation(type, resolvedCoreModuleInformation));
+            uintPtrType = this.LazyGetOrAddMember(
+                () => resolvedCoreModule.TypeSystem.UIntPtr,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
             charType = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.TypeSystem.Char,
@@ -345,10 +347,10 @@ namespace IL2C.Metadata
         public ITypeInformation UInt32Type => uint32Type.Value;
         public ITypeInformation Int64Type => int64Type.Value;
         public ITypeInformation UInt64Type => uint64Type.Value;
-        public ITypeInformation IntPtrType => intPtrType.Value;
-        public ITypeInformation UIntPtrType => uintPtrType.Value;
         public ITypeInformation SingleType => singleType.Value;
         public ITypeInformation DoubleType => doubleType.Value;
+        public ITypeInformation IntPtrType => intPtrType.Value;
+        public ITypeInformation UIntPtrType => uintPtrType.Value;
         public ITypeInformation CharType => charType.Value;
         public ITypeInformation StringType => stringType.Value;
         public ITypeInformation BooleanType => booleanType.Value;

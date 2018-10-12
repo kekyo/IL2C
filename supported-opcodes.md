@@ -4,7 +4,7 @@ OpCode | Binary | Implement | Test | ILConverter
 |:---|:---|:---|:---|:---|
 | [nop](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Nop) | 0x0 | Implemented |  | IL2C.ILConveters.NopConverter |
 | [break](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Break) | 0x1 |  |  |  |
-| [ldarg.0](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldarg_0) | 0x2 | Implemented | Test [7] | IL2C.ILConveters.Ldarg_0Converter |
+| [ldarg.0](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldarg_0) | 0x2 | Implemented | Test [8] | IL2C.ILConveters.Ldarg_0Converter |
 | [ldarg.1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldarg_1) | 0x3 | Implemented |  | IL2C.ILConveters.Ldarg_1Converter |
 | [ldarg.2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldarg_2) | 0x4 | Implemented |  | IL2C.ILConveters.Ldarg_2Converter |
 | [ldarg.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldarg_3) | 0x5 | Implemented |  | IL2C.ILConveters.Ldarg_3Converter |
@@ -36,7 +36,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldc.i4.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldc_I4_S) | 0x1f | Implemented |  | IL2C.ILConveters.Ldc_i4_sConverter |
 | [ldc.i4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldc_I4) | 0x20 | Implemented |  | IL2C.ILConveters.Ldc_i4Converter |
 | [ldc.i8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldc_I8) | 0x21 | Implemented |  | IL2C.ILConveters.Ldc_i8Converter |
-| [ldc.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldc_R4) | 0x22 |  |  |  |
+| [ldc.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldc_R4) | 0x22 | Implemented |  | IL2C.ILConveters.Ldc_R4Converter |
 | [ldc.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Ldc_R8) | 0x23 |  |  |  |
 | [dup](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Dup) | 0x25 | Implemented |  | IL2C.ILConveters.RetConverter+DupConverter |
 | [pop](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.Pop) | 0x26 | Implemented |  | IL2C.ILConveters.RetConverter+PopConverter |

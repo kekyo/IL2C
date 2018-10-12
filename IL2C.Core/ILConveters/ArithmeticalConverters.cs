@@ -16,12 +16,16 @@ namespace IL2C.ILConveters
             var si0 = decodeContext.PopStack();
 
             // https://msdn.microsoft.com/en-us/library/system.reflection.emit.opcodes.add(v=vs.100).aspx
+
+            // Int32 = Int32 + Int32
             if (si0.TargetType.IsInt32Type && si1.TargetType.IsInt32Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
+
+            // Int64 = Int64 + Int64
             if (si0.TargetType.IsInt64Type && si1.TargetType.IsInt64Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
@@ -29,6 +33,15 @@ namespace IL2C.ILConveters
                     "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // Single = Single + Single
+            if (si0.TargetType.IsSingleType && si1.TargetType.IsSingleType)
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
+                return _ => new[] { string.Format(
+                    "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
+            }
+
+            // IntPtr = Pointer + Int32
             if (si0.TargetType.IsPointer && si1.TargetType.IsInt32Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
@@ -36,6 +49,7 @@ namespace IL2C.ILConveters
                     "{0} = ((intptr_t){1}) + ((intptr_t){2})", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // IntPtr = Pointer + IntPtr
             if (si0.TargetType.IsPointer && si1.TargetType.IsIntPtrType)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
@@ -43,6 +57,7 @@ namespace IL2C.ILConveters
                     "{0} = ((intptr_t){1}) + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // IntPtr = IntPtr + Int32
             if (si0.TargetType.IsIntPtrType && si1.TargetType.IsInt32Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
@@ -67,13 +82,15 @@ namespace IL2C.ILConveters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            // TODO: Check these combinations
+            // Int32 = Int32 - Int32
             if (si0.TargetType.IsInt32Type && si1.TargetType.IsInt32Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
+
+            // Int64 = Int64 - Int64
             if (si0.TargetType.IsInt64Type && si1.TargetType.IsInt64Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
@@ -81,6 +98,15 @@ namespace IL2C.ILConveters
                     "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // Single = Single - Single
+            if (si0.TargetType.IsSingleType && si1.TargetType.IsSingleType)
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
+                return _ => new[] { string.Format(
+                    "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
+            }
+
+            // IntPtr = Pointer - Int32
             if (si0.TargetType.IsPointer && si1.TargetType.IsInt32Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
@@ -88,6 +114,7 @@ namespace IL2C.ILConveters
                     "{0} = ((intptr_t){1}) - ((intptr_t){2})", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // IntPtr = Pointer - IntPtr
             if (si0.TargetType.IsPointer && si1.TargetType.IsIntPtrType)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
@@ -95,6 +122,7 @@ namespace IL2C.ILConveters
                     "{0} = ((intptr_t){1}) - {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // IntPtr = IntPtr - Int32
             if (si0.TargetType.IsIntPtrType && si1.TargetType.IsInt32Type)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);

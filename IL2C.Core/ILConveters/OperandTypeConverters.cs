@@ -27,6 +27,10 @@ namespace IL2C.ILConveters
     {
     }
 
+    internal abstract class InlineR4Converter : ILConverter<float>
+    {
+    }
+
     internal abstract class InlineMethodConverter : ILConverter<IMethodInformation>
     {
     }

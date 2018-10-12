@@ -126,4 +126,15 @@ namespace IL2C.ILConveters
             return _ => new[] { string.Format("{0} = {1}LL", symbolName, operand) };
         }
     }
+
+    internal sealed class Ldc_R4Converter : InlineR4Converter
+    {
+        public override OpCode OpCode => OpCodes.Ldc_R4;
+
+        public override Func<IExtractContext, string[]> Apply(float operand, DecodeContext decodeContext)
+        {
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
+            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
+        }
+    }
 }

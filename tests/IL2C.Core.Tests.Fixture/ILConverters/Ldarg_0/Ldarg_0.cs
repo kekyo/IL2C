@@ -4,10 +4,11 @@ namespace IL2C.ILConverters
 {
     [Case("Boolean", true, false)]
     [Case("Boolean", false, true)]
-    [Case("Byte", byte.MaxValue - 1, byte.MaxValue)]
-    [Case("Int16", short.MaxValue - 1, short.MaxValue)]
+    [Case("Byte", (byte)(byte.MaxValue - 1), byte.MaxValue)]
+    [Case("Int16", (short)(short.MaxValue - 1), short.MaxValue)]
     [Case("Int32", int.MaxValue - 1, int.MaxValue)]
     [Case("Int64", long.MaxValue - 1, long.MaxValue)]
+    [Case("Single", (float)223.45, (float)123.45)]
     [Case("String", "ABCD", "ABC")]
     public static class Ldarg_0
     {
@@ -25,6 +26,9 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64(long num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern float Single(float num);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string String(string v);

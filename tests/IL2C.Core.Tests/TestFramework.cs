@@ -86,7 +86,8 @@ namespace IL2C
                 Path.Combine(
                     Path.GetDirectoryName(method.DeclaringType.Assembly.Location),
                     "translated",
-                    targetMethod.CLanguageFunctionName));
+                    targetMethod.DeclaringType.Name,
+                    targetMethod.Name));
             await Task.Run(() =>
             {
                 if (Directory.Exists(translatedPath))

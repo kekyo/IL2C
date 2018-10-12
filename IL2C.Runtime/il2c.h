@@ -36,11 +36,7 @@ struct IL2C_REF_HEADER
 {
     IL2C_REF_HEADER* pNext;
     IL2C_RUNTIME_TYPE_DECL* type;
-    union
-    {
-        interlock_t gcMark;
-        intptr_t reserved0__;
-    };
+    interlock_t gcMark;
 };
 
 /////////////////////////////////////////////////////////////

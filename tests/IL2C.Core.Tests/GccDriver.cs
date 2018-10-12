@@ -173,7 +173,7 @@ namespace IL2C
 
             var gccArguments = includePaths
                 .SelectMany(p => new[] { "-I", p })
-                .Concat(new[] { "-o", executablePath, sourcePath })
+                .Concat(new[] { "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-o", executablePath, sourcePath })
                 .Concat(sourcePaths)
                 .ToArray();
 

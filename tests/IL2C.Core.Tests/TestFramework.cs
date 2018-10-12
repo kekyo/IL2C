@@ -81,17 +81,28 @@ namespace IL2C
                     targetMethod.CLanguageFunctionName));
             await Task.Run(() =>
             {
-                if (!Directory.Exists(translatedPath))
+                if (Directory.Exists(translatedPath))
                 {
                     try
                     {
-                        Directory.CreateDirectory(translatedPath);
+                        Directory.Delete(translatedPath);
                     }
                     catch
                     {
                     }
                 }
+                Directory.CreateDirectory(translatedPath);
             }).ConfigureAwait(false);
+
+            var templatePath = Path.Combine(translatedPath, "test.vcxproj");
+            using (var fs = new FileStream(templatePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
+            {
+                using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream("IL2C.test.vcxproj"))
+                {
+                    await ts.CopyToAsync(fs);
+                    await fs.FlushAsync();
+                }
+            }
 
             var sourcePath = Path.Combine(translatedPath, "test.c");
             using (var fs = new FileStream(sourcePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
@@ -114,6 +125,8 @@ namespace IL2C
                 await tw.WriteLineAsync();
                 await tw.WriteLineAsync("int main()");
                 await tw.WriteLineAsync("{");
+                await tw.WriteLineAsync("  il2c_initialize();");
+                await tw.WriteLineAsync();
                 await tw.WriteLineAsync(
                     string.Format("  const {0} expected = {1};",
                         targetMethod.ReturnType.CLanguageTypeName,
@@ -124,8 +137,12 @@ namespace IL2C
                         targetMethod.CLanguageFunctionName,
                         string.Join(",", args.Select(GetCLanguageLiteralExpression))));
                 await tw.WriteLineAsync();
-                await tw.WriteLineAsync("  if (expected == actual) { printf(\"Success\\n\"); return 0; }");
-                await tw.WriteLineAsync(string.Format("  else {{ printf(\"Failed: {0}\\n\", actual); return 1; }}", formatChar));
+                await tw.WriteLineAsync("  int result;");
+                await tw.WriteLineAsync("  if (expected == actual) { printf(\"Success\\n\"); result = 0; }");
+                await tw.WriteLineAsync(string.Format("  else {{ printf(\"Failed: {0}\\n\", actual); result = 1; }}", formatChar));
+                await tw.WriteLineAsync();
+                await tw.WriteLineAsync("  il2c_shutdown();");
+                await tw.WriteLineAsync("  return result;");
                 await tw.WriteLineAsync("}");
 
                 await tw.FlushAsync();

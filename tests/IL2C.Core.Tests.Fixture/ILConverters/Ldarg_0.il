@@ -36,7 +36,7 @@
 		ret
 	}
 
-	.method public static string String(string num) cil managed
+	.method public static string String(string str) cil managed
 	{
 		.maxstack 2
 		ldarg.0

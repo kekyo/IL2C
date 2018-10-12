@@ -22,6 +22,6 @@ namespace IL2C.ILConverters
         public static extern long Int64(long num);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string String(string value);
+        public static extern string String(string str);
     }
 }

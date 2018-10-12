@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <None Include="ConverterTest.cs" />
+    <EmbeddedResource Include="test.vcxproj" />
   </ItemGroup>
 
   <ItemGroup>

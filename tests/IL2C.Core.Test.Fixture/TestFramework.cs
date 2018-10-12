@@ -55,6 +55,8 @@ namespace IL2C
                 (type.IsSingleType) ? "%f" :
                 (type.IsDoubleType) ? "%lf" :
                 (type.IsBooleanType) ? "%d" :
+                (type.IsIntPtrType) ? "0x%08x" :
+                (type.IsUIntPtrType) ? "0x%08x" :
                 "%s";
         }
 

@@ -168,7 +168,8 @@ extern void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type);
 /////////////////////////////////////////////////////////////
 // Primitive types
 
-typedef System_Object IL2C_CecilHelper_PseudoZeroType;
+// It's pseudo referenced-type null value used by ldnull.
+typedef void* untyped_ptr;
 
 typedef intptr_t System_IntPtr;
 extern IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__;

@@ -142,10 +142,18 @@ namespace IL2C
             if (lhsType.IsAssignableFrom(rhsType))
             {
                 Debug.Assert(lhsType.IsValueType == false);
-                Debug.Assert(rhsType.IsValueType == false);
+                Debug.Assert((rhsType.IsValueType == false) || rhsType.IsUntypedReferenceType);
 
+                // (RefType) <-- UntypedReferenceType  (maybe ldnull value)
+                if (rhsType.IsUntypedReferenceType)
+                {
+                    return string.Format(
+                        "({0}){1}",
+                        lhsType.CLanguageTypeName,
+                        rhsExpression);
+                }
                 // IHoge <-- Hoge  (use il2c_cast_to_interface() macro)
-                if (lhsType.IsInterface && !rhsType.IsInterface)
+                else if (lhsType.IsInterface && !rhsType.IsInterface)
                 {
                     return string.Format(
                         "il2c_cast_to_interface({0}, {1}, {2})",
@@ -166,7 +174,7 @@ namespace IL2C
             {
                 if (lhsType.IsNumericPrimitive)
                 {
-                    return String.Format(
+                    return string.Format(
                         "({0})({1})",
                         lhsType.CLanguageTypeName,
                         rhsExpression);
@@ -174,14 +182,14 @@ namespace IL2C
 
                 if (lhsType.IsBooleanType)
                 {
-                    return String.Format(
+                    return string.Format(
                         "({0}) ? true : false",
                         rhsExpression);
                 }
 
                 if (!lhsType.IsValueType && rhsType.IsIntPtrType)
                 {
-                    return String.Format(
+                    return string.Format(
                         "({0}){1}",
                         lhsType.CLanguageTypeName,
                         rhsExpression);
@@ -205,7 +213,7 @@ namespace IL2C
             {
                 if (lhsType.IsNumericPrimitive)
                 {
-                    return String.Format(
+                    return string.Format(
                         "({0}) ? 1 : 0",
                         rhsExpression);
                 }
@@ -214,7 +222,7 @@ namespace IL2C
             {
                 if (lhsType.IsByReference)
                 {
-                    return String.Format(
+                    return string.Format(
                         "({0}){1}",
                         lhsType.CLanguageTypeName,
                         rhsExpression);
@@ -222,10 +230,20 @@ namespace IL2C
             }
             else if (lhsType.IsByReference)
             {
-                return String.Format(
+                return string.Format(
                     "({0}){1}",
                     lhsType.CLanguageTypeName,
                     rhsExpression);
+            }
+            else if (rhsType.IsUntypedReferenceType)
+            {
+                if (lhsType.IsIntPtrType || lhsType.IsUIntPtrType || lhsType.IsClass || lhsType.IsInterface)
+                {
+                    return string.Format(
+                        "({0}){1}",
+                        lhsType.CLanguageTypeName,
+                        rhsExpression);
+                }
             }
 
             return null;

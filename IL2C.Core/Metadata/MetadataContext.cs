@@ -16,6 +16,7 @@ namespace IL2C.Metadata
         ITypeInformation ObjectType { get; }
         ITypeInformation ValueTypeType { get; }
         ITypeInformation DelegateType { get; }
+        ITypeInformation UntypedReferenceType { get; }
 
         ITypeInformation ByteType { get; }
         ITypeInformation SByteType { get; }
@@ -338,6 +339,7 @@ namespace IL2C.Metadata
         public ITypeInformation ObjectType => objectType.Value;
         public ITypeInformation ValueTypeType => valueTypeType.Value;
         public ITypeInformation DelegateType => delegateType.Value;
+        public ITypeInformation UntypedReferenceType => UntypedReferenceTypeInformation.UntypedReferenceType;
 
         public ITypeInformation ByteType => byteType.Value;
         public ITypeInformation SByteType => sbyteType.Value;

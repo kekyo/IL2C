@@ -2,15 +2,15 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case("Boolean", true, false)]
-    [Case("Boolean", false, true)]
-    [Case("Byte", (byte)(byte.MaxValue - 1), byte.MaxValue)]
-    [Case("Int16", (short)(short.MaxValue - 1), short.MaxValue)]
-    [Case("Int32", int.MaxValue - 1, int.MaxValue)]
-    [Case("Int64", long.MaxValue - 1, long.MaxValue)]
-    [Case("Single", (float)223.45, (float)123.45)]
-    [Case("Double", 223.45, 123.45)]
-    [Case("String", "ABCD", "ABC")]
+    [Case(true, "Boolean", false)]
+    [Case(false, "Boolean", true)]
+    [Case((byte)(byte.MaxValue - 1), "Byte", byte.MaxValue)]
+    [Case((short)(short.MaxValue - 1), "Int16", short.MaxValue)]
+    [Case(int.MaxValue - 1, "Int32", int.MaxValue)]
+    [Case(long.MaxValue - 1, "Int64", long.MaxValue)]
+    [Case((float)223.45, "Single", (float)123.45)]
+    [Case(223.45, "Double", 123.45)]
+    [Case("ABCD", "String", "ABC")]
     public static class Ldarg_0
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

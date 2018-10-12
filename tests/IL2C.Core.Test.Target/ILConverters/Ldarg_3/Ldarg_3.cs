@@ -2,15 +2,15 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case("Boolean", true, 123, 45, 6, false)]
-    [Case("Boolean", false, 123, 45, 6, true)]
-    [Case("Byte", (byte)(byte.MaxValue - 1), 123, 45, 6, byte.MaxValue)]
-    [Case("Int16", (short)(short.MaxValue - 1), 123, 45, 6, short.MaxValue)]
-    [Case("Int32", int.MaxValue - 1, 123, 45, 6, int.MaxValue)]
-    [Case("Int64", long.MaxValue - 1, 123, 45, 6, long.MaxValue)]
-    [Case("Single", (float)223.45, 123, 45, 6, (float)123.45)]
-    [Case("Double", 223.45, 123, 45, 6, 123.45)]
-    [Case("String", "ABCD", 123, 45, 6, "ABC")]
+    [Case(true, "Boolean", 123, 45, 6, false)]
+    [Case(false, "Boolean", 123, 45, 6, true)]
+    [Case((byte)(byte.MaxValue - 1), "Byte", 123, 45, 6, byte.MaxValue)]
+    [Case((short)(short.MaxValue - 1), "Int16", 123, 45, 6, short.MaxValue)]
+    [Case(int.MaxValue - 1, "Int32", 123, 45, 6, int.MaxValue)]
+    [Case(long.MaxValue - 1, "Int64", 123, 45, 6, long.MaxValue)]
+    [Case((float)223.45, "Single", 123, 45, 6, (float)123.45)]
+    [Case(223.45, "Double", 123, 45, 6, 123.45)]
+    [Case("ABCD", "String", 123, 45, 6, "ABC")]
     public static class Ldarg_3
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

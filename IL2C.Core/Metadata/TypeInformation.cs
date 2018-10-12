@@ -49,6 +49,8 @@ namespace IL2C.Metadata
         bool IsCharType { get; }
         bool IsStringType { get; }
 
+        bool IsUntypedReferenceType { get; }
+
         ITypeInformation BaseType { get; }
         ITypeInformation ElementType { get; }
         ITypeInformation[] InterfaceTypes { get; }
@@ -314,6 +316,8 @@ namespace IL2C.Metadata
         public bool IsCharType => this.Equals(this.MetadataContext.CharType);
         public bool IsStringType => this.Equals(this.MetadataContext.StringType);
         public bool IsBooleanType => this.Equals(this.MetadataContext.BooleanType);
+
+        public bool IsUntypedReferenceType => false;
 
         public ITypeInformation BaseType => baseType.Value;
         public ITypeInformation ElementType => elementType.Value;

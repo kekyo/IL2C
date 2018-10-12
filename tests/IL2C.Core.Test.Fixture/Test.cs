@@ -25,7 +25,7 @@ namespace IL2C
                     && ilConverterType.IsAssignableFrom(type)
                     && (type.GetConstructor(Type.EmptyTypes) != null))
                 .Select(type => (ILConverter)Activator.CreateInstance(type))
-                .ToDictionary(ilConverter => ilConverter.OpCode.Name);
+                .ToDictionary(ilConverter => ilConverter.OpCode.Name, StringComparer.InvariantCultureIgnoreCase);
 
             var refOpCodeNames =
                 typeof(System.Reflection.Emit.OpCodes)
@@ -55,7 +55,7 @@ namespace IL2C
             var ilConverterTests =
                 ILConverterTest.TargetCases
                 .GroupBy(entry => entry.Method.DeclaringType.Name)
-                .ToDictionary(g => g.Key, g => g.Count());
+                .ToDictionary(g => g.Key, g => g.Count(), StringComparer.InvariantCultureIgnoreCase);
 
             var basePath = Path.GetFullPath(
                 Path.Combine(
@@ -86,7 +86,7 @@ namespace IL2C
                             isEmitRelated ?
                                 string.Format(
                                     "[{0}](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.{1})",
-                                    opCodeName, name) :
+                                    opCodeName, name.ToLowerInvariant()) :
                                 opCodeName,
                             (ushort)opCode.Value,
                             (ilConverter != null) ? "Implemented" : string.Empty,

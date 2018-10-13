@@ -55,6 +55,10 @@ namespace IL2C.ILConverters
     {
     }
 
+    internal abstract class InlineParamConverter : ILConverter<VariableInformation>
+    {
+    }
+
     internal abstract class ShortInlineBrTargetConverter : ILConverter<ICodeInformation>
     {
     }

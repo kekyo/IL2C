@@ -72,4 +72,15 @@ namespace IL2C.ILConverters
             return LdargConverterUtilities.Apply(operand.Index, decodeContext);
         }
     }
+
+    internal sealed class LdargConverter : InlineParamConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldarg;
+
+        public override Func<IExtractContext, string[]> Apply(
+            VariableInformation operand, DecodeContext decodeContext)
+        {
+            return LdargConverterUtilities.Apply(operand.Index, decodeContext);
+        }
+    }
 }

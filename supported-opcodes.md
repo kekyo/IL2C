@@ -201,7 +201,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [clt.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.clt_un) | 0xfe05 |  |  |  |
 | [ldftn](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldftn) | 0xfe06 | Implemented |  | IL2C.ILConverters.LdftnConverter |
 | [ldvirtftn](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldvirtftn) | 0xfe07 |  |  |  |
-| [ldarg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarg) | 0xfe09 |  |  |  |
+| [ldarg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarg) | 0xfe09 | Implemented | Test [10] | IL2C.ILConverters.LdargConverter |
 | [ldarga](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarga) | 0xfe0a |  |  |  |
 | [starg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg) | 0xfe0b |  |  |  |
 | [ldloc](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloc) | 0xfe0c |  |  |  |

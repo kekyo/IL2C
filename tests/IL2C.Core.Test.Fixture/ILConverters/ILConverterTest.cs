@@ -36,11 +36,9 @@ namespace IL2C.ILConverters
             public override string ToString()
             {
                 return string.Format(
-                    "{0}.{1}({2}) == {3}",
+                    "{0}.{1}",
                     this.Method.DeclaringType.Name,
-                    this.Method.Name,
-                    string.Join(", ", this.Arguments.Select(PrettyPrint)),
-                    PrettyPrint(this.Expected));
+                    this.Method.Name);
             }
         }
 

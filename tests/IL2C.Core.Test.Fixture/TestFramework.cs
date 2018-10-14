@@ -34,8 +34,8 @@ namespace IL2C
             if (value is float) return string.Format("{0:g9}f", value);
             if (value is double) return string.Format("{0:g17}", value);
             if (value is bool) return (bool)value ? "true" : "false";
+            if (value is char) return "L'" + value + "'";
             if (value is string) return "il2c_new_string(L\"" + value + "\")";
-            if (value is char) return "il2c_new_string(L\"" + value + "\")";
             return value.ToString();
         }
 
@@ -52,18 +52,17 @@ namespace IL2C
                 (type.IsInt64Type) ? "%llu" :
                 (type.IsSingleType) ? "%f" :
                 (type.IsDoubleType) ? "%lf" :
-                (type.IsBooleanType) ? "%d" :
                 (type.IsIntPtrType) ? "0x%08x" :
                 (type.IsUIntPtrType) ? "0x%08x" :
+                (type.IsBooleanType) ? "%d" :
+                (type.IsCharType) ? "'%c'" :
+                (type.IsStringType) ? "\\\"%s\\\"" :
                 "%s";
         }
 
         public static async Task ExecuteTestAsync(MethodInfo method, object expected, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
-
-            var rawResult = method.Invoke(null, args);
-            Assert.AreEqual(expected, rawResult);
 
             var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
 
@@ -143,6 +142,11 @@ namespace IL2C
                 await tw.FlushAsync();
             }
 
+            // Step1: Test real IL code at this runtime.
+            var rawResult = method.Invoke(null, args);
+            Assert.AreEqual(expected, rawResult);
+
+            // Step2: Test compiled C source code and execute.
             var il2cRuntimeSourcePath = Path.Combine(il2cRuntimePath, "il2c.c");
             var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, new[] { il2cRuntimeSourcePath }, il2cRuntimePath);
             var sanitized = executedResult.Trim(' ', '\r', '\n');

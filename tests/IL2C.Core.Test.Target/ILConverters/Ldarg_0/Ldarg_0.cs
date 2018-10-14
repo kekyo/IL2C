@@ -11,6 +11,7 @@ namespace IL2C.ILConverters
     [Case(long.MaxValue - 1, "Int64", long.MaxValue)]
     [Case((float)((double)123.45f + (double)3.14159274f), "Single", 123.45f)]
     [Case(123.45 + 3.1415926535897931, "Double", 123.45)]
+    [Case('B', "Char", 'A')]
     [Case("ABCD", "String", "ABC")]
     public static class Ldarg_0
     {
@@ -34,6 +35,9 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern double Double(double num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern char Char(char ch);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string String(string v);

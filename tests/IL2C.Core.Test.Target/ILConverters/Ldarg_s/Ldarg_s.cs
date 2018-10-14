@@ -10,6 +10,7 @@ namespace IL2C.ILConverters
     [Case(long.MaxValue - 1, "Int64_4", 0, 1, 2, 3, long.MaxValue)]
     [Case((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
     [Case(123.45 + 3.1415926535897931, "Double_4", 0, 1, 2, 3, 123.45)]
+    [Case('B', "Char_4", 0, 1, 2, 3, 'A')]
     [Case("ABCD", "String_4", 0, 1, 2, 3, "ABC")]
     [Case("ABCD", "Argument_255",
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -58,6 +59,10 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern double Double_4(
             int arg0, int arg1, int arg2, int arg3, double num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern char Char_4(
+            int arg0, int arg1, int arg2, int arg3, char ch);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string String_4(

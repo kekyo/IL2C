@@ -66,6 +66,16 @@
 		add
 		ret
 	}
+    
+	.method public static char Char(int32 arg0, char ch) cil managed
+	{
+		.maxstack 2
+		ldarg.1
+		ldc.i4.1
+		add
+        conv.u2
+		ret
+	}
 
 	.method public static string String(int32 arg0, string str) cil managed
 	{

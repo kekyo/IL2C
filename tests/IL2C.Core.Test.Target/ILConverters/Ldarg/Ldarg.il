@@ -4,7 +4,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, bool v) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i4.0
         ceq
         brfalse.s end
@@ -18,7 +18,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, uint8 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i4.1
         sub
         ret
@@ -28,7 +28,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, int16 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i4.1
         sub
         ret
@@ -38,7 +38,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, int32 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i4.1
         sub
         ret
@@ -48,7 +48,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, int64 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i8 1
         sub
         ret
@@ -58,7 +58,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, float32 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
 		ldc.r4 3.14159274
         add
         ret
@@ -68,17 +68,28 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, float64 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
 		ldc.r8 3.1415926535897931
         add
         ret
     }
+                    
+	.method public static char Char_4(
+        int32 arg0, int32 arg1, int32 arg2, int32 arg3, char ch) cil managed
+	{
+		.maxstack 2
+		ldarg 4
+		ldc.i4.1
+		add
+        conv.u2
+		ret
+	}
 
     .method public static string String_4(
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, string str) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldstr "D"
         call string System.String::Concat(string, string)
         ret

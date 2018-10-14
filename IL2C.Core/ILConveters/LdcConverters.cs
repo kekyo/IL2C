@@ -168,7 +168,17 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(float operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
+
+            // Single type format issue: https://docs.microsoft.com/en-us/dotnet/api/system.single.tostring
+            //   By default, the return value only contains 7 digits of precision although a maximum of
+            //   9 digits is maintained internally.
+            //   If the value of this instance has greater than 7 digits, ToString returns
+            //   PositiveInfinitySymbol or NegativeInfinitySymbol instead of the expected number.
+            //   If you require more precision, specify format with the "G9" format specification,
+            //   which always returns 9 digits of precision, or "R", which returns 7 digits if the number
+            //   can be represented with that precision or 9 digits if the number can only be represented
+            //   with maximum precision.
+            return _ => new[] { string.Format("{0} = {1:g9}f", symbolName, operand) };
         }
     }
 
@@ -179,7 +189,17 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(double operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
+
+            // Double type format issue: https://docs.microsoft.com/en-us/dotnet/api/system.double.tostring
+            //   By default, the return value only contains 15 digits of precision although a maximum of
+            //   17 digits is maintained internally.
+            //   If the value of this instance has greater than 15 digits, ToString returns
+            //   PositiveInfinitySymbol or NegativeInfinitySymbol instead of the expected number.
+            //   If you require more precision, specify format with the "G17" format specification,
+            //   which always returns 17 digits of precision, or "R", which returns 15 digits if the number
+            //   can be represented with that precision or 17 digits if the number can only be represented
+            //   with maximum precision.
+            return _ => new[] { string.Format("{0} = {1:g17}", symbolName, operand) };
         }
     }
 }

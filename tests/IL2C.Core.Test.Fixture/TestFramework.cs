@@ -31,6 +31,8 @@ namespace IL2C
             if (value is long) return string.Format("INT64_C({0})", value);
             if (value is ulong) return string.Format("UINT64_C({0})", value);
             if (value is uint) return string.Format("UINT32_C({0})", value);
+            if (value is float) return string.Format("{0:g9}f", value);
+            if (value is double) return string.Format("{0:g17}", value);
             if (value is bool) return (bool)value ? "true" : "false";
             if (value is string) return "il2c_new_string(L\"" + value + "\")";
             if (value is char) return "il2c_new_string(L\"" + value + "\")";
@@ -128,7 +130,8 @@ namespace IL2C
             sourceCode.Replace("{function}", targetMethod.CLanguageFunctionName);
             sourceCode.Replace("{arguments}", string.Join(", ", args.Select(GetCLanguageLiteralExpression)));
             sourceCode.Replace("{equality}", expectedType.IsStringType ? "wcscmp(expected->string_body__, actual->string_body__) == 0" : "expected == actual");
-            sourceCode.Replace("{actualFormat}", GetCLanguagePrintFormatFromType(targetMethod.ReturnType));
+            sourceCode.Replace("{format}", GetCLanguagePrintFormatFromType(targetMethod.ReturnType));
+            sourceCode.Replace("{expectedExpression}", expectedType.IsBooleanType ? "expected ? \"true\" : \"false\"" : "expected");
             sourceCode.Replace("{actualExpression}", expectedType.IsBooleanType ? "actual ? \"true\" : \"false\"" : "actual");
 
             var sourcePath = Path.Combine(translatedPath, "test.c");

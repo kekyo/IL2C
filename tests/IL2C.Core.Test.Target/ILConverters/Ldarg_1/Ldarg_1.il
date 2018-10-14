@@ -53,7 +53,7 @@
 	{
 		.maxstack 2
 		ldarg.1
-		ldc.r4 100.0
+		ldc.r4 3.14159274
 		add
 		ret
 	}
@@ -62,7 +62,7 @@
 	{
 		.maxstack 2
 		ldarg.1
-		ldc.r8 100.0
+		ldc.r8 3.1415926535897931
 		add
 		ret
 	}

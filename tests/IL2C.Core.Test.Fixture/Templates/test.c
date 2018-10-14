@@ -36,7 +36,7 @@ int main()
 
     int result;
     if ({equality}) { wprintf(L"Success\n"); result = 0; }
-    else { wprintf(L"Failed: {actualFormat}\n", {actualExpression}); result = 1; }
+    else { wprintf(L"Failed: {type}: expected={format}, actual={format}\n", {expectedExpression}, {actualExpression}); result = 1; }
 
 #if {isRefType} // expected value is reference type
     il2c_unlink_execution_frame(&__executionFrame__);

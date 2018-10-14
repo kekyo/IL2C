@@ -8,8 +8,8 @@ namespace IL2C.ILConverters
     [Case((short)(short.MaxValue - 1), "Int16_4", 0, 1, 2, 3, short.MaxValue)]
     [Case(int.MaxValue - 1, "Int32_4", 0, 1, 2, 3, int.MaxValue)]
     [Case(long.MaxValue - 1, "Int64_4", 0, 1, 2, 3, long.MaxValue)]
-    [Case((float)223.45, "Single_4", 0, 1, 2, 3, (float)123.45)]
-    [Case(223.45, "Double_4", 0, 1, 2, 3, 123.45)]
+    [Case((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
+    [Case(123.45 + 3.1415926535897931, "Double_4", 0, 1, 2, 3, 123.45)]
     [Case("ABCD", "String_4", 0, 1, 2, 3, "ABC")]
     [Case("ABCD", "Argument_256",
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,

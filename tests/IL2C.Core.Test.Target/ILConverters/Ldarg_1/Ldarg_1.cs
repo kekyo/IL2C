@@ -8,8 +8,8 @@ namespace IL2C.ILConverters
     [Case((short)(short.MaxValue - 1), "Int16", 123, short.MaxValue)]
     [Case(int.MaxValue - 1, "Int32", 123, int.MaxValue)]
     [Case(long.MaxValue - 1, "Int64", 123, long.MaxValue)]
-    [Case((float)223.45, "Single", 123, (float)123.45)]
-    [Case(223.45, "Double", 123, 123.45)]
+    [Case((float)((double)123.45f + (double)3.14159274f), "Single", 123, 123.45f)]
+    [Case(123.45 + 3.1415926535897931, "Double", 123, 123.45)]
     [Case("ABCD", "String", 123, "ABC")]
     public static class Ldarg_1
     {

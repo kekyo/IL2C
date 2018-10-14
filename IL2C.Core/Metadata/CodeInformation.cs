@@ -82,6 +82,22 @@ namespace IL2C.Metadata
                     str);
             }
 
+            // Single type format issue: https://docs.microsoft.com/en-us/dotnet/api/system.single.tostring
+            if (this.Operand is float)
+            {
+                return string.Format(
+                    "{0:g9}f",
+                    this.Operand);
+            }
+
+            // Double type format issue: https://docs.microsoft.com/en-us/dotnet/api/system.double.tostring
+            if (this.Operand is double)
+            {
+                return string.Format(
+                    "{0:g17}",
+                    this.Operand);
+            }
+
             return this.Operand?.ToString() ?? string.Empty;
         }
 

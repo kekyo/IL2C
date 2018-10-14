@@ -26,15 +26,14 @@ namespace IL2C
         private static string GetCLanguageLiteralExpression(object value)
         {
             if (value == null) return "NULL";
-            // String instance will leak but no problem for test.
-            if (value is string) return "il2c_new_string(L\"" + value + "\")";
-            if (value is char) return "il2c_new_string(L\"" + value + "\")";
+            if (value.Equals(int.MinValue)) return "INT32_MIN";
+            if (value.Equals(long.MinValue)) return "INT64_MIN";
             if (value is long) return string.Format("INT64_C({0})", value);
             if (value is ulong) return string.Format("UINT64_C({0})", value);
             if (value is uint) return string.Format("UINT32_C({0})", value);
             if (value is bool) return (bool)value ? "true" : "false";
-            if (value.Equals(int.MinValue)) return "INT32_MIN";
-            if (value.Equals(long.MinValue)) return "INT64_MIN";
+            if (value is string) return "il2c_new_string(L\"" + value + "\")";
+            if (value is char) return "il2c_new_string(L\"" + value + "\")";
             return value.ToString();
         }
 

@@ -53,13 +53,55 @@
         sub
         ret
     }
+                        
+    .method public static int8 SByte_4(
+        int32 arg0, int32 arg1, int32 arg2, int32 arg3, int8 num) cil managed
+    {
+        .maxstack 2
+        ldarg.s 4
+        ldc.i4.1
+        sub
+        ret
+    }
+
+    .method public static uint16 UInt16_4(
+        int32 arg0, int32 arg1, int32 arg2, int32 arg3, uint16 num) cil managed
+    {
+        .maxstack 2
+        ldarg.s 4
+        ldc.i4.1
+        sub
+        ret
+    }
+    
+    .method public static uint32 UInt32_4(
+        int32 arg0, int32 arg1, int32 arg2, int32 arg3, uint32 num) cil managed
+    {
+        .maxstack 2
+        ldarg.s 4
+        ldc.i4.1
+        sub
+        conv.u4
+        ret
+    }
+        
+    .method public static uint64 UInt64_4(
+        int32 arg0, int32 arg1, int32 arg2, int32 arg3, uint64 num) cil managed
+    {
+        .maxstack 2
+        ldarg.s 4
+        ldc.i8 1
+        sub
+        conv.u8
+        ret
+    }
 
     .method public static float32 Single_4(
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, float32 num) cil managed
     {
         .maxstack 2
         ldarg.s 4
-		ldc.r4 3.14159274
+        ldc.r4 3.14159274
         add
         ret
     }
@@ -69,21 +111,21 @@
     {
         .maxstack 2
         ldarg.s 4
-		ldc.r8 3.1415926535897931
+        ldc.r8 3.1415926535897931
         add
         ret
     }
                 
-	.method public static char Char_4(
+    .method public static char Char_4(
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, char ch) cil managed
-	{
-		.maxstack 2
-		ldarg.s 4
-		ldc.i4.1
-		add
+    {
+        .maxstack 2
+        ldarg.s 4
+        ldc.i4.1
+        add
         conv.u2
-		ret
-	}
+        ret
+    }
 
     .method public static string String_4(
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, string str) cil managed

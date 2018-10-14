@@ -9,6 +9,10 @@ namespace IL2C.ILConverters
     [Case(short.MaxValue, "Int16")]
     [Case(int.MaxValue, "Int32")]
     [Case(long.MaxValue, "Int64")]
+    [Case(sbyte.MaxValue, "SByte")]
+    [Case(ushort.MaxValue, "UInt16")]
+    [Case(uint.MaxValue, "UInt32")]
+    [Case(ulong.MaxValue, "UInt64")]
     [Case(3.14159274f, "Single")]
     [Case(3.1415926535897931, "Double")]
     [Case('A', "Char")]
@@ -32,6 +36,18 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64();
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte SByte();
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ushort UInt16();
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern uint UInt32();
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ulong UInt64();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single();

@@ -72,6 +72,56 @@
         ret
     }
 
+    .method public static int8 SByte() cil managed
+    {
+        .maxstack 1
+        .locals init (
+            [0] int8
+        )
+        ldc.i4 127
+        stloc.0
+        ldloc.0
+        ret
+    }
+
+    .method public static uint16 UInt16() cil managed
+    {
+        .maxstack 1
+        .locals init (
+            [0] uint16
+        )
+        ldc.i4 65535
+        stloc.0
+        ldloc.0
+        ret
+    }
+
+    .method public static uint32 UInt32() cil managed
+    {
+        .maxstack 1
+        .locals init (
+            [0] uint32
+        )
+        ldc.i4 4294967295
+        conv.u4
+        stloc.0
+        ldloc.0
+        ret
+    }
+
+    .method public static uint64 UInt64() cil managed
+    {
+        .maxstack 1
+        .locals init (
+            [0] uint64
+        )
+        ldc.i8 18446744073709551615
+        conv.u8
+        stloc.0
+        ldloc.0
+        ret
+    }
+
     .method public static float32 Single() cil managed
     {
         .maxstack 1

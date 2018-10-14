@@ -118,6 +118,12 @@ namespace IL2C.Metadata
                     return this.MetadataContext.Int32Type;
                 }
 
+                // 'F' type at the evaluation stack.
+                if (this.IsSingleType)
+                {
+                    return this.MetadataContext.DoubleType;
+                }
+
                 if (this.IsUInt64Type)
                 {
                     return this.MetadataContext.Int64Type;
@@ -294,6 +300,8 @@ namespace IL2C.Metadata
                 || this.Equals(this.MetadataContext.UInt64Type)
                 || this.Equals(this.MetadataContext.IntPtrType)
                 || this.Equals(this.MetadataContext.UIntPtrType)
+                || this.Equals(this.MetadataContext.SingleType)
+                || this.Equals(this.MetadataContext.DoubleType)
                 || this.Equals(this.MetadataContext.CharType));
 
         public bool IsVoidType => this.Equals(this.MetadataContext.VoidType);

@@ -167,7 +167,10 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(float operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
+            // The evaluation stack type at floating point, it has to 'F' type.
+            // 'F' is only one type (64 bit floating point, it's System.Double.)
+            // It expression causes implicitly up conversion between float and double.
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
 
             // Single type format issue: https://docs.microsoft.com/en-us/dotnet/api/system.single.tostring
             //   By default, the return value only contains 7 digits of precision although a maximum of

@@ -33,15 +33,7 @@ namespace IL2C.ILConverters
                     "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
-            // Single = Single + Single
-            if (si0.TargetType.IsSingleType && si1.TargetType.IsSingleType)
-            {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
-                return _ => new[] { string.Format(
-                    "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
-            }
-
-            // Double = Double + Double
+            // Double = Double + Double ('F' type)
             if (si0.TargetType.IsDoubleType && si1.TargetType.IsDoubleType)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
@@ -106,15 +98,7 @@ namespace IL2C.ILConverters
                     "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
-            // Single = Single - Single
-            if (si0.TargetType.IsSingleType && si1.TargetType.IsSingleType)
-            {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
-                return _ => new[] { string.Format(
-                    "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
-            }
-
-            // Double = Double - Double
+            // Double = Double - Double ('F' type)
             if (si0.TargetType.IsDoubleType && si1.TargetType.IsDoubleType)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);

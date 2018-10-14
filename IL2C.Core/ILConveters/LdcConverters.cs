@@ -140,7 +140,7 @@ namespace IL2C.ILConverters
             //   IL2C makes the expression it special case.
             return _ => (operand != int.MinValue)
                 ? new[] { string.Format("{0} = {1}", symbolName, operand) }
-                : new[] { string.Format("{0} = INT32_MIN", symbolName) };
+                : new[] { string.Format("{0} = ({1} - 1)", symbolName, int.MinValue + 1) };
         }
     }
 
@@ -156,8 +156,8 @@ namespace IL2C.ILConverters
             //   "warning: this decimal constant is unsigned only in ISO C90 [enabled by default]" (it's gcc, but vc causes same)
             //   IL2C makes the expression it special case.
             return _ => (operand != long.MinValue)
-                ? new[] { string.Format("{0} = INT64_C({1})", symbolName, operand) }
-                : new[] { string.Format("{0} = INT64_MIN", symbolName) };
+                ? new[] { string.Format("{0} = {1}LL", symbolName, operand) }
+                : new[] { string.Format("{0} = ({1}LL - 1LL)", symbolName, long.MinValue + 1) };
         }
     }
 

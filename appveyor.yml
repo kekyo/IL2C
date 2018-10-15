@@ -7,10 +7,7 @@ shallow_clone: true
 before_build:
   - nuget restore il2c.sln
 build_script:
-  - choco install "msbuild-sonarqube-runner" -y
-  - SonarScanner.MSBuild.exe begin /k:"il2c" /d:sonar.organization="kekyo-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="d160a9f1705a16193fb8b81164a3d6309ef4c841"
   - msbuild /t:Rebuild il2c.sln
-  - SonarScanner.MSBuild.exe end /d:"sonar.login=d160a9f1705a16193fb8b81164a3d6309ef4c841"
   - cmd: pack.bat
 artifacts:
   - path: artifacts

@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
@@ -12,6 +13,8 @@ namespace IL2C.ILConverters
     [Case((ushort)(ushort.MaxValue - 1), "UInt16", 123, ushort.MaxValue)]
     [Case((uint)(uint.MaxValue - 1), "UInt32", 123, uint.MaxValue)]
     [Case((ulong)(ulong.MaxValue - 1), "UInt64", 123, ulong.MaxValue)]
+    [Case(int.MaxValue - 1, typeof(IntPtr), "IntPtr", typeof(int), 123, typeof(IntPtr), int.MaxValue)]
+    [Case(uint.MaxValue - 1, typeof(UIntPtr), "UIntPtr", typeof(int), 123, typeof(UIntPtr), uint.MaxValue)]
     [Case((float)((double)123.45f + (double)3.14159274f), "Single", 123, 123.45f)]
     [Case(123.45 + 3.1415926535897931, "Double", 123, 123.45)]
     [Case('B', "Char", 123, 'A')]
@@ -32,6 +35,24 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64(int arg0, long num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte SByte(int arg0, sbyte num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ushort UInt16(int arg0, ushort num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern uint UInt32(int arg0, uint num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ulong UInt64(int arg0, ulong num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern IntPtr IntPtr(int arg0, IntPtr num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern UIntPtr UIntPtr(int arg0, UIntPtr num);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single(int arg0, float num);

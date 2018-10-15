@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace IL2C
@@ -15,7 +12,8 @@ namespace IL2C
                 ex.Message.Contains("not a valid application") ||
                 ex.Message.Contains("it is being used by another process") ||
                 ex.Message.Contains("system cannot find the file specified") ||
-                ex.Message.Contains("Permission denied");
+                ex.Message.Contains("Permission denied") ||
+                ex.Message.Contains("ExitCode=-1073741819");
         }
 
         // HACK: If use offloading Task rarely causes strange problems, it's workaround by retry. ¯\_(ツ)_/¯

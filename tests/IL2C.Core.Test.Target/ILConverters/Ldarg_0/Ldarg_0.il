@@ -86,6 +86,24 @@
         conv.u8
         ret
     }
+        
+    .method public static native int IntPtr(native int num) cil managed
+    {
+        .maxstack 2
+        ldarg.0
+        ldc.i4 1
+        sub
+        ret
+    }
+        
+    .method public static native uint UIntPtr(native uint num) cil managed
+    {
+        .maxstack 2
+        ldarg.0
+        ldc.i4 1
+        sub
+        ret
+    }
 
     .method public static float32 Single(float32 num) cil managed
     {

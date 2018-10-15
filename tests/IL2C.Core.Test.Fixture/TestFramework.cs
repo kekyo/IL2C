@@ -32,6 +32,16 @@ namespace IL2C
             if (value is long) return string.Format("INT64_C({0})", value);
             if (value is ulong) return string.Format("UINT64_C({0})", value);
             if (value is uint) return string.Format("UINT32_C({0})", value);
+            if (value.Equals(new IntPtr(int.MinValue))) return "INT32_MIN";
+            try
+            {
+                if (value.Equals(new IntPtr(long.MinValue))) return "INT64_MIN";
+            }
+            catch (OverflowException)
+            {
+            }
+            if (value is IntPtr) return string.Format("(intptr_t)INT64_C({0})", ((IntPtr)value).ToInt64());
+            if (value is UIntPtr) return string.Format("(uintptr_t)UINT64_C({0})", ((UIntPtr)value).ToUInt64());
             if (value is float) return string.Format("{0:g9}f", value);
             if (value is double) return string.Format("{0:g17}", value);
             if (value is bool) return (bool)value ? "true" : "false";

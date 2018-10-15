@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
@@ -8,10 +9,12 @@ namespace IL2C.ILConverters
     [Case((short)(short.MaxValue - 1), "Int16_4", 0, 1, 2, 3, short.MaxValue)]
     [Case(int.MaxValue - 1, "Int32_4", 0, 1, 2, 3, int.MaxValue)]
     [Case(long.MaxValue - 1, "Int64_4", 0, 1, 2, 3, long.MaxValue)]
-    [Case((sbyte)(sbyte.MaxValue - 1), "SByte", 0, 1, 2, 3, sbyte.MaxValue)]
-    [Case((ushort)(ushort.MaxValue - 1), "UInt16", 0, 1, 2, 3, ushort.MaxValue)]
-    [Case((uint)(uint.MaxValue - 1), "UInt32", 0, 1, 2, 3, uint.MaxValue)]
-    [Case((ulong)(ulong.MaxValue - 1), "UInt64", 0, 1, 2, 3, ulong.MaxValue)]
+    [Case((sbyte)(sbyte.MaxValue - 1), "SByte_4", 0, 1, 2, 3, sbyte.MaxValue)]
+    [Case((ushort)(ushort.MaxValue - 1), "UInt16_4", 0, 1, 2, 3, ushort.MaxValue)]
+    [Case((uint)(uint.MaxValue - 1), "UInt32_4", 0, 1, 2, 3, uint.MaxValue)]
+    [Case((ulong)(ulong.MaxValue - 1), "UInt64_4", 0, 1, 2, 3, ulong.MaxValue)]
+    [Case(int.MaxValue - 1, typeof(IntPtr), "IntPtr_4", typeof(int), 0, typeof(int), 1, typeof(int), 2, typeof(int), 3, typeof(IntPtr), int.MaxValue)]
+    [Case(uint.MaxValue - 1, typeof(UIntPtr), "UIntPtr_4", typeof(int), 0, typeof(int), 1, typeof(int), 2, typeof(int), 3, typeof(UIntPtr), uint.MaxValue)]
     [Case((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
     [Case(123.45 + 3.1415926535897931, "Double_4", 0, 1, 2, 3, 123.45)]
     [Case("ABCD", "String_4", 0, 1, 2, 3, "ABC")]
@@ -55,6 +58,30 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64_4(
             int arg0, int arg1, int arg2, int arg3, long num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte SByte_4(
+            int arg0, int arg1, int arg2, int arg3, sbyte num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ushort UInt16_4(
+            int arg0, int arg1, int arg2, int arg3, ushort num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern uint UInt32_4(
+            int arg0, int arg1, int arg2, int arg3, uint num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ulong UInt64_4(
+            int arg0, int arg1, int arg2, int arg3, ulong num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern IntPtr IntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, IntPtr num);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern UIntPtr UIntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, UIntPtr num);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single_4(

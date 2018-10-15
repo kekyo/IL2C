@@ -58,7 +58,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, int8 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i4.1
         sub
         ret
@@ -68,7 +68,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, uint16 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i4.1
         sub
         ret
@@ -78,7 +78,7 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, uint32 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i4.1
         sub
         conv.u4
@@ -89,10 +89,30 @@
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, uint64 num) cil managed
     {
         .maxstack 2
-        ldarg.s 4
+        ldarg 4
         ldc.i8 1
         sub
         conv.u8
+        ret
+    }
+       
+    .method public static native int IntPtr_4(
+        int32 arg0, int32 arg1, int32 arg2, int32 arg3, native int num) cil managed
+    {
+        .maxstack 2
+        ldarg 4
+        ldc.i4.1
+        sub
+        ret
+    }
+ 
+    .method public static native uint UIntPtr_4(
+        int32 arg0, int32 arg1, int32 arg2, int32 arg3, native uint num) cil managed
+    {
+        .maxstack 2
+        ldarg 4
+        ldc.i4.1
+        sub
         ret
     }
 

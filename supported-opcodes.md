@@ -12,10 +12,10 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldloc.1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloc_1) | 0x7 | Implemented | Test [16] | IL2C.ILConverters.Ldloc_1Converter |
 | [ldloc.2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloc_2) | 0x8 | Implemented | Test [16] | IL2C.ILConverters.Ldloc_2Converter |
 | [ldloc.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloc_3) | 0x9 | Implemented | Test [16] | IL2C.ILConverters.Ldloc_3Converter |
-| [stloc.0](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_0) | 0xa | Implemented |  | IL2C.ILConverters.Stloc_0Converter |
-| [stloc.1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_1) | 0xb | Implemented |  | IL2C.ILConverters.Stloc_1Converter |
-| [stloc.2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_2) | 0xc | Implemented |  | IL2C.ILConverters.Stloc_2Converter |
-| [stloc.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_3) | 0xd | Implemented |  | IL2C.ILConverters.Stloc_3Converter |
+| [stloc.0](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_0) | 0xa | Implemented | Test [16] | IL2C.ILConverters.Stloc_0Converter |
+| [stloc.1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_1) | 0xb | Implemented | Test [16] | IL2C.ILConverters.Stloc_1Converter |
+| [stloc.2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_2) | 0xc | Implemented | Test [16] | IL2C.ILConverters.Stloc_2Converter |
+| [stloc.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_3) | 0xd | Implemented | Test [16] | IL2C.ILConverters.Stloc_3Converter |
 | [ldarg.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarg_s) | 0xe | Implemented | Test [17] | IL2C.ILConverters.Ldarg_sConverter |
 | [ldarga.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarga_s) | 0xf |  |  |  |
 | [starg.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg_s) | 0x10 |  |  |  |

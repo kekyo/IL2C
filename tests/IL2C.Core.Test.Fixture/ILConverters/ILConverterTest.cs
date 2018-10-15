@@ -180,5 +180,31 @@ namespace IL2C.ILConverters
             [ValueSource("_Ldloc_3")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
         #endregion
+
+        #region Stloc
+        public static readonly CaseInfo[] _Stloc_0 = GetTargetCases<IL2C.ILConverters.Stloc_0>();
+        [Test]
+        public static Task Stloc_0(
+            [ValueSource("_Stloc_0")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Stloc_1 = GetTargetCases<IL2C.ILConverters.Stloc_1>();
+        [Test]
+        public static Task Stloc_1(
+            [ValueSource("_Stloc_1")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Stloc_2 = GetTargetCases<IL2C.ILConverters.Stloc_2>();
+        [Test]
+        public static Task Stloc_2(
+            [ValueSource("_Stloc_2")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Stloc_3 = GetTargetCases<IL2C.ILConverters.Stloc_3>();
+        [Test]
+        public static Task Stloc_3(
+            [ValueSource("_Stloc_3")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
     }
 }

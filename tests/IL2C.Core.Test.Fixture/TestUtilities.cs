@@ -12,6 +12,7 @@ namespace IL2C
                 ex.Message.Contains("not a valid application") ||
                 ex.Message.Contains("it is being used by another process") ||
                 ex.Message.Contains("system cannot find the file specified") ||
+                ex.Message.Contains("file or directory is corrupted and unreadable") ||
                 ex.Message.Contains("Permission denied") ||
                 ex.Message.Contains("ExitCode=-1073741819");
         }

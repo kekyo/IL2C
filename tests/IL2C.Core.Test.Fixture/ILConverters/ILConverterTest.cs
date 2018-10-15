@@ -13,13 +13,23 @@ namespace IL2C.ILConverters
     [Parallelizable(ParallelScope.All)]
     public sealed class ILConverterTest
     {
-        private static CaseInfo[] GetTargetCases<T>() =>
-            (from testCase in typeof(T).GetCustomAttributes<CaseAttribute>(true)
-             let method = typeof(T).GetMethod(testCase.MethodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-             where method != null
-             orderby method.DeclaringType.FullName, method.Name
-             select new CaseInfo(method, testCase.Expected, testCase.Arguments))
-            .ToArray();
+        private static CaseInfo[] GetTargetCases<T>()
+        {
+            return
+                (from testCase in typeof(T).GetCustomAttributes<CaseAttribute>(true)
+                 let method = typeof(T).GetMethod(testCase.MethodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                 where method != null
+                 group new { testCase, method } by method.Name)
+                 .SelectMany(g =>
+                 {
+                     var a = g.ToArray();
+                     return (a.Length == 1) ?
+                        a.Select(entry => new CaseInfo(entry.method.Name, entry.method, entry.testCase.Expected, entry.testCase.Arguments)) :
+                        a.Select((entry, index) => new CaseInfo(entry.method.Name + "_" + index, entry.method, entry.testCase.Expected, entry.testCase.Arguments));
+                    })
+                 .OrderBy(caseInfo => caseInfo.Name)
+                 .ToArray();
+        }
 
         public static readonly CaseInfo[] _Ldnull = GetTargetCases<IL2C.ILConverters.Ldnull>();
         [Test]

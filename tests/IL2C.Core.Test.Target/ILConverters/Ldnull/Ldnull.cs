@@ -6,7 +6,7 @@ namespace IL2C.ILConverters
     [Case(0, typeof(IntPtr), "IntPtrZero")]
     [Case((uint)0, typeof(UIntPtr), "UIntPtrZero")]
     [Case(null, "NullReference")]
-    public static class Ldnull
+    public sealed class Ldnull
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern IntPtr IntPtrZero();

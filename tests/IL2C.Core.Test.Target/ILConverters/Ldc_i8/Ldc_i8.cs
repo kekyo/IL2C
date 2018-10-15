@@ -4,7 +4,7 @@ namespace IL2C.ILConverters
 {
     [Case(long.MaxValue, "MaxValue")]
     [Case(long.MinValue, "MinValue")]
-    public static class Ldc_i8
+    public sealed class Ldc_i8
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long MaxValue();

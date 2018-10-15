@@ -34,7 +34,7 @@ namespace IL2C.ILConverters
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
         "ABC")]
-    public static class Ldarg_s
+    public sealed class Ldarg_s
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool Boolean_4(

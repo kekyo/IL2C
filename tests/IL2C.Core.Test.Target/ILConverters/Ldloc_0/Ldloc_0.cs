@@ -17,7 +17,7 @@ namespace IL2C.ILConverters
     [Case(3.1415926535897931, "Double")]
     [Case('A', "Char")]
     [Case("ABC", "String")]
-    public static class Ldloc_0
+    public sealed class Ldloc_0
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool True();

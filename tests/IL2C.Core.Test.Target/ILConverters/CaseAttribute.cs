@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IL2C.ILConverters
 {
@@ -18,35 +12,46 @@ namespace IL2C.ILConverters
             this.Arguments = args;
         }
 
-        public CaseAttribute(object expected, Type expectedType, string methodName, params object[] args)
+        public CaseAttribute(object expected, Type targetType, string methodName)
         {
             this.MethodName = methodName;
-            this.Arguments = args;
+            this.Expected = ConvertTo(expected, targetType);
+            this.Arguments = new object[0];
+        }
 
-            if (expectedType == typeof(IntPtr))
+        public CaseAttribute(object expected, Type targetType, string methodName, object arg0)
+        {
+            this.MethodName = methodName;
+            this.Expected = ConvertTo(expected, targetType);
+            this.Arguments = new[] { ConvertTo(arg0, targetType) };
+        }
+
+        private static object ConvertTo(object value, Type targetType)
+        {
+            if (targetType == typeof(IntPtr))
             {
-                if (expected is int)
+                if (value is int)
                 {
-                    this.Expected = new IntPtr((int)expected);
+                    return new IntPtr((int)value);
                 }
-                else if (expected is long)
+                else if (value is long)
                 {
-                    this.Expected = new IntPtr((long)expected);
+                    return new IntPtr((long)value);
                 }
                 else
                 {
                     throw new InvalidCastException();
                 }
             }
-            else if (expectedType == typeof(UIntPtr))
+            else if (targetType == typeof(UIntPtr))
             {
-                if (expected is uint)
+                if (value is uint)
                 {
-                    this.Expected = new UIntPtr((uint)expected);
+                    return new UIntPtr((uint)value);
                 }
-                else if (expected is ulong)
+                else if (value is ulong)
                 {
-                    this.Expected = new UIntPtr((ulong)expected);
+                    return new UIntPtr((ulong)value);
                 }
                 else
                 {
@@ -55,7 +60,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                this.Expected = Convert.ChangeType(expected, expectedType);
+                return Convert.ChangeType(value, targetType);
             }
         }
 

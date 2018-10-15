@@ -53,7 +53,10 @@ namespace IL2C
                 .ToArray();
 
             var ilConverterTests =
-                ILConverterTest.TargetCases
+                typeof(ILConverterTest)
+                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                .Where(field => field.IsInitOnly && (field.FieldType == typeof(CaseInfo[])))
+                .SelectMany(field => (CaseInfo[])field.GetValue(null))
                 .GroupBy(entry => entry.Method.DeclaringType.Name)
                 .ToDictionary(g => g.Key, g => g.Count(), StringComparer.InvariantCultureIgnoreCase);
 
@@ -67,7 +70,7 @@ namespace IL2C
                     ".."));
             var path = Path.Combine(basePath, "supported-opcodes.md");
 
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
+            using (var fs = await TestUtilities.CreateStreamAsync(path))
             {
                 var tw = new StreamWriter(fs);
 

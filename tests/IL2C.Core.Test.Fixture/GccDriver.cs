@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -70,7 +71,7 @@ namespace IL2C
                 p.Exited += (sender, e) => tcs.SetResult(p.ExitCode);
                 p.EnableRaisingEvents = true;
 
-                p.Start();
+                await TestUtilities.RetryIfStrangeProblemAsync(() => p.Start());
 
                 p.BeginOutputReadLine();
                 p.BeginErrorReadLine();
@@ -95,10 +96,12 @@ namespace IL2C
             {
                 using (var stream = await client.GetStreamAsync(url).ConfigureAwait(false))
                 {
-                    using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
+                    using (var fs = await TestUtilities.CreateStreamAsync(path))
                     {
                         await stream.CopyToAsync(fs);
                         await fs.FlushAsync();
+
+                        fs.Close();
                     }
                 }
             }
@@ -177,23 +180,27 @@ namespace IL2C
                 .Concat(sourcePaths)
                 .ToArray();
 
-            var (compileExitCode, compileLog) = await ExecuteAsync(
-                basePath, new[] { gccBinPath }, gccPath, gccArguments);
-            if ((compileExitCode != 0) || !string.IsNullOrWhiteSpace(compileLog)
-                || !File.Exists(executablePath))
+            var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {
-                throw new Exception("gcc [ExitCode=" + compileExitCode + "]: " + compileLog);
-            }
+                var (exitCode, log) = await ExecuteAsync(
+                    basePath, new[] { gccBinPath }, gccPath, gccArguments);
+                if ((exitCode != 0) || !string.IsNullOrWhiteSpace(log)
+                    || !File.Exists(executablePath))
+                {
+                    throw new Exception("gcc [ExitCode=" + exitCode + "]: " + log);
+                }
+                return (exitCode, log);
+            });
 
             // Step2: Execute native binary
-            var (exitCode, log) = await ExecuteAsync(
+            var (testExitCode, testLog) = await ExecuteAsync(
                 basePath, new[] { basePath }, executablePath);
-            if (exitCode != 0)
+            if (testExitCode != 0)
             {
-                throw new Exception("test [ExitCode=" + exitCode + "]: " + log);
+                throw new Exception("test [ExitCode=" + testExitCode + "]: " + testLog);
             }
 
-            return log;
+            return testLog;
         }
     }
 }

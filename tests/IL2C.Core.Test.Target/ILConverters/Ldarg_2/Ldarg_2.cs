@@ -16,7 +16,7 @@ namespace IL2C.ILConverters
     [Case(123.45 + 3.1415926535897931, "Double", 123, 45, 123.45)]
     [Case('B', "Char", 123, 45, 'A')]
     [Case("ABCD", "String", 123, 45, "ABC")]
-    public static class Ldarg_2
+    public sealed class Ldarg_2
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool Boolean(int arg0, int arg1, bool value);

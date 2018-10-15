@@ -4,7 +4,7 @@ namespace IL2C.ILConverters
 {
     [Case(4, "RawValue")]
     [Case(8, "Add", 4)]
-    public static class Ldc_i4_4
+    public sealed class Ldc_i4_4
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int RawValue();

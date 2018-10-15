@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
+
 using IL2C.Metadata;
 
 namespace IL2C
@@ -64,6 +65,8 @@ namespace IL2C
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
 
+            await Task.Yield();
+
             var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
 
             var prepared = AssemblyPreparer.Prepare(
@@ -87,29 +90,28 @@ namespace IL2C
                     "translated",
                     targetMethod.DeclaringType.Name,
                     targetMethod.Name));
-            await Task.Run(() =>
+
+            while (!Directory.Exists(translatedPath))
             {
-                if (Directory.Exists(translatedPath))
+                try
                 {
-                    try
-                    {
-                        Directory.Delete(translatedPath);
-                    }
-                    catch
-                    {
-                    }
+                    Directory.CreateDirectory(translatedPath);
                 }
-                Directory.CreateDirectory(translatedPath);
-            }).ConfigureAwait(false);
+                catch (IOException)
+                {
+                }
+            }
 
             var templatePath = Path.Combine(translatedPath, "test.vcxproj");
-            using (var fs = new FileStream(templatePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
+            using (var fs = await TestUtilities.CreateStreamAsync(templatePath))
             {
                 using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream("IL2C.Templates.test.vcxproj"))
                 {
                     await ts.CopyToAsync(fs);
                     await fs.FlushAsync();
                 }
+
+                fs.Close();
             }
 
             var sourceCode = new StringBuilder();
@@ -134,12 +136,14 @@ namespace IL2C
             sourceCode.Replace("{actualExpression}", expectedType.IsBooleanType ? "actual ? \"true\" : \"false\"" : "actual");
 
             var sourcePath = Path.Combine(translatedPath, "test.c");
-            using (var fs = new FileStream(sourcePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true))
+            using (var fs = await TestUtilities.CreateStreamAsync(sourcePath))
             {
                 var tw = new StreamWriter(fs);
 
                 await tw.WriteAsync(sourceCode.ToString());
                 await tw.FlushAsync();
+
+                fs.Close();
             }
 
             // Step1: Test real IL code at this runtime.

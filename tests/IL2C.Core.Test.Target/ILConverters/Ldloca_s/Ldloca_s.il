@@ -26,215 +26,176 @@
         ret
     }
 
-    .method public static uint8 Byte() cil managed
+    .method public static string Byte() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] uint8
+            [0] uint8
         )
         ldc.i4 255
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.Byte::ToString()
         ret
     }
 
-    .method public static int16 Int16() cil managed
+    .method public static string Int16() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] int16
+            [0] int16
         )
         ldc.i4 32767
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.Int16::ToString()
         ret
     }
 
-    .method public static int32 Int32() cil managed
+    .method public static string Int32() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] int32
+            [0] int32
         )
         ldc.i4 2147483647
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.Int32::ToString()
         ret
     }
 
-    .method public static int64 Int64() cil managed
+    .method public static string Int64() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] int64
+            [0] int64
         )
         ldc.i8 9223372036854775807
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.Int64::ToString()
         ret
     }
 
-    .method public static int8 SByte() cil managed
+    .method public static string SByte() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] int8
+            [0] int8
         )
         ldc.i4 127
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.SByte::ToString()
         ret
     }
 
-    .method public static uint16 UInt16() cil managed
+    .method public static string UInt16() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] uint16
+            [0] uint16
         )
         ldc.i4 65535
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.UInt16::ToString()
         ret
     }
 
-    .method public static uint32 UInt32() cil managed
+    .method public static string UInt32() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] uint32
+            [0] uint32
         )
         ldc.i4 4294967295
         conv.u4
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.UInt32::ToString()
         ret
     }
 
-    .method public static uint64 UInt64() cil managed
+    .method public static string UInt64() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] uint64
+            [0] uint64
         )
         ldc.i8 18446744073709551615
         conv.u8
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.UInt64::ToString()
         ret
     }
     
-    .method public static native int IntPtr() cil managed
+    .method public static string IntPtr() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] native int
+            [0] native int
         )
         ldc.i4 2147483647
         conv.i
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.IntPtr::ToString()
         ret
     }
     
-    .method public static native uint UIntPtr() cil managed
+    .method public static string UIntPtr() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] native uint
+            [0] native uint
         )
         ldc.i4 4294967295
         conv.u
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.UIntPtr::ToString()
         ret
     }
 
-    .method public static float32 Single() cil managed
+    .method public static string Single() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] float32
+            [0] float32
         )
         ldc.r4 3.14159274
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.Single::ToString()
         ret
     }
 
-    .method public static float64 Double() cil managed
+    .method public static string Double() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] float64
+            [0] float64
         )
         ldc.r8 3.1415926535897931
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.Double::ToString()
         ret
     }
 
-    .method public static char Char() cil managed
+    .method public static string Char() cil managed
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] char
+            [0] char
         )
         ldc.i4.s 0x41
-        stloc.s 4
-        ldloc.s 4
+        stloc.s 0
+        ldloca.s 0
+        call instance string [mscorlib]System.Char::ToString()
         ret
     }
 
@@ -242,15 +203,12 @@
     {
         .maxstack 1
         .locals init (
-            [0] int32,
-            [1] int32,
-            [2] int32,
-            [3] int32,
-            [4] string
+            [0] string
         )
+        ldloca.s 0
         ldstr "ABC"
-        stloc.s 4
-        ldloc.s 4
+        stind.ref
+        ldloc.0
         ret
     }
 
@@ -292,8 +250,9 @@
             [0xf8] int32, [0xf9] int32, [0xfa] int32, [0xfb] int32, [0xfc] int32, [0xfd] int32, [0xfe] int32,
             [0xff] string
         )
+        ldloca.s 255
         ldstr "ABC"
-        stloc.s 255
+        stind.ref
         ldloc.s 255
         ret
     }

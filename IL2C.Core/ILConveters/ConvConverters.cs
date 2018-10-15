@@ -21,7 +21,7 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SByteType);
             return _ => new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -41,7 +41,7 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int16Type);
             return _ => new[] { string.Format("{0} = (int16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -81,7 +81,7 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.ByteType);
             return _ => new[] { string.Format("{0} = (uint8_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -101,7 +101,7 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.UInt16Type);
             return _ => new[] { string.Format("{0} = (uint16_t){1}", resultName, siFrom.SymbolName) };
         }
     }
@@ -121,8 +121,8 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = (int32_t)(uint32_t){1}", symbolName, siFrom.SymbolName) };
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.UInt32Type);
+            return _ => new[] { string.Format("{0} = (uint32_t){1}", symbolName, siFrom.SymbolName) };
         }
     }
 
@@ -141,8 +141,8 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
-            return _ => new[] { string.Format("{0} = (int64_t)(uint64_t){1}", symbolName, siFrom.SymbolName) };
+            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.UInt64Type);
+            return _ => new[] { string.Format("{0} = (uint64_t){1}", symbolName, siFrom.SymbolName) };
         }
     }
 
@@ -181,8 +181,8 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
-            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
-            return _ => new[] { string.Format("{0} = (intptr_t)(uintptr_t){1}", resultName, siFrom.SymbolName) };
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.UIntPtrType);
+            return _ => new[] { string.Format("{0} = (uintptr_t){1}", resultName, siFrom.SymbolName) };
         }
     }
 }

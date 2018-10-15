@@ -16,6 +16,7 @@ typedef long interlock_t;
 #include <stdint.h>
 #include <stdbool.h>
 #include <wchar.h>
+#include <float.h>
 
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
@@ -174,6 +175,9 @@ typedef void* untyped_ptr;
 typedef intptr_t System_IntPtr;
 extern IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__;
 
+typedef bool System_Boolean;
+extern IL2C_RUNTIME_TYPE_DECL __System_Boolean_RUNTIME_TYPE__;
+
 typedef uint8_t System_Byte;
 extern IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__;
 
@@ -211,7 +215,21 @@ static bool System_IntPtr_op_Inequality(System_IntPtr lhs, System_IntPtr rhs)
 }
 
 extern bool System_Int32_TryParse(System_String* s, int32_t* result);
+
+extern System_String* System_Boolean_ToString(bool* this__);
+extern System_String* System_Byte_ToString(uint8_t* this__);
+extern System_String* System_Int16_ToString(int16_t* this__);
 extern System_String* System_Int32_ToString(int32_t* this__);
+extern System_String* System_Int64_ToString(int64_t* this__);
+extern System_String* System_SByte_ToString(int8_t* this__);
+extern System_String* System_UInt16_ToString(uint16_t* this__);
+extern System_String* System_UInt32_ToString(uint32_t* this__);
+extern System_String* System_UInt64_ToString(uint64_t* this__);
+extern System_String* System_IntPtr_ToString(intptr_t* this__);
+extern System_String* System_UIntPtr_ToString(uintptr_t* this__);
+extern System_String* System_Single_ToString(float* this__);
+extern System_String* System_Double_ToString(double* this__);
+extern System_String* System_Char_ToString_1(wchar_t* this__);
 
 /////////////////////////////////////////////////////////////
 // System.String

@@ -178,16 +178,16 @@ namespace IL2C.Translators
             Debug.Assert(stackList != null);
             Debug.Assert(stackPointer >= 0);
 
-            Debug.Assert(!targetType.IsUInt32Type);
-            Debug.Assert(!targetType.IsUInt64Type);
-            Debug.Assert(!targetType.IsUIntPtrType);
+            //Debug.Assert(!targetType.IsUInt32Type);
+            //Debug.Assert(!targetType.IsUInt64Type);
+            //Debug.Assert(!targetType.IsUIntPtrType);
 
-            Debug.Assert(!targetType.IsByteType);
-            Debug.Assert(!targetType.IsSByteType);
-            Debug.Assert(!targetType.IsInt16Type);
-            Debug.Assert(!targetType.IsUInt16Type);
+            //Debug.Assert(!targetType.IsByteType);
+            //Debug.Assert(!targetType.IsSByteType);
+            //Debug.Assert(!targetType.IsInt16Type);
+            //Debug.Assert(!targetType.IsUInt16Type);
 
-            Debug.Assert(!targetType.IsBooleanType);
+            //Debug.Assert(!targetType.IsBooleanType);
 
             StackInformationHolder stackInformationHolder;
             if (stackPointer >= stackList.Count)

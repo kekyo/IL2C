@@ -211,6 +211,12 @@ namespace IL2C.ILConverters
         public static Task Stloc_3(
             [ValueSource("_Stloc_3")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Stloc_s = GetTargetCases<IL2C.ILConverters.Stloc_s>();
+        [Test]
+        public static Task Stloc_s(
+            [ValueSource("_Stloc_s")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
         #endregion
     }
 }

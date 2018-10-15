@@ -50,6 +50,13 @@ namespace IL2C
             return value.ToString();
         }
 
+        private static string GetCLanguageCompareExpression(ITypeInformation type)
+        {
+            return type.IsStringType ?
+                "wcscmp(expected->string_body__, actual->string_body__) == 0" :
+                "expected == actual";
+        }
+
         private static string GetCLanguagePrintFormatFromType(ITypeInformation type)
         {
             return
@@ -69,6 +76,15 @@ namespace IL2C
                 (type.IsCharType) ? "'%c'" :
                 (type.IsStringType) ? "\\\"%s\\\"" :
                 "%s";
+        }
+
+        private static string GetCLanguagePrintArgumentExpression(ITypeInformation type, string symbolName)
+        {
+            return type.IsBooleanType ?
+                symbolName + " ? \"true\" : \"false\"" :
+                type.IsStringType ?
+                    symbolName + "->string_body__" :
+                    symbolName;
         }
 
         public static async Task ExecuteTestAsync(MethodInfo method, object expected, object[] args)
@@ -140,10 +156,10 @@ namespace IL2C
             sourceCode.Replace("{expected}", GetCLanguageLiteralExpression(expected));
             sourceCode.Replace("{function}", targetMethod.CLanguageFunctionName);
             sourceCode.Replace("{arguments}", string.Join(", ", args.Select(GetCLanguageLiteralExpression)));
-            sourceCode.Replace("{equality}", expectedType.IsStringType ? "wcscmp(expected->string_body__, actual->string_body__) == 0" : "expected == actual");
+            sourceCode.Replace("{equality}", GetCLanguageCompareExpression(expectedType));
             sourceCode.Replace("{format}", GetCLanguagePrintFormatFromType(targetMethod.ReturnType));
-            sourceCode.Replace("{expectedExpression}", expectedType.IsBooleanType ? "expected ? \"true\" : \"false\"" : "expected");
-            sourceCode.Replace("{actualExpression}", expectedType.IsBooleanType ? "actual ? \"true\" : \"false\"" : "actual");
+            sourceCode.Replace("{expectedExpression}", GetCLanguagePrintArgumentExpression(expectedType, "expected"));
+            sourceCode.Replace("{actualExpression}", GetCLanguagePrintArgumentExpression(expectedType, "actual"));
 
             var sourcePath = Path.Combine(translatedPath, "test.c");
             using (var fs = await TestUtilities.CreateStreamAsync(sourcePath))

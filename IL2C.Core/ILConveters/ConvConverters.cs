@@ -146,6 +146,26 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Conv_iConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Conv_I;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var siFrom = decodeContext.PopStack();
+            if (siFrom.TargetType.IsNumericPrimitive == false)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
+            }
+
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
+            return _ => new[] { string.Format("{0} = (intptr_t){1}", resultName, siFrom.SymbolName) };
+        }
+    }
+
     internal sealed class Conv_uConverter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Conv_U;

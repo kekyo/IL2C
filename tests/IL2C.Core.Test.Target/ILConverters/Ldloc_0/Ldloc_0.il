@@ -121,6 +121,32 @@
         ldloc.0
         ret
     }
+    
+    .method public static native int IntPtr() cil managed
+    {
+        .maxstack 1
+        .locals init (
+            [0] native int
+        )
+        ldc.i4 2147483647
+        conv.i
+        stloc.0
+        ldloc.0
+        ret
+    }
+    
+    .method public static native uint UIntPtr() cil managed
+    {
+        .maxstack 1
+        .locals init (
+            [0] native uint
+        )
+        ldc.i4 4294967295
+        conv.u
+        stloc.0
+        ldloc.0
+        ret
+    }
 
     .method public static float32 Single() cil managed
     {

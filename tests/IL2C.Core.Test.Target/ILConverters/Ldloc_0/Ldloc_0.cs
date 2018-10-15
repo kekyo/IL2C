@@ -13,6 +13,8 @@ namespace IL2C.ILConverters
     [Case(ushort.MaxValue, "UInt16")]
     [Case(uint.MaxValue, "UInt32")]
     [Case(ulong.MaxValue, "UInt64")]
+    [Case(int.MaxValue, typeof(IntPtr), "IntPtr")]
+    [Case(uint.MaxValue, typeof(UIntPtr), "UIntPtr")]
     [Case(3.14159274f, "Single")]
     [Case(3.1415926535897931, "Double")]
     [Case('A', "Char")]
@@ -48,6 +50,12 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong UInt64();
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern IntPtr IntPtr();
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern UIntPtr UIntPtr();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single();

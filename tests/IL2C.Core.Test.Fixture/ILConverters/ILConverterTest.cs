@@ -185,6 +185,12 @@ namespace IL2C.ILConverters
         public static Task Ldloc_s(
             [ValueSource("_Ldloc_s")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+
+        //public static readonly CaseInfo[] _Ldloca_s = GetTargetCases<IL2C.ILConverters.Ldloca_s>();
+        //[Test]
+        //public static Task Ldloca_s(
+        //    [ValueSource("_Ldloca_s")] CaseInfo caseInfo) =>
+        //    TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
         #region Stloc

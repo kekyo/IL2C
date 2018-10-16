@@ -17,62 +17,72 @@ namespace IL2C.ILConverters
         {
             return
                 (from testCase in typeof(T).GetCustomAttributes<CaseAttribute>(true)
-                 let method = typeof(T).GetMethod(testCase.MethodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                 let method = typeof(T).GetMethod(
+                     testCase.MethodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)    // Static method only for test entry
                  where method != null
-                 group new { testCase, method } by method.Name)
+                 let additionalMethods =
+                    testCase.AdditionalMethodNames
+                    .Select(amn => typeof(T).GetMethod(
+                        amn, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))   // Both instance or static method
+                    .ToArray()
+                 group new { testCase, method, additionalMethods } by method.Name)
                  .SelectMany(g =>
                  {
                      var a = g.ToArray();
                      return (a.Length == 1) ?
-                        a.Select(entry => new CaseInfo(entry.method.Name, entry.method, entry.testCase.Expected, entry.testCase.Arguments)) :
-                        a.Select((entry, index) => new CaseInfo(entry.method.Name + "_" + index, entry.method, entry.testCase.Expected, entry.testCase.Arguments));
+                        a.Select(entry => new CaseInfo(
+                            entry.method.Name, entry.method, entry.additionalMethods, entry.testCase.Expected, entry.testCase.Arguments)) :
+                        a.Select((entry, index) => new CaseInfo(
+                            entry.method.Name + "_" + index, entry.method, entry.additionalMethods, entry.testCase.Expected, entry.testCase.Arguments));
                     })
                  .OrderBy(caseInfo => caseInfo.Name)
                  .ToArray();
         }
 
+        #region Ldnull
         public static readonly CaseInfo[] _Ldnull = GetTargetCases<IL2C.ILConverters.Ldnull>();
         [Test]
         public static Task Ldnull(
             [ValueSource("_Ldnull")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
 
         #region Ldarg
         public static readonly CaseInfo[] _Ldarg_0 = GetTargetCases<IL2C.ILConverters.Ldarg_0>();
         [Test]
         public static Task Ldarg_0(
             [ValueSource("_Ldarg_0")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldarg_1 = GetTargetCases<IL2C.ILConverters.Ldarg_1>();
         [Test]
         public static Task Ldarg_1(
             [ValueSource("_Ldarg_1")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldarg_2 = GetTargetCases<IL2C.ILConverters.Ldarg_2>();
         [Test]
         public static Task Ldarg_2(
             [ValueSource("_Ldarg_2")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldarg_3 = GetTargetCases<IL2C.ILConverters.Ldarg_3>();
         [Test]
         public static Task Ldarg_3(
             [ValueSource("_Ldarg_3")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldarg_s = GetTargetCases<IL2C.ILConverters.Ldarg_s>();
         [Test]
         public static Task Ldarg_s(
             [ValueSource("_Ldarg_s")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldarg = GetTargetCases<IL2C.ILConverters.Ldarg>();
         [Test]
         public static Task Ldarg(
             [ValueSource("_Ldarg")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
         #region Ldc
@@ -80,79 +90,79 @@ namespace IL2C.ILConverters
         [Test]
         public static Task Ldc_i4_0(
             [ValueSource("_Ldc_i4_0")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_1 = GetTargetCases<IL2C.ILConverters.Ldc_i4_1>();
         [Test]
         public static Task Ldc_i4_1(
             [ValueSource("_Ldc_i4_1")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_2 = GetTargetCases<IL2C.ILConverters.Ldc_i4_2>();
         [Test]
         public static Task Ldc_i4_2(
             [ValueSource("_Ldc_i4_2")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_3 = GetTargetCases<IL2C.ILConverters.Ldc_i4_3>();
         [Test]
         public static Task Ldc_i4_3(
             [ValueSource("_Ldc_i4_3")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_4 = GetTargetCases<IL2C.ILConverters.Ldc_i4_4>();
         [Test]
         public static Task Ldc_i4_4(
             [ValueSource("_Ldc_i4_4")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_5 = GetTargetCases<IL2C.ILConverters.Ldc_i4_5>();
         [Test]
         public static Task Ldc_i4_5(
             [ValueSource("_Ldc_i4_5")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_6 = GetTargetCases<IL2C.ILConverters.Ldc_i4_6>();
         [Test]
         public static Task Ldc_i4_6(
             [ValueSource("_Ldc_i4_6")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_7 = GetTargetCases<IL2C.ILConverters.Ldc_i4_7>();
         [Test]
         public static Task Ldc_i4_7(
             [ValueSource("_Ldc_i4_7")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_8 = GetTargetCases<IL2C.ILConverters.Ldc_i4_8>();
         [Test]
         public static Task Ldc_i4_8(
             [ValueSource("_Ldc_i4_8")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_m1 = GetTargetCases<IL2C.ILConverters.Ldc_i4_m1>();
         [Test]
         public static Task Ldc_i4_m1(
             [ValueSource("_Ldc_i4_m1")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4_s = GetTargetCases<IL2C.ILConverters.Ldc_i4_s>();
         [Test]
         public static Task Ldc_i4_s(
             [ValueSource("_Ldc_i4_s")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i4 = GetTargetCases<IL2C.ILConverters.Ldc_i4>();
         [Test]
         public static Task Ldc_i4(
             [ValueSource("_Ldc_i4")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldc_i8 = GetTargetCases<IL2C.ILConverters.Ldc_i8>();
         [Test]
         public static Task Ldc_i8(
             [ValueSource("_Ldc_i8")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
         #region Ldloc
@@ -160,37 +170,37 @@ namespace IL2C.ILConverters
         [Test]
         public static Task Ldloc_0(
             [ValueSource("_Ldloc_0")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldloc_1 = GetTargetCases<IL2C.ILConverters.Ldloc_1>();
         [Test]
         public static Task Ldloc_1(
             [ValueSource("_Ldloc_1")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldloc_2 = GetTargetCases<IL2C.ILConverters.Ldloc_2>();
         [Test]
         public static Task Ldloc_2(
             [ValueSource("_Ldloc_2")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldloc_3 = GetTargetCases<IL2C.ILConverters.Ldloc_3>();
         [Test]
         public static Task Ldloc_3(
             [ValueSource("_Ldloc_3")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Ldloc_s = GetTargetCases<IL2C.ILConverters.Ldloc_s>();
         [Test]
         public static Task Ldloc_s(
             [ValueSource("_Ldloc_s")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
-        //public static readonly CaseInfo[] _Ldloca_s = GetTargetCases<IL2C.ILConverters.Ldloca_s>();
-        //[Test]
-        //public static Task Ldloca_s(
-        //    [ValueSource("_Ldloca_s")] CaseInfo caseInfo) =>
-        //    TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+        public static readonly CaseInfo[] _Ldloca_s = GetTargetCases<IL2C.ILConverters.Ldloca_s>();
+        [Test]
+        public static Task Ldloca_s(
+            [ValueSource("_Ldloca_s")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
         #region Stloc
@@ -198,31 +208,31 @@ namespace IL2C.ILConverters
         [Test]
         public static Task Stloc_0(
             [ValueSource("_Stloc_0")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Stloc_1 = GetTargetCases<IL2C.ILConverters.Stloc_1>();
         [Test]
         public static Task Stloc_1(
             [ValueSource("_Stloc_1")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Stloc_2 = GetTargetCases<IL2C.ILConverters.Stloc_2>();
         [Test]
         public static Task Stloc_2(
             [ValueSource("_Stloc_2")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Stloc_3 = GetTargetCases<IL2C.ILConverters.Stloc_3>();
         [Test]
         public static Task Stloc_3(
             [ValueSource("_Stloc_3")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
         public static readonly CaseInfo[] _Stloc_s = GetTargetCases<IL2C.ILConverters.Stloc_s>();
         [Test]
         public static Task Stloc_s(
             [ValueSource("_Stloc_s")] CaseInfo caseInfo) =>
-            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.Expected, caseInfo.Arguments);
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
     }
 }

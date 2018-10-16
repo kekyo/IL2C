@@ -30,6 +30,11 @@ namespace IL2C.Metadata
         public bool IsPrimitive => false;
         public bool IsNumericPrimitive => false;
 
+        public bool IsInt32StackFriendlyType => false;
+        public bool IsInt64StackFriendlyType => false;
+        public bool IsFloatStackFriendlyType => false;
+        public bool IsIntPtrStackFriendlyType => false;
+
         public bool IsVoidType => false;
         public bool IsObjectType => false;
         public bool IsValueTypeType => false;

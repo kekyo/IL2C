@@ -29,6 +29,11 @@ namespace IL2C.Metadata
         bool IsPrimitive { get; }
         bool IsNumericPrimitive { get; }
 
+        bool IsInt32StackFriendlyType { get; }
+        bool IsInt64StackFriendlyType { get; }
+        bool IsFloatStackFriendlyType { get; }
+        bool IsIntPtrStackFriendlyType { get; }
+
         bool IsVoidType { get; }
         bool IsObjectType { get; }
         bool IsValueTypeType { get; }
@@ -105,37 +110,39 @@ namespace IL2C.Metadata
                 () => (this.Definition as TypeDefinition)?.NestedTypes,
                 nestedType => new TypeInformation(nestedType, module));
 
-            stackableType = Lazy.Create(() =>
-            {
-                if (this.IsByteType
-                    || this.IsSByteType
-                    || this.IsInt16Type
-                    || this.IsUInt16Type
-                    || this.IsUInt32Type
-                    || this.IsBooleanType
-                    || this.IsCharType)
-                {
-                    return this.MetadataContext.Int32Type;
-                }
+            stackableType = Lazy.Create(() => (ITypeInformation)this);
 
-                // 'F' type at the evaluation stack.
-                if (this.IsSingleType)
-                {
-                    return this.MetadataContext.DoubleType;
-                }
+            //stackableType = Lazy.Create(() =>
+            //{
+            //    if (this.IsByteType
+            //        || this.IsSByteType
+            //        || this.IsInt16Type
+            //        || this.IsUInt16Type
+            //        || this.IsUInt32Type
+            //        || this.IsBooleanType
+            //        || this.IsCharType)
+            //    {
+            //        return this.MetadataContext.Int32Type;
+            //    }
 
-                if (this.IsUInt64Type)
-                {
-                    return this.MetadataContext.Int64Type;
-                }
+            //    // 'F' type at the evaluation stack.
+            //    if (this.IsSingleType)
+            //    {
+            //        return this.MetadataContext.DoubleType;
+            //    }
 
-                if (this.IsUIntPtrType)
-                {
-                    return this.MetadataContext.IntPtrType;
-                }
+            //    if (this.IsUInt64Type)
+            //    {
+            //        return this.MetadataContext.Int64Type;
+            //    }
 
-                return this;
-            });
+            //    if (this.IsUIntPtrType)
+            //    {
+            //        return this.MetadataContext.IntPtrType;
+            //    }
+
+            //    return this;
+            //});
 
             fields = this.MetadataContext.LazyGetOrAddMembers(
                 () => (this.Definition as TypeDefinition)?.Fields,
@@ -303,6 +310,37 @@ namespace IL2C.Metadata
                 || this.Equals(this.MetadataContext.SingleType)
                 || this.Equals(this.MetadataContext.DoubleType)
                 || this.Equals(this.MetadataContext.CharType));
+
+        public bool IsInt32StackFriendlyType =>
+            this.Equals(this.MetadataContext.ByteType)
+            || this.Equals(this.MetadataContext.SByteType)
+            || this.Equals(this.MetadataContext.Int16Type)
+            || this.Equals(this.MetadataContext.UInt16Type)
+            || this.Equals(this.MetadataContext.Int32Type)
+            || this.Equals(this.MetadataContext.UInt32Type)
+            || this.Equals(this.MetadataContext.BooleanType)
+            || this.Equals(this.MetadataContext.CharType);
+
+        public bool IsInt64StackFriendlyType =>
+            this.Equals(this.MetadataContext.ByteType)
+            || this.Equals(this.MetadataContext.SByteType)
+            || this.Equals(this.MetadataContext.Int16Type)
+            || this.Equals(this.MetadataContext.UInt16Type)
+            || this.Equals(this.MetadataContext.Int32Type)
+            || this.Equals(this.MetadataContext.UInt32Type)
+            || this.Equals(this.MetadataContext.Int64Type)
+            || this.Equals(this.MetadataContext.UInt64Type)
+            || this.Equals(this.MetadataContext.BooleanType)
+            || this.Equals(this.MetadataContext.CharType);
+
+        public bool IsFloatStackFriendlyType =>
+            this.Equals(this.MetadataContext.SingleType)
+            || this.Equals(this.MetadataContext.DoubleType);
+
+        public bool IsIntPtrStackFriendlyType =>
+            this.IsPointer
+            || this.Equals(this.MetadataContext.IntPtrType)
+            || this.Equals(this.MetadataContext.UIntPtrType);
 
         public bool IsVoidType => this.Equals(this.MetadataContext.VoidType);
         public bool IsObjectType => this.Equals(this.MetadataContext.ObjectType);

@@ -87,26 +87,48 @@ namespace IL2C
                     symbolName;
         }
 
-        public static async Task ExecuteTestAsync(MethodInfo method, object expected, object[] args)
+        public static async Task ExecuteTestAsync(
+            MethodInfo method, MethodInfo[] additionalMethods, object expected, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
+            foreach (var m in additionalMethods)
+            {
+                Assert.IsTrue(m.IsPublic && m.IsStatic);
+                Assert.AreEqual(m.DeclaringType, method.DeclaringType);
+            }
 
+            // Split current thread context.
             await Task.Yield();
 
             var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
 
             var prepared = AssemblyPreparer.Prepare(
-                translateContext, m => m.Name == method.Name);
+                translateContext,
+                m =>
+                    (m.DeclaringType.FriendlyName == method.DeclaringType.FullName) &&
+                    ((m.Name == method.Name) || (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null)));
 
-            var targetMethod =
+            var targetType =
                 translateContext.Assembly.Modules
                 .First().Types
-                .First(t => t.FriendlyName == method.DeclaringType.FullName).DeclaredMethods
+                .First(t => t.FriendlyName == method.DeclaringType.FullName);
+
+            var targetMethod =
+                targetType.DeclaredMethods
                 .First(m => m.Name == method.Name);
+            var targetAdditionalMethods =
+                targetType.DeclaredMethods
+                .Where(m => (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null))
+                .ToArray();
 
             var body = new StringWriter();
             AssemblyWriter.WriteConstStrings(
                 body, translateContext);
+            foreach (var tam in targetAdditionalMethods)
+            {
+                AssemblyWriter.InternalConvertFromMethod(
+                    body, translateContext, prepared, tam, "  ", DebugInformationOptions.Full);
+            }
             AssemblyWriter.InternalConvertFromMethod(
                 body, translateContext, prepared, targetMethod, "  ", DebugInformationOptions.Full);
 

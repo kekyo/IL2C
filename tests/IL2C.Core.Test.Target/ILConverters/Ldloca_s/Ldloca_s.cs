@@ -5,21 +5,21 @@ namespace IL2C.ILConverters
 {
     [Case("True", "True")]
     [Case("False", "False")]
-    [Case(byte.MaxValue, "Byte")]
-    [Case(short.MaxValue, "Int16")]
-    [Case(int.MaxValue, "Int32")]
-    [Case(long.MaxValue, "Int64")]
-    [Case(sbyte.MaxValue, "SByte")]
-    [Case(ushort.MaxValue, "UInt16")]
-    [Case(uint.MaxValue, "UInt32")]
-    [Case(ulong.MaxValue, "UInt64")]
-    [Case(int.MaxValue, typeof(IntPtr), "IntPtr")]
-    [Case(uint.MaxValue, typeof(UIntPtr), "UIntPtr")]
-    [Case(3.14159274f, "Single")]
-    [Case(3.1415926535897931, "Double")]
-    [Case('A', "Char")]
-    [Case("ABC", "String")]
-    [Case("ABC", "LocalVariable_255")]
+    [Case("255", "Byte")]
+    [Case("32767", "Int16")]
+    [Case("2147483647", "Int32")]
+    [Case("9223372036854775807", "Int64")]
+    [Case("127", "SByte")]
+    [Case("65535", "UInt16")]
+    [Case("4294967295", "UInt32")]
+    [Case("18446744073709551615", "UInt64")]
+    [Case("2147483647", "IntPtr")]
+    [Case("4294967295", "UIntPtr")]
+    [Case("3.141593", "Single")]            // Lost last 2 digits via ToString conversion.
+    [Case("3.14159265358979", "Double")]    // Lost last 2 digits via ToString conversion.
+    [Case("A", "Char")]
+    [Case("ABC", new[] { "String", "UpdateString" })]               // Translation will include UpdateString method
+    [Case("ABC", new[] { "LocalVariable_255", "UpdateString" })]    // Translation will include UpdateString method
     public sealed class Ldloca_s
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -29,43 +29,48 @@ namespace IL2C.ILConverters
         public static extern string False();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte Byte();
+        public static extern string Byte();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern short Int16();
+        public static extern string Int16();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int Int32();
+        public static extern string Int32();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern long Int64();
+        public static extern string Int64();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern sbyte SByte();
+        public static extern string SByte();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern ushort UInt16();
+        public static extern string UInt16();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern uint UInt32();
+        public static extern string UInt32();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern ulong UInt64();
+        public static extern string UInt64();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr IntPtr();
+        public static extern string IntPtr();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UIntPtr();
+        public static extern string UIntPtr();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float Single();
+        public static extern string Single();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern double Double();
+        public static extern string Double();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern char Char();
+        public static extern string Char();
+
+        public static void UpdateString(ref string value)
+        {
+            value = "ABC";
+        }
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string String();

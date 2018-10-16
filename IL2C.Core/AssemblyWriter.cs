@@ -371,9 +371,8 @@ namespace IL2C
             tw.WriteLine();
 
             // Important NULL assigner (p = NULL):
-            //   Because these variables are pointer (of object reference).
+            //   Because these variables are pointer (of object reference 'O' type).
             //   So GC will traverse these variables just setup the stack frame.
-
             foreach (var local in preparedMethod.Method.LocalVariables)
             {
                 tw.WriteLine(
@@ -381,7 +380,7 @@ namespace IL2C
                     indent,
                     local.TargetType.CLanguageTypeName,
                     local.SymbolName,
-                    local.TargetType.IsValueType ? string.Empty : " = NULL");
+                    local.TargetType.IsClass ? " = NULL" : string.Empty);
             }
 
             tw.WriteLine();
@@ -396,12 +395,12 @@ namespace IL2C
                     indent,
                     stack.TargetType.CLanguageTypeName,
                     stack.SymbolName,
-                    stack.TargetType.IsValueType ? string.Empty : " = NULL");
+                    stack.TargetType.IsClass ? " = NULL" : string.Empty);
             }
 
             var frameEntries = locals
                 .Concat(preparedMethod.Stacks)
-                .Where(local => !local.TargetType.IsValueType && !local.TargetType.IsPointer)
+                .Where(local => local.TargetType.IsClass)
                 .ToArray();
 
             if (frameEntries.Length >= 1)

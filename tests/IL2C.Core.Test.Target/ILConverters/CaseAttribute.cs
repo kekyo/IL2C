@@ -10,6 +10,15 @@ namespace IL2C.ILConverters
         public CaseAttribute(object expected, string methodName, params object[] args)
         {
             this.MethodName = methodName;
+            this.AdditionalMethodNames = new string[0];
+            this.Expected = expected;
+            this.Arguments = args;
+        }
+
+        public CaseAttribute(object expected, string[] methodNames, params object[] args)
+        {
+            this.MethodName = methodNames[0];
+            this.AdditionalMethodNames = methodNames.Skip(1).ToArray();
             this.Expected = expected;
             this.Arguments = args;
         }
@@ -17,6 +26,17 @@ namespace IL2C.ILConverters
         public CaseAttribute(object expected, Type targetType, string methodName, params object[] args)
         {
             this.MethodName = methodName;
+            this.AdditionalMethodNames = new string[0];
+            this.Expected = ConvertTo(expected, targetType);
+            this.Arguments = Pair<object, Type, object>(args)
+                .Select(entry => ConvertTo(entry.Item2, entry.Item1))
+                .ToArray();
+        }
+
+        public CaseAttribute(object expected, Type targetType, string[] methodNames, params object[] args)
+        {
+            this.MethodName = methodNames[0];
+            this.AdditionalMethodNames = methodNames.Skip(1).ToArray();
             this.Expected = ConvertTo(expected, targetType);
             this.Arguments = Pair<object, Type, object>(args)
                 .Select(entry => ConvertTo(entry.Item2, entry.Item1))
@@ -82,6 +102,7 @@ namespace IL2C.ILConverters
         }
 
         public string MethodName { get; }
+        public string[] AdditionalMethodNames { get; }
         public object Expected { get; }
         public object[] Arguments { get; }
     }

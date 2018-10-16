@@ -10,6 +10,13 @@ typedef long interlock_t;
 
 #include <stdint.h>
 #include <wchar.h>
+#include <float.h>
+
+#define il2c_itow _itow
+#define il2c_ultow _ultow
+#define il2c_i64tow _i64tow
+#define il2c_ui64tow _ui64tow
+#define il2c_snwprintf _snwprintf
 
 extern void* il2c_memcpy(void* to, const void* from, size_t n);
 extern void* il2c_memset(void* target, int ch, size_t n);
@@ -35,6 +42,13 @@ extern void WriteLineToError(const wchar_t* pMessage);
 
 #include <stdint.h>
 #include <wchar.h>
+#include <float.h>
+
+#define il2c_itow _itow
+#define il2c_ultow _ultow
+#define il2c_i64tow _i64tow
+#define il2c_ui64tow _ui64tow
+#define il2c_snwprintf _snwprintf
 
 #define il2c_memcpy memcpy
 #define il2c_memset memset
@@ -74,6 +88,13 @@ extern void WriteLineToError(const wchar_t* pMessage);
 
 #include <stdint.h>
 #include <wchar.h>
+#include <float.h>
+
+#define il2c_itow _itow
+#define il2c_ultow _ultow
+#define il2c_i64tow _i64tow
+#define il2c_ui64tow _ui64tow
+#define il2c_snwprintf _snwprintf
 
 #ifdef _DEBUG
 #define DEBUG_WRITE(step, message) { \
@@ -100,6 +121,13 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <stdint.h>
 #include <stdbool.h>
 #include <wchar.h>
+#include <float.h>
+
+#define il2c_itow _itow
+#define il2c_ultow _ultow
+#define il2c_i64tow _i64tow
+#define il2c_ui64tow _ui64tow
+#define il2c_snwprintf _snwprintf
 
 static interlock_t _InterlockedCompareExchange(interlock_t* p, interlock_t v, interlock_t c)
 {
@@ -529,6 +557,8 @@ IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__ = {
 
 IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__ = {
     "System.IntPtr", sizeof(System_IntPtr), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+IL2C_RUNTIME_TYPE_DECL __System_Boolean_RUNTIME_TYPE__ = {
+    "System.Boolean", sizeof(System_Boolean), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__ = {
     "System.Byte", sizeof(System_Byte), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
 IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE__ = {
@@ -562,11 +592,116 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 	return ((s->string_body__ != endPtr) && (errno == 0)) ? true : false;
 }
 
+IL2C_CONST_STRING(System_Boolean_True, L"True");
+IL2C_CONST_STRING(System_Boolean_False, L"False");
+
+System_String* System_Boolean_ToString(bool* this__)
+{
+    return *this__ ? System_Boolean_True : System_Boolean_False;
+}
+
+System_String* System_Byte_ToString(uint8_t* this__)
+{
+    wchar_t buffer[5];
+
+    il2c_itow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_Int16_ToString(int16_t* this__)
+{
+    wchar_t buffer[7];
+
+    il2c_itow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
 System_String* System_Int32_ToString(int32_t* this__)
 {
     wchar_t buffer[14];
     
-    _itow(*this__, buffer, 10);
+    il2c_itow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_Int64_ToString(int64_t* this__)
+{
+    wchar_t buffer[24];
+
+    il2c_i64tow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_SByte_ToString(int8_t* this__)
+{
+    wchar_t buffer[5];
+
+    il2c_itow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_UInt16_ToString(uint16_t* this__)
+{
+    wchar_t buffer[7];
+
+    il2c_itow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_UInt32_ToString(uint32_t* this__)
+{
+    wchar_t buffer[14];
+
+    il2c_ultow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_UInt64_ToString(uint64_t* this__)
+{
+    wchar_t buffer[24];
+
+    il2c_ui64tow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_IntPtr_ToString(intptr_t* this__)
+{
+    wchar_t buffer[24];
+
+    il2c_i64tow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_UIntPtr_ToString(uintptr_t* this__)
+{
+    wchar_t buffer[24];
+
+    il2c_ui64tow(*this__, buffer, 10);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_Single_ToString(float* this__)
+{
+    wchar_t buffer[14];
+
+    il2c_snwprintf(buffer, 14, L"%.7g", *this__);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_Double_ToString(double* this__)
+{
+    wchar_t buffer[24];
+
+    il2c_snwprintf(buffer, 24, L"%.15g", *this__);
+    return il2c_new_string(buffer);
+}
+
+System_String* System_Char_ToString_1(wchar_t* this__)
+{
+    wchar_t buffer[2];
+
+    buffer[0] = *this__;
+    buffer[1] = L'\0';
     return il2c_new_string(buffer);
 }
 

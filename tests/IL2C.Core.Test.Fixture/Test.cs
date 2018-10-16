@@ -93,7 +93,9 @@ namespace IL2C
                                 opCodeName,
                             (ushort)opCode.Value,
                             (ilConverter != null) ? "Implemented" : string.Empty,
-                            ilConverterTests.TryGetValue(name, out var count) ? string.Format("Test [{0}]", count) : string.Empty,
+                            ilConverterTests.TryGetValue(name, out var count) ?
+                                string.Format("[Test [{0}]](tests/IL2C.Core.Test.Target/ILConverters/{1})", count, name) :
+                                string.Empty,
                             ilConverter?.GetType().FullName ?? string.Empty));
                 }
 

@@ -61,8 +61,6 @@ namespace IL2C.Metadata
         ITypeInformation[] InterfaceTypes { get; }
         ITypeInformation[] NestedTypes { get; }
 
-        ITypeInformation StackableType { get; }
-
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
         IMethodInformation[] OverridedMethods { get; }
@@ -84,7 +82,6 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation> elementType;
         private readonly Lazy<TypeInformation[]> interfaceTypes;
         private readonly Lazy<TypeInformation[]> nestedTypes;
-        private readonly Lazy<ITypeInformation> stackableType;
         private readonly Lazy<FieldInformation[]> fields;
         private readonly Lazy<MethodInformation[]> declaredMethods;
         private readonly Lazy<IMethodInformation[]> overridedMethods;
@@ -109,40 +106,6 @@ namespace IL2C.Metadata
             nestedTypes = this.MetadataContext.LazyGetOrAddMembers(
                 () => (this.Definition as TypeDefinition)?.NestedTypes,
                 nestedType => new TypeInformation(nestedType, module));
-
-            stackableType = Lazy.Create(() => (ITypeInformation)this);
-
-            //stackableType = Lazy.Create(() =>
-            //{
-            //    if (this.IsByteType
-            //        || this.IsSByteType
-            //        || this.IsInt16Type
-            //        || this.IsUInt16Type
-            //        || this.IsUInt32Type
-            //        || this.IsBooleanType
-            //        || this.IsCharType)
-            //    {
-            //        return this.MetadataContext.Int32Type;
-            //    }
-
-            //    // 'F' type at the evaluation stack.
-            //    if (this.IsSingleType)
-            //    {
-            //        return this.MetadataContext.DoubleType;
-            //    }
-
-            //    if (this.IsUInt64Type)
-            //    {
-            //        return this.MetadataContext.Int64Type;
-            //    }
-
-            //    if (this.IsUIntPtrType)
-            //    {
-            //        return this.MetadataContext.IntPtrType;
-            //    }
-
-            //    return this;
-            //});
 
             fields = this.MetadataContext.LazyGetOrAddMembers(
                 () => (this.Definition as TypeDefinition)?.Fields,
@@ -369,7 +332,6 @@ namespace IL2C.Metadata
         public ITypeInformation ElementType => elementType.Value;
         public ITypeInformation[] InterfaceTypes => interfaceTypes.Value;
         public ITypeInformation[] NestedTypes => nestedTypes.Value;
-        public ITypeInformation StackableType => stackableType.Value;
 
         public IFieldInformation[] Fields => fields.Value;
         public IMethodInformation[] DeclaredMethods => declaredMethods.Value;

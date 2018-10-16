@@ -45,8 +45,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                var resultName = decodeContext.PushStack(
-                    method.ReturnType.StackableType);
+                var resultName = decodeContext.PushStack(method.ReturnType);
 
                 return extractContext =>
                 {

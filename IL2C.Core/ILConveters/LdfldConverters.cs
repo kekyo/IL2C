@@ -20,7 +20,7 @@ namespace IL2C.ILConverters
 
             decodeContext.PrepareContext.RegisterStaticField(field);
 
-            var targetType = field.FieldType.StackableType;
+            var targetType = field.FieldType;
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new [] { string.Format(
@@ -89,7 +89,7 @@ namespace IL2C.ILConverters
                     siReference.TargetType.FriendlyName);
             }
 
-            var targetType = field.FieldType.StackableType;
+            var targetType = field.FieldType;
             var resultName = decodeContext.PushStack(targetType);
 
             var codeInformation = decodeContext.CurrentCode;

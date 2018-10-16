@@ -12,7 +12,6 @@ namespace IL2C.ILConverters
         private static Func<IExtractContext, string[]> Apply(
             string targetName, ITypeInformation targetType, DecodeContext decodeContext, bool isReference)
         {
-            targetType = targetType.StackableType;
             targetType = isReference ? targetType.MakeByReference() : targetType;
                 
             var symbolName = decodeContext.PushStack(targetType);

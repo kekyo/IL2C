@@ -206,8 +206,7 @@
             [0] string
         )
         ldloca.s 0
-        ldstr "ABC"
-        stind.ref
+        call void IL2C.ILConverters.Ldloca_s::UpdateString(string&)
         ldloc.0
         ret
     }
@@ -251,8 +250,7 @@
             [0xff] string
         )
         ldloca.s 255
-        ldstr "ABC"
-        stind.ref
+        call void IL2C.ILConverters.Ldloca_s::UpdateString(string&)
         ldloc.s 255
         ret
     }

@@ -18,8 +18,8 @@ namespace IL2C.ILConverters
     [Case("3.141593", "Single")]            // Lost last 2 digits via ToString conversion.
     [Case("3.14159265358979", "Double")]    // Lost last 2 digits via ToString conversion.
     [Case("A", "Char")]
-    [Case("ABC", "String")]
-    [Case("ABC", "LocalVariable_255")]
+    [Case("ABC", new[] { "String", "UpdateString" })]               // Translation will include UpdateString method
+    [Case("ABC", new[] { "LocalVariable_255", "UpdateString" })]    // Translation will include UpdateString method
     public sealed class Ldloca_s
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -70,12 +70,6 @@ namespace IL2C.ILConverters
         public static void UpdateString(ref string value)
         {
             value = "ABC";
-        }
-
-        public static void UpdateStringF()
-        {
-            string value = null;
-            UpdateString(ref value);
         }
 
         [MethodImpl(MethodImplOptions.ForwardRef)]

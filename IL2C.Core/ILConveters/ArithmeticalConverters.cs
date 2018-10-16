@@ -104,6 +104,15 @@ namespace IL2C.ILConverters
                     "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // ByRef = (ByRef) - (Int32|IntPtr)
+            if (si0.TargetType.IsByReference &&
+                (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))
+            {
+                var resultName = decodeContext.PushStack(si0.TargetType);
+                return _ => new[] { string.Format(
+                    "{0} = ({1})(((intptr_t){2}) - {3})", resultName, si0.TargetType.CLanguageTypeName, si0.SymbolName, si1.SymbolName) };
+            }
+
             // Double = (Float) - (Float|Int64|IntPtr)
             if (si0.TargetType.IsFloatStackFriendlyType &&
                 (si1.TargetType.IsFloatStackFriendlyType || si1.TargetType.IsInt64StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))

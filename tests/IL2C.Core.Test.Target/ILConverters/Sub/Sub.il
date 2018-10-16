@@ -1,11 +1,11 @@
-﻿.class public IL2C.ILConverters.Add
+﻿.class public IL2C.ILConverters.Sub
 {
 	.method public static int32 Int32_Int32(int32 lhs, int32 rhs) cil managed
 	{
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -14,7 +14,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -23,7 +23,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -32,7 +32,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -41,7 +41,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -50,16 +50,16 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
-    .method public static int32& Add_IntRef_IntPtr(int32& r, native int adder) cil managed
+    .method public static int32& Sub_IntRef_IntPtr(int32& r, native int adder) cil managed
 	{
 		.maxstack 2
         ldarg.0
 	    ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -74,20 +74,20 @@
         ldloca.s 0
         ldc.i4.1
         conv.i
-        call int32& IL2C.ILConverters.Add::Add_IntRef_IntPtr(int32&, native int)
+        call int32& IL2C.ILConverters.Sub::Sub_IntRef_IntPtr(int32&, native int)
         ldc.i4.m1
         conv.i
-        call int32& IL2C.ILConverters.Add::Add_IntRef_IntPtr(int32&, native int)
+        call int32& IL2C.ILConverters.Sub::Sub_IntRef_IntPtr(int32&, native int)
         ldind.i4
 		ret
 	}
 
-    .method public static int32& Add_IntRef_Int32(int32& r, int32 adder) cil managed
+    .method public static int32& Sub_IntRef_Int32(int32& r, int32 adder) cil managed
 	{
 		.maxstack 2
         ldarg.0
 	    ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -101,9 +101,9 @@
         stloc.0
         ldloca.s 0
         ldc.i4.1
-        call int32& IL2C.ILConverters.Add::Add_IntRef_Int32(int32&, int32)
+        call int32& IL2C.ILConverters.Sub::Sub_IntRef_Int32(int32&, int32)
         ldc.i4.m1
-        call int32& IL2C.ILConverters.Add::Add_IntRef_Int32(int32&, int32)
+        call int32& IL2C.ILConverters.Sub::Sub_IntRef_Int32(int32&, int32)
         ldind.i4
 		ret
 	}
@@ -113,7 +113,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -122,7 +122,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -131,7 +131,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 
@@ -140,7 +140,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		add
+		sub
 		ret
 	}
 }

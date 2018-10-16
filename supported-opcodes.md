@@ -91,7 +91,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [stind.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_r8) | 0x57 |  |  |  |
 | [add](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.add) | 0x58 | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Add) | IL2C.ILConverters.AddConverter |
 | [sub](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub) | 0x59 | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Sub) | IL2C.ILConverters.SubConverter |
-| [mul](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul) | 0x5a | Implemented |  | IL2C.ILConverters.MulConverter |
+| [mul](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul) | 0x5a | Implemented | [Test [8]](tests/IL2C.Core.Test.Target/ILConverters/Mul) | IL2C.ILConverters.MulConverter |
 | [div](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div) | 0x5b | Implemented |  | IL2C.ILConverters.DivConverter |
 | [div.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div_un) | 0x5c |  |  |  |
 | [rem](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem) | 0x5d |  |  |  |

@@ -13,6 +13,7 @@ namespace IL2C.ILConverters
     [Case(123, new[] { "IntRef_Int32", "Sub_IntRef_Int32" }, 123)]
     [Case(123.45 - 120.0, "Double_Double", 123.45, 120.0)]
     // It cases isn't written in MSDN document, but .NET 4.0 CLR can handle.
+    //[Case(12, typeof(IntPtr), new[] { "IntRef_IntRef", "Sub_IntRef_IntRef" })]   // TODO:
     [Case(123.45 - 120, "Double_Int32", 123.45, 120)]
     // These cases are declared at ".NET IL Assembler" Serge Lidin's book.
     // It can handle by IL2C, but .NET 4.0 CLR causes InvalidProgramException.
@@ -39,16 +40,22 @@ namespace IL2C.ILConverters
         public static extern long Int64_Int32(long lhs, int rhs);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern ref int Sub_IntRef_IntPtr(ref int lhs, IntPtr rhs);
+        public static extern ref int Sub_IntRef_IntPtr(ref int r, IntPtr subv);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int IntRef_IntPtr(int value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern ref int Sub_IntRef_Int32(ref int lhs, int rhs);
+        public static extern ref int Sub_IntRef_Int32(ref int r, int subv);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int IntRef_Int32(int value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern IntPtr Sub_IntRef_IntRef(ref int lhs, ref int rhs);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern IntPtr IntRef_IntRef();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern double Double_Double(double lhs, double rhs);

@@ -122,6 +122,15 @@ namespace IL2C.ILConverters
                     "{0} = {1} - {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // IntPtr = (ByRef) - (ByRef)
+            if (si0.TargetType.IsByReference &&
+                si1.TargetType.IsByReference)
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
+                return _ => new[] { string.Format(
+                    "{0} = (intptr_t){2} - (intptr_t){3}", resultName, si0.TargetType.CLanguageTypeName, si0.SymbolName, si1.SymbolName) };
+            }
+
             throw new InvalidProgramSequenceException(
                 "Unknown sub operation: Location={0}, Type0={1}, Type1={2}",
                 decodeContext.CurrentCode.RawLocation,
@@ -139,39 +148,39 @@ namespace IL2C.ILConverters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            // TODO: Check these combinations
-            if (si0.TargetType.IsInt32Type && si1.TargetType.IsInt32Type)
+            // Int32 = (Int32) * (Int32)
+            if (si0.TargetType.IsInt32StackFriendlyType && si1.TargetType.IsInt32StackFriendlyType)
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return _ => new[] { string.Format(
                     "{0} = {1} * {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
-            if (si0.TargetType.IsInt64Type && si1.TargetType.IsInt64Type)
+
+            // Int64 = (Int64) * (Int64|IntPtr)
+            if (si0.TargetType.IsInt64StackFriendlyType &&
+                (si1.TargetType.IsInt64StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
                 return _ => new[] { string.Format(
                     "{0} = {1} * {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
-            if (si0.TargetType.IsPointer && si1.TargetType.IsInt32Type)
+            // IntPtr = (IntPtr) * (Int32|IntPtr)
+            if (si0.TargetType.IsIntPtrStackFriendlyType &&
+                (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
                 return _ => new[] { string.Format(
-                    "{0} = ((intptr_t){1}) * ((intptr_t){2})", resultName, si0.SymbolName, si1.SymbolName) };
+                    "{0} = {1} * {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
-            if (si0.TargetType.IsPointer && si1.TargetType.IsIntPtrType)
+            // Double = (Float) * (Float|Int64|IntPtr)
+            if (si0.TargetType.IsFloatStackFriendlyType &&
+                (si1.TargetType.IsFloatStackFriendlyType || si1.TargetType.IsInt64StackFriendlyType))
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
                 return _ => new[] { string.Format(
-                    "{0} = ((intptr_t){1}) * {2}", resultName, si0.SymbolName, si1.SymbolName) };
-            }
-
-            if (si0.TargetType.IsIntPtrType && si1.TargetType.IsInt32Type)
-            {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
-                return _ => new[] { string.Format(
-                    "{0} = {1} * ((intptr_t){2})", resultName, si0.SymbolName, si1.SymbolName) };
+                    "{0} = {1} * {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
             throw new InvalidProgramSequenceException(

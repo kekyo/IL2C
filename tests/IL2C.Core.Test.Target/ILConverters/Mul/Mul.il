@@ -1,0 +1,92 @@
+﻿.class public IL2C.ILConverters.Mul
+{
+	.method public static int32 Int32_Int32(int32 lhs, int32 rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static native int IntPtr_IntPtr(native int lhs, native int rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static native int IntPtr_Int32(native int lhs, int32 rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static int64 Int64_Int64(int64 lhs, int64 rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static int64 Int64_IntPtr(int64 lhs, native int rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static int64 Int64_Int32(int64 lhs, int32 rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static float64 Double_Double(float64 lhs, float64 rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static float64 Double_Int32(float64 lhs, int32 rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static float64 Double_IntPtr(float64 lhs, native int rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+
+	.method public static float64 Double_Int64(float64 lhs, int64 rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		mul
+		ret
+	}
+}

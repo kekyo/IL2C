@@ -54,7 +54,7 @@
 		ret
 	}
 
-    .method public static int32& Sub_IntRef_IntPtr(int32& r, native int adder) cil managed
+    .method public static int32& Sub_IntRef_IntPtr(int32& r, native int subv) cil managed
 	{
 		.maxstack 2
         ldarg.0
@@ -82,7 +82,7 @@
 		ret
 	}
 
-    .method public static int32& Sub_IntRef_Int32(int32& r, int32 adder) cil managed
+    .method public static int32& Sub_IntRef_Int32(int32& r, int32 subv) cil managed
 	{
 		.maxstack 2
         ldarg.0
@@ -105,6 +105,32 @@
         ldc.i4.m1
         call int32& IL2C.ILConverters.Sub::Sub_IntRef_Int32(int32&, int32)
         ldind.i4
+		ret
+	}
+
+    .method public static native int Sub_IntRef_IntRef(int32& lhs, int32& rhs) cil managed
+	{
+		.maxstack 2
+        ldarg.0
+	    ldarg.1
+		sub
+		ret
+	}
+
+    .method public static native int IntRef_IntRef() cil managed
+	{
+		.maxstack 2
+        // TODO: The local variable layout can't know at the CLR.
+        //   So, this method is invalid.
+        .locals init (
+            [0] int32,
+			[1] int32,
+			[2] int32,
+			[3] int32
+        )
+        ldloca.s 3
+        ldloca.s 0
+        call native int IL2C.ILConverters.Sub::Sub_IntRef_IntRef(int32&, int32&)
 		ret
 	}
 

@@ -18,7 +18,7 @@ namespace IL2C
         }
 
         // HACK: If use offloading Task rarely causes strange problems, it's workaround by retry. ¯\_(ツ)_/¯
-        public static async Task<T> RetryIfStrangeProblemAsync<T>(Func<T> func, int count = 10)
+        public static async Task<T> RetryIfStrangeProblemAsync<T>(Func<T> func, int count = 16)
         {
             while (true)
             {
@@ -42,7 +42,7 @@ namespace IL2C
         }
 
         // HACK: If use offloading Task rarely causes strange problems, it's workaround by retry. ¯\_(ツ)_/¯
-        public static async Task<T> RetryIfStrangeProblemAsync<T>(Func<Task<T>> func, int count = 10)
+        public static async Task<T> RetryIfStrangeProblemAsync<T>(Func<Task<T>> func, int count = 16)
         {
             while (true)
             {

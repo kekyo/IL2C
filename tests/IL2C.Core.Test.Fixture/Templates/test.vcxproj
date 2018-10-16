@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\IL2C.Runtime\il2c.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\IL2C.Runtime\*.c" />
     <ClCompile Include="test.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="il2c.c" />
-    <ClInclude Include="il2c.h" />
+    <ClCompile Include="*.c" />
+    <ClInclude Include="*.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

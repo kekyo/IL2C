@@ -265,6 +265,12 @@ namespace IL2C.ILConverters
         public static Task Mul(
             [ValueSource("_Mul")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Div = GetTargetCases<IL2C.ILConverters.Div>();
+        [Test]
+        public static Task Div(
+            [ValueSource("_Div")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
     }
 }

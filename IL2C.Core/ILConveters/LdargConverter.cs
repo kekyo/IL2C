@@ -12,7 +12,7 @@ namespace IL2C.ILConverters
         public static Func<IExtractContext, string[]> Apply(int parameterIndex, DecodeContext decodeContext)
         {
             var parameter = decodeContext.Method.Parameters[parameterIndex];
-            var targetType = parameter.TargetType.StackableType;
+            var targetType = parameter.TargetType;
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(

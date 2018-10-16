@@ -15,7 +15,7 @@ namespace IL2C.ILConverters
             var siFrom = decodeContext.PopStack();
 
             var targetType = decodeContext.PrepareContext.MetadataContext.ByteType;
-            var symbolName = decodeContext.PushStack(targetType.StackableType);
+            var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
                 "{0} = *((uint8_t*){1})",

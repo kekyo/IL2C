@@ -62,7 +62,7 @@ namespace IL2C.Metadata
         public ITypeInformation ElementType => throw new NotImplementedException();
         public ITypeInformation[] InterfaceTypes => throw new NotImplementedException();
         public ITypeInformation[] NestedTypes => throw new NotImplementedException();
-        public ITypeInformation StackableType => throw new NotImplementedException();
+
         public IFieldInformation[] Fields => throw new NotImplementedException();
         public IMethodInformation[] DeclaredMethods => throw new NotImplementedException();
         public IMethodInformation[] OverridedMethods => throw new NotImplementedException();

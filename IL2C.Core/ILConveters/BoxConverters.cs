@@ -56,8 +56,7 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(
-                operand.StackableType);
+            var symbolName = decodeContext.PushStack(operand);
 
             return extractContext =>
             {

@@ -15,7 +15,7 @@ namespace IL2C.ILConverters
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
 
-            // https://msdn.microsoft.com/en-us/library/system.reflection.emit.opcodes.add(v=vs.100).aspx
+            // https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.add
 
             // Int32 = (Int32) + (Int32)
             if (si0.TargetType.IsInt32StackFriendlyType && si1.TargetType.IsInt32StackFriendlyType)
@@ -43,9 +43,18 @@ namespace IL2C.ILConverters
                     "{0} = {1} + {2}", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
+            // ByRef = (ByRef) + (Int32|IntPtr)
+            if (si0.TargetType.IsByReference &&
+                (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))
+            {
+                var resultName = decodeContext.PushStack(si0.TargetType);
+                return _ => new[] { string.Format(
+                    "{0} = ({1})(((intptr_t){2}) + {3})", resultName, si0.TargetType.CLanguageTypeName, si0.SymbolName, si1.SymbolName) };
+            }
+
             // Double = (Float) + (Float|Int64|IntPtr)
             if (si0.TargetType.IsFloatStackFriendlyType &&
-                (si1.TargetType.IsFloatStackFriendlyType || si1.TargetType.IsInt64StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))
+                (si1.TargetType.IsFloatStackFriendlyType || si1.TargetType.IsInt64StackFriendlyType))
             {
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
                 return _ => new[] { string.Format(

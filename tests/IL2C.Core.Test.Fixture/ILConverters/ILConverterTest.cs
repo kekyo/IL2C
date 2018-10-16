@@ -246,5 +246,13 @@ namespace IL2C.ILConverters
             [ValueSource("_Stloc_s")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
+
+        #region Arithmetical
+        public static readonly CaseInfo[] _Add = GetTargetCases<IL2C.ILConverters.Add>();
+        [Test]
+        public static Task Add(
+            [ValueSource("_Add")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
     }
 }

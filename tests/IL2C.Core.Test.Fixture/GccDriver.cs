@@ -193,12 +193,16 @@ namespace IL2C
             });
 
             // Step2: Execute native binary
-            var (testExitCode, testLog) = await ExecuteAsync(
-                basePath, new[] { basePath }, executablePath);
-            if (testExitCode != 0)
+            var (testExitCode, testLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {
-                throw new Exception("test [ExitCode=" + testExitCode + "]: " + testLog);
-            }
+                var (exitCode, log) = await ExecuteAsync(
+                    basePath, new[] { basePath }, executablePath);
+                if (exitCode != 0)
+                {
+                    throw new Exception("test [ExitCode=" + exitCode + "]: " + log);
+                }
+                return (exitCode, log);
+            });
 
             return testLog;
         }

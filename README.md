@@ -1,8 +1,8 @@
 # IL2C - A translator implementation of .NET intermediate language to C language.
 
-|Provider|Result|
-|:--|:--|
-|AppVeyor (.NET 4.5 / .NET Core 2.0)|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master)|
+|Provider|Build|Tests|
+|:--|:--|:--|
+|AppVeyor master|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master)|[![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)|
 
 ## What's this?
 

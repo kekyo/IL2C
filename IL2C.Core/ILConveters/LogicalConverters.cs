@@ -88,4 +88,16 @@ namespace IL2C.ILConverters
                 LogicalConverterUtilities.BinaryOperators.Or, decodeContext);
         }
     }
+
+    internal sealed class XorConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Xor;
+
+        public override Func<IExtractContext, string[]> Apply(
+            DecodeContext decodeContext)
+        {
+            return LogicalConverterUtilities.Apply(
+                LogicalConverterUtilities.BinaryOperators.Xor, decodeContext);
+        }
+    }
 }

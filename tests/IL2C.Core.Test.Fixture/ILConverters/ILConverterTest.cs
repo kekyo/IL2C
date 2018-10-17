@@ -291,6 +291,12 @@ namespace IL2C.ILConverters
         public static Task Or(
             [ValueSource("_Or")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Xor = GetTargetCases<IL2C.ILConverters.Xor>();
+        [Test]
+        public static Task Xor(
+            [ValueSource("_Xor")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
     }
 }

@@ -48,7 +48,14 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive)
+            if (si.TargetType.IsBooleanType)
+            {
+                return _ => new[] { string.Format(
+                    "if (!({0})) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
+            else if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -76,7 +83,14 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive)
+            if (si.TargetType.IsBooleanType)
+            {
+                return _ => new[] { string.Format(
+                    "if (!({0})) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
+            else if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -104,7 +118,14 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive)
+            if (si.TargetType.IsBooleanType)
+            {
+                return _ => new[] { string.Format(
+                    "if ({0}) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
+            else if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} != 0) goto {1}",
@@ -132,7 +153,14 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            if (si.TargetType.IsNumericPrimitive)
+            if (si.TargetType.IsBooleanType)
+            {
+                return _ => new[] { string.Format(
+                    "if ({0}) goto {1}",
+                    si.SymbolName,
+                    labelName) };
+            }
+            else if (si.TargetType.IsNumericPrimitive)
             {
                 return _ => new[] { string.Format(
                     "if ({0} != 0) goto {1}",

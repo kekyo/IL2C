@@ -45,8 +45,8 @@ OpCode | Binary | Implement | Test | ILConverter
 | [calli](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.calli) | 0x29 |  |  |  |
 | [ret](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ret) | 0x2a | Implemented | [Test [2]](tests/IL2C.Core.Test.Target/ILConverters/Ret) | IL2C.ILConverters.RetConverter |
 | [br.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.br_s) | 0x2b | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Br_S) | IL2C.ILConverters.Br_sConverter |
-| [brfalse.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brfalse_s) | 0x2c | Implemented |  | IL2C.ILConverters.Brfalse_sConverter |
-| [brtrue.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brtrue_s) | 0x2d | Implemented |  | IL2C.ILConverters.Brtrue_sConverter |
+| [brfalse.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brfalse_s) | 0x2c | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Brfalse_S) | IL2C.ILConverters.Brfalse_sConverter |
+| [brtrue.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brtrue_s) | 0x2d | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Brtrue_S) | IL2C.ILConverters.Brtrue_sConverter |
 | [beq.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.beq_s) | 0x2e | Implemented |  | IL2C.ILConverters.Beq_sConverter |
 | [bge.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge_s) | 0x2f |  |  |  |
 | [bgt.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_s) | 0x30 |  |  |  |
@@ -58,8 +58,8 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ble.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble_un_s) | 0x36 |  |  |  |
 | [blt.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.blt_un_s) | 0x37 |  |  |  |
 | [br](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.br) | 0x38 | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Br) | IL2C.ILConverters.BrConverter |
-| [brfalse](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brfalse) | 0x39 | Implemented |  | IL2C.ILConverters.BrfalseConverter |
-| [brtrue](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brtrue) | 0x3a | Implemented |  | IL2C.ILConverters.BrtrueConverter |
+| [brfalse](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brfalse) | 0x39 | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Brfalse) | IL2C.ILConverters.BrfalseConverter |
+| [brtrue](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brtrue) | 0x3a | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Brtrue) | IL2C.ILConverters.BrtrueConverter |
 | [beq](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.beq) | 0x3b |  |  |  |
 | [bge](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge) | 0x3c |  |  |  |
 | [bgt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt) | 0x3d |  |  |  |

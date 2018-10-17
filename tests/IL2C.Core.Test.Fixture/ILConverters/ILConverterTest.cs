@@ -75,6 +75,30 @@ namespace IL2C.ILConverters
         public static Task Br(
             [ValueSource("_Br")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Brtrue_s = GetTargetCases<IL2C.ILConverters.Brtrue_s>();
+        [Test]
+        public static Task Brtrue_s(
+            [ValueSource("_Brtrue_s")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Brtrue = GetTargetCases<IL2C.ILConverters.Brtrue>();
+        [Test]
+        public static Task Brtrue(
+            [ValueSource("_Brtrue")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Brfalse_s = GetTargetCases<IL2C.ILConverters.Brfalse_s>();
+        [Test]
+        public static Task Brfalse_s(
+            [ValueSource("_Brfalse_s")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Brfalse = GetTargetCases<IL2C.ILConverters.Brfalse>();
+        [Test]
+        public static Task Brfalse(
+            [ValueSource("_Brfalse")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
         #region Ret

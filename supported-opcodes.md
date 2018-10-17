@@ -97,7 +97,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [rem](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem) | 0x5d | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Rem) | IL2C.ILConverters.RemConverter |
 | [rem.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem_un) | 0x5e |  |  |  |
 | [and](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.and) | 0x5f | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/And) | IL2C.ILConverters.AndConverter |
-| [or](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.or) | 0x60 |  |  |  |
+| [or](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.or) | 0x60 | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Or) | IL2C.ILConverters.OrConverter |
 | [xor](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.xor) | 0x61 |  |  |  |
 | [shl](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shl) | 0x62 |  |  |  |
 | [shr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shr) | 0x63 |  |  |  |

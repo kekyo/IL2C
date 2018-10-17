@@ -201,6 +201,7 @@ static void* _InterlockedCompareExchangePointer(void** p, void* v, void* c)
 
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 ///////////////////////////////////////////////////
 // Internal runtime functions

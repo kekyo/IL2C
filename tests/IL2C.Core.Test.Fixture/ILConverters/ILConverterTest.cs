@@ -271,6 +271,12 @@ namespace IL2C.ILConverters
         public static Task Div(
             [ValueSource("_Div")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
+        public static readonly CaseInfo[] _Rem = GetTargetCases<IL2C.ILConverters.Rem>();
+        [Test]
+        public static Task Rem(
+            [ValueSource("_Rem")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
     }
 }

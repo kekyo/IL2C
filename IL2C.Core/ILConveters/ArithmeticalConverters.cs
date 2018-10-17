@@ -13,7 +13,8 @@ namespace IL2C.ILConverters
             Add,
             Sub,
             Mul,
-            Div
+            Div,
+            Rem
         }
 
         public static Func<IExtractContext, string[]> Apply(BinaryOperators binaryOperator, DecodeContext decodeContext)
@@ -28,6 +29,7 @@ namespace IL2C.ILConverters
                 case BinaryOperators.Sub: opChar = '-'; break;
                 case BinaryOperators.Mul: opChar = '*'; break;
                 case BinaryOperators.Div: opChar = '/'; break;
+                case BinaryOperators.Rem: opChar = '%'; break;
                 default: throw new Exception();
             }
 
@@ -47,6 +49,17 @@ namespace IL2C.ILConverters
                 var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
                 return _ => new[] { string.Format(
                     "{0} = {1} {2} {3}", resultName, si0.SymbolName, opChar, si1.SymbolName) };
+            }
+
+            // Double = (Float) % (Float)
+            if (si0.TargetType.IsFloatStackFriendlyType && si1.TargetType.IsFloatStackFriendlyType &&
+                (binaryOperator == BinaryOperators.Rem))
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+
+                // Use special runtime function.
+                return _ => new[] { string.Format(
+                    "{0} = il2c_fmod({1}, {2})", resultName, si0.SymbolName, si1.SymbolName) };
             }
 
             // Double = (Float) op (Float)
@@ -153,6 +166,17 @@ namespace IL2C.ILConverters
         {
             return ArithmeticalConverterUtilities.Apply(
                 ArithmeticalConverterUtilities.BinaryOperators.Div, decodeContext);
+        }
+    }
+
+    internal sealed class RemConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Rem;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return ArithmeticalConverterUtilities.Apply(
+                ArithmeticalConverterUtilities.BinaryOperators.Rem, decodeContext);
         }
     }
 }

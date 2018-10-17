@@ -94,7 +94,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [mul](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul) | 0x5a | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Mul) | IL2C.ILConverters.MulConverter |
 | [div](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div) | 0x5b | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Div) | IL2C.ILConverters.DivConverter |
 | [div.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div_un) | 0x5c |  |  |  |
-| [rem](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem) | 0x5d |  |  |  |
+| [rem](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem) | 0x5d | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Rem) | IL2C.ILConverters.RemConverter |
 | [rem.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem_un) | 0x5e |  |  |  |
 | [and](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.and) | 0x5f | Implemented |  | IL2C.ILConverters.AndConverter |
 | [or](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.or) | 0x60 |  |  |  |

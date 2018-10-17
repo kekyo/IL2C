@@ -55,6 +55,14 @@ namespace IL2C.ILConverters
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
+        #region Branch
+        public static readonly CaseInfo[] _Br_s = GetTargetCases<IL2C.ILConverters.Br_s>();
+        [Test]
+        public static Task Br_s(
+            [ValueSource("_Br_s")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
+
         #region Ret
         public static readonly CaseInfo[] _Ret = GetTargetCases<IL2C.ILConverters.Ret>();
         [Test]

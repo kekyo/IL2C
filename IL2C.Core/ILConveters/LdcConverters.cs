@@ -55,7 +55,7 @@ namespace IL2C.ILConverters
             var str = value.ToString("g9");
 
             // HACK: C compiler requires dot-notation for float type literal.
-            return str.Contains(".") ? str : (str + ".0f");
+            return str.Contains(".") ? (str + "f") : (str + ".0f");
         }
 
         public static string ToCLanguageExpression(double value)

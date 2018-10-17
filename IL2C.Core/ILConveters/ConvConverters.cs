@@ -22,6 +22,7 @@ namespace IL2C.ILConverters
             }
 
             // See also: ECMA-335: III.1.5 Operand type table - Conversion Operations
+
             var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SByteType);
             return _ => new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
         }
@@ -42,8 +43,14 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
+            // See also: ECMA-335: III.1.5 Operand type table - Conversion Operations
+
             var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int16Type);
-            return _ => new[] { string.Format("{0} = (int16_t){1}", resultName, siFrom.SymbolName) };
+
+            // HACK: On gcc 4, if only uses int16_t cast expression, result may causes INT16_MIN value.
+            //   On Visual C++ is not (good result.)
+            //   This workaround makes good result, we have to use downgrade cast step by step "F --> int32 --> int16"
+            return _ => new[] { string.Format("{0} = (int16_t)(int32_t){1}", resultName, siFrom.SymbolName) };
         }
     }
 

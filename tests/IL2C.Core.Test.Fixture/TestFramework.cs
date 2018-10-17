@@ -13,6 +13,7 @@ namespace IL2C
 {
     public static class TestFramework
     {
+        #region Test infrastructures
         private static readonly string il2cRuntimePath =
             Path.GetFullPath(
                 Path.Combine(
@@ -41,10 +42,17 @@ namespace IL2C
             return value.ToString();
         }
 
+        private static string GetCLanguageTypedLiteralExpression(object value, ITypeInformation type)
+        {
+            return ((value != null) && (value.GetType().FullName == type.FriendlyName)) ?
+                GetCLanguageLiteralExpression(value) :
+                string.Format("({0})({1})", type.CLanguageTypeName, GetCLanguageLiteralExpression(value));
+        }
+
         private static string GetCLanguageCompareExpression(ITypeInformation type)
         {
             return type.IsStringType ?
-                "wcscmp(expected->string_body__, actual->string_body__) == 0" :
+                "wcscmp(il2c_c_str(expected), il2c_c_str(actual)) == 0" :
                 "expected == actual";
         }
 
@@ -74,12 +82,13 @@ namespace IL2C
             return type.IsBooleanType ?
                 symbolName + " ? \"true\" : \"false\"" :
                 type.IsStringType ?
-                    symbolName + "->string_body__" :
+                    string.Format("il2c_c_str({0})", symbolName) :
                     symbolName;
         }
+        #endregion
 
         public static async Task ExecuteTestAsync(
-            MethodInfo method, MethodInfo[] additionalMethods, object expected, object[] args)
+            string testName, MethodInfo method, MethodInfo[] additionalMethods, object expected, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
             foreach (var m in additionalMethods)
@@ -90,14 +99,19 @@ namespace IL2C
             // Split current thread context.
             await Task.Yield();
 
+            ///////////////////////////////////////////////
+
+            // Step 1-1: Create translation context.
             var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
 
+            // Step 1-2: Prepare target methods.
             var prepared = AssemblyPreparer.Prepare(
                 translateContext,
                 m =>
                     (m.DeclaringType.FriendlyName == method.DeclaringType.FullName) &&
                     ((m.Name == method.Name) || (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null)));
 
+            // Step 1-3: Extract prepared target type/method informations.
             var targetType =
                 translateContext.Assembly.Modules
                 .First().Types
@@ -111,6 +125,7 @@ namespace IL2C
                 .Where(m => (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null))
                 .ToArray();
 
+            // Step 1-4: Translate method bodies.
             var body = new StringWriter();
             AssemblyWriter.WriteConstStrings(
                 body, translateContext);
@@ -122,12 +137,14 @@ namespace IL2C
             AssemblyWriter.InternalConvertFromMethod(
                 body, translateContext, prepared, targetMethod, "  ", DebugInformationOptions.Full);
 
+            // Step 1-5: Write Visual C++ project file from template.
+            //     Note: It's only debugging purpose. The test doesn't use.
             var translatedPath = Path.GetFullPath(
                 Path.Combine(
                     Path.GetDirectoryName(method.DeclaringType.Assembly.Location),
                     "translated",
                     targetMethod.DeclaringType.Name,
-                    targetMethod.Name));
+                    testName));
 
             while (!Directory.Exists(translatedPath))
             {
@@ -152,10 +169,12 @@ namespace IL2C
                 fs.Close();
             }
 
+            // Step 1-6: Write source code into a file from template.
             var expectedType = targetMethod.ReturnType;
 
             var sourceCode = new StringBuilder();
             using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
+                // If the target method result is void-type, we have to use void-type tolerant template.
                 expectedType.IsVoidType ? "IL2C.Templates.test_void.c" : "IL2C.Templates.test.c"))
             {
                 var tr = new StreamReader(ts);
@@ -167,9 +186,11 @@ namespace IL2C
             sourceCode.Replace("{isRefType}", (expectedType.IsByReference || expectedType.IsClass) ? "1" : "0");
 
             sourceCode.Replace("{type}", targetMethod.ReturnType.CLanguageTypeName);
-            sourceCode.Replace("{expected}", GetCLanguageLiteralExpression(expected));
+            sourceCode.Replace("{expected}", GetCLanguageTypedLiteralExpression(expected, targetMethod.ReturnType));
             sourceCode.Replace("{function}", targetMethod.CLanguageFunctionName);
-            sourceCode.Replace("{arguments}", string.Join(", ", args.Select(GetCLanguageLiteralExpression)));
+            sourceCode.Replace("{arguments}", string.Join(
+                ", ",
+                args.Zip(targetMethod.Parameters, (arg, p) => GetCLanguageTypedLiteralExpression(arg, p.TargetType))));
             sourceCode.Replace("{equality}", GetCLanguageCompareExpression(expectedType));
             sourceCode.Replace("{format}", GetCLanguagePrintFormatFromType(targetMethod.ReturnType));
             sourceCode.Replace("{expectedExpression}", GetCLanguagePrintArgumentExpression(expectedType, "expected"));
@@ -186,17 +207,25 @@ namespace IL2C
                 fs.Close();
             }
 
-            // Step1: Test real IL code at this runtime.
+            ///////////////////////////////////////////////
+
+            // Step 2: Test and verify result by real IL code at this runtime.
             var rawResult = method.Invoke(null, args);
             Assert.AreEqual(expected, rawResult);
 
-            // Step2: Test compiled C source code and execute.
+            ///////////////////////////////////////////////
+
+            // Step 3: Test compiled C source code and execute.
             var il2cRuntimeSourcePaths = new[] {
+                // Use combined runtime source. 5 times faster!
                 Path.Combine(il2cRuntimePath, "il2c_combined.c")
             };
             var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cRuntimeSourcePaths, il2cRuntimePath);
             var sanitized = executedResult.Trim(' ', '\r', '\n');
 
+            ///////////////////////////////////////////////
+
+            // Step 4: Verify result.
             Assert.AreEqual("Success", sanitized);
         }
     }

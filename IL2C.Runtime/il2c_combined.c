@@ -1,6 +1,7 @@
 // This is only using for unit tests because the combined runtime code compiles faster.
 
 #include "il2c.c"
+
 #include "System.Object.c"
 #include "System.ValueType.c"
 #include "System.Char.c"
@@ -18,3 +19,5 @@
 #include "System.UIntPtr.c"
 #include "System.Single.c"
 #include "System.Double.c"
+
+#include "System.Console.c"

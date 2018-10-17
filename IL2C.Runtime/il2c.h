@@ -13,8 +13,6 @@ extern "C" {
 #include <x86intrin.h>
 #endif
 
-typedef long interlock_t;
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <wchar.h>
@@ -28,6 +26,8 @@ extern void il2c_shutdown();
 
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
+
+typedef long interlock_t;
 
 typedef struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
 typedef struct IL2C_REF_HEADER IL2C_REF_HEADER;
@@ -70,9 +70,6 @@ struct IL2C_REF_HEADER
 
 ///////////////////////////////////////////////////////
 // Garbage collector related declarations
-
-extern void il2c_initialize();
-extern void il2c_shutdown();
 
 extern void il2c_collect();
 

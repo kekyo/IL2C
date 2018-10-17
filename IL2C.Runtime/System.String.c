@@ -67,6 +67,19 @@ System_String* il2c_new_string(const wchar_t* string_body__)
     return pString;
 }
 
+const wchar_t* il2c_c_str(System_String* str)
+{
+    if (str != NULL)
+    {
+        il2c_assert(str->string_body__ != NULL);
+        return str->string_body__;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
 /////////////////////////////////////////////////
 // System.String members
 

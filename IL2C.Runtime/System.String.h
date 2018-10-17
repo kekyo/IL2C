@@ -69,8 +69,6 @@ typedef struct
         NULL, &__System_String_RUNTIME_TYPE__, /* GCMARK_LIVE */ 0, &__System_String_VTABLE__, string_body }; \
     static System_String* const name = ((System_String*)&(__##name##_CONST_STRING__.vptr0__))
 
-extern System_String* il2c_new_string(const wchar_t* pString);
-
 extern /* internalcall */ void __System_String_IL2C_MarkHandler__(System_String* this__);
 extern /* internalcall */ void* __System_String_IL2C_RuntimeCast__(System_String* this__, IL2C_RUNTIME_TYPE_DECL* type);
 extern /* virtual */ System_String* __System_String_ToString__(System_String* this__);
@@ -92,6 +90,12 @@ extern wchar_t System_String_get_Chars(System_String* this__, int32_t index);
 extern int32_t System_String_get_Length(System_String* this__);
 extern bool System_String_IsNullOrWhiteSpace(System_String* value);
 extern bool System_String_op_Equality(System_String* lhs, System_String* rhs);
+
+/////////////////////////////////////////////////
+// String special functions
+
+extern System_String* il2c_new_string(const wchar_t* pString);
+extern const wchar_t* il2c_c_str(System_String* str);
 
 #ifdef __cplusplus
 }

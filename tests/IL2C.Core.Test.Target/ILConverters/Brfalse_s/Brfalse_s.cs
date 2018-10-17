@@ -8,6 +8,11 @@ namespace IL2C.ILConverters
     [Case("ABC", "Int32Value", 100)]
     [Case("DEF", "Int32Value", 0)]
     [Case("ABC", "Int32Value", -100)]
+    [Case("ABC", "IntPtrValue", 100)]
+    [Case("DEF", "IntPtrValue", 0)]
+    [Case("ABC", "IntPtrValue", -100)]
+    [Case("ABC", "ObjectValue", "")]
+    [Case("DEF", "ObjectValue", new object[] { null })]
     public sealed class Brfalse_s
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -15,5 +20,8 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Int32Value(int v);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string IntPtrValue(IntPtr v);
     }
 }

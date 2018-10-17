@@ -72,7 +72,6 @@ typedef long interlock_t;
 
 extern void* il2c_memcpy(void* to, const void* from, size_t n);
 extern void* il2c_memset(void* target, int ch, size_t n);
-
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 

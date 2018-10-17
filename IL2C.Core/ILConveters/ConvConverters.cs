@@ -48,7 +48,7 @@ namespace IL2C.ILConverters
             var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int16Type);
 
             // HACK: On gcc 4, if only uses int16_t cast expression, result may causes INT16_MIN value.
-            //   On Visual C++ is not (good result.)
+            //   On Visual C++ is good result.
             //   This workaround makes good result, we have to use downgrade cast step by step "F --> int32 --> int16"
             return _ => new[] { string.Format("{0} = (int16_t)(int32_t){1}", resultName, siFrom.SymbolName) };
         }

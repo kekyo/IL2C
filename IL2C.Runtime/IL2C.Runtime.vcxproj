@@ -19,8 +19,45 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="*.c" />
-    <ClInclude Include="*.h" />
+    <ClCompile Include="il2c.c" />
+    <ClCompile Include="System.Boolean.c" />
+    <ClCompile Include="System.Byte.c" />
+    <ClCompile Include="System.Char.c" />
+    <ClCompile Include="System.Console.c" />
+    <ClCompile Include="System.Double.c" />
+    <ClCompile Include="System.Int16.c" />
+    <ClCompile Include="System.Int32.c" />
+    <ClCompile Include="System.Int64.c" />
+    <ClCompile Include="System.IntPtr.c" />
+    <ClCompile Include="System.Object.c" />
+    <ClCompile Include="System.SByte.c" />
+    <ClCompile Include="System.Single.c" />
+    <ClCompile Include="System.String.c" />
+    <ClCompile Include="System.UInt16.c" />
+    <ClCompile Include="System.UInt32.c" />
+    <ClCompile Include="System.UInt64.c" />
+    <ClCompile Include="System.UIntPtr.c" />
+    <ClCompile Include="System.ValueType.c" />
+    <ClInclude Include="il2c.h" />
+    <ClInclude Include="il2c_private.h" />
+    <ClInclude Include="System.Boolean.h" />
+    <ClInclude Include="System.Byte.h" />
+    <ClInclude Include="System.Char.h" />
+    <ClInclude Include="System.Console.h" />
+    <ClInclude Include="System.Double.h" />
+    <ClInclude Include="System.Int16.h" />
+    <ClInclude Include="System.Int32.h" />
+    <ClInclude Include="System.Int64.h" />
+    <ClInclude Include="System.IntPtr.h" />
+    <ClInclude Include="System.Object.h" />
+    <ClInclude Include="System.SByte.h" />
+    <ClInclude Include="System.Single.h" />
+    <ClInclude Include="System.String.h" />
+    <ClInclude Include="System.UInt16.h" />
+    <ClInclude Include="System.UInt32.h" />
+    <ClInclude Include="System.UInt64.h" />
+    <ClInclude Include="System.UIntPtr.h" />
+    <ClInclude Include="System.ValueType.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

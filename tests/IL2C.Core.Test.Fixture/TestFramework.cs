@@ -199,9 +199,9 @@ namespace IL2C
             Assert.AreEqual(expected, rawResult);
 
             // Step2: Test compiled C source code and execute.
-            var il2cRuntimeSourcePaths =
-                Directory.EnumerateFiles(il2cRuntimePath, "*.c")
-                .ToArray();
+            var il2cRuntimeSourcePaths = new[] {
+                Path.Combine(il2cRuntimePath, "il2c_combined.c")
+            };
             var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cRuntimeSourcePaths, il2cRuntimePath);
             var sanitized = executedResult.Trim(' ', '\r', '\n');
 

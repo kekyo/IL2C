@@ -11,6 +11,8 @@ namespace IL2C.ILConverters
     [Case(36, typeof(IntPtr), "IntPtr_IntPtr", typeof(IntPtr), 12, typeof(IntPtr), 24)]
     [Case(123, new[] { "IntPtr_IntRef", "Add_IntPtr_IntRef" }, 123)]
     [Case(0.45f + 123.0f, "Single_Single", 0.45f, 123.0f)]
+    [Case(0.45f + 123.0, "Single_Double", 0.45f, 123.0)]
+    [Case(0.45 + 123.0f, "Double_Single", 0.45, 123.0f)]
     [Case(0.45 + 123.0, "Double_Double", 0.45, 123.0)]
     [Case(123, new[] { "IntRef_Int32", "Add_IntRef_Int32" }, 123)]
     [Case(123, new[] { "IntRef_IntPtr", "Add_IntRef_IntPtr" }, 123)]
@@ -45,6 +47,12 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single_Single(float lhs, float rhs);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern double Single_Double(float lhs, double rhs);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern double Double_Single(double lhs, float rhs);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern double Double_Double(double lhs, double rhs);

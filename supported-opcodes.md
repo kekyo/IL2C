@@ -89,10 +89,10 @@ OpCode | Binary | Implement | Test | ILConverter
 | [stind.i8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i8) | 0x55 |  |  |  |
 | [stind.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_r4) | 0x56 |  |  |  |
 | [stind.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_r8) | 0x57 |  |  |  |
-| [add](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.add) | 0x58 | Implemented | [Test [11]](tests/IL2C.Core.Test.Target/ILConverters/Add) | IL2C.ILConverters.AddConverter |
-| [sub](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub) | 0x59 | Implemented | [Test [8]](tests/IL2C.Core.Test.Target/ILConverters/Sub) | IL2C.ILConverters.SubConverter |
-| [mul](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul) | 0x5a | Implemented | [Test [6]](tests/IL2C.Core.Test.Target/ILConverters/Mul) | IL2C.ILConverters.MulConverter |
-| [div](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div) | 0x5b | Implemented | [Test [6]](tests/IL2C.Core.Test.Target/ILConverters/Div) | IL2C.ILConverters.DivConverter |
+| [add](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.add) | 0x58 | Implemented | [Test [13]](tests/IL2C.Core.Test.Target/ILConverters/Add) | IL2C.ILConverters.AddConverter |
+| [sub](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub) | 0x59 | Implemented | [Test [11]](tests/IL2C.Core.Test.Target/ILConverters/Sub) | IL2C.ILConverters.SubConverter |
+| [mul](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul) | 0x5a | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Mul) | IL2C.ILConverters.MulConverter |
+| [div](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div) | 0x5b | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Div) | IL2C.ILConverters.DivConverter |
 | [div.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div_un) | 0x5c |  |  |  |
 | [rem](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem) | 0x5d |  |  |  |
 | [rem.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem_un) | 0x5e |  |  |  |

@@ -14,7 +14,9 @@ namespace IL2C.ILConverters
         #region Test infrastructure
         private static CaseInfo CreateCaseInfo(string name, MethodInfo method, MethodInfo[] additionalMethods, CaseAttribute testCase) =>
             new CaseInfo(name, method, additionalMethods,
-                TestUtilities.ConvertTo(testCase.Expected, method.ReturnType),
+                Case.TrapBreak.Equals(testCase.Expected) ?
+                    TestFramework.Expected_TrapBreak :
+                    TestUtilities.ConvertTo(testCase.Expected, method.ReturnType),
                 testCase.Arguments.
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => TestUtilities.ConvertTo(arg, type)).
                     ToArray());
@@ -52,6 +54,13 @@ namespace IL2C.ILConverters
         public static readonly CaseInfo[] _Nop = GetTargetCases<IL2C.ILConverters.Nop>();
         [Test]
         public static Task Nop([ValueSource("_Nop")] CaseInfo caseInfo) =>
+            ExecuteTestAsync(caseInfo);
+        #endregion
+
+        #region Break
+        public static readonly CaseInfo[] _Break = GetTargetCases<IL2C.ILConverters.Break>();
+        [Test]
+        public static Task Break([ValueSource("_Break")] CaseInfo caseInfo) =>
             ExecuteTestAsync(caseInfo);
         #endregion
 

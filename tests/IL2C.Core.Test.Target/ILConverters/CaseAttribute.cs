@@ -3,6 +3,11 @@ using System.Linq;
 
 namespace IL2C.ILConverters
 {
+    public static class Case
+    {
+        public const string TrapBreak = "31D1EAB1-2830-458D-9572-4363CDD8DA73";
+    }
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class CaseAttribute : Attribute
     {

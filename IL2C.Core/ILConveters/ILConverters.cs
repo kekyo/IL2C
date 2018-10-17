@@ -20,6 +20,16 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class BreakConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Break;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return _ => new[] { "il2c_break()" };
+        }
+    }
+
     internal sealed class RetConverter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ret;

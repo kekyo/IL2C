@@ -87,6 +87,8 @@ namespace IL2C
         }
         #endregion
 
+        public static readonly object Expected_TrapBreak = new object();
+
         public static async Task ExecuteTestAsync(
             string testName, MethodInfo method, MethodInfo[] additionalMethods, object expected, object[] args)
         {
@@ -98,6 +100,8 @@ namespace IL2C
 
             // Split current thread context.
             await Task.Yield();
+
+            var isTrapBreak = object.ReferenceEquals(expected, Expected_TrapBreak);
 
             ///////////////////////////////////////////////
 
@@ -175,7 +179,7 @@ namespace IL2C
             var sourceCode = new StringBuilder();
             using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
                 // If the target method result is void-type, we have to use void-type tolerant template.
-                expectedType.IsVoidType ? "IL2C.Templates.test_void.c" : "IL2C.Templates.test.c"))
+                (expectedType.IsVoidType || isTrapBreak) ? "IL2C.Templates.test_void.c" : "IL2C.Templates.test.c"))
             {
                 var tr = new StreamReader(ts);
                 sourceCode.Append(await tr.ReadToEndAsync());
@@ -210,18 +214,35 @@ namespace IL2C
             ///////////////////////////////////////////////
 
             // Step 2: Test and verify result by real IL code at this runtime.
-            var rawResult = method.Invoke(null, args);
-            Assert.AreEqual(expected, rawResult);
+            if (!isTrapBreak)
+            {
+                var rawResult = method.Invoke(null, args);
+                Assert.AreEqual(expected, rawResult);
+            }
 
             ///////////////////////////////////////////////
 
-            // Step 3: Test compiled C source code and execute.
-            var il2cRuntimeSourcePaths = new[] {
-                // Use combined runtime source. 5 times faster!
-                Path.Combine(il2cRuntimePath, "il2c_combined.c")
-            };
-            var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cRuntimeSourcePaths, il2cRuntimePath);
-            var sanitized = executedResult.Trim(' ', '\r', '\n');
+            string sanitized = null;
+            try
+            {
+                // Step 3: Test compiled C source code and execute.
+                var il2cRuntimeSourcePaths = new[] {
+                    // Use combined runtime source. 5 times faster!
+                    Path.Combine(il2cRuntimePath, "il2c_combined.c")
+                };
+                var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cRuntimeSourcePaths, il2cRuntimePath);
+                sanitized = executedResult.Trim(' ', '\r', '\n');
+            }
+            catch (Exception ex)
+            {
+                if (isTrapBreak && ex.Message.Contains("ExitCode=-1073741795"))
+                {
+                    return;
+                }
+                throw;
+            }
+
+            Assert.IsFalse(isTrapBreak, "Code didn't break.");
 
             ///////////////////////////////////////////////
 

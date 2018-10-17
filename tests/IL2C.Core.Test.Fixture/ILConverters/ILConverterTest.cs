@@ -47,6 +47,14 @@ namespace IL2C.ILConverters
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
+        #region Ret
+        public static readonly CaseInfo[] _Ret = GetTargetCases<IL2C.ILConverters.Ret>();
+        [Test]
+        public static Task Ret(
+            [ValueSource("_Ret")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
+
         #region Ldarg
         public static readonly CaseInfo[] _Ldarg_0 = GetTargetCases<IL2C.ILConverters.Ldarg_0>();
         [Test]

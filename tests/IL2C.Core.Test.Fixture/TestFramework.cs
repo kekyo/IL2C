@@ -152,8 +152,11 @@ namespace IL2C
                 fs.Close();
             }
 
+            var expectedType = targetMethod.ReturnType;
+
             var sourceCode = new StringBuilder();
-            using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream("IL2C.Templates.test.c"))
+            using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
+                expectedType.IsVoidType ? "IL2C.Templates.test_void.c" : "IL2C.Templates.test.c"))
             {
                 var tr = new StreamReader(ts);
                 sourceCode.Append(await tr.ReadToEndAsync());
@@ -161,7 +164,6 @@ namespace IL2C
 
             sourceCode.Replace("{body}", body.ToString());
 
-            var expectedType = targetMethod.ReturnType;
             sourceCode.Replace("{isRefType}", (expectedType.IsByReference || expectedType.IsClass) ? "1" : "0");
 
             sourceCode.Replace("{type}", targetMethod.ReturnType.CLanguageTypeName);

@@ -285,6 +285,14 @@ namespace IL2C.ILConverters
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
 
+        #region Dup
+        public static readonly CaseInfo[] _Dup = GetTargetCases<IL2C.ILConverters.Dup>();
+        [Test]
+        public static Task Dup(
+            [ValueSource("_Dup")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
+
         #region Arithmetical
         public static readonly CaseInfo[] _Add = GetTargetCases<IL2C.ILConverters.Add>();
         [Test]

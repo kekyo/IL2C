@@ -21,6 +21,7 @@ namespace IL2C.ILConverters
                     siFrom.TargetType.FriendlyName);
             }
 
+            // See also: ECMA-335: III.1.5 Operand type table - Conversion Operations
             var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SByteType);
             return _ => new[] { string.Format("{0} = (int8_t){1}", resultName, siFrom.SymbolName) };
         }

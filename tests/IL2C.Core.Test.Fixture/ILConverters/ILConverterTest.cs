@@ -306,6 +306,12 @@ namespace IL2C.ILConverters
             [ValueSource("_Conv_i1")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
 
+        public static readonly CaseInfo[] _Conv_u1 = GetTargetCases<IL2C.ILConverters.Conv_u1>();
+        [Test]
+        public static Task Conv_u1(
+            [ValueSource("_Conv_u1")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+
         #endregion
     }
 }

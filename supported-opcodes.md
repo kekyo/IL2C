@@ -178,7 +178,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [mkrefany](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mkrefany) | 0xc6 |  |  |  |
 | [ldtoken](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldtoken) | 0xd0 |  |  |  |
 | [conv.u2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u2) | 0xd1 | Implemented |  | IL2C.ILConverters.Conv_u2Converter |
-| [conv.u1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u1) | 0xd2 | Implemented |  | IL2C.ILConverters.Conv_u1Converter |
+| [conv.u1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u1) | 0xd2 | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Conv_U1) | IL2C.ILConverters.Conv_u1Converter |
 | [conv.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i) | 0xd3 | Implemented |  | IL2C.ILConverters.Conv_iConverter |
 | [conv.ovf.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_ovf_i) | 0xd4 |  |  |  |
 | [conv.ovf.u](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_ovf_u) | 0xd5 |  |  |  |

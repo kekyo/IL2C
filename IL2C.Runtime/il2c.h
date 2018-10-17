@@ -123,6 +123,7 @@ extern void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type);
 // Another special runtime helper functions
 
 extern double il2c_fmod(double lhs, double rhs);
+extern void il2c_break();
 
 #ifdef __cplusplus
 }

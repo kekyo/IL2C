@@ -68,7 +68,7 @@ void* il2c_get_uninitialized_object_internal__(
         // (2)
         pHeader->pNext = pNext;
         // (3)
-        if ((IL2C_REF_HEADER*)INTERLOCKED_COMPARE_EXCHANGE_POINTER(
+        if ((IL2C_REF_HEADER*)il2c_icmpxchgptr(
             &g_pBeginHeader__,
             pHeader,
             pNext) == pNext)
@@ -97,7 +97,7 @@ void il2c_mark_from_handler(void* pReference)
 
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
-    interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
+    interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
         il2c_assert(pHeader->type != NULL);
@@ -171,7 +171,7 @@ void il2c_step2_mark_gcmark__()
             // Marking process.
             IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
                 (((uint8_t*)*ppReference) - sizeof(IL2C_REF_HEADER));
-            interlock_t currentMark = INTERLOCKED_COMPARE_EXCHANGE(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
+            interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {
                 il2c_assert(pHeader->type != NULL);
@@ -286,4 +286,9 @@ void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
 double il2c_fmod(double lhs, double rhs)
 {
     return fmod(lhs, rhs);
+}
+
+void il2c_break()
+{
+    il2c_debugbreak();
 }

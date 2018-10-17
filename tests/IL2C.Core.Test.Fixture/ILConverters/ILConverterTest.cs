@@ -23,7 +23,7 @@ namespace IL2C.ILConverters
                  let additionalMethods =
                     testCase.AdditionalMethodNames
                     .Select(amn => typeof(T).GetMethod(
-                        amn, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))   // Both instance or static method
+                        amn, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly))   // Both instance or static method
                     .ToArray()
                  group new { testCase, method, additionalMethods } by method.Name)
                  .SelectMany(g =>

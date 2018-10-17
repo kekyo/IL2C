@@ -27,6 +27,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core.Test.Target", "tests\IL2C.Core.Test.Target\IL2C.Core.Test.Target.csproj", "{ACE3F9B1-0A92-4F1F-B817-7A74114030E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core.Test.Fixture", "tests\IL2C.Core.Test.Fixture\IL2C.Core.Test.Fixture.csproj", "{B0F1010D-8B73-46F7-AF8E-E3C58F68525F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{182A62A4-47AC-4290-8EA5-250AE8131613} = {182A62A4-47AC-4290-8EA5-250AE8131613}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

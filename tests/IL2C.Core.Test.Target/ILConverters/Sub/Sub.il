@@ -9,7 +9,16 @@
 		ret
 	}
 
-	.method public static native int IntPtr_IntPtr(native int lhs, native int rhs) cil managed
+	.method public static native int Int32_IntPtr(int32 lhs, native int rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		sub
+		ret
+	}
+
+    .method public static int64 Int64_Int64(int64 lhs, int64 rhs) cil managed
 	{
 		.maxstack 2
 		ldarg.0
@@ -27,7 +36,16 @@
 		ret
 	}
 
-	.method public static int64 Int64_Int64(int64 lhs, int64 rhs) cil managed
+	.method public static native int IntPtr_IntPtr(native int lhs, native int rhs) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		sub
+		ret
+	}
+    
+	.method public static float64 Double_Double(float64 lhs, float64 rhs) cil managed
 	{
 		.maxstack 2
 		ldarg.0
@@ -36,53 +54,7 @@
 		ret
 	}
 
-	.method public static int64 Int64_IntPtr(int64 lhs, native int rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		sub
-		ret
-	}
-
-	.method public static int64 Int64_Int32(int64 lhs, int32 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		sub
-		ret
-	}
-
-    .method public static int32& Sub_IntRef_IntPtr(int32& r, native int subv) cil managed
-	{
-		.maxstack 2
-        ldarg.0
-	    ldarg.1
-		sub
-		ret
-	}
-
-    .method public static int32 IntRef_IntPtr(int32 v) cil managed
-	{
-		.maxstack 2
-        .locals init (
-            [0] int32
-        )
-        ldarg.0
-        stloc.0
-        ldloca.s 0
-        ldc.i4.1
-        conv.i
-        call int32& IL2C.ILConverters.Sub::Sub_IntRef_IntPtr(int32&, native int)
-        ldc.i4.m1
-        conv.i
-        call int32& IL2C.ILConverters.Sub::Sub_IntRef_IntPtr(int32&, native int)
-        ldind.i4
-		ret
-	}
-
-    .method public static int32& Sub_IntRef_Int32(int32& r, int32 subv) cil managed
+    .method private static int32& Sub_IntRef_Int32(int32& lhs, int32 rhs) cil managed
 	{
 		.maxstack 2
         ldarg.0
@@ -93,7 +65,7 @@
 
     .method public static int32 IntRef_Int32(int32 v) cil managed
 	{
-		.maxstack 2
+		.maxstack 3
         .locals init (
             [0] int32
         )
@@ -108,7 +80,7 @@
 		ret
 	}
 
-    .method public static native int Sub_IntRef_IntRef(int32& lhs, int32& rhs) cil managed
+    .method private static int32& Sub_IntRef_IntPtr(int32& lhs, native int rhs) cil managed
 	{
 		.maxstack 2
         ldarg.0
@@ -117,56 +89,22 @@
 		ret
 	}
 
-    .method public static native int IntRef_IntRef() cil managed
+    .method public static int32 IntRef_IntPtr(int32 v) cil managed
 	{
-		.maxstack 2
-        // TODO: The local variable layout can't know at the CLR.
-        //   So, this method is invalid.
+		.maxstack 3
         .locals init (
-            [0] int32,
-			[1] int32,
-			[2] int32,
-			[3] int32
+            [0] int32
         )
-        ldloca.s 3
+        ldarg.0
+        stloc.0
         ldloca.s 0
-        call native int IL2C.ILConverters.Sub::Sub_IntRef_IntRef(int32&, int32&)
-		ret
-	}
-
-	.method public static float64 Double_Double(float64 lhs, float64 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		sub
-		ret
-	}
-
-	.method public static float64 Double_Int32(float64 lhs, int32 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		sub
-		ret
-	}
-
-	.method public static float64 Double_IntPtr(float64 lhs, native int rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		sub
-		ret
-	}
-
-	.method public static float64 Double_Int64(float64 lhs, int64 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		sub
+        ldc.i4.1
+        conv.i
+        call int32& IL2C.ILConverters.Sub::Sub_IntRef_IntPtr(int32&, native int)
+        ldc.i4.m1
+        conv.i
+        call int32& IL2C.ILConverters.Sub::Sub_IntRef_IntPtr(int32&, native int)
+        ldind.i4
 		ret
 	}
 }

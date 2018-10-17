@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace IL2C.ILConverters
 {
     [Case(36, "Int32_Int32", 12, 24)]
-    [Case(36, typeof(IntPtr), "IntPtr_Int32", typeof(IntPtr), 12, typeof(int), 24)]
+    [Case(36, typeof(IntPtr), "Int32_IntPtr", typeof(int), 12, typeof(IntPtr), 24)]
     [Case(123, new[] { "Int32_IntRef", "Add_Int32_IntRef" }, 123)]
     [Case(36L, "Int64_Int64", 12L, 24L)]
     [Case(36, typeof(IntPtr), "IntPtr_Int32", typeof(IntPtr), 12, typeof(int), 24)]

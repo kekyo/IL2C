@@ -115,7 +115,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [callvirt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.callvirt) | 0x6f | Implemented |  | IL2C.ILConverters.CallvirtConverter |
 | [cpobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.cpobj) | 0x70 |  |  |  |
 | [ldobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldobj) | 0x71 |  |  |  |
-| [ldstr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldstr) | 0x72 | Implemented |  | IL2C.ILConverters.LdstrConverter |
+| [ldstr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldstr) | 0x72 | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Ldstr) | IL2C.ILConverters.LdstrConverter |
 | [newobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.newobj) | 0x73 | Implemented |  | IL2C.ILConverters.NewobjConverter |
 | [castclass](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.castclass) | 0x74 | Implemented |  | IL2C.ILConverters.CastclassConverter |
 | [isinst](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.isinst) | 0x75 |  |  |  |

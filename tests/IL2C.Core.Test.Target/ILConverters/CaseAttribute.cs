@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace IL2C.ILConverters
@@ -23,49 +22,17 @@ namespace IL2C.ILConverters
             this.Arguments = args;
         }
 
-        public CaseAttribute(object expected, Type targetType, string methodName, params object[] args)
-        {
-            this.MethodName = methodName;
-            this.AdditionalMethodNames = new string[0];
-            this.Expected = ConvertTo(expected, targetType);
-            this.Arguments = Pair<object, Type, object>(args)
-                .Select(entry => ConvertTo(entry.Item2, entry.Item1))
-                .ToArray();
-        }
-
-        public CaseAttribute(object expected, Type targetType, string[] methodNames, params object[] args)
-        {
-            this.MethodName = methodNames[0];
-            this.AdditionalMethodNames = methodNames.Skip(1).ToArray();
-            this.Expected = ConvertTo(expected, targetType);
-            this.Arguments = Pair<object, Type, object>(args)
-                .Select(entry => ConvertTo(entry.Item2, entry.Item1))
-                .ToArray();
-        }
-
-        private static IEnumerable<(U1, U2)> Pair<T, U1, U2>(IEnumerable<T> enumerable)
-        {
-            using (var e = enumerable.GetEnumerator())
-            {
-                while (e.MoveNext())
-                {
-                    var v1 = (U1)(object)e.Current;
-                    if (e.MoveNext())
-                    {
-                        var v2 = (U2)(object)e.Current;
-                        yield return (v1, v2);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
         private static object ConvertTo(object value, Type targetType)
         {
-            if (targetType == typeof(IntPtr))
+            if (value == null)
+            {
+                return null;
+            }
+            else if (value.GetType() == targetType)
+            {
+                return value;
+            }
+            else if (targetType == typeof(IntPtr))
             {
                 if (value is int)
                 {

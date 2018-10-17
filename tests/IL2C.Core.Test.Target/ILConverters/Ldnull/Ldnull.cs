@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(0, typeof(IntPtr), "IntPtrZero")]
-    [Case((uint)0, typeof(UIntPtr), "UIntPtrZero")]
+    [Case(0, "IntPtrZero")]
+    [Case((uint)0, "UIntPtrZero")]
     [Case(null, "NullReference")]
     public sealed class Ldnull
     {

@@ -4,10 +4,10 @@ using System.Runtime.CompilerServices;
 namespace IL2C.ILConverters
 {
     [Case(0x12345678 & 0x55555555, "Int32_Int32", 0x12345678, 0x55555555)]
-    [Case(0x12345678 & 0x55555555, typeof(IntPtr), "Int32_IntPtr", typeof(int), 0x12345678, typeof(IntPtr), 0x55555555)]
+    [Case(0x12345678 & 0x55555555, "Int32_IntPtr", 0x12345678, 0x55555555)]
     [Case(0x123456789abcdef & 0x55555555aaaaaaaa, "Int64_Int64", 0x123456789abcdef, 0x55555555aaaaaaaa)]
-    [Case(0x12345678 & 0x55555555, typeof(IntPtr), "IntPtr_Int32", typeof(IntPtr), 0x12345678, typeof(int), 0x55555555)]
-    [Case(0x12345678 & 0x55555555, typeof(IntPtr), "IntPtr_IntPtr", typeof(IntPtr), 0x12345678, typeof(IntPtr), 0x55555555)]
+    [Case(0x12345678 & 0x55555555, "IntPtr_Int32", 0x12345678, 0x55555555)]
+    [Case(0x12345678 & 0x55555555, "IntPtr_IntPtr", 0x12345678, 0x55555555)]
     public sealed class And
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -21,14 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ConverterTest.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="ConverterTest.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <IL Include="ILConverters/*/*.il" />
   </ItemGroup>
 

@@ -38,6 +38,7 @@
     <ClCompile Include="System.UInt64.c" />
     <ClCompile Include="System.UIntPtr.c" />
     <ClCompile Include="System.ValueType.c" />
+    <ClInclude Include="debugbreak.h" />
     <ClInclude Include="il2c.h" />
     <ClInclude Include="il2c_private.h" />
     <ClInclude Include="System.Boolean.h" />

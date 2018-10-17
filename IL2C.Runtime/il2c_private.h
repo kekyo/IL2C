@@ -36,7 +36,6 @@ typedef long interlock_t;
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_assert assert
-#define il2c_debugbreak() __debugbreak()
 #define il2c_icmpxchg(p, v, c) _InterlockedCompareExchange((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
 #define il2c_icmpxchgptr(pp, pv, pc) _InterlockedCompareExchangePointer((void**)(pp), (void*)(pc), (void*)(pv))
 
@@ -78,7 +77,6 @@ extern void* il2c_memset(void* target, int ch, size_t n);
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 
-#define il2c_debugbreak() __debugbreak()
 #define il2c_icmpxchg(p, v, c) _InterlockedCompareExchange((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
 #define il2c_icmpxchgptr(pp, pv, pc) _InterlockedCompareExchangePointer((void**)(pp), (void*)(pc), (void*)(pv))
 
@@ -118,7 +116,6 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_memset memset
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
-#define il2c_debugbreak() __debugbreak()
 #define il2c_icmpxchg(p, v, c) _InterlockedCompareExchange((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
 #define il2c_icmpxchgptr(pp, pv, pc) _InterlockedCompareExchangePointer((void**)(pp), (void*)(pc), (void*)(pv))
 
@@ -164,7 +161,6 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_assert assert
-#define il2c_debugbreak() __builtin_trap()
 #define il2c_icmpxchg(p, v, c) __sync_val_compare_and_swap((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
 #define il2c_icmpxchgptr(pp, pv, pc) __sync_val_compare_and_swap((void**)(pp), (void*)(pc), (void*)(pv))
 

@@ -1,5 +1,7 @@
 #include "il2c_private.h"
 
+#include "debugbreak.h"
+
 /////////////////////////////////////////////////////////////
 
 // TODO: Support finalizer
@@ -290,5 +292,5 @@ double il2c_fmod(double lhs, double rhs)
 
 void il2c_break()
 {
-    il2c_debugbreak();
+    debug_break();
 }

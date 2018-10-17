@@ -235,7 +235,7 @@ namespace IL2C
             }
             catch (Exception ex)
             {
-                if (isTrapBreak && ex.Message.Contains("ExitCode=-1073741795"))
+                if (isTrapBreak && ex.Message.Contains("ExitCode=-2147483645"))
                 {
                     return;
                 }

@@ -39,6 +39,14 @@ namespace IL2C.ILConverters
                  .ToArray();
         }
 
+        #region Nop
+        public static readonly CaseInfo[] _Nop = GetTargetCases<IL2C.ILConverters.Nop>();
+        [Test]
+        public static Task Nop(
+            [ValueSource("_Nop")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
+
         #region Ldnull
         public static readonly CaseInfo[] _Ldnull = GetTargetCases<IL2C.ILConverters.Ldnull>();
         [Test]

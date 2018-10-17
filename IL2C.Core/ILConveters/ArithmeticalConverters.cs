@@ -117,7 +117,7 @@ namespace IL2C.ILConverters
             }
 
             throw new InvalidProgramSequenceException(
-                "Unknown arithmetic operation: Location={0}, Op={1}, Type0={2}, Type1={3}",
+                "Unknown arithmetical operation: Location={0}, Op={1}, Type0={2}, Type1={3}",
                 decodeContext.CurrentCode.RawLocation,
                 binaryOperator,
                 si0.TargetType.FriendlyName,

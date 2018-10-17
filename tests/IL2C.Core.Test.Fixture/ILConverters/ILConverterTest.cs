@@ -278,5 +278,13 @@ namespace IL2C.ILConverters
             [ValueSource("_Rem")] CaseInfo caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
         #endregion
+
+        #region Logical
+        public static readonly CaseInfo[] _And = GetTargetCases<IL2C.ILConverters.And>();
+        [Test]
+        public static Task And(
+            [ValueSource("_And")] CaseInfo caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo.Method, caseInfo.AdditionalMethods, caseInfo.Expected, caseInfo.Arguments);
+        #endregion
     }
 }

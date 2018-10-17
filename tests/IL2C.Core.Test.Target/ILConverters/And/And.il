@@ -23,7 +23,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		mul
+		and
 		ret
 	}
 
@@ -32,7 +32,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		mul
+		and
 		ret
 	}
 
@@ -41,43 +41,7 @@
 		.maxstack 2
 		ldarg.0
 		ldarg.1
-		mul
-		ret
-	}
-    
-	.method public static float32 Single_Single(float32 lhs, float32 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		mul
-		ret
-	}
-      
-	.method public static float64 Single_Double(float32 lhs, float64 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		mul
-		ret
-	}
-      
-	.method public static float64 Double_Single(float64 lhs, float32 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		mul
-		ret
-	}
-
-	.method public static float64 Double_Double(float64 lhs, float64 rhs) cil managed
-	{
-		.maxstack 2
-		ldarg.0
-		ldarg.1
-		mul
+		and
 		ret
 	}
 }

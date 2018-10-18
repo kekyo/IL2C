@@ -153,7 +153,7 @@ namespace IL2C
         }
 
         public static async Task<string> CompileAndRunAsync(
-            string sourcePath, string[] sourcePaths, params string[] includePaths)
+            string sourcePath, params string[] includePaths)
         {
             // Download requirements for gcc (single)
             if (!Directory.Exists(gccBasePath))
@@ -168,7 +168,13 @@ namespace IL2C
             }
 
             var basePath = Path.GetDirectoryName(sourcePath);
-            var executablePath = Path.Combine(basePath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+            var objPath = Path.Combine(basePath, "obj");
+            var executablePath = Path.Combine(objPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+
+            if (!Directory.Exists(objPath))
+            {
+                Directory.CreateDirectory(objPath);
+            }
 
             // Step1: Compile by gcc
             var gccBinPath = Path.Combine(gccBasePath, "bin");
@@ -176,9 +182,18 @@ namespace IL2C
 
             var gccArguments = includePaths
                 .SelectMany(p => new[] { "-I", p })
-                .Concat(new[] { "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-o", executablePath, sourcePath })
-                .Concat(sourcePaths)
+                .Concat(new[] { "-save-temps=obj", "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-o", executablePath, sourcePath })
                 .ToArray();
+
+            // TODO: turn to cmake based.
+            var scriptPath = Path.Combine(basePath, "make.bat");
+            await TestUtilities.WriteTextFileAsync(
+                scriptPath,
+                string.Format(
+                    "@echo off\r\nsetlocal\r\nset PATH={0};%PATH%\r\nrmdir /s /q obj\r\nmkdir obj\r\n{1} {2}\r\n",
+                    gccBinPath,
+                    gccPath,
+                    string.Join(" ", gccArguments)));
 
             var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {

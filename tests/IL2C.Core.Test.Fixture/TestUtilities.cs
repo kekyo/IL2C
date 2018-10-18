@@ -116,5 +116,18 @@ namespace IL2C
             return RetryIfStrangeProblemAsync(() =>
                 (Stream)new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true));
         }
+
+        public static async Task WriteTextFileAsync(string path, string text)
+        {
+            using (var fs = await CreateStreamAsync(path))
+            {
+                var tw = new StreamWriter(fs);
+
+                await tw.WriteAsync(text);
+                await tw.FlushAsync();
+
+                fs.Close();
+            }
+        }
     }
 }

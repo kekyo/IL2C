@@ -1,4 +1,5 @@
-﻿#include "test.h"
+﻿#include <il2c_combined.c>
+#include "test.h"
 
 {body}
 

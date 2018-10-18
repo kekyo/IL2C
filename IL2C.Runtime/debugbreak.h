@@ -24,6 +24,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #ifndef DEBUG_BREAK_H
+#define DEBUG_BREAK_H
+
+#pragma once
 
 #ifdef _MSC_VER
 

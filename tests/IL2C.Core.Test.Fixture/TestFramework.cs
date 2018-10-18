@@ -85,19 +85,6 @@ namespace IL2C
                     string.Format("il2c_c_str({0})", symbolName) :
                     symbolName;
         }
-
-        private static async Task WriteTextFileAsync(string path, string text)
-        {
-            using (var fs = await TestUtilities.CreateStreamAsync(path))
-            {
-                var tw = new StreamWriter(fs);
-
-                await tw.WriteAsync(text);
-                await tw.FlushAsync();
-
-                fs.Close();
-            }
-        }
         #endregion
 
         public static readonly object Expected_TrapBreak = new object();
@@ -212,8 +199,8 @@ namespace IL2C
             var headerPath = Path.Combine(translatedPath, "test.h");
 
             await Task.WhenAll(
-                WriteTextFileAsync(sourcePath, sourceCode.ToString()),
-                WriteTextFileAsync(headerPath, header.ToString()));
+                TestUtilities.WriteTextFileAsync(sourcePath, sourceCode.ToString()),
+                TestUtilities.WriteTextFileAsync(headerPath, header.ToString()));
 
             ///////////////////////////////////////////////
             // Step 2: Test and verify result by real IL code at this runtime.
@@ -234,7 +221,7 @@ namespace IL2C
                     // Use combined runtime source. 5 times faster!
                     Path.Combine(il2cRuntimePath, "il2c_combined.c")
                 };
-                var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cRuntimeSourcePaths, il2cRuntimePath);
+                var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cRuntimePath);
                 sanitized = executedResult.Trim(' ', '\r', '\n');
             }
             catch (Exception ex)

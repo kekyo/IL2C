@@ -188,11 +188,11 @@ extern void WriteLineToError(const wchar_t* pMessage);
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
-void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize);
+extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize);
 
-void il2c_step1_clear_gcmark__();
-void il2c_step2_mark_gcmark__();
-void il2c_step3_sweep_garbage__();
+extern void il2c_step1_clear_gcmark__();
+extern void il2c_step2_mark_gcmark__();
+extern void il2c_step3_sweep_garbage__();
 
 #ifdef __cplusplus
 }

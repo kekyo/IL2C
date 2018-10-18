@@ -36,8 +36,6 @@ namespace IL2C.Metadata
         bool HasThis { get; }
         bool HasBody { get; }
 
-        bool IsCallableMethod { get; }
-
         ITypeInformation ReturnType { get; }
         VariableInformation[] Parameters { get; }
         VariableInformation[] LocalVariables { get; }
@@ -261,28 +259,6 @@ namespace IL2C.Metadata
             this.Definition.HasThis;
         public bool HasBody => 
             this.Definition.HasBody;
-
-        public bool IsCallableMethod
-        {
-            get
-            {
-                // TODO: Except typed delegate's async methods
-                //   Because currently IL2C not supported async methods.
-                if (this.DeclaringType.IsDelegate)
-                {
-                    // Only "Invoke", exclude "BeginInvoke" and "EndInvoke"
-                    return this.Name.Equals("Invoke");
-                }
-
-                // Except type initializer
-                if (this.IsConstructor)
-                {
-                    return !this.IsStatic;
-                }
-
-                return true;
-            }
-        }
 
         public ITypeInformation ReturnType =>
             returnType.Value;

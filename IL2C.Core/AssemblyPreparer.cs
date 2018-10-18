@@ -201,13 +201,14 @@ namespace IL2C
 
         internal static PreparedMethodInformations Prepare(
             TranslateContext translateContext,
-            Func<IMethodInformation, bool> predict)
+            Func<ITypeInformation, bool> predictType,
+            Func<IMethodInformation, bool> predictMethod)
         {
             IPrepareContext prepareContext = translateContext;
 
             var allTypes = translateContext.Assembly.Modules
                 .SelectMany(module => module.Types)
-                .Where(type => type.IsValidDefinition)
+                .Where(type => type.IsValidDefinition && predictType(type))
                 .ToArray();
 
             // Lookup type references.
@@ -226,7 +227,7 @@ namespace IL2C
             return new PreparedMethodInformations(
                 (from type in allTypes
                  from method in type.DeclaredMethods
-                 where predict(method) &&
+                 where predictMethod(method) &&
                     // Exclude delegate's constructor
                     (!method.IsConstructor || !method.DeclaringType.IsDelegate)
                  let preparedMethod = PrepareMethod(prepareContext, method)
@@ -241,6 +242,8 @@ namespace IL2C
         {
             return Prepare(
                 translateContext,
+                // All types
+                type => true,
                 // Standard methods and instance constructors.
                 method => !method.IsConstructor || !method.IsStatic);
         }

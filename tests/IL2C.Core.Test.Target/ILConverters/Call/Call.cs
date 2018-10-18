@@ -6,7 +6,7 @@ namespace IL2C.ILConverters
     [Case(123, new[] { "Static_Int32_Int32", "Add_Static_Int32_Int32" }, 100, 23)]
     [Case("ABCDEF", new[] { "Static_String_String", "Concat_Static_String_String" }, "ABC", "DEF")]
     [Case(123, new[] { "Static_RefInt_RefInt", "Store_Static_RefInt_RefInt" })]
-    //[Case(123, new[] { "Instance_Int32_Int32", "Add_Instance_Int32_Int32" }, 100, 23)]
+    [Case(123, new[] { "Instance_Int32_Int32", ".ctor", "Add_Instance_Int32_Int32" }, 100, 23)]
     public sealed class Call
     {
         #region Static

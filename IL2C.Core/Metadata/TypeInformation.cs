@@ -89,6 +89,20 @@ namespace IL2C.Metadata
         private readonly Lazy<string> cLanguageTypeName;
 
         public TypeInformation(TypeReference type, ModuleInformation module)
+            : this(type, module, _ => true)
+        {
+        }
+
+        internal TypeInformation(
+            TypeReference type, ModuleInformation module,
+            HashSet<string> validMethods)
+            : this(type, module, m => validMethods.Contains(m.Name))
+        {
+        }
+
+        internal TypeInformation(
+            TypeReference type, ModuleInformation module,
+            Func<MethodDefinition, bool> filterMethod)
             : base(type, module)
         {
             baseType = this.MetadataContext.LazyGetOrAddMember(
@@ -112,7 +126,7 @@ namespace IL2C.Metadata
                 field => new FieldInformation(field, module));
 
             declaredMethods = this.MetadataContext.LazyGetOrAddMembers(
-                () => (this.Definition as TypeDefinition)?.Methods,
+                () => (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
                 method => new MethodInformation(method, module));
 
             overridedMethods = Lazy.Create(

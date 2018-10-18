@@ -38,6 +38,10 @@ namespace IL2C.Metadata
     internal sealed class MetadataContext
         : IMetadataContext
     {
+        private static readonly HashSet<string> objectMethodValidTarget =
+            new HashSet<string>(new[] {
+            "ToString", "GetHashCode", "Finalize", "Equals"});
+
         private readonly Dictionary<AssemblyDefinition, IAssemblyInformation> assemblies =
             new Dictionary<AssemblyDefinition, IAssemblyInformation>(AssemblyDefinitionComparer.Instance);
         private readonly Dictionary<ModuleReference, IModuleInformation> modules =
@@ -95,7 +99,7 @@ namespace IL2C.Metadata
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
             objectType = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.TypeSystem.Object,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
+                type => new TypeInformation(type, resolvedCoreModuleInformation, objectMethodValidTarget));
             valueTypeType = this.LazyGetOrAddMember(
                 () => resolvedCoreModule.GetType("System.ValueType"),
                 type => new TypeInformation(type, resolvedCoreModuleInformation));

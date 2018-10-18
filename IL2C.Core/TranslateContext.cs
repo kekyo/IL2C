@@ -26,7 +26,6 @@ namespace IL2C
         public TranslateContext(Assembly assembly, bool readSymbols)
             : this(assembly.Location, readSymbols)
         {
-            includes.Add("il2c.h");
         }
 
         public TranslateContext(string assemblyPath, bool readSymbols)
@@ -34,8 +33,6 @@ namespace IL2C
             var context = new MetadataContext(assemblyPath, readSymbols);
             this.MetadataContext = context;
             this.Assembly = context.MainAssembly;
-
-            includes.Add("il2c.h");
         }
         #endregion
 

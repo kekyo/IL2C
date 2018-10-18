@@ -12,7 +12,7 @@ namespace IL2C.ILConverters
     public sealed class ILConverterTest
     {
         #region Test infrastructure
-        private static CaseInfo CreateCaseInfo(string name, MethodInfo method, MethodInfo[] additionalMethods, CaseAttribute testCase) =>
+        private static CaseInfo CreateCaseInfo(string name, MethodInfo method, MethodBase[] additionalMethods, CaseAttribute testCase) =>
             new CaseInfo(name, method, additionalMethods,
                 Case.TrapBreak.Equals(testCase.Expected) ?
                     TestFramework.Expected_TrapBreak :
@@ -30,8 +30,11 @@ namespace IL2C.ILConverters
                  where method != null
                  let additionalMethods =
                     testCase.AdditionalMethodNames.
-                    Select(amn => typeof(T).GetMethod(
-                        amn, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)).   // Both instance or static method
+                    Select(amn => (amn == ".ctor") ?
+                        (MethodBase)typeof(T).GetConstructor(Type.EmptyTypes) :
+                        (MethodBase)typeof(T).GetMethod(
+                            amn, BindingFlags.Public | BindingFlags.NonPublic |
+                            BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)).   // Both instance or static method
                     ToArray()
                  group new { testCase, method, additionalMethods } by method.Name).
                  SelectMany(g =>

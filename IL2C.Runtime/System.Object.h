@@ -32,7 +32,7 @@ struct System_Object
 extern IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__;
 extern __System_Object_VTABLE_DECL__ __System_Object_VTABLE__;
 
-static void System_Object__ctor(System_Object* this__)
+static inline void System_Object__ctor(System_Object* this__)
 {
 }
 

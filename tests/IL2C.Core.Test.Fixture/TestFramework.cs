@@ -85,12 +85,25 @@ namespace IL2C
                     string.Format("il2c_c_str({0})", symbolName) :
                     symbolName;
         }
+
+        private static async Task WriteTextFileAsync(string path, string text)
+        {
+            using (var fs = await TestUtilities.CreateStreamAsync(path))
+            {
+                var tw = new StreamWriter(fs);
+
+                await tw.WriteAsync(text);
+                await tw.FlushAsync();
+
+                fs.Close();
+            }
+        }
         #endregion
 
         public static readonly object Expected_TrapBreak = new object();
 
         public static async Task ExecuteTestAsync(
-            string testName, MethodInfo method, MethodInfo[] additionalMethods, object expected, object[] args)
+            string testName, MethodInfo method, MethodBase[] additionalMethods, object expected, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
             foreach (var m in additionalMethods)
@@ -111,16 +124,14 @@ namespace IL2C
             // Step 1-2: Prepare target methods.
             var prepared = AssemblyPreparer.Prepare(
                 translateContext,
-                m =>
-                    (m.DeclaringType.FriendlyName == method.DeclaringType.FullName) &&
-                    ((m.Name == method.Name) || (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null)));
+                t => t.FriendlyName == method.DeclaringType.FullName,
+                m => ((m.Name == method.Name) || (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null)));
 
             // Step 1-3: Extract prepared target type/method informations.
             var targetType =
                 translateContext.Assembly.Modules
                 .First().Types
                 .First(t => t.FriendlyName == method.DeclaringType.FullName);
-
             var targetMethod =
                 targetType.DeclaredMethods
                 .First(m => m.Name == method.Name);
@@ -130,16 +141,12 @@ namespace IL2C
                 .ToArray();
 
             // Step 1-4: Translate method bodies.
+            var header = new StringWriter();
             var body = new StringWriter();
-            AssemblyWriter.WriteConstStrings(
-                body, translateContext);
-            foreach (var tam in targetAdditionalMethods)
-            {
-                AssemblyWriter.InternalConvertFromMethod(
-                    body, translateContext, prepared, tam, "  ", DebugInformationOptions.Full);
-            }
-            AssemblyWriter.InternalConvertFromMethod(
-                body, translateContext, prepared, targetMethod, "  ", DebugInformationOptions.Full);
+            AssemblyWriter.InternalWriteHeader(
+                header, translateContext, prepared, "    ", false);
+            AssemblyWriter.InternalWriteSourceCode(
+                body, translateContext, prepared, "    ", DebugInformationOptions.Full, false);
 
             // Step 1-5: Write Visual C++ project file from template.
             //     Note: It's only debugging purpose. The test doesn't use.
@@ -185,6 +192,7 @@ namespace IL2C
                 sourceCode.Append(await tr.ReadToEndAsync());
             }
 
+            // Construct test definitions.
             sourceCode.Replace("{body}", body.ToString());
 
             sourceCode.Replace("{isRefType}", (expectedType.IsByReference || expectedType.IsClass) ? "1" : "0");
@@ -201,19 +209,15 @@ namespace IL2C
             sourceCode.Replace("{actualExpression}", GetCLanguagePrintArgumentExpression(expectedType, "actual"));
 
             var sourcePath = Path.Combine(translatedPath, "test.c");
-            using (var fs = await TestUtilities.CreateStreamAsync(sourcePath))
-            {
-                var tw = new StreamWriter(fs);
+            var headerPath = Path.Combine(translatedPath, "test.h");
 
-                await tw.WriteAsync(sourceCode.ToString());
-                await tw.FlushAsync();
-
-                fs.Close();
-            }
+            await Task.WhenAll(
+                WriteTextFileAsync(sourcePath, sourceCode.ToString()),
+                WriteTextFileAsync(headerPath, header.ToString()));
 
             ///////////////////////////////////////////////
-
             // Step 2: Test and verify result by real IL code at this runtime.
+
             if (!isTrapBreak)
             {
                 var rawResult = method.Invoke(null, args);
@@ -221,11 +225,11 @@ namespace IL2C
             }
 
             ///////////////////////////////////////////////
+            // Step 3: Test compiled C source code and execute.
 
             string sanitized = null;
             try
             {
-                // Step 3: Test compiled C source code and execute.
                 var il2cRuntimeSourcePaths = new[] {
                     // Use combined runtime source. 5 times faster!
                     Path.Combine(il2cRuntimePath, "il2c_combined.c")
@@ -245,8 +249,8 @@ namespace IL2C
             Assert.IsFalse(isTrapBreak, "Code didn't break.");
 
             ///////////////////////////////////////////////
-
             // Step 4: Verify result.
+
             Assert.AreEqual("Success", sanitized);
         }
     }

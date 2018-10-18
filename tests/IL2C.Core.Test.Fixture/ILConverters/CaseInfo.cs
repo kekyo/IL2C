@@ -6,11 +6,11 @@ namespace IL2C.ILConverters
     {
         public readonly string Name;
         public readonly MethodInfo Method;
-        public readonly MethodInfo[] AdditionalMethods;
+        public readonly MethodBase[] AdditionalMethods;
         public readonly object Expected;
         public readonly object[] Arguments;
 
-        public CaseInfo(string name, MethodInfo method, MethodInfo[] additionalMethods, object expected, object[] arguments)
+        public CaseInfo(string name, MethodInfo method, MethodBase[] additionalMethods, object expected, object[] arguments)
         {
             this.Name = name;
             this.Method = method;

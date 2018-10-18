@@ -19,14 +19,6 @@ namespace IL2C
 
     public static class AssemblyWriter
     {
-        private static IMethodInformation[] GetCallableMethods(this ITypeInformation declaredType)
-        {
-            return declaredType
-                .DeclaredMethods
-                .Where(method => method.IsCallableMethod)
-                .ToArray();
-        }
-
         private static void InternalConvertType(
             TextWriter tw,
             ITypeInformation declaredType,
@@ -294,7 +286,7 @@ namespace IL2C
                         type.CLanguageThisTypeName);
                 }
 
-                foreach (var method in type.GetCallableMethods()
+                foreach (var method in type.DeclaredMethods
                     .Where(predictMethod))
                 {
                     tw.WriteLine(
@@ -633,7 +625,7 @@ namespace IL2C
             ITypeInformation adjustorThunkTargetType,
             ITypeInformation delegationTargetType) =>
             adjustorThunkTargetType
-                .OverridedMethods
+                .VirtualMethods
                 .Select(method => new VirtualFunctionInformation(
                     method.DeclaringType.Equals(adjustorThunkTargetType)
                         ? delegationTargetType.MangledName
@@ -813,6 +805,10 @@ namespace IL2C
                 tw.WriteLine(
                     "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                     declaredType.MangledName);
+                tw.WriteLine(
+                    "{0}/* internalcall */ __{1}_IL2C_RuntimeCast__,",
+                    indent,
+                    declaredType.MangledName);
 
                 var virtualFunctions = GetVirtualFunctions(
                     declaredType,
@@ -990,11 +986,12 @@ namespace IL2C
             }
         }
 
-        public static void WriteHeader(
+        internal static void InternalWriteHeader(
             TextWriter twHeader,
             TranslateContext translateContext,
             PreparedMethodInformations preparedMethods,
-            string indent)
+            string indent,
+            bool includeAssemblyHeader)
         {
             IExtractContext extractContext = translateContext;
 
@@ -1003,16 +1000,22 @@ namespace IL2C
             twHeader.WriteLine("#ifndef __{0}_H__", assemblyName);
             twHeader.WriteLine("#define __{0}_H__", assemblyName);
             twHeader.WriteLine();
+            twHeader.WriteLine("#pragma once");
+            twHeader.WriteLine();
+            twHeader.WriteLine("#include <il2c.h>");
 
-            foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
+            if (includeAssemblyHeader)
             {
-                twHeader.WriteLine("#include <{0}>", fileName);
+                twHeader.WriteLine();
+                foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
+                {
+                    twHeader.WriteLine("#include <{0}>", fileName);
+                }
             }
 
-            var allTypes = extractContext.Assembly.Modules
-                .SelectMany(module => module.Types)
-                .SelectMany(type => new[] { type }.Concat(type.NestedTypes))
-                .Where(type => type.IsValidDefinition)
+            var allTypes = preparedMethods.Functions
+                .Select(f => f.Key.DeclaringType)
+                .Distinct()
                 .ToArray();
 
             // All types exclude privates
@@ -1021,11 +1024,22 @@ namespace IL2C
                 allTypes,
                 type => type.IsCLanguagePublicScope,
                 field => field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly,
-                method => method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly,
+                method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
+                    preparedMethods.Functions.ContainsKey(method),
                 indent);
 
             twHeader.WriteLine();
             twHeader.WriteLine("#endif");
+        }
+
+        public static void WriteHeader(
+            TextWriter twHeader,
+            TranslateContext translateContext,
+            PreparedMethodInformations preparedMethods,
+            string indent)
+        {
+            InternalWriteHeader(
+                twHeader, translateContext, preparedMethods, indent, true);
         }
 
         internal static void WriteConstStrings(
@@ -1049,23 +1063,27 @@ namespace IL2C
             }
         }
 
-        public static void WriteSourceCode(
+        internal static void InternalWriteSourceCode(
             TextWriter twSource,
             TranslateContext translateContext,
             PreparedMethodInformations preparedMethods,
             string indent,
-            DebugInformationOptions debugInformationOption = DebugInformationOptions.Full)
+            DebugInformationOptions debugInformationOption,
+            bool includeAssemblyHeader)
         {
             IExtractContext extractContext = translateContext;
 
-            twSource.WriteLine();
-
-            foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
+            if (includeAssemblyHeader)
             {
-                twSource.WriteLine("#include \"{0}\"", fileName);
-            }
+                twSource.WriteLine();
 
-            twSource.WriteLine("#include \"{0}.h\"", extractContext.Assembly.Name);
+                foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
+                {
+                    twSource.WriteLine("#include \"{0}\"", fileName);
+                }
+
+                twSource.WriteLine("#include \"{0}.h\"", extractContext.Assembly.Name);
+            }
 
             WriteConstStrings(twSource, translateContext);
 
@@ -1073,10 +1091,9 @@ namespace IL2C
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [9-2] File scope prototypes:");
 
-            var allTypes = extractContext.Assembly.Modules
-                .SelectMany(module => module.Types)
-                .SelectMany(type => new[] { type }.Concat(type.NestedTypes))
-                .Where(type => type.IsValidDefinition)
+            var allTypes = preparedMethods.Functions
+                .Select(f => f.Key.DeclaringType)
+                .Distinct()
                 .ToArray();
 
             // All types exclude publics and internals (for file scope prototypes)
@@ -1085,7 +1102,8 @@ namespace IL2C
                 allTypes,
                 type => !type.IsCLanguagePublicScope,
                 field => !(field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly),
-                method => !(method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly),
+                method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
+                    preparedMethods.Functions.ContainsKey(method),
                 indent);
 
             twSource.WriteLine();
@@ -1144,6 +1162,17 @@ namespace IL2C
                         indent);
                 }
             }
+        }
+
+        public static void WriteSourceCode(
+            TextWriter twSource,
+            TranslateContext translateContext,
+            PreparedMethodInformations preparedMethods,
+            string indent,
+            DebugInformationOptions debugInformationOption = DebugInformationOptions.Full)
+        {
+            InternalWriteSourceCode(
+                twSource, translateContext, preparedMethods, indent, debugInformationOption, true);
         }
     }
 }

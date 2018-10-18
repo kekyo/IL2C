@@ -17,12 +17,12 @@ extern IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__;
 
 extern const System_IntPtr System_IntPtr_Zero;
 
-static System_IntPtr System_IntPtr_op_Addition(System_IntPtr lhs, int32_t rhs)
+static inline System_IntPtr System_IntPtr_op_Addition(intptr_t lhs, intptr_t rhs)
 {
     return lhs + rhs;
 }
 
-static bool System_IntPtr_op_Inequality(System_IntPtr lhs, System_IntPtr rhs)
+static inline bool System_IntPtr_op_Inequality(intptr_t lhs, intptr_t rhs)
 {
     return lhs != rhs;
 }

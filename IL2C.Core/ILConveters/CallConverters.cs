@@ -13,6 +13,12 @@ namespace IL2C.ILConverters
         public static Func<IExtractContext, string[]> Apply(
             IMethodInformation method, DecodeContext decodeContext)
         {
+            // OPT HACK: System.Object's constructor calls ignored.
+            if (method.IsConstructor && method.DeclaringType.IsObjectType)
+            {
+                return _ => new string[0];
+            }
+
             var pairParameters = method.Parameters
                 .Reverse()
                 .Select(parameter => new Utilities.RightExpressionGivenParameter(
@@ -21,12 +27,6 @@ namespace IL2C.ILConverters
                 .ToArray();
 
             var codeInformation = decodeContext.CurrentCode;
-
-            // System.Object's constructor calls ignored.
-            if (method.IsConstructor && method.DeclaringType.IsObjectType)
-            {
-                return _ => new string[0];
-            }
 
             if (method.ReturnType.IsVoidType)
             {

@@ -253,7 +253,7 @@ namespace IL2C
                 {
                     tw.WriteLine(
                         "extern {0};",
-                        field.GetCLanguagePrototype(false));
+                        field.GetCLanguageStaticPrototype(false));
                 }
             }
 
@@ -731,7 +731,7 @@ namespace IL2C
                     tw.WriteLine(
                         "{0}il2c_try_mark_from_handler(this__->{1});",
                         indent,
-                        field.MangledName);
+                        field.Name);
                 }
             }
 
@@ -1121,7 +1121,7 @@ namespace IL2C
                 {
                     twSource.WriteLine(
                         "{0};",
-                        field.GetCLanguagePrototype(true));
+                        field.GetCLanguageStaticPrototype(true));
                 }
             }
 

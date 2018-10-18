@@ -80,7 +80,7 @@ extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pFrame
 
 extern void il2c_mark_from_handler(void* pReference);
 #define il2c_try_mark_from_handler(pReference) \
-    if ((pReference) != NULL) il2c_mark_from_handler(pReference)
+    { void* pRef = pReference; if (pRef != NULL) il2c_mark_from_handler(pRef); }
 
 ///////////////////////////////////////////////////////
 // The basis types

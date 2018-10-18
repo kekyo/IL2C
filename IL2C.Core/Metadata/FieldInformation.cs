@@ -17,7 +17,7 @@ namespace IL2C.Metadata
         ITypeInformation FieldType { get; }
         object ConstantValue { get; }
 
-        string GetCLanguagePrototype(bool requireInitializerExpression);
+        string GetCLanguageStaticPrototype(bool requireInitializerExpression);
     }
 
     internal sealed class FieldInformation
@@ -51,7 +51,7 @@ namespace IL2C.Metadata
 
         public object ConstantValue => this.Definition.Constant;
 
-        public string GetCLanguagePrototype(bool requireInitializerExpression)
+        public string GetCLanguageStaticPrototype(bool requireInitializerExpression)
         {
             var initializer = String.Empty;
             if (requireInitializerExpression)

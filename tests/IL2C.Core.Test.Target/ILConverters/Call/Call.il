@@ -33,4 +33,14 @@
         add
 		ret
 	}
+
+	.method public static int32 Instance_Int32_Int32(int32 lhs, int32 rhs) cil managed
+	{
+		.maxstack 3
+        newobj instance void class IL2C.ILConverters.Call::.ctor()
+        ldarg.0
+        ldarg.1
+        call instance int32 IL2C.ILConverters.Call::Add_Instance_Int32_Int32(int32, int32)
+		ret
+	}
 }

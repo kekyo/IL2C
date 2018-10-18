@@ -110,6 +110,13 @@ namespace IL2C.ILConverters
             ExecuteTestAsync(caseInfo);
         #endregion
 
+        #region Call
+        public static readonly CaseInfo[] _Call = GetTargetCases<IL2C.ILConverters.Call>();
+        [Test]
+        public static Task Call([ValueSource("_Call")] CaseInfo caseInfo) =>
+            ExecuteTestAsync(caseInfo);
+        #endregion
+
         #region Ret
         public static readonly CaseInfo[] _Ret = GetTargetCases<IL2C.ILConverters.Ret>();
         [Test]

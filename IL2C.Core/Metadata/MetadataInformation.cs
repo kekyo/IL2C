@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace IL2C.Metadata
@@ -8,6 +9,8 @@ namespace IL2C.Metadata
         , IComparable<IMetadataInformation>
         , IComparable
     {
+        string MetadataTypeName { get; }
+
         string UniqueName { get; }
         string Name { get; }
         string FriendlyName { get; }
@@ -16,6 +19,7 @@ namespace IL2C.Metadata
         IMetadataContext Context { get; }
     }
 
+    [DebuggerDisplay("{MetadataTypeName} {Name}")]
     internal abstract class MetadataInformation
         : IMetadataInformation
     {
@@ -32,6 +36,7 @@ namespace IL2C.Metadata
         IMetadataContext IMetadataInformation.Context =>
             this.MetadataContext;
 
+        public abstract string MetadataTypeName { get; }
         public abstract string UniqueName { get; }
         public abstract string Name { get; }
         public abstract string FriendlyName { get; }
@@ -65,7 +70,7 @@ namespace IL2C.Metadata
             this.UniqueName.GetHashCode();
 
         public override string ToString() =>
-            this.UniqueName;
+            string.Format("{0} {1}", this.MetadataTypeName, this.Name);
     }
 
     internal abstract class MetadataInformation<TReference, TDefinition>

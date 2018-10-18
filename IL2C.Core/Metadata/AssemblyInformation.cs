@@ -29,6 +29,8 @@ namespace IL2C.Metadata
                 (_, module) => new ModuleInformation(module, this));
         }
 
+        public override string MetadataTypeName => "Assembly";
+
         public override string UniqueName => assembly.FullName;
         public override string Name => assembly.Name.Name;
         public override string FriendlyName => assembly.Name.Name;

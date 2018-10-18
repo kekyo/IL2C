@@ -27,6 +27,8 @@ namespace IL2C.Metadata
                 type => new TypeInformation(type, this));
         }
 
+        public override string MetadataTypeName => "Module";
+
         public override string UniqueName => this.Member.Name;
         public override string Name => this.Member.Name;
         public override string FriendlyName => this.Member.Name;

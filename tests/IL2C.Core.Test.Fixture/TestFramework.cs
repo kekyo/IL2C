@@ -52,7 +52,7 @@ namespace IL2C
         private static string GetCLanguageCompareExpression(ITypeInformation type)
         {
             return type.IsStringType ?
-                "wcscmp(il2c_c_str(expected), il2c_c_str(actual)) == 0" :
+                "((il2c_c_str(expected) == NULL) && (il2c_c_str(actual) == NULL)) || \n        ((il2c_c_str(expected) != NULL) && (il2c_c_str(actual) != NULL) && (wcscmp(il2c_c_str(expected), il2c_c_str(actual)) == 0))" :
                 "expected == actual";
         }
 

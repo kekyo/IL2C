@@ -34,6 +34,8 @@ namespace IL2C.Metadata
                 type => new TypeInformation(type, module));
         }
 
+        public override string MetadataTypeName => "Field";
+
         public override string MemberTypeName => this.IsStatic
             ? "Static field"
             : "Field";

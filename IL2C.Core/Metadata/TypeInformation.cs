@@ -210,6 +210,8 @@ namespace IL2C.Metadata
                 });
         }
 
+        public override string MetadataTypeName => "Type";
+
         public override string MemberTypeName => this.IsEnum
             ? "Enum"
             : this.IsValueType

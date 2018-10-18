@@ -228,6 +228,8 @@ namespace IL2C.Metadata
                                     assembly_,
                                     assembly__ => new AssemblyInformation(assembly__, this.MetadataContext)))))));
 
+        public override string MetadataTypeName => "Method";
+
         public override string FriendlyName =>
             this.GetFriendlyName(FriendlyNameTypes.ArgumentTypes | FriendlyNameTypes.ArgumentNames);
 

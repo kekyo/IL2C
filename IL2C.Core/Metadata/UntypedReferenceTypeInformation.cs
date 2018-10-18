@@ -12,6 +12,8 @@ namespace IL2C.Metadata
         {
         }
 
+        public string MetadataTypeName => "Type";
+
         public bool IsValidDefinition => false;
 
         public bool IsPublic => false;

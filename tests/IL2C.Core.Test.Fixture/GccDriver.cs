@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -35,11 +34,12 @@ namespace IL2C
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-bin.tar.lzma",
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dev.tar.lzma",
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
             // Require C++
             //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-bin.tar.lzma",
             //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dev.tar.lzma",
-            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma"
+            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma",
+            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
+            "https://cmake.org/files/v3.12/cmake-3.12.3-win32-x86.zip",
         };
 
         private static readonly string gccBasePath = Path.GetFullPath(Path.Combine(
@@ -111,6 +111,37 @@ namespace IL2C
             return path;
         }
 
+        private static async Task<int> ExtractFromZip(string basePath, string zipPath, bool suppressTopDirectory)
+        {
+            var absoluteBasePath = Path.GetFullPath(basePath);
+
+            return await Task.Run(() =>
+            {
+                using (var zip = ZipFile.OpenRead(zipPath))
+                {
+                    foreach (var entry in zip.Entries.
+                        Where(entry => !string.IsNullOrWhiteSpace(entry.Name)))
+                    {
+                        var path = Path.Combine(
+                            absoluteBasePath,
+                            Path.Combine(entry.FullName.Split('/').Skip(suppressTopDirectory ? 1 : 0).ToArray()));
+                        if (!Directory.Exists(Path.GetDirectoryName(path)))
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        entry.ExtractToFile(path, true);
+                    }
+                }
+                return 0;
+            });
+        }
+
         private static async Task DownloadGccRequirementsAsync(string basePath)
         {
             try
@@ -120,26 +151,44 @@ namespace IL2C
 
                 try
                 {
-                    var bsdTarArchivePath =
-                        await DownloadFromUrlAsync(bsdTarUrl, fetchPath);
-                    await Task.Run(() =>
-                        ZipFile.ExtractToDirectory(bsdTarArchivePath, fetchPath));
+                    var bsdTarArchivePath = await DownloadFromUrlAsync(bsdTarUrl, fetchPath);
+                    await ExtractFromZip(fetchPath, bsdTarArchivePath, false);
 
                     var bsdTarPath = Path.Combine(fetchPath, "basic-bsdtar.exe");
 
                     var archivePaths = await Task.WhenAll(
                         gccRequirementUrls.Select(async url =>
                         {
-                            var path = await DownloadFromUrlAsync(url, fetchPath);
-                            var decompressionFlag = Path.GetExtension(path) == ".lzma" ? "--lzma" : "-j";
-                            var (exitCode, log) = await ExecuteAsync(
-                                basePath, new[] { basePath }, bsdTarPath, decompressionFlag, "-xf", path);
+                            var archivePath = await DownloadFromUrlAsync(url, fetchPath);
+
+                            int exitCode = -1;
+                            string log = string.Empty;
+                            switch (Path.GetExtension(archivePath))
+                            {
+                                case ".lzma":
+                                    (exitCode, log) = await ExecuteAsync(
+                                        basePath, new[] { basePath }, bsdTarPath, "--lzma", "-xf", archivePath);
+                                    break;
+                                case ".xz":
+                                    (exitCode, log) = await ExecuteAsync(
+                                        basePath, new[] { basePath }, bsdTarPath, "-j", "-xf", archivePath);
+                                    break;
+                                case ".gz":
+                                    (exitCode, log) = await ExecuteAsync(
+                                        basePath, new[] { basePath }, bsdTarPath, "-z", "-xf", archivePath);
+                                    break;
+                                case ".zip":
+                                    exitCode = await ExtractFromZip(basePath, archivePath, true);
+                                    break;
+                            }
+
                             if (exitCode != 0)
                             {
-                                throw new Exception("Failed extraction gcc asset: " + Path.GetFileName(path));
+                                throw new Exception("Failed extraction gcc asset: " + Path.GetFileName(archivePath));
                             }
-                            Trace.WriteLine("Downloaded and extracted gcc asset: " + Path.GetFileName(path));
-                            return path;
+                            Trace.WriteLine("Downloaded and extracted gcc asset: " + Path.GetFileName(archivePath));
+
+                            return archivePath;
                         }));
                 }
                 finally

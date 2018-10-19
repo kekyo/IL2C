@@ -13,7 +13,7 @@ using IL2C.ILConverters;
 namespace IL2C
 {
     [TestFixture]
-    public sealed class Test
+    public sealed class Generators
     {
         [Test]
         public static async Task DumpSupportedOpCodes()
@@ -53,7 +53,7 @@ namespace IL2C
                 .ToArray();
 
             var ilConverterTests =
-                typeof(ILConverterTest)
+                typeof(ILConvertersTest)
                 .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[])))
                 .SelectMany(field => (TestCaseInformation[])field.GetValue(null))
@@ -62,7 +62,7 @@ namespace IL2C
 
             var basePath = Path.GetFullPath(
                 Path.Combine(
-                    Path.GetDirectoryName(typeof(Test).Assembly.Location),
+                    Path.GetDirectoryName(typeof(Generators).Assembly.Location),
                     "..",
                     "..",
                     "..",

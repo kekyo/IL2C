@@ -20,8 +20,8 @@ namespace IL2C
             this.Arguments = arguments;
         }
 
-        public Task ExecuteTestAsync() =>
-            TestFramework.ExecuteTestAsync(this.Name, this.Method, this.AdditionalMethods, this.Expected, this.Arguments);
+        public Task ExecuteTestAsync(string categoryName) =>
+            TestFramework.ExecuteTestAsync(categoryName, this.Name, this.Method, this.AdditionalMethods, this.Expected, this.Arguments);
 
         public override string ToString()
         {

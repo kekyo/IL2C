@@ -90,7 +90,7 @@ namespace IL2C
         public static readonly object Expected_TrapBreak = new object();
 
         public static async Task ExecuteTestAsync(
-            string testName, MethodInfo method, MethodBase[] additionalMethods, object expected, object[] args)
+            string categoryName, string testName, MethodInfo method, MethodBase[] additionalMethods, object expected, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
             foreach (var m in additionalMethods)
@@ -140,7 +140,7 @@ namespace IL2C
             var translatedPath = Path.GetFullPath(
                 Path.Combine(
                     Path.GetDirectoryName(method.DeclaringType.Assembly.Location),
-                    "translated",
+                    categoryName,
                     targetMethod.DeclaringType.Name,
                     testName));
 

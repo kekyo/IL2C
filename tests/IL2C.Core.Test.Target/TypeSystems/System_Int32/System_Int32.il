@@ -1,4 +1,4 @@
-﻿.class public IL2C.TypeSystems.Int32
+﻿.class public IL2C.TypeSystems.System_Int32
 {
 	.method public static bool IsValueType() cil managed
 	{

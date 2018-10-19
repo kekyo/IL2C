@@ -98,40 +98,14 @@ Under Apache v2.
 
 ## Overall status
 
-TODO: Writing...
+[Supported IL opcodes list](supported-opcodes.md)
 
-### IL translation features
-
-[Support IL opcodes list](supported-opcodes.md)
-
-#### Support primitive types
-
-| Issue | Status | Milestone
-|:---|:---|:---|
-| System.Byte | Supported | M2
-| System.SByte | Supported | M2
-| System.Int16 | Supported | M2
-| System.UInt16 | Supported | M2
-| System.Int32 | Supported | M1
-| System.UInt32
-| System.Int64 | Supported | M1
-| System.UInt64
-| System.Single
-| System.Double
-| System.Boolean | Supported | M2
-| System.Void | Partial supported | M2
-| System.IntPtr | Partial supported |
-| System.UIntPtr
+[Supported runtime types](supported-runtime-types.md)
 
 #### Support basic types
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| System.Object | Partial supported |
-| System.ValueType | Partial supported |
-| System.String | Partial supported |
-| System.Decimal |
-| System.Guid |
 | Value types | Partial supported | M3
 | Class types | Partial supported |
 | Managed reference | Partial supported | M3

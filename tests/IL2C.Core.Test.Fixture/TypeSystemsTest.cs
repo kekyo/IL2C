@@ -12,9 +12,9 @@ namespace IL2C
     public sealed class TypeSystemsTest
     {
         #region Int32
-        public static readonly TestCaseInformation[] _Int32 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.Int32>();
+        public static readonly TestCaseInformation[] _System_Int32 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Int32>();
         [Test]
-        public static Task Int32([ValueSource("_Int32")] TestCaseInformation caseInfo) =>
+        public static Task System_Int32([ValueSource("_System_Int32")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("TypeSystems");
         #endregion
     }

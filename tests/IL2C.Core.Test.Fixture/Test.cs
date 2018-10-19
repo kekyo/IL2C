@@ -55,8 +55,8 @@ namespace IL2C
             var ilConverterTests =
                 typeof(ILConverterTest)
                 .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                .Where(field => field.IsInitOnly && (field.FieldType == typeof(CaseInfo[])))
-                .SelectMany(field => (CaseInfo[])field.GetValue(null))
+                .Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[])))
+                .SelectMany(field => (TestCaseInformation[])field.GetValue(null))
                 .GroupBy(entry => entry.Method.DeclaringType.Name)
                 .ToDictionary(g => g.Key, g => g.Count(), StringComparer.InvariantCultureIgnoreCase);
 

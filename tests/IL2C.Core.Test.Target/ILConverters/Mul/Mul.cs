@@ -3,15 +3,15 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(288, "Int32_Int32", 12, 24)]
-    [Case(288, "Int32_IntPtr", 12, 24)]
-    [Case(288L, "Int64_Int64", 12L, 24L)]
-    [Case(288, "IntPtr_Int32", 12, 24)]
-    [Case(288, "IntPtr_IntPtr", 12, 24)]
-    [Case(123.0f * 0.45f, "Single_Single", 123.0f, 0.45f)]
-    [Case(123.0f * 0.45, "Single_Double", 123.0f, 0.45)]
-    [Case(123.0 * 0.45f, "Double_Single", 123.0, 0.45f)]
-    [Case(123.0 * 0.45, "Double_Double", 123.0, 0.45)]
+    [TestCase(288, "Int32_Int32", 12, 24)]
+    [TestCase(288, "Int32_IntPtr", 12, 24)]
+    [TestCase(288L, "Int64_Int64", 12L, 24L)]
+    [TestCase(288, "IntPtr_Int32", 12, 24)]
+    [TestCase(288, "IntPtr_IntPtr", 12, 24)]
+    [TestCase(123.0f * 0.45f, "Single_Single", 123.0f, 0.45f)]
+    [TestCase(123.0f * 0.45, "Single_Double", 123.0f, 0.45)]
+    [TestCase(123.0 * 0.45f, "Double_Single", 123.0, 0.45f)]
+    [TestCase(123.0 * 0.45, "Double_Double", 123.0, 0.45)]
     public sealed class Mul
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

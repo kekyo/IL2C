@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(5, "Rem2", 12345, 47, 26)]
+    [TestCase(5, "Rem2", 12345, 47, 26)]
     public sealed class Br
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

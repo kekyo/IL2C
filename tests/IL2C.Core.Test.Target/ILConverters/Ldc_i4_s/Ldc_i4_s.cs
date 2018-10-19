@@ -2,8 +2,8 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(127, "Plus127Value")]
-    [Case(-128, "Minus128Value")]
+    [TestCase(127, "Plus127Value")]
+    [TestCase(-128, "Minus128Value")]
     public sealed class Ldc_i4_s
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -3,16 +3,16 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case("ABC", "FlagValue", true)]
-    [Case("DEF", "FlagValue", false)]
-    [Case("ABC", "Int32Value", 100)]
-    [Case("DEF", "Int32Value", 0)]
-    [Case("ABC", "Int32Value", -100)]
-    [Case("ABC", "IntPtrValue", 100)]
-    [Case("DEF", "IntPtrValue", 0)]
-    [Case("ABC", "IntPtrValue", -100)]
-    [Case("ABC", "ObjectValue", "")]
-    [Case("DEF", "ObjectValue", new object[] { null })]
+    [TestCase("ABC", "FlagValue", true)]
+    [TestCase("DEF", "FlagValue", false)]
+    [TestCase("ABC", "Int32Value", 100)]
+    [TestCase("DEF", "Int32Value", 0)]
+    [TestCase("ABC", "Int32Value", -100)]
+    [TestCase("ABC", "IntPtrValue", 100)]
+    [TestCase("DEF", "IntPtrValue", 0)]
+    [TestCase("ABC", "IntPtrValue", -100)]
+    [TestCase("ABC", "ObjectValue", "")]
+    [TestCase("DEF", "ObjectValue", new object[] { null })]
     public sealed class Brfalse
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

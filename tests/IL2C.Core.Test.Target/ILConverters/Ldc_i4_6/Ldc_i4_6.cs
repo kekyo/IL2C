@@ -2,8 +2,8 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(6, "RawValue")]
-    [Case(10, "Add", 4)]
+    [TestCase(6, "RawValue")]
+    [TestCase(10, "Add", 4)]
     public sealed class Ldc_i4_6
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

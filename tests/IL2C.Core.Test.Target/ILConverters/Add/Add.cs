@@ -3,19 +3,19 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(36, "Int32_Int32", 12, 24)]
-    [Case(36, "Int32_IntPtr", 12, 24)]
-    [Case(123, new[] { "Int32_IntRef", "Add_Int32_IntRef" }, 123)]
-    [Case(36L, "Int64_Int64", 12L, 24L)]
-    [Case(36, "IntPtr_Int32", 12, 24)]
-    [Case(36, "IntPtr_IntPtr", 12, 24)]
-    [Case(123, new[] { "IntPtr_IntRef", "Add_IntPtr_IntRef" }, 123)]
-    [Case(0.45f + 123.0f, "Single_Single", 0.45f, 123.0f)]
-    [Case(0.45f + 123.0, "Single_Double", 0.45f, 123.0)]
-    [Case(0.45 + 123.0f, "Double_Single", 0.45, 123.0f)]
-    [Case(0.45 + 123.0, "Double_Double", 0.45, 123.0)]
-    [Case(123, new[] { "IntRef_Int32", "Add_IntRef_Int32" }, 123)]
-    [Case(123, new[] { "IntRef_IntPtr", "Add_IntRef_IntPtr" }, 123)]
+    [TestCase(36, "Int32_Int32", 12, 24)]
+    [TestCase(36, "Int32_IntPtr", 12, 24)]
+    [TestCase(123, new[] { "Int32_IntRef", "Add_Int32_IntRef" }, 123)]
+    [TestCase(36L, "Int64_Int64", 12L, 24L)]
+    [TestCase(36, "IntPtr_Int32", 12, 24)]
+    [TestCase(36, "IntPtr_IntPtr", 12, 24)]
+    [TestCase(123, new[] { "IntPtr_IntRef", "Add_IntPtr_IntRef" }, 123)]
+    [TestCase(0.45f + 123.0f, "Single_Single", 0.45f, 123.0f)]
+    [TestCase(0.45f + 123.0, "Single_Double", 0.45f, 123.0)]
+    [TestCase(0.45 + 123.0f, "Double_Single", 0.45, 123.0f)]
+    [TestCase(0.45 + 123.0, "Double_Double", 0.45, 123.0)]
+    [TestCase(123, new[] { "IntRef_Int32", "Add_IntRef_Int32" }, 123)]
+    [TestCase(123, new[] { "IntRef_IntPtr", "Add_IntRef_IntPtr" }, 123)]
     public sealed class Add
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -3,17 +3,17 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(12, "Int32_Int32", 36, 24)]
-    [Case(12, "Int32_IntPtr", 36, 24)]
-    [Case(12L, "Int64_Int64", 36L, 24L)]
-    [Case(12, "IntPtr_Int32", 36, 24)]
-    [Case(12, "IntPtr_IntPtr", 36, 24)]
-    [Case(123.0f - 0.45f, "Single_Single", 123.0f, 0.45f)]
-    [Case(123.0f - 0.45, "Single_Double", 123.0f, 0.45)]
-    [Case(123.0 - 0.45f, "Double_Single", 123.0, 0.45f)]
-    [Case(123.0 - 0.45, "Double_Double", 123.0, 0.45)]
-    [Case(123, new[] { "IntRef_Int32", "Sub_IntRef_Int32" }, 123)]
-    [Case(123, new[] { "IntRef_IntPtr", "Sub_IntRef_IntPtr" }, 123)]
+    [TestCase(12, "Int32_Int32", 36, 24)]
+    [TestCase(12, "Int32_IntPtr", 36, 24)]
+    [TestCase(12L, "Int64_Int64", 36L, 24L)]
+    [TestCase(12, "IntPtr_Int32", 36, 24)]
+    [TestCase(12, "IntPtr_IntPtr", 36, 24)]
+    [TestCase(123.0f - 0.45f, "Single_Single", 123.0f, 0.45f)]
+    [TestCase(123.0f - 0.45, "Single_Double", 123.0f, 0.45)]
+    [TestCase(123.0 - 0.45f, "Double_Single", 123.0, 0.45f)]
+    [TestCase(123.0 - 0.45, "Double_Double", 123.0, 0.45)]
+    [TestCase(123, new[] { "IntRef_Int32", "Sub_IntRef_Int32" }, 123)]
+    [TestCase(123, new[] { "IntRef_IntPtr", "Sub_IntRef_IntPtr" }, 123)]
     //[Case(123, new[] { "IntRef_IntRef", "Add_IntRef_IntRef" }, 123)] // TODO: will implement become from Ldelema.
     public sealed class Sub
     {

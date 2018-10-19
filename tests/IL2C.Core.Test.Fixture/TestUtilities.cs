@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,17 +10,20 @@ namespace IL2C
 {
     internal static class TestUtilities
     {
-        public static object ConvertTo(object value, Type targetType)
+        #region Test case related
+        private static object ConvertToArgumentType(object value, Type argumentType)
         {
+            // This is helper function that convert between raw value type and argument type.
+            // Because .NET attribute can't have complex type arguments.
             if (value == null)
             {
                 return null;
             }
-            else if (value.GetType() == targetType)
+            else if (value.GetType() == argumentType)
             {
                 return value;
             }
-            else if (targetType == typeof(IntPtr))
+            else if (argumentType == typeof(IntPtr))
             {
                 if (value is int)
                 {
@@ -33,7 +38,7 @@ namespace IL2C
                     throw new InvalidCastException();
                 }
             }
-            else if (targetType == typeof(UIntPtr))
+            else if (argumentType == typeof(UIntPtr))
             {
                 if (value is uint)
                 {
@@ -50,10 +55,55 @@ namespace IL2C
             }
             else
             {
-                return Convert.ChangeType(value, targetType);
+                return Convert.ChangeType(value, argumentType);
             }
         }
 
+        public static TestCaseInformation CreateTestCaseInformation(
+            string name, MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
+            new TestCaseInformation(name, method, additionalMethods,
+                Case.CauseBreak.Equals(caseAttribute.Expected) ?
+                    TestFramework.Expected_TrapBreak :
+                    ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
+                caseAttribute.Arguments.
+                    Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
+                    ToArray());
+
+        public static TestCaseInformation[] GetTestCaseInformations<T>()
+        {
+            var caseInfos =
+                (from testCase in typeof(T).GetCustomAttributes<TestCaseAttribute>(true)
+                 let method = typeof(T).GetMethod(
+                     testCase.MethodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)    // Static method only for test entry
+                 where method != null
+                 let additionalMethods =
+                    testCase.AdditionalMethodNames.
+                    Select(methodName => typeof(T).GetMethod(
+                        methodName, BindingFlags.Public | BindingFlags.NonPublic |
+                        BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)).   // Both instance or static method
+                    ToArray()
+                 let totalAdditionalMethods =
+                    // If contains instance method in set of additional methods (test case is implicitly required the instance), add the constructor.
+                    (additionalMethods.Any(m => !m.IsStatic) ?
+                        new[] { (MethodBase)typeof(T).GetConstructor(Type.EmptyTypes) } :
+                        new MethodBase[0]).
+                    Concat(additionalMethods).
+                    ToArray()
+                 group new { testCase, method, AdditionalMethods = totalAdditionalMethods } by method.Name).
+                 SelectMany(g =>
+                 {
+                     var a = g.ToArray();
+                     return (a.Length == 1) ?
+                        a.Select(entry => CreateTestCaseInformation(entry.method.Name, entry.method, entry.AdditionalMethods, entry.testCase)) :
+                        a.Select((entry, index) => CreateTestCaseInformation(entry.method.Name + "_" + index, entry.method, entry.AdditionalMethods, entry.testCase));
+                 }).
+                 OrderBy(caseInfo => caseInfo.Name).
+                 ToArray();
+            return caseInfos;
+        }
+        #endregion
+
+        #region IO related
         private static bool IsStrangeProblemException(Exception ex)
         {
             return
@@ -218,5 +268,6 @@ namespace IL2C
         {
             return CopyResourceToTextFileAsync(path, resourceName, empty);
         }
+        #endregion
     }
 }

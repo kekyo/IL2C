@@ -2,8 +2,8 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(long.MaxValue, "MaxValue")]
-    [Case(long.MinValue, "MinValue")]
+    [TestCase(long.MaxValue, "MaxValue")]
+    [TestCase(long.MinValue, "MinValue")]
     public sealed class Ldc_i8
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

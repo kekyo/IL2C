@@ -3,12 +3,12 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(123, "Int32Value")]
-    [Case("ABC", "StringValue")]
-    [Case(null, "NullValue")]
-    [Case(123, new[] { "RefIntValue", "Return_RefInt" }, true)]
-    [Case(456, new[] { "RefIntValue", "Return_RefInt" }, false)]
-    [Case(null, "Void")]
+    [TestCase(123, "Int32Value")]
+    [TestCase("ABC", "StringValue")]
+    [TestCase(null, "NullValue")]
+    [TestCase(123, new[] { "RefIntValue", "Return_RefInt" }, true)]
+    [TestCase(456, new[] { "RefIntValue", "Return_RefInt" }, false)]
+    [TestCase(null, "Void")]
     public sealed class Ret
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

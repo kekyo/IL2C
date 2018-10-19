@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(123, "Nothing")]
+    [TestCase(123, "Nothing")]
     public sealed class Nop
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -3,23 +3,23 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case("True", "True")]
-    [Case("False", "False")]
-    [Case("255", "Byte")]
-    [Case("32767", "Int16")]
-    [Case("2147483647", "Int32")]
-    [Case("9223372036854775807", "Int64")]
-    [Case("127", "SByte")]
-    [Case("65535", "UInt16")]
-    [Case("4294967295", "UInt32")]
-    [Case("18446744073709551615", "UInt64")]
-    [Case("2147483647", "IntPtr")]
-    [Case("4294967295", "UIntPtr")]
-    [Case("3.141593", "Single")]            // Lost last 2 digits via ToString conversion.
-    [Case("3.14159265358979", "Double")]    // Lost last 2 digits via ToString conversion.
-    [Case("A", "Char")]
-    [Case("ABC", new[] { "String", "UpdateString" })]               // Translation will include UpdateString method
-    [Case("ABC", new[] { "LocalVariable_255", "UpdateString" })]    // Translation will include UpdateString method
+    [TestCase("True", "True")]
+    [TestCase("False", "False")]
+    [TestCase("255", "Byte")]
+    [TestCase("32767", "Int16")]
+    [TestCase("2147483647", "Int32")]
+    [TestCase("9223372036854775807", "Int64")]
+    [TestCase("127", "SByte")]
+    [TestCase("65535", "UInt16")]
+    [TestCase("4294967295", "UInt32")]
+    [TestCase("18446744073709551615", "UInt64")]
+    [TestCase("2147483647", "IntPtr")]
+    [TestCase("4294967295", "UIntPtr")]
+    [TestCase("3.141593", "Single")]            // Lost last 2 digits via ToString conversion.
+    [TestCase("3.14159265358979", "Double")]    // Lost last 2 digits via ToString conversion.
+    [TestCase("A", "Char")]
+    [TestCase("ABC", new[] { "String", "UpdateString" })]               // Translation will include UpdateString method
+    [TestCase("ABC", new[] { "LocalVariable_255", "UpdateString" })]    // Translation will include UpdateString method
     public sealed class Ldloca_s
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

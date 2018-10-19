@@ -3,11 +3,11 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(12345, "Int32", 12345)]
-    [Case(12345, "Int64", 12345L)]
-    [Case(12345, "IntPtr", 12345)]
-    [Case(12345, "Single", 12345.67f)]
-    [Case(12345, "Double", 12345.67)]
+    [TestCase(12345, "Int32", 12345)]
+    [TestCase(12345, "Int64", 12345L)]
+    [TestCase(12345, "IntPtr", 12345)]
+    [TestCase(12345, "Single", 12345.67f)]
+    [TestCase(12345, "Double", 12345.67)]
     public sealed class Conv_i
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

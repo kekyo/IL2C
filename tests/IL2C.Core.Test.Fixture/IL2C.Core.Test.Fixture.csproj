@@ -5,7 +5,7 @@
 
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <AssemblyName>IL2C.Core.Test.Fixture</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>

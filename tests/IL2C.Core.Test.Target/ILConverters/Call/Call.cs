@@ -3,11 +3,11 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(123, new[] { "Static_Int32_Int32", "Add_Static_Int32_Int32" }, 100, 23)]
-    [Case("ABCDEF", new[] { "Static_String_String", "Concat_Static_String_String" }, "ABC", "DEF")]
-    [Case(123, new[] { "Static_RefInt_RefInt", "Store_Static_RefInt_RefInt" })]
-    [Case(679, new[] { "Instance_Int32_ThisInt32", ".ctor", "Add_Instance_Int32_ThisInt32" }, 123, 456)]
-    [Case("ABCGHIDEFGHI", new[] { "Instance_String_ThisString", ".ctor", "Concat_Instance_String_ThisString" }, "ABC", "DEF")]
+    [TestCase(123, new[] { "Static_Int32_Int32", "Add_Static_Int32_Int32" }, 100, 23)]
+    [TestCase("ABCDEF", new[] { "Static_String_String", "Concat_Static_String_String" }, "ABC", "DEF")]
+    [TestCase(123, new[] { "Static_RefInt_RefInt", "Store_Static_RefInt_RefInt" })]
+    [TestCase(679, new[] { "Instance_Int32_ThisInt32", "Add_Instance_Int32_ThisInt32" }, 123, 456)]
+    [TestCase("ABCGHIDEFGHI", new[] { "Instance_String_ThisString", "Concat_Instance_String_ThisString" }, "ABC", "DEF")]
     public sealed class Call
     {
         #region Static

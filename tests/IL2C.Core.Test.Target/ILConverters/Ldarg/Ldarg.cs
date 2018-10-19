@@ -3,23 +3,23 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(true, "Boolean_4", 0, 1, 2, 3, false)]
-    [Case(false, "Boolean_4", 0, 1, 2, 3, true)]
-    [Case((byte)(byte.MaxValue - 1), "Byte_4", 0, 1, 2, 3, byte.MaxValue)]
-    [Case((short)(short.MaxValue - 1), "Int16_4", 0, 1, 2, 3, short.MaxValue)]
-    [Case(int.MaxValue - 1, "Int32_4", 0, 1, 2, 3, int.MaxValue)]
-    [Case(long.MaxValue - 1, "Int64_4", 0, 1, 2, 3, long.MaxValue)]
-    [Case((sbyte)(sbyte.MaxValue - 1), "SByte_4", 0, 1, 2, 3, sbyte.MaxValue)]
-    [Case((ushort)(ushort.MaxValue - 1), "UInt16_4", 0, 1, 2, 3, ushort.MaxValue)]
-    [Case(uint.MaxValue - 1, "UInt32_4", 0, 1, 2, 3, uint.MaxValue)]
-    [Case(ulong.MaxValue - 1, "UInt64_4", 0, 1, 2, 3, ulong.MaxValue)]
-    [Case(int.MaxValue - 1, "IntPtr_4", 0, 1, 2, 3, int.MaxValue)]
-    [Case(uint.MaxValue - 1, "UIntPtr_4", 0, 1, 2, 3, uint.MaxValue)]
-    [Case((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
-    [Case(123.45 + 3.1415926535897931, "Double_4", 0, 1, 2, 3, 123.45)]
-    [Case("ABCD", "String_4", 0, 1, 2, 3, "ABC")]
-    [Case('B', "Char_4", 0, 1, 2, 3, 'A')]
-    [Case("ABCD", "Argument_256",
+    [TestCase(true, "Boolean_4", 0, 1, 2, 3, false)]
+    [TestCase(false, "Boolean_4", 0, 1, 2, 3, true)]
+    [TestCase((byte)(byte.MaxValue - 1), "Byte_4", 0, 1, 2, 3, byte.MaxValue)]
+    [TestCase((short)(short.MaxValue - 1), "Int16_4", 0, 1, 2, 3, short.MaxValue)]
+    [TestCase(int.MaxValue - 1, "Int32_4", 0, 1, 2, 3, int.MaxValue)]
+    [TestCase(long.MaxValue - 1, "Int64_4", 0, 1, 2, 3, long.MaxValue)]
+    [TestCase((sbyte)(sbyte.MaxValue - 1), "SByte_4", 0, 1, 2, 3, sbyte.MaxValue)]
+    [TestCase((ushort)(ushort.MaxValue - 1), "UInt16_4", 0, 1, 2, 3, ushort.MaxValue)]
+    [TestCase(uint.MaxValue - 1, "UInt32_4", 0, 1, 2, 3, uint.MaxValue)]
+    [TestCase(ulong.MaxValue - 1, "UInt64_4", 0, 1, 2, 3, ulong.MaxValue)]
+    [TestCase(int.MaxValue - 1, "IntPtr_4", 0, 1, 2, 3, int.MaxValue)]
+    [TestCase(uint.MaxValue - 1, "UIntPtr_4", 0, 1, 2, 3, uint.MaxValue)]
+    [TestCase((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
+    [TestCase(123.45 + 3.1415926535897931, "Double_4", 0, 1, 2, 3, 123.45)]
+    [TestCase("ABCD", "String_4", 0, 1, 2, 3, "ABC")]
+    [TestCase('B', "Char_4", 0, 1, 2, 3, 'A')]
+    [TestCase("ABCD", "Argument_256",
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,

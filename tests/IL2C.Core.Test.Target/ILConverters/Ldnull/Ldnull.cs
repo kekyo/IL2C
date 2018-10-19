@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(0, "IntPtrZero")]
-    [Case((uint)0, "UIntPtrZero")]
-    [Case(null, "NullReference")]
+    [TestCase(0, "IntPtrZero")]
+    [TestCase((uint)0, "UIntPtrZero")]
+    [TestCase(null, "NullReference")]
     public sealed class Ldnull
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

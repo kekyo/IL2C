@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [Case(246, "Mul2Int32", 123)]
-    [Case("ABCABC", "Mul2String", "ABC")]
+    [TestCase(246, "Mul2Int32", 123)]
+    [TestCase("ABCABC", "Mul2String", "ABC")]
     public sealed class Dup
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

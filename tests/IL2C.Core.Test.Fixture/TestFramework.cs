@@ -71,7 +71,7 @@ namespace IL2C
                 (type.IsDoubleType) ? "%lf" :
                 (type.IsIntPtrType) ? "0x%08x" :
                 (type.IsUIntPtrType) ? "0x%08x" :
-                (type.IsBooleanType) ? "%d" :
+                (type.IsBooleanType) ? "%s" :
                 (type.IsCharType) ? "'%c'" :
                 (type.IsStringType) ? "\\\"%s\\\"" :
                 "%s";
@@ -80,7 +80,7 @@ namespace IL2C
         private static string GetCLanguagePrintArgumentExpression(ITypeInformation type, string symbolName)
         {
             return type.IsBooleanType ?
-                symbolName + " ? \"true\" : \"false\"" :
+                symbolName + " ? L\"true\" : L\"false\"" :
                 type.IsStringType ?
                     string.Format("il2c_c_str({0})", symbolName) :
                     symbolName;

@@ -217,9 +217,9 @@ __System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
     /* internalcall */ __System_String_IL2C_RuntimeCast__,
     __System_String_ToString__,
     __System_String_GetHashCode__,
-    (void*)__System_Object_Finalize__,
-    (void*)__System_Object_Equals__,
+    (void(*)(System_String*))__System_Object_Finalize__,
+    (bool(*)(System_String*, System_Object*))__System_Object_Equals__,
 };
 
 IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
-    "System.String", UINTPTR_MAX, /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.String", INVALID_BODY_SIZE, /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

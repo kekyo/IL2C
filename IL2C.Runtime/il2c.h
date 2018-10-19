@@ -37,7 +37,7 @@ typedef void (*IL2C_MARK_HANDLER)(void*);
 typedef const struct
 {
     const char* pTypeName;
-    uintptr_t bodySize;
+    uint32_t bodySize;
     /* internalcall */ IL2C_MARK_HANDLER IL2C_MarkHandler;
 } IL2C_RUNTIME_TYPE_DECL;
 
@@ -56,15 +56,15 @@ struct IL2C_REF_HEADER
 
 // dynamic cast operator
 #define il2c_runtime_cast(pReference, typeName) \
-    ((typeName##*)((pReference)->vptr0__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
+    ((typeName*)((pReference)->vptr0__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
 
 // static cast operators
 #define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
-    ((typeName##*)(((uint8_t*)(pInterface)) - \
+    ((typeName*)(((intptr_t)(pInterface)) - \
      (offsetof(typeName, vptr_##interfaceTypeName##__) - \
       offsetof(typeName, vptr0__))))
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
-    ((interfaceTypeName##*)(((uint8_t*)(pReference)) + \
+    ((interfaceTypeName *)(((intptr_t)(pReference)) + \
      (offsetof(typeName, vptr_##interfaceTypeName##__) - \
       offsetof(typeName, vptr0__))))
 
@@ -116,8 +116,11 @@ typedef void* untyped_ptr;
 ///////////////////////////////////////////////////////
 // Boxing related declarations
 
-extern System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE_DECL* type);
-extern void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type);
+extern System_Object* il2c_box__(void* pValue, IL2C_RUNTIME_TYPE_DECL* type);
+extern void* il2c_unbox__(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type);
+
+#define il2c_box(pValue, typeName) (il2c_box__(pValue, il2c_typeof(typeName)))
+#define il2c_unbox(pObject, typeName) (il2c_unbox__(pObject, il2c_typeof(typeName)))
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions

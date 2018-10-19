@@ -113,6 +113,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>All</AssemblerOutput>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,6 +134,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>All</AssemblerOutput>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,6 +159,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>All</AssemblerOutput>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,6 +186,7 @@
       <DisableSpecificWarnings>4100</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>All</AssemblerOutput>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

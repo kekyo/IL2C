@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <IL Include="ILConverters/*/*.il" />
+    <IL Include="*/*/*.il" />
   </ItemGroup>
 
   <ItemGroup>

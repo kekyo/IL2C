@@ -12,7 +12,7 @@ struct IL2C_EXECUTION_FRAME
 {
     IL2C_EXECUTION_FRAME* pNext;
     uint8_t targetCount;
-    void** pTargets[];      // We have to track object references.
+    void** pTargets[1];      // We have to track object references.
 };
 
 // TODO: Become store to thread local storage
@@ -88,7 +88,7 @@ void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
 
     // String or Array:
     // throw new InvalidProgramException();
-    il2c_assert(type->bodySize != UINTPTR_MAX);
+    il2c_assert(type->bodySize != INVALID_BODY_SIZE);
 
     return il2c_get_uninitialized_object_internal__(type, type->bodySize);
 }
@@ -248,7 +248,7 @@ void il2c_shutdown()
 /////////////////////////////////////////////////////////////
 // Boxing related functions
 
-System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
+System_Object* il2c_box__(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
 {
     // +----------------------+
     // | IL2C_REF_HEADER      |
@@ -269,7 +269,7 @@ System_Object* il2c_box(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
     return (System_Object*)pBoxed;
 }
 
-void* il2c_unbox(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
+void* il2c_unbox__(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
 {
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pObject) - sizeof(IL2C_REF_HEADER));

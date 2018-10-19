@@ -98,6 +98,10 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             DecodeContext decodeContext)
         {
+            // MEMO: ldnull pushes the "UntypedReferenceType."
+            //   Because we can't understand whats the objref type at now.
+            //   The "UntypedReferenceType" is pseudo type information.
+            //   It will be resolved at later if using for GetRightExpression method.
             var symbolName = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UntypedReferenceType);
 
@@ -172,6 +176,30 @@ namespace IL2C.ILConverters
                         operand.MangledName) };
                 };
             }
+        }
+    }
+
+    internal sealed class SizeofConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Sizeof;
+
+        public override Func<IExtractContext, string[]> Apply(
+            ITypeInformation operand, DecodeContext decodeContext)
+        {
+            // TODO: If we use it by string and array type (flexible size.)
+
+            // III.4.25 sizeof - load the size, in bytes,of a type 
+            //   sizeof opcode has to push size by UInt32 (not Int32.)
+            var symbolName = decodeContext.PushStack(
+                decodeContext.PrepareContext.MetadataContext.UInt32Type);
+
+            return extractContext =>
+            {
+                return new[] { string.Format(
+                    "{0} = il2c_sizeof({1})",
+                    symbolName,
+                    operand.MangledName) };
+            };
         }
     }
 }

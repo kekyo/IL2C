@@ -41,7 +41,7 @@ __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
     /* internalcall */ __System_ValueType_IL2C_RuntimeCast__,
     __System_ValueType_ToString__,
     __System_ValueType_GetHashCode__,
-    (void*)__System_Object_Finalize__,
+    (void(*)(System_ValueType*))__System_Object_Finalize__,
     __System_ValueType_Equals__,
 };
 

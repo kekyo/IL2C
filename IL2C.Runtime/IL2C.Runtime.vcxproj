@@ -41,6 +41,7 @@
     <ClInclude Include="debugbreak.h" />
     <ClInclude Include="il2c.h" />
     <ClInclude Include="il2c_private.h" />
+    <None Include="il2c_combined.h" />
     <ClInclude Include="System.Boolean.h" />
     <ClInclude Include="System.Byte.h" />
     <ClInclude Include="System.Char.h" />

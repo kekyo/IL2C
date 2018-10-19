@@ -1,4 +1,8 @@
 // This is only using for unit tests because the combined runtime code compiles faster.
+#ifndef __IL2C_COMBINED_H__
+#define __IL2C_COMBINED_H__
+
+#pragma once
 
 #include "il2c.c"
 
@@ -21,3 +25,5 @@
 #include "System.Double.c"
 
 #include "System.Console.c"
+
+#endif

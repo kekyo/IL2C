@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -34,6 +35,7 @@ namespace IL2C
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-bin.tar.lzma",
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dev.tar.lzma",
             "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dll.tar.lzma",
+            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
             // Require C++
             //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-bin.tar.lzma",
             //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dev.tar.lzma",
@@ -168,12 +170,12 @@ namespace IL2C
             }
 
             var basePath = Path.GetDirectoryName(sourcePath);
-            var objPath = Path.Combine(basePath, "obj");
-            var executablePath = Path.Combine(objPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+            var outPath = Path.Combine(basePath, "out");
+            var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
 
-            if (!Directory.Exists(objPath))
+            if (!Directory.Exists(outPath))
             {
-                Directory.CreateDirectory(objPath);
+                Directory.CreateDirectory(outPath);
             }
 
             // Step1: Compile by gcc
@@ -187,13 +189,12 @@ namespace IL2C
 
             // TODO: turn to cmake based.
             var scriptPath = Path.Combine(basePath, "make.bat");
-            await TestUtilities.WriteTextFileAsync(
-                scriptPath,
-                string.Format(
-                    "@echo off\r\nsetlocal\r\nset PATH={0};%PATH%\r\nrmdir /s /q obj\r\nmkdir obj\r\n{1} {2}\r\n",
-                    gccBinPath,
-                    gccPath,
-                    string.Join(" ", gccArguments)));
+            await TestUtilities.CopyResourceToTextFileAsync(
+                scriptPath, "make.bat",
+                new Dictionary<string, object>
+                {
+                    { "gccBinPath", gccBinPath }
+                });
 
             var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {

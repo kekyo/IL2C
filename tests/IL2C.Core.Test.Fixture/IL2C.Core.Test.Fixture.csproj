@@ -23,16 +23,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ConverterTest.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Remove="Templates\launch.json" />
+    <None Remove="Templates\make.bat" />
     <None Remove="Templates\test_void.c" />
     <None Remove="Templates\test.c" />
+    <None Remove="Templates\test.vcxproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="ConverterTest.cs" />
+    <EmbeddedResource Include="Templates\launch.json" />
+    <EmbeddedResource Include="Templates\make.bat" />
     <EmbeddedResource Include="Templates\test_void.c" />
     <EmbeddedResource Include="Templates\test.c" />
     <EmbeddedResource Include="Templates\test.vcxproj" />

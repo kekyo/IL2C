@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 
 using IL2C.Metadata;
+using System.Collections.Generic;
 
 namespace IL2C
 {
@@ -135,7 +136,7 @@ namespace IL2C
             AssemblyWriter.InternalWriteSourceCode(
                 body, translateContext, prepared, "    ", DebugInformationOptions.Full, false);
 
-            // Step 1-5: Write Visual C++ project file from template.
+            // Step 1-5: Write Visual C++ project file and Visual Studio Code launch config from template.
             //     Note: It's only debugging purpose. The test doesn't use.
             var translatedPath = Path.GetFullPath(
                 Path.Combine(
@@ -144,62 +145,78 @@ namespace IL2C
                     targetMethod.DeclaringType.Name,
                     testName));
 
-            while (!Directory.Exists(translatedPath))
-            {
-                try
-                {
-                    Directory.CreateDirectory(translatedPath);
-                }
-                catch (IOException)
-                {
-                }
-            }
+            var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
+            await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj");
 
-            var templatePath = Path.Combine(translatedPath, "test.vcxproj");
-            using (var fs = await TestUtilities.CreateStreamAsync(templatePath))
-            {
-                using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream("IL2C.Templates.test.vcxproj"))
-                {
-                    await ts.CopyToAsync(fs);
-                    await fs.FlushAsync();
-                }
-
-                fs.Close();
-            }
+            var launchTemplatePath = Path.Combine(translatedPath, ".vscode", "launch.json");
+            await TestUtilities.CopyResourceToTextFileAsync(launchTemplatePath, "launch.json");
 
             // Step 1-6: Write source code into a file from template.
             var expectedType = targetMethod.ReturnType;
 
-            var sourceCode = new StringBuilder();
-            using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
+            var sourceCodeStream = new MemoryStream();
+            await TestUtilities.CopyResourceToStreamAsync(
+                sourceCodeStream,
                 // If the target method result is void-type, we have to use void-type tolerant template.
-                (expectedType.IsVoidType || isTrapBreak) ? "IL2C.Templates.test_void.c" : "IL2C.Templates.test.c"))
-            {
-                var tr = new StreamReader(ts);
-                sourceCode.Append(await tr.ReadToEndAsync());
-            }
+                (expectedType.IsVoidType || isTrapBreak) ? "test_void.c" : "test.c");
+            sourceCodeStream.Position = 0;
+            var sourceCode = new StreamReader(sourceCodeStream);
+
+            var arguments = args.
+                Zip(targetMethod.Parameters, (arg, p) =>
+                    (p.SymbolName, p.TargetType, GetCLanguageTypedLiteralExpression(arg, p.TargetType))).
+                ToArray();
+            var locals = (!(expectedType.IsVoidType || isTrapBreak) ?
+                new ValueTuple<string, ITypeInformation, string>[]
+                {
+                    ( "expected", expectedType, GetCLanguageTypedLiteralExpression(expected, targetMethod.ReturnType) ),
+                    ( "actual", expectedType, (string)null ),
+                } :
+                new ValueTuple<string, ITypeInformation, string>[]
+                {
+                }).
+                Concat(arguments);
 
             // Construct test definitions.
-            sourceCode.Replace("{body}", body.ToString());
-
-            sourceCode.Replace("{isRefType}", (expectedType.IsByReference || expectedType.IsClass) ? "1" : "0");
-
-            sourceCode.Replace("{type}", targetMethod.ReturnType.CLanguageTypeName);
-            sourceCode.Replace("{expected}", GetCLanguageTypedLiteralExpression(expected, targetMethod.ReturnType));
-            sourceCode.Replace("{function}", targetMethod.CLanguageFunctionName);
-            sourceCode.Replace("{arguments}", string.Join(
-                ", ",
-                args.Zip(targetMethod.Parameters, (arg, p) => GetCLanguageTypedLiteralExpression(arg, p.TargetType))));
-            sourceCode.Replace("{equality}", GetCLanguageCompareExpression(expectedType));
-            sourceCode.Replace("{format}", GetCLanguagePrintFormatFromType(targetMethod.ReturnType));
-            sourceCode.Replace("{expectedExpression}", GetCLanguagePrintArgumentExpression(expectedType, "expected"));
-            sourceCode.Replace("{actualExpression}", GetCLanguagePrintArgumentExpression(expectedType, "actual"));
+            var replaceValues = new Dictionary<string, object>
+            {
+                { "testName", targetMethod.FriendlyName},
+                { "type", targetMethod.ReturnType.CLanguageTypeName},
+                { "body", body.ToString() },
+                { "locals", string.Join(" ", locals.
+                    Select(entry => string.Format("{0} {1} = {2};",
+                        entry.Item2.CLanguageTypeName,
+                        entry.Item1,
+                        entry.Item2.IsClass ? "NULL" : "0"))) },
+                { "frames", string.Join(" ", locals.
+                    Where(entry => entry.Item2.IsClass).
+                    Select(entry => string.Format("{0}* {1}__;",
+                        entry.Item2.CLanguageTypeName,
+                        entry.Item1))) },
+                { "frameCount", locals.
+                    Where(entry => entry.Item2.IsClass).Count() },
+                { "frameInitializers", string.Join(" ", locals.
+                    Where(entry => entry.Item2.IsClass).
+                    Select(entry => string.Format("__executionFrame__.{0}__ = &{0};",
+                        entry.Item1))) },
+                { "argInitializers", string.Join(" ", arguments.
+                    Select(entry => string.Format("{0} = {1};",
+                        entry.Item1, entry.Item3))) },
+                { "expected", GetCLanguageTypedLiteralExpression(expected, targetMethod.ReturnType)},
+                { "function", targetMethod.CLanguageFunctionName},
+                { "arguments", string.Join(", ", arguments.
+                    Select(arg => arg.SymbolName))},
+                { "equality", GetCLanguageCompareExpression(expectedType)},
+                { "format", GetCLanguagePrintFormatFromType(targetMethod.ReturnType)},
+                { "expectedExpression", GetCLanguagePrintArgumentExpression(expectedType, "expected")},
+                { "actualExpression", GetCLanguagePrintArgumentExpression(expectedType, "actual")},
+            };
 
             var sourcePath = Path.Combine(translatedPath, "test.c");
             var headerPath = Path.Combine(translatedPath, "test.h");
 
             await Task.WhenAll(
-                TestUtilities.WriteTextFileAsync(sourcePath, sourceCode.ToString()),
+                TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues),
                 TestUtilities.WriteTextFileAsync(headerPath, header.ToString()));
 
             ///////////////////////////////////////////////

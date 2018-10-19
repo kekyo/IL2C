@@ -1,9 +1,10 @@
-﻿#include <il2c_combined.c>
+﻿#include <il2c_combined.h>
 #include "test.h"
 
 {body}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Test: {testName}
 
 #include <stdio.h>
 
@@ -11,27 +12,26 @@ int main()
 {
     il2c_initialize();
 
-    {type} expected;
-    {type} actual;
+    ////////////////////////
 
-#if {isRefType} // expected value is reference type
-    expected = NULL;
-    actual = NULL;
+    {locals}
+
+    ////////////////////////
 
     struct /* IL2C_EXECUTION_FRAME */
     {
         IL2C_EXECUTION_FRAME* pNext;
         uint8_t targetCount;
-        {type}* expected__;
-        {type}* actual__;
+        {frames}
     } __executionFrame__;
 
-    __executionFrame__.targetCount = 2;
-    __executionFrame__.expected__ = &expected;
-    __executionFrame__.actual__ = &actual;
+    __executionFrame__.targetCount = {frameCount};
+    {frameInitializers}
     il2c_link_execution_frame(&__executionFrame__);
-#endif
 
+    ////////////////////////
+
+    {argInitializers}
     expected = {expected};
     actual = {function}({arguments});
 
@@ -39,9 +39,11 @@ int main()
     if ({equality}) { wprintf(L"Success\n"); result = 0; }
     else { wprintf(L"Failed: {type}: expected={format}, actual={format}\n", {expectedExpression}, {actualExpression}); result = 1; }
 
-#if {isRefType} // expected value is reference type
+    ////////////////////////
+
     il2c_unlink_execution_frame(&__executionFrame__);
-#endif
+
+    ////////////////////////
 
     il2c_shutdown();
 

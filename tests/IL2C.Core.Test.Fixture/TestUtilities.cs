@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IL2C
@@ -114,20 +116,107 @@ namespace IL2C
         public static Task<Stream> CreateStreamAsync(string path)
         {
             return RetryIfStrangeProblemAsync(() =>
-                (Stream)new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true));
+            {
+                var basePath = Path.GetDirectoryName(path);
+                while (!Directory.Exists(basePath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(basePath);
+                    }
+                    catch
+                    {
+                    }
+                }
+                return (Stream)new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true);
+            });
         }
 
-        public static async Task WriteTextFileAsync(string path, string text)
+        public static async Task WriteTextFileAsync(
+            TextWriter tw, TextReader from, IReadOnlyDictionary<string, object> replaceValues)
+        {
+            while (true)
+            {
+                var line = await from.ReadLineAsync();
+                if (line == null)
+                {
+                    break;
+                }
+
+                if (replaceValues.Count >= 1)
+                {
+                    var sb = new StringBuilder(line);
+                    foreach (var entry in replaceValues)
+                    {
+                        sb.Replace("{" + entry.Key + "}", entry.Value.ToString());
+                    }
+                    await tw.WriteLineAsync(sb.ToString());
+                }
+                else
+                {
+                    await tw.WriteLineAsync(line);
+                }
+            }
+
+            await tw.FlushAsync();
+        }
+
+        public static async Task WriteTextFileAsync(
+            string path, TextReader tr, IReadOnlyDictionary<string, object> replaceValues)
         {
             using (var fs = await CreateStreamAsync(path))
             {
                 var tw = new StreamWriter(fs);
-
-                await tw.WriteAsync(text);
-                await tw.FlushAsync();
-
+                await WriteTextFileAsync(tw, tr, replaceValues);
                 fs.Close();
             }
+        }
+
+        public static Task WriteTextFileAsync(
+            string path, string text, IReadOnlyDictionary<string, object> replaceValues)
+        {
+            return WriteTextFileAsync(path, new StringReader(text), replaceValues);
+        }
+
+        private static readonly Dictionary<string, object> empty = new Dictionary<string, object>();
+
+        public static Task WriteTextFileAsync(
+            string path, TextReader tr)
+        {
+            return WriteTextFileAsync(path, tr, empty);
+        }
+
+        public static Task WriteTextFileAsync(
+            string path, string text)
+        {
+            return WriteTextFileAsync(path, text, empty);
+        }
+
+        public static async Task CopyResourceToStreamAsync(Stream targetStream, string resourceName)
+        {
+            using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
+                "IL2C.Templates." + resourceName))
+            {
+                await ts.CopyToAsync(targetStream);
+                await targetStream.FlushAsync();
+            }
+        }
+
+        public static async Task CopyResourceToTextFileAsync(
+            string path, string resourceName, IReadOnlyDictionary<string, object> replaceValues)
+        {
+            using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
+                "IL2C.Templates." + resourceName))
+            {
+                var tr = new StreamReader(ts);
+                await WriteTextFileAsync(path, tr);
+            }
+        }
+
+        public static Task CopyResourceToTextFileAsync(
+            string path, string resourceName)
+        {
+            return CopyResourceToTextFileAsync(path, resourceName, empty);
         }
     }
 }

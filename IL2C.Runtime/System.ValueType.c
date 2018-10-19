@@ -47,6 +47,7 @@ __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
 
 IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__ = {
     "System.ValueType",
+    IL2C_TYPE_STANDARD,
     sizeof(System_ValueType),
     /* internalcall */ (IL2C_MARK_HANDLER)__System_ValueType_IL2C_MarkHandler__
 };

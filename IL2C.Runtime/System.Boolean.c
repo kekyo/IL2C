@@ -14,4 +14,7 @@ System_String* System_Boolean_ToString(bool* this__)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_Boolean_RUNTIME_TYPE__ = {
-    "System.Boolean", sizeof(System_Boolean), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.Boolean",
+    IL2C_TYPE_INTEGER,
+    sizeof(System_Boolean),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

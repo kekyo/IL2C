@@ -37,6 +37,7 @@ typedef void (*IL2C_MARK_HANDLER)(void*);
 typedef const struct
 {
     const char* pTypeName;
+    uint32_t flags;
     uint32_t bodySize;
     /* internalcall */ IL2C_MARK_HANDLER IL2C_MarkHandler;
 } IL2C_RUNTIME_TYPE_DECL;
@@ -50,6 +51,9 @@ struct IL2C_REF_HEADER
 
 ///////////////////////////////////////////////////////
 // Runtime type information related declarations
+
+// IL2C_RUNTIME_TYPE_DECL.flags
+#define IL2C_TYPE_STANDARD 0x00
 
 #define il2c_typeof(typeName) (&__##typeName##_RUNTIME_TYPE__)
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
@@ -116,11 +120,19 @@ typedef void* untyped_ptr;
 ///////////////////////////////////////////////////////
 // Boxing related declarations
 
-extern System_Object* il2c_box__(void* pValue, IL2C_RUNTIME_TYPE_DECL* type);
-extern void* il2c_unbox__(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type);
+extern System_Object* il2c_box1__(
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType);
+extern System_Object* il2c_box2__(
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType);
+extern void* il2c_unbox__(
+    System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* valueType);
 
-#define il2c_box(pValue, typeName) (il2c_box__(pValue, il2c_typeof(typeName)))
-#define il2c_unbox(pObject, typeName) (il2c_unbox__(pObject, il2c_typeof(typeName)))
+#define il2c_box1(pValue, valueTypeName) \
+    (il2c_box1__(pValue, il2c_typeof(valueTypeName)))
+#define il2c_box2(pValue, valueTypeName, stackTypeName) \
+    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName)))
+#define il2c_unbox(pObject, valueTypeName) \
+    (il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions

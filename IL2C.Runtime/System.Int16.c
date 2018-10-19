@@ -15,4 +15,7 @@ System_String* System_Int16_ToString(int16_t* this__)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_Int16_RUNTIME_TYPE__ = {
-    "System.Int16", sizeof(System_Int16), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.Int16",
+    IL2C_TYPE_INTEGER,
+    sizeof(System_Int16),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

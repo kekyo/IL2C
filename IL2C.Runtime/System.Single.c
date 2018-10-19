@@ -15,4 +15,7 @@ System_String* System_Single_ToString(float* this__)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_Single_RUNTIME_TYPE__ = {
-    "System.Single", sizeof(System_Single), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.Single",
+    IL2C_TYPE_STANDARD,
+    sizeof(System_Single),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

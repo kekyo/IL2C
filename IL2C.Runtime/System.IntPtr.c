@@ -17,4 +17,7 @@ System_String* System_IntPtr_ToString(intptr_t* this__)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__ = {
-    "System.IntPtr", sizeof(System_IntPtr), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.IntPtr",
+    IL2C_TYPE_INTEGER,
+    sizeof(System_IntPtr),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

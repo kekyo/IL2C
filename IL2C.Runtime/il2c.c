@@ -86,9 +86,9 @@ void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
 {
     il2c_assert(type != NULL);
 
-    // String or Array:
+    // String or Array (IL2C_TYPE_VARIABLE):
     // throw new InvalidProgramException();
-    il2c_assert(type->bodySize != INVALID_BODY_SIZE);
+    il2c_assert((type->flags & IL2C_TYPE_VARIABLE) == 0);
 
     return il2c_get_uninitialized_object_internal__(type, type->bodySize);
 }
@@ -248,32 +248,99 @@ void il2c_shutdown()
 /////////////////////////////////////////////////////////////
 // Boxing related functions
 
-System_Object* il2c_box__(void* pValue, IL2C_RUNTIME_TYPE_DECL* type)
+// +----------------------+
+// | IL2C_REF_HEADER      |
+// +----------------------+ <-- pBoxed        ---------------------------
+// | vptr0__              |                     | System_ValueType    ^
+// +----------------------+                   -----------             |
+// |        :             |                     ^                     | bodySize
+// | (value data)         | Copy from pValue    | type->bodySize      |
+// |        :             |                     v                     v
+// +----------------------+                   ---------------------------
+
+System_Object* il2c_box1__(
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType)
 {
-    // +----------------------+
-    // | IL2C_REF_HEADER      |
-    // +----------------------+ <-- pBoxed        ---------------------------
-    // | vptr0__              |                     | System_ValueType    ^
-    // +----------------------+                   -----------             |
-    // |        :             |                     ^                     | bodySize
-    // | (value data)         | Copy from pValue    | type->bodySize      |
-    // |        :             |                     v                     v
-    // +----------------------+                   ---------------------------
+    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
+    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
-    uintptr_t bodySize = sizeof(System_ValueType) + type->bodySize;
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(type, bodySize);
-
+    // TODO: toType's VTABLE
     pBoxed->vptr0__ = &__System_ValueType_VTABLE__;
-    il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, type->bodySize);
+    il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
 
     return (System_Object*)pBoxed;
 }
 
-void* il2c_unbox__(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* type)
+System_Object* il2c_box2__(
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType)
+{
+    // Require type conversion
+    il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) != 0) && ((stackType->flags & IL2C_TYPE_INTEGER) != 0));
+    il2c_assert((valueType->bodySize <= 4) && (stackType->bodySize <= 4));
+    il2c_assert((valueType->bodySize >= 1) && (stackType->bodySize >= 1));
+
+    // TODO: value type --> interface type
+
+    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
+    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
+
+    // TODO: toType's VTABLE
+    pBoxed->vptr0__ = &__System_ValueType_VTABLE__;
+
+    uint8_t v1;
+    uint16_t v2;
+    uint16_t v4;
+    switch (valueType->bodySize)
+    {
+    case 1:
+        switch (stackType->bodySize)
+        {
+        case 2:
+            v1 = (uint8_t)*(uint16_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v1, 1);
+            break;
+        case 4:
+            v1 = (uint8_t)*(uint32_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v1, 1);
+            break;
+        }
+        break;
+    case 2:
+        switch (stackType->bodySize)
+        {
+        case 1:
+            v2 = *(uint8_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v2, 2);
+            break;
+        case 4:
+            v2 = (uint16_t)*(uint32_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v2, 2);
+            break;
+        }
+        break;
+    case 4:
+        switch (stackType->bodySize)
+        {
+        case 1:
+            v4 = *(uint8_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v4, 4);
+            break;
+        case 2:
+            v4 = *(uint16_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v4, 4);
+            break;
+        }
+        break;
+    }
+
+    return (System_Object*)pBoxed;
+}
+
+void* il2c_unbox__(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* valueType)
 {
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pObject) - sizeof(IL2C_REF_HEADER));
-    if (pHeader->type != type)
+    if (pHeader->type != valueType)
     {
         // new InvalidCastException();
         il2c_assert(0);

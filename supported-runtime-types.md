@@ -5,7 +5,7 @@ Type | Test
 | [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) |  |
 | [System.ValueType](https://docs.microsoft.com/en-us/dotnet/api/system.valuetype) |  |
 | [System.Void](https://docs.microsoft.com/en-us/dotnet/api/system.void) |  |
-| [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/system.byte) |  |
+| [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/system.byte) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Byte) |
 | [System.SByte](https://docs.microsoft.com/en-us/dotnet/api/system.sbyte) |  |
 | [System.Int16](https://docs.microsoft.com/en-us/dotnet/api/system.int16) |  |
 | [System.UInt16](https://docs.microsoft.com/en-us/dotnet/api/system.uint16) |  |

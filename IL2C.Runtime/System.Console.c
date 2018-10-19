@@ -50,4 +50,7 @@ System_String* System_Console_ReadLine()
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_Console_RUNTIME_TYPE__ = {
-    "System.Console", 0, /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.Console",
+    IL2C_TYPE_STANDARD,
+    0,
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

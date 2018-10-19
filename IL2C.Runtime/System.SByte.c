@@ -15,4 +15,7 @@ System_String* System_SByte_ToString(int8_t* this__)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE__ = {
-    "System.SByte", sizeof(System_SByte), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.SByte",
+    IL2C_TYPE_INTEGER,
+    sizeof(System_SByte),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

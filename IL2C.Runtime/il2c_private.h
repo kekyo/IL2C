@@ -178,8 +178,9 @@ extern void WriteLineToError(const wchar_t* pMessage);
 
 #include <il2c.h>
 
-// Use by string and array type at IL2C_RUNTIME_TYPE_DECL.bodySize
-#define INVALID_BODY_SIZE UINT32_MAX
+// IL2C_RUNTIME_TYPE_DECL.flags
+#define IL2C_TYPE_INTEGER 0x01
+#define IL2C_TYPE_VARIABLE 0x02
 
 ///////////////////////////////////////////////////
 // Internal implements required additional headers

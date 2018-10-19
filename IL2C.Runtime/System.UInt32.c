@@ -15,4 +15,7 @@ System_String* System_UInt32_ToString(uint32_t* this__)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_UInt32_RUNTIME_TYPE__ = {
-    "System.UInt32", sizeof(System_UInt32), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.UInt32",
+    IL2C_TYPE_INTEGER,
+    sizeof(System_UInt32),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

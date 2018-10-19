@@ -16,4 +16,7 @@ System_String* System_Char_ToString_1(wchar_t* this__)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_Char_RUNTIME_TYPE__ = {
-    "System.Char", sizeof(System_Char), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.Char",
+    IL2C_TYPE_INTEGER,
+    sizeof(System_Char),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

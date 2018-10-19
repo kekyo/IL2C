@@ -29,4 +29,7 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE__ = {
-    "System.Int32", sizeof(System_Int32), /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    "System.Int32",
+    IL2C_TYPE_INTEGER,
+    sizeof(System_Int32),
+    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

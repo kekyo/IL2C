@@ -15,7 +15,10 @@ namespace IL2C.ILConverters
             ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            if (!si.TargetType.IsValueType || !si.TargetType.Equals(operand))
+            if (!(si.TargetType.IsValueType &&
+                ((operand.IsInt32StackFriendlyType && si.TargetType.IsInt32StackFriendlyType) ||
+                (operand.IsInt64StackFriendlyType && si.TargetType.IsInt64StackFriendlyType) ||
+                (operand.IsIntPtrStackFriendlyType && si.TargetType.IsIntPtrStackFriendlyType))))
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Location={0}, TokenType={1}, StackType={2}",
@@ -27,14 +30,29 @@ namespace IL2C.ILConverters
             var symbolName = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.ObjectType);
 
-            return _ =>
+            if (operand.Equals(si.TargetType))
             {
-                return new[] { string.Format(
-                    "{0} = il2c_box(&{1}, {2})",
+                return _ =>
+                {
+                    return new[] { string.Format(
+                    "{0} = il2c_box1(&{1}, {2})",
                     symbolName,
                     si.SymbolName,
+                    operand.MangledName) };
+                };
+            }
+            else
+            {
+                return _ =>
+                {
+                    return new[] { string.Format(
+                    "{0} = il2c_box2(&{1}, {2}, {3})",
+                    symbolName,
+                    si.SymbolName,
+                    operand.MangledName,
                     si.TargetType.MangledName) };
-            };
+                };
+            }
         }
     }
 

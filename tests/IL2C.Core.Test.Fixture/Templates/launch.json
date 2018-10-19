@@ -5,7 +5,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/obj/test.exe",
+            "program": "${workspaceFolder}/out/test.exe",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",

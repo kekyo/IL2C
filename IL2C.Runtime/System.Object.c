@@ -55,5 +55,6 @@ IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
     "System.Object",
     IL2C_TYPE_STANDARD,
     sizeof(System_Object),
+    &__System_Object_VTABLE__,
     /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__
 };

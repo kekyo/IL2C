@@ -29,8 +29,8 @@ struct System_Object
     __System_Object_VTABLE_DECL__* vptr0__;
 };
 
-extern IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__;
 extern __System_Object_VTABLE_DECL__ __System_Object_VTABLE__;
+extern IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__;
 
 static inline void System_Object__ctor(System_Object* this__)
 {

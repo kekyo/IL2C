@@ -18,4 +18,5 @@ IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE__ = {
     "System.UInt16",
     IL2C_TYPE_INTEGER,
     sizeof(System_UInt16),
+    &__System_ValueType_VTABLE__,  // TODO:
     /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

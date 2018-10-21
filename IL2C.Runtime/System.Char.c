@@ -19,4 +19,5 @@ IL2C_RUNTIME_TYPE_DECL __System_Char_RUNTIME_TYPE__ = {
     "System.Char",
     IL2C_TYPE_INTEGER,
     sizeof(System_Char),
+    &__System_ValueType_VTABLE__,  // TODO:
     /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

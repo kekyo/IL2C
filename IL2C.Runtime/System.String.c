@@ -225,4 +225,5 @@ IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
     "System.String",
     IL2C_TYPE_VARIABLE,
     0,
+    &__System_String_VTABLE__,
     /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };

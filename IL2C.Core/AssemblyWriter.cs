@@ -186,18 +186,18 @@ namespace IL2C
 
             tw.WriteLine();
             tw.WriteLine(
-                "// [1-4] {0} runtime type information",
-                declaredType.MemberTypeName);
-            tw.WriteLine(
-                "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
-                declaredType.MangledName);
-
-            tw.WriteLine();
-            tw.WriteLine(
                 "// [1-5] {0} vtable",
                 declaredType.MemberTypeName);
             tw.WriteLine(
                 "extern __{0}_VTABLE_DECL__ __{0}_VTABLE__;",
+                declaredType.MangledName);
+
+            tw.WriteLine();
+            tw.WriteLine(
+                "// [1-4] {0} runtime type information",
+                declaredType.MemberTypeName);
+            tw.WriteLine(
+                "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
                 declaredType.MangledName);
         }
 
@@ -766,30 +766,6 @@ namespace IL2C
 
             tw.WriteLine("}");
 
-            // Write runtime type information
-            tw.WriteLine();
-            tw.WriteLine("// [7-8] Runtime type information");
-            tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
-                declaredType.MangledName);
-            tw.WriteLine(
-                "{0}\"{1}\",",
-                indent,
-                declaredType.FriendlyName);
-            tw.WriteLine(
-                "{0}IL2C_TYPE_STANDARD,",
-                indent);
-            tw.WriteLine(
-                "{0}sizeof({1}),",
-                indent,
-                declaredType.MangledName);
-            tw.WriteLine(
-                "{0}/* internalcall */ (IL2C_MARK_HANDLER)__{1}_IL2C_MarkHandler__,",
-                indent,
-                declaredType.MangledName);
-
-            tw.WriteLine("};");
-
             // NOTE: 2 of 2
             //   Enum type derived from System.Enum,
             //   so all enum types boxed to System.Enum
@@ -824,12 +800,6 @@ namespace IL2C
                         indent,
                         function.MangledTypeName,
                         function.CLanguageVirtualFunctionDeclarationName);
-                    //tw.WriteLine(
-                    //    "{0}{1} (*{2})({3}),",
-                    //    indent,
-                    //    function.ReturnTypeName,
-                    //    function.Name,
-                    //    string.Join(", ", function.Parameters.Select(p => p.Key)));
                 }
 
                 tw.WriteLine("};");
@@ -910,6 +880,34 @@ namespace IL2C
                     tw.WriteLine("};");
                 }
             }
+
+            // Write runtime type information
+            tw.WriteLine();
+            tw.WriteLine("// [7-8] Runtime type information");
+            tw.WriteLine(
+                "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
+                declaredType.MangledName);
+            tw.WriteLine(
+                "{0}\"{1}\",",
+                indent,
+                declaredType.FriendlyName);
+            tw.WriteLine(
+                "{0}IL2C_TYPE_STANDARD,",
+                indent);
+            tw.WriteLine(
+                "{0}sizeof({1}),",
+                indent,
+                declaredType.MangledName);
+            tw.WriteLine(
+                "{0}&__{1}_VTABLE__,",
+                indent,
+                (!declaredType.IsEnum) ? declaredType.MangledName : declaredType.Context.ObjectType.MangledName);  // NOTE: 2 of 2
+            tw.WriteLine(
+                "{0}/* internalcall */ (IL2C_MARK_HANDLER)__{1}_IL2C_MarkHandler__,",
+                indent,
+                declaredType.MangledName);
+
+            tw.WriteLine("};");
         }
 
         private static void InternalConvertTypeHelperForInterface(

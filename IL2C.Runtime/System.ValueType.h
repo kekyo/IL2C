@@ -28,8 +28,8 @@ struct System_ValueType
     __System_ValueType_VTABLE_DECL__* vptr0__;
 };
 
-extern IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__;
 extern __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__;
+extern IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__;
 
 static inline void System_ValueType__ctor(System_ValueType* this__)
 {

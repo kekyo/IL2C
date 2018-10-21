@@ -37,9 +37,10 @@ typedef void (*IL2C_MARK_HANDLER)(void*);
 typedef const struct
 {
     const char* pTypeName;
-    uint32_t flags;
-    uint32_t bodySize;
-    /* internalcall */ IL2C_MARK_HANDLER IL2C_MarkHandler;
+    const uint32_t flags;
+    const uint32_t bodySize;
+    const void* pVTable;
+    /* internalcall */ const IL2C_MARK_HANDLER IL2C_MarkHandler;
 } IL2C_RUNTIME_TYPE_DECL;
 
 struct IL2C_REF_HEADER

@@ -31,24 +31,15 @@ struct System_ValueType
 extern __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__;
 
+extern /* internalcall */ void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type);
+
 static inline void System_ValueType__ctor(System_ValueType* this__)
 {
 }
 
-extern /* internalcall */ void __System_ValueType_IL2C_MarkHandler__(System_ValueType* this__);
-extern /* internalcall */ void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern /* virtual */ System_String* __System_ValueType_ToString__(System_ValueType* this__);
-extern /* virtual */ int32_t __System_ValueType_GetHashCode__(System_ValueType* this__);
-extern /* virtual */ bool __System_ValueType_Equals__(System_ValueType* this__, System_Object* obj);
-
-#define System_ValueType_ToString(/* System_ValueType* */ this__) \
-    ((this__)->vptr0__->ToString((this__)))
-#define System_ValueType_GetHashCode(/* System_ValueType* */ this__) \
-    ((this__)->vptr0__->GetHashCode((this__)))
-#define System_ValueType_Finalize(/* System_ValueType* */ this__) \
-    ((this__)->vptr0__->Finalize((this__)))
-#define System_ValueType_Equals(/* System_ValueType* */ this__, /* System_Object* */ obj) \
-    ((this__)->vptr0__->Equals((this__), (obj)))
+extern /* virtual */ System_String* System_ValueType_ToString(System_ValueType* this__);
+extern /* virtual */ int32_t System_ValueType_GetHashCode(System_ValueType* this__);
+extern /* virtual */ bool System_ValueType_Equals(System_ValueType* this__, System_Object* obj);
 
 #ifdef __cplusplus
 }

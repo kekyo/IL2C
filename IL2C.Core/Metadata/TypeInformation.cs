@@ -63,7 +63,7 @@ namespace IL2C.Metadata
 
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
-        IMethodInformation[] OverridedMethods { get; }
+        IMethodInformation[] CalculatedMethods { get; }
         IMethodInformation[] VirtualMethods { get; }
 
         string CLanguageTypeName { get; }
@@ -84,7 +84,7 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation[]> nestedTypes;
         private readonly Lazy<FieldInformation[]> fields;
         private readonly Lazy<MethodInformation[]> declaredMethods;
-        private readonly Lazy<IMethodInformation[]> overridedMethods;
+        private readonly Lazy<IMethodInformation[]> calculatedMethods;
         private readonly Lazy<IMethodInformation[]> virtualMethods;
         private readonly Lazy<string> cLanguageTypeName;
 
@@ -129,11 +129,11 @@ namespace IL2C.Metadata
                 () => (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
                 method => new MethodInformation(method, module));
 
-            overridedMethods = Lazy.Create(
-                () => this.EnumerateOverridedMethods().ToArray());
+            calculatedMethods = Lazy.Create(
+                () => this.GetCalculatedMethods());
 
             virtualMethods = Lazy.Create(
-                () => this.OverridedMethods.Where(method => method.IsVirtual).ToArray());
+                () => this.CalculatedMethods.Where(method => method.IsVirtual).ToArray());
 
             cLanguageTypeName = Lazy.Create(
                 () =>
@@ -351,7 +351,7 @@ namespace IL2C.Metadata
 
         public IFieldInformation[] Fields => fields.Value;
         public IMethodInformation[] DeclaredMethods => declaredMethods.Value;
-        public IMethodInformation[] OverridedMethods => overridedMethods.Value;
+        public IMethodInformation[] CalculatedMethods => calculatedMethods.Value;
         public IMethodInformation[] VirtualMethods => virtualMethods.Value;
 
         public override bool IsCLanguagePublicScope
@@ -431,10 +431,15 @@ namespace IL2C.Metadata
             return false;
         }
 
-        private IEnumerable<IMethodInformation> EnumerateOverridedMethods()
+        private IMethodInformation[] GetCalculatedMethods()
         {
+            // Calculate totally visible methods.
+            // Those are excluded by inherited base methods.
+
             var results = new List<IMethodInformation>();
 
+            // Overrided method calculus:
+            //   Traverse from this type to base (System.Object) type.
             foreach (var type in ((ITypeInformation)this)
                 .Traverse(type => (type.IsValueType || type.IsClass)
                     ? type.BaseType
@@ -444,46 +449,36 @@ namespace IL2C.Metadata
                     //   But we have to support for invoking these methods by callvirt opcode.
                     //   IL2C applies easy way to interface type has pseudo these method entries.
                     //   This code fragment makes it.
-                    : this.MetadataContext.ObjectType)
-                .Reverse())
+                    : this.MetadataContext.ObjectType))
             {
                 foreach (var method in type.DeclaredMethods
-                    .Where(method => !method.IsStatic && !method.IsConstructor)  // Only instance methods
-                    .OrderByParameters())   // Make stable in current type.
+                    .Where(method => !(method.IsStatic && method.IsConstructor))  // Exclude for the type initializer
+                    .OrderByStableAllOverloads())   // Make stable in current type.
                 {
-                    // Not newslot: method become override
-                    if (!method.IsNewSlot)
+                    // Override rule:
+                    //   1. Method name is same
+                    //   2. Method parameter types are same
+                    var index = results
+                        .FindIndex(md =>
+                            (md.Name == method.Name)
+                            && (md.Parameters
+                                .Select(p => p.TargetType)
+                                .SequenceEqual(
+                                    method.Parameters.Select(p => p.TargetType))));
+                    if (index >= 0)
                     {
-                        // Override rule:
-                        //   1. Method name is same
-                        //   2. Method parameter types are same
-                        var index = results
-                            .FindIndex(md =>
-                                (md.Name == method.Name)
-                                && (md.Parameters
-                                    .Select(p => p.TargetType)
-                                    .SequenceEqual(
-                                        method.Parameters.Select(p => p.TargetType))));
-                        if (index >= 0)
-                        {
-                            // Found: override
-                            results[index] = method;
-                        }
-                        else
-                        {
-                            // Not fount: append new method
-                            results.Add(method);
-                        }
+                        // Found: override
+                        results[index] = method;
                     }
                     else
                     {
-                        // Newslot: force append
+                        // Not fount: append new method
                         results.Add(method);
                     }
                 }
             }
 
-            return results;
+            return results.ToArray();
         }
 
         public ITypeInformation MakeByReference()

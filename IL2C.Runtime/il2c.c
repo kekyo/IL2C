@@ -93,7 +93,7 @@ void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
     return il2c_get_uninitialized_object_internal__(type, type->bodySize);
 }
 
-void il2c_mark_from_handler(void* pReference)
+void il2c_mark_from_handler(/* System_Object* */ void* pReference)
 {
     il2c_assert(pReference != NULL);
 
@@ -106,6 +106,16 @@ void il2c_mark_from_handler(void* pReference)
         il2c_assert(pHeader->type->IL2C_MarkHandler != NULL);
         pHeader->type->IL2C_MarkHandler(pReference);
     }
+}
+
+void il2c_default_mark_handler(/* System_Object* */ void* pReference)
+{
+    il2c_assert(pReference != NULL);
+
+    // We can use this function only when the runtime type has no member fields (contains maybe objref.)
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
+        (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
+    il2c_assert(pHeader->type->bodySize == 0);
 }
 
 //////////////////////////
@@ -251,29 +261,37 @@ void il2c_shutdown()
 // +----------------------+
 // | IL2C_REF_HEADER      |
 // +----------------------+ <-- pBoxed        ---------------------------
-// | vptr0__              |                     | System_ValueType    ^
+// | vptr0__              | <-- pVTable0        | System_ValueType    ^
 // +----------------------+                   -----------             |
 // |        :             |                     ^                     | bodySize
 // | (value data)         | Copy from pValue    | type->bodySize      |
 // |        :             |                     v                     v
 // +----------------------+                   ---------------------------
 
-System_Object* il2c_box1__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType)
+System_Object* il2c_box__(
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, const void* vptr0)
 {
+    il2c_assert(pValue != NULL);
+    il2c_assert(valueType != NULL);
+    il2c_assert(vptr0 != NULL);
+
     uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
-    // TODO: toType's VTABLE
-    pBoxed->vptr0__ = &__System_ValueType_VTABLE__;
+    pBoxed->vptr0__ = vptr0;
     il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
 
     return (System_Object*)pBoxed;
 }
 
 System_Object* il2c_box2__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType)
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0)
 {
+    il2c_assert(pValue != NULL);
+    il2c_assert(valueType != NULL);
+    il2c_assert(stackType != NULL);
+    il2c_assert(vptr0 != NULL);
+
     // Require type conversion
     il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) != 0) && ((stackType->flags & IL2C_TYPE_INTEGER) != 0));
     il2c_assert((valueType->bodySize <= 4) && (stackType->bodySize <= 4));
@@ -284,8 +302,7 @@ System_Object* il2c_box2__(
     uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
-    // TODO: toType's VTABLE
-    pBoxed->vptr0__ = &__System_ValueType_VTABLE__;
+    pBoxed->vptr0__ = vptr0;
 
     uint8_t v1;
     uint16_t v2;

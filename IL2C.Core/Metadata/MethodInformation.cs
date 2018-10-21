@@ -183,9 +183,9 @@ namespace IL2C.Metadata
 
             overloadIndex = Lazy.Create(() =>
                 {
-                    var found = this.DeclaringType.DeclaredMethods
+                    var found = this.DeclaringType.CalculatedMethods
                         .Where(m => m.Name == this.Member.Name)
-                        .OrderByParameters()     // Stable by overload types.
+                        .OrderByStableAllOverloads()     // Stable by overload types.
                         .Select((m, i) => new { m, i })
                         .First(e => this.Equals(e.m));
                     return found.i;

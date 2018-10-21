@@ -28,22 +28,27 @@ namespace IL2C.Metadata
                     .Concat(new[] { member.Name }));
         }
 
-        public static IOrderedEnumerable<IMethodInformation> OrderByParameters(
+        public static IOrderedEnumerable<IMethodInformation> OrderByStableAllOverloads(
             this IEnumerable<IMethodInformation> methods)
         {
+            // TODO: Improve human predictivity and stable compatibility.
+
             var ms = methods.ToArray();
             var maxParameterCount = (ms.Length >= 1) ? ms.Max(m => m.Parameters.Length) : 0;
 
+            // Step 1: Stable by parameter count
             var expr = ms.OrderBy(m => m.Parameters.Length);
             for (var index = 0; index < maxParameterCount; index++)
             {
                 // HACK: C# lambda captured inner incremented value.
                 var capturedIndex = index;
 
-                // TODO: Improve human predictivity and stable compatibility.
-                expr = expr.ThenBy(m => (capturedIndex < m.Parameters.Length)
-                    ? m.Parameters[capturedIndex].TargetType.FriendlyName
-                    : string.Empty);
+                // Step 2: Stable by non virtual --> virtual
+                expr = expr.ThenBy(m => m.IsVirtual ? 1 : 0).
+                // Step 3: Stable by the type letter for each of a prameter
+                    ThenBy(m => (capturedIndex < m.Parameters.Length)
+                        ? m.Parameters[capturedIndex].TargetType.FriendlyName
+                        : string.Empty);
             }
 
             return expr;

@@ -796,7 +796,7 @@ namespace IL2C
                 foreach (var function in virtualFunctions)
                 {
                     tw.WriteLine(
-                        "{0}__{1}_{2}__,",
+                        "{0}{1}_{2},",
                         indent,
                         function.MangledTypeName,
                         function.CLanguageVirtualFunctionDeclarationName);
@@ -898,10 +898,6 @@ namespace IL2C
                 "{0}sizeof({1}),",
                 indent,
                 declaredType.MangledName);
-            tw.WriteLine(
-                "{0}&__{1}_VTABLE__,",
-                indent,
-                (!declaredType.IsEnum) ? declaredType.MangledName : declaredType.Context.ObjectType.MangledName);  // NOTE: 2 of 2
             tw.WriteLine(
                 "{0}/* internalcall */ (IL2C_MARK_HANDLER)__{1}_IL2C_MarkHandler__,",
                 indent,

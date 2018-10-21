@@ -17,5 +17,4 @@ IL2C_RUNTIME_TYPE_DECL __System_Boolean_RUNTIME_TYPE__ = {
     "System.Boolean",
     IL2C_TYPE_INTEGER,
     sizeof(System_Boolean),
-    &__System_ValueType_VTABLE__,  // TODO:
-    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };

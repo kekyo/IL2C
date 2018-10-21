@@ -18,5 +18,4 @@ IL2C_RUNTIME_TYPE_DECL __System_Double_RUNTIME_TYPE__ = {
     "System.Double",
     IL2C_TYPE_STANDARD,
     sizeof(System_Double),
-    &__System_ValueType_VTABLE__,  // TODO:
-    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };

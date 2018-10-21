@@ -53,5 +53,4 @@ IL2C_RUNTIME_TYPE_DECL __System_Console_RUNTIME_TYPE__ = {
     "System.Console",
     IL2C_TYPE_STANDARD,
     0,
-    &__System_Object_VTABLE__, // TODO: VTable
-    /* internalcall */ (IL2C_MARK_HANDLER)__System_Object_IL2C_MarkHandler__ };
+    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };

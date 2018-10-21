@@ -32,14 +32,13 @@ typedef long interlock_t;
 typedef struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
 typedef struct IL2C_REF_HEADER IL2C_REF_HEADER;
 
-typedef void (*IL2C_MARK_HANDLER)(void*);
+typedef void (*IL2C_MARK_HANDLER)(/* System_Object* */ void* pReference);
 
 typedef const struct
 {
     const char* pTypeName;
     const uint32_t flags;
     const uint32_t bodySize;
-    const void* pVTable;
     /* internalcall */ const IL2C_MARK_HANDLER IL2C_MarkHandler;
 } IL2C_RUNTIME_TYPE_DECL;
 
@@ -65,11 +64,11 @@ struct IL2C_REF_HEADER
 
 // static cast operators
 #define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
-    ((typeName*)(((intptr_t)(pInterface)) - \
+    ((typeName*)(((uint8_t*)(pInterface)) - \
      (offsetof(typeName, vptr_##interfaceTypeName##__) - \
       offsetof(typeName, vptr0__))))
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
-    ((interfaceTypeName *)(((intptr_t)(pReference)) + \
+    ((interfaceTypeName *)(((uint8_t*)(pReference)) + \
      (offsetof(typeName, vptr_##interfaceTypeName##__) - \
       offsetof(typeName, vptr0__))))
 
@@ -83,9 +82,13 @@ extern void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type);
 extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pNewFrame);
 extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pFrame);
 
-extern void il2c_mark_from_handler(void* pReference);
+extern void il2c_default_mark_handler(/* System_Object* */ void* pReference);
+
 #define il2c_try_mark_from_handler(pReference) \
     { void* pRef = pReference; if (pRef != NULL) il2c_mark_from_handler(pRef); }
+
+extern void il2c_mark_from_handler(/* System_Object* */ void* pReference);
+#define IL2C_DEFAULT_MARK_HANDLER ((IL2C_MARK_HANDLER)il2c_mark_from_handler)
 
 ///////////////////////////////////////////////////////
 // The basis types
@@ -121,19 +124,19 @@ typedef void* untyped_ptr;
 ///////////////////////////////////////////////////////
 // Boxing related declarations
 
-extern System_Object* il2c_box1__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType);
+extern System_Object* il2c_box__(
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, const void* vptr0);
 extern System_Object* il2c_box2__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType);
+    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0);
 extern void* il2c_unbox__(
     System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* valueType);
 
-#define il2c_box1(pValue, valueTypeName) \
-    (il2c_box1__(pValue, il2c_typeof(valueTypeName)))
+#define il2c_box(pValue, valueTypeName) \
+    (il2c_box__(pValue, il2c_typeof(valueTypeName), &__##valueTypeName##_VTABLE__))
 #define il2c_box2(pValue, valueTypeName, stackTypeName) \
-    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName)))
+    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName), &__##valueTypeName##_VTABLE__))
 #define il2c_unbox(pObject, valueTypeName) \
-    (il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
+    (*(valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions

@@ -25,12 +25,14 @@ typedef long interlock_t;
 #include <stdio.h>
 #include <assert.h>
 
-// Compatibility symbols
+// Compatibility symbols (required platform depended functions)
 #define il2c_itow _itow
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcscmp wcscmp
+#define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
 #define il2c_malloc malloc
@@ -65,12 +67,14 @@ typedef long interlock_t;
 
 #include <intrin.h>
 
-// Compatibility symbols
+// Compatibility symbols (required platform depended functions)
 #define il2c_itow _itow
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcscmp wcscmp
+#define il2c_wcslen wcslen
 
 extern void* il2c_memcpy(void* to, const void* from, size_t n);
 extern void* il2c_memset(void* target, int ch, size_t n);
@@ -106,12 +110,14 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <intrin.h>
 #include <wdm.h>
 
-// Compatibility symbols
+// Compatibility symbols (required platform depended functions)
 #define il2c_itow _itow
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcscmp wcscmp
+#define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
@@ -150,12 +156,14 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <stdio.h>
 #include <wchar.h>
 
-// Compatibility symbols
+// Compatibility symbols (required platform depended functions)
 #define il2c_itow _itow
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcscmp wcscmp
+#define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
 #define il2c_malloc malloc

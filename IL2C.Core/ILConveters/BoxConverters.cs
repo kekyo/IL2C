@@ -35,7 +35,7 @@ namespace IL2C.ILConverters
                 return _ =>
                 {
                     return new[] { string.Format(
-                    "{0} = il2c_box1(&{1}, {2})",
+                    "{0} = il2c_box(&{1}, {2})",
                     symbolName,
                     si.SymbolName,
                     operand.MangledName) };
@@ -82,9 +82,8 @@ namespace IL2C.ILConverters
                     decodeContext.PrepareContext.MetadataContext.ObjectType, si);
 
                 return new[] { string.Format(
-                    "{0} = *(({1}*)il2c_unbox({2}, {3}))",
+                    "{0} = il2c_unbox({1}, {2})",
                     symbolName,
-                    operand.CLanguageTypeName,
                     rhs,
                     operand.MangledName) };
             };

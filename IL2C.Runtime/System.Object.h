@@ -32,25 +32,17 @@ struct System_Object
 extern __System_Object_VTABLE_DECL__ __System_Object_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__;
 
+extern /* internalcall */ void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
+#define __System_Object_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+
 static inline void System_Object__ctor(System_Object* this__)
 {
 }
 
-extern /* internalcall */ void __System_Object_IL2C_MarkHandler__(System_Object* this__);
-extern /* internalcall */ void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-extern /* virtual */ System_String* __System_Object_ToString__(System_Object* this__);
-extern /* virtual */ int32_t __System_Object_GetHashCode__(System_Object* this__);
-extern /* virtual */ void __System_Object_Finalize__(System_Object* this__);
-extern /* virtual */ bool __System_Object_Equals__(System_Object* this__, System_Object* obj);
-
-#define System_Object_ToString(/* System_Object* */ this__) \
-    ((this__)->vptr0__->ToString((this__)))
-#define System_Object_GetHashCode(/* System_Object* */ this__) \
-    ((this__)->vptr0__->GetHashCode((this__)))
-#define System_Object_Finalize(/* System_Object* */ this__) \
-    ((this__)->vptr0__->Finalize((this__)))
-#define System_Object_Equals(/* System_Object* */ this__, /* System_Object* */ obj) \
-    ((this__)->vptr0__->Equals((this__), (obj)))
+extern System_String* System_Object_ToString(System_Object* this__);
+extern int32_t System_Object_GetHashCode(System_Object* this__);
+extern void System_Object_Finalize(System_Object* this__);
+extern bool System_Object_Equals(System_Object* this__, System_Object* obj);
 
 #ifdef __cplusplus
 }

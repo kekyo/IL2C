@@ -19,6 +19,8 @@ namespace IL2C.ILConverters
             return extractContext => new[] { string.Format(
                 "{0} = {1}{2}",
                 symbolName,
+                // MEMO: Don't check "targetType.IsByReference" instead "isReference."
+                //   Because it's maybe double encoded byref type.
                 isReference ? "&" : string.Empty,
                 targetName) };
         }

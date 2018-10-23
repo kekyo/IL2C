@@ -6,22 +6,38 @@ using IL2C.Translators;
 
 namespace IL2C.ILConverters
 {
+    internal static class LdindConverterUtilities
+    {
+        public static Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var siFrom = decodeContext.PopStack();
+
+            // Requre only managed refs
+            if (!siFrom.TargetType.IsByReference)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid managed reference: Location={0}, StackType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
+            }
+
+            var targetType = siFrom.TargetType.ElementType;
+            var symbolName = decodeContext.PushStack(targetType);
+
+            return extractContext => new[] { string.Format(
+                "{0} = *{1}",
+                symbolName,
+                siFrom.SymbolName) };
+        }
+    }
+
     internal sealed class Ldind_i4Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldind_I4;
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var siFrom = decodeContext.PopStack();
-
-            var targetType = decodeContext.PrepareContext.MetadataContext.Int32Type;
-            var symbolName = decodeContext.PushStack(targetType);
-
-            return extractContext => new[] { string.Format(
-                "{0} = *(int32_t*){1}",
-                symbolName,
-                siFrom.SymbolName) };
-
+            return LdindConverterUtilities.Apply(decodeContext);
         }
     }
 
@@ -31,16 +47,17 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var siFrom = decodeContext.PopStack();
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
 
-            var targetType = decodeContext.PrepareContext.MetadataContext.ByteType;
-            var symbolName = decodeContext.PushStack(targetType);
+    internal sealed class Ldind_refConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_Ref;
 
-            return extractContext => new[] { string.Format(
-                "{0} = *(uint8_t*){1}",
-                symbolName,
-                siFrom.SymbolName) };
-
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
         }
     }
 }

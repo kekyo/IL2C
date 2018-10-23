@@ -9,16 +9,20 @@ namespace IL2C.ILConverters
 {
     internal static class LdargConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(int parameterIndex, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            int parameterIndex, DecodeContext decodeContext, bool isReference)
         {
             var parameter = decodeContext.Method.Parameters[parameterIndex];
-            var targetType = parameter.TargetType;
+            var targetType = isReference ? parameter.TargetType.MakeByReference() : parameter.TargetType;
             var symbolName = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
-                "{0} = {1}",
+                "{0} = {1}{2}",
                 symbolName,
-                extractContext.GetRightExpression(targetType, parameter.TargetType, parameter.SymbolName)) };
+                // MEMO: Don't check "targetType.IsByReference" instead "isReference."
+                //   Because it's maybe double encoded byref type.
+                isReference ? "&" : string.Empty,
+                parameter.SymbolName) };
         }
     }
 
@@ -28,7 +32,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(0, decodeContext);
+            return LdargConverterUtilities.Apply(0, decodeContext, false);
         }
     }
 
@@ -38,7 +42,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(1, decodeContext);
+            return LdargConverterUtilities.Apply(1, decodeContext, false);
         }
     }
 
@@ -48,7 +52,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(2, decodeContext);
+            return LdargConverterUtilities.Apply(2, decodeContext, false);
         }
     }
 
@@ -58,7 +62,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(3, decodeContext);
+            return LdargConverterUtilities.Apply(3, decodeContext, false);
         }
     }
 
@@ -69,7 +73,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(operand.Index, decodeContext);
+            return LdargConverterUtilities.Apply(operand.Index, decodeContext, false);
         }
     }
 
@@ -80,7 +84,18 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(operand.Index, decodeContext);
+            return LdargConverterUtilities.Apply(operand.Index, decodeContext, false);
+        }
+    }
+
+    internal sealed class Ldarga_sConverter : ShortInlineParamConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldarga_S;
+
+        public override Func<IExtractContext, string[]> Apply(
+            VariableInformation operand, DecodeContext decodeContext)
+        {
+            return LdargConverterUtilities.Apply(operand.Index, decodeContext, true);
         }
     }
 }

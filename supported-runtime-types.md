@@ -9,7 +9,7 @@ Type | Test
 | [System.SByte](https://docs.microsoft.com/en-us/dotnet/api/system.sbyte) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_SByte) |
 | [System.Int16](https://docs.microsoft.com/en-us/dotnet/api/system.int16) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int16) |
 | [System.UInt16](https://docs.microsoft.com/en-us/dotnet/api/system.uint16) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt16) |
-| [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int32) |
+| [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32) | [Test [4]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int32) |
 | [System.UInt32](https://docs.microsoft.com/en-us/dotnet/api/system.uint32) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt32) |
 | [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int64) |
 | [System.UInt64](https://docs.microsoft.com/en-us/dotnet/api/system.uint64) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt64) |

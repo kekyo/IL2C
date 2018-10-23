@@ -115,6 +115,11 @@ namespace IL2C
         [Test]
         public static Task Ldarg([ValueSource("_Ldarg")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("ILConverters");
+
+        public static readonly TestCaseInformation[] _Ldarga_s = TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Ldarga_s>();
+        [Test]
+        public static Task Ldarga_s([ValueSource("_Ldarga_s")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("ILConverters");
         #endregion
 
         #region Ldc

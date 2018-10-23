@@ -17,7 +17,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [stloc.2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_2) | 0xc | Implemented | [Test [16]](tests/IL2C.Core.Test.Target/ILConverters/Stloc_2) | IL2C.ILConverters.Stloc_2Converter |
 | [stloc.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_3) | 0xd | Implemented | [Test [16]](tests/IL2C.Core.Test.Target/ILConverters/Stloc_3) | IL2C.ILConverters.Stloc_3Converter |
 | [ldarg.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarg_s) | 0xe | Implemented | [Test [17]](tests/IL2C.Core.Test.Target/ILConverters/Ldarg_S) | IL2C.ILConverters.Ldarg_sConverter |
-| [ldarga.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarga_s) | 0xf |  |  |  |
+| [ldarga.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarga_s) | 0xf | Implemented | [Test [17]](tests/IL2C.Core.Test.Target/ILConverters/Ldarga_S) | IL2C.ILConverters.Ldarga_sConverter |
 | [starg.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg_s) | 0x10 |  |  |  |
 | [ldloc.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloc_s) | 0x11 | Implemented | [Test [17]](tests/IL2C.Core.Test.Target/ILConverters/Ldloc_S) | IL2C.ILConverters.Ldloc_SConverter |
 | [ldloca.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloca_s) | 0x12 | Implemented | [Test [17]](tests/IL2C.Core.Test.Target/ILConverters/Ldloca_S) | IL2C.ILConverters.Ldloca_sConverter |
@@ -81,7 +81,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldind.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldind_i) | 0x4d |  |  |  |
 | [ldind.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldind_r4) | 0x4e |  |  |  |
 | [ldind.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldind_r8) | 0x4f |  |  |  |
-| [ldind.ref](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldind_ref) | 0x50 |  |  |  |
+| [ldind.ref](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldind_ref) | 0x50 | Implemented |  | IL2C.ILConverters.Ldind_refConverter |
 | [stind.ref](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_ref) | 0x51 | Implemented |  | IL2C.ILConverters.Stind_RefConverter |
 | [stind.i1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i1) | 0x52 |  |  |  |
 | [stind.i2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i2) | 0x53 |  |  |  |

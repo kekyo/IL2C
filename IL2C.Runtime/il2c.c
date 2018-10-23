@@ -321,6 +321,8 @@ System_Object* il2c_box2__(
 
     pBoxed->vptr0__ = vptr0;
 
+    // MEMO: This verbose implemenation makes safer for endian order.
+
     uint8_t v1;
     uint16_t v2;
     uint16_t v4;

@@ -41,6 +41,9 @@ typedef long interlock_t;
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_initialize_heap() _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF)
+#define il2c_check_heap() _CrtCheckMemory()
+#define il2c_shutdown_heap() _CrtDumpMemoryLeaks()
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_assert assert
@@ -87,6 +90,9 @@ typedef long interlock_t;
 #define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
 #define il2c_wcslen wcslen
+#define il2c_initialize_heap()
+#define il2c_check_heap()
+#define il2c_shutdown_heap()
 
 extern void* il2c_memcpy(void* to, const void* from, size_t n);
 extern void* il2c_memset(void* target, int ch, size_t n);
@@ -138,6 +144,9 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_initialize_heap()
+#define il2c_check_heap()
+#define il2c_shutdown_heap()
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 #define il2c_icmpxchg(p, v, c) _InterlockedCompareExchange((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
@@ -190,6 +199,9 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_initialize_heap()
+#define il2c_check_heap()
+#define il2c_shutdown_heap()
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_assert assert

@@ -230,34 +230,18 @@ void il2c_step3_sweep_garbage__()
 
 void il2c_collect()
 {
-#ifdef _CRTDBG_ALLOC_MEM_DF
-    il2c_assert(_CrtCheckMemory());
-#endif
-
+    il2c_check_heap();
     il2c_step1_clear_gcmark__();
-
-#ifdef _CRTDBG_ALLOC_MEM_DF
-    il2c_assert(_CrtCheckMemory());
-#endif
-
+    il2c_check_heap();
     il2c_step2_mark_gcmark__();
-
-#ifdef _CRTDBG_ALLOC_MEM_DF
-    il2c_assert(_CrtCheckMemory());
-#endif
-
+    il2c_check_heap();
     il2c_step3_sweep_garbage__();
-
-#ifdef _CRTDBG_ALLOC_MEM_DF
-    il2c_assert(_CrtCheckMemory());
-#endif
+    il2c_check_heap();
 }
 
 void il2c_initialize()
 {
-#ifdef _CRTDBG_ALLOC_MEM_DF
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
-#endif
+    il2c_initialize_heap();
 
     g_pBeginFrame__ = NULL;
     g_pBeginHeader__ = NULL;
@@ -267,9 +251,7 @@ void il2c_shutdown()
 {
     il2c_collect();
 
-#ifdef _CRTDBG_ALLOC_MEM_DF
-    _CrtDumpMemoryLeaks();
-#endif
+    il2c_shutdown_heap();
 }
 
 /////////////////////////////////////////////////////////////

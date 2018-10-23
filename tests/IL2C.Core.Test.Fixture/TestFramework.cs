@@ -87,10 +87,9 @@ namespace IL2C
         }
         #endregion
 
-        public static readonly object Expected_TrapBreak = new object();
-
         public static async Task ExecuteTestAsync(
-            string categoryName, string testName, MethodInfo method, MethodBase[] additionalMethods, object expected, object[] args)
+            string categoryName, string testName, object expected, TestCaseAsserts assert,
+            MethodInfo method, MethodBase[] additionalMethods, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
             foreach (var m in additionalMethods)
@@ -100,8 +99,6 @@ namespace IL2C
 
             // Split current thread context.
             await Task.Yield();
-
-            var isTrapBreak = object.ReferenceEquals(expected, Expected_TrapBreak);
 
             ///////////////////////////////////////////////
 
@@ -157,7 +154,7 @@ namespace IL2C
             await TestUtilities.CopyResourceToStreamAsync(
                 sourceCodeStream,
                 // If the target method result is void-type, we have to use void-type tolerant template.
-                (expectedType.IsVoidType || isTrapBreak) ? "test_void.c" : "test.c");
+                (expectedType.IsVoidType || (assert == TestCaseAsserts.CauseBreak)) ? "test_void.c" : "test.c");
             sourceCodeStream.Position = 0;
             var sourceCode = new StreamReader(sourceCodeStream);
 
@@ -165,7 +162,7 @@ namespace IL2C
                 Zip(targetMethod.Parameters, (arg, p) =>
                     (p.SymbolName, p.TargetType, GetCLanguageTypedLiteralExpression(arg, p.TargetType))).
                 ToArray();
-            var locals = (!(expectedType.IsVoidType || isTrapBreak) ?
+            var locals = (!(expectedType.IsVoidType || (assert == TestCaseAsserts.CauseBreak)) ?
                 new ValueTuple<string, ITypeInformation, string>[]
                 {
                     ( "expected", expectedType, GetCLanguageTypedLiteralExpression(expected, targetMethod.ReturnType) ),
@@ -221,10 +218,19 @@ namespace IL2C
             ///////////////////////////////////////////////
             // Step 2: Test and verify result by real IL code at this runtime.
 
-            if (!isTrapBreak)
+            object rawResult;
+            switch (assert)
             {
-                var rawResult = method.Invoke(null, args);
-                Assert.AreEqual(expected, rawResult);
+                case TestCaseAsserts.IgnoreInvokeResult:
+                    rawResult = method.Invoke(null, args);
+                    break;
+                case TestCaseAsserts.CauseBreak:
+                    rawResult = null;
+                    break;
+                default:
+                    rawResult = method.Invoke(null, args);
+                    Assert.AreEqual(expected, rawResult);
+                    break;
             }
 
             ///////////////////////////////////////////////
@@ -242,14 +248,14 @@ namespace IL2C
             }
             catch (Exception ex)
             {
-                if (isTrapBreak && ex.Message.Contains("ExitCode=-2147483645"))
+                if ((assert == TestCaseAsserts.CauseBreak) && ex.Message.Contains("ExitCode=-2147483645"))
                 {
                     return;
                 }
                 throw;
             }
 
-            Assert.IsFalse(isTrapBreak, "Code didn't break.");
+            Assert.IsFalse(assert == TestCaseAsserts.CauseBreak, "Code didn't break.");
 
             ///////////////////////////////////////////////
             // Step 4: Verify result.

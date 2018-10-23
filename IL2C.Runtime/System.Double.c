@@ -5,9 +5,9 @@
 
 System_String* System_Double_ToString(double* this__)
 {
-    wchar_t buffer[24];
+    wchar_t buffer[26];
 
-    il2c_snwprintf(buffer, 24, L"%.15g", *this__);
+    il2c_snwprintf(buffer, 26, L"%.15g", *this__);
     return il2c_new_string(buffer);
 }
 
@@ -37,6 +37,26 @@ bool System_Double_Equals_1(double* this__, System_Object* obj)
 
     double rhs = il2c_unbox(obj, System_Double);
     return *this__ == rhs;
+}
+
+bool System_Double_TryParse(System_String* s, double* result)
+{
+    // TODO: NullReferenceException
+    il2c_assert(s != NULL);
+
+    il2c_assert(result != NULL);
+    il2c_assert(s->string_body__ != NULL);
+
+    wchar_t* endPtr;
+
+    double value = il2c_wcstod(s->string_body__, &endPtr);
+    *result = value;
+
+    // We have to use a literal value of max instead standard C symbol named *_MAX.
+    // Because it's rarely different between .NET and C implementation.
+    // TODO: NaN, INF
+    return ((s->string_body__ != endPtr) && (errno == 0) &&
+        (value <= 1.7976931348623157e+308) && (value >= -1.7976931348623157e+308)) ? true : false;
 }
 
 /////////////////////////////////////////////////

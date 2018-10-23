@@ -31,6 +31,12 @@ typedef long interlock_t;
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcstol wcstol
+#define il2c_wcstoul wcstoul
+#define il2c_wcstoll wcstoll
+#define il2c_wcstoull wcstoull
+#define il2c_wcstof wcstof
+#define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
@@ -73,6 +79,12 @@ typedef long interlock_t;
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcstol wcstol
+#define il2c_wcstoul wcstoul
+#define il2c_wcstoll wcstoll
+#define il2c_wcstoull wcstoull
+#define il2c_wcstof wcstof
+#define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
 #define il2c_wcslen wcslen
 
@@ -116,6 +128,12 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcstol wcstol
+#define il2c_wcstoul wcstoul
+#define il2c_wcstoll wcstoll
+#define il2c_wcstoull wcstoull
+#define il2c_wcstof wcstof
+#define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
@@ -162,6 +180,12 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
+#define il2c_wcstol wcstol
+#define il2c_wcstoul wcstoul
+#define il2c_wcstoll wcstoll
+#define il2c_wcstoull wcstoull
+#define il2c_wcstof wcstof
+#define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy

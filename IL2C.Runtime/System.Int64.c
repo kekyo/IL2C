@@ -38,6 +38,20 @@ bool System_Int64_Equals_1(int64_t* this__, System_Object* obj)
     return *this__ == rhs;
 }
 
+bool System_Int64_TryParse(System_String* s, int64_t* result)
+{
+    // TODO: NullReferenceException
+    il2c_assert(s != NULL);
+
+    il2c_assert(result != NULL);
+    il2c_assert(s->string_body__ != NULL);
+
+    wchar_t* endPtr;
+
+    *result = il2c_wcstoll(s->string_body__, &endPtr, 10);
+    return ((s->string_body__ != endPtr) && (errno == 0)) ? true : false;
+}
+
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 

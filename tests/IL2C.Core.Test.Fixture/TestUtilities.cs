@@ -61,10 +61,12 @@ namespace IL2C
 
         public static TestCaseInformation CreateTestCaseInformation(
             string name, MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
-            new TestCaseInformation(name, method, additionalMethods,
-                Case.CauseBreak.Equals(caseAttribute.Expected) ?
-                    TestFramework.Expected_TrapBreak :
-                    ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
+            new TestCaseInformation(
+                name,
+                ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
+                caseAttribute.Assert,
+                method,
+                additionalMethods,
                 caseAttribute.Arguments.
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());

@@ -30,6 +30,7 @@ extern System_String* System_Byte_ToString(uint8_t* this__);
 extern int32_t System_Byte_GetHashCode(uint8_t* this__);
 extern bool System_Byte_Equals(uint8_t* this__, uint8_t obj);
 extern bool System_Byte_Equals_1(uint8_t* this__, System_Object* obj);
+extern bool System_Byte_TryParse(System_String* s, uint8_t* result);
 
 #ifdef __cplusplus
 }

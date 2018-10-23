@@ -10,18 +10,24 @@ namespace IL2C
         public readonly MethodBase[] AdditionalMethods;
         public readonly object Expected;
         public readonly object[] Arguments;
+        public readonly TestCaseAsserts Assert;
 
-        public TestCaseInformation(string name, MethodInfo method, MethodBase[] additionalMethods, object expected, object[] arguments)
+        public TestCaseInformation(
+            string name, object expected, TestCaseAsserts assert,
+            MethodInfo method, MethodBase[] additionalMethods, object[] arguments)
         {
             this.Name = name;
             this.Method = method;
             this.AdditionalMethods = additionalMethods;
             this.Expected = expected;
             this.Arguments = arguments;
+            this.Assert = assert;
         }
 
         public Task ExecuteTestAsync(string categoryName) =>
-            TestFramework.ExecuteTestAsync(categoryName, this.Name, this.Method, this.AdditionalMethods, this.Expected, this.Arguments);
+            TestFramework.ExecuteTestAsync(
+                categoryName, this.Name, this.Expected, this.Assert,
+                this.Method, this.AdditionalMethods, this.Arguments);
 
         public override string ToString()
         {

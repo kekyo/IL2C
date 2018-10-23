@@ -3,10 +3,11 @@ using System.Linq;
 
 namespace IL2C
 {
-    public static class Case
+    public enum TestCaseAsserts
     {
-        // The expected value tests causing break opcode.
-        public const string CauseBreak = "31D1EAB1-2830-458D-9572-4363CDD8DA73";
+        PerfectMatch,
+        IgnoreInvokeResult,
+        CauseBreak
     }
 
     // It's test case attribute contains expected value, method name and argument values at overall.
@@ -19,6 +20,7 @@ namespace IL2C
             this.AdditionalMethodNames = new string[0];
             this.Expected = expected;
             this.Arguments = args;
+            this.Assert = TestCaseAsserts.PerfectMatch;
         }
 
         // This overload contains additional methods, those are used from the test method (first methodName entry.)
@@ -28,11 +30,14 @@ namespace IL2C
             this.AdditionalMethodNames = methodNames.Skip(1).ToArray();   // additionals
             this.Expected = expected;
             this.Arguments = args;
+            this.Assert = TestCaseAsserts.PerfectMatch;
         }
 
         public string MethodName { get; }
         public string[] AdditionalMethodNames { get; }
         public object Expected { get; }
         public object[] Arguments { get; }
+
+        public TestCaseAsserts Assert { get; set; }
     }
 }

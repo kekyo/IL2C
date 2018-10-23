@@ -38,6 +38,24 @@ bool System_Int16_Equals_1(int16_t* this__, System_Object* obj)
     return *this__ == rhs;
 }
 
+bool System_Int16_TryParse(System_String* s, int16_t* result)
+{
+    // TODO: NullReferenceException
+    il2c_assert(s != NULL);
+
+    il2c_assert(result != NULL);
+    il2c_assert(s->string_body__ != NULL);
+
+    wchar_t* endPtr;
+
+    long value = il2c_wcstol(s->string_body__, &endPtr, 10);
+    *result = (int16_t)value;
+
+    // We have to use a literal value of max instead standard C symbol named *_MAX.
+    // Because it's rarely different between .NET and C implementation.
+    return ((s->string_body__ != endPtr) && (errno == 0) && (value <= 32767) && (value >= -32768)) ? true : false;
+}
+
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 

@@ -30,6 +30,7 @@ extern System_String* System_Single_ToString(float* this__);
 extern int32_t System_Single_GetHashCode(float* this__);
 extern bool System_Single_Equals(float* this__, float obj);
 extern bool System_Single_Equals_1(float* this__, System_Object* obj);
+extern bool System_Single_TryParse(System_String* s, float* result);
 
 #ifdef __cplusplus
 }

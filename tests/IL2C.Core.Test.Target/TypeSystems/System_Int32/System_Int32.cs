@@ -4,8 +4,10 @@ namespace IL2C.TypeSystems
 {
     [TestCase(true, "IsValueType")]
     [TestCase(4, "SizeOf")]
-    [TestCase("12345678", "ToString", 12345678)]
-    [TestCase(12345678, "TryParse", "12345678")]
+    [TestCase("2147483647", "ToString", int.MaxValue)]
+    [TestCase("-2147483648", "ToString", int.MinValue)]
+    [TestCase(int.MaxValue, "TryParse", "2147483647")]
+    [TestCase(int.MinValue, "TryParse", "-2147483648")]
     public sealed class System_Int32
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -21,7 +23,7 @@ namespace IL2C.TypeSystems
 
         public static int TryParse(string str)
         {
-            int.TryParse("12345678", out var value);
+            int.TryParse(str, out var value);
             return value;
         }
     }

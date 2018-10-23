@@ -5,9 +5,9 @@
 
 System_String* System_Single_ToString(float* this__)
 {
-    wchar_t buffer[14];
+    wchar_t buffer[16];
 
-    il2c_snwprintf(buffer, 14, L"%.7g", *this__);
+    il2c_snwprintf(buffer, 16, L"%.7g", *this__);
     return il2c_new_string(buffer);
 }
 
@@ -37,6 +37,26 @@ bool System_Single_Equals_1(float* this__, System_Object* obj)
 
     float rhs = il2c_unbox(obj, System_Single);
     return *this__ == rhs;
+}
+
+bool System_Single_TryParse(System_String* s, float* result)
+{
+    // TODO: NullReferenceException
+    il2c_assert(s != NULL);
+
+    il2c_assert(result != NULL);
+    il2c_assert(s->string_body__ != NULL);
+
+    wchar_t* endPtr;
+
+    float value = il2c_wcstof(s->string_body__, &endPtr);
+    *result = value;
+
+    // We have to use a literal value of max instead standard C symbol named *_MAX.
+    // Because it's rarely different between .NET and C implementation.
+    // TODO: NaN, INF
+    return ((s->string_body__ != endPtr) && (errno == 0) &&
+        (value <= 3.40282347e+38f) && (value >= -3.40282347e+38f)) ? true : false;
 }
 
 /////////////////////////////////////////////////

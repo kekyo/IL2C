@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase(Case.CauseBreak, "CauseBreak", 100, 23)]
+    [TestCase(0, "CauseBreak", 100, 23, Assert = TestCaseAsserts.CauseBreak)]
     public sealed class Break
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

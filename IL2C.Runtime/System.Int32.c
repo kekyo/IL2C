@@ -50,7 +50,7 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 
     wchar_t* endPtr;
 
-	*result = wcstol(s->string_body__, &endPtr, 10);
+	*result = il2c_wcstol(s->string_body__, &endPtr, 10);
 	return ((s->string_body__ != endPtr) && (errno == 0)) ? true : false;
 }
 

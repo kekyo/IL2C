@@ -346,9 +346,10 @@ namespace IL2C.Metadata
         public bool IsUntypedReferenceType => false;
 
         public int SizeOfValue =>
-            (this.IsByteType || this.IsSByteType) ? 1 :
+            // Recently, the bool type is usually defined by 1byte space type.
+            (this.IsByteType || this.IsSByteType || this.IsBooleanType) ? 1 :
             (this.IsInt16Type || this.IsUInt16Type || this.IsCharType) ? 2 :
-            (this.IsInt32Type || this.IsUInt32Type || this.IsSingleType || this.IsBooleanType) ? 4 :
+            (this.IsInt32Type || this.IsUInt32Type || this.IsSingleType) ? 4 :
             (this.IsInt64Type || this.IsUInt64Type || this.IsDoubleType || this.IsIntPtrType || this.IsUIntPtrType) ? 8 :
             0;
 

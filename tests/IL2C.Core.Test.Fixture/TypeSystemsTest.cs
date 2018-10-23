@@ -11,6 +11,11 @@ namespace IL2C
     [Parallelizable(ParallelScope.All)]
     public sealed class TypeSystemsTest
     {
+        public static readonly TestCaseInformation[] _System_Boolean = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Boolean>();
+        [Test]
+        public static Task System_Boolean([ValueSource("_System_Boolean")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
         public static readonly TestCaseInformation[] _System_Byte = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Byte>();
         [Test]
         public static Task System_Byte([ValueSource("_System_Byte")] TestCaseInformation caseInfo) =>

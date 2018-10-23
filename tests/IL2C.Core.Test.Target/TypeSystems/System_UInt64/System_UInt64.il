@@ -1,10 +1,10 @@
-﻿.class public IL2C.TypeSystems.System_Int16
+﻿.class public IL2C.TypeSystems.System_UInt64
 {
 	.method public static bool IsValueType() cil managed
 	{
 		.maxstack 2
-		ldc.i4 12345
-		box [mscorlib]System.Int16
+		ldc.i8 1234567890123
+		box [mscorlib]System.UInt64
 		castclass [mscorlib]System.ValueType
         brnull.s F1
         ldc.i4.1
@@ -17,7 +17,7 @@
 	.method public static int32 SizeOf() cil managed
 	{
 		.maxstack 1
-        sizeof [mscorlib]System.Int16
+        sizeof [mscorlib]System.UInt64
         ret
 	}
 }

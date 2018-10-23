@@ -3,7 +3,7 @@
 	.method public static bool IsValueType() cil managed
 	{
 		.maxstack 2
-		ldc.i4.s 123
+		ldc.i4 1234567
 		box [mscorlib]System.Int32
 		castclass [mscorlib]System.ValueType
         brnull.s F1

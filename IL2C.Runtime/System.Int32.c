@@ -57,7 +57,7 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Int32_IL2C_RuntimeCast__(System_Int32* this__, IL2C_RUNTIME_TYPE_DECL* type)
+void* __System_Int32_IL2C_RuntimeCast__(int32_t* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     il2c_assert(this__ != NULL);
 

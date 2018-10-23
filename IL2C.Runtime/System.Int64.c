@@ -41,7 +41,7 @@ bool System_Int64_Equals_1(int64_t* this__, System_Object* obj)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Int64_IL2C_RuntimeCast__(System_Int64* this__, IL2C_RUNTIME_TYPE_DECL* type)
+void* __System_Int64_IL2C_RuntimeCast__(int64_t* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     il2c_assert(this__ != NULL);
 

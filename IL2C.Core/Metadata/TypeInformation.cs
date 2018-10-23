@@ -56,6 +56,8 @@ namespace IL2C.Metadata
 
         bool IsUntypedReferenceType { get; }
 
+        int SizeOfValue { get; }
+
         ITypeInformation BaseType { get; }
         ITypeInformation ElementType { get; }
         ITypeInformation[] InterfaceTypes { get; }
@@ -342,6 +344,13 @@ namespace IL2C.Metadata
         public bool IsBooleanType => this.Equals(this.MetadataContext.BooleanType);
 
         public bool IsUntypedReferenceType => false;
+
+        public int SizeOfValue =>
+            (this.IsByteType || this.IsSByteType) ? 1 :
+            (this.IsInt16Type || this.IsUInt16Type || this.IsCharType) ? 2 :
+            (this.IsInt32Type || this.IsUInt32Type || this.IsSingleType || this.IsBooleanType) ? 4 :
+            (this.IsInt64Type || this.IsUInt64Type || this.IsDoubleType || this.IsIntPtrType || this.IsUIntPtrType) ? 8 :
+            0;
 
         public ITypeInformation BaseType => baseType.Value;
         public ITypeInformation ElementType => elementType.Value;

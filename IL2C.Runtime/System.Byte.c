@@ -41,7 +41,7 @@ bool System_Byte_Equals_1(uint8_t* this__, System_Object* obj)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Byte_IL2C_RuntimeCast__(System_Byte* this__, IL2C_RUNTIME_TYPE_DECL* type)
+void* __System_Byte_IL2C_RuntimeCast__(uint8_t* this__, IL2C_RUNTIME_TYPE_DECL* type)
 {
     il2c_assert(this__ != NULL);
 

@@ -7,12 +7,12 @@ Type | Test
 | [System.Void](https://docs.microsoft.com/en-us/dotnet/api/system.void) |  |
 | [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/system.byte) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Byte) |
 | [System.SByte](https://docs.microsoft.com/en-us/dotnet/api/system.sbyte) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_SByte) |
-| [System.Int16](https://docs.microsoft.com/en-us/dotnet/api/system.int16) |  |
-| [System.UInt16](https://docs.microsoft.com/en-us/dotnet/api/system.uint16) |  |
+| [System.Int16](https://docs.microsoft.com/en-us/dotnet/api/system.int16) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int16) |
+| [System.UInt16](https://docs.microsoft.com/en-us/dotnet/api/system.uint16) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt16) |
 | [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int32) |
-| [System.UInt32](https://docs.microsoft.com/en-us/dotnet/api/system.uint32) |  |
-| [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) |  |
-| [System.UInt64](https://docs.microsoft.com/en-us/dotnet/api/system.uint64) |  |
+| [System.UInt32](https://docs.microsoft.com/en-us/dotnet/api/system.uint32) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt32) |
+| [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int64) |
+| [System.UInt64](https://docs.microsoft.com/en-us/dotnet/api/system.uint64) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt64) |
 | [System.Single](https://docs.microsoft.com/en-us/dotnet/api/system.single) |  |
 | [System.Double](https://docs.microsoft.com/en-us/dotnet/api/system.double) |  |
 | [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean) |  |

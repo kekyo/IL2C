@@ -16,11 +16,6 @@ namespace IL2C
         public static Task System_Byte([ValueSource("_System_Byte")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("TypeSystems");
 
-        public static readonly TestCaseInformation[] _System_SByte = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_SByte>();
-        [Test]
-        public static Task System_SByte([ValueSource("_System_SByte")] TestCaseInformation caseInfo) =>
-            caseInfo.ExecuteTestAsync("TypeSystems");
-
         public static readonly TestCaseInformation[] _System_Int16 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Int16>();
         [Test]
         public static Task System_Int16([ValueSource("_System_Int16")] TestCaseInformation caseInfo) =>
@@ -34,6 +29,26 @@ namespace IL2C
         public static readonly TestCaseInformation[] _System_Int64 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Int64>();
         [Test]
         public static Task System_Int64([ValueSource("_System_Int64")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
+        public static readonly TestCaseInformation[] _System_SByte = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_SByte>();
+        [Test]
+        public static Task System_SByte([ValueSource("_System_SByte")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
+        public static readonly TestCaseInformation[] _System_UInt16 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_UInt16>();
+        [Test]
+        public static Task System_UInt16([ValueSource("_System_UInt16")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
+        public static readonly TestCaseInformation[] _System_UInt32 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_UInt32>();
+        [Test]
+        public static Task System_UInt32([ValueSource("_System_UInt32")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
+        public static readonly TestCaseInformation[] _System_UInt64 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_UInt64>();
+        [Test]
+        public static Task System_UInt64([ValueSource("_System_UInt64")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("TypeSystems");
     }
 }

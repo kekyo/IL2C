@@ -30,7 +30,7 @@ namespace IL2C.ILConverters
             var symbolName = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.ObjectType);
 
-            if (operand.Equals(si.TargetType))
+            if (operand.SizeOfValue == si.TargetType.SizeOfValue)
             {
                 return _ =>
                 {

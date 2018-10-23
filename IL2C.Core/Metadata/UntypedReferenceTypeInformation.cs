@@ -60,6 +60,8 @@ namespace IL2C.Metadata
 
         public bool IsUntypedReferenceType => true;
 
+        public int SizeOfValue => 0;
+
         public ITypeInformation BaseType => null;
         public ITypeInformation ElementType => throw new NotImplementedException();
         public ITypeInformation[] InterfaceTypes => throw new NotImplementedException();

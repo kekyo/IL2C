@@ -30,5 +30,10 @@ namespace IL2C
         [Test]
         public static Task System_Int32([ValueSource("_System_Int32")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("TypeSystems");
+
+        public static readonly TestCaseInformation[] _System_Int64 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Int64>();
+        [Test]
+        public static Task System_Int64([ValueSource("_System_Int64")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
     }
 }

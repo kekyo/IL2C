@@ -27,19 +27,8 @@ namespace IL2C
 
         private static string GetCLanguageLiteralExpression(object value)
         {
-            if (value == null) return "NULL";
-            if (value is int) return ILConverters.LdcConverterUtilities.ToCLanguageExpression((int)value);
-            if (value is uint) return ILConverters.LdcConverterUtilities.ToCLanguageExpression((uint)value);
-            if (value is long) return ILConverters.LdcConverterUtilities.ToCLanguageExpression((long)value);
-            if (value is ulong) return ILConverters.LdcConverterUtilities.ToCLanguageExpression((ulong)value);
-            if (value is IntPtr) return string.Format("(intptr_t)({0})", ILConverters.LdcConverterUtilities.ToCLanguageExpression(((IntPtr)value).ToInt64()));
-            if (value is UIntPtr) return string.Format("(uintptr_t)({0})", ILConverters.LdcConverterUtilities.ToCLanguageExpression(((UIntPtr)value).ToUInt64()));
-            if (value is float) return ILConverters.LdcConverterUtilities.ToCLanguageExpression((float)value);
-            if (value is double) return ILConverters.LdcConverterUtilities.ToCLanguageExpression((double)value);
-            if (value is bool) return (bool)value ? "true" : "false";
-            if (value is char) return "L'" + value + "'";
-            if (value is string) return "il2c_new_string(L\"" + value + "\")";
-            return value.ToString();
+            if (value is string) return "il2c_new_string(" + Utilities.ToCLanguageLiteralExpression(value) + ")";
+            return Utilities.ToCLanguageLiteralExpression(value);
         }
 
         private static string GetCLanguageTypedLiteralExpression(object value, ITypeInformation type)
@@ -52,7 +41,7 @@ namespace IL2C
         private static string GetCLanguageCompareExpression(ITypeInformation type)
         {
             return type.IsStringType ?
-                "((il2c_c_str(expected) == NULL) && (il2c_c_str(actual) == NULL)) || \n        ((il2c_c_str(expected) != NULL) && (il2c_c_str(actual) != NULL) && (wcscmp(il2c_c_str(expected), il2c_c_str(actual)) == 0))" :
+                "((il2c_c_str(expected) == NULL) && (il2c_c_str(actual) == NULL)) || \r\n        ((il2c_c_str(expected) != NULL) && (il2c_c_str(actual) != NULL) && (wcscmp(il2c_c_str(expected), il2c_c_str(actual)) == 0))" :
                 "expected == actual";
         }
 

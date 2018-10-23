@@ -82,13 +82,12 @@ extern void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type);
 extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pNewFrame);
 extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pFrame);
 
-extern void il2c_default_mark_handler(/* System_Object* */ void* pReference);
-
+extern void il2c_mark_from_handler__(/* System_Object* */ void* pReference);
 #define il2c_try_mark_from_handler(pReference) \
-    { void* pRef = pReference; if (pRef != NULL) il2c_mark_from_handler(pRef); }
+    { void* pRef = pReference; if (pRef != NULL) il2c_mark_from_handler__(pRef); }
 
-extern void il2c_mark_from_handler(/* System_Object* */ void* pReference);
-#define IL2C_DEFAULT_MARK_HANDLER ((IL2C_MARK_HANDLER)il2c_mark_from_handler)
+extern void il2c_no_mark_handler__(/* System_Object* */ void* pReference);
+#define IL2C_DEFAULT_MARK_HANDLER ((IL2C_MARK_HANDLER)il2c_no_mark_handler__)
 
 ///////////////////////////////////////////////////////
 // The basis types

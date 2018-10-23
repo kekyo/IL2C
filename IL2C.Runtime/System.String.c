@@ -209,7 +209,7 @@ wchar_t System_String_get_Chars(System_String* this__, int32_t index)
 
     // TODO: IndexOutOfRangeException
     il2c_assert(index >= 0);
-    il2c_assert(index < il2c_wcslen(this__->string_body__));
+    il2c_assert(index < (int32_t)il2c_wcslen(this__->string_body__));
 
     return this__->string_body__[index];
 }

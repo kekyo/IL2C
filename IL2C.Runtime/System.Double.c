@@ -16,7 +16,7 @@ int32_t System_Double_GetHashCode(double* this__)
     il2c_assert(this__ != NULL);
 
     il2c_assert(sizeof(double) == sizeof(int64_t));
-    return *(int64_t*)this__ ^ (*(int64_t*)this__ >> 32);
+    return (int32_t)*(int64_t*)this__ ^ (int32_t)(*(int64_t*)this__ >> 32);
 }
 
 bool System_Double_Equals(double* this__, double obj)
@@ -54,9 +54,11 @@ bool System_Double_TryParse(System_String* s, double* result)
 
     // We have to use a literal value of max instead standard C symbol named *_MAX.
     // Because it's rarely different between .NET and C implementation.
+    // Strict value expression from: https://github.com/dotnet/corefx/blob/master/src/Common/src/CoreLib/System/Double.cs
+
     // TODO: NaN, INF
     return ((s->string_body__ != endPtr) && (errno == 0) &&
-        (value <= 1.7976931348623157e+308) && (value >= -1.7976931348623157e+308)) ? true : false;
+        (value <= 1.7976931348623157E+308) && (value >= -1.7976931348623157E+308)) ? true : false;
 }
 
 /////////////////////////////////////////////////

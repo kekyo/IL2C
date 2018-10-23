@@ -54,9 +54,11 @@ bool System_Single_TryParse(System_String* s, float* result)
 
     // We have to use a literal value of max instead standard C symbol named *_MAX.
     // Because it's rarely different between .NET and C implementation.
+    // Strict value expression from: https://github.com/dotnet/corefx/blob/master/src/Common/src/CoreLib/System/Single.cs
+
     // TODO: NaN, INF
     return ((s->string_body__ != endPtr) && (errno == 0) &&
-        (value <= 3.40282347e+38f) && (value >= -3.40282347e+38f)) ? true : false;
+        (value <= (float)3.40282346638528859e+38) && (value >= (float)-3.40282346638528859e+38)) ? true : false;
 }
 
 /////////////////////////////////////////////////

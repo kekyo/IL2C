@@ -1052,11 +1052,11 @@ namespace IL2C
 
             foreach (var kv in extractContext.ExtractConstStrings())
             {
-                var escaped = Utilities.GetEscapedCString(kv.Value);
+                var expr = Utilities.ToCLanguageExpression(kv.Value);
                 twSource.WriteLine(
-                    "IL2C_CONST_STRING({0}, L\"{1}\");",
+                    "IL2C_CONST_STRING({0}, {1});",
                     kv.Key,
-                    escaped);
+                    expr);
             }
         }
 

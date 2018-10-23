@@ -93,7 +93,7 @@ void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
     return il2c_get_uninitialized_object_internal__(type, type->bodySize);
 }
 
-void il2c_mark_from_handler(/* System_Object* */ void* pReference)
+void il2c_mark_from_handler__(/* System_Object* */ void* pReference)
 {
     il2c_assert(pReference != NULL);
 
@@ -108,14 +108,13 @@ void il2c_mark_from_handler(/* System_Object* */ void* pReference)
     }
 }
 
-void il2c_default_mark_handler(/* System_Object* */ void* pReference)
+void il2c_no_mark_handler__(/* System_Object* */ void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    // We can use this function only when the runtime type has no member fields (contains maybe objref.)
-    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
-        (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
-    il2c_assert(pHeader->type->bodySize == 0);
+    // Nothing to do.
+    // We can use this function only when the runtime type has no member fields
+    // (it contains maybe objref.)
 }
 
 //////////////////////////
@@ -231,9 +230,27 @@ void il2c_step3_sweep_garbage__()
 
 void il2c_collect()
 {
+#ifdef _CRTDBG_ALLOC_MEM_DF
+    il2c_assert(_CrtCheckMemory());
+#endif
+
     il2c_step1_clear_gcmark__();
+
+#ifdef _CRTDBG_ALLOC_MEM_DF
+    il2c_assert(_CrtCheckMemory());
+#endif
+
     il2c_step2_mark_gcmark__();
+
+#ifdef _CRTDBG_ALLOC_MEM_DF
+    il2c_assert(_CrtCheckMemory());
+#endif
+
     il2c_step3_sweep_garbage__();
+
+#ifdef _CRTDBG_ALLOC_MEM_DF
+    il2c_assert(_CrtCheckMemory());
+#endif
 }
 
 void il2c_initialize()

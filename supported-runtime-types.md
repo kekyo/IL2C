@@ -16,7 +16,7 @@ Type | Test
 | [System.Single](https://docs.microsoft.com/en-us/dotnet/api/system.single) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Single) |
 | [System.Double](https://docs.microsoft.com/en-us/dotnet/api/system.double) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Double) |
 | [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean) |  |
-| [System.Char](https://docs.microsoft.com/en-us/dotnet/api/system.char) |  |
+| [System.Char](https://docs.microsoft.com/en-us/dotnet/api/system.char) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Char) |
 | [System.String](https://docs.microsoft.com/en-us/dotnet/api/system.string) |  |
 | [System.IntPtr](https://docs.microsoft.com/en-us/dotnet/api/system.intptr) |  |
 | [System.UIntPtr](https://docs.microsoft.com/en-us/dotnet/api/system.uintptr) |  |

@@ -15,10 +15,11 @@ namespace IL2C.ILConverters
             ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            if (!(si.TargetType.IsValueType &&
-                ((operand.IsInt32StackFriendlyType && si.TargetType.IsInt32StackFriendlyType) ||
-                (operand.IsInt64StackFriendlyType && si.TargetType.IsInt64StackFriendlyType) ||
-                (operand.IsIntPtrStackFriendlyType && si.TargetType.IsIntPtrStackFriendlyType))))
+            if (!(si.TargetType.IsValueType &&      // We have to value type
+                (operand.Equals(si.TargetType) ||   // Same type
+                (operand.IsInt32StackFriendlyType && si.TargetType.IsInt32StackFriendlyType) ||     // Same size or implicit expanders
+                (operand.IsInt64StackFriendlyType && si.TargetType.IsInt64StackFriendlyType) ||     // Same size
+                (operand.IsIntPtrStackFriendlyType && si.TargetType.IsIntPtrStackFriendlyType))))   // Same size
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Location={0}, TokenType={1}, StackType={2}",

@@ -13,7 +13,7 @@ Type | Test
 | [System.UInt32](https://docs.microsoft.com/en-us/dotnet/api/system.uint32) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt32) |
 | [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int64) |
 | [System.UInt64](https://docs.microsoft.com/en-us/dotnet/api/system.uint64) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt64) |
-| [System.Single](https://docs.microsoft.com/en-us/dotnet/api/system.single) |  |
+| [System.Single](https://docs.microsoft.com/en-us/dotnet/api/system.single) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Single) |
 | [System.Double](https://docs.microsoft.com/en-us/dotnet/api/system.double) |  |
 | [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean) |  |
 | [System.Char](https://docs.microsoft.com/en-us/dotnet/api/system.char) |  |

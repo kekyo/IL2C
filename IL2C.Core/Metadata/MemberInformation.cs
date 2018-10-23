@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Mono.Cecil;
 
 namespace IL2C.Metadata
@@ -53,6 +53,12 @@ namespace IL2C.Metadata
         public abstract bool IsCLanguagePublicScope { get; }
         public abstract bool IsCLanguageLinkageScope { get; }
         public abstract bool IsCLanguageFileScope { get; }
+
+        protected override void ResolveLazyValues()
+        {
+            var dummy = declaringType.Value;
+            base.ResolveLazyValues();
+        }
 
         public override string ToString() =>
             string.Format("{0}: {1}", this.MemberTypeName, base.ToString());

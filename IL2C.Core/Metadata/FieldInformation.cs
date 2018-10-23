@@ -85,6 +85,12 @@ namespace IL2C.Metadata
         public override bool IsCLanguageLinkageScope => !this.Definition.IsPublic && !this.Definition.IsPrivate;
         public override bool IsCLanguageFileScope => this.Definition.IsPrivate;
 
+        protected override void ResolveLazyValues()
+        {
+            var dummy = fieldType.Value;
+            base.ResolveLazyValues();
+        }
+
         protected override FieldDefinition OnResolve(FieldReference member)
         {
             return member.Resolve();

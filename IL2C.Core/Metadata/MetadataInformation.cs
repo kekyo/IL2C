@@ -19,7 +19,7 @@ namespace IL2C.Metadata
         IMetadataContext Context { get; }
     }
 
-    [DebuggerDisplay("{MetadataTypeName} {Name}")]
+    [DebuggerDisplay("{DebuggerDisplayString}")]
     internal abstract class MetadataInformation
         : IMetadataInformation
     {
@@ -54,6 +54,21 @@ namespace IL2C.Metadata
         public virtual string MangledName =>
             ToMangledName(this.FriendlyName);
 
+        protected virtual void ResolveLazyValues()
+        {
+            // For debugging purpose.
+        }
+
+        public string DebuggerDisplayString
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                this.ResolveLazyValues();
+                return this.ToString();
+            }
+        }
+
         public int CompareTo(IMetadataInformation other) =>
             StringComparer.Ordinal.Compare(this.UniqueName, other.UniqueName);
 
@@ -69,8 +84,12 @@ namespace IL2C.Metadata
         public override int GetHashCode() =>
             this.UniqueName.GetHashCode();
 
-        public override string ToString() =>
-            string.Format("{0} {1}", this.MetadataTypeName, this.Name);
+        [DebuggerStepThrough]
+        public override string ToString()
+        {
+            this.ResolveLazyValues();
+            return string.Format("{0} {1}", this.MetadataTypeName, this.Name);
+        }
     }
 
     internal abstract class MetadataInformation<TReference, TDefinition>

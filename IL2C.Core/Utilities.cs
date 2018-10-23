@@ -10,6 +10,7 @@ using Mono.Cecil.Cil;
 using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
+using System.Threading;
 
 namespace IL2C
 {
@@ -17,7 +18,7 @@ namespace IL2C
     {
         public static Lazy<T> Create<T>(Func<T> generator)
         {
-            return new Lazy<T>(generator);
+            return new Lazy<T>(generator, LazyThreadSafetyMode.ExecutionAndPublication);
         }
     }
 

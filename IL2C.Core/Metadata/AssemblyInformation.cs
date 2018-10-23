@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Mono.Cecil;
 
 namespace IL2C.Metadata
@@ -39,6 +39,12 @@ namespace IL2C.Metadata
         public string CLanguageIncludeFileName => assembly.Name.Name + ".h";
 
         public IModuleInformation[] Modules => modules.Value;
+
+        protected override void ResolveLazyValues()
+        {
+            var dummy = modules.Value;
+            base.ResolveLazyValues();
+        }
 
         public bool Equals(IAssemblyInformation other)
         {

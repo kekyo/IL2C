@@ -75,8 +75,7 @@ namespace IL2C.Metadata
     }
 
     internal sealed class TypeInformation
-        : MemberInformation<TypeReference, TypeReference>
-            , ITypeInformation
+        : MemberInformation<TypeReference, TypeReference>, ITypeInformation
     {
         private readonly Lazy<TypeInformation> baseType;
         private readonly Lazy<TypeInformation> elementType;
@@ -133,7 +132,7 @@ namespace IL2C.Metadata
                 () => this.GetCalculatedMethods());
 
             virtualMethods = Lazy.Create(
-                () => this.CalculatedMethods.Where(method => method.IsVirtual).ToArray());
+                () => this.GetCalculatedMethods().Where(method => method.IsVirtual).ToArray());
 
             cLanguageTypeName = Lazy.Create(
                 () =>
@@ -433,52 +432,24 @@ namespace IL2C.Metadata
 
         private IMethodInformation[] GetCalculatedMethods()
         {
-            // Calculate totally visible methods.
-            // Those are excluded by inherited base methods.
-
-            var results = new List<IMethodInformation>();
-
-            // Overrided method calculus:
-            //   Traverse from this type to base (System.Object) type.
-            foreach (var type in ((ITypeInformation)this)
-                .Traverse(type => (type.IsValueType || type.IsClass)
-                    ? type.BaseType
+            return ((ITypeInformation)this).
+                // Traverse: System.Int32 --> System.ValueType --> System.Object
+                Traverse(type => (type.IsValueType || type.IsClass) ? type.BaseType :
                     // TODO: Traverse interface inheritance
-
                     // HACK: Interface metadata not contains basic System.Object methods (ex: ToString, Equals...)
                     //   But we have to support for invoking these methods by callvirt opcode.
                     //   IL2C applies easy way to interface type has pseudo these method entries.
                     //   This code fragment makes it.
-                    : this.MetadataContext.ObjectType))
-            {
-                foreach (var method in type.DeclaredMethods
-                    .Where(method => !(method.IsStatic && method.IsConstructor))  // Exclude for the type initializer
-                    .OrderByStableAllOverloads())   // Make stable in current type.
-                {
-                    // Override rule:
-                    //   1. Method name is same
-                    //   2. Method parameter types are same
-                    var index = results
-                        .FindIndex(md =>
-                            (md.Name == method.Name)
-                            && (md.Parameters
-                                .Select(p => p.TargetType)
-                                .SequenceEqual(
-                                    method.Parameters.Select(p => p.TargetType))));
-                    if (index >= 0)
-                    {
-                        // Found: override
-                        results[index] = method;
-                    }
-                    else
-                    {
-                        // Not fount: append new method
-                        results.Add(method);
-                    }
-                }
-            }
-
-            return results.ToArray();
+                    this.MetadataContext.ObjectType).
+                // Aggregates methods.
+                SelectMany(type => type.DeclaredMethods).
+                // Exclude for the type initializer.
+                Where(method => !(method.IsStatic && method.IsConstructor)).
+                // Sort
+                OrderByStableAllOverloads().
+                Values.
+                SelectMany(method => method).
+                ToArray();
         }
 
         public ITypeInformation MakeByReference()
@@ -486,6 +457,20 @@ namespace IL2C.Metadata
             return this.MetadataContext.GetOrAddMember(
                 this.Definition.MakeByReferenceType(),
                 type => new TypeInformation(type, this.DeclaringModule));
+        }
+
+        protected override void ResolveLazyValues()
+        {
+            var dummy1 = baseType.Value;
+            var dummy2 = elementType.Value;
+            var dummy3 = interfaceTypes.Value;
+            var dummy4 = nestedTypes.Value;
+            var dummy5 = fields.Value;
+            var dummy6 = declaredMethods.Value;
+            var dummy7 = calculatedMethods.Value;
+            var dummy8 = virtualMethods.Value;
+            var dummy9 = cLanguageTypeName.Value;
+            base.ResolveLazyValues();
         }
 
         protected override TypeReference OnResolve(TypeReference member)

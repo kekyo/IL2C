@@ -32,6 +32,7 @@ namespace IL2C.Metadata
         bool IsAbstract { get; }
         bool IsSealed { get; }
         bool IsNewSlot { get; }
+        bool IsReuseSlot { get; }
         bool IsExtern { get; }
         bool HasThis { get; }
         bool HasBody { get; }
@@ -39,6 +40,9 @@ namespace IL2C.Metadata
         ITypeInformation ReturnType { get; }
         VariableInformation[] Parameters { get; }
         VariableInformation[] LocalVariables { get; }
+        IMethodInformation[] Overrides { get; }
+        IMethodInformation BaseMethod { get; }
+
         ICodeStream CodeStream { get; }
         int OverloadIndex { get; }
 
@@ -63,6 +67,8 @@ namespace IL2C.Metadata
         private readonly Lazy<ITypeInformation> returnType;
         private readonly Lazy<VariableInformation[]> parameters;
         private readonly Lazy<VariableInformation[]> variables;
+        private readonly Lazy<MethodInformation[]> overrides;
+        private readonly Lazy<IMethodInformation> baseMethod;
         private readonly Lazy<CodeStream> codeStreams;
         private readonly Lazy<int> overloadIndex;
 
@@ -101,6 +107,17 @@ namespace IL2C.Metadata
                                         assembly,
                                         assembly_ => new AssemblyInformation(assembly_, this.MetadataContext))))))))
                 .ToArray());
+
+            overrides = Lazy.Create(() => this.Definition.Overrides.
+                Select(om => this.MetadataContext.GetOrAddMember(
+                    om,
+                    m => new MethodInformation(m, module))).
+                ToArray());
+
+            baseMethod = Lazy.Create(() => this.DeclaringType.BaseType?.
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.DeclaredMethods.Where(m => m.Overrides.Contains(this))).
+                FirstOrDefault());
 
             codeStreams = Lazy.Create(() =>
                 {
@@ -183,11 +200,11 @@ namespace IL2C.Metadata
 
             overloadIndex = Lazy.Create(() =>
                 {
-                    var found = this.DeclaringType.CalculatedMethods
-                        .Where(m => m.Name == this.Member.Name)
-                        .OrderByStableAllOverloads()     // Stable by overload types.
-                        .Select((m, i) => new { m, i })
-                        .First(e => this.Equals(e.m));
+                    var dict = this.DeclaringType.CalculatedMethods.
+                        OrderByStableAllOverloads();
+                    var found = dict[this.Member.Name].
+                        Select((m, i) => new { m, i }).
+                        First(e => this.Equals(e.m));
                     return found.i;
                 });
         }
@@ -253,6 +270,8 @@ namespace IL2C.Metadata
             this.Definition.IsFinal;
         public bool IsNewSlot =>
             this.Definition.IsNewSlot;
+        public bool IsReuseSlot =>
+            this.Definition.IsReuseSlot;
         public bool IsExtern =>
             this.Definition.IsPInvokeImpl || this.Definition.IsInternalCall;
         public bool HasThis =>
@@ -266,6 +285,11 @@ namespace IL2C.Metadata
             parameters.Value;
         public VariableInformation[] LocalVariables =>
             variables.Value;
+        public IMethodInformation[] Overrides =>
+            overrides.Value;
+        public IMethodInformation BaseMethod =>
+            baseMethod.Value;
+
         public ICodeStream CodeStream =>
             codeStreams.Value;
         public int OverloadIndex =>
@@ -386,6 +410,18 @@ namespace IL2C.Metadata
                     this.Name,
                     parametersString);
             }
+        }
+
+        protected override void ResolveLazyValues()
+        {
+            var dummy1 = returnType.Value;
+            var dummy2 = parameters.Value;
+            var dummy3 = variables.Value;
+            var dummy4 = overrides.Value;
+            var dummy5 = baseMethod.Value;
+            var dummy6 = codeStreams.Value;
+            var dummy7 = overloadIndex.Value;
+            base.ResolveLazyValues();
         }
 
         protected override MethodDefinition OnResolve(MethodReference member) =>

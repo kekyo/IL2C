@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////////
 // System.Char
 
-System_String* System_Char_ToString_1(wchar_t* this__)
+System_String* System_Char_ToString(wchar_t* this__)
 {
     wchar_t buffer[2];
 

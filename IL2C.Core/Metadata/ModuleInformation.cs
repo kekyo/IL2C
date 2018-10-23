@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Mono.Cecil;
 
 namespace IL2C.Metadata
@@ -36,6 +36,12 @@ namespace IL2C.Metadata
         public IAssemblyInformation DeclaringAssembly { get; }
 
         public ITypeInformation[] Types => types.Value;
+
+        protected override void ResolveLazyValues()
+        {
+            var dummy = types.Value;
+            base.ResolveLazyValues();
+        }
 
         protected override ModuleDefinition OnResolve(ModuleReference member)
         {

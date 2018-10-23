@@ -56,6 +56,16 @@ namespace IL2C
         public static Task System_UInt64([ValueSource("_System_UInt64")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("TypeSystems");
 
+        public static readonly TestCaseInformation[] _System_IntPtr = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_IntPtr>();
+        [Test]
+        public static Task System_IntPtr([ValueSource("_System_IntPtr")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
+        public static readonly TestCaseInformation[] _System_UIntPtr = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_UIntPtr>();
+        [Test]
+        public static Task System_UIntPtr([ValueSource("_System_UIntPtr")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
         public static readonly TestCaseInformation[] _System_Single = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Single>();
         [Test]
         public static Task System_Single([ValueSource("_System_Single")] TestCaseInformation caseInfo) =>

@@ -263,7 +263,7 @@ namespace IL2C.Metadata
         public bool IsStatic =>
             this.Definition.IsStatic;
         public bool IsVirtual =>
-            this.Definition.IsVirtual;
+            this.Definition.IsVirtual && !this.DeclaringType.IsValueType;
         public bool IsAbstract =>
             this.Definition.IsAbstract;
         public bool IsSealed =>

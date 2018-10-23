@@ -106,7 +106,7 @@ namespace IL2C
             return str.Contains(".") ? str : (str + ".0");
         }
 
-        private static bool TryAppendEscapedCharString(StringBuilder sb, char ch)
+        private static void AppendEscapedCharString(StringBuilder sb, char ch)
         {
             switch (ch)
             {
@@ -140,28 +140,22 @@ namespace IL2C
                         case UnicodeCategory.Control:
                         case UnicodeCategory.PrivateUse:
                         case UnicodeCategory.OtherNotAssigned:
-                            return false;
+                            sb.AppendFormat("\\x{0:x4}", (ushort)ch);
+                            break;
                         default:
                             sb.Append(ch);
                             break;
                     }
                     break;
             }
-            return true;
         }
 
         public static string ToCLanguageExpression(char value)
         {
             var sb = new StringBuilder("L'");
-            if (TryAppendEscapedCharString(sb, value))
-            {
-                sb.Append('\'');
-                return sb.ToString();
-            }
-            else
-            {
-                return string.Format("((wchar_t)0x{0:x4}U)", (ushort)value);
-            }
+            AppendEscapedCharString(sb, value);
+            sb.Append('\'');
+            return sb.ToString();
         }
 
         public static string ToCLanguageExpression(string value)
@@ -169,10 +163,7 @@ namespace IL2C
             var sb = new StringBuilder("L\"");
             foreach (var ch in value)
             {
-                if (!TryAppendEscapedCharString(sb, ch))
-                {
-                    sb.AppendFormat("\\u{0:x4}", (ushort)ch);
-                }
+                AppendEscapedCharString(sb, ch);
             }
             sb.Append('"');
             return sb.ToString();

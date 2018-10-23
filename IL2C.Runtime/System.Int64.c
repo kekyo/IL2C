@@ -15,7 +15,7 @@ int32_t System_Int64_GetHashCode(int64_t* this__)
 {
     il2c_assert(this__ != NULL);
 
-    return *this__;
+    return *this__ ^ (*this__ >> 32);
 }
 
 bool System_Int64_Equals(int64_t* this__, int64_t obj)

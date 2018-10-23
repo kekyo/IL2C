@@ -55,5 +55,10 @@ namespace IL2C
         [Test]
         public static Task System_Single([ValueSource("_System_Single")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("TypeSystems");
+
+        public static readonly TestCaseInformation[] _System_Double = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Double>();
+        [Test]
+        public static Task System_Double([ValueSource("_System_Double")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
     }
 }

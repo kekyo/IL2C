@@ -1,10 +1,10 @@
-﻿.class public IL2C.TypeSystems.System_Single
+﻿.class public IL2C.TypeSystems.System_Double
 {
 	.method public static bool IsValueType() cil managed
 	{
 		.maxstack 2
-		ldc.r4 12345.67
-		box [mscorlib]System.Single
+		ldc.r8 1234567.890123
+		box [mscorlib]System.Double
 		castclass [mscorlib]System.ValueType
         brnull.s F1
         ldc.i4.1
@@ -17,7 +17,7 @@
 	.method public static int32 SizeOf() cil managed
 	{
 		.maxstack 1
-        sizeof [mscorlib]System.Single
+        sizeof [mscorlib]System.Double
         ret
 	}
 }

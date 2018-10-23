@@ -21,6 +21,11 @@ namespace IL2C
         public static Task System_SByte([ValueSource("_System_SByte")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("TypeSystems");
 
+        public static readonly TestCaseInformation[] _System_Int16 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Int16>();
+        [Test]
+        public static Task System_Int16([ValueSource("_System_Int16")] TestCaseInformation caseInfo) =>
+            caseInfo.ExecuteTestAsync("TypeSystems");
+
         public static readonly TestCaseInformation[] _System_Int32 = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.System_Int32>();
         [Test]
         public static Task System_Int32([ValueSource("_System_Int32")] TestCaseInformation caseInfo) =>

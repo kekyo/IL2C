@@ -12,3 +12,4 @@ build_script:
 artifacts:
   - path: artifacts
   - path: tests/IL2C.Core.Test.Fixture/bin/Debug/net462/ILConverters
+  - path: tests/IL2C.Core.Test.Fixture/bin/Debug/net462/RuntimeTypes

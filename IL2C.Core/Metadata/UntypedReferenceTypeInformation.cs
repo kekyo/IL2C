@@ -26,6 +26,7 @@ namespace IL2C.Metadata
         public bool IsClass => false;
         public bool IsInterface => false;
         public bool IsEnum => false;
+        public bool IsArray => false;
         public bool IsDelegate => false;
         public bool IsByReference => false;
         public bool IsPointer => false;

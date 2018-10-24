@@ -23,6 +23,7 @@ namespace IL2C.Metadata
         bool IsClass { get; }
         bool IsInterface { get; }
         bool IsEnum { get; }
+        bool IsArray { get; }
         bool IsDelegate { get; }
         bool IsByReference { get; }
         bool IsPointer { get; }
@@ -65,7 +66,6 @@ namespace IL2C.Metadata
 
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
-        IMethodInformation[] CalculatedMethods { get; }
         IMethodInformation[] VirtualMethods { get; }
 
         string CLanguageTypeName { get; }
@@ -85,7 +85,6 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation[]> nestedTypes;
         private readonly Lazy<FieldInformation[]> fields;
         private readonly Lazy<MethodInformation[]> declaredMethods;
-        private readonly Lazy<IMethodInformation[]> calculatedMethods;
         private readonly Lazy<IMethodInformation[]> virtualMethods;
         private readonly Lazy<string> cLanguageTypeName;
 
@@ -130,11 +129,8 @@ namespace IL2C.Metadata
                 () => (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
                 method => new MethodInformation(method, module));
 
-            calculatedMethods = Lazy.Create(
-                () => this.GetCalculatedMethods());
-
             virtualMethods = Lazy.Create(
-                () => this.GetCalculatedMethods().Where(method => method.IsVirtual).ToArray());
+                () => this.DeclaredMethods.Where(method => method.IsVirtual).ToArray());
 
             cLanguageTypeName = Lazy.Create(
                 () =>
@@ -272,6 +268,7 @@ namespace IL2C.Metadata
         public bool IsClass => !this.Member.IsValueType && ((this.Definition as TypeDefinition)?.IsClass ?? false);
         public bool IsInterface => (this.Definition as TypeDefinition)?.IsInterface ?? false;
         public bool IsEnum => (this.Definition as TypeDefinition)?.IsEnum ?? false;
+        public bool IsArray => (this.Definition as TypeDefinition)?.IsArray ?? false;
         public bool IsDelegate => this.MetadataContext.DelegateType.IsAssignableFrom(this);
         public bool IsByReference => this.Member.IsByReference;
         public bool IsPointer => this.Member.IsPointer;
@@ -360,7 +357,6 @@ namespace IL2C.Metadata
 
         public IFieldInformation[] Fields => fields.Value;
         public IMethodInformation[] DeclaredMethods => declaredMethods.Value;
-        public IMethodInformation[] CalculatedMethods => calculatedMethods.Value;
         public IMethodInformation[] VirtualMethods => virtualMethods.Value;
 
         public override bool IsCLanguagePublicScope
@@ -440,28 +436,6 @@ namespace IL2C.Metadata
             return false;
         }
 
-        private IMethodInformation[] GetCalculatedMethods()
-        {
-            return ((ITypeInformation)this).
-                // Traverse: System.Int32 --> System.ValueType --> System.Object
-                Traverse(type => (type.IsValueType || type.IsClass) ? type.BaseType :
-                    // TODO: Traverse interface inheritance
-                    // HACK: Interface metadata not contains basic System.Object methods (ex: ToString, Equals...)
-                    //   But we have to support for invoking these methods by callvirt opcode.
-                    //   IL2C applies easy way to interface type has pseudo these method entries.
-                    //   This code fragment makes it.
-                    this.MetadataContext.ObjectType).
-                // Aggregates methods.
-                SelectMany(type => type.DeclaredMethods).
-                // Exclude for the type initializer.
-                Where(method => !(method.IsStatic && method.IsConstructor)).
-                // Sort
-                OrderByStableAllOverloads().
-                Values.
-                SelectMany(method => method).
-                ToArray();
-        }
-
         public ITypeInformation MakeByReference()
         {
             return this.MetadataContext.GetOrAddMember(
@@ -477,7 +451,6 @@ namespace IL2C.Metadata
             var dummy4 = nestedTypes.Value;
             var dummy5 = fields.Value;
             var dummy6 = declaredMethods.Value;
-            var dummy7 = calculatedMethods.Value;
             var dummy8 = virtualMethods.Value;
             var dummy9 = cLanguageTypeName.Value;
             base.ResolveLazyValues();

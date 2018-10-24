@@ -29,65 +29,129 @@ namespace IL2C.Metadata
                     .Concat(new[] { member.Name }));
         }
 
-        private sealed class MethodSignatureComparer : IEqualityComparer<IMethodInformation>
+        private sealed class MethodSignatureComparer : IComparer<IMethodInformation>
         {
+            // This is a overload stablizer
+
             private MethodSignatureComparer()
             {
             }
 
-            public bool Equals(IMethodInformation x, IMethodInformation y)
+            private static int Compare(ITypeInformation x, ITypeInformation y)
             {
-                // We have to test if both parameters equal but different static/instance combination.
-                // (The MethodInformation gives the "this" objref at arg0)
-                if ((x.Name != y.Name) || (x.IsStatic != y.IsStatic))
+                var xr = x.IsAssignableFrom(y);
+                var yr = y.IsAssignableFrom(x);
+
+                if (!xr && xr)
                 {
-                    return false;
+                    return -1;
                 }
-                if (x.Parameters.Length != y.Parameters.Length)
+                if (xr && !yr)
                 {
-                    return false;
+                    return 1;
+                }
+                if (xr && yr)
+                {
+                    return 0;
                 }
 
-                for (var index = 0; index < x.Parameters.Length; index++)
+                if (!x.IsByReference && y.IsByReference)
                 {
-                    // Instance method arg0 type ignores different type.
-                    if ((index == 0) && x.HasThis)
-                    {
-                        continue;
-                    }
-                    if (!x.Parameters[index].TargetType.Equals(y.Parameters[index].TargetType))
-                    {
-                        return false;
-                    }
+                    return Compare(x.ElementType, y);
                 }
-                return true;
+                if (x.IsByReference && !y.IsByReference)
+                {
+                    return Compare(x, y.ElementType);
+                }
+                if (x.IsByReference && y.IsByReference)
+                {
+                    return Compare(x.ElementType, y.ElementType);
+                }
+
+                if (x.IsPrimitive)
+                {
+                    return -1;
+                }
+                if (y.IsPrimitive)
+                {
+                    return 1;
+                }
+                if (x.IsValueType)
+                {
+                    return -1;
+                }
+                if (y.IsValueType)
+                {
+                    return 1;
+                }
+
+                if (x.IsClass)
+                {
+                    return -1;
+                }
+                if (y.IsClass)
+                {
+                    return 1;
+                }
+                if (x.IsInterface)
+                {
+                    return -1;
+                }
+                if (y.IsInterface)
+                {
+                    return 1;
+                }
+                if (x.IsArray)
+                {
+                    return -1;
+                }
+                if (y.IsArray)
+                {
+                    return 1;
+                }
+                if (x.IsPointer)
+                {
+                    return -1;
+                }
+                if (y.IsPointer)
+                {
+                    return 1;
+                }
+
+                return -1;
             }
 
-            public int GetHashCode(IMethodInformation obj)
+            private static int Compare(VariableInformation x, VariableInformation y)
             {
-                return obj.Name.GetHashCode() ^ obj.IsStatic.GetHashCode() ^ obj.Parameters.Length;
+                var xt = x.TargetType;
+                var yt = y.TargetType;
+
+                var xr = xt.IsAssignableFrom(yt);
+                var yr = yt.IsAssignableFrom(xt);
+
+                return Compare(xt, yt);
             }
 
-            public static readonly IEqualityComparer<IMethodInformation> Instance = new MethodSignatureComparer();
+            public int Compare(IMethodInformation x, IMethodInformation y)
+            {
+                var xps = x.Parameters;
+                var yps = y.Parameters;
+
+                var result = xps.Zip(yps, Compare).FirstOrDefault(r => r != 0);
+                if (result != 0)
+                {
+                    return result;
+                }
+                else
+                {
+                    return xps.Length.CompareTo(yps.Length);
+                }
+            }
+
+            public static readonly IComparer<IMethodInformation> Instance = new MethodSignatureComparer();
         }
 
-        private static IEnumerable<IMethodInformation> StableDistinctBySignature(
-            this IEnumerable<IMethodInformation> methods)
-        {
-            // LINQ to Object implement is stable argorithm, but not documented.
-            // So, here's manually calculation.
-            // return methods.Distinct(MethodSignatureComparer.Instance);
-            var handled = new HashSet<IMethodInformation>(MethodSignatureComparer.Instance);
-            foreach (var method in methods)
-            {
-                if (handled.Add(method))
-                {
-                    yield return method;
-                }
-            }
-        }
-
-        public static IDictionary<string, IMethodInformation[]> OrderByStableAllOverloads(
+        public static IDictionary<string, IMethodInformation[]> CalculateOverloadMethods(
             this IEnumerable<IMethodInformation> methods)
         {
             // Aggregate overloads and overrides.
@@ -95,17 +159,10 @@ namespace IL2C.Metadata
             foreach (var g in methods.GroupBy(method => method.Name))
             {
                 var r = g.
-                    Select(method => new { index = method.DeclaringType.Traverse(type => type.BaseType).Count(), method }).
-                    OrderByDescending(entry => entry.index).
-                    ThenBy(entry => entry.method.IsStatic ? 1 : 0).
-                    ThenBy(entry => entry.method.IsReuseSlot ? 0 : 1).
-                    Select(entry => entry.method).
-                    StableDistinctBySignature().
-                    Select((method, index) => new { index, method }).
-                    OrderBy(entry => entry.index).
-                    ThenBy(entry => entry.method.Parameters.Length).
-                    ThenBy(entry => entry.method.IsVirtual ? 1 : 0).
-                    Select(entry => entry.method).
+                    OrderBy(method => method.IsStatic ? 1 : 0).
+                    ThenBy(method => method.Parameters.Length).
+                    ThenBy(method => method.IsReuseSlot ? 1 : 0).
+                    ThenBy(method => method, MethodSignatureComparer.Instance).
                     ToArray();
 
                 dict.Add(g.Key, r);

@@ -133,7 +133,7 @@ int32_t System_String_GetHashCode(System_String* this__)
     return value;
 }
 
-System_String* System_String_Concat_7(System_String* this__, System_String* str1)
+System_String* System_String_Concat_5(System_String* this__, System_String* str1)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->string_body__ != NULL);

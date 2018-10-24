@@ -129,8 +129,8 @@ namespace IL2C
                 typeof(UIntPtr),
             };
 
-            var typeSystemsTests =
-                typeof(TypeSystemsTest)
+            var runtimeTypesTests =
+                typeof(RuntimeTypesTest)
                 .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[])))
                 .SelectMany(field => (TestCaseInformation[])field.GetValue(null))
@@ -150,7 +150,7 @@ namespace IL2C
 
                 foreach (var type in types)
                 {
-                    typeSystemsTests.TryGetValue(type.FullName.Replace('.', '_'), out var entry);
+                    runtimeTypesTests.TryGetValue(type.FullName.Replace('.', '_'), out var entry);
 
                     await tw.WriteLineAsync(
                         string.Format("| [{0}](https://docs.microsoft.com/en-us/dotnet/api/{1}) | {2} |",

@@ -110,6 +110,7 @@ namespace IL2C
             var types = new Type[]
             {
                 typeof(object),
+                typeof(Type),
                 typeof(ValueType),
                 typeof(void),
                 typeof(byte),

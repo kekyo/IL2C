@@ -33,6 +33,7 @@
     <ClCompile Include="System.SByte.c" />
     <ClCompile Include="System.Single.c" />
     <ClCompile Include="System.String.c" />
+    <ClCompile Include="System.Type.c" />
     <ClCompile Include="System.UInt16.c" />
     <ClCompile Include="System.UInt32.c" />
     <ClCompile Include="System.UInt64.c" />
@@ -41,7 +42,6 @@
     <ClInclude Include="debugbreak.h" />
     <ClInclude Include="il2c.h" />
     <ClInclude Include="il2c_private.h" />
-    <None Include="il2c_combined.h" />
     <ClInclude Include="System.Boolean.h" />
     <ClInclude Include="System.Byte.h" />
     <ClInclude Include="System.Char.h" />
@@ -55,11 +55,13 @@
     <ClInclude Include="System.SByte.h" />
     <ClInclude Include="System.Single.h" />
     <ClInclude Include="System.String.h" />
+    <ClInclude Include="System.Type.h" />
     <ClInclude Include="System.UInt16.h" />
     <ClInclude Include="System.UInt32.h" />
     <ClInclude Include="System.UInt64.h" />
     <ClInclude Include="System.UIntPtr.h" />
     <ClInclude Include="System.ValueType.h" />
+    <None Include="il2c_combined.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

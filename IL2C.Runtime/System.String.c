@@ -44,17 +44,136 @@ static System_String* __new_string_internal__(uintptr_t byteSize)
     return pString;
 }
 
-System_String* il2c_new_string(const wchar_t* string_body__)
+System_String* il2c_new_string(const wchar_t* pString)
 {
-    il2c_assert(string_body__ != NULL);
+    if (pString == NULL)
+    {
+        return NULL;
+    }
 
-    uintptr_t size = (uintptr_t)(il2c_wcslen(string_body__) + 1) * sizeof(wchar_t);
-    System_String* pString = __new_string_internal__(size);
+    uintptr_t size = (uintptr_t)(il2c_wcslen(pString) + 1) * sizeof(wchar_t);
+    System_String* p = __new_string_internal__(size);
 
     // Copy string at below
-    il2c_memcpy((wchar_t*)(pString->string_body__), string_body__, size);
+    il2c_memcpy((wchar_t*)(p->string_body__), pString, size);
 
-    return pString;
+    return p;
+}
+
+System_String* il2c_new_string_from_utf8(const char* pUtf8String)
+{
+    if (pUtf8String == NULL)
+    {
+        return NULL;
+    }
+
+    // https://en.wikipedia.org/wiki/UTF-8
+
+    size_t length = 1;
+    const char* pSource = pUtf8String;
+    while (1)
+    {
+        const char ch0 = *pSource;
+        if (ch0 == '\0')
+        {
+            break;
+        }
+
+        if (ch0 <= 0x7f)
+        {
+            pSource += 1;
+            length++;
+            continue;
+        }
+        if (ch0 <= 0xdf)
+        {
+            pSource += 2;
+            length++;
+            continue;
+        }
+        if (ch0 <= 0xef)
+        {
+            pSource += 3;
+            length++;
+            continue;
+        }
+        if (ch0 <= 0xf7)
+        {
+            pSource += 4;
+            length++;
+            continue;
+        }
+        if (ch0 <= 0xfb)
+        {
+            pSource += 5;
+            length++;
+            continue;
+        }
+        if (ch0 <= 0xfd)
+        {
+            pSource += 6;
+            length++;
+            continue;
+        }
+        break;
+    }
+
+    uintptr_t size = (uintptr_t)(length) * sizeof(wchar_t);
+    System_String* p = __new_string_internal__(size);
+    wchar_t* pDest = (wchar_t*)(p->string_body__);
+
+    pSource = pUtf8String;
+    while (1)
+    {
+        const char ch0 = *pSource++;
+        if (ch0 == '\0')
+        {
+            *pDest = L'\0';
+            break;
+        }
+
+        // 2byte page
+        if (ch0 <= 0x7f)
+        {
+            *pDest++ = (wchar_t)ch0;
+            continue;
+        }
+        const char ch1 = *pSource++;
+        if (ch0 <= 0xdf)
+        {
+            *pDest++ = ((((wchar_t)ch0) & 0x1f) << 6) | (((wchar_t)ch1) & 0x3f);
+            continue;
+        }
+        const char ch2 = *pSource++;
+        if (ch0 <= 0xef)
+        {
+            *pDest++ = ((((wchar_t)ch0) & 0x0f) << 8) | ((((wchar_t)ch1) & 0x3f) << 6) | (((wchar_t)ch2) & 0x3f);
+            continue;
+        }
+#if 0 // TODO: 4-6bytes decoder (surrogate pair)
+        const char ch3 = *pSource++;
+        if (ch0 <= 0xf7)
+        {
+            il2c_assert(0);
+            continue;
+        }
+        const char ch4 = *pSource++;
+        if (ch0 <= 0xfb)
+        {
+            il2c_assert(0);
+            continue;
+        }
+        const char ch5 = *pSource++;
+        if (ch0 <= 0xfd)
+        {
+            il2c_assert(0);
+            continue;
+        }
+#endif
+        break;
+    }
+
+    return p;
 }
 
 const wchar_t* il2c_c_str(System_String* str)

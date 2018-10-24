@@ -8,6 +8,8 @@ namespace IL2C.ILConverters
     [TestCase(123, new[] { "Static_RefInt_RefInt", "Store_Static_RefInt_RefInt" })]
     [TestCase(679, new[] { "Instance_Int32_ThisInt32", "Add_Instance_Int32_ThisInt32" }, 123, 456)]
     [TestCase("ABCGHIDEFGHI", new[] { "Instance_String_ThisString", "Concat_Instance_String_ThisString" }, "ABC", "DEF")]
+    [TestCase("IL2C.ILConverters.Call", new[] { "Instance_ToString_System_Object", "ToString" })]
+    [TestCase("CallTest", new[] { "Instance_ToString_IL2C_ILConverters_Call", "ToString" })]
     public sealed class Call
     {
         #region Static
@@ -57,6 +59,17 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Instance_String_ThisString(string v1, string v2);
+
+        public override string ToString()
+        {
+            return "CallTest";
+        }
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string Instance_ToString_System_Object();
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string Instance_ToString_IL2C_ILConverters_Call();
         #endregion
     }
 }

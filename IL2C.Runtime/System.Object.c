@@ -8,8 +8,8 @@ System_String* System_Object_ToString(System_Object* this__)
 {
     il2c_assert(this__ != NULL);
 
-    // TODO: we have to construct runtime time type name.
-    return System_Object_name;
+    System_Type* pType = System_Object_GetType(this__);
+    return System_Type_get_FullName(pType);
 }
 
 int32_t System_Object_GetHashCode(System_Object* this__)
@@ -17,6 +17,21 @@ int32_t System_Object_GetHashCode(System_Object* this__)
     il2c_assert(this__ != NULL);
 
     return (int32_t)(intptr_t)this__;
+}
+
+System_Type* System_Object_GetType(System_Object* this__)
+{
+    il2c_assert(this__ != NULL);
+
+    System_Type* pType = il2c_get_uninitialized_object(il2c_typeof(System_Type));
+    pType->vptr0__ = &__System_Type_VTABLE__;
+
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
+        (((uint8_t*)this__) - sizeof(IL2C_REF_HEADER));
+
+    pType->type__ = pHeader->type;
+
+    return pType;
 }
 
 void System_Object_Finalize(System_Object* this__)

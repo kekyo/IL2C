@@ -103,9 +103,9 @@ typedef void* untyped_ptr;
 //   System.Enum
 //   System.Delegate, System.MulticastDelegate
 //   System.Exception
-//   System.Type
 
 #include <System.Object.h>
+#include <System.Type.h>
 #include <System.ValueType.h>
 #include <System.Char.h>
 #include <System.String.h>

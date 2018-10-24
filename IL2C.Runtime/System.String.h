@@ -54,6 +54,7 @@ extern bool System_String_op_Equality(System_String* lhs, System_String* rhs);
 // String special functions
 
 extern System_String* il2c_new_string(const wchar_t* pString);
+extern System_String* il2c_new_string_from_utf8(const char* pUtf8String);
 extern const wchar_t* il2c_c_str(System_String* str);
 
 typedef struct

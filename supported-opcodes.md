@@ -41,7 +41,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [dup](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.dup) | 0x25 | Implemented | [Test [2]](tests/IL2C.Core.Test.Target/ILConverters/Dup) | IL2C.ILConverters.DupConverter |
 | [pop](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.pop) | 0x26 | Implemented |  | IL2C.ILConverters.PopConverter |
 | [jmp](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.jmp) | 0x27 |  |  |  |
-| [call](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.call) | 0x28 | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Call) | IL2C.ILConverters.CallConverter |
+| [call](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.call) | 0x28 | Implemented | [Test [7]](tests/IL2C.Core.Test.Target/ILConverters/Call) | IL2C.ILConverters.CallConverter |
 | [calli](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.calli) | 0x29 |  |  |  |
 | [ret](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ret) | 0x2a | Implemented | [Test [6]](tests/IL2C.Core.Test.Target/ILConverters/Ret) | IL2C.ILConverters.RetConverter |
 | [br.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.br_s) | 0x2b | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Br_S) | IL2C.ILConverters.Br_sConverter |

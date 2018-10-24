@@ -7,6 +7,7 @@
 #include "il2c.c"
 
 #include "System.Object.c"
+#include "System.Type.c"
 #include "System.ValueType.c"
 #include "System.Char.c"
 #include "System.String.c"

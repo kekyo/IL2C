@@ -2,7 +2,8 @@
 
 Type | Test
 |:---|:---|
-| [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Object) |
+| [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) | [Test [4]](tests/IL2C.Core.Test.Target/TypeSystems/System_Object) |
+| [System.Type](https://docs.microsoft.com/en-us/dotnet/api/system.type) |  |
 | [System.ValueType](https://docs.microsoft.com/en-us/dotnet/api/system.valuetype) |  |
 | [System.Void](https://docs.microsoft.com/en-us/dotnet/api/system.void) |  |
 | [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/system.byte) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Byte) |

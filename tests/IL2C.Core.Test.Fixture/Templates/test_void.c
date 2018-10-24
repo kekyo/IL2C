@@ -1,10 +1,13 @@
-﻿#include <il2c_combined.h>
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IL2C Test: {testName}
+
+#include <il2c_combined.h>
 #include "test.h"
 
 {body}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Test: {testName}
+// Main
 
 #include <stdio.h>
 
@@ -13,10 +16,14 @@ int main()
     il2c_initialize();
 
     ////////////////////////
+    // Argument and expected values.
 
-    {locals}
+    {constants}
 
     ////////////////////////
+    // Construct tracking values.
+
+    {locals}
 
     struct /* IL2C_EXECUTION_FRAME */
     {
@@ -30,14 +37,20 @@ int main()
     il2c_link_execution_frame(&__executionFrame__);
 
     ////////////////////////
+    // Construct required type arguments.
 
-    {argInitializers}
-    {function}({arguments});
+    {arguments}
+
+    ////////////////////////
+    // Execute target function.
+
+    {function}({argumentList});
 
     int result = 0;
     wprintf(L"Success\n");
 
     ////////////////////////
+    // Destruct frames.
 
     il2c_unlink_execution_frame(&__executionFrame__);
 

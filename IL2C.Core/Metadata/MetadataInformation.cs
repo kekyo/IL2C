@@ -23,10 +23,6 @@ namespace IL2C.Metadata
     internal abstract class MetadataInformation
         : IMetadataInformation
     {
-        private static readonly char[] replaceChars = {
-            '.', ',', '@', '+', '-', '*', '/', '^', '\\', '#', '%', '&', '$', '?', '!', '=', '~', '|',
-            '(', ')', '<', '>', '[', ']', '{', '}', '\'', '"', '`', ';', ':', ' ' };
-
         protected MetadataInformation(MetadataContext metadataContext)
         {
             this.MetadataContext = metadataContext;
@@ -41,18 +37,8 @@ namespace IL2C.Metadata
         public abstract string Name { get; }
         public abstract string FriendlyName { get; }
 
-        protected static string ToMangledName(string name)
-        {
-            var sb = new StringBuilder(name);
-            foreach (var ch in replaceChars)
-            {
-                sb.Replace(ch, '_');
-            }
-            return sb.ToString();
-        }
-
         public virtual string MangledName =>
-            ToMangledName(this.FriendlyName);
+            Utilities.ToMangledName(this.FriendlyName);
 
         protected virtual void ResolveLazyValues()
         {

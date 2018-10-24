@@ -28,7 +28,10 @@ namespace IL2C
         private static readonly string intMinValueExpression = string.Format("{0} - 1", int.MinValue + 1);
         private static readonly string longMinValueExpression = string.Format("{0}LL - 1LL", long.MinValue + 1);
 
-        private static readonly char[] replaceChars = { '.', '@', '<', '>', '$', '-', '=', ',', '.' };
+        private static readonly char[] replaceChars = {
+            '.', ',', '@', '+', '-', '*', '/', '^', '\\', '#', '%', '&', '$', '?', '!', '=', '~', '|',
+            '(', ')', '<', '>', '[', ']', '{', '}', '\'', '"', '`', ';', ':', ' ' };
+
         private static readonly Dictionary<OpCode, ILConverter> ilConverters;
 
         static Utilities()
@@ -44,6 +47,16 @@ namespace IL2C
 
         public static bool TryGetILConverter(OpCode opCode, out ILConverter ilc) =>
             ilConverters.TryGetValue(opCode, out ilc);
+
+        public static string ToMangledName(string name)
+        {
+            var sb = new StringBuilder(name);
+            foreach (var ch in replaceChars)
+            {
+                sb.Replace(ch, '_');
+            }
+            return sb.ToString();
+        }
 
         #region ToCLanguageExpression
         public static string ToCLanguageExpression(int value)

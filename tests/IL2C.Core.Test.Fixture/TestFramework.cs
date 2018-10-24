@@ -25,24 +25,38 @@ namespace IL2C
                     "..",
                     "IL2C.Runtime"));
 
-        private static string GetCLanguageLiteralExpression(object value)
+        private static string GetCLangaugeSafeConversionExpression(
+            ITypeInformation argumentType, Type constantType, string constantExpression)
         {
-            if (value is string) return "il2c_new_string(" + Utilities.ToCLanguageLiteralExpression(value) + ")";
-            return Utilities.ToCLanguageLiteralExpression(value);
-        }
+            // abbrev
+            if (constantType != null)
+            {
+                if (TestUtilities.GetCLanguageTypeName(constantType) == argumentType.CLanguageTypeName)
+                {
+                    return constantExpression;
+                }
+                else if (constantType == typeof(string))
+                {
+                    return string.Format("({0})il2c_new_string({1})",
+                        argumentType.CLanguageTypeName,
+                        constantExpression);
+                }
+                else if (argumentType.IsObjectType && constantType.IsValueType)
+                {
+                    return string.Format("il2c_box(&{0}, {1})",
+                        constantExpression,
+                        Utilities.ToMangledName(constantType.FullName));
+                }
+            }
 
-        private static string GetCLanguageTypedLiteralExpression(object value, ITypeInformation type)
-        {
-            return ((value != null) && (value.GetType().FullName == type.FriendlyName)) ?
-                GetCLanguageLiteralExpression(value) :
-                string.Format("({0})({1})", type.CLanguageTypeName, GetCLanguageLiteralExpression(value));
+            return string.Format("({0}){1}", argumentType.CLanguageTypeName, constantExpression);
         }
 
         private static string GetCLanguageCompareExpression(ITypeInformation type)
         {
             return type.IsStringType ?
-                "((il2c_c_str(expected) == NULL) && (il2c_c_str(actual) == NULL)) || \r\n        ((il2c_c_str(expected) != NULL) && (il2c_c_str(actual) != NULL) && (wcscmp(il2c_c_str(expected), il2c_c_str(actual)) == 0))" :
-                "expected == actual";
+                "((il2c_c_str(_expected) == NULL) && (il2c_c_str(actual) == NULL)) || \r\n        ((il2c_c_str(_expected) != NULL) && (il2c_c_str(actual) != NULL) && (wcscmp(il2c_c_str(_expected), il2c_c_str(actual)) == 0))" :
+                "_expected == actual";
         }
 
         private static string GetCLanguagePrintFormatFromType(ITypeInformation type)
@@ -75,6 +89,22 @@ namespace IL2C
                     symbolName;
         }
         #endregion
+
+        private struct Constant
+        {
+            public readonly string SymbolName;
+            public readonly ITypeInformation TargetType;
+            public readonly Type ExpressionType;
+            public readonly string Expression;
+
+            public Constant(string symbolName, ITypeInformation targetType, Type expressionType, string expression)
+            {
+                this.SymbolName = symbolName;
+                this.TargetType = targetType;
+                this.ExpressionType = expressionType;
+                this.Expression = expression;
+            }
+        }
 
         public static async Task ExecuteTestAsync(
             string categoryName, string testName, object expected, TestCaseAsserts assert,
@@ -147,20 +177,68 @@ namespace IL2C
             sourceCodeStream.Position = 0;
             var sourceCode = new StreamReader(sourceCodeStream);
 
-            var arguments = args.
-                Zip(targetMethod.Parameters, (arg, p) =>
-                    (p.SymbolName, p.TargetType, GetCLanguageTypedLiteralExpression(arg, p.TargetType))).
+            var constants = args.
+                Zip(targetMethod.Parameters, (arg, p) => new Constant(
+                    p.SymbolName,
+                    p.TargetType,
+                    arg?.GetType(),
+                    Utilities.ToCLanguageLiteralExpression(arg))
+                ).
                 ToArray();
-            var locals = (!(expectedType.IsVoidType || (assert == TestCaseAsserts.CauseBreak)) ?
-                new ValueTuple<string, ITypeInformation, string>[]
-                {
-                    ( "expected", expectedType, GetCLanguageTypedLiteralExpression(expected, targetMethod.ReturnType) ),
-                    ( "actual", expectedType, (string)null ),
-                } :
-                new ValueTuple<string, ITypeInformation, string>[]
-                {
-                }).
-                Concat(arguments);
+            var argumentList = constants.
+                Select(constant => new Constant(
+                    "_" + constant.SymbolName,
+                    constant.TargetType,
+                    null,
+                    GetCLangaugeSafeConversionExpression(constant.TargetType, constant.ExpressionType, constant.SymbolName))).
+                ToArray();
+
+            var arguments = argumentList;
+            var locals = argumentList.
+                Select(argument =>
+                    new Constant(
+                        argument.SymbolName,
+                        argument.TargetType,
+                        argument.ExpressionType,
+                        Utilities.ToCLanguageLiteralExpression(expectedType.EmptyValue))).
+                ToArray();
+
+            if (!(expectedType.IsVoidType || (assert == TestCaseAsserts.CauseBreak)))
+            {
+                // VERY DIRTY:
+                constants = constants.Concat(new Constant[]
+                    {
+                        new Constant(
+                            "expected",
+                            expectedType,
+                            expected?.GetType(),
+                            Utilities.ToCLanguageLiteralExpression(expected)),
+                    }).
+                    ToArray();
+                arguments = constants.
+                    Select(constant => new Constant(
+                        "_" + constant.SymbolName,
+                        constant.TargetType,
+                        null,
+                        GetCLangaugeSafeConversionExpression(constant.TargetType, constant.ExpressionType, constant.SymbolName))).
+                    ToArray();
+                locals = arguments.
+                    Select(argument =>
+                        new Constant(
+                            argument.SymbolName,
+                            argument.TargetType,
+                            argument.ExpressionType,
+                            Utilities.ToCLanguageLiteralExpression(argument.TargetType.EmptyValue))).
+                    Concat(new Constant[]
+                    {
+                        new Constant(
+                            "actual",
+                            expectedType,
+                            expected?.GetType(),
+                            Utilities.ToCLanguageLiteralExpression(expectedType.EmptyValue)),
+                    }).
+                    ToArray();
+            }
 
             // Construct test definitions.
             var replaceValues = new Dictionary<string, object>
@@ -168,32 +246,36 @@ namespace IL2C
                 { "testName", targetMethod.FriendlyName},
                 { "type", targetMethod.ReturnType.CLanguageTypeName},
                 { "body", body.ToString() },
+                { "constants", string.Join(" ", constants.
+                    Select(entry => string.Format("{0} {1} = {2};",
+                        (entry.ExpressionType != null) ? TestUtilities.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
+                        entry.SymbolName,
+                        entry.Expression))) },
                 { "locals", string.Join(" ", locals.
                     Select(entry => string.Format("{0} {1} = {2};",
-                        entry.Item2.CLanguageTypeName,
-                        entry.Item1,
-                        entry.Item2.IsClass ? "NULL" : "0"))) },
+                        entry.TargetType.CLanguageTypeName,
+                        entry.SymbolName,
+                        entry.Expression))) },
                 { "frames", string.Join(" ", locals.
-                    Where(entry => entry.Item2.IsClass).
+                    Where(entry => entry.TargetType.IsClass).
                     Select(entry => string.Format("{0}* {1}__;",
-                        entry.Item2.CLanguageTypeName,
-                        entry.Item1))) },
+                        entry.TargetType.CLanguageTypeName,
+                        entry.SymbolName))) },
                 { "frameCount", locals.
-                    Where(entry => entry.Item2.IsClass).Count() },
+                    Where(entry => entry.TargetType.IsClass).Count() },
                 { "frameInitializers", string.Join(" ", locals.
-                    Where(entry => entry.Item2.IsClass).
+                    Where(entry => entry.TargetType.IsClass).
                     Select(entry => string.Format("__executionFrame__.{0}__ = &{0};",
-                        entry.Item1))) },
-                { "argInitializers", string.Join(" ", arguments.
+                        entry.SymbolName))) },
+                { "arguments", string.Join(" ", arguments.
                     Select(entry => string.Format("{0} = {1};",
-                        entry.Item1, entry.Item3))) },
-                { "expected", GetCLanguageTypedLiteralExpression(expected, targetMethod.ReturnType)},
+                        entry.SymbolName, entry.Expression))) },
                 { "function", targetMethod.CLanguageFunctionName},
-                { "arguments", string.Join(", ", arguments.
+                { "argumentList", string.Join(", ", argumentList.
                     Select(arg => arg.SymbolName))},
                 { "equality", GetCLanguageCompareExpression(expectedType)},
                 { "format", GetCLanguagePrintFormatFromType(targetMethod.ReturnType)},
-                { "expectedExpression", GetCLanguagePrintArgumentExpression(expectedType, "expected")},
+                { "expectedExpression", GetCLanguagePrintArgumentExpression(expectedType, "_expected")},
                 { "actualExpression", GetCLanguagePrintArgumentExpression(expectedType, "actual")},
             };
 

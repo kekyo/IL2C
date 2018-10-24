@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 namespace IL2C.RuntimeTypes
 {
     [TestCase(false, "IsValueType")]
-    [TestCase(4, "SizeOf")]     // vptr
     [TestCase("ABC", "ToString", "ABC")]
     [TestCase("ABCDEF", "Concat", "ABC", "DEF")]
     [TestCase("CDEFGH", "Substring", "ABCDEFGH", 2)]
@@ -15,6 +14,8 @@ namespace IL2C.RuntimeTypes
     [TestCase(true, "IsNullOrWhiteSpace", "")]
     [TestCase(true, "IsNullOrWhiteSpace", null)]
     [TestCase(true, "Equals1", "ABC", "ABC")]
+    [TestCase(false, "Equals1", "ABC", "ABCDEF")]
+    [TestCase(false, "Equals1", "ABC", "DEF")]
     public sealed class System_String
     {
         // MEMO: ToString and Equals are written by IL.
@@ -22,9 +23,6 @@ namespace IL2C.RuntimeTypes
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
-
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int SizeOf();
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string ToString(string value);

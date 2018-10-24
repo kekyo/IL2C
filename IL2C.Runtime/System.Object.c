@@ -8,6 +8,7 @@ System_String* System_Object_ToString(System_Object* this__)
 {
     il2c_assert(this__ != NULL);
 
+    // TODO: we have to construct runtime time type name.
     return System_Object_name;
 }
 

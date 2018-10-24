@@ -2,7 +2,7 @@
 
 Type | Test
 |:---|:---|
-| [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) |  |
+| [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Object) |
 | [System.ValueType](https://docs.microsoft.com/en-us/dotnet/api/system.valuetype) |  |
 | [System.Void](https://docs.microsoft.com/en-us/dotnet/api/system.void) |  |
 | [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/system.byte) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Byte) |
@@ -17,6 +17,6 @@ Type | Test
 | [System.Double](https://docs.microsoft.com/en-us/dotnet/api/system.double) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Double) |
 | [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Boolean) |
 | [System.Char](https://docs.microsoft.com/en-us/dotnet/api/system.char) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Char) |
-| [System.String](https://docs.microsoft.com/en-us/dotnet/api/system.string) | [Test [13]](tests/IL2C.Core.Test.Target/TypeSystems/System_String) |
+| [System.String](https://docs.microsoft.com/en-us/dotnet/api/system.string) | [Test [14]](tests/IL2C.Core.Test.Target/TypeSystems/System_String) |
 | [System.IntPtr](https://docs.microsoft.com/en-us/dotnet/api/system.intptr) | [Test [4]](tests/IL2C.Core.Test.Target/TypeSystems/System_IntPtr) |
 | [System.UIntPtr](https://docs.microsoft.com/en-us/dotnet/api/system.uintptr) | [Test [4]](tests/IL2C.Core.Test.Target/TypeSystems/System_UIntPtr) |

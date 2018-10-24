@@ -58,6 +58,7 @@ namespace IL2C.Metadata
         bool IsUntypedReferenceType { get; }
 
         int SizeOfValue { get; }
+        object EmptyValue { get; }
 
         ITypeInformation BaseType { get; }
         ITypeInformation ElementType { get; }
@@ -349,6 +350,29 @@ namespace IL2C.Metadata
             (this.IsInt32Type || this.IsUInt32Type || this.IsSingleType) ? 4 :
             (this.IsInt64Type || this.IsUInt64Type || this.IsDoubleType || this.IsIntPtrType || this.IsUIntPtrType) ? 8 :
             0;
+        public object EmptyValue
+        {
+            get
+            {
+                if (this.IsClass || this.IsInterface) return null;
+                if (this.IsByReference || this.IsPointer) return null;
+                if (this.IsByteType) return (byte)0;
+                if (this.IsSByteType) return (sbyte)0;
+                if (this.IsInt16Type) return (short)0;
+                if (this.IsUInt16Type) return (ushort)0;
+                if (this.IsInt32Type) return (int)0;
+                if (this.IsUInt32Type) return (uint)0;
+                if (this.IsInt64Type) return (long)0;
+                if (this.IsUInt64Type) return (ulong)0;
+                if (this.IsIntPtrType) return IntPtr.Zero;
+                if (this.IsUIntPtrType) return UIntPtr.Zero;
+                if (this.IsSingleType) return (float)0;
+                if (this.IsDoubleType) return (double)0;
+                if (this.IsCharType) return (char)0;
+                if (this.IsBooleanType) return false;
+                return null;
+            }
+        }
 
         public ITypeInformation BaseType => baseType.Value;
         public ITypeInformation ElementType => elementType.Value;

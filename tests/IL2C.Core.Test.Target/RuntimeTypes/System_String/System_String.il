@@ -13,13 +13,6 @@
         ret
 	}
 
-	.method public static int32 SizeOf() cil managed
-	{
-		.maxstack 1
-        sizeof [mscorlib]System.Int32
-        ret
-	}
-
 	.method public static string ToString(string str) cil managed
 	{
 		.maxstack 1

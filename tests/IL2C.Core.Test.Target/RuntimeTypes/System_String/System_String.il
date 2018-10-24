@@ -19,4 +19,21 @@
         sizeof [mscorlib]System.Int32
         ret
 	}
+
+	.method public static string ToString(string str) cil managed
+	{
+		.maxstack 1
+        ldarg.0
+        call instance string [mscorlib]System.String::ToString()
+        ret
+	}
+
+	.method public static bool Equals1(string value1, string value2) cil managed
+	{
+		.maxstack 2
+        ldarg.0
+        ldarg.1
+        call instance bool [mscorlib]System.String::Equals(string)
+        ret
+	}
 }

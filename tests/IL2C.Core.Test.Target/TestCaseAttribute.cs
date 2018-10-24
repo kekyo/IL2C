@@ -19,7 +19,7 @@ namespace IL2C
             this.MethodName = methodName;
             this.AdditionalMethodNames = new string[0];
             this.Expected = expected;
-            this.Arguments = args;
+            this.Arguments = args ?? new object[] { null };  // HACK
             this.Assert = TestCaseAsserts.PerfectMatch;
         }
 
@@ -29,7 +29,7 @@ namespace IL2C
             this.MethodName = methodNames[0];   // test method
             this.AdditionalMethodNames = methodNames.Skip(1).ToArray();   // additionals
             this.Expected = expected;
-            this.Arguments = args;
+            this.Arguments = args ?? new object[] { null };  // HACK
             this.Assert = TestCaseAsserts.PerfectMatch;
         }
 

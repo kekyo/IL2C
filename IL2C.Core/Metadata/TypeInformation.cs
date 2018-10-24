@@ -67,7 +67,6 @@ namespace IL2C.Metadata
 
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
-        IMethodInformation[] VirtualMethods { get; }
 
         string CLanguageTypeName { get; }
         string CLanguageThisTypeName { get; }
@@ -381,7 +380,6 @@ namespace IL2C.Metadata
 
         public IFieldInformation[] Fields => fields.Value;
         public IMethodInformation[] DeclaredMethods => declaredMethods.Value;
-        public IMethodInformation[] VirtualMethods => virtualMethods.Value;
 
         public override bool IsCLanguagePublicScope
         {

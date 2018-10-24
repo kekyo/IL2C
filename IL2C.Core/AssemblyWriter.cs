@@ -111,7 +111,9 @@ namespace IL2C
                     "{0}/* internalcall */ void* (*IL2C_RuntimeCast)({1} this__, IL2C_RUNTIME_TYPE_DECL* type);",
                     indent,
                     declaredType.CLanguageThisTypeName);
-
+#if true
+                tw.WriteLine("{0}/* TODO: virtual methods [1] */", indent);
+#else
                 foreach (var method in declaredType.VirtualMethods)
                 {
                     tw.WriteLine(
@@ -119,7 +121,7 @@ namespace IL2C
                         indent,
                         method.CLanguageFunctionTypePrototype);
                 }
-
+#endif
                 tw.WriteLine(
                     "}} __{0}_VTABLE_DECL__;",
                     declaredType.MangledName);
@@ -303,6 +305,9 @@ namespace IL2C
                         type.FriendlyName);
                     tw.WriteLine();
 
+#if true
+                    tw.WriteLine("/* TODO: virtual methods [2] */");
+#else
                     foreach (var method in type.VirtualMethods
                         .Where(predictMethod))
                     {
@@ -329,6 +334,7 @@ namespace IL2C
                             method.CLanguageVirtualFunctionDeclarationName,
                             functionParameters);
                     }
+#endif
                 }
             }
 
@@ -625,7 +631,7 @@ namespace IL2C
             ITypeInformation adjustorThunkTargetType,
             ITypeInformation delegationTargetType) =>
             adjustorThunkTargetType
-                .VirtualMethods
+                .DeclaredMethods.Where(m => m.IsVirtual)        // TODO: virtual method
                 .Select(method => new VirtualFunctionInformation(
                     method.DeclaringType.Equals(adjustorThunkTargetType)
                         ? delegationTargetType.MangledName
@@ -789,6 +795,10 @@ namespace IL2C
                     indent,
                     declaredType.MangledName);
 
+#if true
+                tw.WriteLine("{0}/* TODO: virtual methods [3] */", indent);
+                tw.WriteLine("};");
+#else
                 var virtualFunctions = GetVirtualFunctions(
                     declaredType,
                     declaredType);
@@ -879,6 +889,7 @@ namespace IL2C
 
                     tw.WriteLine("};");
                 }
+#endif
             }
 
             // Write runtime type information

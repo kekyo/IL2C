@@ -53,7 +53,6 @@ namespace IL2C.Metadata
 
         string CLanguageFunctionName { get; }
         string CLanguageVirtualFunctionDeclarationName { get; }
-        string CLanguageRawFunctionPrototype { get; }
         string CLanguageFunctionPrototype { get; }
         string CLanguageFunctionTypePrototype { get; }
     }
@@ -385,10 +384,8 @@ namespace IL2C.Metadata
         public string CLanguageVirtualFunctionDeclarationName =>
             this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
 
-        public string CLanguageRawFunctionPrototype =>
-            this.GetFunctionPrototype(false);
         public string CLanguageFunctionPrototype =>
-            this.GetFunctionPrototype(this.IsVirtual);
+            this.GetFunctionPrototype(false);
 
         public string CLanguageFunctionTypePrototype
         {

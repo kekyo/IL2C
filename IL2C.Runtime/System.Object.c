@@ -40,9 +40,6 @@ void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYP
     il2c_assert(this__ != NULL);
 
     if (type == il2c_typeof(System_Object)) return this__;
-
-    // throw new InvalidCastException();
-    il2c_assert(0);
     return NULL;
 }
 

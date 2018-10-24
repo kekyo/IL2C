@@ -1,11 +1,9 @@
-﻿.class public IL2C.RuntimeTypes.System_IntPtr
+﻿.class public IL2C.RuntimeTypes.System_String
 {
 	.method public static bool IsValueType() cil managed
 	{
 		.maxstack 2
-		ldc.i4 1234567
-        conv.i
-		box [mscorlib]System.IntPtr
+		ldstr "ABC"
 		isinst [mscorlib]System.ValueType
         brnull.s F1
         ldc.i4.1
@@ -18,7 +16,7 @@
 	.method public static int32 SizeOf() cil managed
 	{
 		.maxstack 1
-        sizeof [mscorlib]System.IntPtr
+        sizeof [mscorlib]System.Int32
         ret
 	}
 }

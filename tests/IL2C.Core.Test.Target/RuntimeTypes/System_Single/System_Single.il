@@ -5,7 +5,7 @@
 		.maxstack 2
 		ldc.r4 12345.67
 		box [mscorlib]System.Single
-		castclass [mscorlib]System.ValueType
+		isinst [mscorlib]System.ValueType
         brnull.s F1
         ldc.i4.1
 		ret

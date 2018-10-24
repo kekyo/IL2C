@@ -6,7 +6,7 @@
 		ldc.i4 1234567
         conv.u
 		box [mscorlib]System.UIntPtr
-		castclass [mscorlib]System.ValueType
+		isinst [mscorlib]System.ValueType
         brnull.s F1
         ldc.i4.1
 		ret

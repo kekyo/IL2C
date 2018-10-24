@@ -13,6 +13,7 @@ extern "C" {
 #include <x86intrin.h>
 #endif
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <wchar.h>
@@ -59,8 +60,10 @@ struct IL2C_REF_HEADER
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 
 // dynamic cast operator
-#define il2c_runtime_cast(pReference, typeName) \
+#define il2c_isinst(pReference, typeName) \
     ((typeName*)((pReference)->vptr0__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
+#define il2c_castclass(pReference, typeName) \
+    il2c_isinst(pReference, typeName)
 
 // static cast operators
 #define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \

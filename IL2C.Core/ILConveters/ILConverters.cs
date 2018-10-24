@@ -143,6 +143,42 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class IsinstConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Isinst;
+
+        public override Func<IExtractContext, string[]> Apply(
+            ITypeInformation operand, DecodeContext decodeContext)
+        {
+            var si = decodeContext.PopStack();
+            var symbolName = decodeContext.PushStack(operand);
+
+            // If this type can cast statically
+            if (operand.IsAssignableFrom(si.TargetType))
+            {
+                return extractContext =>
+                {
+                    return new[] { string.Format(
+                        "{0} = ({1}){2}",
+                        symbolName,
+                        operand.CLanguageTypeName,
+                        si.SymbolName) };
+                };
+            }
+            else
+            {
+                return extractContext =>
+                {
+                    return new[] { string.Format(
+                        "{0} = il2c_isinst({1}, {2})",
+                        symbolName,
+                        si.SymbolName,
+                        operand.MangledName) };
+                };
+            }
+        }
+    }
+
     internal sealed class CastclassConverter : InlineTypeConverter
     {
         public override OpCode OpCode => OpCodes.Castclass;
@@ -170,10 +206,11 @@ namespace IL2C.ILConverters
                 return extractContext =>
                 {
                     return new[] { string.Format(
-                        "{0} = il2c_runtime_cast({1}, {2})",
+                        "{0} = il2c_castclass({1}, {2})",
                         symbolName,
                         si.SymbolName,
-                        operand.MangledName) };
+                        operand.MangledName),
+                    };
                 };
             }
         }

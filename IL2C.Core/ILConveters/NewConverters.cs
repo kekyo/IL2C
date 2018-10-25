@@ -127,20 +127,13 @@ namespace IL2C.ILConverters
                     var get = new[]
                     {
                         string.Format(
-                            "{0} = il2c_get_uninitialized_object(il2c_typeof({1}))",
+                            "{0} = il2c_get_uninitialized_object({1})",
                             thisSymbolName,
                             type.MangledName)
                     };
 
                     // Setup vptr from vtables.
-                    var vptr = new[]
-                    {
-                        // Instance's vptr
-                        string.Format(
-                            "{0}->vptr0__ = &__{1}_VTABLE__",
-                            thisSymbolName,
-                            type.MangledName)
-                    }.Concat(type.InterfaceTypes.Select(interfaceType =>
+                    var vptrs = type.InterfaceTypes.Select(interfaceType =>
                     {
                         // Interface's vptr:
                         //   These are unique tables by pair of instance type and interface type.
@@ -150,7 +143,7 @@ namespace IL2C.ILConverters
                             thisSymbolName,
                             interfaceType.MangledName,
                             type.MangledName);
-                    }));
+                    });
 
                     var ctor = new[]
                     {
@@ -167,7 +160,7 @@ namespace IL2C.ILConverters
                     };
 
                     return get
-                        .Concat(vptr)
+                        .Concat(vptrs)
                         .Concat(ctor)
                         .ToArray();
                 }

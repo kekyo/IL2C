@@ -23,8 +23,7 @@ System_Type* System_Object_GetType(System_Object* this__)
 {
     il2c_assert(this__ != NULL);
 
-    System_Type* pType = il2c_get_uninitialized_object(il2c_typeof(System_Type));
-    pType->vptr0__ = &__System_Type_VTABLE__;
+    System_Type* pType = il2c_get_uninitialized_object(System_Type);
 
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)this__) - sizeof(IL2C_REF_HEADER));

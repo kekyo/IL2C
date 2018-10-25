@@ -57,7 +57,7 @@ namespace IL2C
                     var name = isEmitRelated ? refOpCodeName : opCode.Name;
                     return (name, isEmitRelated, opCode);
                 })
-                .OrderBy(entry => (ushort)entry.opCode.Value)
+                .OrderBy(entry => entry.name)
                 .ToArray();
 
             var ilConverterTests =
@@ -128,7 +128,8 @@ namespace IL2C
                 typeof(string),
                 typeof(IntPtr),
                 typeof(UIntPtr),
-            };
+            }.
+            OrderBy(type => type.FullName);
 
             var runtimeTypesTests =
                 typeof(RuntimeTypesTest)

@@ -82,15 +82,18 @@ void* il2c_get_uninitialized_object_internal__(
     return pReference;
 }
 
-void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type)
+void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE_DECL* type, void* vptr0)
 {
     il2c_assert(type != NULL);
+    il2c_assert(vptr0 != NULL);
 
     // String or Array (IL2C_TYPE_VARIABLE):
     // throw new InvalidProgramException();
     il2c_assert((type->flags & IL2C_TYPE_VARIABLE) == 0);
 
-    return il2c_get_uninitialized_object_internal__(type, type->bodySize);
+    void** ppReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
+    *ppReference = vptr0;
+    return ppReference;
 }
 
 void il2c_mark_from_handler__(/* System_Object* */ void* pReference)

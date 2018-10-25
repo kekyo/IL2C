@@ -56,7 +56,7 @@ struct IL2C_REF_HEADER
 // IL2C_RUNTIME_TYPE_DECL.flags
 #define IL2C_TYPE_STANDARD 0x00
 
-#define il2c_typeof(typeName) (&__##typeName##_RUNTIME_TYPE__)
+#define il2c_typeof(typeName) (&(__##typeName##_RUNTIME_TYPE__))
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 
 // dynamic cast operator
@@ -80,7 +80,9 @@ struct IL2C_REF_HEADER
 
 extern void il2c_collect();
 
-extern void* il2c_get_uninitialized_object(IL2C_RUNTIME_TYPE_DECL* type);
+extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE_DECL* type, void* vptr0);
+#define il2c_get_uninitialized_object(typeName) \
+    il2c_get_uninitialized_object__(il2c_typeof(typeName), (void*)(&(__##typeName##_VTABLE__)))
 
 extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pNewFrame);
 extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pFrame);

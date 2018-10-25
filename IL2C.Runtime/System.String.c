@@ -32,7 +32,7 @@
 // |        :             |
 // +----------------------+ (terminated with \0)
 
-static System_String* __new_string_internal__(uintptr_t byteSize)
+static System_String* new_string_internal__(uintptr_t byteSize)
 {
     uintptr_t bodySize = sizeof(System_String) + byteSize;
     System_String* pString = il2c_get_uninitialized_object_internal__(
@@ -52,7 +52,7 @@ System_String* il2c_new_string(const wchar_t* pString)
     }
 
     uintptr_t size = (uintptr_t)(il2c_wcslen(pString) + 1) * sizeof(wchar_t);
-    System_String* p = __new_string_internal__(size);
+    System_String* p = new_string_internal__(size);
 
     // Copy string at below
     il2c_memcpy((wchar_t*)(p->string_body__), pString, size);
@@ -119,7 +119,7 @@ System_String* il2c_new_string_from_utf8(const char* pUtf8String)
     }
 
     uintptr_t size = (uintptr_t)(length) * sizeof(wchar_t);
-    System_String* p = __new_string_internal__(size);
+    System_String* p = new_string_internal__(size);
     wchar_t* pDest = (wchar_t*)(p->string_body__);
 
     pSource = pUtf8String;
@@ -264,7 +264,7 @@ System_String* System_String_Concat_5(System_String* this__, System_String* str1
     uintptr_t str0Size = (uintptr_t)il2c_wcslen(this__->string_body__) * sizeof(wchar_t);
     uintptr_t str1Size = (uintptr_t)il2c_wcslen(str1->string_body__) * sizeof(wchar_t);
 
-    System_String* pString = __new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
+    System_String* pString = new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
     il2c_memcpy((wchar_t*)(pString->string_body__), this__->string_body__, str0Size);
     il2c_memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size + sizeof(wchar_t));
 
@@ -289,7 +289,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
     il2c_assert(startIndex < thisLength);
 
     uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
-    System_String* pString = __new_string_internal__(newSize);
+    System_String* pString = new_string_internal__(newSize);
     il2c_memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
 
     return pString;
@@ -314,7 +314,7 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
     }
 
     uintptr_t newSize = (uintptr_t)length * sizeof(wchar_t);
-    System_String* pString = __new_string_internal__(newSize + sizeof(wchar_t));
+    System_String* pString = new_string_internal__(newSize + sizeof(wchar_t));
     il2c_memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
     ((wchar_t*)(pString->string_body__))[length] = L'\0';
 

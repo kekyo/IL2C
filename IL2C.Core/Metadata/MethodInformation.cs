@@ -54,7 +54,8 @@ namespace IL2C.Metadata
         string CLanguageFunctionName { get; }
         string CLanguageVirtualFunctionDeclarationName { get; }
         string CLanguageFunctionPrototype { get; }
-        string GetCLanguageFunctionTypePrototype(int overloadIndex);
+        string CLanguageFunctionTypePrototype { get; }
+        string GetCLanguageFunctionPrototype(int overloadIndex);
     }
 
     internal sealed class MethodInformation
@@ -362,49 +363,67 @@ namespace IL2C.Metadata
         public override bool IsCLanguageFileScope =>
             this.Definition.IsPrivate;
 
-        private string GetFunctionPrototype(bool decorate)
-        {
-            var parametersString = string.Join(
-                ", ",
-                this.Parameters.Select(parameter => string.Format(
-                    "{0} {1}",
-                    parameter.TargetType.CLanguageTypeName,
-                    parameter.SymbolName)));
-
-            var returnTypeName =
-                this.ReturnType.CLanguageTypeName;
-
-            return string.Format(
-                decorate ? "{0} __{1}__({2})" : "{0} {1}({2})",
-                returnTypeName,
-                this.CLanguageFunctionName,
-                parametersString);
-        }
-
         public string CLanguageFunctionName =>
             this.GetFriendlyName(FriendlyNameTypes.FullName | FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
         public string CLanguageVirtualFunctionDeclarationName =>
             this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
 
-        public string CLanguageFunctionPrototype =>
-            this.GetFunctionPrototype(false);
-
-        public string GetCLanguageFunctionTypePrototype(int overloadIndex)
+        public string CLanguageFunctionPrototype
         {
+            get
+            {
+                var parametersString = string.Join(
+                    ", ",
+                    this.Parameters.Select(parameter => string.Format(
+                        "{0} {1}",
+                        parameter.TargetType.CLanguageTypeName,
+                        parameter.SymbolName)));
+
+                var returnTypeName =
+                    this.ReturnType.CLanguageTypeName;
+
+                return string.Format(
+                    "{0} {1}({2})",
+                    returnTypeName,
+                    this.CLanguageFunctionName,
+                    parametersString);
+            }
+        }
+
+        public string CLanguageFunctionTypePrototype =>
+            this.GetCLanguageFunctionPrototype(-1);
+
+        public string GetCLanguageFunctionPrototype(int overloadIndex)
+        {
+            // Generate function type prototype if overloadIndex == -1.
+            //   [0] : int32_t (*GetHashCode)(void* this__)
+            //   [1] : int32_t (*GetHashCode_1)(void* this__)
+            //   [2] : int32_t (*GetHashCode_2)(void* this__)
+            //   [-1]: int32_t (*)(void*)
+
+            // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*."
+            //   non virtual : int32_t (*DoThat)(System_String* this__)
+            //   virtual     : int32_t (*DoThat)(void* this__)
+
             var parametersString = string.Join(
                 ", ",
                 this.Parameters.Select((parameter, index) => string.Format(
-                    "{0} {1}",
-                    (index == 0) ? "void*" : parameter.TargetType.CLanguageTypeName,
-                    parameter.SymbolName)));
+                    "{0}{1}",
+                    (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
+                    (overloadIndex == -1) ? string.Empty : (" " + parameter.SymbolName))));
 
             var returnTypeName =
                 this.ReturnType.CLanguageTypeName;
 
+            var name =
+                (overloadIndex == 0) ? this.Name :
+                (overloadIndex == -1) ? string.Empty :
+                string.Format("{0}_{1}", this.Name, overloadIndex);
+
             return string.Format(
                 "{0} (*{1})({2})",
                 returnTypeName,
-                (overloadIndex == 0) ? this.Name : string.Format("{0}_{1}", this.Name, overloadIndex),
+                name,
                 parametersString);
         }
 

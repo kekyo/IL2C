@@ -152,7 +152,7 @@ namespace IL2C
                         tw.WriteLine(
                             "{0}{1};",
                             indent,
-                            method.GetCLanguageFunctionTypePrototype(overloadIndex));
+                            method.GetCLanguageFunctionPrototype(overloadIndex));
                     }
 
                     tw.WriteLine(
@@ -816,8 +816,9 @@ namespace IL2C
                     foreach (var (method, _) in virtualMethods)
                     {
                         tw.WriteLine(
-                            "{0}{1},",
+                            "{0}({1}){2},",
                             indent,
+                            method.CLanguageFunctionTypePrototype,
                             method.CLanguageFunctionName);
                     }
 

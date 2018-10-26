@@ -28,45 +28,45 @@ namespace IL2C
         {
             var ilConverterType = typeof(ILConverter);
             var ilConverters =
-                ilConverterType.Assembly.GetTypes()
-                .Where(type => type.IsClass && type.IsSealed
+                ilConverterType.Assembly.GetTypes().
+                Where(type => type.IsClass && type.IsSealed
                     && ilConverterType.IsAssignableFrom(type)
-                    && (type.GetConstructor(Type.EmptyTypes) != null))
-                .Select(type => (ILConverter)Activator.CreateInstance(type))
-                .ToDictionary(ilConverter => ilConverter.OpCode.Name, StringComparer.InvariantCultureIgnoreCase);
+                    && (type.GetConstructor(Type.EmptyTypes) != null)).
+                Select(type => (ILConverter)Activator.CreateInstance(type)).
+                ToDictionary(ilConverter => ilConverter.OpCode.Name, StringComparer.InvariantCultureIgnoreCase);
 
             var refOpCodeNames =
-                typeof(System.Reflection.Emit.OpCodes)
-                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                .Where(field => field.FieldType == typeof(System.Reflection.Emit.OpCode))
-                .Select(field =>
+                typeof(System.Reflection.Emit.OpCodes).
+                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
+                Where(field => field.FieldType == typeof(System.Reflection.Emit.OpCode)).
+                Select(field =>
                 {
                     var opCode = (System.Reflection.Emit.OpCode)field.GetValue(null);
                     return (opCode.Value, field.Name);
-                })
-                .ToDictionary(entry => entry.Item1, entry => entry.Item2);
+                }).
+                ToDictionary(entry => entry.Item1, entry => entry.Item2);
 
             var opCodes =
-                typeof(OpCodes)
-                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                .Where(field => field.FieldType == typeof(OpCode))
-                .Select(field =>
+                typeof(OpCodes).
+                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
+                Where(field => field.FieldType == typeof(OpCode)).
+                Select(field =>
                 {
                     var opCode = (OpCode)field.GetValue(null);
                     var isEmitRelated = refOpCodeNames.TryGetValue(opCode.Value, out var refOpCodeName);
                     var name = isEmitRelated ? refOpCodeName : opCode.Name;
                     return (name, isEmitRelated, opCode);
-                })
-                .OrderBy(entry => entry.name)
-                .ToArray();
+                }).
+                OrderBy(entry => entry.name).
+                ToArray();
 
             var ilConverterTests =
-                typeof(ILConvertersTest)
-                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                .Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[])))
-                .SelectMany(field => (TestCaseInformation[])field.GetValue(null))
-                .GroupBy(entry => entry.Method.DeclaringType.Name)
-                .ToDictionary(g => g.Key, g => g.Count(), StringComparer.InvariantCultureIgnoreCase);
+                typeof(ILConvertersTest).
+                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
+                Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
+                SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
+                GroupBy(entry => entry.Id).
+                ToDictionary(g => g.Key, g => g.Count(), StringComparer.InvariantCultureIgnoreCase);
 
             var path = Path.Combine(generatedDocumentBasePath, "supported-opcodes.md");
 

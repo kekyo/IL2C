@@ -11,94 +11,6 @@ namespace IL2C
 {
     internal static class TestUtilities
     {
-        public static string GetCLanguageTypeName(Type type)
-        {
-            if (type.IsByRef || type.IsPointer)
-            {
-                return string.Format(
-                    "{0}*",
-                    GetCLanguageTypeName(type.GetElementType()));
-            }
-
-            string typeName = null;
-            if (type == typeof(bool))
-            {
-                typeName = "bool";
-            }
-            else if (type == typeof(byte))
-            {
-                typeName = "uint8_t";
-            }
-            else if (type == typeof(sbyte))
-            {
-                typeName = "int8_t";
-            }
-            else if (type == typeof(short))
-            {
-                typeName = "int16_t";
-            }
-            else if (type == typeof(ushort))
-            {
-                typeName = "uint16_t";
-            }
-            else if (type == typeof(int))
-            {
-                typeName = "int32_t";
-            }
-            else if (type == typeof(uint))
-            {
-                typeName = "uint32_t";
-            }
-            else if (type == typeof(long))
-            {
-                typeName = "int64_t";
-            }
-            else if (type == typeof(ulong))
-            {
-                typeName = "uint64_t";
-            }
-            else if (type == typeof(IntPtr))
-            {
-                typeName = "intptr_t";
-            }
-            else if (type == typeof(UIntPtr))
-            {
-                typeName = "uintptr_t";
-            }
-            else if (type == typeof(float))
-            {
-                typeName = "float";
-            }
-            else if (type == typeof(double))
-            {
-                typeName = "double";
-            }
-            else if (type == typeof(char))
-            {
-                typeName = "wchar_t";
-            }
-            else if (type == typeof(string))
-            {
-                typeName = "wchar_t*";
-            }
-            else if (type == typeof(void))
-            {
-                typeName = "void";
-            }
-            else
-            {
-                typeName = Utilities.ToMangledName(type.FullName);
-                if (!type.IsValueType)
-                {
-                    typeName += "*";
-                }
-            }
-
-            Debug.Assert(typeName != null);
-
-            return typeName;
-        }
-
         #region Test case related
         private static object ConvertToArgumentType(object value, Type argumentType)
         {
@@ -149,8 +61,9 @@ namespace IL2C
         }
 
         public static TestCaseInformation CreateTestCaseInformation(
-            string name, MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
+            string id, string name, MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
             new TestCaseInformation(
+                id,
                 name,
                 ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
                 caseAttribute.Assert,
@@ -162,6 +75,9 @@ namespace IL2C
 
         public static TestCaseInformation[] GetTestCaseInformations<T>()
         {
+            var id = typeof(T).
+                GetCustomAttribute<TestIdAttribute>()?.Id ??
+                typeof(T).Name;
             var caseInfos =
                 (from testCase in typeof(T).GetCustomAttributes<TestCaseAttribute>(true)
                  let method = typeof(T).GetMethod(
@@ -185,8 +101,8 @@ namespace IL2C
                  {
                      var a = g.ToArray();
                      return (a.Length == 1) ?
-                        a.Select(entry => CreateTestCaseInformation(entry.method.Name, entry.method, entry.AdditionalMethods, entry.testCase)) :
-                        a.Select((entry, index) => CreateTestCaseInformation(entry.method.Name + "_" + index, entry.method, entry.AdditionalMethods, entry.testCase));
+                        a.Select(entry => CreateTestCaseInformation(id, entry.method.Name, entry.method, entry.AdditionalMethods, entry.testCase)) :
+                        a.Select((entry, index) => CreateTestCaseInformation(id, entry.method.Name + "_" + index, entry.method, entry.AdditionalMethods, entry.testCase));
                  }).
                  OrderBy(caseInfo => caseInfo.Name).
                  ToArray();
@@ -360,5 +276,93 @@ namespace IL2C
             return CopyResourceToTextFileAsync(path, resourceName, empty);
         }
         #endregion
+
+        public static string GetCLanguageTypeName(Type type)
+        {
+            if (type.IsByRef || type.IsPointer)
+            {
+                return string.Format(
+                    "{0}*",
+                    GetCLanguageTypeName(type.GetElementType()));
+            }
+
+            string typeName = null;
+            if (type == typeof(bool))
+            {
+                typeName = "bool";
+            }
+            else if (type == typeof(byte))
+            {
+                typeName = "uint8_t";
+            }
+            else if (type == typeof(sbyte))
+            {
+                typeName = "int8_t";
+            }
+            else if (type == typeof(short))
+            {
+                typeName = "int16_t";
+            }
+            else if (type == typeof(ushort))
+            {
+                typeName = "uint16_t";
+            }
+            else if (type == typeof(int))
+            {
+                typeName = "int32_t";
+            }
+            else if (type == typeof(uint))
+            {
+                typeName = "uint32_t";
+            }
+            else if (type == typeof(long))
+            {
+                typeName = "int64_t";
+            }
+            else if (type == typeof(ulong))
+            {
+                typeName = "uint64_t";
+            }
+            else if (type == typeof(IntPtr))
+            {
+                typeName = "intptr_t";
+            }
+            else if (type == typeof(UIntPtr))
+            {
+                typeName = "uintptr_t";
+            }
+            else if (type == typeof(float))
+            {
+                typeName = "float";
+            }
+            else if (type == typeof(double))
+            {
+                typeName = "double";
+            }
+            else if (type == typeof(char))
+            {
+                typeName = "wchar_t";
+            }
+            else if (type == typeof(string))
+            {
+                typeName = "wchar_t*";
+            }
+            else if (type == typeof(void))
+            {
+                typeName = "void";
+            }
+            else
+            {
+                typeName = Utilities.ToMangledName(type.FullName);
+                if (!type.IsValueType)
+                {
+                    typeName += "*";
+                }
+            }
+
+            Debug.Assert(typeName != null);
+
+            return typeName;
+        }
     }
 }

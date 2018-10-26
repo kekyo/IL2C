@@ -72,7 +72,10 @@ namespace IL2C
         #endregion
 
         #region Call
-        public static readonly TestCaseInformation[] _Call = TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call>();
+        public static readonly TestCaseInformation[] _Call =
+            TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call>().
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call_Virtual>()).
+            ToArray();
         [Test]
         public static Task Call([ValueSource("_Call")] TestCaseInformation caseInfo) =>
             caseInfo.ExecuteTestAsync("ILConverters");

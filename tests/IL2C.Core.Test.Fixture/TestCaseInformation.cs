@@ -5,6 +5,7 @@ namespace IL2C
 {
     public struct TestCaseInformation
     {
+        public readonly string Id;
         public readonly string Name;
         public readonly MethodInfo Method;
         public readonly MethodBase[] AdditionalMethods;
@@ -13,9 +14,10 @@ namespace IL2C
         public readonly TestCaseAsserts Assert;
 
         public TestCaseInformation(
-            string name, object expected, TestCaseAsserts assert,
+            string id, string name, object expected, TestCaseAsserts assert,
             MethodInfo method, MethodBase[] additionalMethods, object[] arguments)
         {
+            this.Id = id;
             this.Name = name;
             this.Method = method;
             this.AdditionalMethods = additionalMethods;

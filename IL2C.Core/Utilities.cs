@@ -264,6 +264,7 @@ namespace IL2C
                         entry.SymbolInformation.TargetType.FriendlyName,
                         entry.TargetType.FriendlyName);
                 }
+
                 return rightExpression;
             }));
         }

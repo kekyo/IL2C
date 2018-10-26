@@ -20,9 +20,11 @@ namespace IL2C.Metadata
         public bool IsNestedPublic => false;
         public bool IsNestedFamily => false;
         public bool IsNestedFamilyOrAssembly => false;
-        public bool IsStatic => false;
 
-        public bool IsValueType => true;
+        public bool IsStatic => false;
+        public bool IsSealed => false;
+
+        public bool IsValueType => false;
         public bool IsClass => false;
         public bool IsInterface => false;
         public bool IsEnum => false;
@@ -107,7 +109,11 @@ namespace IL2C.Metadata
 
         public bool IsAssignableFrom(ITypeInformation rhs)
         {
-            throw new NotImplementedException();
+            // untyped type <-- Class
+            // untyped type <-- Interface
+            // untyped type <-- ByReference (special case: this direction is valid, but reverse direction is invalid)
+            // untyped type <-- Pointer
+            return rhs.IsClass || rhs.IsInterface || rhs.IsByReference || rhs.IsPointer;
         }
 
         public ITypeInformation MakeByReference()

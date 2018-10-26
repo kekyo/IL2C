@@ -22,7 +22,11 @@ namespace IL2C.ILConverters
             var pairParameters = method.Parameters
                 .Reverse()
                 .Select(parameter => new Utilities.RightExpressionGivenParameter(
-                    parameter.TargetType, decodeContext.PopStack()))
+                    // Replace untyped type (will resolve by lvalue type) if it's virtual method and arg0.
+                    (isVirtualCall && (parameter.Index == 0)) ?
+                        decodeContext.PrepareContext.MetadataContext.UntypedReferenceType :
+                        parameter.TargetType,
+                    decodeContext.PopStack()))
                 .Reverse()
                 .ToArray();
 
@@ -34,13 +38,27 @@ namespace IL2C.ILConverters
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters, extractContext, codeInformation);
-                    return new[]
+                    if (isVirtualCall && method.IsVirtual && !method.IsSealed)
                     {
-                        string.Format(
-                            "{0}({1})",
-                            method.CLanguageFunctionName,
-                            parameterString)
-                    };
+                        return new[]
+                        {
+                            string.Format(
+                                "{0}->vptr0__->{1}({2})",
+                                pairParameters[0].SymbolInformation.SymbolName,
+                                method.CLanguageVirtualFunctionDeclarationName,
+                                parameterString)
+                        };
+                    }
+                    else
+                    {
+                        return new[]
+                        {
+                            string.Format(
+                                "{0}({1})",
+                                method.CLanguageFunctionName,
+                                parameterString)
+                        };
+                    }
                 };
             }
             else
@@ -51,14 +69,29 @@ namespace IL2C.ILConverters
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters, extractContext, codeInformation);
-                    return new[]
+                    if (isVirtualCall && method.IsVirtual && !method.IsSealed)
                     {
-                        string.Format(
-                            "{0} = {1}({2})",
-                            resultName,
-                            method.CLanguageFunctionName,
-                            parameterString)
-                    };
+                        return new[]
+                        {
+                            string.Format(
+                                "{0} = {1}->vptr0__->{2}({3})",
+                                resultName,
+                                pairParameters[0].SymbolInformation.SymbolName,
+                                method.CLanguageVirtualFunctionDeclarationName,
+                                parameterString)
+                        };
+                    }
+                    else
+                    {
+                        return new[]
+                        {
+                            string.Format(
+                                "{0} = {1}({2})",
+                                resultName,
+                                method.CLanguageFunctionName,
+                                parameterString)
+                        };
+                    }
                 };
             }
         }
@@ -89,8 +122,6 @@ namespace IL2C.ILConverters
                     decodeContext.CurrentCode.RawLocation,
                     method.FriendlyName);
             }
-
-            // TODO: Support virtual method
 
             return CallConverterUtilities.Apply(method, decodeContext, true);
         }

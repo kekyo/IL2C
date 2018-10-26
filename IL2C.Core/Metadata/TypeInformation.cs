@@ -18,6 +18,7 @@ namespace IL2C.Metadata
         bool IsNestedFamilyOrAssembly { get; }
 
         bool IsStatic { get; }
+        bool IsSealed { get; }
 
         bool IsValueType { get; }
         bool IsClass { get; }
@@ -260,6 +261,14 @@ namespace IL2C.Metadata
                 return (definition?.IsAbstract ?? false) && (definition?.IsSealed ?? false);
             }
         }
+        public bool IsSealed
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                return definition?.IsSealed ?? false || this.Member.IsValueType;
+            }
+        }
 
         public bool IsValueType => this.Member.IsValueType;
         public bool IsClass => !this.Member.IsValueType && ((this.Definition as TypeDefinition)?.IsClass ?? false);
@@ -434,6 +443,15 @@ namespace IL2C.Metadata
         public bool IsAssignableFrom(ITypeInformation rhs)
         {
             if (this.Equals(rhs))
+            {
+                return true;
+            }
+
+            // Class <-- untyped type
+            // Interface <-- untyped type
+            // Pointer <-- untyped type
+            if ((this.IsClass || this.IsInterface || this.IsPointer) &&
+                rhs.IsUntypedReferenceType)
             {
                 return true;
             }

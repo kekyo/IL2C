@@ -269,7 +269,7 @@ namespace IL2C.Metadata
         public bool IsAbstract =>
             this.Definition.IsAbstract;
         public bool IsSealed =>
-            this.Definition.IsFinal;
+            this.Definition.IsFinal || this.DeclaringType.IsSealed;
         public bool IsNewSlot =>
             this.Definition.IsNewSlot;
         public bool IsReuseSlot =>

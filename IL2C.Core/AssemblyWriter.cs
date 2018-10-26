@@ -332,11 +332,6 @@ namespace IL2C
                             type.MangledName,
                             type.CLanguageThisTypeName);
                     }
-
-                    tw.WriteLine(
-                        "extern /* internalcall */ void* __{0}_IL2C_RuntimeCast__({1} this__, IL2C_RUNTIME_TYPE_DECL* type);",
-                        type.MangledName,
-                        type.CLanguageThisTypeName);
                 }
 
                 foreach (var method in type.DeclaredMethods

@@ -35,7 +35,7 @@ bool System_Char_Equals_1(wchar_t* this__, System_Object* obj)
         return false;
     }
 
-    wchar_t rhs = il2c_unbox(obj, System_Char);
+    wchar_t rhs = *il2c_unbox(obj, System_Char);
     return *this__ == rhs;
 }
 

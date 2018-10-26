@@ -34,7 +34,7 @@ bool System_Byte_Equals_1(uint8_t* this__, System_Object* obj)
         return false;
     }
 
-    uint8_t rhs = il2c_unbox(obj, System_Byte);
+    uint8_t rhs = *il2c_unbox(obj, System_Byte);
     return *this__ == rhs;
 }
 

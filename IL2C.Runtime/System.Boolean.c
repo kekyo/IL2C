@@ -33,7 +33,7 @@ bool System_Boolean_Equals_1(bool* this__, System_Object* obj)
         return false;
     }
 
-    bool rhs = il2c_unbox(obj, System_Boolean);
+    bool rhs = *il2c_unbox(obj, System_Boolean);
     return *this__ == rhs;
 }
 

@@ -34,7 +34,7 @@ bool System_Int64_Equals_1(int64_t* this__, System_Object* obj)
         return false;
     }
 
-    int64_t rhs = il2c_unbox(obj, System_Int64);
+    int64_t rhs = *il2c_unbox(obj, System_Int64);
     return *this__ == rhs;
 }
 

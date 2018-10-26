@@ -142,7 +142,7 @@ extern void* il2c_unbox__(
 #define il2c_box2(pValue, valueTypeName, stackTypeName) \
     (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName), &__##valueTypeName##_VTABLE__))
 #define il2c_unbox(pObject, valueTypeName) \
-    (*(valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
+    ((valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions

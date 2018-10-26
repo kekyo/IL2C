@@ -3,19 +3,15 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase("CallvirtTest", new[] { "Instance_ToString_System_Object", "ToString" })]
-    [TestCase("CallvirtTest", new[] { "Instance_ToString_IL2C_ILConverters_Callvirt", "ToString" })]
+    [TestCase("123ABC", new[] { "NonVirtual_Callvirt", "NonVirtual" }, 123, "ABC")]
     public sealed class Callvirt
     {
-        public override string ToString()
+        private string NonVirtual(int value1, string value2)
         {
-            return "CallvirtTest";
+            return value1 + value2;
         }
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string Instance_ToString_System_Object();
-
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string Instance_ToString_IL2C_ILConverters_Callvirt();
+        public static extern string NonVirtual_Callvirt(int value1, string value2);
     }
 }

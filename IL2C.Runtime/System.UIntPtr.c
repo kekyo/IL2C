@@ -37,7 +37,7 @@ bool System_UIntPtr_Equals_1(uintptr_t* this__, System_Object* obj)
         return false;
     }
 
-    uintptr_t rhs = il2c_unbox(obj, System_UIntPtr);
+    uintptr_t rhs = *il2c_unbox(obj, System_UIntPtr);
     return *this__ == rhs;
 }
 

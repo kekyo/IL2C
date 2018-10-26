@@ -35,7 +35,7 @@ bool System_Double_Equals_1(double* this__, System_Object* obj)
         return false;
     }
 
-    double rhs = il2c_unbox(obj, System_Double);
+    double rhs = *il2c_unbox(obj, System_Double);
     return *this__ == rhs;
 }
 

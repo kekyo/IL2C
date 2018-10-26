@@ -83,7 +83,7 @@ namespace IL2C.ILConverters
                     decodeContext.PrepareContext.MetadataContext.ObjectType, si);
 
                 return new[] { string.Format(
-                    "{0} = il2c_unbox({1}, {2})",
+                    "{0} = *il2c_unbox({1}, {2})",
                     symbolName,
                     rhs,
                     operand.MangledName) };

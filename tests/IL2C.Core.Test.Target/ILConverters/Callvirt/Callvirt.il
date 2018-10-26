@@ -1,18 +1,12 @@
 ﻿.class public IL2C.ILConverters.Callvirt
 {
-	.method public static string Instance_ToString_System_Object() cil managed
+	.method public static string NonVirtual_Callvirt(int32 value1, string value2) cil managed
 	{
-		.maxstack 1
+		.maxstack 3
         newobj instance void class IL2C.ILConverters.Callvirt::.ctor()
-        callvirt instance string [mscorlib]System.Object::ToString()
-		ret
-	}
-
-	.method public static string Instance_ToString_IL2C_ILConverters_Callvirt() cil managed
-	{
-		.maxstack 1
-        newobj instance void class IL2C.ILConverters.Callvirt::.ctor()
-        callvirt instance string IL2C.ILConverters.Callvirt::ToString()
+        ldarg.0
+        ldarg.1
+        callvirt instance string IL2C.ILConverters.Callvirt::NonVirtual(int32, string)
 		ret
 	}
 }

@@ -252,23 +252,35 @@ int32_t System_String_GetHashCode(System_String* this__)
     return value;
 }
 
-System_String* System_String_Concat_5(System_String* this__, System_String* str1)
+System_String* System_String_Concat_5(System_String* str0, System_String* str1)
 {
-    il2c_assert(this__ != NULL);
-    il2c_assert(this__->string_body__ != NULL);
-
     // TODO: NullReferenceException
+    il2c_assert(str0 != NULL);
     il2c_assert(str1 != NULL);
+
+    il2c_assert(str0->string_body__ != NULL);
     il2c_assert(str1->string_body__ != NULL);
 
-    uintptr_t str0Size = (uintptr_t)il2c_wcslen(this__->string_body__) * sizeof(wchar_t);
+    uintptr_t str0Size = (uintptr_t)il2c_wcslen(str0->string_body__) * sizeof(wchar_t);
     uintptr_t str1Size = (uintptr_t)il2c_wcslen(str1->string_body__) * sizeof(wchar_t);
 
     System_String* pString = new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
-    il2c_memcpy((wchar_t*)(pString->string_body__), this__->string_body__, str0Size);
+    il2c_memcpy((wchar_t*)(pString->string_body__), str0->string_body__, str0Size);
     il2c_memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size + sizeof(wchar_t));
 
     return pString;
+}
+
+System_String* System_String_Concat_6(System_Object* arg0, System_Object* arg1)
+{
+    // TODO: NullReferenceException
+    il2c_assert(arg0 != NULL);
+    il2c_assert(arg1 != NULL);
+
+    System_String* str0 = arg0->vptr0__->ToString(arg0);
+    System_String* str1 = arg1->vptr0__->ToString(arg1);
+
+    return System_String_Concat_5(str0, str1);
 }
 
 System_String* System_String_Substring(System_String* this__, int32_t startIndex)

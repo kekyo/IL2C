@@ -34,7 +34,7 @@ bool System_Int16_Equals_1(int16_t* this__, System_Object* obj)
         return false;
     }
 
-    int16_t rhs = il2c_unbox(obj, System_Int16);
+    int16_t rhs = *il2c_unbox(obj, System_Int16);
     return *this__ == rhs;
 }
 

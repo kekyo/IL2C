@@ -35,7 +35,7 @@ bool System_Single_Equals_1(float* this__, System_Object* obj)
         return false;
     }
 
-    float rhs = il2c_unbox(obj, System_Single);
+    float rhs = *il2c_unbox(obj, System_Single);
     return *this__ == rhs;
 }
 

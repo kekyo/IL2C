@@ -58,27 +58,24 @@ System_String* System_Type_get_FullName(System_Type* this__)
     return il2c_new_string_from_utf8(this__->type__->pTypeName);
 }
 
+System_Type* System_Type_get_BaseType(System_Type* this__)
+{
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->type__ != NULL);
+
+    if (this__->type__->baseType == NULL)
+    {
+        return NULL;
+    }
+
+    System_Type* pType = il2c_get_uninitialized_object(System_Type);
+    pType->type__ = this__->type__->baseType;
+
+    return pType;
+}
+
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Type_IL2C_RuntimeCast__(System_Type* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_Type)) return this__;
-    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
-}
-
-__System_Type_VTABLE_DECL__ __System_Type_VTABLE__ = {
-    /* internalcall */ __System_Type_IL2C_RuntimeCast__,
-    System_Type_ToString,
-    System_Type_GetHashCode,
-    (void(*)(System_Type*))System_Object_Finalize,
-    System_Type_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_Type_RUNTIME_TYPE__ = {
-    "System.Type",
-    IL2C_TYPE_STANDARD,
-    sizeof(System_Type),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_Type);
+IL2C_DECLARE_RUNTIME_TYPE(System_Type, "System.Type", IL2C_TYPE_STANDARD, System_Object);

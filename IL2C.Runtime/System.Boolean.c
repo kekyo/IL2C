@@ -63,24 +63,5 @@ bool System_Boolean_TryParse(System_String* s, bool* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Boolean_IL2C_RuntimeCast__(bool* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_Boolean)) return this__;
-    return __System_ValueType_IL2C_RuntimeCast__((System_ValueType*)this__, type);
-}
-
-__System_Boolean_VTABLE_DECL__ __System_Boolean_VTABLE__ = {
-    /* internalcall */ __System_Boolean_IL2C_RuntimeCast__,
-    System_Boolean_ToString,
-    System_Boolean_GetHashCode,
-    (void(*)(System_Boolean*))System_Object_Finalize,
-    System_Boolean_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_Boolean_RUNTIME_TYPE__ = {
-    "System.Boolean",
-    IL2C_TYPE_INTEGER,
-    sizeof(System_Boolean),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_Boolean);
+IL2C_DECLARE_RUNTIME_TYPE(System_Boolean, "System.Boolean", IL2C_TYPE_INTEGER, System_ValueType);

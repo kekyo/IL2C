@@ -40,7 +40,7 @@ namespace IL2C.Metadata
     {
         private static readonly HashSet<string> objectMethodValidTarget =
             new HashSet<string>(new[] {
-            "ToString", "GetHashCode", "Finalize", "Equals"});
+            "ToString", "GetHashCode", "Finalize", "Equals", "GetType"});
 
         private readonly Dictionary<AssemblyDefinition, IAssemblyInformation> assemblies =
             new Dictionary<AssemblyDefinition, IAssemblyInformation>(AssemblyDefinitionComparer.Instance);

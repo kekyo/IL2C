@@ -67,6 +67,7 @@ namespace IL2C.Metadata
 
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
+        (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods { get; }
 
         string CLanguageTypeName { get; }
         string CLanguageThisTypeName { get; }
@@ -85,7 +86,6 @@ namespace IL2C.Metadata
         private readonly Lazy<TypeInformation[]> nestedTypes;
         private readonly Lazy<FieldInformation[]> fields;
         private readonly Lazy<MethodInformation[]> declaredMethods;
-        private readonly Lazy<IMethodInformation[]> virtualMethods;
         private readonly Lazy<string> cLanguageTypeName;
 
         public TypeInformation(TypeReference type, ModuleInformation module)
@@ -128,9 +128,6 @@ namespace IL2C.Metadata
             declaredMethods = this.MetadataContext.LazyGetOrAddMembers(
                 () => (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
                 method => new MethodInformation(method, module));
-
-            virtualMethods = Lazy.Create(
-                () => this.DeclaredMethods.Where(method => method.IsVirtual).ToArray());
 
             cLanguageTypeName = Lazy.Create(
                 () =>
@@ -381,6 +378,19 @@ namespace IL2C.Metadata
         public IFieldInformation[] Fields => fields.Value;
         public IMethodInformation[] DeclaredMethods => declaredMethods.Value;
 
+        public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods
+        {
+            get
+            {
+                return ((ITypeInformation)this).
+                    Traverse(type => type.BaseType).
+                    Reverse().
+                    SelectMany(type => type.DeclaredMethods.CalculateOverloadMethods().SelectMany(entry => entry.Value)).
+                    CalculateVirtualMethods().
+                    ToArray();
+            }
+        }
+
         public override bool IsCLanguagePublicScope
         {
             get
@@ -473,8 +483,7 @@ namespace IL2C.Metadata
             var dummy4 = nestedTypes.Value;
             var dummy5 = fields.Value;
             var dummy6 = declaredMethods.Value;
-            var dummy8 = virtualMethods.Value;
-            var dummy9 = cLanguageTypeName.Value;
+            var dummy7 = cLanguageTypeName.Value;
             base.ResolveLazyValues();
         }
 

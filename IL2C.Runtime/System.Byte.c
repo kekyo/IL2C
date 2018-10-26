@@ -59,24 +59,5 @@ bool System_Byte_TryParse(System_String* s, uint8_t* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Byte_IL2C_RuntimeCast__(uint8_t* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_Byte)) return this__;
-    return __System_ValueType_IL2C_RuntimeCast__((System_ValueType*)this__, type);
-}
-
-__System_Byte_VTABLE_DECL__ __System_Byte_VTABLE__ = {
-    /* internalcall */ __System_Byte_IL2C_RuntimeCast__,
-    System_Byte_ToString,
-    System_Byte_GetHashCode,
-    (void(*)(System_Byte*))System_Object_Finalize,
-    System_Byte_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__ = {
-    "System.Byte",
-    IL2C_TYPE_INTEGER,
-    sizeof(System_Byte),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_Byte);
+IL2C_DECLARE_RUNTIME_TYPE(System_Byte, "System.Byte", IL2C_TYPE_INTEGER, System_ValueType);

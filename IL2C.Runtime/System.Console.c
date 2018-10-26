@@ -1,4 +1,5 @@
 #include "il2c_private.h"
+#include "System.Console.h"
 
 /////////////////////////////////////////////////////////////
 // System.Console
@@ -49,8 +50,4 @@ System_String* System_Console_ReadLine()
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_RUNTIME_TYPE_DECL __System_Console_RUNTIME_TYPE__ = {
-    "System.Console",
-    IL2C_TYPE_STANDARD,
-    0,
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_RUNTIME_TYPE(System_Console, "System.Console", IL2C_TYPE_STANDARD, System_Object);

@@ -13,11 +13,20 @@
         ret
 	}
 
-	.method public static string ToString(object str) cil managed
+	.method public static string ToString(object v) cil managed
 	{
 		.maxstack 1
         ldarg.0
         call instance string [mscorlib]System.Object::ToString()    // non virtual call
+        ret
+	}
+
+	.method public static string GetType(object v) cil managed
+	{
+		.maxstack 1
+        ldarg.0
+        call instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()
+        callvirt instance string [mscorlib]System.Type::get_FullName()
         ret
 	}
 }

@@ -3,7 +3,6 @@
 /////////////////////////////////////////////////////////////
 // System.Object
 
-IL2C_CONST_STRING(System_Object_name, L"System.Object");
 System_String* System_Object_ToString(System_Object* this__)
 {
     il2c_assert(this__ != NULL);
@@ -50,25 +49,18 @@ bool System_Object_Equals(System_Object* this__, System_Object* obj)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_Object)) return this__;
-    return NULL;
-}
-
 __System_Object_VTABLE_DECL__ __System_Object_VTABLE__ = {
-    /* internalcall */ __System_Object_IL2C_RuntimeCast__,
-    System_Object_ToString,
-    System_Object_GetHashCode,
-    System_Object_Finalize,
-    System_Object_Equals
+    /* internalcall */ il2c_runtime_isinst,
+    (bool(*)(void*, System_Object*))System_Object_Equals,
+    NULL,
+    (int32_t(*)(void*))System_Object_GetHashCode,
+    (System_String* (*)(void*))System_Object_ToString
 };
 
 IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
     "System.Object",
     IL2C_TYPE_STANDARD,
     sizeof(System_Object),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER
+    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER,
+    NULL
 };

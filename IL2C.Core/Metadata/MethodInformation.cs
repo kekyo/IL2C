@@ -54,7 +54,7 @@ namespace IL2C.Metadata
         string CLanguageFunctionName { get; }
         string CLanguageVirtualFunctionDeclarationName { get; }
         string CLanguageFunctionPrototype { get; }
-        string CLanguageFunctionTypePrototype { get; }
+        string GetCLanguageFunctionTypePrototype(int overloadIndex);
     }
 
     internal sealed class MethodInformation
@@ -262,7 +262,9 @@ namespace IL2C.Metadata
         public bool IsStatic =>
             this.Definition.IsStatic;
         public bool IsVirtual =>
-            this.Definition.IsVirtual && !this.DeclaringType.IsValueType;
+            this.Definition.IsVirtual &&
+            // HACK: The method at value type maybe marked virtual, so it made unmarking at this expression.
+            !(this.DeclaringType.IsValueType && !this.IsReuseSlot);
         public bool IsAbstract =>
             this.Definition.IsAbstract;
         public bool IsSealed =>
@@ -387,26 +389,23 @@ namespace IL2C.Metadata
         public string CLanguageFunctionPrototype =>
             this.GetFunctionPrototype(false);
 
-        public string CLanguageFunctionTypePrototype
+        public string GetCLanguageFunctionTypePrototype(int overloadIndex)
         {
-            get
-            {
-                var parametersString = string.Join(
-                    ", ",
-                    this.Parameters.Select(parameter => string.Format(
-                        "{0} {1}",
-                        parameter.TargetType.CLanguageTypeName,
-                        parameter.SymbolName)));
+            var parametersString = string.Join(
+                ", ",
+                this.Parameters.Select((parameter, index) => string.Format(
+                    "{0} {1}",
+                    (index == 0) ? "void*" : parameter.TargetType.CLanguageTypeName,
+                    parameter.SymbolName)));
 
-                var returnTypeName =
-                    this.ReturnType.CLanguageTypeName;
+            var returnTypeName =
+                this.ReturnType.CLanguageTypeName;
 
-                return string.Format(
-                    "{0} (*{1})({2})",
-                    returnTypeName,
-                    this.Name,
-                    parametersString);
-            }
+            return string.Format(
+                "{0} (*{1})({2})",
+                returnTypeName,
+                (overloadIndex == 0) ? this.Name : string.Format("{0}_{1}", this.Name, overloadIndex),
+                parametersString);
         }
 
         protected override void ResolveLazyValues()

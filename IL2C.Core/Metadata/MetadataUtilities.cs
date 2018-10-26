@@ -29,15 +29,14 @@ namespace IL2C.Metadata
                     .Concat(new[] { member.Name }));
         }
 
-        private sealed class MethodSignatureComparer : IComparer<IMethodInformation>
+        public sealed class TypeComparerImpl
+            : IComparer<ITypeInformation>, IEqualityComparer<ITypeInformation>
         {
-            // This is a overload stablizer
-
-            private MethodSignatureComparer()
+            public TypeComparerImpl()
             {
             }
 
-            private static int Compare(ITypeInformation x, ITypeInformation y)
+            public int Compare(ITypeInformation x, ITypeInformation y)
             {
                 var xr = x.IsAssignableFrom(y);
                 var yr = y.IsAssignableFrom(x);
@@ -121,6 +120,32 @@ namespace IL2C.Metadata
                 return -1;
             }
 
+            public bool Equals(ITypeInformation x, ITypeInformation y)
+            {
+                return x.Equals(y);
+            }
+
+            public int GetHashCode(ITypeInformation obj)
+            {
+                return obj.UniqueName.GetHashCode();
+            }
+        }
+
+        public static readonly TypeComparerImpl TypeComparer =
+            new TypeComparerImpl();
+
+        public sealed class MethodSignatureComparerImpl
+            : IComparer<IMethodInformation>, IEqualityComparer<IMethodInformation>
+        {
+            // This is a overload stablizer
+
+            private readonly bool isVirtual;
+
+            public MethodSignatureComparerImpl(bool isVirtual)
+            {
+                this.isVirtual = isVirtual;
+            }
+
             private static int Compare(VariableInformation x, VariableInformation y)
             {
                 var xt = x.TargetType;
@@ -129,27 +154,73 @@ namespace IL2C.Metadata
                 var xr = xt.IsAssignableFrom(yt);
                 var yr = yt.IsAssignableFrom(xt);
 
-                return Compare(xt, yt);
+                return TypeComparer.Compare(xt, yt);
+            }
+
+            private static bool Equals(VariableInformation x, VariableInformation y)
+            {
+                var xt = x.TargetType;
+                var yt = y.TargetType;
+
+                return TypeComparer.Equals(xt, yt);
             }
 
             public int Compare(IMethodInformation x, IMethodInformation y)
             {
+                var rn = x.Name.CompareTo(y.Name);
+                if (rn != 0)
+                {
+                    return rn;
+                }
+
                 var xps = x.Parameters;
                 var yps = y.Parameters;
 
-                var result = xps.Zip(yps, Compare).FirstOrDefault(r => r != 0);
-                if (result != 0)
+                rn = xps.Length.CompareTo(yps.Length);
+                if (rn != 0)
                 {
-                    return result;
+                    return rn;
                 }
-                else
-                {
-                    return xps.Length.CompareTo(yps.Length);
-                }
+
+                // The arg0 type for virtual method has to ignore different types.
+                return xps.
+                    Zip(yps, (xp, yp) => new { xp, yp }).
+                    Select((entry, index) => (isVirtual && (index == 0)) ? 0 : Compare(entry.xp, entry.yp)).
+                    FirstOrDefault(r => r != 0);
             }
 
-            public static readonly IComparer<IMethodInformation> Instance = new MethodSignatureComparer();
+            public bool Equals(IMethodInformation x, IMethodInformation y)
+            {
+                if (x.Name != y.Name)
+                {
+                    return false;
+                }
+
+                var xps = x.Parameters;
+                var yps = y.Parameters;
+
+                if (xps.Length != yps.Length)
+                {
+                    return false;
+                }
+
+                // The arg0 type for virtual method has to ignore different types.
+                return xps.
+                    Zip(yps, (xp, yp) => new { xp, yp }).
+                    Select((entry, index) => (isVirtual && (index == 0)) ? true : Equals(entry.xp, entry.yp)).
+                    FirstOrDefault(r => r);
+            }
+
+            public int GetHashCode(IMethodInformation obj)
+            {
+                return obj.Name.GetHashCode();
+            }
         }
+
+        public static readonly MethodSignatureComparerImpl MethodSignatureComparer =
+            new MethodSignatureComparerImpl(false);
+        public static readonly MethodSignatureComparerImpl VirtualMethodSignatureComparer =
+            new MethodSignatureComparerImpl(true);
 
         public static IDictionary<string, IMethodInformation[]> CalculateOverloadMethods(
             this IEnumerable<IMethodInformation> methods)
@@ -162,12 +233,39 @@ namespace IL2C.Metadata
                     OrderBy(method => method.IsStatic ? 1 : 0).
                     ThenBy(method => method.Parameters.Length).
                     ThenBy(method => method.IsReuseSlot ? 1 : 0).
-                    ThenBy(method => method, MethodSignatureComparer.Instance).
+                    ThenBy(method => method, MethodSignatureComparer).
                     ToArray();
 
                 dict.Add(g.Key, r);
             }
             return dict;
+        }
+
+        public static IEnumerable<(IMethodInformation method, int overloadIndex)> CalculateVirtualMethods(
+            this IEnumerable<IMethodInformation> methods)
+        {
+            var overloadIndexes = new Dictionary<IMethodInformation, int>(VirtualMethodSignatureComparer);
+            foreach (var method in methods.Where(method => method.IsVirtual))
+            {
+                if (overloadIndexes.TryGetValue(method, out var overloadIndex))
+                {
+                    if (method.IsNewSlot)
+                    {
+                        overloadIndex++;
+                        overloadIndexes[method] = overloadIndex;
+                        yield return (method, overloadIndex);
+                    }
+                    else
+                    {
+                        Debug.Assert(method.IsReuseSlot);
+                    }
+                }
+                else
+                {
+                    overloadIndexes.Add(method, 0);
+                    yield return (method, 0);
+                }
+            }
         }
     }
 }

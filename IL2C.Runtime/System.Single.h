@@ -14,14 +14,7 @@ extern "C" {
 
 typedef float System_Single;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(float* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(float* this__);
-    int32_t(*GetHashCode)(float* this__);
-    void(*Finalize)(float* this__);
-    bool(*Equals)(float* this__, System_Object* obj);
-} __System_Single_VTABLE_DECL__;
+typedef __System_ValueType_VTABLE_DECL__ __System_Single_VTABLE_DECL__;
 
 extern __System_Single_VTABLE_DECL__ __System_Single_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Single_RUNTIME_TYPE__;

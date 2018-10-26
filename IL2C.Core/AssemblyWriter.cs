@@ -101,30 +101,51 @@ namespace IL2C
             //   (and those types can dynamic cast to IConvertible, IFormattable and IComparable with NO specialized boxed type layouts... in C#?)
             if (!declaredType.IsEnum)
             {
-                tw.WriteLine();
-                tw.WriteLine(
-                    "// [1-2] {0} vtable layout",
-                    declaredType.MemberTypeName);
-                tw.WriteLine("typedef const struct");
-                tw.WriteLine("{");
-                tw.WriteLine(
-                    "{0}/* internalcall */ void* (*IL2C_RuntimeCast)({1} this__, IL2C_RUNTIME_TYPE_DECL* type);",
-                    indent,
-                    declaredType.CLanguageThisTypeName);
-#if true
-                tw.WriteLine("{0}/* TODO: virtual methods [1] */", indent);
-#else
-                foreach (var method in declaredType.VirtualMethods)
+                var virtualMethods = declaredType.CalculatedVirtualMethods;
+                var derivedType = virtualMethods.
+                    Select(entry => entry.method.DeclaringType).
+                    Last();
+
+                // If the type of tales method is this type, we know vtable layout is same as it.
+                if (derivedType != declaredType)
                 {
+                    tw.WriteLine();
                     tw.WriteLine(
-                        "{0}{1};",
-                        indent,
-                        method.CLanguageFunctionTypePrototype);
+                        "// [1-2] {0} vtable layout (Same as {1})",
+                        declaredType.MemberTypeName,
+                        derivedType.FriendlyName);
+
+                    tw.WriteLine(
+                        "typedef __{0}_VTABLE_DECL__ __{1}_VTABLE_DECL__;",
+                        derivedType.MangledName,
+                        declaredType.MangledName);
                 }
-#endif
-                tw.WriteLine(
-                    "}} __{0}_VTABLE_DECL__;",
-                    declaredType.MangledName);
+                // Require new vtable layout.
+                else
+                {
+                    tw.WriteLine();
+                    tw.WriteLine(
+                        "// [1-2] {0} vtable layout",
+                        declaredType.MemberTypeName);
+
+                    tw.WriteLine("typedef const struct");
+                    tw.WriteLine("{");
+                    tw.WriteLine(
+                        "{0}/* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);",
+                        indent);
+
+                    foreach (var (method, overloadIndex) in virtualMethods)
+                    {
+                        tw.WriteLine(
+                            "{0}{1};",
+                            indent,
+                            method.GetCLanguageFunctionTypePrototype(overloadIndex));
+                    }
+
+                    tw.WriteLine(
+                        "}} __{0}_VTABLE_DECL__;",
+                        declaredType.MangledName);
+                }
 
                 tw.WriteLine();
                 tw.WriteLine(
@@ -657,63 +678,6 @@ namespace IL2C
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// [7] Runtime helpers:");
 
-            // Write RuntimeCast function:
-            tw.WriteLine();
-            tw.WriteLine("// [7-1] Runtime cast");
-            tw.WriteLine(
-                "void* __{0}_IL2C_RuntimeCast__({1} this__, IL2C_RUNTIME_TYPE_DECL* type)",
-                declaredType.MangledName,
-                declaredType.CLanguageThisTypeName);
-            tw.WriteLine("{");
-
-            // RuntimeCast: this type.
-            // If type is value type, this operations invalid (ignore operation then cause InvalidCastException)
-            //   TODO: inlining all base type comparer are better than base invoker?
-            if (!declaredType.IsValueType)
-            {
-                tw.WriteLine(
-                    "{0}// [7-2] This type",
-                    indent);
-                tw.WriteLine(
-                    "{0}if (type == il2c_typeof({1})) return this__;",
-                    indent,
-                    declaredType.MangledName);
-            }
-
-            // RuntimeCast: implemented interfaces.
-            if (declaredType.InterfaceTypes.Length >= 1)
-            {
-                tw.WriteLine();
-                tw.WriteLine(
-                    "{0}// [7-3] Interface types",
-                    indent);
-
-                foreach (var interfaceType in declaredType.InterfaceTypes)
-                {
-                    // NOTE:
-                    //  The virtual function pointer added offset from between vptr_TYPE__ and vptr0__.
-                    //  If will invoke interface's virtual function,
-                    //  the function is delegated "Adjust thunk" function,
-                    //  it will recalculate this pointer offset.
-                    tw.WriteLine(
-                        "{0}if (type == il2c_typeof({1})) return (void*)&(this__->vptr_{1}__);",
-                        indent,
-                        interfaceType.MangledName);
-                }
-            }
-
-            // RuntimeCast: reflect base types.
-            tw.WriteLine();
-            tw.WriteLine(
-                "{0}// [7-4] Delegate checking base types",
-                indent);
-            tw.WriteLine(
-                "{0}return __{1}_IL2C_RuntimeCast__(({2})this__, type);",
-                indent,
-                declaredType.BaseType.MangledName,
-                declaredType.BaseType.CLanguageThisTypeName);
-            tw.WriteLine("}");
-
             // Write mark handler:
             tw.WriteLine();
             tw.WriteLine(
@@ -791,7 +755,7 @@ namespace IL2C
                     "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                     declaredType.MangledName);
                 tw.WriteLine(
-                    "{0}/* internalcall */ __{1}_IL2C_RuntimeCast__,",
+                    "{0}/* internalcall */ il2c_runtime_isinst,",
                     indent,
                     declaredType.MangledName);
 
@@ -913,6 +877,10 @@ namespace IL2C
                 "{0}/* internalcall */ (IL2C_MARK_HANDLER)__{1}_IL2C_MarkHandler__,",
                 indent,
                 declaredType.MangledName);
+            tw.WriteLine(
+                "{0}il2c_typeof({1})",
+                indent,
+                declaredType.BaseType.MangledName);
 
             tw.WriteLine("};");
         }

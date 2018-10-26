@@ -258,6 +258,31 @@ void il2c_shutdown()
 }
 
 /////////////////////////////////////////////////////////////
+// Runtime cast function
+
+void* il2c_runtime_isinst(void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    il2c_assert(pReference != NULL);
+    il2c_assert(type != NULL);
+
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
+        (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
+
+    IL2C_RUNTIME_TYPE_DECL* currentType = pHeader->type;
+    do
+    {
+        if (currentType == type)
+        {
+            return pReference;
+        }
+        currentType = currentType->baseType;
+    }
+    while (currentType != NULL);
+
+    return NULL;
+}
+
+/////////////////////////////////////////////////////////////
 // Boxing related functions
 
 // +----------------------+

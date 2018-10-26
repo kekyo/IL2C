@@ -3,46 +3,34 @@
 /////////////////////////////////////////////////////////////
 // System.ValueType
 
-IL2C_CONST_STRING(System_ValueType_name, L"System.ValueType");
 System_String* System_ValueType_ToString(System_ValueType* this__)
 {
-    // TODO: GetType().ToString();
-    return System_ValueType_name;
+    return NULL;
 }
 
 int32_t System_ValueType_GetHashCode(System_ValueType* this__)
 {
     // TODO:
+    il2c_assert(0);
     return (int32_t)(intptr_t)this__;
 }
 
 bool System_ValueType_Equals(System_ValueType* this__, System_Object* obj)
 {
     // TODO:
+    il2c_assert(0);
     return false;
 }
 
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_ValueType)) return this__;
-    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
-}
-
 __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
-    /* internalcall */ __System_ValueType_IL2C_RuntimeCast__,
-    System_ValueType_ToString,
-    System_ValueType_GetHashCode,
-    (void(*)(System_ValueType*))System_Object_Finalize,
-    System_ValueType_Equals,
+    /* internalcall */ il2c_runtime_isinst,
+    (bool(*)(void*, System_Object*))System_ValueType_Equals,
+    NULL,
+    (int32_t(*)(void*))System_ValueType_GetHashCode,
+    (System_String* (*)(void*))System_ValueType_ToString
 };
 
-IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__ = {
-    "System.ValueType",
-    IL2C_TYPE_STANDARD,
-    sizeof(System_ValueType),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_RUNTIME_TYPE(System_ValueType, "System.ValueType", IL2C_TYPE_STANDARD, System_Object);

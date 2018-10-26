@@ -64,24 +64,5 @@ bool System_Single_TryParse(System_String* s, float* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Single_IL2C_RuntimeCast__(float* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_Single)) return this__;
-    return __System_ValueType_IL2C_RuntimeCast__((System_ValueType*)this__, type);
-}
-
-__System_Single_VTABLE_DECL__ __System_Single_VTABLE__ = {
-    /* internalcall */ __System_Single_IL2C_RuntimeCast__,
-    System_Single_ToString,
-    System_Single_GetHashCode,
-    (void(*)(System_Single*))System_Object_Finalize,
-    System_Single_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_Single_RUNTIME_TYPE__ = {
-    "System.Single",
-    IL2C_TYPE_STANDARD,
-    sizeof(System_Single),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_Single);
+IL2C_DECLARE_RUNTIME_TYPE(System_Single, "System.Single", IL2C_TYPE_STANDARD, System_ValueType);

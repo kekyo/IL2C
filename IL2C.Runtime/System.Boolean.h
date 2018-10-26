@@ -14,14 +14,7 @@ extern "C" {
 
 typedef bool System_Boolean;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(bool* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(bool* this__);
-    int32_t(*GetHashCode)(bool* this__);
-    void(*Finalize)(bool* this__);
-    bool(*Equals)(bool* this__, System_Object* obj);
-} __System_Boolean_VTABLE_DECL__;
+typedef __System_ValueType_VTABLE_DECL__ __System_Boolean_VTABLE_DECL__;
 
 extern __System_Boolean_VTABLE_DECL__ __System_Boolean_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Boolean_RUNTIME_TYPE__;

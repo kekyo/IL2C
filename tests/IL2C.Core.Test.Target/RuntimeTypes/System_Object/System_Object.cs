@@ -6,6 +6,8 @@ namespace IL2C.RuntimeTypes
     [TestCase(false, "IsValueType", "ABC")]
     [TestCase("System.Int32", "ToString", int.MaxValue)]
     [TestCase("System.String", "ToString", "ABC")]
+    [TestCase("System.Int32", "GetType", int.MaxValue)]
+    [TestCase("System.String", "GetType", "ABC")]
     public sealed class System_Object
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -14,5 +16,8 @@ namespace IL2C.RuntimeTypes
         // This is non virtual calling test.
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string ToString(object value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string GetType(object value);
     }
 }

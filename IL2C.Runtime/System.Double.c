@@ -64,24 +64,5 @@ bool System_Double_TryParse(System_String* s, double* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Double_IL2C_RuntimeCast__(double* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_Double)) return this__;
-    return __System_ValueType_IL2C_RuntimeCast__((System_ValueType*)this__, type);
-}
-
-__System_Double_VTABLE_DECL__ __System_Double_VTABLE__ = {
-    /* internalcall */ __System_Double_IL2C_RuntimeCast__,
-    System_Double_ToString,
-    System_Double_GetHashCode,
-    (void(*)(System_Double*))System_Object_Finalize,
-    System_Double_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_Double_RUNTIME_TYPE__ = {
-    "System.Double",
-    IL2C_TYPE_STANDARD,
-    sizeof(System_Double),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_Double);
+IL2C_DECLARE_RUNTIME_TYPE(System_Double, "System.Double", IL2C_TYPE_STANDARD, System_ValueType);

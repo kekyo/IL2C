@@ -44,24 +44,5 @@ bool System_IntPtr_Equals_1(intptr_t* this__, System_Object* obj)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_IntPtr_IL2C_RuntimeCast__(intptr_t* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_IntPtr)) return this__;
-    return __System_ValueType_IL2C_RuntimeCast__((System_ValueType*)this__, type);
-}
-
-__System_IntPtr_VTABLE_DECL__ __System_IntPtr_VTABLE__ = {
-    /* internalcall */ __System_IntPtr_IL2C_RuntimeCast__,
-    System_IntPtr_ToString,
-    System_IntPtr_GetHashCode,
-    (void(*)(System_IntPtr*))System_Object_Finalize,
-    System_IntPtr_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__ = {
-    "System.IntPtr",
-    IL2C_TYPE_INTEGER,
-    sizeof(System_IntPtr),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_IntPtr);
+IL2C_DECLARE_RUNTIME_TYPE(System_IntPtr, "System.IntPtr", IL2C_TYPE_INTEGER, System_ValueType);

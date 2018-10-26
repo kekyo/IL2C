@@ -14,14 +14,7 @@ extern "C" {
 
 typedef double System_Double;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(double* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(double* this__);
-    int32_t(*GetHashCode)(double* this__);
-    void(*Finalize)(double* this__);
-    bool(*Equals)(double* this__, System_Object* obj);
-} __System_Double_VTABLE_DECL__;
+typedef __System_ValueType_VTABLE_DECL__ __System_Double_VTABLE_DECL__;
 
 extern __System_Double_VTABLE_DECL__ __System_Double_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Double_RUNTIME_TYPE__;

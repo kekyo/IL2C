@@ -18,11 +18,11 @@ typedef struct System_Type System_Type;
 
 typedef const struct
 {
-    /* internalcall */ void* (*IL2C_RuntimeCast)(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_Object* this__);
-    int32_t (*GetHashCode)(System_Object* this__);
-    void (*Finalize)(System_Object* this__);
-    bool (*Equals)(System_Object* this__, System_Object* obj);
+    /* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);
+    bool(*Equals)(void* this__, System_Object* obj);
+    void(*Finalize)(void* this__);
+    int32_t(*GetHashCode)(void* this__);
+    System_String* (*ToString)(void* this__);
 } __System_Object_VTABLE_DECL__;
 
 struct System_Object

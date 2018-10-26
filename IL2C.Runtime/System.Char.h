@@ -14,14 +14,7 @@ extern "C" {
 
 typedef wchar_t System_Char;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(wchar_t* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(wchar_t* this__);
-    int32_t(*GetHashCode)(wchar_t* this__);
-    void(*Finalize)(wchar_t* this__);
-    bool(*Equals)(wchar_t* this__, System_Object* obj);
-} __System_Char_VTABLE_DECL__;
+typedef __System_ValueType_VTABLE_DECL__ __System_Char_VTABLE_DECL__;
 
 extern __System_Char_VTABLE_DECL__ __System_Char_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Char_RUNTIME_TYPE__;

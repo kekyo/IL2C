@@ -59,24 +59,5 @@ bool System_UInt16_TryParse(System_String* s, uint16_t* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_UInt16_IL2C_RuntimeCast__(uint16_t* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_UInt16)) return this__;
-    return __System_ValueType_IL2C_RuntimeCast__((System_ValueType*)this__, type);
-}
-
-__System_UInt16_VTABLE_DECL__ __System_UInt16_VTABLE__ = {
-    /* internalcall */ __System_UInt16_IL2C_RuntimeCast__,
-    System_UInt16_ToString,
-    System_UInt16_GetHashCode,
-    (void(*)(System_UInt16*))System_Object_Finalize,
-    System_UInt16_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE__ = {
-    "System.UInt16",
-    IL2C_TYPE_INTEGER,
-    sizeof(System_UInt16),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_UInt16);
+IL2C_DECLARE_RUNTIME_TYPE(System_UInt16, "System.UInt16", IL2C_TYPE_INTEGER, System_ValueType);

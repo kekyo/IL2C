@@ -14,14 +14,7 @@ extern "C" {
 
 typedef uint16_t System_UInt16;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(uint16_t* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(uint16_t* this__);
-    int32_t(*GetHashCode)(uint16_t* this__);
-    void(*Finalize)(uint16_t* this__);
-    bool(*Equals)(uint16_t* this__, System_Object* obj);
-} __System_UInt16_VTABLE_DECL__;
+typedef __System_ValueType_VTABLE_DECL__ __System_UInt16_VTABLE_DECL__;
 
 extern __System_UInt16_VTABLE_DECL__ __System_UInt16_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_UInt16_RUNTIME_TYPE__;

@@ -384,24 +384,5 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_String_IL2C_RuntimeCast__(System_String* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_String)) return this__;
-    return __System_Object_IL2C_RuntimeCast__((System_Object*)this__, type);
-}
-
-__System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
-    /* internalcall */ __System_String_IL2C_RuntimeCast__,
-    System_String_ToString,
-    System_String_GetHashCode,
-    (void(*)(System_String*))System_Object_Finalize,
-    System_String_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
-    "System.String",
-    IL2C_TYPE_VARIABLE,
-    0,
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_String);
+IL2C_DECLARE_RUNTIME_TYPE(System_String, "System.String", IL2C_TYPE_VARIABLE, System_Object);

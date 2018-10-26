@@ -14,14 +14,7 @@ extern "C" {
 
 typedef uint8_t System_Byte;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(uint8_t* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(uint8_t* this__);
-    int32_t(*GetHashCode)(uint8_t* this__);
-    void(*Finalize)(uint8_t* this__);
-    bool(*Equals)(uint8_t* this__, System_Object* obj);
-} __System_Byte_VTABLE_DECL__;
+typedef __System_ValueType_VTABLE_DECL__ __System_Byte_VTABLE_DECL__;
 
 extern __System_Byte_VTABLE_DECL__ __System_Byte_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__;

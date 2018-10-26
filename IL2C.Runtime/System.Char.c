@@ -55,26 +55,5 @@ bool System_Char_TryParse(System_String* s, wchar_t* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void* __System_Char_IL2C_RuntimeCast__(wchar_t* this__, IL2C_RUNTIME_TYPE_DECL* type)
-{
-    il2c_assert(this__ != NULL);
-
-    if (type == il2c_typeof(System_Char)) return this__;
-
-    // BUG: TODO: All value types are invalid upcasting to ValueType type.
-    return __System_ValueType_IL2C_RuntimeCast__((System_ValueType*)this__, type);
-}
-
-__System_Char_VTABLE_DECL__ __System_Char_VTABLE__ = {
-    /* internalcall */ __System_Char_IL2C_RuntimeCast__,
-    System_Char_ToString,
-    System_Char_GetHashCode,
-    (void(*)(System_Char*))System_Object_Finalize,
-    System_Char_Equals_1
-};
-
-IL2C_RUNTIME_TYPE_DECL __System_Char_RUNTIME_TYPE__ = {
-    "System.Char",
-    IL2C_TYPE_INTEGER,
-    sizeof(System_Char),
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER };
+IL2C_DECLARE_OBJECT_VTABLE(System_Char);
+IL2C_DECLARE_RUNTIME_TYPE(System_Char, "System.Char", IL2C_TYPE_INTEGER, System_ValueType);

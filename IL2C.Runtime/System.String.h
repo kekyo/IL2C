@@ -12,17 +12,9 @@ extern "C" {
 /////////////////////////////////////////////////////////////
 // System.String
 
-typedef struct System_Object System_Object;
 typedef struct System_String System_String;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(System_String* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(System_String* this__);
-    int32_t(*GetHashCode)(System_String* this__);
-    void(*Finalize)(System_String* this__);
-    bool(*Equals)(System_String* this__, System_Object* obj);
-} __System_String_VTABLE_DECL__;
+typedef __System_Object_VTABLE_DECL__ __System_String_VTABLE_DECL__;
 
 struct System_String
 {

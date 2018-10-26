@@ -35,12 +35,13 @@ typedef struct IL2C_REF_HEADER IL2C_REF_HEADER;
 
 typedef void (*IL2C_MARK_HANDLER)(/* System_Object* */ void* pReference);
 
-typedef const struct
+typedef const struct IL2C_RUNTIME_TYPE_DECL
 {
     const char* pTypeName;
     const uint32_t flags;
     const uint32_t bodySize;
     /* internalcall */ const IL2C_MARK_HANDLER IL2C_MarkHandler;
+    const struct IL2C_RUNTIME_TYPE_DECL* baseType;
 } IL2C_RUNTIME_TYPE_DECL;
 
 struct IL2C_REF_HEADER
@@ -60,8 +61,9 @@ struct IL2C_REF_HEADER
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 
 // dynamic cast operator
+extern void* il2c_runtime_isinst(void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
 #define il2c_isinst(pReference, typeName) \
-    ((typeName*)((pReference)->vptr0__->IL2C_RuntimeCast((pReference), il2c_typeof(typeName))))
+    ((typeName*)(((System_Object*)pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName))))
 #define il2c_castclass(pReference, typeName) \
     il2c_isinst(pReference, typeName)
 

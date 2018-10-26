@@ -14,14 +14,7 @@ extern "C" {
 
 typedef uint64_t System_UInt64;
 
-typedef const struct
-{
-    /* internalcall */ void* (*IL2C_RuntimeCast)(uint64_t* this__, IL2C_RUNTIME_TYPE_DECL* type);
-    System_String* (*ToString)(uint64_t* this__);
-    int32_t(*GetHashCode)(uint64_t* this__);
-    void(*Finalize)(uint64_t* this__);
-    bool(*Equals)(uint64_t* this__, System_Object* obj);
-} __System_UInt64_VTABLE_DECL__;
+typedef __System_ValueType_VTABLE_DECL__ __System_UInt64_VTABLE_DECL__;
 
 extern __System_UInt64_VTABLE_DECL__ __System_UInt64_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE__;

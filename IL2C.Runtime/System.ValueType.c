@@ -26,9 +26,9 @@ bool System_ValueType_Equals(System_ValueType* this__, System_Object* obj)
 // VTable and runtime type info declarations
 
 __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
-    /* internalcall */ il2c_runtime_isinst,
+    /* internalcall */ il2c_isinst__,
     (bool(*)(void*, System_Object*))System_ValueType_Equals,
-    NULL,
+    (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_ValueType_GetHashCode,
     (System_String* (*)(void*))System_ValueType_ToString
 };

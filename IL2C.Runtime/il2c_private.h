@@ -231,9 +231,9 @@ extern void WriteLineToError(const wchar_t* pMessage);
 
 #define IL2C_DECLARE_OBJECT_VTABLE(typeName) \
 __##typeName##_VTABLE_DECL__ __##typeName##_VTABLE__ = { \
-    /* internalcall */ il2c_runtime_isinst, \
+    /* internalcall */ il2c_isinst__, \
     (bool(*)(void*, System_Object*))typeName##_Equals_1, \
-    NULL, \
+    (void(*)(void*))System_Object_Finalize, \
     (int32_t(*)(void*))typeName##_GetHashCode, \
     (System_String* (*)(void*))typeName##_ToString \
 }

@@ -38,10 +38,11 @@ namespace IL2C.Metadata
 
             public int Compare(ITypeInformation x, ITypeInformation y)
             {
+                // Prioritize for narrowing base type.
                 var xr = x.IsAssignableFrom(y);
                 var yr = y.IsAssignableFrom(x);
 
-                if (!xr && xr)
+                if (!xr && yr)
                 {
                     return -1;
                 }
@@ -244,28 +245,41 @@ namespace IL2C.Metadata
         public static IEnumerable<(IMethodInformation method, int overloadIndex)> CalculateVirtualMethods(
             this IEnumerable<IMethodInformation> methods)
         {
-            var overloadIndexes = new Dictionary<IMethodInformation, int>(VirtualMethodSignatureComparer);
+            // Calculate overrided virtual methods using NewSlot attribute.
+
+            var overloadIndexes = new List<(IMethodInformation method, int overloadIndex)>();
+
             foreach (var method in methods.Where(method => method.IsVirtual))
             {
-                if (overloadIndexes.TryGetValue(method, out var overloadIndex))
+                // Search from derived to base
+                var index = overloadIndexes.FindLastIndex(entry =>
+                    VirtualMethodSignatureComparer.Equals(entry.method, method));
+                if (index >= 1)
                 {
+                    // It's new slotted.
                     if (method.IsNewSlot)
                     {
-                        overloadIndex++;
-                        overloadIndexes[method] = overloadIndex;
-                        yield return (method, overloadIndex);
+                        // Add new method.
+                        var (_, oi) = overloadIndexes[index];
+                        overloadIndexes.Add((method, oi++));
                     }
                     else
                     {
+                        // ReuseSlot: It's overrided from base method.
                         Debug.Assert(method.IsReuseSlot);
+
+                        // Replace.
+                        var (_, oi) = overloadIndexes[index];
+                        overloadIndexes[index] = (method, oi++);
                     }
                 }
                 else
                 {
-                    overloadIndexes.Add(method, 0);
-                    yield return (method, 0);
+                    overloadIndexes.Add((method, 0));
                 }
             }
+
+            return overloadIndexes.ToArray();
         }
     }
 }

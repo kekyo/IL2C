@@ -233,7 +233,7 @@ namespace IL2C
 
             var gccArguments = includePaths
                 .SelectMany(p => new[] { "-I", p })     // TODO: -std=c99
-                .Concat(new[] { "-save-temps=obj", "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-o", executablePath, sourcePath })
+                .Concat(new[] { "-save-temps=obj", "-Wall", "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-o", executablePath, sourcePath })
                 .ToArray();
 
             // TODO: turn to cmake based.

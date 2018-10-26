@@ -33,7 +33,6 @@ struct System_Object
 extern __System_Object_VTABLE_DECL__ __System_Object_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__;
 
-extern /* internalcall */ void* __System_Object_IL2C_RuntimeCast__(System_Object* this__, IL2C_RUNTIME_TYPE_DECL* type);
 #define __System_Object_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
 
 static inline void System_Object__ctor(System_Object* this__)

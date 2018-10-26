@@ -50,9 +50,9 @@ bool System_Object_Equals(System_Object* this__, System_Object* obj)
 // VTable and runtime type info declarations
 
 __System_Object_VTABLE_DECL__ __System_Object_VTABLE__ = {
-    /* internalcall */ il2c_runtime_isinst,
+    /* internalcall */ il2c_isinst__,
     (bool(*)(void*, System_Object*))System_Object_Equals,
-    NULL,
+    (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Object_GetHashCode,
     (System_String* (*)(void*))System_Object_ToString
 };

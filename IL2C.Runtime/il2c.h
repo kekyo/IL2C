@@ -61,7 +61,7 @@ struct IL2C_REF_HEADER
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 
 // dynamic cast operator
-extern void* il2c_runtime_isinst(void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
+extern void* il2c_isinst__(void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
 #define il2c_isinst(pReference, typeName) \
     ((typeName*)(((System_Object*)pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName))))
 #define il2c_castclass(pReference, typeName) \

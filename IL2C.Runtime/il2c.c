@@ -260,7 +260,7 @@ void il2c_shutdown()
 /////////////////////////////////////////////////////////////
 // Runtime cast function
 
-void* il2c_runtime_isinst(void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
+void* il2c_isinst__(void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
 {
     il2c_assert(pReference != NULL);
     il2c_assert(type != NULL);

@@ -95,29 +95,41 @@ namespace IL2C
             //                                         | Calc() [with AT]             |
             //                                         +------------------------------+
 
+            // TODO: move to metadata
+            var virtualMethods = declaredType.CalculatedVirtualMethods;
+            var overrideMethods = virtualMethods.
+                Select(entry => entry.method).
+                Where(method => method.DeclaringType.Equals(declaredType) && method.IsReuseSlot).
+                ToArray();
+            var newSlotMethods = virtualMethods.
+                Select(entry => entry.method).
+                Where(method => method.DeclaringType.Equals(declaredType) && method.IsNewSlot).
+                ToArray();
+            var overrideBaseMethods = virtualMethods.
+                Select(entry => entry.method).
+                Where(method =>
+                    !method.DeclaringType.Equals(declaredType) &&
+                    method.DeclaringType.IsAssignableFrom(declaredType)).
+                ToArray();
+
             // NOTE: 1 of 2
             //   Enum type derived from System.Enum,
             //   so all enum types boxed to System.Enum
             //   (and those types can dynamic cast to IConvertible, IFormattable and IComparable with NO specialized boxed type layouts... in C#?)
             if (!declaredType.IsEnum)
             {
-                var virtualMethods = declaredType.CalculatedVirtualMethods;
-                var derivedType = virtualMethods.
-                    Select(entry => entry.method.DeclaringType).
-                    Last();
-
-                // If the type of tales method is this type, we know vtable layout is same as it.
-                if (derivedType != declaredType)
+                // If virtual method collection doesn't contain newslot method at this declared type:
+                if (!newSlotMethods.Any())
                 {
                     tw.WriteLine();
                     tw.WriteLine(
-                        "// [1-2] {0} vtable layout (Same as {1})",
+                        "// [1-2-1] {0} vtable layout (Same as {1})",
                         declaredType.MemberTypeName,
-                        derivedType.FriendlyName);
+                        overrideBaseMethods.Last().DeclaringType.FriendlyName);
 
                     tw.WriteLine(
                         "typedef __{0}_VTABLE_DECL__ __{1}_VTABLE_DECL__;",
-                        derivedType.MangledName,
+                        overrideBaseMethods.Last().DeclaringType.MangledName,
                         declaredType.MangledName);
                 }
                 // Require new vtable layout.
@@ -125,8 +137,9 @@ namespace IL2C
                 {
                     tw.WriteLine();
                     tw.WriteLine(
-                        "// [1-2] {0} vtable layout",
-                        declaredType.MemberTypeName);
+                        "// [1-2-2] {0} vtable layout (Derived from {1})",
+                        declaredType.MemberTypeName,
+                        overrideBaseMethods.Last().DeclaringType.FriendlyName);
 
                     tw.WriteLine("typedef const struct");
                     tw.WriteLine("{");
@@ -207,18 +220,35 @@ namespace IL2C
                 tw.WriteLine("};");
             }
 
-            tw.WriteLine();
-            tw.WriteLine(
-                "// [1-5] {0} vtable",
-                declaredType.MemberTypeName);
-            tw.WriteLine(
-                "extern __{0}_VTABLE_DECL__ __{0}_VTABLE__;",
-                declaredType.MangledName);
+            // If virtual method collection doesn't contain reuseslot and newslot method at this declared type:
+            if (!overrideMethods.Any() && !newSlotMethods.Any())
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [1-5-1] Vtable (Same as {0})",
+                    overrideBaseMethods.Last().DeclaringType.FriendlyName);
+
+                tw.WriteLine(
+                    "#define __{0}_VTABLE__ __{1}_VTABLE__",
+                    declaredType.MangledName,
+                    overrideBaseMethods.Last().DeclaringType.MangledName);
+            }
+            // Require new vtable.
+            else
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [1-5-2] Vtable (Derived from {0})",
+                    overrideBaseMethods.Last().DeclaringType.FriendlyName);
+
+                tw.WriteLine(
+                    "extern __{0}_VTABLE_DECL__ __{0}_VTABLE__;",
+                    declaredType.MangledName);
+            }
 
             tw.WriteLine();
             tw.WriteLine(
-                "// [1-4] {0} runtime type information",
-                declaredType.MemberTypeName);
+                "// [1-4] Runtime type information");
             tw.WriteLine(
                 "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
                 declaredType.MangledName);
@@ -742,10 +772,58 @@ namespace IL2C
             //   (and those types can dynamic cast to IConvertible, IFormattable and IComparable with NO specialized boxed type layouts... in C#?)
             if (!declaredType.IsEnum)
             {
-                tw.WriteLine();
-                tw.WriteLine("//////////////////////");
-                tw.WriteLine("// [7-9] VTables:");
+#if true
+                // TODO: move to metadata
+                var virtualMethods = declaredType.CalculatedVirtualMethods;
+                var overrideMethods = virtualMethods.
+                    Select(entry => entry.method).
+                    Where(method => method.DeclaringType.Equals(declaredType) && method.IsReuseSlot).
+                    ToArray();
+                var newSlotMethods = virtualMethods.
+                    Select(entry => entry.method).
+                    Where(method => method.DeclaringType.Equals(declaredType) && method.IsNewSlot).
+                    ToArray();
+                var overrideBaseMethods = virtualMethods.
+                    Select(entry => entry.method).
+                    Where(method =>
+                        !method.DeclaringType.Equals(declaredType) &&
+                        method.DeclaringType.IsAssignableFrom(declaredType)).
+                    ToArray();
 
+                // If virtual method collection doesn't contain reuseslot and newslot method at this declared type:
+                if (!overrideMethods.Any() && !newSlotMethods.Any())
+                {
+                    tw.WriteLine();
+                    tw.WriteLine(
+                        "// [7-10-1] Vtable (Not defined, same as {0})",
+                        overrideBaseMethods.Last().DeclaringType.FriendlyName);
+                }
+                // Require new vtable.
+                else
+                {
+                    // Write virtual methods
+                    tw.WriteLine();
+                    tw.WriteLine(
+                        "// [7-10-2] Vtable");
+                    tw.WriteLine(
+                        "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
+                        declaredType.MangledName);
+                    tw.WriteLine(
+                        "{0}/* internalcall */ il2c_isinst__,",
+                        indent,
+                        declaredType.MangledName);
+
+                    foreach (var (method, _) in virtualMethods)
+                    {
+                        tw.WriteLine(
+                            "{0}{1},",
+                            indent,
+                            method.CLanguageFunctionName);
+                    }
+
+                    tw.WriteLine("};");
+                }
+#else
                 // Write virtual methods
                 tw.WriteLine();
                 tw.WriteLine(
@@ -759,10 +837,6 @@ namespace IL2C
                     indent,
                     declaredType.MangledName);
 
-#if true
-                tw.WriteLine("{0}/* TODO: virtual methods [3] */", indent);
-                tw.WriteLine("};");
-#else
                 var virtualFunctions = GetVirtualFunctions(
                     declaredType,
                     declaredType);

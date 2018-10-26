@@ -28,7 +28,7 @@ namespace IL2C
 
         public Task ExecuteTestAsync(string categoryName) =>
             TestFramework.ExecuteTestAsync(
-                categoryName, this.Name, this.Expected, this.Assert,
+                categoryName, this.Id, this.Name, this.Expected, this.Assert,
                 this.Method, this.AdditionalMethods, this.Arguments);
 
         public override string ToString()

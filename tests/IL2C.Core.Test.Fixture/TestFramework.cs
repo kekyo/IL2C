@@ -107,7 +107,7 @@ namespace IL2C
         }
 
         public static async Task ExecuteTestAsync(
-            string categoryName, string testName, object expected, TestCaseAsserts assert,
+            string categoryName, string subCategoryName, string testName, object expected, TestCaseAsserts assert,
             MethodInfo method, MethodBase[] additionalMethods, object[] args)
         {
             Assert.IsTrue(method.IsPublic && method.IsStatic);
@@ -157,7 +157,7 @@ namespace IL2C
                 Path.Combine(
                     Path.GetDirectoryName(method.DeclaringType.Assembly.Location),
                     categoryName,
-                    targetMethod.DeclaringType.Name,
+                    subCategoryName,
                     testName));
 
             var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");

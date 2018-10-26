@@ -5,9 +5,7 @@ using System.Text;
 namespace IL2C.Metadata
 {
     public interface IMetadataInformation
-        : IEquatable<IMetadataInformation>
-        , IComparable<IMetadataInformation>
-        , IComparable
+        : IEquatable<IMetadataInformation>, IComparable<IMetadataInformation>, IComparable
     {
         string MetadataTypeName { get; }
 

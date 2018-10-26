@@ -232,8 +232,8 @@ namespace IL2C
             var gccPath = Path.Combine(gccBinPath, "gcc.exe");
 
             var gccArguments = includePaths
-                .SelectMany(p => new[] { "-I", p })     // TODO: -std=c99
-                .Concat(new[] { "-save-temps=obj", "-Wall", "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-o", executablePath, sourcePath })
+                .SelectMany(p => new[] { "-I", p })     // TODO: -std=c99, -Wall
+                .Concat(new[] { "-save-temps=obj", "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-o", executablePath, sourcePath })
                 .ToArray();
 
             // TODO: turn to cmake based.

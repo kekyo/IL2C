@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+
 using Mono.Cecil;
 
 namespace IL2C.Metadata
@@ -18,9 +18,7 @@ namespace IL2C.Metadata
     }
 
     internal abstract class MemberInformation<TReference, TDefinition>
-        : MetadataInformation<TReference, TDefinition>
-        , IMemberInformation
-        , IOperandPrintable
+        : MetadataInformation<TReference, TDefinition>, IMemberInformation, IOperandPrintable
         where TReference : MemberReference
         where TDefinition : TReference
     {

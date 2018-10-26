@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Mono.Cecil;
+
 using Mono.Cecil.Cil;
 
 namespace IL2C.Metadata
@@ -35,8 +35,7 @@ namespace IL2C.Metadata
     }
 
     internal sealed class CodeInformation
-        : ICodeInformation
-            , IOperandPrintable
+        : ICodeInformation, IOperandPrintable
     {
         private readonly Lazy<object> operand;
 
@@ -126,8 +125,7 @@ namespace IL2C.Metadata
     }
 
     internal sealed class CodeStream
-        : SortedDictionary<int, ICodeInformation>
-        , ICodeStream
+        : SortedDictionary<int, ICodeInformation>, ICodeStream
     {
         public CodeStream()
         {

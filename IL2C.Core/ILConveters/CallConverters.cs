@@ -11,7 +11,7 @@ namespace IL2C.ILConverters
     internal static class CallConverterUtilities
     {
         public static Func<IExtractContext, string[]> Apply(
-            IMethodInformation method, DecodeContext decodeContext)
+            IMethodInformation method, DecodeContext decodeContext, bool isVirtualCall)
         {
             // OPT HACK: System.Object's constructor calls ignored.
             if (method.IsConstructor && method.DeclaringType.IsObjectType)
@@ -71,7 +71,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             IMethodInformation method, DecodeContext decodeContext)
         {
-            return CallConverterUtilities.Apply(method, decodeContext);
+            return CallConverterUtilities.Apply(method, decodeContext, false);
         }
     }
 
@@ -92,7 +92,7 @@ namespace IL2C.ILConverters
 
             // TODO: Support virtual method
 
-            return CallConverterUtilities.Apply(method, decodeContext);
+            return CallConverterUtilities.Apply(method, decodeContext, true);
         }
     }
 }

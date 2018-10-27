@@ -64,5 +64,6 @@ bool System_Double_TryParse(System_String* s, double* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_DECLARE_OBJECT_VTABLE(System_Double);
-IL2C_DECLARE_RUNTIME_TYPE(System_Double, "System.Double", IL2C_TYPE_STANDARD, System_ValueType);
+IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Double);
+IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Double);
+IL2C_DECLARE_RUNTIME_TYPE(System_Double, "System.Double", IL2C_TYPE_REFERENCE, System_ValueType);

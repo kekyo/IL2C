@@ -260,10 +260,14 @@ void il2c_shutdown()
 /////////////////////////////////////////////////////////////
 // Runtime cast function
 
-void* il2c_isinst__(void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
+void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
 {
-    il2c_assert(pReference != NULL);
     il2c_assert(type != NULL);
+
+    if (pReference == NULL)
+    {
+        return NULL;
+    }
 
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
         (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
@@ -320,7 +324,7 @@ System_Object* il2c_box2__(
     il2c_assert(vptr0 != NULL);
 
     // Require type conversion
-    il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) != 0) && ((stackType->flags & IL2C_TYPE_INTEGER) != 0));
+    il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER) && ((stackType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER));
     il2c_assert((valueType->bodySize <= 4) && (stackType->bodySize <= 4));
     il2c_assert((valueType->bodySize >= 1) && (stackType->bodySize >= 1));
 
@@ -382,17 +386,27 @@ System_Object* il2c_box2__(
     return (System_Object*)pBoxed;
 }
 
-void* il2c_unbox__(System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* valueType)
+void* il2c_unbox__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType)
 {
+    if (pReference == NULL)
+    {
+        if (valueType->flags & IL2C_TYPE_VALUE)
+        {
+            // throw NullReferenceException();
+            il2c_assert(0);
+        }
+        return NULL;
+    }
+
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
-        (((uint8_t*)pObject) - sizeof(IL2C_REF_HEADER));
+        (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
     if (pHeader->type != valueType)
     {
-        // new InvalidCastException();
+        // throw InvalidCastException();
         il2c_assert(0);
     }
 
-    return ((uint8_t*)pObject) + sizeof(System_ValueType);
+    return il2c_unsafe_unbox__(pReference, void);
 }
 
 ///////////////////////////////////////////////////////

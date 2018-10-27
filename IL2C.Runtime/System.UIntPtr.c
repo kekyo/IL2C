@@ -44,5 +44,6 @@ bool System_UIntPtr_Equals_1(uintptr_t* this__, System_Object* obj)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_DECLARE_OBJECT_VTABLE(System_UIntPtr);
+IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_UIntPtr);
+IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_UIntPtr);
 IL2C_DECLARE_RUNTIME_TYPE(System_UIntPtr, "System.UIntPtr", IL2C_TYPE_INTEGER, System_ValueType);

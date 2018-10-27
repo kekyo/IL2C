@@ -28,6 +28,7 @@ extern /* internalcall */ void* __System_ValueType_IL2C_RuntimeCast__(System_Val
 
 static inline void System_ValueType__ctor(System_ValueType* this__)
 {
+    System_Object__ctor((System_Object*)this__);
 }
 
 extern /* virtual */ System_String* System_ValueType_ToString(System_ValueType* this__);

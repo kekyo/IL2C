@@ -59,5 +59,6 @@ bool System_SByte_TryParse(System_String* s, int8_t* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_DECLARE_OBJECT_VTABLE(System_SByte);
+IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_SByte);
+IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_SByte);
 IL2C_DECLARE_RUNTIME_TYPE(System_SByte, "System.SByte", IL2C_TYPE_INTEGER, System_ValueType);

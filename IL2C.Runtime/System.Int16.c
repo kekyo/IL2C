@@ -59,5 +59,6 @@ bool System_Int16_TryParse(System_String* s, int16_t* result)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_DECLARE_OBJECT_VTABLE(System_Int16);
+IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Int16);
+IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Int16);
 IL2C_DECLARE_RUNTIME_TYPE(System_Int16, "System.Int16", IL2C_TYPE_INTEGER, System_ValueType);

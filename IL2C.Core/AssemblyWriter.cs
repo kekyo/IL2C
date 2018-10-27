@@ -937,8 +937,9 @@ namespace IL2C
                 indent,
                 declaredType.FriendlyName);
             tw.WriteLine(
-                "{0}IL2C_TYPE_STANDARD,",
-                indent);
+                "{0}{1},",
+                indent,
+                declaredType.IsValueType ? "IL2C_TYPE_VALUE" : "IL2C_TYPE_REFERENCE");
             tw.WriteLine(
                 "{0}sizeof({1}),",
                 indent,

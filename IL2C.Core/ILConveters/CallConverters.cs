@@ -13,12 +13,6 @@ namespace IL2C.ILConverters
         public static Func<IExtractContext, string[]> Apply(
             IMethodInformation method, DecodeContext decodeContext, bool isVirtualCall)
         {
-            // OPT HACK: System.Object's constructor calls ignored.
-            if (method.IsConstructor && method.DeclaringType.IsObjectType)
-            {
-                return _ => new string[0];
-            }
-
             var pairParameters = method.Parameters
                 .Reverse()
                 .Select(parameter => new Utilities.RightExpressionGivenParameter(
@@ -42,6 +36,7 @@ namespace IL2C.ILConverters
                     {
                         return new[]
                         {
+                            // TODO: interface member vptr
                             string.Format(
                                 "{0}->vptr0__->{1}({2})",
                                 pairParameters[0].SymbolInformation.SymbolName,
@@ -73,6 +68,7 @@ namespace IL2C.ILConverters
                     {
                         return new[]
                         {
+                            // TODO: interface member vptr
                             string.Format(
                                 "{0} = {1}->vptr0__->{2}({3})",
                                 resultName,

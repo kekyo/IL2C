@@ -10,7 +10,7 @@ Type | Test
 | [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int32) |
 | [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int64) |
 | [System.IntPtr](https://docs.microsoft.com/en-us/dotnet/api/system.intptr) | [Test [4]](tests/IL2C.Core.Test.Target/TypeSystems/System_IntPtr) |
-| [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Object) |
+| [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) | [Test [12]](tests/IL2C.Core.Test.Target/TypeSystems/System_Object) |
 | [System.SByte](https://docs.microsoft.com/en-us/dotnet/api/system.sbyte) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_SByte) |
 | [System.Single](https://docs.microsoft.com/en-us/dotnet/api/system.single) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Single) |
 | [System.String](https://docs.microsoft.com/en-us/dotnet/api/system.string) | [Test [14]](tests/IL2C.Core.Test.Target/TypeSystems/System_String) |

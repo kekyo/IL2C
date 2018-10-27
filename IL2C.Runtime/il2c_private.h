@@ -226,18 +226,48 @@ extern void WriteLineToError(const wchar_t* pMessage);
 // Internal runtime definitions
 
 // IL2C_RUNTIME_TYPE_DECL.flags
-#define IL2C_TYPE_INTEGER 0x01
-#define IL2C_TYPE_VARIABLE 0x02
+#define IL2C_TYPE_INTEGER 0x03
+#define IL2C_TYPE_VARIABLE 0x04
 
-#define IL2C_DECLARE_OBJECT_VTABLE(typeName) \
-__##typeName##_VTABLE_DECL__ __##typeName##_VTABLE__ = { \
-    /* internalcall */ il2c_isinst__, \
-    (bool(*)(void*, System_Object*))typeName##_Equals_1, \
-    (void(*)(void*))System_Object_Finalize, \
-    (int32_t(*)(void*))typeName##_GetHashCode, \
-    (System_String* (*)(void*))typeName##_ToString \
+// Generator macro for the trampoline virtual function using the value type.
+// These are using the unsafe_unbox. Because we can understand what type the this__ pointer,
+// these function only invoke from the (known value type) trampoline vtable.
+#define IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(typeName) \
+static System_String* typeName##_ToString_Trampoline_VFunc__(void* this__) \
+{ \
+    il2c_assert(this__ != NULL); \
+ \
+    typeName* pValue = il2c_unsafe_unbox__(this__, typeName); \
+    return typeName##_ToString(pValue); \
+} \
+ \
+static int32_t typeName##_GetHashCode_Trampoline_VFunc__(void* this__) \
+{ \
+    il2c_assert(this__ != NULL); \
+ \
+    typeName* pValue = il2c_unsafe_unbox__(this__, typeName); \
+    return typeName##_GetHashCode(pValue); \
+} \
+ \
+static bool typeName##_Equals_1_Trampoline_VFunc__(void* this__, System_Object* obj) \
+{ \
+    il2c_assert(this__ != NULL); \
+ \
+    typeName* pValue = il2c_unsafe_unbox__(this__, typeName); \
+    return typeName##_Equals_1(pValue, obj); \
 }
 
+// Generator macro for the trampoline virtual function table using the value type.
+#define IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(typeName) \
+__##typeName##_VTABLE_DECL__ __##typeName##_VTABLE__ = { \
+    /* internalcall */ il2c_isinst__, \
+    (bool(*)(void*, System_Object*))typeName##_Equals_1_Trampoline_VFunc__, \
+    (void(*)(void*))System_Object_Finalize, \
+    (int32_t(*)(void*))typeName##_GetHashCode_Trampoline_VFunc__, \
+    (System_String* (*)(void*))typeName##_ToString_Trampoline_VFunc__ \
+}
+
+// Generator macro for runtime type information.
 #define IL2C_DECLARE_RUNTIME_TYPE(typeName, typeNameString, flags, baseTypeName) \
 IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
     typeNameString, \
@@ -262,6 +292,9 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE_DECL* ty
 extern void il2c_step1_clear_gcmark__();
 extern void il2c_step2_mark_gcmark__();
 extern void il2c_step3_sweep_garbage__();
+
+#define il2c_unsafe_unbox__(pObject, typeName) \
+    ((typeName*)(((uint8_t*)pObject) + sizeof(System_ValueType)))
 
 #ifdef __cplusplus
 }

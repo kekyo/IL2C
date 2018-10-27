@@ -55,13 +55,14 @@ struct IL2C_REF_HEADER
 // Runtime type information related declarations
 
 // IL2C_RUNTIME_TYPE_DECL.flags
-#define IL2C_TYPE_STANDARD 0x00
+#define IL2C_TYPE_REFERENCE 0x00
+#define IL2C_TYPE_VALUE 0x01
 
 #define il2c_typeof(typeName) (&(__##typeName##_RUNTIME_TYPE__))
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
 
 // dynamic cast operator
-extern void* il2c_isinst__(void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
+extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
 #define il2c_isinst(pReference, typeName) \
     ((typeName*)(((System_Object*)pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName))))
 #define il2c_castclass(pReference, typeName) \
@@ -135,7 +136,7 @@ extern System_Object* il2c_box__(
 extern System_Object* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0);
 extern void* il2c_unbox__(
-    System_Object* pObject, IL2C_RUNTIME_TYPE_DECL* valueType);
+    /* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType);
 
 #define il2c_box(pValue, valueTypeName) \
     (il2c_box__(pValue, il2c_typeof(valueTypeName), &__##valueTypeName##_VTABLE__))

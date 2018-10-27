@@ -87,4 +87,4 @@ __System_Type_VTABLE_DECL__ __System_Type_VTABLE__ = {
     (System_String*(*)(void*))System_Type_get_FullName,
 };
 
-IL2C_DECLARE_RUNTIME_TYPE(System_Type, "System.Type", IL2C_TYPE_STANDARD, System_Object);
+IL2C_DECLARE_RUNTIME_TYPE(System_Type, "System.Type", IL2C_TYPE_REFERENCE, System_Object);

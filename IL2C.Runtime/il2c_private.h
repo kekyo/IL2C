@@ -49,6 +49,7 @@ typedef long interlock_t;
 #define il2c_assert assert
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
+#define il2c_iyield() Sleep(0)
 
 // Support basic console features
 #define il2c_putws _putws
@@ -101,6 +102,7 @@ extern void il2c_free(void* p);
 
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
+#define il2c_iyield()
 
 extern void WriteLineToError(const wchar_t* pMessage);
 
@@ -151,6 +153,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
+#define il2c_iyield()
 
 // Support basic console features
 //#define il2c_putws _putws
@@ -207,6 +210,15 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_assert assert
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
+
+#if defined(_POSIX_PRIORITY_SCHEDULING)
+#include <sched.h>
+#define il2c_iyield() sched_yield()
+#elif defined(_WIN32)
+#define il2c_iyield() Sleep(0)
+#else
+#define il2c_iyield()
+#endif
 
 // Support basic console features
 #define il2c_putws _putws

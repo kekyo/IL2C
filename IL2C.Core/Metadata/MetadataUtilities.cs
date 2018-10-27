@@ -261,7 +261,7 @@ namespace IL2C.Metadata
                     {
                         // Add new method.
                         var (_, oi) = overloadIndexes[index];
-                        overloadIndexes.Add((method, oi++));
+                        overloadIndexes.Add((method, oi + 1));
                     }
                     else
                     {
@@ -270,7 +270,7 @@ namespace IL2C.Metadata
 
                         // Replace.
                         var (_, oi) = overloadIndexes[index];
-                        overloadIndexes[index] = (method, oi++);
+                        overloadIndexes[index] = (method, oi + 1);  // TODO: really increment??
                     }
                 }
                 else

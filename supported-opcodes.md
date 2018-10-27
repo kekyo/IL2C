@@ -35,7 +35,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [brfalse.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brfalse_s) | 0x2c | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Brfalse_S) | IL2C.ILConverters.Brfalse_sConverter |
 | [brtrue](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brtrue) | 0x3a | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Brtrue) | IL2C.ILConverters.BrtrueConverter |
 | [brtrue.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.brtrue_s) | 0x2d | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Brtrue_S) | IL2C.ILConverters.Brtrue_sConverter |
-| [call](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.call) | 0x28 | Implemented | [Test [7]](tests/IL2C.Core.Test.Target/ILConverters/Call) | IL2C.ILConverters.CallConverter |
+| [call](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.call) | 0x28 | Implemented | [Test [11]](tests/IL2C.Core.Test.Target/ILConverters/Call) | IL2C.ILConverters.CallConverter |
 | [calli](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.calli) | 0x29 |  |  |  |
 | [callvirt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.callvirt) | 0x6f | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Callvirt) | IL2C.ILConverters.CallvirtConverter |
 | [castclass](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.castclass) | 0x74 | Implemented |  | IL2C.ILConverters.CastclassConverter |

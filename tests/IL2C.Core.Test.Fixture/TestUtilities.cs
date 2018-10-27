@@ -75,6 +75,11 @@ namespace IL2C
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());
 
+        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes)
+        {
+            return includeBaseTypes ? typeof(T).Traverse(type => type.BaseType) : new[] { typeof(T) };
+        }
+
         public static TestCaseInformation[] GetTestCaseInformations<T>()
         {
             var categoryName = typeof(T).
@@ -85,13 +90,17 @@ namespace IL2C
             var caseInfos =
                 (from testCase in typeof(T).GetCustomAttributes<TestCaseAttribute>(true)
                  let method = typeof(T).GetMethod(
-                     testCase.MethodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)    // Static method only for test entry
+                     testCase.MethodName,
+                     BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)    // Static method only for test entry
                  where method != null
                  let additionalMethods =
                     testCase.AdditionalMethodNames.
-                    Select(methodName => typeof(T).GetMethod(
-                        methodName, BindingFlags.Public | BindingFlags.NonPublic |
-                        BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly)).   // Both instance or static method
+                    SelectMany(methodName =>
+                        TraverseTypes<T>(testCase.IncludeBaseTypes).
+                        SelectMany(type => type.GetMethods(
+                            BindingFlags.Public | BindingFlags.NonPublic |
+                            BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly).  // Both instance or static method
+                        Where(m => m.Name == methodName))).
                     ToArray()
                  let totalAdditionalMethods =
                     // If contains instance method in set of additional methods (test case is implicitly required the instance), add the constructor.

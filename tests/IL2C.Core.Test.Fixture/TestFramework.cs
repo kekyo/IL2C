@@ -108,10 +108,6 @@ namespace IL2C
         public static async Task ExecuteTestAsync(TestCaseInformation caseInfo)
         {
             Assert.IsTrue(caseInfo.Method.IsPublic && caseInfo.Method.IsStatic);
-            foreach (var m in caseInfo.AdditionalMethods)
-            {
-                Assert.AreEqual(m.DeclaringType, caseInfo.Method.DeclaringType);
-            }
 
             // Split current thread context.
             await Task.Yield();
@@ -122,10 +118,20 @@ namespace IL2C
             var translateContext = new TranslateContext(caseInfo.Method.DeclaringType.Assembly.Location, false);
 
             // Step 1-2: Prepare target methods.
+            var targetTypes = new HashSet<string>(
+                new[] { caseInfo.Method }.
+                Concat(caseInfo.AdditionalMethods).
+                Select(method => method.DeclaringType.FullName).
+                Distinct());
+            var targetMethods = new[] { caseInfo.Method }.
+                Concat(caseInfo.AdditionalMethods).
+                GroupBy(method => method.Name).
+                ToDictionary(g => g.Key, g => g.ToArray());
+
             var prepared = AssemblyPreparer.Prepare(
                 translateContext,
-                t => t.FriendlyName == caseInfo.Method.DeclaringType.FullName,
-                m => ((m.Name == caseInfo.Method.Name) || (caseInfo.AdditionalMethods.FirstOrDefault(am => m.Name == am.Name) != null)));
+                t => targetTypes.Contains(t.FriendlyName),
+                m => targetMethods.ContainsKey(m.Name));
 
             // Step 1-3: Extract prepared target type/caseInfo.Method informations.
             var targetType =

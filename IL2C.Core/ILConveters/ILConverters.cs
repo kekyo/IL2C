@@ -151,6 +151,14 @@ namespace IL2C.ILConverters
             ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
+            if (si.TargetType.IsValueType || si.TargetType.IsByReference || si.TargetType.IsPointer)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid isinst operation: Location={0}, StackType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si.TargetType.FriendlyName);
+            }
+
             var symbolName = decodeContext.PushStack(operand);
 
             // If this type can cast statically
@@ -187,6 +195,14 @@ namespace IL2C.ILConverters
             ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
+            if (si.TargetType.IsValueType || si.TargetType.IsByReference || si.TargetType.IsPointer)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid isinst operation: Location={0}, StackType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si.TargetType.FriendlyName);
+            }
+
             var symbolName = decodeContext.PushStack(operand);
 
             // If this type can cast statically

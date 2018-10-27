@@ -27,13 +27,10 @@ struct System_String
 extern IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__;
 extern __System_String_VTABLE_DECL__ __System_String_VTABLE__;
 
-extern /* internalcall */ void* __System_String_IL2C_RuntimeCast__(System_String* this__, IL2C_RUNTIME_TYPE_DECL* type);
-#define __System_String_IL2C_MarkHandler__ __System_Object_IL2C_MarkHandler__
-
-extern System_String* System_String_ToString(System_String* this__);
+extern /* virtual */ System_String* System_String_ToString(System_String* this__);
 extern bool System_String_Equals(System_String* this__, System_String* obj);
-extern bool System_String_Equals_1(System_String* this__, System_Object* obj);
-extern int32_t System_String_GetHashCode(System_String* this__);
+extern /* virtual */ bool System_String_Equals_1(System_String* this__, System_Object* obj);
+extern /* virtual */ int32_t System_String_GetHashCode(System_String* this__);
 extern System_String* System_String_Concat_5(System_String* str0, System_String* str1);
 extern System_String* System_String_Concat_6(System_Object* arg0, System_Object* arg1);
 extern System_String* System_String_Substring(System_String* this__, int32_t startIndex);

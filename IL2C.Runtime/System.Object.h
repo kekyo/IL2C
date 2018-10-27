@@ -39,11 +39,11 @@ static inline void System_Object__ctor(System_Object* this__)
 {
 }
 
-extern System_String* System_Object_ToString(System_Object* this__);
-extern int32_t System_Object_GetHashCode(System_Object* this__);
+extern /* virtual */ System_String* System_Object_ToString(System_Object* this__);
+extern /* virtual */ int32_t System_Object_GetHashCode(System_Object* this__);
 extern System_Type* System_Object_GetType(System_Object* this__);
-extern void System_Object_Finalize(System_Object* this__);
-extern bool System_Object_Equals(System_Object* this__, System_Object* obj);
+extern /* virtual */ void System_Object_Finalize(System_Object* this__);
+extern /* virtual */ bool System_Object_Equals(System_Object* this__, System_Object* obj);
 
 extern bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB);
 

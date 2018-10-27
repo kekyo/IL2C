@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
@@ -106,14 +105,12 @@ namespace IL2C
             }
         }
 
-        public static async Task ExecuteTestAsync(
-            string categoryName, string subCategoryName, string testName, object expected, TestCaseAsserts assert,
-            MethodInfo method, MethodBase[] additionalMethods, object[] args)
+        public static async Task ExecuteTestAsync(TestCaseInformation caseInfo)
         {
-            Assert.IsTrue(method.IsPublic && method.IsStatic);
-            foreach (var m in additionalMethods)
+            Assert.IsTrue(caseInfo.Method.IsPublic && caseInfo.Method.IsStatic);
+            foreach (var m in caseInfo.AdditionalMethods)
             {
-                Assert.AreEqual(m.DeclaringType, method.DeclaringType);
+                Assert.AreEqual(m.DeclaringType, caseInfo.Method.DeclaringType);
             }
 
             // Split current thread context.
@@ -122,28 +119,28 @@ namespace IL2C
             ///////////////////////////////////////////////
 
             // Step 1-1: Create translation context.
-            var translateContext = new TranslateContext(method.DeclaringType.Assembly.Location, false);
+            var translateContext = new TranslateContext(caseInfo.Method.DeclaringType.Assembly.Location, false);
 
             // Step 1-2: Prepare target methods.
             var prepared = AssemblyPreparer.Prepare(
                 translateContext,
-                t => t.FriendlyName == method.DeclaringType.FullName,
-                m => ((m.Name == method.Name) || (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null)));
+                t => t.FriendlyName == caseInfo.Method.DeclaringType.FullName,
+                m => ((m.Name == caseInfo.Method.Name) || (caseInfo.AdditionalMethods.FirstOrDefault(am => m.Name == am.Name) != null)));
 
-            // Step 1-3: Extract prepared target type/method informations.
+            // Step 1-3: Extract prepared target type/caseInfo.Method informations.
             var targetType =
                 translateContext.Assembly.Modules
                 .First().Types
-                .First(t => t.FriendlyName == method.DeclaringType.FullName);
+                .First(t => t.FriendlyName == caseInfo.Method.DeclaringType.FullName);
             var targetMethod =
                 targetType.DeclaredMethods
-                .First(m => m.Name == method.Name);
+                .First(m => m.Name == caseInfo.Method.Name);
             var targetAdditionalMethods =
                 targetType.DeclaredMethods
-                .Where(m => (additionalMethods.FirstOrDefault(am => m.Name == am.Name) != null))
+                .Where(m => (caseInfo.AdditionalMethods.FirstOrDefault(am => m.Name == am.Name) != null))
                 .ToArray();
 
-            // Step 1-4: Translate method bodies.
+            // Step 1-4: Translate caseInfo.Method bodies.
             var header = new StringWriter();
             var body = new StringWriter();
             AssemblyWriter.InternalWriteHeader(
@@ -155,10 +152,10 @@ namespace IL2C
             //     Note: It's only debugging purpose. The test doesn't use.
             var translatedPath = Path.GetFullPath(
                 Path.Combine(
-                    Path.GetDirectoryName(method.DeclaringType.Assembly.Location),
-                    categoryName,
-                    subCategoryName,
-                    testName));
+                    Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
+                    caseInfo.CategoryName,
+                    caseInfo.Id,
+                    caseInfo.Name));
 
             var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
             await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj");
@@ -172,12 +169,12 @@ namespace IL2C
             var sourceCodeStream = new MemoryStream();
             await TestUtilities.CopyResourceToStreamAsync(
                 sourceCodeStream,
-                // If the target method result is void-type, we have to use void-type tolerant template.
-                (expectedType.IsVoidType || (assert == TestCaseAsserts.CauseBreak)) ? "test_void.c" : "test.c");
+                // If the target caseInfo.Method result is void-type, we have to use void-type tolerant template.
+                (expectedType.IsVoidType || (caseInfo.Assert == TestCaseAsserts.CauseBreak)) ? "test_void.c" : "test.c");
             sourceCodeStream.Position = 0;
             var sourceCode = new StreamReader(sourceCodeStream);
 
-            var constants = args.
+            var constants = caseInfo.Arguments.
                 Zip(targetMethod.Parameters, (arg, p) => new Constant(
                     p.SymbolName,
                     p.TargetType,
@@ -203,7 +200,7 @@ namespace IL2C
                         Utilities.ToCLanguageLiteralExpression(expectedType.EmptyValue))).
                 ToArray();
 
-            if (!(expectedType.IsVoidType || (assert == TestCaseAsserts.CauseBreak)))
+            if (!(expectedType.IsVoidType || (caseInfo.Assert == TestCaseAsserts.CauseBreak)))
             {
                 // VERY DIRTY:
                 constants = constants.Concat(new Constant[]
@@ -211,8 +208,8 @@ namespace IL2C
                         new Constant(
                             "expected",
                             expectedType,
-                            expected?.GetType(),
-                            Utilities.ToCLanguageLiteralExpression(expected)),
+                            caseInfo.Expected?.GetType(),
+                            Utilities.ToCLanguageLiteralExpression(caseInfo.Expected)),
                     }).
                     ToArray();
                 arguments = constants.
@@ -234,7 +231,7 @@ namespace IL2C
                         new Constant(
                             "actual",
                             expectedType,
-                            expected?.GetType(),
+                            caseInfo.Expected?.GetType(),
                             Utilities.ToCLanguageLiteralExpression(expectedType.EmptyValue)),
                     }).
                     ToArray();
@@ -290,17 +287,17 @@ namespace IL2C
             // Step 2: Test and verify result by real IL code at this runtime.
 
             object rawResult;
-            switch (assert)
+            switch (caseInfo.Assert)
             {
-                case TestCaseAsserts.IgnoreInvokeResult:
-                    rawResult = method.Invoke(null, args);
+                case TestCaseAsserts.IgnoreValidateInvokeResult:
+                    rawResult = caseInfo.Method.Invoke(null, caseInfo.Arguments);
                     break;
                 case TestCaseAsserts.CauseBreak:
                     rawResult = null;
                     break;
                 default:
-                    rawResult = method.Invoke(null, args);
-                    Assert.AreEqual(expected, rawResult);
+                    rawResult = caseInfo.Method.Invoke(null, caseInfo.Arguments);
+                    Assert.AreEqual(caseInfo.Expected, rawResult);
                     break;
             }
 
@@ -319,14 +316,14 @@ namespace IL2C
             }
             catch (Exception ex)
             {
-                if ((assert == TestCaseAsserts.CauseBreak) && ex.Message.Contains("ExitCode=-2147483645"))
+                if ((caseInfo.Assert == TestCaseAsserts.CauseBreak) && ex.Message.Contains("ExitCode=-2147483645"))
                 {
                     return;
                 }
                 throw;
             }
 
-            Assert.IsFalse(assert == TestCaseAsserts.CauseBreak, "Code didn't break.");
+            Assert.IsFalse(caseInfo.Assert == TestCaseAsserts.CauseBreak, "Code didn't break.");
 
             ///////////////////////////////////////////////
             // Step 4: Verify result.

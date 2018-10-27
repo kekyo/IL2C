@@ -6,7 +6,7 @@ namespace IL2C
     public enum TestCaseAsserts
     {
         PerfectMatch,
-        IgnoreInvokeResult,
+        IgnoreValidateInvokeResult,
         CauseBreak
     }
 
@@ -21,6 +21,7 @@ namespace IL2C
             this.Expected = expected;
             this.Arguments = args ?? new object[] { null };  // HACK
             this.Assert = TestCaseAsserts.PerfectMatch;
+            this.IncludeBaseTypes = false;
         }
 
         // This overload contains additional methods, those are used from the test method (first methodName entry.)
@@ -31,6 +32,7 @@ namespace IL2C
             this.Expected = expected;
             this.Arguments = args ?? new object[] { null };  // HACK
             this.Assert = TestCaseAsserts.PerfectMatch;
+            this.IncludeBaseTypes = false;
         }
 
         public string MethodName { get; }
@@ -39,5 +41,6 @@ namespace IL2C
         public object[] Arguments { get; }
 
         public TestCaseAsserts Assert { get; set; }
+        public bool IncludeBaseTypes { get; set; }
     }
 }

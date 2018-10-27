@@ -24,8 +24,6 @@ struct System_ValueType
 extern __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__;
 
-extern /* internalcall */ void* __System_ValueType_IL2C_RuntimeCast__(System_ValueType* this__, IL2C_RUNTIME_TYPE_DECL* type);
-
 static inline void System_ValueType__ctor(System_ValueType* this__)
 {
     System_Object__ctor((System_Object*)this__);

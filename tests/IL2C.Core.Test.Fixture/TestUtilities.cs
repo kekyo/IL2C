@@ -61,12 +61,14 @@ namespace IL2C
         }
 
         public static TestCaseInformation CreateTestCaseInformation(
-            string id, string name, MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
+            string categoryName, string id, string name, MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
             new TestCaseInformation(
+                categoryName,
                 id,
                 name,
                 ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
                 caseAttribute.Assert,
+                caseAttribute.IncludeBaseTypes,
                 method,
                 additionalMethods,
                 caseAttribute.Arguments.
@@ -75,6 +77,8 @@ namespace IL2C
 
         public static TestCaseInformation[] GetTestCaseInformations<T>()
         {
+            var categoryName = typeof(T).
+                Namespace.Split('.').Last();
             var id = typeof(T).
                 GetCustomAttribute<TestIdAttribute>()?.Id ??
                 typeof(T).Name;
@@ -101,8 +105,8 @@ namespace IL2C
                  {
                      var a = g.ToArray();
                      return (a.Length == 1) ?
-                        a.Select(entry => CreateTestCaseInformation(id, entry.method.Name, entry.method, entry.AdditionalMethods, entry.testCase)) :
-                        a.Select((entry, index) => CreateTestCaseInformation(id, entry.method.Name + "_" + index, entry.method, entry.AdditionalMethods, entry.testCase));
+                        a.Select(entry => CreateTestCaseInformation(categoryName, id, entry.method.Name, entry.method, entry.AdditionalMethods, entry.testCase)) :
+                        a.Select((entry, index) => CreateTestCaseInformation(categoryName, id, entry.method.Name + "_" + index, entry.method, entry.AdditionalMethods, entry.testCase));
                  }).
                  OrderBy(caseInfo => caseInfo.Name).
                  ToArray();

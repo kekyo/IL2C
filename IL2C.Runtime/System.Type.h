@@ -34,15 +34,14 @@ struct System_Type
 extern __System_Type_VTABLE_DECL__ __System_Type_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Type_RUNTIME_TYPE__;
 
-extern /* internalcall */ void* __System_Type_IL2C_RuntimeCast__(System_Type* this__, IL2C_RUNTIME_TYPE_DECL* type);
 #define __System_Type_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
 
-extern System_String* System_Type_ToString(System_Type* this__);
-extern int32_t System_Type_GetHashCode(System_Type* this__);
+extern /* virtual */ System_String* System_Type_ToString(System_Type* this__);
+extern /* virtual */ int32_t System_Type_GetHashCode(System_Type* this__);
 extern bool System_Type_Equals(System_Type* this__, System_Type* obj);
-extern bool System_Type_Equals_1(System_Type* this__, System_Object* obj);
-extern System_Type* System_Type_get_BaseType(System_Type* this__);
-extern System_String* System_Type_get_FullName(System_Type* this__);
+extern /* virtual */ bool System_Type_Equals_1(System_Type* this__, System_Object* obj);
+extern /* virtual */ System_Type* System_Type_get_BaseType(System_Type* this__);
+extern /* virtual */ System_String* System_Type_get_FullName(System_Type* this__);
 
 #ifdef __cplusplus
 }

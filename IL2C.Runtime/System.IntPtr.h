@@ -19,10 +19,10 @@ typedef __System_ValueType_VTABLE_DECL__ __System_IntPtr_VTABLE_DECL__;
 extern __System_IntPtr_VTABLE_DECL__ __System_IntPtr_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_IntPtr_RUNTIME_TYPE__;
 
-extern System_String* System_IntPtr_ToString(intptr_t* this__);
-extern int32_t System_IntPtr_GetHashCode(intptr_t* this__);
+extern /* virtual */ System_String* System_IntPtr_ToString(intptr_t* this__);
+extern /* virtual */ int32_t System_IntPtr_GetHashCode(intptr_t* this__);
 extern bool System_IntPtr_Equals(intptr_t* this__, intptr_t obj);
-extern bool System_IntPtr_Equals_1(intptr_t* this__, System_Object* obj);
+extern /* virtual */ bool System_IntPtr_Equals_1(intptr_t* this__, System_Object* obj);
 
 extern const intptr_t System_IntPtr_Zero;
 

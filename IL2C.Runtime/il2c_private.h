@@ -47,8 +47,8 @@ typedef long interlock_t;
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_assert assert
-#define il2c_icmpxchg(p, v, c) _InterlockedCompareExchange((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
-#define il2c_icmpxchgptr(pp, pv, pc) _InterlockedCompareExchangePointer((void**)(pp), (void*)(pc), (void*)(pv))
+#define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
+#define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
 
 // Support basic console features
 #define il2c_putws _putws
@@ -99,8 +99,8 @@ extern void* il2c_memset(void* target, int ch, size_t n);
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 
-#define il2c_icmpxchg(p, v, c) _InterlockedCompareExchange((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
-#define il2c_icmpxchgptr(pp, pv, pc) _InterlockedCompareExchangePointer((void**)(pp), (void*)(pc), (void*)(pv))
+#define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
+#define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
 
 extern void WriteLineToError(const wchar_t* pMessage);
 
@@ -149,8 +149,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_shutdown_heap()
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
-#define il2c_icmpxchg(p, v, c) _InterlockedCompareExchange((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
-#define il2c_icmpxchgptr(pp, pv, pc) _InterlockedCompareExchangePointer((void**)(pp), (void*)(pc), (void*)(pv))
+#define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
+#define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
 
 // Support basic console features
 //#define il2c_putws _putws
@@ -205,8 +205,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_assert assert
-#define il2c_icmpxchg(p, v, c) __sync_val_compare_and_swap((interlock_t*)(p), (interlock_t)(c), (interlock_t)(v))
-#define il2c_icmpxchgptr(pp, pv, pc) __sync_val_compare_and_swap((void**)(pp), (void*)(pc), (void*)(pv))
+#define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
+#define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
 
 // Support basic console features
 #define il2c_putws _putws

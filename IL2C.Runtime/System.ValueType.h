@@ -29,6 +29,8 @@ static inline void System_ValueType__ctor(System_ValueType* this__)
     System_Object__ctor((System_Object*)this__);
 }
 
+#define __System_ValueType_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+
 extern /* virtual */ System_String* System_ValueType_ToString(System_ValueType* this__);
 extern /* virtual */ int32_t System_ValueType_GetHashCode(System_ValueType* this__);
 extern /* virtual */ bool System_ValueType_Equals(System_ValueType* this__, System_Object* obj);

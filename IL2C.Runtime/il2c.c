@@ -7,6 +7,7 @@
 // TODO: Support finalizer
 #define GCMARK_NOMARK ((interlock_t)1)
 #define GCMARK_LIVE ((interlock_t)0)
+#define GCMARK_CONST ((interlock_t)2)
 
 struct IL2C_EXECUTION_FRAME
 {
@@ -161,7 +162,11 @@ void il2c_step1_clear_gcmark__()
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     while (pCurrentHeader != NULL)
     {
-        pCurrentHeader->gcMark = GCMARK_NOMARK;
+        // (Exclude GCMARK_CONST)
+        if (pCurrentHeader->gcMark == GCMARK_LIVE)
+        {
+            pCurrentHeader->gcMark = GCMARK_NOMARK;
+        }
         pCurrentHeader = pCurrentHeader->pNext;
     }
 }
@@ -211,7 +216,7 @@ void il2c_step3_sweep_garbage__()
     while (pCurrentHeader != NULL)
     {
         IL2C_REF_HEADER* pNext = pCurrentHeader->pNext;
-        if (pCurrentHeader->gcMark != GCMARK_LIVE)
+        if (pCurrentHeader->gcMark == GCMARK_NOMARK)
         {
             // Very important link steps: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;

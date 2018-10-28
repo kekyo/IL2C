@@ -20,7 +20,7 @@
 		isinst [mscorlib]System.Int32
 		dup
 		brnull.s N1
-		callvirt string [mscorlib]System.Object::ToString()
+		callvirt instance string [mscorlib]System.Object::ToString()
 	N1:
 		ret
 	}

@@ -254,7 +254,7 @@ namespace IL2C.Metadata
                 // Search from derived to base
                 var index = overloadIndexes.FindLastIndex(entry =>
                     VirtualMethodSignatureComparer.Equals(entry.method, method));
-                if (index >= 1)
+                if (index >= 0)
                 {
                     // It's new slotted.
                     if (method.IsNewSlot)

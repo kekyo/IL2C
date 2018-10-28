@@ -68,16 +68,17 @@ namespace IL2C
                 name,
                 ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
                 caseAttribute.Assert,
-                caseAttribute.IncludeBaseTypes,
                 method,
                 additionalMethods,
                 caseAttribute.Arguments.
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());
 
-        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes)
+        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes, Type[] includeTypes)
         {
-            return includeBaseTypes ? typeof(T).Traverse(type => type.BaseType) : new[] { typeof(T) };
+            return includeBaseTypes ?
+                typeof(T).Traverse(type => type.BaseType).Concat(includeTypes) :
+                new[] { typeof(T) }.Concat(includeTypes);
         }
 
         public static TestCaseInformation[] GetTestCaseInformations<T>()
@@ -87,6 +88,7 @@ namespace IL2C
             var id = typeof(T).
                 GetCustomAttribute<TestIdAttribute>()?.Id ??
                 typeof(T).Name;
+
             var caseInfos =
                 (from testCase in typeof(T).GetCustomAttributes<TestCaseAttribute>(true)
                  let method = typeof(T).GetMethod(
@@ -96,7 +98,7 @@ namespace IL2C
                  let additionalMethods =
                     testCase.AdditionalMethodNames.
                     SelectMany(methodName =>
-                        TraverseTypes<T>(testCase.IncludeBaseTypes).
+                        TraverseTypes<T>(testCase.IncludeBaseTypes, testCase.IncludeTypes).
                         SelectMany(type => type.GetMethods(
                             BindingFlags.Public | BindingFlags.NonPublic |
                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly).  // Both instance or static method

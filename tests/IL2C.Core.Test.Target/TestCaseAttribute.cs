@@ -22,9 +22,10 @@ namespace IL2C
             this.Arguments = args ?? new object[] { null };  // HACK
             this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
+            this.IncludeTypes = Type.EmptyTypes;
         }
 
-        // This overload contains additional methods, those are used from the test method (first methodName entry.)
+        // This overload contains additional methods, those are used from the test method (first methodName is target.)
         public TestCaseAttribute(object expected, string[] methodNames, params object[] args)
         {
             this.MethodName = methodNames[0];   // test method
@@ -33,6 +34,7 @@ namespace IL2C
             this.Arguments = args ?? new object[] { null };  // HACK
             this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
+            this.IncludeTypes = Type.EmptyTypes;
         }
 
         public string MethodName { get; }
@@ -42,5 +44,6 @@ namespace IL2C
 
         public TestCaseAsserts Assert { get; set; }
         public bool IncludeBaseTypes { get; set; }
+        public Type[] IncludeTypes { get; set; }
     }
 }

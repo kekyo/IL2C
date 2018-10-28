@@ -398,6 +398,14 @@ namespace IL2C
             tw.WriteLine(preparedMethod.Method.CLanguageFunctionPrototype);
             tw.WriteLine("{");
 
+            if (!preparedMethod.Method.IsStatic)
+            {
+                tw.WriteLine(
+                    "{0}il2c_assert(this__ != NULL);",
+                    indent);
+                tw.WriteLine();
+            }
+
             tw.WriteLine("{0}//-------------------", indent);
             tw.WriteLine("{0}// Local variables:", indent);
             tw.WriteLine();
@@ -700,20 +708,46 @@ namespace IL2C
                 declaredType.MangledName,
                 declaredType.CLanguageThisTypeName);
             tw.WriteLine("{");
+            tw.WriteLine(
+                "{0}il2c_assert(this__ != NULL);",
+                indent);
 
-            var fields = declaredType.Fields
-                .Where(field => !field.IsStatic && !field.FieldType.IsValueType)
-                .ToArray();
+            var fields = declaredType.Fields.
+                Where(field => !field.IsStatic && !field.FieldType.IsValueType).
+                ToArray();
             if (fields.Length >= 1)
             {
+                tw.WriteLine();
                 tw.WriteLine(
                     "{0}// [7-6] Try marking each object reference fields",
                     indent);
+
+                // Write unbox function if type is value type.
+                string thisRefForMarker;
+                if (declaredType.IsValueType)
+                {
+                    tw.WriteLine(
+                        "{0}{1}* pValue =",
+                        indent,
+                        declaredType.CLanguageTypeName);
+                    tw.WriteLine(
+                        "{0}{0}il2c_unsafe_unbox__(this__, {1});",
+                        indent,
+                        declaredType.CLanguageTypeName);
+                    thisRefForMarker = "pValue";
+                }
+                else
+                {
+                    thisRefForMarker = "this__";
+                }
+
+                // Write marker expression.
                 foreach (var field in fields)
                 {
                     tw.WriteLine(
-                        "{0}il2c_try_mark_from_handler(this__->{1});",
+                        "{0}il2c_try_mark_from_handler({1}->{2});",
                         indent,
+                        thisRefForMarker,
                         field.Name);
                 }
             }
@@ -724,9 +758,9 @@ namespace IL2C
             var baseType = declaredType.BaseType;
             if (baseType != null)
             {
-                if (baseType
-                    .Traverse(type => type.BaseType)
-                    .Any(type => type.Fields.Length >= 1) == false)
+                if (baseType.
+                    Traverse(type => type.BaseType).
+                    Any(type => type.Fields.Length >= 1) == false)
                 {
                     tw.WriteLine();
                     tw.WriteLine(
@@ -749,6 +783,54 @@ namespace IL2C
 
             tw.WriteLine("}");
 
+            // Write trampoline virtual functions if type is value type.
+            var virtualMethods = declaredType.CalculatedVirtualMethods;
+            var trampolineTargets = virtualMethods.
+                Where(entry => declaredType.IsValueType && entry.method.DeclaringType.Equals(declaredType)).
+                Select(entry => entry.method).
+                ToArray();
+            foreach (var method in trampolineTargets)
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [7-12] Trampoline virtual function: {0}",
+                    method.FriendlyName);
+                tw.WriteLine(
+                    "static {0} {1}_Trampoline_VFunc__(System_ValueType* this__{2})",
+                    method.ReturnType.CLanguageTypeName,
+                    method.CLanguageFunctionName,
+                    string.Concat(method.Parameters.
+                        Skip(1).
+                        Select(p => string.Format(", {0} {1}", p.TargetType.CLanguageTypeName, p.SymbolName))));
+                tw.WriteLine(
+                    "{");
+                tw.WriteLine(
+                    "{0}il2c_assert(this__ != NULL);",
+                    indent);
+                tw.WriteLine();
+                tw.WriteLine(
+                    "{0}{1}* pValue =",
+                    indent,
+                    declaredType.CLanguageTypeName);
+                tw.WriteLine(
+                    "{0}{0}il2c_unsafe_unbox__(this__, {1});",
+                    indent,
+                    declaredType.CLanguageTypeName);
+                tw.WriteLine(
+                    "{0}return {1}(pValue{2});",
+                    indent,
+                    method.CLanguageFunctionName,
+                    string.Concat(method.Parameters.
+                        Skip(1).
+                        Select(p => string.Format(", {0}", p.SymbolName))));    // These aren't required expression evaluation.
+                tw.WriteLine(
+                    "}");
+            }
+
+            var overrideMethods = declaredType.OverrideMethods;
+            var newSlotMethods = declaredType.NewSlotMethods;
+            var overrideBaseMethods = declaredType.OverrideBaseMethods;
+
             // NOTE: 2 of 2
             //   Enum type derived from System.Enum,
             //   so all enum types boxed to System.Enum
@@ -756,11 +838,6 @@ namespace IL2C
             if (!declaredType.IsEnum)
             {
 #if true
-                var virtualMethods = declaredType.CalculatedVirtualMethods;
-                var overrideMethods = declaredType.OverrideMethods;
-                var newSlotMethods = declaredType.NewSlotMethods;
-                var overrideBaseMethods = declaredType.OverrideBaseMethods;
-
                 // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
                 if (!overrideMethods.Any() && !newSlotMethods.Any())
                 {
@@ -786,11 +863,15 @@ namespace IL2C
 
                     foreach (var (method, _) in virtualMethods)
                     {
+                        // MEMO: Transfer trampoline virtual function if declared type is value type.
+                        //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
+                        //   The trampoline unboxes from objref to target value type.
                         tw.WriteLine(
-                            "{0}({1}){2},",
+                            "{0}({1}){2}{3},",
                             indent,
                             method.CLanguageFunctionTypePrototype,
-                            method.CLanguageFunctionName);
+                            method.CLanguageFunctionName,
+                            (declaredType.IsValueType && method.DeclaringType.Equals(declaredType)) ? "_Trampoline_VFunc__" : string.Empty);
                     }
 
                     tw.WriteLine("};");

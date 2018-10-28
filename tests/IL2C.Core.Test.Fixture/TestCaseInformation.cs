@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace IL2C
 {
@@ -12,10 +13,9 @@ namespace IL2C
         public readonly object Expected;
         public readonly object[] Arguments;
         public readonly TestCaseAsserts Assert;
-        public readonly bool IncludeBaseTypes;
 
         public TestCaseInformation(
-            string categoryName, string id, string name, object expected, TestCaseAsserts assert, bool includeBaseTypes,
+            string categoryName, string id, string name, object expected, TestCaseAsserts assert,
             MethodInfo method, MethodBase[] additionalMethods, object[] arguments)
         {
             this.CategoryName = categoryName;
@@ -26,7 +26,6 @@ namespace IL2C
             this.Expected = expected;
             this.Arguments = arguments;
             this.Assert = assert;
-            this.IncludeBaseTypes = includeBaseTypes;
         }
 
         public override string ToString()

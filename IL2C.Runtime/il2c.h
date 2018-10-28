@@ -144,6 +144,8 @@ extern void* il2c_unbox__(
     (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName), &__##valueTypeName##_VTABLE__))
 #define il2c_unbox(pObject, valueTypeName) \
     ((valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
+#define il2c_unsafe_unbox__(pObject, typeName) \
+    ((typeName*)(((uint8_t*)pObject) + sizeof(System_ValueType)))
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions

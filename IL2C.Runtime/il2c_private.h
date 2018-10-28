@@ -245,7 +245,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 // These are using the unsafe_unbox. Because we can understand what type the this__ pointer,
 // these function only invoke from the (known value type) trampoline vtable.
 #define IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(typeName) \
-static System_String* typeName##_ToString_Trampoline_VFunc__(void* this__) \
+static System_String* typeName##_ToString_Trampoline_VFunc__(System_ValueType* this__) \
 { \
     il2c_assert(this__ != NULL); \
  \
@@ -253,7 +253,7 @@ static System_String* typeName##_ToString_Trampoline_VFunc__(void* this__) \
     return typeName##_ToString(pValue); \
 } \
  \
-static int32_t typeName##_GetHashCode_Trampoline_VFunc__(void* this__) \
+static int32_t typeName##_GetHashCode_Trampoline_VFunc__(System_ValueType* this__) \
 { \
     il2c_assert(this__ != NULL); \
  \
@@ -261,7 +261,7 @@ static int32_t typeName##_GetHashCode_Trampoline_VFunc__(void* this__) \
     return typeName##_GetHashCode(pValue); \
 } \
  \
-static bool typeName##_Equals_1_Trampoline_VFunc__(void* this__, System_Object* obj) \
+static bool typeName##_Equals_1_Trampoline_VFunc__(System_ValueType* this__, System_Object* obj) \
 { \
     il2c_assert(this__ != NULL); \
  \
@@ -304,9 +304,6 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE_DECL* ty
 extern void il2c_step1_clear_gcmark__();
 extern void il2c_step2_mark_gcmark__();
 extern void il2c_step3_sweep_garbage__();
-
-#define il2c_unsafe_unbox__(pObject, typeName) \
-    ((typeName*)(((uint8_t*)pObject) + sizeof(System_ValueType)))
 
 #ifdef __cplusplus
 }

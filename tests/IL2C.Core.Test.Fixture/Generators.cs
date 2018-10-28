@@ -76,6 +76,16 @@ namespace IL2C
 
                 await tw.WriteLineAsync("# Supported IL opcodes");
                 await tw.WriteLineAsync();
+                await tw.WriteLineAsync(
+                    string.Format("* Number of opcode implementations: {0} / {1}",
+                        opCodes.Count(entry => ilConverters.ContainsKey(entry.opCode.Name)),
+                        opCodes.Length));
+                await tw.WriteLineAsync(
+                    string.Format("* Number of opcode tests: {0} [{1} / {2}]",
+                        opCodes.Sum(entry => ilConverterTests.TryGetValue(entry.name, out var count) ? count : 0),
+                        opCodes.Count(entry => ilConverterTests.ContainsKey(entry.name)),
+                        opCodes.Length));
+                await tw.WriteLineAsync();
                 await tw.WriteLineAsync("OpCode | Binary | Implement | Test | ILConverter");
                 await tw.WriteLineAsync("|:---|:---|:---|:---|:---|");
 
@@ -129,15 +139,16 @@ namespace IL2C
                 typeof(IntPtr),
                 typeof(UIntPtr),
             }.
-            OrderBy(type => type.FullName);
+            OrderBy(type => type.FullName).
+            ToArray();
 
             var runtimeTypesTests =
-                typeof(RuntimeTypesTest)
-                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                .Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[])))
-                .SelectMany(field => (TestCaseInformation[])field.GetValue(null))
-                .GroupBy(entry => entry.Method.DeclaringType.Name)
-                .ToDictionary(g => g.Key, g => new { Name = g.Key, Count = g.Count() });
+                typeof(RuntimeTypesTest).
+                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
+                Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
+                SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
+                GroupBy(entry => entry.Method.DeclaringType.Name).
+                ToDictionary(g => g.Key, g => new { Name = g.Key, Count = g.Count() });
 
             var path = Path.Combine(generatedDocumentBasePath, "supported-runtime-types.md");
 
@@ -146,6 +157,15 @@ namespace IL2C
                 var tw = new StreamWriter(fs);
 
                 await tw.WriteLineAsync("# Supported runtime types");
+                await tw.WriteLineAsync();
+                await tw.WriteLineAsync(
+                    string.Format("* Number of types: {0}",
+                        types.Length));
+                await tw.WriteLineAsync(
+                    string.Format("* Number of tests: {0} [{1} / {2}]",
+                        types.Sum(type => runtimeTypesTests.TryGetValue(type.FullName.Replace('.', '_'), out var entry) ? entry.Count : 0),
+                        types.Count(type => runtimeTypesTests.ContainsKey(type.FullName.Replace('.', '_'))),
+                        types.Length));
                 await tw.WriteLineAsync();
                 await tw.WriteLineAsync("Type | Test");
                 await tw.WriteLineAsync("|:---|:---|");

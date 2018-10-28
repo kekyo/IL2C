@@ -1,5 +1,8 @@
 # Supported IL opcodes
 
+* Number of opcode implementations: 87 / 219
+* Number of opcode tests: 531 [60 / 219]
+
 OpCode | Binary | Implement | Test | ILConverter
 |:---|:---|:---|:---|:---|
 | [add](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.add) | 0x58 | Implemented | [Test [13]](tests/IL2C.Core.Test.Target/ILConverters/Add) | IL2C.ILConverters.AddConverter |

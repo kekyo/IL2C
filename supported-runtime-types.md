@@ -1,5 +1,8 @@
 # Supported runtime types
 
+* Number of types: 19
+* Number of tests: 106 [16 / 19]
+
 Type | Test
 |:---|:---|
 | [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Boolean) |

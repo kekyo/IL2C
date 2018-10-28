@@ -64,149 +64,9 @@ namespace IL2C.Metadata
     {
         private static readonly DebugInformation[] empty = new DebugInformation[0];
 
-        private readonly Lazy<ITypeInformation> returnType;
-        private readonly Lazy<VariableInformation[]> parameters;
-        private readonly Lazy<VariableInformation[]> variables;
-        private readonly Lazy<MethodInformation[]> overrides;
-        private readonly Lazy<IMethodInformation> baseMethod;
-        private readonly Lazy<CodeStream> codeStreams;
-        private readonly Lazy<int> overloadIndex;
-
         public MethodInformation(MethodReference method, ModuleInformation module)
             : base(method, module)
         {
-            returnType = this.MetadataContext.LazyGetOrAddMember(
-                () => this.Member.ReturnType,
-                type => (type != null) ? new TypeInformation(type, module) : this.MetadataContext.VoidType);
-
-            parameters = Lazy.Create(() => (method.HasThis)
-                ? new[] { this.CreateThisParameterInformation(this.DeclaringType) }
-                    .Concat(this.Member.Parameters.Select(this.ToParameterInformation))
-                    .ToArray()
-                : this.Member.Parameters
-                    .Select(ToParameterInformation)
-                    .ToArray());
-
-            variables = Lazy.Create(() => this.Definition.Body.Variables
-                .Select(variable => new VariableInformation(
-                    this,
-                    variable.Index,
-                    this.Definition.Body.Method.DebugInformation.TryGetName(variable, out var name)
-                        ? name
-                        : string.Format("local{0}__", variable.Index),
-                    this.MetadataContext.GetOrAddMember(
-                        variable.VariableType,
-                        variableType => new TypeInformation(
-                            variableType,
-                            this.MetadataContext.GetOrAddModule(
-                                variableType.Module.Assembly,
-                                variableType.Module,
-                                (assembly, module_) => new ModuleInformation(
-                                    module_,
-                                    this.MetadataContext.GetOrAddAssembly(
-                                        assembly,
-                                        assembly_ => new AssemblyInformation(assembly_, this.MetadataContext))))))))
-                .ToArray());
-
-            overrides = Lazy.Create(() => this.Definition.Overrides.
-                Select(om => this.MetadataContext.GetOrAddMember(
-                    om,
-                    m => new MethodInformation(m, module))).
-                ToArray());
-
-            baseMethod = Lazy.Create(() => this.DeclaringType.BaseType?.
-                Traverse(type => type.BaseType).
-                SelectMany(type => type.DeclaredMethods.Where(m => m.Overrides.Contains(this))).
-                FirstOrDefault());
-
-            codeStreams = Lazy.Create(() =>
-                {
-                    // It gathers sequence point informations.
-                    // It will use writing the line preprocessor directive.
-                    var paths = new Dictionary<string, string>();
-                    var spd =
-                        (from sp in this.Definition.DebugInformation.SequencePoints
-                         where !sp.IsHidden
-                         group sp by sp.Offset into g
-                         let sps = g
-                            .OrderBy(sp => sp.Offset)
-                            .Select(sp => new DebugInformation(
-                                paths.GetOrAdd(sp.Document.Url, sp.Document.Url),
-                                sp.StartLine,
-                                sp.StartColumn))
-                            .ToArray()
-                         where sps.Length >= 1
-                         select new { g.Key, sps })
-                        .ToDictionary(g => g.Key, g => g.sps);
-
-                    var codeStream = new CodeStream();
-
-                    object translateOperand(object operand)
-                    {
-                        var inst = operand as Instruction;
-                        if (inst != null)
-                        {
-                            return codeStream[inst.Offset];
-                        }
-
-                        var parameter = operand as ParameterReference;
-                        if (parameter != null)
-                        {
-                            return this.Parameters[this.HasThis ? (parameter.Index + 1) : parameter.Index];
-                        }
-
-                        var local = operand as VariableReference;
-                        if (local != null)
-                        {
-                            return this.LocalVariables[local.Index];
-                        }
-
-                        var typeRef = operand as TypeReference;
-                        if (typeRef != null)
-                        {
-                            return this.MetadataContext.GetOrAddMember(typeRef, t => new TypeInformation(t, module));
-                        }
-
-                        var fieldRef = operand as FieldReference;
-                        if (fieldRef != null)
-                        {
-                            return this.MetadataContext.GetOrAddMember(fieldRef, f => new FieldInformation(f, module));
-                        }
-
-                        var methodRef = operand as MethodReference;
-                        if (methodRef != null)
-                        {
-                            return this.MetadataContext.GetOrAddMember(methodRef, m => new MethodInformation(m, module));
-                        }
-
-                        return operand;
-                    }
-
-                    foreach (var inst in this.Definition.Body.Instructions
-                        .OrderBy(instruction => instruction.Offset)
-                        .Select(instruction => new CodeInformation(
-                            this,
-                            instruction.Offset,
-                            instruction.OpCode,
-                            instruction.Operand,
-                            instruction.GetSize(),
-                            spd.TryGetValue(instruction.Offset, out var sps) ? sps : empty,
-                            translateOperand)))
-                    {
-                        codeStream.Add(inst.Offset, inst);
-                    }
-                    return codeStream;
-                });
-
-            overloadIndex = Lazy.Create(() =>
-                {
-                    var dict = this.DeclaringType.DeclaredMethods.
-                        CalculateOverloadMethods();
-                    var found = dict[this.Member.Name].
-                        Select((m, i) => new { m, i }).
-                        First(e => this.Equals(e.m));
-                    return found.i;
-                });
         }
 
         public override string MemberTypeName =>
@@ -282,20 +142,146 @@ namespace IL2C.Metadata
             this.Definition.HasBody;
 
         public ITypeInformation ReturnType =>
-            returnType.Value;
+            this.MetadataContext.GetOrAddMember(
+                this.Member.ReturnType,
+                type => (type != null) ? new TypeInformation(type, this.DeclaringModule) : this.MetadataContext.VoidType);
         public VariableInformation[] Parameters =>
-            parameters.Value;
+            (this.Member.HasThis) ?
+                new[] { this.CreateThisParameterInformation(this.DeclaringType) }.
+                    Concat(this.Member.Parameters.Select(this.ToParameterInformation)).
+                    ToArray() :
+                this.Member.Parameters.
+                    Select(ToParameterInformation).
+                    ToArray();
         public VariableInformation[] LocalVariables =>
-            variables.Value;
+            this.Definition.Body.Variables.
+                Select(variable => new VariableInformation(
+                    this,
+                    variable.Index,
+                    this.Definition.Body.Method.DebugInformation.TryGetName(variable, out var name) ?
+                        name :
+                        string.Format("local{0}__", variable.Index),
+                    this.MetadataContext.GetOrAddMember(
+                        variable.VariableType,
+                        variableType => new TypeInformation(
+                            variableType,
+                            this.MetadataContext.GetOrAddModule(
+                                variableType.Module.Assembly,
+                                variableType.Module,
+                                (assembly, module_) => new ModuleInformation(
+                                    module_,
+                                    this.MetadataContext.GetOrAddAssembly(
+                                        assembly,
+                                        assembly_ => new AssemblyInformation(assembly_, this.MetadataContext)))))))).
+                ToArray();
         public IMethodInformation[] Overrides =>
-            overrides.Value;
+            this.Definition.Overrides.
+                Select(om => this.MetadataContext.GetOrAddMember(
+                    om, m => new MethodInformation(m, this.DeclaringModule))).
+                ToArray();
         public IMethodInformation BaseMethod =>
-            baseMethod.Value;
+            this.DeclaringType.BaseType?.
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.DeclaredMethods.Where(m => m.Overrides.Contains(this))).
+                FirstOrDefault();
 
-        public ICodeStream CodeStream =>
-            codeStreams.Value;
-        public int OverloadIndex =>
-            overloadIndex.Value;
+        public ICodeStream CodeStream
+        {
+            get
+            {
+                // It gathers sequence point informations.
+                // It will use writing the line preprocessor directive.
+                var paths = new Dictionary<string, string>();
+                var spd =
+                    (from sp in this.Definition.DebugInformation.SequencePoints
+                     where !sp.IsHidden
+                     group sp by sp.Offset into g
+                     let sps = g.
+                        OrderBy(sp => sp.Offset).
+                        Select(sp => new DebugInformation(
+                            paths.GetOrAdd(sp.Document.Url, sp.Document.Url),
+                            sp.StartLine,
+                            sp.StartColumn)).
+                        ToArray()
+                     where sps.Length >= 1
+                     select new { g.Key, sps }).
+                    ToDictionary(g => g.Key, g => g.sps);
+
+                var codeStream = new CodeStream();
+
+                object translateOperand(object operand)
+                {
+                    var inst = operand as Instruction;
+                    if (inst != null)
+                    {
+                        return codeStream[inst.Offset];
+                    }
+
+                    var parameter = operand as ParameterReference;
+                    if (parameter != null)
+                    {
+                        return this.Parameters[this.HasThis ? (parameter.Index + 1) : parameter.Index];
+                    }
+
+                    var local = operand as VariableReference;
+                    if (local != null)
+                    {
+                        return this.LocalVariables[local.Index];
+                    }
+
+                    var typeRef = operand as TypeReference;
+                    if (typeRef != null)
+                    {
+                        return this.MetadataContext.GetOrAddMember(
+                            typeRef, t => new TypeInformation(t, this.DeclaringModule));
+                    }
+
+                    var fieldRef = operand as FieldReference;
+                    if (fieldRef != null)
+                    {
+                        return this.MetadataContext.GetOrAddMember(
+                            fieldRef, f => new FieldInformation(f, this.DeclaringModule));
+                    }
+
+                    var methodRef = operand as MethodReference;
+                    if (methodRef != null)
+                    {
+                        return this.MetadataContext.GetOrAddMember(
+                            methodRef, m => new MethodInformation(m, this.DeclaringModule));
+                    }
+
+                    return operand;
+                }
+
+                foreach (var inst in this.Definition.Body.Instructions.
+                    OrderBy(instruction => instruction.Offset).
+                    Select(instruction => new CodeInformation(
+                        this,
+                        instruction.Offset,
+                        instruction.OpCode,
+                        instruction.Operand,
+                        instruction.GetSize(),
+                        spd.TryGetValue(instruction.Offset, out var sps) ? sps : empty,
+                        translateOperand)))
+                {
+                    codeStream.Add(inst.Offset, inst);
+                }
+                return codeStream;
+            }
+        }
+
+        public int OverloadIndex
+        {
+            get
+            {
+                var dict = this.DeclaringType.DeclaredMethods.
+                    CalculateOverloadMethods();
+                var found = dict[this.Member.Name].
+                    Select((m, i) => new { m, i }).
+                    First(e => this.Equals(e.m));
+                return found.i;
+            }
+        }
 
         private static bool FullName(FriendlyNameTypes type) =>
             (type & FriendlyNameTypes.FullName) == FriendlyNameTypes.FullName;
@@ -426,18 +412,6 @@ namespace IL2C.Metadata
                 returnTypeName,
                 name,
                 parametersString);
-        }
-
-        protected override void ResolveLazyValues()
-        {
-            var dummy1 = returnType.Value;
-            var dummy2 = parameters.Value;
-            var dummy3 = variables.Value;
-            var dummy4 = overrides.Value;
-            var dummy5 = baseMethod.Value;
-            var dummy6 = codeStreams.Value;
-            var dummy7 = overloadIndex.Value;
-            base.ResolveLazyValues();
         }
 
         protected override MethodDefinition OnResolve(MethodReference member) =>

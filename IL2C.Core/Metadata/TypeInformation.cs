@@ -69,6 +69,9 @@ namespace IL2C.Metadata
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
         (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods { get; }
+        IMethodInformation[] OverrideMethods { get; }
+        IMethodInformation[] NewSlotMethods { get; }
+        IMethodInformation[] OverrideBaseMethods { get; }
 
         string CLanguageTypeName { get; }
         string CLanguageThisTypeName { get; }
@@ -287,18 +290,41 @@ namespace IL2C.Metadata
             this.MetadataContext.GetOrAddMembers(
                 (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
                 method => new MethodInformation(method, this.DeclaringModule));
-        public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods
+
+        private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods()
         {
-            get
-            {
-                return ((ITypeInformation)this).
-                    Traverse(type => type.BaseType).
-                    Reverse().
-                    SelectMany(type => type.DeclaredMethods.CalculateOverloadMethods().SelectMany(entry => entry.Value)).
-                    CalculateVirtualMethods().
-                    ToArray();
-            }
+            return ((ITypeInformation)this).
+                Traverse(type => type.BaseType).
+                Reverse().
+                SelectMany(type => type.DeclaredMethods.CalculateOverloadMethods().SelectMany(entry => entry.Value)).
+                CalculateVirtualMethods();
         }
+
+        public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods =>
+            this.EnumerateCalculatedVirtualMethods().
+            ToArray();
+        public IMethodInformation[] OverrideMethods =>
+            this.EnumerateCalculatedVirtualMethods().
+                Select(entry => entry.method).
+                Where(method => method.DeclaringType.Equals(this) && method.IsReuseSlot).
+                ToArray();
+        public IMethodInformation[] NewSlotMethods =>
+            this.EnumerateCalculatedVirtualMethods().
+                Select(entry => entry.method).
+                Where(method => method.DeclaringType.IsAssignableFrom(this) && method.IsNewSlot).
+                ToArray();
+        public IMethodInformation[] OverrideBaseMethods =>
+            ((ITypeInformation)this).
+                Traverse(type => type.BaseType).
+                Reverse().
+                SelectMany(type => type.DeclaredMethods.
+                    Where(method => method.IsVirtual).
+                    CalculateOverloadMethods().
+                    SelectMany(entry => entry.Value)).
+                Where(method =>
+                    !method.DeclaringType.Equals(this) &&
+                    method.DeclaringType.IsAssignableFrom(this)).
+                ToArray();
 
         public override bool IsCLanguagePublicScope
         {

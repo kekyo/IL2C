@@ -95,27 +95,10 @@ namespace IL2C
             //                                         | Calc() [with AT]             |
             //                                         +------------------------------+
 
-            // TODO: move to metadata
             var virtualMethods = declaredType.CalculatedVirtualMethods;
-            var overrideMethods = virtualMethods.
-                Select(entry => entry.method).
-                Where(method => method.DeclaringType.Equals(declaredType) && method.IsReuseSlot).
-                ToArray();
-            var newSlotMethods = virtualMethods.
-                Select(entry => entry.method).
-                Where(method => method.DeclaringType.IsAssignableFrom(declaredType) && method.IsNewSlot).
-                ToArray();
-            var overrideBaseMethods = declaredType.
-                Traverse(type => type.BaseType).
-                Reverse().
-                SelectMany(type => type.DeclaredMethods.
-                    Where(method => method.IsVirtual).
-                    CalculateOverloadMethods().
-                    SelectMany(entry => entry.Value)).
-                Where(method =>
-                    !method.DeclaringType.Equals(declaredType) &&
-                    method.DeclaringType.IsAssignableFrom(declaredType)).
-                ToArray();
+            var overrideMethods = declaredType.OverrideMethods;
+            var newSlotMethods = declaredType.NewSlotMethods;
+            var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
             // NOTE: 1 of 2
             //   Enum type derived from System.Enum,
@@ -773,27 +756,10 @@ namespace IL2C
             if (!declaredType.IsEnum)
             {
 #if true
-                // TODO: move to metadata
                 var virtualMethods = declaredType.CalculatedVirtualMethods;
-                var overrideMethods = virtualMethods.
-                    Select(entry => entry.method).
-                    Where(method => method.DeclaringType.Equals(declaredType) && method.IsReuseSlot).
-                    ToArray();
-                var newSlotMethods = virtualMethods.
-                    Select(entry => entry.method).
-                    Where(method => method.DeclaringType.IsAssignableFrom(declaredType) && method.IsNewSlot).
-                    ToArray();
-                var overrideBaseMethods = declaredType.
-                    Traverse(type => type.BaseType).
-                    Reverse().
-                    SelectMany(type => type.DeclaredMethods.
-                        Where(method => method.IsVirtual).
-                        CalculateOverloadMethods().
-                        SelectMany(entry => entry.Value)).
-                    Where(method =>
-                        !method.DeclaringType.Equals(declaredType) &&
-                        method.DeclaringType.IsAssignableFrom(declaredType)).
-                    ToArray();
+                var overrideMethods = declaredType.OverrideMethods;
+                var newSlotMethods = declaredType.NewSlotMethods;
+                var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
                 // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
                 if (!overrideMethods.Any() && !newSlotMethods.Any())

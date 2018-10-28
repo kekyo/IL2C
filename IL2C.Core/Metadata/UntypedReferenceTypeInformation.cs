@@ -74,6 +74,9 @@ namespace IL2C.Metadata
         public IFieldInformation[] Fields => throw new NotImplementedException();
         public IMethodInformation[] DeclaredMethods => throw new NotImplementedException();
         public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods => throw new NotImplementedException();
+        public IMethodInformation[] OverrideMethods => throw new NotImplementedException();
+        public IMethodInformation[] NewSlotMethods => throw new NotImplementedException();
+        public IMethodInformation[] OverrideBaseMethods => throw new NotImplementedException();
 
         public string CLanguageTypeName => "untyped_ptr";
         public string CLanguageThisTypeName => throw new NotImplementedException();

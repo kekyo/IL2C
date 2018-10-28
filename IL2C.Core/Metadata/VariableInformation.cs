@@ -43,10 +43,8 @@ namespace IL2C.Metadata
                 this.DeclaredMethod.GetHashCode();
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0}: {1}", this.SymbolName, this.TargetType.UniqueName);
-        }
+        public override string ToString() =>
+            string.Format("{0}: {1}", this.TargetType.FriendlyName, this.SymbolName);
 
         string IOperandPrintable.PrintableString => this.SymbolName;
     }

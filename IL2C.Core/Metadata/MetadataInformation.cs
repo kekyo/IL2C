@@ -63,10 +63,8 @@ namespace IL2C.Metadata
             this.UniqueName.GetHashCode();
 
         [DebuggerStepThrough]
-        public override string ToString()
-        {
-            return string.Format("{0} {1}", this.MetadataTypeName, this.Name);
-        }
+        public override string ToString() =>
+            string.Format("{0}: {1}", this.MetadataTypeName, this.FriendlyName);
     }
 
     internal abstract class MetadataInformation<TReference, TDefinition>

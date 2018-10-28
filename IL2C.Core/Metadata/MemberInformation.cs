@@ -51,7 +51,7 @@ namespace IL2C.Metadata
         public abstract bool IsCLanguageFileScope { get; }
 
         public override string ToString() =>
-            string.Format("{0}: {1}", this.MemberTypeName, base.ToString());
+            string.Format("{0}: {1}", this.MemberTypeName, this.FriendlyName);
 
         string IOperandPrintable.PrintableString =>
             this.Member.GetFriendlyName();

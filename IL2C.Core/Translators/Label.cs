@@ -9,9 +9,7 @@
             this.Offset = offset;
         }
 
-        public override string ToString()
-        {
-            return string.Format("IL_{0:x4}", this.Offset);
-        }
+        public override string ToString() =>
+            string.Format("IL_{0:x4}", this.Offset);
     }
 }

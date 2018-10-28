@@ -102,14 +102,12 @@ namespace IL2C.Metadata
             return this.Operand?.ToString() ?? string.Empty;
         }
 
-        public override string ToString()
-        {
-            return string.Format(
+        public override string ToString() =>
+            string.Format(
                 "{0}: {1} {2}",
                 this.Label,
                 this.OpCode,
                 this.GetOperandForPrintable());
-        }
 
         string IOperandPrintable.PrintableString => this.Label;
 

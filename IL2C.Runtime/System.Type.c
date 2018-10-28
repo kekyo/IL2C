@@ -3,15 +3,17 @@
 /////////////////////////////////////////////////////////////
 // System.Type
 
-IL2C_CONST_STRING(System_Type_ToString_Header, L"Type: ");
+//IL2C_CONST_STRING(System_Type_ToString_Header, L"Type: ");
 System_String* System_Type_ToString(System_Type* this__)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->type__ != NULL);
 
-    return System_String_Concat_5(
-        System_Type_ToString_Header,
-        System_Type_get_FullName(this__));
+    // System.Type.ToString() implementation has concatenation for "Type: " header, but the System.RuntimeType do not.
+    return System_Type_get_FullName(this__);
+    //return System_String_Concat_5(
+    //    System_Type_ToString_Header,
+    //    System_Type_get_FullName(this__));
 }
 
 int32_t System_Type_GetHashCode(System_Type* this__)

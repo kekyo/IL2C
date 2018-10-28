@@ -1,7 +1,7 @@
 # Supported runtime types
 
 * Number of types: 19
-* Number of tests: 106 [16 / 19]
+* Number of tests: 112 [17 / 19]
 
 Type | Test
 |:---|:---|
@@ -17,7 +17,7 @@ Type | Test
 | [System.SByte](https://docs.microsoft.com/en-us/dotnet/api/system.sbyte) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_SByte) |
 | [System.Single](https://docs.microsoft.com/en-us/dotnet/api/system.single) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Single) |
 | [System.String](https://docs.microsoft.com/en-us/dotnet/api/system.string) | [Test [14]](tests/IL2C.Core.Test.Target/TypeSystems/System_String) |
-| [System.Type](https://docs.microsoft.com/en-us/dotnet/api/system.type) |  |
+| [System.Type](https://docs.microsoft.com/en-us/dotnet/api/system.type) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Type) |
 | [System.UInt16](https://docs.microsoft.com/en-us/dotnet/api/system.uint16) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt16) |
 | [System.UInt32](https://docs.microsoft.com/en-us/dotnet/api/system.uint32) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt32) |
 | [System.UInt64](https://docs.microsoft.com/en-us/dotnet/api/system.uint64) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_UInt64) |

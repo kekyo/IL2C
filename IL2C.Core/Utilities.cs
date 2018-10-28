@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 
 using Mono.Cecil.Cil;
 
@@ -15,14 +13,6 @@ using IL2C.Metadata;
 
 namespace IL2C
 {
-    internal static class Lazy
-    {
-        public static Lazy<T> Create<T>(Func<T> generator)
-        {
-            return new Lazy<T>(generator, LazyThreadSafetyMode.ExecutionAndPublication);
-        }
-    }
-
     internal static class Utilities
     {
         private static readonly string intMinValueExpression = string.Format("{0} - 1", int.MinValue + 1);

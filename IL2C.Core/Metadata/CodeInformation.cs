@@ -37,7 +37,8 @@ namespace IL2C.Metadata
     internal sealed class CodeInformation
         : ICodeInformation, IOperandPrintable
     {
-        private readonly Lazy<object> operand;
+        private readonly object operand;
+        private readonly Func<object, object> translateOperand;
 
         public CodeInformation(
             MethodInformation method,
@@ -53,7 +54,8 @@ namespace IL2C.Metadata
             this.OpCode = opCode;
             this.Size = size;
             this.Debug = debug;
-            this.operand = Lazy.Create(() => translateOperand(operand));
+            this.operand = operand;
+            this.translateOperand = translateOperand;
         }
 
         public IMethodInformation Method { get; }
@@ -63,7 +65,7 @@ namespace IL2C.Metadata
         public string Label => MetadataUtilities.GetLabelName(this.Offset);
         public DebugInformation[] Debug { get; }
 
-        public object Operand => operand.Value;
+        public object Operand => translateOperand(operand);
 
         private string GetOperandForPrintable()
         {

@@ -38,23 +38,11 @@ namespace IL2C.Metadata
         public virtual string MangledName =>
             Utilities.ToMangledName(this.FriendlyName);
 
-        protected virtual void ResolveLazyValues()
-        {
-            // For debugging purpose.
-        }
-
         public string DebuggerDisplayString
         {
             [DebuggerStepThrough]
             get
             {
-                try
-                {
-                    this.ResolveLazyValues();
-                }
-                catch
-                {
-                }
                 return this.ToString();
             }
         }
@@ -77,13 +65,6 @@ namespace IL2C.Metadata
         [DebuggerStepThrough]
         public override string ToString()
         {
-            try
-            {
-                this.ResolveLazyValues();
-            }
-            catch
-            {
-            }
             return string.Format("{0} {1}", this.MetadataTypeName, this.Name);
         }
     }

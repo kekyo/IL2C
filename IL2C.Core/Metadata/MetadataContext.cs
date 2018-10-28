@@ -51,27 +51,6 @@ namespace IL2C.Metadata
         private readonly Dictionary<MemberReference, IMemberInformation> members =
             new Dictionary<MemberReference, IMemberInformation>(MemberReferenceComparer.Instance);
 
-        private readonly Lazy<TypeInformation> voidType;
-        private readonly Lazy<TypeInformation> objectType;
-        private readonly Lazy<TypeInformation> valueTypeType;
-        private readonly Lazy<TypeInformation> delegateType;
-
-        private readonly Lazy<TypeInformation> byteType;
-        private readonly Lazy<TypeInformation> sbyteType;
-        private readonly Lazy<TypeInformation> int16Type;
-        private readonly Lazy<TypeInformation> uint16Type;
-        private readonly Lazy<TypeInformation> int32Type;
-        private readonly Lazy<TypeInformation> uint32Type;
-        private readonly Lazy<TypeInformation> int64Type;
-        private readonly Lazy<TypeInformation> uint64Type;
-        private readonly Lazy<TypeInformation> singleType;
-        private readonly Lazy<TypeInformation> doubleType;
-        private readonly Lazy<TypeInformation> intPtrType;
-        private readonly Lazy<TypeInformation> uintPtrType;
-        private readonly Lazy<TypeInformation> charType;
-        private readonly Lazy<TypeInformation> stringType;
-        private readonly Lazy<TypeInformation> booleanType;
-
         internal MetadataContext(string assemblyPath, bool readSymbols)
         {
             var resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
@@ -94,63 +73,63 @@ namespace IL2C.Metadata
             modules.Add(resolvedCoreModule, resolvedCoreModuleInformation);
             assemblyByModule.Add(resolvedCoreModule, resolvedCoreAssembly);
 
-            voidType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Void,
+            this.VoidType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Void,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            objectType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Object,
+            this.ObjectType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Object,
                 type => new TypeInformation(type, resolvedCoreModuleInformation, objectMethodValidTarget));
-            valueTypeType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.GetType("System.ValueType"),
+            this.ValueTypeType = this.GetOrAddMember(
+                resolvedCoreModule.GetType("System.ValueType"),
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            delegateType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.GetType("System.Delegate"),
+            this.DelegateType = this.GetOrAddMember(
+                resolvedCoreModule.GetType("System.Delegate"),
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
 
-            byteType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Byte,
+            this.ByteType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Byte,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            sbyteType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.SByte,
+            this.SByteType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.SByte,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            int16Type = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Int16,
+            this.Int16Type = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Int16,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            uint16Type = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.UInt16,
+            this.UInt16Type = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.UInt16,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            int32Type = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Int32,
+            this.Int32Type = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Int32,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            uint32Type = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.UInt32,
+            this.UInt32Type = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.UInt32,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            int64Type = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Int64,
+            this.Int64Type = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Int64,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            uint64Type = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.UInt64,
+            this.UInt64Type = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.UInt64,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            singleType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Single,
+            this.SingleType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Single,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            doubleType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Double,
+            this.DoubleType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Double,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            intPtrType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.IntPtr,
+            this.IntPtrType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.IntPtr,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            uintPtrType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.UIntPtr,
+            this.UIntPtrType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.UIntPtr,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            charType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Char,
+            this.CharType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Char,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            stringType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.String,
+            this.StringType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.String,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
-            booleanType = this.LazyGetOrAddMember(
-                () => resolvedCoreModule.TypeSystem.Boolean,
+            this.BooleanType = this.GetOrAddMember(
+                resolvedCoreModule.TypeSystem.Boolean,
                 type => new TypeInformation(type, resolvedCoreModuleInformation));
 
             this.MainAssembly = new AssemblyInformation(mainAssembly, this);
@@ -190,24 +169,6 @@ namespace IL2C.Metadata
             return assemblyDefinitions
                 .Select(type => this.GetOrAddAssembly(type, factory))
                 .ToArray();
-        }
-
-        internal Lazy<TInformation> LazyGetOrAddAssembly<TInformation>(
-            Func<AssemblyDefinition> extractor,
-            Func<AssemblyDefinition, TInformation> factory)
-            where TInformation : IAssemblyInformation
-        {
-            return Lazy.Create(() => this.GetOrAddAssembly(extractor(), factory));
-        }
-
-        internal Lazy<TInformation[]> LazyGetOrAddAssemblies<TInformation>(
-            Func<IEnumerable<AssemblyDefinition>> extractor,
-            Func<AssemblyDefinition, TInformation> factory)
-            where TInformation : IAssemblyInformation
-        {
-            return Lazy.Create(() => extractor()
-                .Select(type => this.GetOrAddAssembly(type, factory))
-                .ToArray());
         }
         #endregion
 
@@ -261,26 +222,6 @@ namespace IL2C.Metadata
                 .Select(moduleReference => this.GetOrAddModule(assemblyDefinition, moduleReference, factory))
                 .ToArray();
         }
-
-        internal Lazy<TInformation> LazyGetOrAddModule<TInformation>(
-            AssemblyDefinition assemblyDefinition,
-            Func<ModuleReference> extractor,
-            Func<AssemblyDefinition, ModuleReference, TInformation> factory)
-            where TInformation : IModuleInformation
-        {
-            return Lazy.Create(() => this.GetOrAddModule(assemblyDefinition, extractor(), factory));
-        }
-
-        internal Lazy<TInformation[]> LazyGetOrAddModules<TInformation>(
-            AssemblyDefinition assemblyDefinition,
-            Func<IEnumerable<ModuleReference>> extractor,
-            Func<AssemblyDefinition, ModuleReference, TInformation> factory)
-            where TInformation : IModuleInformation
-        {
-            return Lazy.Create(() => extractor()
-                .Select(moduleReference => this.GetOrAddModule(assemblyDefinition, moduleReference, factory))
-                .ToArray());
-        }
         #endregion
 
         #region IMemberInformation
@@ -316,50 +257,31 @@ namespace IL2C.Metadata
                 .Select(member => this.GetOrAddMember(member, factory))
                 .ToArray();
         }
-
-        internal Lazy<TInformation> LazyGetOrAddMember<TReference, TInformation>(
-            Func<TReference> extractor,
-            Func<TReference, TInformation> factory)
-            where TReference : MemberReference
-            where TInformation : IMemberInformation
-        {
-            return Lazy.Create(() => this.GetOrAddMember(extractor(), factory));
-        }
-
-        internal Lazy<TInformation[]> LazyGetOrAddMembers<TReference, TInformation>(
-            Func<IEnumerable<TReference>> extractor,
-            Func<TReference, TInformation> factory)
-            where TReference : MemberReference
-            where TInformation : IMemberInformation
-        {
-            return Lazy.Create(() => extractor()
-                .Select(type => this.GetOrAddMember(type, factory))
-                .ToArray());
-        }
         #endregion
 
         #region CoreLibraryTypes
-        public ITypeInformation VoidType => voidType.Value;
-        public ITypeInformation ObjectType => objectType.Value;
-        public ITypeInformation ValueTypeType => valueTypeType.Value;
-        public ITypeInformation DelegateType => delegateType.Value;
-        public ITypeInformation UntypedReferenceType => UntypedReferenceTypeInformation.UntypedReferenceType;
+        public ITypeInformation VoidType { get; }
+        public ITypeInformation ObjectType { get; }
+        public ITypeInformation ValueTypeType { get; }
+        public ITypeInformation DelegateType { get; }
+        public ITypeInformation UntypedReferenceType =>
+            UntypedReferenceTypeInformation.UntypedReferenceType;
 
-        public ITypeInformation ByteType => byteType.Value;
-        public ITypeInformation SByteType => sbyteType.Value;
-        public ITypeInformation Int16Type => int16Type.Value;
-        public ITypeInformation UInt16Type => uint16Type.Value;
-        public ITypeInformation Int32Type => int32Type.Value;
-        public ITypeInformation UInt32Type => uint32Type.Value;
-        public ITypeInformation Int64Type => int64Type.Value;
-        public ITypeInformation UInt64Type => uint64Type.Value;
-        public ITypeInformation SingleType => singleType.Value;
-        public ITypeInformation DoubleType => doubleType.Value;
-        public ITypeInformation IntPtrType => intPtrType.Value;
-        public ITypeInformation UIntPtrType => uintPtrType.Value;
-        public ITypeInformation CharType => charType.Value;
-        public ITypeInformation StringType => stringType.Value;
-        public ITypeInformation BooleanType => booleanType.Value;
+        public ITypeInformation ByteType { get; }
+        public ITypeInformation SByteType { get; }
+        public ITypeInformation Int16Type { get; }
+        public ITypeInformation UInt16Type { get; }
+        public ITypeInformation Int32Type { get; }
+        public ITypeInformation UInt32Type { get; }
+        public ITypeInformation Int64Type { get; }
+        public ITypeInformation UInt64Type { get; }
+        public ITypeInformation SingleType { get; }
+        public ITypeInformation DoubleType { get; }
+        public ITypeInformation IntPtrType { get; }
+        public ITypeInformation UIntPtrType { get; }
+        public ITypeInformation CharType { get; }
+        public ITypeInformation StringType { get; }
+        public ITypeInformation BooleanType { get; }
         #endregion
     }
 }

@@ -24,14 +24,9 @@ namespace IL2C.Metadata
         : MemberInformation<FieldReference, FieldDefinition>
         , IFieldInformation
     {
-        private readonly Lazy<TypeInformation> fieldType;
-
         public FieldInformation(FieldReference field, ModuleInformation module)
             : base(field, module)
         {
-            fieldType = this.MetadataContext.LazyGetOrAddMember(
-                () => this.Member.FieldType,
-                type => new TypeInformation(type, module));
         }
 
         public override string MetadataTypeName => "Field";
@@ -47,7 +42,10 @@ namespace IL2C.Metadata
         public bool IsStatic => this.Definition.IsStatic;
         public bool HasConstant => this.Definition.HasConstant;
 
-        public ITypeInformation FieldType => fieldType.Value;
+        public ITypeInformation FieldType =>
+            this.MetadataContext.GetOrAddMember(
+                this.Member.FieldType,
+                type => new TypeInformation(type, this.DeclaringModule));
 
         public object ConstantValue => this.Definition.Constant;
 
@@ -84,12 +82,6 @@ namespace IL2C.Metadata
         public override bool IsCLanguagePublicScope => this.Definition.IsPublic;
         public override bool IsCLanguageLinkageScope => !this.Definition.IsPublic && !this.Definition.IsPrivate;
         public override bool IsCLanguageFileScope => this.Definition.IsPrivate;
-
-        protected override void ResolveLazyValues()
-        {
-            var dummy = fieldType.Value;
-            base.ResolveLazyValues();
-        }
 
         protected override FieldDefinition OnResolve(FieldReference member)
         {

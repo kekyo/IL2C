@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 
 namespace IL2C.Metadata
 {
@@ -15,16 +13,10 @@ namespace IL2C.Metadata
         : MetadataInformation<ModuleReference, ModuleDefinition>
         , IModuleInformation
     {
-        private readonly Lazy<TypeInformation[]> types;
-
         public ModuleInformation(ModuleReference module, AssemblyInformation assembly)
             : base(module, assembly.MetadataContext)
         {
             this.DeclaringAssembly = assembly;
-
-            types = this.MetadataContext.LazyGetOrAddMembers(
-                () => this.Definition.Types,
-                type => new TypeInformation(type, this));
         }
 
         public override string MetadataTypeName => "Module";
@@ -35,13 +27,10 @@ namespace IL2C.Metadata
 
         public IAssemblyInformation DeclaringAssembly { get; }
 
-        public ITypeInformation[] Types => types.Value;
-
-        protected override void ResolveLazyValues()
-        {
-            var dummy = types.Value;
-            base.ResolveLazyValues();
-        }
+        public ITypeInformation[] Types =>
+            this.MetadataContext.GetOrAddMembers(
+                this.Definition.Types,
+                type => new TypeInformation(type, this));
 
         protected override ModuleDefinition OnResolve(ModuleReference member)
         {

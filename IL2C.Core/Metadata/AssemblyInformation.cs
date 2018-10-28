@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 
 namespace IL2C.Metadata
 {
@@ -16,17 +14,11 @@ namespace IL2C.Metadata
         , IAssemblyInformation
     {
         private readonly AssemblyDefinition assembly;
-        private readonly Lazy<ModuleInformation[]> modules;
 
         internal AssemblyInformation(AssemblyDefinition assembly, MetadataContext metadataContext)
             : base(metadataContext)
         {
             this.assembly = assembly;
-
-            modules = metadataContext.LazyGetOrAddModules(
-                assembly,
-                () => assembly.Modules,
-                (_, module) => new ModuleInformation(module, this));
         }
 
         public override string MetadataTypeName => "Assembly";
@@ -38,13 +30,11 @@ namespace IL2C.Metadata
         // TODO: mscorlib --> il2c.h?
         public string CLanguageIncludeFileName => assembly.Name.Name + ".h";
 
-        public IModuleInformation[] Modules => modules.Value;
-
-        protected override void ResolveLazyValues()
-        {
-            var dummy = modules.Value;
-            base.ResolveLazyValues();
-        }
+        public IModuleInformation[] Modules =>
+            this.MetadataContext.GetOrAddModules(
+                assembly,
+                assembly.Modules,
+                (_, module) => new ModuleInformation(module, this));
 
         public bool Equals(IAssemblyInformation other)
         {

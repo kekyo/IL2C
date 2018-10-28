@@ -48,7 +48,13 @@ namespace IL2C.Metadata
             [DebuggerStepThrough]
             get
             {
-                this.ResolveLazyValues();
+                try
+                {
+                    this.ResolveLazyValues();
+                }
+                catch
+                {
+                }
                 return this.ToString();
             }
         }
@@ -71,7 +77,13 @@ namespace IL2C.Metadata
         [DebuggerStepThrough]
         public override string ToString()
         {
-            this.ResolveLazyValues();
+            try
+            {
+                this.ResolveLazyValues();
+            }
+            catch
+            {
+            }
             return string.Format("{0} {1}", this.MetadataTypeName, this.Name);
         }
     }

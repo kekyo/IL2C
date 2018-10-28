@@ -22,16 +22,10 @@ namespace IL2C.Metadata
         where TReference : MemberReference
         where TDefinition : TReference
     {
-        private readonly Lazy<TypeInformation> declaringType;
-
         public MemberInformation(TReference member, ModuleInformation module)
             : base(member, module.MetadataContext)
         {
             this.DeclaringModule = module;
-
-            declaringType = this.MetadataContext.LazyGetOrAddMember(
-                () => this.Member.DeclaringType,
-                type => new TypeInformation(type, module));
         }
 
         public override string UniqueName =>
@@ -44,19 +38,17 @@ namespace IL2C.Metadata
         public abstract string MemberTypeName { get; }
 
         internal ModuleInformation DeclaringModule { get; }
-        IModuleInformation IMemberInformation.DeclaringModule => this.DeclaringModule;
+        IModuleInformation IMemberInformation.DeclaringModule =>
+            this.DeclaringModule;
 
-        public ITypeInformation DeclaringType => declaringType.Value;
+        public ITypeInformation DeclaringType =>
+            this.MetadataContext.GetOrAddMember(
+                this.Member.DeclaringType,
+                type => new TypeInformation(type, this.DeclaringModule));
 
         public abstract bool IsCLanguagePublicScope { get; }
         public abstract bool IsCLanguageLinkageScope { get; }
         public abstract bool IsCLanguageFileScope { get; }
-
-        protected override void ResolveLazyValues()
-        {
-            var dummy = declaringType.Value;
-            base.ResolveLazyValues();
-        }
 
         public override string ToString() =>
             string.Format("{0}: {1}", this.MemberTypeName, base.ToString());

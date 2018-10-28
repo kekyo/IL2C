@@ -85,6 +85,9 @@ namespace IL2C
             TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt>().
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived1>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived2>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived1_Newslot>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived1_Newslot_Virtual>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived2_Newslot>()).
             ToArray();
         [Test]
         public static Task Callvirt([ValueSource(nameof(_Callvirt))] TestCaseInformation caseInfo) =>

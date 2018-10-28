@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    public abstract class Callvirt_Derived_Base
+    public abstract class Callvirt_Derived2_Base
     {
-        protected Callvirt_Derived_Base()
+        protected Callvirt_Derived2_Base()
         {
         }
 
@@ -18,7 +18,7 @@ namespace IL2C.ILConverters
     [TestId("Callvirt")]
     [TestCase("CallvirtTest", new[] { "Derived2_ToString_System_Object", "ToString" }, IncludeBaseTypes = true)]
     [TestCase("CallvirtTest", new[] { "Derived2_ToString_IL2C_ILConverters_Callvirt", "ToString" }, IncludeBaseTypes = true)]
-    public sealed class Callvirt_Derived2 : Callvirt_Derived_Base
+    public sealed class Callvirt_Derived2 : Callvirt_Derived2_Base
     {
         public override string ToString()
         {

@@ -34,13 +34,17 @@ namespace IL2C.ILConverters
                         pairParameters, extractContext, codeInformation);
                     if (isVirtualCall && method.IsVirtual && !method.IsSealed)
                     {
+                        var overloadIndex = method.DeclaringType.CalculatedVirtualMethods.
+                            First(entry => entry.method.Equals(method)).
+                            overloadIndex;
+
                         return new[]
                         {
                             // TODO: interface member vptr
                             string.Format(
                                 "{0}->vptr0__->{1}({2})",
                                 pairParameters[0].SymbolInformation.SymbolName,
-                                method.CLanguageVirtualFunctionDeclarationName,
+                                method.GetCLanguageDeclarationName(overloadIndex),
                                 parameterString)
                         };
                     }
@@ -66,6 +70,10 @@ namespace IL2C.ILConverters
                         pairParameters, extractContext, codeInformation);
                     if (isVirtualCall && method.IsVirtual && !method.IsSealed)
                     {
+                        var overloadIndex = method.DeclaringType.CalculatedVirtualMethods.
+                            First(entry => entry.method.Equals(method)).
+                            overloadIndex;
+
                         return new[]
                         {
                             // TODO: interface member vptr
@@ -73,7 +81,7 @@ namespace IL2C.ILConverters
                                 "{0} = {1}->vptr0__->{2}({3})",
                                 resultName,
                                 pairParameters[0].SymbolInformation.SymbolName,
-                                method.CLanguageVirtualFunctionDeclarationName,
+                                method.GetCLanguageDeclarationName(overloadIndex),
                                 parameterString)
                         };
                     }

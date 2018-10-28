@@ -270,7 +270,7 @@ namespace IL2C.Metadata
 
                         // Replace.
                         var (_, oi) = overloadIndexes[index];
-                        overloadIndexes[index] = (method, oi + 1);  // TODO: really increment??
+                        overloadIndexes[index] = (method, oi);
                     }
                 }
                 else

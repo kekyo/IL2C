@@ -103,7 +103,7 @@ namespace IL2C
                 ToArray();
             var newSlotMethods = virtualMethods.
                 Select(entry => entry.method).
-                Where(method => method.DeclaringType.Equals(declaredType) && method.IsNewSlot).
+                Where(method => method.DeclaringType.IsAssignableFrom(declaredType) && method.IsNewSlot).
                 ToArray();
             var overrideBaseMethods = virtualMethods.
                 Select(entry => entry.method).
@@ -673,26 +673,26 @@ namespace IL2C
             }
         }
 
-        private static VirtualFunctionInformation[] GetVirtualFunctions(
-            ITypeInformation adjustorThunkTargetType,
-            ITypeInformation delegationTargetType) =>
-            adjustorThunkTargetType
-                .DeclaredMethods.Where(m => m.IsVirtual)        // TODO: virtual method
-                .Select(method => new VirtualFunctionInformation(
-                    method.DeclaringType.Equals(adjustorThunkTargetType)
-                        ? delegationTargetType.MangledName
-                        : method.DeclaringType.MangledName,
-                    method.DeclaringType.Equals(adjustorThunkTargetType)
-                        ? delegationTargetType.CLanguageTypeName
-                        : method.DeclaringType.CLanguageTypeName,
-                    method.CLanguageVirtualFunctionDeclarationName,
-                    method.ReturnType.CLanguageTypeName,
-                    method.GetParameters(adjustorThunkTargetType)
-                        .Select((parameter, index) => Utilities.KeyValue(
-                            (index == 0) ? parameter.TargetType.CLanguageThisTypeName : parameter.TargetType.CLanguageTypeName,
-                            parameter.SymbolName))
-                        .ToArray()))
-                .ToArray();
+        //private static VirtualFunctionInformation[] GetVirtualFunctions(
+        //    ITypeInformation adjustorThunkTargetType,
+        //    ITypeInformation delegationTargetType) =>
+        //    adjustorThunkTargetType
+        //        .DeclaredMethods.Where(m => m.IsVirtual)        // TODO: virtual method
+        //        .Select(method => new VirtualFunctionInformation(
+        //            method.DeclaringType.Equals(adjustorThunkTargetType)
+        //                ? delegationTargetType.MangledName
+        //                : method.DeclaringType.MangledName,
+        //            method.DeclaringType.Equals(adjustorThunkTargetType)
+        //                ? delegationTargetType.CLanguageTypeName
+        //                : method.DeclaringType.CLanguageTypeName,
+        //            method.CLanguageVirtualFunctionDeclarationName,
+        //            method.ReturnType.CLanguageTypeName,
+        //            method.GetParameters(adjustorThunkTargetType)
+        //                .Select((parameter, index) => Utilities.KeyValue(
+        //                    (index == 0) ? parameter.TargetType.CLanguageThisTypeName : parameter.TargetType.CLanguageTypeName,
+        //                    parameter.SymbolName))
+        //                .ToArray()))
+        //        .ToArray();
 
         private static void InternalConvertTypeHelper(
             TextWriter tw,
@@ -776,7 +776,7 @@ namespace IL2C
                     ToArray();
                 var newSlotMethods = virtualMethods.
                     Select(entry => entry.method).
-                    Where(method => method.DeclaringType.Equals(declaredType) && method.IsNewSlot).
+                    Where(method => method.DeclaringType.IsAssignableFrom(declaredType) && method.IsNewSlot).
                     ToArray();
                 var overrideBaseMethods = virtualMethods.
                     Select(entry => entry.method).

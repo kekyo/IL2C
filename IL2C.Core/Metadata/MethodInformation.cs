@@ -52,15 +52,15 @@ namespace IL2C.Metadata
         PInvokeInfo PInvokeInfo { get; }
 
         string CLanguageFunctionName { get; }
-        string CLanguageVirtualFunctionDeclarationName { get; }
         string CLanguageFunctionPrototype { get; }
         string CLanguageFunctionTypePrototype { get; }
+
+        string GetCLanguageDeclarationName(int overloadIndex);
         string GetCLanguageFunctionPrototype(int overloadIndex);
     }
 
     internal sealed class MethodInformation
-        : MemberInformation<MethodReference, MethodDefinition>
-        , IMethodInformation
+        : MemberInformation<MethodReference, MethodDefinition>, IMethodInformation
     {
         private static readonly DebugInformation[] empty = new DebugInformation[0];
 
@@ -365,8 +365,6 @@ namespace IL2C.Metadata
 
         public string CLanguageFunctionName =>
             this.GetFriendlyName(FriendlyNameTypes.FullName | FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
-        public string CLanguageVirtualFunctionDeclarationName =>
-            this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
 
         public string CLanguageFunctionPrototype
         {
@@ -393,6 +391,14 @@ namespace IL2C.Metadata
         public string CLanguageFunctionTypePrototype =>
             this.GetCLanguageFunctionPrototype(-1);
 
+        public string GetCLanguageDeclarationName(int overloadIndex)
+        {
+            return
+                (overloadIndex == 0) ? this.Name :
+                (overloadIndex == -1) ? string.Empty :
+                string.Format("{0}_{1}", this.Name, overloadIndex);
+        }
+
         public string GetCLanguageFunctionPrototype(int overloadIndex)
         {
             // Generate function type prototype if overloadIndex == -1.
@@ -412,13 +418,8 @@ namespace IL2C.Metadata
                     (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
                     (overloadIndex == -1) ? string.Empty : (" " + parameter.SymbolName))));
 
-            var returnTypeName =
-                this.ReturnType.CLanguageTypeName;
-
-            var name =
-                (overloadIndex == 0) ? this.Name :
-                (overloadIndex == -1) ? string.Empty :
-                string.Format("{0}_{1}", this.Name, overloadIndex);
+            var returnTypeName = this.ReturnType.CLanguageTypeName;
+            var name = this.GetCLanguageDeclarationName(overloadIndex);
 
             return string.Format(
                 "{0} (*{1})({2})",

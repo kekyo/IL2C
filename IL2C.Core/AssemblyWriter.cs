@@ -105,8 +105,13 @@ namespace IL2C
                 Select(entry => entry.method).
                 Where(method => method.DeclaringType.IsAssignableFrom(declaredType) && method.IsNewSlot).
                 ToArray();
-            var overrideBaseMethods = virtualMethods.
-                Select(entry => entry.method).
+            var overrideBaseMethods = declaredType.
+                Traverse(type => type.BaseType).
+                Reverse().
+                SelectMany(type => type.DeclaredMethods.
+                    Where(method => method.IsVirtual).
+                    CalculateOverloadMethods().
+                    SelectMany(entry => entry.Value)).
                 Where(method =>
                     !method.DeclaringType.Equals(declaredType) &&
                     method.DeclaringType.IsAssignableFrom(declaredType)).
@@ -119,7 +124,7 @@ namespace IL2C
             if (!declaredType.IsEnum)
             {
                 // If virtual method collection doesn't contain newslot method at this declared type:
-                if (!newSlotMethods.Any())
+                if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
                 {
                     tw.WriteLine();
                     tw.WriteLine(
@@ -220,7 +225,7 @@ namespace IL2C
                 tw.WriteLine("};");
             }
 
-            // If virtual method collection doesn't contain reuseslot and newslot method at this declared type:
+            // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
             if (!overrideMethods.Any() && !newSlotMethods.Any())
             {
                 tw.WriteLine();
@@ -778,14 +783,19 @@ namespace IL2C
                     Select(entry => entry.method).
                     Where(method => method.DeclaringType.IsAssignableFrom(declaredType) && method.IsNewSlot).
                     ToArray();
-                var overrideBaseMethods = virtualMethods.
-                    Select(entry => entry.method).
+                var overrideBaseMethods = declaredType.
+                    Traverse(type => type.BaseType).
+                    Reverse().
+                    SelectMany(type => type.DeclaredMethods.
+                        Where(method => method.IsVirtual).
+                        CalculateOverloadMethods().
+                        SelectMany(entry => entry.Value)).
                     Where(method =>
                         !method.DeclaringType.Equals(declaredType) &&
                         method.DeclaringType.IsAssignableFrom(declaredType)).
                     ToArray();
 
-                // If virtual method collection doesn't contain reuseslot and newslot method at this declared type:
+                // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
                 if (!overrideMethods.Any() && !newSlotMethods.Any())
                 {
                     tw.WriteLine();

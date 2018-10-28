@@ -76,6 +76,9 @@ namespace IL2C
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call_Newslot>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call_Virtual>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call_Newslot_Virtual>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call_Overload>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call_Overload_Virtual>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Call_Overload_Newslot_Virtual>()).
             ToArray();
         [Test]
         public static Task Call([ValueSource(nameof(_Call))] TestCaseInformation caseInfo) =>
@@ -88,6 +91,9 @@ namespace IL2C
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived1_Newslot>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived1_Newslot_Virtual>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived2_Newslot>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived2_Newslot_Virtual>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived3_Newslot>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Callvirt_Derived3_Newslot_Virtual>()).
             ToArray();
         [Test]
         public static Task Callvirt([ValueSource(nameof(_Callvirt))] TestCaseInformation caseInfo) =>

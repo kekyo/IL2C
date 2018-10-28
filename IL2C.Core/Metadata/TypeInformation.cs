@@ -81,13 +81,7 @@ namespace IL2C.Metadata
     internal sealed class TypeInformation
         : MemberInformation<TypeReference, TypeReference>, ITypeInformation
     {
-        private readonly Lazy<TypeInformation> baseType;
-        private readonly Lazy<TypeInformation> elementType;
-        private readonly Lazy<TypeInformation[]> interfaceTypes;
-        private readonly Lazy<TypeInformation[]> nestedTypes;
-        private readonly Lazy<FieldInformation[]> fields;
-        private readonly Lazy<MethodInformation[]> declaredMethods;
-        private readonly Lazy<string> cLanguageTypeName;
+        private readonly Func<MethodDefinition, bool> filterMethod;
 
         public TypeInformation(TypeReference type, ModuleInformation module)
             : this(type, module, _ => true)
@@ -106,117 +100,7 @@ namespace IL2C.Metadata
             Func<MethodDefinition, bool> filterMethod)
             : base(type, module)
         {
-            baseType = this.MetadataContext.LazyGetOrAddMember(
-                () => (this.Definition as TypeDefinition)?.BaseType,
-                baseType => new TypeInformation(baseType, module));
-
-            elementType = this.MetadataContext.LazyGetOrAddMember(
-                () => this.Member.GetElementType(),
-                elementType => new TypeInformation(elementType, module));
-
-            interfaceTypes = this.MetadataContext.LazyGetOrAddMembers(
-                () => (this.Definition as TypeDefinition)?.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType),
-                interfaceType => new TypeInformation(interfaceType, module));
-
-            nestedTypes = this.MetadataContext.LazyGetOrAddMembers(
-                () => (this.Definition as TypeDefinition)?.NestedTypes,
-                nestedType => new TypeInformation(nestedType, module));
-
-            fields = this.MetadataContext.LazyGetOrAddMembers(
-                () => (this.Definition as TypeDefinition)?.Fields,
-                field => new FieldInformation(field, module));
-
-            declaredMethods = this.MetadataContext.LazyGetOrAddMembers(
-                () => (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
-                method => new MethodInformation(method, module));
-
-            cLanguageTypeName = Lazy.Create(
-                () =>
-                {
-                    if (this.IsByReference || this.IsPointer)
-                    {
-                        return string.Format(
-                            "{0}*",
-                            this.ElementType.CLanguageTypeName);
-                    }
-
-                    string typeName = null;
-                    if (this.Member.IsPrimitive)
-                    {
-                        if (this.IsBooleanType)
-                        {
-                            typeName = "bool";
-                        }
-                        else if (this.IsByteType)
-                        {
-                            typeName = "uint8_t";
-                        }
-                        else if (this.IsSByteType)
-                        {
-                            typeName = "int8_t";
-                        }
-                        else if (this.IsInt16Type)
-                        {
-                            typeName = "int16_t";
-                        }
-                        else if (this.IsUInt16Type)
-                        {
-                            typeName = "uint16_t";
-                        }
-                        else if (this.IsInt32Type)
-                        {
-                            typeName = "int32_t";
-                        }
-                        else if (this.IsUInt32Type)
-                        {
-                            typeName = "uint32_t";
-                        }
-                        else if (this.IsInt64Type)
-                        {
-                            typeName = "int64_t";
-                        }
-                        else if (this.IsUInt64Type)
-                        {
-                            typeName = "uint64_t";
-                        }
-                        else if (this.IsIntPtrType)
-                        {
-                            typeName = "intptr_t";
-                        }
-                        else if (this.IsUIntPtrType)
-                        {
-                            typeName = "uintptr_t";
-                        }
-                        else if (this.IsSingleType)
-                        {
-                            typeName = "float";
-                        }
-                        else if (this.IsDoubleType)
-                        {
-                            typeName = "double";
-                        }
-                        else if (this.IsCharType)
-                        {
-                            typeName = "wchar_t";
-                        }
-                    }
-                    else if (this.IsVoidType)
-                    {
-                        typeName = "void";
-                    }
-                    else
-                    {
-                        typeName = this.MangledName;
-                        if (!this.IsValueType)
-                        {
-                            typeName += "*";
-                        }
-                    }
-
-                    Debug.Assert(typeName != null);
-
-                    return typeName;
-                });
+            this.filterMethod = filterMethod;
         }
 
         public override string MetadataTypeName => "Type";
@@ -379,14 +263,30 @@ namespace IL2C.Metadata
             }
         }
 
-        public ITypeInformation BaseType => baseType.Value;
-        public ITypeInformation ElementType => elementType.Value;
-        public ITypeInformation[] InterfaceTypes => interfaceTypes.Value;
-        public ITypeInformation[] NestedTypes => nestedTypes.Value;
-
-        public IFieldInformation[] Fields => fields.Value;
-        public IMethodInformation[] DeclaredMethods => declaredMethods.Value;
-
+        public ITypeInformation BaseType =>
+            this.MetadataContext.GetOrAddMember(
+                (this.Definition as TypeDefinition)?.BaseType,
+                baseType => new TypeInformation(baseType, this.DeclaringModule));
+        public ITypeInformation ElementType =>
+            this.MetadataContext.GetOrAddMember(
+                this.Member.GetElementType(),
+                elementType => new TypeInformation(elementType, this.DeclaringModule));
+        public ITypeInformation[] InterfaceTypes =>
+            this.MetadataContext.GetOrAddMembers(
+                (this.Definition as TypeDefinition)?.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType),
+                interfaceType => new TypeInformation(interfaceType, this.DeclaringModule));
+        public ITypeInformation[] NestedTypes =>
+            this.MetadataContext.GetOrAddMembers(
+                (this.Definition as TypeDefinition)?.NestedTypes,
+                nestedType => new TypeInformation(nestedType, this.DeclaringModule));
+        public IFieldInformation[] Fields =>
+            this.MetadataContext.GetOrAddMembers(
+                (this.Definition as TypeDefinition)?.Fields,
+                field => new FieldInformation(field, this.DeclaringModule));
+        public IMethodInformation[] DeclaredMethods =>
+            this.MetadataContext.GetOrAddMembers(
+                (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
+                method => new MethodInformation(method, this.DeclaringModule));
         public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods
         {
             get
@@ -436,7 +336,96 @@ namespace IL2C.Metadata
         public override bool IsCLanguageFileScope =>
             (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
 
-        public string CLanguageTypeName => cLanguageTypeName.Value;
+        public string CLanguageTypeName
+        {
+            get
+            {
+                if (this.IsByReference || this.IsPointer)
+                {
+                    return string.Format(
+                        "{0}*",
+                        this.ElementType.CLanguageTypeName);
+                }
+
+                string typeName = null;
+                if (this.Member.IsPrimitive)
+                {
+                    if (this.IsBooleanType)
+                    {
+                        typeName = "bool";
+                    }
+                    else if (this.IsByteType)
+                    {
+                        typeName = "uint8_t";
+                    }
+                    else if (this.IsSByteType)
+                    {
+                        typeName = "int8_t";
+                    }
+                    else if (this.IsInt16Type)
+                    {
+                        typeName = "int16_t";
+                    }
+                    else if (this.IsUInt16Type)
+                    {
+                        typeName = "uint16_t";
+                    }
+                    else if (this.IsInt32Type)
+                    {
+                        typeName = "int32_t";
+                    }
+                    else if (this.IsUInt32Type)
+                    {
+                        typeName = "uint32_t";
+                    }
+                    else if (this.IsInt64Type)
+                    {
+                        typeName = "int64_t";
+                    }
+                    else if (this.IsUInt64Type)
+                    {
+                        typeName = "uint64_t";
+                    }
+                    else if (this.IsIntPtrType)
+                    {
+                        typeName = "intptr_t";
+                    }
+                    else if (this.IsUIntPtrType)
+                    {
+                        typeName = "uintptr_t";
+                    }
+                    else if (this.IsSingleType)
+                    {
+                        typeName = "float";
+                    }
+                    else if (this.IsDoubleType)
+                    {
+                        typeName = "double";
+                    }
+                    else if (this.IsCharType)
+                    {
+                        typeName = "wchar_t";
+                    }
+                }
+                else if (this.IsVoidType)
+                {
+                    typeName = "void";
+                }
+                else
+                {
+                    typeName = this.MangledName;
+                    if (!this.IsValueType)
+                    {
+                        typeName += "*";
+                    }
+                }
+
+                Debug.Assert(typeName != null);
+
+                return typeName;
+            }
+        }
+
         public string CLanguageThisTypeName =>
             this.IsValueType ? (this.CLanguageTypeName + "*") : this.CLanguageTypeName;
 
@@ -491,18 +480,6 @@ namespace IL2C.Metadata
             return this.MetadataContext.GetOrAddMember(
                 this.Definition.MakeByReferenceType(),
                 type => new TypeInformation(type, this.DeclaringModule));
-        }
-
-        protected override void ResolveLazyValues()
-        {
-            var dummy1 = baseType.Value;
-            var dummy2 = elementType.Value;
-            var dummy3 = interfaceTypes.Value;
-            var dummy4 = nestedTypes.Value;
-            var dummy5 = fields.Value;
-            var dummy6 = declaredMethods.Value;
-            var dummy7 = cLanguageTypeName.Value;
-            base.ResolveLazyValues();
         }
 
         protected override TypeReference OnResolve(TypeReference member)

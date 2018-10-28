@@ -369,5 +369,12 @@ namespace IL2C
         public static Task Unbox_any([ValueSource(nameof(_Unbox_any))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
         #endregion
+
+        #region Cast
+        public static readonly TestCaseInformation[] _Isinst = TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Isinst>();
+        [Test]
+        public static Task Isinst([ValueSource(nameof(_Isinst))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
+        #endregion
     }
 }

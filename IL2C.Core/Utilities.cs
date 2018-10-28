@@ -242,8 +242,6 @@ namespace IL2C
         {
             return string.Join(", ", parameters.Select(entry =>
             {
-                //Debug.Assert(codeInformation.RawLocation != "IL2C.Tests.ValueTypeTest.Test5():IL_001e");
-
                 var rightExpression = extractContext.GetRightExpression(
                     entry.TargetType, entry.SymbolInformation);
                 if (rightExpression == null)

@@ -1,7 +1,7 @@
 # Supported IL opcodes
 
 * Number of opcode implementations: 87 / 219
-* Number of opcode tests: 534 [62 / 219]
+* Number of opcode tests: 538 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
 |:---|:---|:---|:---|:---|
@@ -91,7 +91,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [endfinally](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.endfinally) | 0xdc |  |  |  |
 | [initblk](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.initblk) | 0xfe18 |  |  |  |
 | [initobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.initobj) | 0xfe15 | Implemented |  | IL2C.ILConverters.InitobjConverter |
-| [isinst](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.isinst) | 0x75 | Implemented |  | IL2C.ILConverters.IsinstConverter |
+| [isinst](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.isinst) | 0x75 | Implemented | [Test [4]](tests/IL2C.Core.Test.Target/ILConverters/Isinst) | IL2C.ILConverters.IsinstConverter |
 | [jmp](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.jmp) | 0x27 |  |  |  |
 | [ldarg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarg) | 0xfe09 | Implemented | [Test [17]](tests/IL2C.Core.Test.Target/ILConverters/Ldarg) | IL2C.ILConverters.LdargConverter |
 | [ldarg.0](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldarg_0) | 0x2 | Implemented | [Test [16]](tests/IL2C.Core.Test.Target/ILConverters/Ldarg_0) | IL2C.ILConverters.Ldarg_0Converter |

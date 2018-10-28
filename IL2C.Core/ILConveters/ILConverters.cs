@@ -159,12 +159,16 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(operand);
+            // It's maybe boxed objref if operand is value type.
+            var resultType = operand.IsValueType ?
+                decodeContext.PrepareContext.MetadataContext.ValueTypeType :
+                operand;
+            var symbolName = decodeContext.PushStack(resultType);
 
             // If this type can cast statically
             if (operand.IsAssignableFrom(si.TargetType))
             {
-                return extractContext =>
+                return _ =>
                 {
                     return new[] { string.Format(
                         "{0} = ({1}){2}",
@@ -175,7 +179,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                return extractContext =>
+                return _ =>
                 {
                     return new[] { string.Format(
                         "{0} = il2c_isinst({1}, {2})",
@@ -203,12 +207,16 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(operand);
+            // It's maybe boxed objref if operand is value type.
+            var resultType = operand.IsValueType ?
+                decodeContext.PrepareContext.MetadataContext.ValueTypeType :
+                operand;
+            var symbolName = decodeContext.PushStack(resultType);
 
             // If this type can cast statically
             if (operand.IsAssignableFrom(si.TargetType))
             {
-                return extractContext =>
+                return _ =>
                 {
                     return new[] { string.Format(
                         "{0} = ({1}){2}",
@@ -219,14 +227,13 @@ namespace IL2C.ILConverters
             }
             else
             {
-                return extractContext =>
+                return _ =>
                 {
                     return new[] { string.Format(
-                        "{0} = il2c_castclass({1}, {2})",
+                        "{0} = il2c_isinst({1}, {2})",
                         symbolName,
                         si.SymbolName,
-                        operand.MangledName),
-                    };
+                        operand.MangledName) };
                 };
             }
         }

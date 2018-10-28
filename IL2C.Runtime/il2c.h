@@ -131,12 +131,12 @@ typedef void* untyped_ptr;
 ///////////////////////////////////////////////////////
 // Boxing related declarations
 
-extern System_Object* il2c_box__(
+extern System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, const void* vptr0);
-extern System_Object* il2c_box2__(
+extern System_ValueType* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0);
 extern void* il2c_unbox__(
-    /* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType);
+    /* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType);
 
 #define il2c_box(pValue, valueTypeName) \
     (il2c_box__(pValue, il2c_typeof(valueTypeName), &__##valueTypeName##_VTABLE__))

@@ -42,7 +42,7 @@ namespace IL2C
                 }
                 else if (argumentType.IsObjectType && constantType.IsValueType)
                 {
-                    return string.Format("il2c_box(&{0}, {1})",
+                    return string.Format("(System_Object*)il2c_box(&{0}, {1})",
                         constantExpression,
                         Utilities.ToMangledName(constantType.FullName));
                 }

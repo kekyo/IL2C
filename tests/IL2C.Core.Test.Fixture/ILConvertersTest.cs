@@ -357,5 +357,17 @@ namespace IL2C
         public static Task Conv_u2([ValueSource(nameof(_Conv_u2))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
         #endregion
+
+        #region Box
+        public static readonly TestCaseInformation[] _Box = TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box>();
+        [Test]
+        public static Task Box([ValueSource(nameof(_Box))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
+
+        public static readonly TestCaseInformation[] _Unbox_any = TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Unbox_any>();
+        [Test]
+        public static Task Unbox_any([ValueSource(nameof(_Unbox_any))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
+        #endregion
     }
 }

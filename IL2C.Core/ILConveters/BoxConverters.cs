@@ -28,9 +28,18 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
+            // MEMO: The 'O' type means System.Object, but we have to push the System.ValueType.
+            //   Because the boxed value types can implicit cast to both types.
+            //   The upcast can be inlining (System.ValueType --> System.Object),
+            //   but downcast requires runtime cast operator (System.Object --> System.ValueType).
             var symbolName = decodeContext.PushStack(
-                decodeContext.PrepareContext.MetadataContext.ObjectType);
+                decodeContext.PrepareContext.MetadataContext.ValueTypeType);
 
+            // MEMO: The IL2C strict type infers the evaluation stack.
+            //   The unbox operator is handling by the pointer.
+            //   So, we have to simulate implicitly conversion from little size value to large size value.
+            //   (It's only 8/16 --> 32bit. See ECMA-335 III.1.1.1 Numeric data types)
+            //   We can use conversion with the "il2c_box2" function in this case.
             if (operand.SizeOfValue == si.TargetType.SizeOfValue)
             {
                 return _ =>
@@ -66,7 +75,7 @@ namespace IL2C.ILConverters
         {
             var si = decodeContext.PopStack();
 
-            if (!si.TargetType.IsObjectType)
+            if (si.TargetType.IsValueType || si.TargetType.IsByReference || si.TargetType.IsPointer)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid type at stack: Location={0}, TokenType={1}, StackType={2}",
@@ -79,13 +88,10 @@ namespace IL2C.ILConverters
 
             return extractContext =>
             {
-                var rhs = extractContext.GetRightExpression(
-                    decodeContext.PrepareContext.MetadataContext.ObjectType, si);
-
                 return new[] { string.Format(
                     "{0} = *il2c_unbox({1}, {2})",
                     symbolName,
-                    rhs,
+                    si.SymbolName,
                     operand.MangledName) };
             };
         }

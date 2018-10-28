@@ -301,7 +301,7 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DEC
 // |        :             |                     v                     v
 // +----------------------+                   ---------------------------
 
-System_Object* il2c_box__(
+System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, const void* vptr0)
 {
     il2c_assert(pValue != NULL);
@@ -314,10 +314,10 @@ System_Object* il2c_box__(
     pBoxed->vptr0__ = vptr0;
     il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
 
-    return (System_Object*)pBoxed;
+    return pBoxed;
 }
 
-System_Object* il2c_box2__(
+System_ValueType* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0)
 {
     il2c_assert(pValue != NULL);
@@ -385,10 +385,10 @@ System_Object* il2c_box2__(
         break;
     }
 
-    return (System_Object*)pBoxed;
+    return pBoxed;
 }
 
-void* il2c_unbox__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType)
+void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType)
 {
     if (pReference == NULL)
     {

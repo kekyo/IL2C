@@ -204,3 +204,7 @@ Under Apache v2.
 * #6-48: How works mark-and-sweep garbage collection on translated code.
 
   ![#6-48: How works mark-and-sweep garbage collection on translated code](images/IMG_20171130_200549.jpg)
+
+* How to do overload/override/virtual method symbol calculus.
+
+  ![How to do overload/override/virtual method symbol calculus](images/IMG_20181028_165314.jpg)

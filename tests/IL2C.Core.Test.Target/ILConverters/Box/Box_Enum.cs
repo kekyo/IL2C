@@ -84,14 +84,6 @@ namespace IL2C.ILConverters
     [TestCase(Box_Enum_UInt64_Type.Min, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, ulong.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
     [TestCase(Box_Enum_UInt64_Type.One, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, 1UL, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
     [TestCase(Box_Enum_UInt64_Type.Max, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, ulong.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
-
-    [TestCase((Box_Enum_Int32_Type)byte.MinValue, new[] { "Enum_Int32_From_Byte", "Box_Enum_Int32_From_Byte" }, byte.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-    [TestCase((Box_Enum_Int32_Type)1, new[] { "Enum_Int32_From_Byte", "Box_Enum_Int32_From_Byte" }, 1, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-    [TestCase((Box_Enum_Int32_Type)byte.MaxValue, new[] { "Enum_Int32_From_Byte", "Box_Enum_Int32_From_Byte" }, byte.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-
-    [TestCase((Box_Enum_Int64_Type)int.MinValue, new[] { "Enum_Int64_From_Int32", "Box_Enum_Int64_From_Int32" }, int.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
-    [TestCase(Box_Enum_Int64_Type.Zero, new[] { "Enum_Int64_From_Int32", "Box_Enum_Int64_From_Int32" }, 0, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
-    [TestCase((Box_Enum_Int64_Type)int.MaxValue, new[] { "Enum_Int64_From_Int32", "Box_Enum_Int64_From_Int32" }, int.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
     public sealed class Box_Enum
     {
             [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -156,22 +148,6 @@ namespace IL2C.ILConverters
         public static Box_Enum_UInt64_Type Enum_UInt64(ulong value)
         {
             return (Box_Enum_UInt64_Type)Box_Enum_UInt64(value);
-        }
-
-            [MethodImpl(MethodImplOptions.ForwardRef)]
-            private static extern object Box_Enum_Int32_From_Byte(byte value);
-
-        public static Box_Enum_Int32_Type Enum_Int32_From_Byte(byte value)
-        {
-            return (Box_Enum_Int32_Type)Box_Enum_Int32_From_Byte(value);
-        }
-
-            [MethodImpl(MethodImplOptions.ForwardRef)]
-            private static extern object Box_Enum_Int64_From_Int32(int value);
-
-        public static Box_Enum_Int64_Type Enum_Int64_From_Int32(int value)
-        {
-            return (Box_Enum_Int64_Type)Box_Enum_Int64_From_Int32(value);
         }
     }
 }

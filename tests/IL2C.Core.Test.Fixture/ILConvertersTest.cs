@@ -364,6 +364,8 @@ namespace IL2C
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box_Widing>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box_Narrowing>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box_Enum>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box_Enum_Widing>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box_Enum_Narrowing>()).
             ToArray();
         [Test]
         public static Task Box([ValueSource(nameof(_Box))] TestCaseInformation caseInfo) =>

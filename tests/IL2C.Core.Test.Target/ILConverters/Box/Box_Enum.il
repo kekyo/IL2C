@@ -63,21 +63,4 @@
         box IL2C.ILConverters.Box_Enum_UInt64_Type
         ret
     }
-    
-    .method public static object Box_Enum_Int32_From_Byte(uint8 v) cil managed
-    {
-        .maxstack 1
-        ldarg.0
-        box IL2C.ILConverters.Box_Enum_Int32_Type
-        ret
-    }
-
-    .method public static object Box_Enum_Int64_From_Int32(int32 v) cil managed
-    {
-        .maxstack 1
-        ldarg.0
-        box IL2C.ILConverters.Box_Enum_Int64_Type
-        ret
-    }
-
 }

@@ -114,53 +114,30 @@ namespace IL2C
                     declaredType.MangledName);
             }
 
+            tw.WriteLine();
+            tw.WriteLine(
+                "// [1-1] {0} layout",
+                declaredType.MemberTypeName);
+
             // Write a enum:
             if (declaredType.IsEnum)
             {
-                tw.WriteLine();
-                tw.WriteLine(
-                    "// [1-1] {0} layout",
-                    declaredType.MemberTypeName);
-                tw.WriteLine(
-                    "enum {0}",
-                    declaredType.MangledName);
-                tw.WriteLine("{");
-
-                // Emit enum values
-                long currentValue = 0;
+                // Emit enum values:
+                //   Unfortunately the enum type at C language has not the underlying type.
+                //   IL2C emits the enum types using not C language syntax.
                 foreach (var field in declaredType.Fields.Where(field => field.HasConstant))
                 {
-                    long value = Convert.ToInt64(field.ConstantValue);
-                    if (value == currentValue)
-                    {
-                        tw.WriteLine(
-                            "{0}{1}_{2},",
-                            indent,
-                            declaredType.MangledName,
-                            field.Name);
-                        currentValue++;
-                    }
-                    else
-                    {
-                        tw.WriteLine(
-                            "{0}{1}_{2} = {3},",
-                            indent,
-                            declaredType.MangledName,
-                            field.Name,
-                            value);
-                        currentValue = value + 1;
-                    }
+                    tw.WriteLine(
+                        "static const {0} {1}_{2} = {3};",
+                        declaredType.CLanguageTypeName,
+                        declaredType.MangledName,
+                        field.Name,
+                        Utilities.ToCLanguageExpression(field.ConstantValue));
                 }
-
-                tw.WriteLine("};");
             }
-            // Write a class/interface/struct.
+            // Write a class/interface/struct:
             else
             {
-                tw.WriteLine();
-                tw.WriteLine(
-                    "// [1-3] {0} layout",
-                    declaredType.MemberTypeName);
                 tw.WriteLine(
                     "struct {0}",
                     declaredType.MangledName);
@@ -273,9 +250,11 @@ namespace IL2C
             foreach (var type in types
                 .Where(type => predictType(type)))
             {
+                // Unfortunately the enum type at C language has not the underlying type.
+                // IL2C emits the enum types using not C language syntax.
                 tw.WriteLine(
-                    "typedef {0} {1} {1};",
-                    type.IsEnum ? "enum" : "struct",
+                    "typedef {0} {1};",
+                    type.IsEnum ? type.ElementType.CLanguageTypeName : ("struct " + type.MangledName),
                     type.MangledName);
             }
 

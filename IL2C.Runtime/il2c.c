@@ -332,7 +332,7 @@ System_ValueType* il2c_box2__(
 
     // Require type conversion
     il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER) && ((stackType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER));
-    il2c_assert((valueType->bodySize <= 4) && (stackType->bodySize <= 4));
+    il2c_assert((valueType->bodySize <= 8) && (stackType->bodySize <= 8));
     il2c_assert((valueType->bodySize >= 1) && (stackType->bodySize >= 1));
 
     // TODO: value type --> interface type
@@ -346,7 +346,8 @@ System_ValueType* il2c_box2__(
 
     uint8_t v1;
     uint16_t v2;
-    uint16_t v4;
+    uint32_t v4;
+    uint64_t v8;
     switch (valueType->bodySize)
     {
     case 1:
@@ -359,6 +360,10 @@ System_ValueType* il2c_box2__(
         case 4:
             v1 = (uint8_t)*(uint32_t*)pValue;
             il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v1, 1);
+            break;
+        default:
+            // TODO: throw InvalidCastException()
+            il2c_assert(0);
             break;
         }
         break;
@@ -373,6 +378,10 @@ System_ValueType* il2c_box2__(
             v2 = (uint16_t)*(uint32_t*)pValue;
             il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v2, 2);
             break;
+        default:
+            // TODO: throw InvalidCastException()
+            il2c_assert(0);
+            break;
         }
         break;
     case 4:
@@ -385,6 +394,27 @@ System_ValueType* il2c_box2__(
         case 2:
             v4 = *(uint16_t*)pValue;
             il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v4, 4);
+            break;
+        case 8:   // Hmm, the ECMA-335 not contains this conversion but .NET CLR 4 can do it.
+            v4 = *(uint64_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v4, 4);
+            break;
+        default:
+            // TODO: throw InvalidCastException()
+            il2c_assert(0);
+            break;
+        }
+        break;
+    case 8:
+        switch (stackType->bodySize)
+        {
+        case 4:   // Hmm, the ECMA-335 not contains this conversion but .NET CLR 4 can do it.
+            v8 = *(uint32_t*)pValue;
+            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v8, 8);
+            break;
+        default:
+            // TODO: throw InvalidCastException()
+            il2c_assert(0);
             break;
         }
         break;

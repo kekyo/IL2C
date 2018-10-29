@@ -273,7 +273,7 @@ namespace IL2C.Metadata
                 baseType => new TypeInformation(baseType, this.DeclaringModule));
         public ITypeInformation ElementType =>
             this.MetadataContext.GetOrAddMember(
-                this.Member.GetElementType(),
+                this.IsEnum ? ((TypeDefinition)this.Definition).GetEnumUnderlyingType() : this.Member.GetElementType(),
                 elementType => new TypeInformation(elementType, this.DeclaringModule));
         public ITypeInformation[] InterfaceTypes =>
             this.MetadataContext.GetOrAddMembers(

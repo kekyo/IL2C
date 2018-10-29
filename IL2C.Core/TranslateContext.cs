@@ -172,7 +172,7 @@ namespace IL2C
                 if (lhsType.IsNumericPrimitive)
                 {
                     return string.Format(
-                        "({0})({1})",
+                        "({0}){1}",
                         lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
@@ -194,16 +194,10 @@ namespace IL2C
 
                 if (lhsType.IsEnum)
                 {
-                    var lhsElementType = lhsType.Fields
-                        .First(f => f.Name == "value__")
-                        .FieldType;
-                    if (lhsElementType.IsAssignableFrom(rhsType))
-                    {
-                        return String.Format(
-                            "({0}){1}",
-                            lhsType.CLanguageTypeName,
-                            rhsExpression);
-                    }
+                    return string.Format(
+                        "({0}){1}",
+                        lhsType.CLanguageTypeName,
+                        rhsExpression);
                 }
             }
             else if (rhsType.IsBooleanType)

@@ -186,7 +186,7 @@ namespace IL2C
                     p.SymbolName,
                     p.TargetType,
                     arg?.GetType(),
-                    Utilities.ToCLanguageLiteralExpression(arg))
+                    Utilities.ToCLanguageExpression(arg))
                 ).
                 ToArray();
             var argumentList = constants.
@@ -204,7 +204,7 @@ namespace IL2C
                         argument.SymbolName,
                         argument.TargetType,
                         argument.ExpressionType,
-                        Utilities.ToCLanguageLiteralExpression(expectedType.PseudoEmptyValue))).
+                        Utilities.ToCLanguageExpression(expectedType.PseudoEmptyValue))).
                 ToArray();
 
             if (!(expectedType.IsVoidType || (caseInfo.Assert == TestCaseAsserts.CauseBreak)))
@@ -216,7 +216,7 @@ namespace IL2C
                             "expected",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.ToCLanguageLiteralExpression(caseInfo.Expected)),
+                            Utilities.ToCLanguageExpression(caseInfo.Expected)),
                     }).
                     ToArray();
                 arguments = constants.
@@ -232,14 +232,14 @@ namespace IL2C
                             argument.SymbolName,
                             argument.TargetType,
                             argument.ExpressionType,
-                            Utilities.ToCLanguageLiteralExpression(argument.TargetType.PseudoEmptyValue))).
+                            Utilities.ToCLanguageExpression(argument.TargetType.PseudoEmptyValue))).
                     Concat(new Constant[]
                     {
                         new Constant(
                             "actual",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.ToCLanguageLiteralExpression(expectedType.PseudoEmptyValue)),
+                            Utilities.ToCLanguageExpression(expectedType.PseudoEmptyValue)),
                     }).
                     ToArray();
             }

@@ -182,9 +182,19 @@ namespace IL2C
             string.Format("((uintptr_t){0})", ToCLanguageExpression(value.ToUInt64()));
 
         public static string ToCLanguageExpression(Enum value) =>
-            string.Format("{0}_{1}", ToMangledName(value.GetType().FullName), value);
+            Enum.IsDefined(value.GetType(), value) ?
+                string.Format("{0}_{1}",
+                    ToMangledName(value.GetType().FullName),
+                    value) :
+                string.Format("({0}){1}",
+                    ToMangledName(value.GetType().FullName),
+                    ToCLanguageExpression(
+                        value.GetType().
+                        GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly).
+                        First().
+                        GetValue(value)));
 
-        public static string ToCLanguageLiteralExpression(object value)
+        public static string ToCLanguageExpression(object value)
         {
             if (value == null) return "NULL";
             if (value is int) return ToCLanguageExpression((int)value);

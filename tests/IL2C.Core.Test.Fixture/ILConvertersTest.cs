@@ -359,7 +359,11 @@ namespace IL2C
         #endregion
 
         #region Box
-        public static readonly TestCaseInformation[] _Box = TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box>();
+        public static readonly TestCaseInformation[] _Box =
+            TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box>().
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box_Widing>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.ILConverters.Box_Narrowing>()).
+            ToArray();
         [Test]
         public static Task Box([ValueSource(nameof(_Box))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);

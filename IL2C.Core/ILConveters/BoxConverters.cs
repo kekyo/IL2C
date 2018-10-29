@@ -40,15 +40,19 @@ namespace IL2C.ILConverters
             //   So, we have to simulate implicitly conversion from little size value to large size value.
             //   (It's only 8/16 --> 32bit. See ECMA-335 III.1.1.1 Numeric data types)
             //   We can use conversion with the "il2c_box2" function in this case.
+            //   For example:
+            //     // object value = (byte)123;
+            //     ldc.i4.s 123                 // int32_t
+            //     box [mscorlib]System.Byte    // int32_t --> objref(uint8_t)   // size[4] --> size[1]
             if (operand.SizeOfValue == si.TargetType.SizeOfValue)
             {
                 return _ =>
                 {
                     return new[] { string.Format(
-                    "{0} = il2c_box(&{1}, {2})",
-                    symbolName,
-                    si.SymbolName,
-                    operand.MangledName) };
+                        "{0} = il2c_box(&{1}, {2})",
+                        symbolName,
+                        si.SymbolName,
+                        operand.MangledName) };
                 };
             }
             else
@@ -56,11 +60,11 @@ namespace IL2C.ILConverters
                 return _ =>
                 {
                     return new[] { string.Format(
-                    "{0} = il2c_box2(&{1}, {2}, {3})",
-                    symbolName,
-                    si.SymbolName,
-                    operand.MangledName,
-                    si.TargetType.MangledName) };
+                        "{0} = il2c_box2(&{1}, {2}, {3})",
+                        symbolName,
+                        si.SymbolName,
+                        operand.MangledName,
+                        si.TargetType.MangledName) };
                 };
             }
         }

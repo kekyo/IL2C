@@ -25,6 +25,7 @@
     <ClCompile Include="System.Char.c" />
     <ClCompile Include="System.Console.c" />
     <ClCompile Include="System.Double.c" />
+    <ClCompile Include="System.Enum.c" />
     <ClCompile Include="System.Int16.c" />
     <ClCompile Include="System.Int32.c" />
     <ClCompile Include="System.Int64.c" />
@@ -47,6 +48,7 @@
     <ClInclude Include="System.Char.h" />
     <ClInclude Include="System.Console.h" />
     <ClInclude Include="System.Double.h" />
+    <ClInclude Include="System.Enum.h" />
     <ClInclude Include="System.Int16.h" />
     <ClInclude Include="System.Int32.h" />
     <ClInclude Include="System.Int64.h" />

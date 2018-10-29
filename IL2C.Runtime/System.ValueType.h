@@ -24,11 +24,6 @@ struct System_ValueType
 extern __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__;
 
-static inline void System_ValueType__ctor(System_ValueType* this__)
-{
-    System_Object__ctor((System_Object*)this__);
-}
-
 #define __System_ValueType_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
 
 extern /* virtual */ System_String* System_ValueType_ToString(System_ValueType* this__);

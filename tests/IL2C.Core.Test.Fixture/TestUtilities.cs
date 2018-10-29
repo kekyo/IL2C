@@ -61,7 +61,8 @@ namespace IL2C
         }
 
         public static TestCaseInformation CreateTestCaseInformation(
-            string categoryName, string id, string name, MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
+            string categoryName, string id, string name,
+            MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
             new TestCaseInformation(
                 categoryName,
                 id,
@@ -69,6 +70,10 @@ namespace IL2C
                 ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
                 caseAttribute.Assert,
                 method,
+                (caseAttribute.IncludeBaseTypes ?
+                    method.DeclaringType.BaseType.Traverse(type => type.BaseType).Concat(caseAttribute.IncludeTypes) :
+                    caseAttribute.IncludeTypes).
+                    ToArray(),
                 additionalMethods,
                 caseAttribute.Arguments.
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).

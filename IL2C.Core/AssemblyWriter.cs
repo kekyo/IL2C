@@ -35,34 +35,6 @@ namespace IL2C
                 "// [1] {0}",
                 declaredType.FriendlyName);
 
-            // Enum declarator:
-            if (declaredType.IsEnum)
-            {
-                tw.WriteLine();
-                tw.WriteLine(
-                    "// [1-1] {0} layout",
-                    declaredType.MemberTypeName);
-                tw.WriteLine(
-                    "typedef enum {0}",
-                    declaredType.MangledName);
-                tw.WriteLine("{");
-
-                // Emit enum values
-                foreach (var field in declaredType.Fields.Where(field => field.HasConstant))
-                {
-                    tw.WriteLine(
-                        "{0}{1}_{2} = {3},",
-                        indent,
-                        declaredType.MangledName,
-                        field.Name,
-                        field.ConstantValue);
-                }
-
-                tw.WriteLine(
-                    "}} {0};",
-                    declaredType.MangledName);
-            }
-
             // IL2C vtable model case [1]:
             //
             // public class A : IB {
@@ -100,54 +72,91 @@ namespace IL2C
             var newSlotMethods = declaredType.NewSlotMethods;
             var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
-            // NOTE: 1 of 2
-            //   Enum type derived from System.Enum,
-            //   so all enum types boxed to System.Enum
-            //   (and those types can dynamic cast to IConvertible, IFormattable and IComparable with NO specialized boxed type layouts... in C#?)
-            if (!declaredType.IsEnum)
+            // If virtual method collection doesn't contain newslot method at this declared type:
+            if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
-                // If virtual method collection doesn't contain newslot method at this declared type:
-                if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
-                {
-                    tw.WriteLine();
-                    tw.WriteLine(
-                        "// [1-2-1] {0} vtable layout (Same as {1})",
-                        declaredType.MemberTypeName,
-                        overrideBaseMethods.Last().DeclaringType.FriendlyName);
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [1-2-1] {0} vtable layout (Same as {1})",
+                    declaredType.MemberTypeName,
+                    declaredType.BaseType.FriendlyName);
 
+                tw.WriteLine(
+                    "typedef __{0}_VTABLE_DECL__ __{1}_VTABLE_DECL__;",
+                    declaredType.BaseType.MangledName,
+                    declaredType.MangledName);
+            }
+            // Require new vtable layout.
+            else
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [1-2-2] {0} vtable layout (Derived from {1})",
+                    declaredType.MemberTypeName,
+                    declaredType.BaseType.FriendlyName);
+
+                tw.WriteLine("typedef const struct");
+                tw.WriteLine("{");
+                tw.WriteLine(
+                    "{0}/* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);",
+                    indent);
+
+                foreach (var (method, overloadIndex) in virtualMethods)
+                {
                     tw.WriteLine(
-                        "typedef __{0}_VTABLE_DECL__ __{1}_VTABLE_DECL__;",
-                        overrideBaseMethods.Last().DeclaringType.MangledName,
-                        declaredType.MangledName);
+                        "{0}{1};",
+                        indent,
+                        method.GetCLanguageFunctionPrototype(overloadIndex));
                 }
-                // Require new vtable layout.
-                else
+
+                tw.WriteLine(
+                    "}} __{0}_VTABLE_DECL__;",
+                    declaredType.MangledName);
+            }
+
+            // Write a enum:
+            if (declaredType.IsEnum)
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [1-1] {0} layout",
+                    declaredType.MemberTypeName);
+                tw.WriteLine(
+                    "enum {0}",
+                    declaredType.MangledName);
+                tw.WriteLine("{");
+
+                // Emit enum values
+                long currentValue = 0;
+                foreach (var field in declaredType.Fields.Where(field => field.HasConstant))
                 {
-                    tw.WriteLine();
-                    tw.WriteLine(
-                        "// [1-2-2] {0} vtable layout (Derived from {1})",
-                        declaredType.MemberTypeName,
-                        overrideBaseMethods.Last().DeclaringType.FriendlyName);
-
-                    tw.WriteLine("typedef const struct");
-                    tw.WriteLine("{");
-                    tw.WriteLine(
-                        "{0}/* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);",
-                        indent);
-
-                    foreach (var (method, overloadIndex) in virtualMethods)
+                    long value = Convert.ToInt64(field.ConstantValue);
+                    if (value == currentValue)
                     {
                         tw.WriteLine(
-                            "{0}{1};",
+                            "{0}{1}_{2},",
                             indent,
-                            method.GetCLanguageFunctionPrototype(overloadIndex));
+                            declaredType.MangledName,
+                            field.Name);
+                        currentValue++;
                     }
-
-                    tw.WriteLine(
-                        "}} __{0}_VTABLE_DECL__;",
-                        declaredType.MangledName);
+                    else
+                    {
+                        tw.WriteLine(
+                            "{0}{1}_{2} = {3},",
+                            indent,
+                            declaredType.MangledName,
+                            field.Name,
+                            value);
+                        currentValue = value + 1;
+                    }
                 }
 
+                tw.WriteLine("};");
+            }
+            // Write a class/interface/struct.
+            else
+            {
                 tw.WriteLine();
                 tw.WriteLine(
                     "// [1-3] {0} layout",
@@ -157,7 +166,7 @@ namespace IL2C
                     declaredType.MangledName);
                 tw.WriteLine("{");
 
-                // Emit vptr:
+                // Emit vptr (class/interface)
                 if (declaredType.IsClass || declaredType.IsInterface)
                 {
                     tw.WriteLine(
@@ -168,10 +177,10 @@ namespace IL2C
 
                 // TODO: If value type implements interfaces, how to assigns vptr into value type?
                 //   (We often have to resolve at enum types...)
-                var fields = declaredType
-                    .Traverse(type => type.BaseType)
-                    .Reverse()
-                    .SelectMany(type =>
+                var fields = declaredType.
+                    Traverse(type => type.BaseType).
+                    Reverse().
+                    SelectMany(type =>
                     {
                         var vptrs = type.InterfaceTypes
                             .Select(interfaceType => new
@@ -209,17 +218,17 @@ namespace IL2C
             }
 
             // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-            if (!overrideMethods.Any() && !newSlotMethods.Any())
+            if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
                 tw.WriteLine();
                 tw.WriteLine(
                     "// [1-5-1] Vtable (Same as {0})",
-                    overrideBaseMethods.Last().DeclaringType.FriendlyName);
+                    declaredType.BaseType.FriendlyName);
 
                 tw.WriteLine(
                     "#define __{0}_VTABLE__ __{1}_VTABLE__",
                     declaredType.MangledName,
-                    overrideBaseMethods.Last().DeclaringType.MangledName);
+                    declaredType.BaseType.MangledName);
             }
             // Require new vtable.
             else
@@ -227,7 +236,7 @@ namespace IL2C
                 tw.WriteLine();
                 tw.WriteLine(
                     "// [1-5-2] Vtable (Derived from {0})",
-                    overrideBaseMethods.Last().DeclaringType.FriendlyName);
+                    declaredType.BaseType.FriendlyName);
 
                 tw.WriteLine(
                     "extern __{0}_VTABLE_DECL__ __{0}_VTABLE__;",
@@ -262,10 +271,11 @@ namespace IL2C
 
             // Output prototypes.
             foreach (var type in types
-                .Where(type => !type.IsEnum && predictType(type)))
+                .Where(type => predictType(type)))
             {
                 tw.WriteLine(
-                    "typedef struct {0} {0};",
+                    "typedef {0} {1} {1};",
+                    type.IsEnum ? "enum" : "struct",
                     type.MangledName);
             }
 
@@ -699,89 +709,92 @@ namespace IL2C
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// [7] Runtime helpers:");
 
-            // Write mark handler:
-            tw.WriteLine();
-            tw.WriteLine(
-                "// [7-5] GC's mark handler");
-            tw.WriteLine(
-                "void __{0}_IL2C_MarkHandler__({1} this__)",
-                declaredType.MangledName,
-                declaredType.CLanguageThisTypeName);
-            tw.WriteLine("{");
-            tw.WriteLine(
-                "{0}il2c_assert(this__ != NULL);",
-                indent);
-
-            var fields = declaredType.Fields.
-                Where(field => !field.IsStatic && !field.FieldType.IsValueType).
-                ToArray();
-            if (fields.Length >= 1)
+            if (!declaredType.IsEnum)
             {
+                // Write mark handler:
                 tw.WriteLine();
                 tw.WriteLine(
-                    "{0}// [7-6] Try marking each object reference fields",
+                    "// [7-5] GC's mark handler");
+                tw.WriteLine(
+                    "void __{0}_IL2C_MarkHandler__({1} this__)",
+                    declaredType.MangledName,
+                    declaredType.CLanguageThisTypeName);
+                tw.WriteLine("{");
+                tw.WriteLine(
+                    "{0}il2c_assert(this__ != NULL);",
                     indent);
 
-                // Write unbox function if type is value type.
-                string thisRefForMarker;
-                if (declaredType.IsValueType)
-                {
-                    tw.WriteLine(
-                        "{0}{1}* pValue =",
-                        indent,
-                        declaredType.CLanguageTypeName);
-                    tw.WriteLine(
-                        "{0}{0}il2c_unsafe_unbox__(this__, {1});",
-                        indent,
-                        declaredType.CLanguageTypeName);
-                    thisRefForMarker = "pValue";
-                }
-                else
-                {
-                    thisRefForMarker = "this__";
-                }
-
-                // Write marker expression.
-                foreach (var field in fields)
-                {
-                    tw.WriteLine(
-                        "{0}il2c_try_mark_from_handler({1}->{2});",
-                        indent,
-                        thisRefForMarker,
-                        field.Name);
-                }
-            }
-
-            // NOTE:
-            //   Invoke base class mark handler except contains NO fields.
-            //   (ex: System.Object, System.ValueType...)
-            var baseType = declaredType.BaseType;
-            if (baseType != null)
-            {
-                if (baseType.
-                    Traverse(type => type.BaseType).
-                    Any(type => type.Fields.Length >= 1) == false)
+                var fields = declaredType.Fields.
+                    Where(field => !field.IsStatic && !field.FieldType.IsValueType).
+                    ToArray();
+                if (fields.Length >= 1)
                 {
                     tw.WriteLine();
                     tw.WriteLine(
-                        "{0}// [7-7] Delegate checking base types",
+                        "{0}// [7-6] Try marking each object reference fields",
                         indent);
-                    tw.WriteLine(
-                        "{0}__{1}_IL2C_MarkHandler__(({2})this__);",
-                        indent,
-                        declaredType.BaseType.MangledName,
-                        declaredType.BaseType.CLanguageTypeName);
-                }
-                else
-                {
-                    tw.WriteLine();
-                    tw.WriteLine(
-                        "{0}/* Suppressed invoke base mark handler */",
-                        indent);
-                }
-            }
 
-            tw.WriteLine("}");
+                    // Write unbox function if type is value type.
+                    string thisRefForMarker;
+                    if (declaredType.IsValueType)
+                    {
+                        tw.WriteLine(
+                            "{0}{1}* pValue =",
+                            indent,
+                            declaredType.CLanguageTypeName);
+                        tw.WriteLine(
+                            "{0}{0}il2c_unsafe_unbox__(this__, {1});",
+                            indent,
+                            declaredType.CLanguageTypeName);
+                        thisRefForMarker = "pValue";
+                    }
+                    else
+                    {
+                        thisRefForMarker = "this__";
+                    }
+
+                    // Write marker expression.
+                    foreach (var field in fields)
+                    {
+                        tw.WriteLine(
+                            "{0}il2c_try_mark_from_handler({1}->{2});",
+                            indent,
+                            thisRefForMarker,
+                            field.Name);
+                    }
+                }
+
+                // NOTE:
+                //   Invoke base class mark handler except contains NO fields.
+                //   (ex: System.Object, System.ValueType...)
+                var baseType = declaredType.BaseType;
+                if (baseType != null)
+                {
+                    if (baseType.
+                        Traverse(type => type.BaseType).
+                        Any(type => type.Fields.Length >= 1) == false)
+                    {
+                        tw.WriteLine();
+                        tw.WriteLine(
+                            "{0}// [7-7] Delegate checking base types",
+                            indent);
+                        tw.WriteLine(
+                            "{0}__{1}_IL2C_MarkHandler__(({2})this__);",
+                            indent,
+                            declaredType.BaseType.MangledName,
+                            declaredType.BaseType.CLanguageTypeName);
+                    }
+                    else
+                    {
+                        tw.WriteLine();
+                        tw.WriteLine(
+                            "{0}/* Suppressed invoke base mark handler */",
+                            indent);
+                    }
+                }
+
+                tw.WriteLine("}");
+            }
 
             // Write trampoline virtual functions if type is value type.
             var virtualMethods = declaredType.CalculatedVirtualMethods;
@@ -831,157 +844,150 @@ namespace IL2C
             var newSlotMethods = declaredType.NewSlotMethods;
             var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
-            // NOTE: 2 of 2
-            //   Enum type derived from System.Enum,
-            //   so all enum types boxed to System.Enum
-            //   (and those types can dynamic cast to IConvertible, IFormattable and IComparable with NO specialized boxed type layouts... in C#?)
-            if (!declaredType.IsEnum)
-            {
 #if true
-                // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-                if (!overrideMethods.Any() && !newSlotMethods.Any())
-                {
-                    tw.WriteLine();
-                    tw.WriteLine(
-                        "// [7-10-1] Vtable (Not defined, same as {0})",
-                        overrideBaseMethods.Last().DeclaringType.FriendlyName);
-                }
-                // Require new vtable.
-                else
-                {
-                    // Write virtual methods
-                    tw.WriteLine();
-                    tw.WriteLine(
-                        "// [7-10-2] Vtable");
-                    tw.WriteLine(
-                        "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
-                        declaredType.MangledName);
-                    tw.WriteLine(
-                        "{0}/* internalcall */ il2c_isinst__,",
-                        indent,
-                        declaredType.MangledName);
-
-                    foreach (var (method, _) in virtualMethods)
-                    {
-                        // MEMO: Transfer trampoline virtual function if declared type is value type.
-                        //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
-                        //   The trampoline unboxes from objref to target value type.
-                        tw.WriteLine(
-                            "{0}({1}){2}{3},",
-                            indent,
-                            method.CLanguageFunctionTypePrototype,
-                            method.CLanguageFunctionName,
-                            (declaredType.IsValueType && method.DeclaringType.Equals(declaredType)) ? "_Trampoline_VFunc__" : string.Empty);
-                    }
-
-                    tw.WriteLine("};");
-                }
-#else
+            // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
+            if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [7-10-1] Vtable (Not defined, same as {0})",
+                    declaredType.BaseType.FriendlyName);
+            }
+            // Require new vtable.
+            else
+            {
                 // Write virtual methods
                 tw.WriteLine();
                 tw.WriteLine(
-                    "// [7-10] Vtable of {0}",
-                    declaredType.FriendlyName);
+                    "// [7-10-2] Vtable");
                 tw.WriteLine(
                     "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
                     declaredType.MangledName);
                 tw.WriteLine(
-                    "{0}/* internalcall */ il2c_runtime_isinst,",
+                    "{0}/* internalcall */ il2c_isinst__,",
                     indent,
                     declaredType.MangledName);
 
-                var virtualFunctions = GetVirtualFunctions(
-                    declaredType,
-                    declaredType);
-
-                foreach (var function in virtualFunctions)
+                foreach (var (method, _) in virtualMethods)
                 {
+                    // MEMO: Transfer trampoline virtual function if declared type is value type.
+                    //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
+                    //   The trampoline unboxes from objref to target value type.
                     tw.WriteLine(
-                        "{0}{1}_{2},",
+                        "{0}({1}){2}{3},",
                         indent,
-                        function.MangledTypeName,
-                        function.CLanguageVirtualFunctionDeclarationName);
+                        method.CLanguageFunctionTypePrototype,
+                        method.CLanguageFunctionName,
+                        (declaredType.IsValueType && method.DeclaringType.Equals(declaredType)) ? "_Trampoline_VFunc__" : string.Empty);
                 }
 
                 tw.WriteLine("};");
+            }
+#else
+            // Write virtual methods
+            tw.WriteLine();
+            tw.WriteLine(
+                "// [7-10] Vtable of {0}",
+                declaredType.FriendlyName);
+            tw.WriteLine(
+                "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
+                declaredType.MangledName);
+            tw.WriteLine(
+                "{0}/* internalcall */ il2c_runtime_isinst,",
+                indent,
+                declaredType.MangledName);
 
-                foreach (var interfaceType in declaredType.InterfaceTypes)
+            var virtualFunctions = GetVirtualFunctions(
+                declaredType,
+                declaredType);
+
+            foreach (var function in virtualFunctions)
+            {
+                tw.WriteLine(
+                    "{0}{1}_{2},",
+                    indent,
+                    function.MangledTypeName,
+                    function.CLanguageVirtualFunctionDeclarationName);
+            }
+
+            tw.WriteLine("};");
+
+            foreach (var interfaceType in declaredType.InterfaceTypes)
+            {
+                var interfaceVirtualFunctions = GetVirtualFunctions(
+                    interfaceType,
+                    declaredType);
+
+                foreach (var function in interfaceVirtualFunctions)
                 {
-                    var interfaceVirtualFunctions = GetVirtualFunctions(
-                        interfaceType,
-                        declaredType);
-
-                    foreach (var function in interfaceVirtualFunctions)
-                    {
-                        // Adjustor thunk will not invoke direct, so try to emit static function.
-                        tw.WriteLine();
-                        tw.WriteLine(
-                            "// [7-11] Adjustor thunk: {0}.{1}",
-                            function.CLanguageTypeName,
-                            function.CLanguageVirtualFunctionDeclarationName);
-                        tw.WriteLine(
-                            "static {0} __{1}_{2}_AT_{3}__(",
-                            function.CLanguageReturnTypeName,
-                            function.CLanguageTypeName,
-                            function.CLanguageVirtualFunctionDeclarationName,
-                            interfaceType.MangledName);
-                        tw.WriteLine(
-                            "{0}{1})",
-                            indent,
-                            string.Join(
-                                ", ",
-                                function.Parameters.Select(parameter =>
-                                    string.Format(
-                                        "{0} {1}",
-                                        parameter.Key,
-                                        parameter.Value))));
-                        tw.WriteLine(
-                            "{");
-                        tw.WriteLine(
-                            "{0}{1}__{2}_{3}__({4});",
-                            indent,
-                            (function.CLanguageReturnTypeName != "void") ? "return " : string.Empty,
-                            function.CLanguageTypeName,
-                            function.CLanguageVirtualFunctionDeclarationName,
-                            string.Join(
-                                ", ",
-                                function.Parameters.Select((parameter, index) =>
-                                    (index == 0)
-                                        // Adjust vptr offset with il2c_cast_from_interface() macro.
-                                        ? string.Format(
-                                            "({0}*)il2c_cast_from_interface({1}, {2}, {3})",
-                                            function.CLanguageTypeName,
-                                            declaredType.MangledName,
-                                            interfaceType.MangledName,
-                                            parameter.Value)
-                                        : parameter.Value)));
-                        tw.WriteLine(
-                            "}");
-                    }
-
+                    // Adjustor thunk will not invoke direct, so try to emit static function.
                     tw.WriteLine();
                     tw.WriteLine(
-                        "// [7-12] Vtable of {0} (with adjustor thunk)",
-                        interfaceType.FriendlyName);
+                        "// [7-11] Adjustor thunk: {0}.{1}",
+                        function.CLanguageTypeName,
+                        function.CLanguageVirtualFunctionDeclarationName);
                     tw.WriteLine(
-                        "__{0}_VTABLE_DECL__ __{1}_{0}_VTABLE__ = {{",
-                        interfaceType.MangledName,
-                        declaredType.MangledName);
-
-                    foreach (var function in interfaceVirtualFunctions)
-                    {
-                        tw.WriteLine(
-                            "{0}__{1}_{2}_AT_{3}__,",
-                            indent,
-                            function.CLanguageTypeName,
-                            function.CLanguageVirtualFunctionDeclarationName,
-                            interfaceType.MangledName);
-                    }
-
-                    tw.WriteLine("};");
+                        "static {0} __{1}_{2}_AT_{3}__(",
+                        function.CLanguageReturnTypeName,
+                        function.CLanguageTypeName,
+                        function.CLanguageVirtualFunctionDeclarationName,
+                        interfaceType.MangledName);
+                    tw.WriteLine(
+                        "{0}{1})",
+                        indent,
+                        string.Join(
+                            ", ",
+                            function.Parameters.Select(parameter =>
+                                string.Format(
+                                    "{0} {1}",
+                                    parameter.Key,
+                                    parameter.Value))));
+                    tw.WriteLine(
+                        "{");
+                    tw.WriteLine(
+                        "{0}{1}__{2}_{3}__({4});",
+                        indent,
+                        (function.CLanguageReturnTypeName != "void") ? "return " : string.Empty,
+                        function.CLanguageTypeName,
+                        function.CLanguageVirtualFunctionDeclarationName,
+                        string.Join(
+                            ", ",
+                            function.Parameters.Select((parameter, index) =>
+                                (index == 0)
+                                    // Adjust vptr offset with il2c_cast_from_interface() macro.
+                                    ? string.Format(
+                                        "({0}*)il2c_cast_from_interface({1}, {2}, {3})",
+                                        function.CLanguageTypeName,
+                                        declaredType.MangledName,
+                                        interfaceType.MangledName,
+                                        parameter.Value)
+                                    : parameter.Value)));
+                    tw.WriteLine(
+                        "}");
                 }
-#endif
+
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [7-12] Vtable of {0} (with adjustor thunk)",
+                    interfaceType.FriendlyName);
+                tw.WriteLine(
+                    "__{0}_VTABLE_DECL__ __{1}_{0}_VTABLE__ = {{",
+                    interfaceType.MangledName,
+                    declaredType.MangledName);
+
+                foreach (var function in interfaceVirtualFunctions)
+                {
+                    tw.WriteLine(
+                        "{0}__{1}_{2}_AT_{3}__,",
+                        indent,
+                        function.CLanguageTypeName,
+                        function.CLanguageVirtualFunctionDeclarationName,
+                        interfaceType.MangledName);
+                }
+
+                tw.WriteLine("};");
             }
+#endif
 
             // Write runtime type information
             tw.WriteLine();
@@ -1001,10 +1007,20 @@ namespace IL2C
                 "{0}sizeof({1}),",
                 indent,
                 declaredType.MangledName);
-            tw.WriteLine(
-                "{0}/* internalcall */ (IL2C_MARK_HANDLER)__{1}_IL2C_MarkHandler__,",
-                indent,
-                declaredType.MangledName);
+            if (declaredType.IsEnum)
+            {
+                tw.WriteLine(
+                    "{0}/* internalcall */ IL2C_DEFAULT_MARK_HANDLER,",
+                    indent,
+                    declaredType.MangledName);
+            }
+            else
+            {
+                tw.WriteLine(
+                    "{0}/* internalcall */ (IL2C_MARK_HANDLER)__{1}_IL2C_MarkHandler__,",
+                    indent,
+                    declaredType.MangledName);
+            }
             tw.WriteLine(
                 "{0}il2c_typeof({1})",
                 indent,
@@ -1040,7 +1056,7 @@ namespace IL2C
         internal static void InternalConvertFromMethod(
             TextWriter tw,
             IExtractContext extractContext,
-            PreparedMethodInformations preparedFunctions,
+            PreparedInformations preparedFunctions,
             IMethodInformation method,
             string indent,
             DebugInformationOptions debugInformationOption = DebugInformationOptions.None)
@@ -1093,7 +1109,7 @@ namespace IL2C
         internal static void InternalWriteHeader(
             TextWriter twHeader,
             TranslateContext translateContext,
-            PreparedMethodInformations preparedMethods,
+            PreparedInformations prepared,
             string indent,
             bool includeAssemblyHeader)
         {
@@ -1117,19 +1133,14 @@ namespace IL2C
                 }
             }
 
-            var allTypes = preparedMethods.Functions
-                .Select(f => f.Key.DeclaringType)
-                .Distinct()
-                .ToArray();
-
             // All types exclude privates
             InternalConvertToPrototypes(
                 twHeader,
-                allTypes,
+                prepared.Types,
                 type => type.IsCLanguagePublicScope,
                 field => field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly,
                 method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
-                    preparedMethods.Functions.ContainsKey(method),
+                    prepared.Functions.ContainsKey(method),
                 indent);
 
             twHeader.WriteLine();
@@ -1139,11 +1150,11 @@ namespace IL2C
         public static void WriteHeader(
             TextWriter twHeader,
             TranslateContext translateContext,
-            PreparedMethodInformations preparedMethods,
+            PreparedInformations prepared,
             string indent)
         {
             InternalWriteHeader(
-                twHeader, translateContext, preparedMethods, indent, true);
+                twHeader, translateContext, prepared, indent, true);
         }
 
         internal static void WriteConstStrings(
@@ -1170,7 +1181,7 @@ namespace IL2C
         internal static void InternalWriteSourceCode(
             TextWriter twSource,
             TranslateContext translateContext,
-            PreparedMethodInformations preparedMethods,
+            PreparedInformations prepared,
             string indent,
             DebugInformationOptions debugInformationOption,
             bool includeAssemblyHeader)
@@ -1195,26 +1206,21 @@ namespace IL2C
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [9-2] File scope prototypes:");
 
-            var allTypes = preparedMethods.Functions
-                .Select(f => f.Key.DeclaringType)
-                .Distinct()
-                .ToArray();
-
             // All types exclude publics and internals (for file scope prototypes)
             InternalConvertToPrototypes(
                 twSource,
-                allTypes,
+                prepared.Types,
                 type => !type.IsCLanguagePublicScope,
                 field => !(field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly),
                 method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
-                    preparedMethods.Functions.ContainsKey(method),
+                    prepared.Functions.ContainsKey(method),
                 indent);
 
             twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [9-3] Declare static fields:");
 
-            foreach (var type in allTypes
+            foreach (var type in prepared.Types
                 .Where(type => !type.IsEnum))
             {
                 twSource.WriteLine();
@@ -1229,14 +1235,10 @@ namespace IL2C
                 }
             }
 
-            twSource.WriteLine();
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// [9-4] Declare methods:");
-
-            foreach (var type in allTypes)
+            foreach (var type in prepared.Types)
             {
                 twSource.WriteLine();
-                twSource.WriteLine("////////////////////////////////////////////////////////////");
+                twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
                 twSource.WriteLine("// [9-4] Type: {0}", type.FriendlyName);
 
                 // All methods and constructor exclude type initializer
@@ -1245,7 +1247,7 @@ namespace IL2C
                     InternalConvertFromMethod(
                         twSource,
                         extractContext,
-                        preparedMethods,
+                        prepared,
                         method,
                         indent,
                         debugInformationOption);
@@ -1271,12 +1273,12 @@ namespace IL2C
         public static void WriteSourceCode(
             TextWriter twSource,
             TranslateContext translateContext,
-            PreparedMethodInformations preparedMethods,
+            PreparedInformations prepared,
             string indent,
             DebugInformationOptions debugInformationOption = DebugInformationOptions.Full)
         {
             InternalWriteSourceCode(
-                twSource, translateContext, preparedMethods, indent, debugInformationOption, true);
+                twSource, translateContext, prepared, indent, debugInformationOption, true);
         }
     }
 }

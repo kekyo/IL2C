@@ -181,6 +181,9 @@ namespace IL2C
         public static string ToCLanguageExpression(UIntPtr value) =>
             string.Format("((uintptr_t){0})", ToCLanguageExpression(value.ToUInt64()));
 
+        public static string ToCLanguageExpression(Enum value) =>
+            string.Format("{0}_{1}", ToMangledName(value.GetType().FullName), value);
+
         public static string ToCLanguageLiteralExpression(object value)
         {
             if (value == null) return "NULL";
@@ -195,6 +198,7 @@ namespace IL2C
             if (value is bool) return ToCLanguageExpression((bool)value);
             if (value is char) return ToCLanguageExpression((char)value);
             if (value is string) return ToCLanguageExpression((string)value);
+            if (value is Enum) return ToCLanguageExpression((Enum)value);
             return value.ToString();
         }
         #endregion

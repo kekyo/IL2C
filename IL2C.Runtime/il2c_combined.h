@@ -24,6 +24,7 @@
 #include "System.UIntPtr.c"
 #include "System.Single.c"
 #include "System.Double.c"
+#include "System.Enum.c"
 
 #include "System.Console.c"
 

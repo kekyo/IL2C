@@ -6,12 +6,16 @@ using IL2C.Metadata;
 
 namespace IL2C.Translators
 {
-    public sealed class PreparedMethodInformations
+    public sealed class PreparedInformations
     {
+        internal readonly ITypeInformation[] Types;
         internal readonly IReadOnlyDictionary<IMethodInformation, PreparedMethodInformation> Functions;
 
-        internal PreparedMethodInformations(IReadOnlyDictionary<IMethodInformation, PreparedMethodInformation> functions)
+        internal PreparedInformations(
+            ITypeInformation[] types,
+            IReadOnlyDictionary<IMethodInformation, PreparedMethodInformation> functions)
         {
+            this.Types = types;
             this.Functions = functions;
         }
 

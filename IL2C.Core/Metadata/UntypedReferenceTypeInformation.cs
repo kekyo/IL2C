@@ -64,7 +64,7 @@ namespace IL2C.Metadata
         public bool IsUntypedReferenceType => true;
 
         public int SizeOfValue => 0;
-        public object EmptyValue => null;
+        public object PseudoEmptyValue => null;
 
         public ITypeInformation BaseType => null;
         public ITypeInformation ElementType => throw new NotImplementedException();

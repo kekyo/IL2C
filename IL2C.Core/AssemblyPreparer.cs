@@ -109,9 +109,9 @@ namespace IL2C
             //   The flow analysis can't predict by sequential path.
             //   So, it reorders by IL offset.
 
-            var generators = decodeContext
-                .Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true)
-                .SelectMany(dc =>
+            var generators = decodeContext.
+                Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true).
+                SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
                     let generator = ilBody.ILConverter.Apply(ilBody.Code.Operand, dc)
                     select new PreparedILBody(
@@ -119,19 +119,19 @@ namespace IL2C
                         generator,
                         dc.UniqueCodeBlockIndex,
                         ilBody.Code,
-                        dc.DecodingPathNumber))
-                .OrderBy(ilb => ilb.UniqueCodeBlockIndex)
-                .ThenBy(ilb => ilb.Label.Offset)
-                .ToDictionary(ilb => ilb.Label.Offset, ilb => ilb.Generator);
+                        dc.DecodingPathNumber)).
+                OrderBy(ilb => ilb.UniqueCodeBlockIndex).
+                ThenBy(ilb => ilb.Label.Offset).
+                ToDictionary(ilb => ilb.Label.Offset, ilb => ilb.Generator);
 
             //////////////////////////////////////////////////////////////////////////////
 
-            var stacks = decodeContext
-                .ExtractStacks()
-                .ToArray();
+            var stacks = decodeContext.
+                ExtractStacks().
+                ToArray();
 
-            var labelNames = decodeContext
-                .ExtractLabelNames();
+            var labelNames = decodeContext.
+                ExtractLabelNames();
 
             return new PreparedMethodInformation(
                 method,
@@ -199,17 +199,18 @@ namespace IL2C
                 method);
         }
 
-        internal static PreparedMethodInformations Prepare(
+        internal static PreparedInformations Prepare(
             TranslateContext translateContext,
             Func<ITypeInformation, bool> predictType,
             Func<IMethodInformation, bool> predictMethod)
         {
             IPrepareContext prepareContext = translateContext;
 
-            var allTypes = translateContext.Assembly.Modules
-                .SelectMany(module => module.Types)
-                .Where(type => type.IsValidDefinition && predictType(type))
-                .ToArray();
+            var allTypes = translateContext.Assembly.Modules.
+                SelectMany(module => module.Types).
+                Where(type => type.IsValidDefinition && predictType(type)).
+                Distinct().
+                ToArray();
 
             // Lookup type references.
             foreach (var type in allTypes)
@@ -224,7 +225,8 @@ namespace IL2C
             }
 
             // Construct result.
-            return new PreparedMethodInformations(
+            return new PreparedInformations(
+                allTypes,
                 (from type in allTypes
                  from method in type.DeclaredMethods
                  where predictMethod(method) &&
@@ -232,13 +234,13 @@ namespace IL2C
                     (!method.IsConstructor || !method.DeclaringType.IsDelegate)
                  let preparedMethod = PrepareMethod(prepareContext, method)
                  where preparedMethod != null
-                 select preparedMethod)
-                .ToDictionary(
+                 select preparedMethod).
+                ToDictionary(
                     preparedMethod => preparedMethod.Method,
                     preparedMethod => preparedMethod));
         }
 
-        public static PreparedMethodInformations Prepare(TranslateContext translateContext)
+        public static PreparedInformations Prepare(TranslateContext translateContext)
         {
             return Prepare(
                 translateContext,

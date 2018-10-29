@@ -1,7 +1,7 @@
 # Supported runtime types
 
-* Number of types: 19
-* Number of tests: 112 [17 / 19]
+* Number of types: 20
+* Number of tests: 112 [17 / 20]
 
 Type | Test
 |:---|:---|
@@ -9,6 +9,7 @@ Type | Test
 | [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/system.byte) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Byte) |
 | [System.Char](https://docs.microsoft.com/en-us/dotnet/api/system.char) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Char) |
 | [System.Double](https://docs.microsoft.com/en-us/dotnet/api/system.double) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Double) |
+| [System.Enum](https://docs.microsoft.com/en-us/dotnet/api/system.enum) |  |
 | [System.Int16](https://docs.microsoft.com/en-us/dotnet/api/system.int16) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int16) |
 | [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int32) |
 | [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int64) |

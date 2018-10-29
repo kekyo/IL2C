@@ -27,7 +27,6 @@ namespace IL2C
         private static string GetCLangaugeSafeConversionExpression(
             ITypeInformation argumentType, Type constantType, string constantExpression)
         {
-            // abbrev
             if (constantType != null)
             {
                 if (TestUtilities.GetCLanguageTypeName(constantType) == argumentType.CLanguageTypeName)
@@ -121,7 +120,9 @@ namespace IL2C
             var targetTypes = new HashSet<string>(
                 new[] { caseInfo.Method }.
                 Concat(caseInfo.AdditionalMethods).
-                Select(method => method.DeclaringType.FullName).
+                Select(method => method.DeclaringType).
+                Concat(caseInfo.AdditionalTypes).
+                Select(type => type.FullName).
                 Distinct());
             var targetMethods = new[] { caseInfo.Method }.
                 Concat(caseInfo.AdditionalMethods).
@@ -203,7 +204,7 @@ namespace IL2C
                         argument.SymbolName,
                         argument.TargetType,
                         argument.ExpressionType,
-                        Utilities.ToCLanguageLiteralExpression(expectedType.EmptyValue))).
+                        Utilities.ToCLanguageLiteralExpression(expectedType.PseudoEmptyValue))).
                 ToArray();
 
             if (!(expectedType.IsVoidType || (caseInfo.Assert == TestCaseAsserts.CauseBreak)))
@@ -231,14 +232,14 @@ namespace IL2C
                             argument.SymbolName,
                             argument.TargetType,
                             argument.ExpressionType,
-                            Utilities.ToCLanguageLiteralExpression(argument.TargetType.EmptyValue))).
+                            Utilities.ToCLanguageLiteralExpression(argument.TargetType.PseudoEmptyValue))).
                     Concat(new Constant[]
                     {
                         new Constant(
                             "actual",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.ToCLanguageLiteralExpression(expectedType.EmptyValue)),
+                            Utilities.ToCLanguageLiteralExpression(expectedType.PseudoEmptyValue)),
                     }).
                     ToArray();
             }

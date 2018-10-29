@@ -20,6 +20,8 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
     <LangVersion>7.1</LangVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>

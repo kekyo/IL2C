@@ -7,7 +7,7 @@ shallow_clone: true
 before_build:
   - nuget restore il2c.sln
 build_script:
-  - msbuild /t:Rebuild il2c.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Release;Platform="Any Cpu" il2c.sln
   - cmd: pack.bat
 artifacts:
   - path: artifacts

@@ -21,6 +21,9 @@
     <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
     <PackageTags>il2c;il;translate;transpile;convert;c;c++;assembly;multi-platform</PackageTags>
+    <LangVersion>7.1</LangVersion>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>

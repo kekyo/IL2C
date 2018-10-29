@@ -981,7 +981,9 @@ namespace IL2C
             tw.WriteLine(
                 "{0}{1},",
                 indent,
-                declaredType.IsValueType ? "IL2C_TYPE_VALUE" : "IL2C_TYPE_REFERENCE");
+                declaredType.IsEnum ?
+                    declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER" :
+                    declaredType.IsValueType ? "IL2C_TYPE_VALUE" : "IL2C_TYPE_REFERENCE");
             tw.WriteLine(
                 "{0}sizeof({1}),",
                 indent,

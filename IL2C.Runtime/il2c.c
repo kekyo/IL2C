@@ -322,6 +322,8 @@ System_ValueType* il2c_box__(
     return pBoxed;
 }
 
+// Boxing with widing/narrowing combination for signed/unsigned integer value.
+// MEMO: This implemenation makes safer for endian order.
 System_ValueType* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0)
 {
@@ -330,36 +332,47 @@ System_ValueType* il2c_box2__(
     il2c_assert(stackType != NULL);
     il2c_assert(vptr0 != NULL);
 
-    // Require type conversion
+    // Require type conversion  (OK: IL2C_TYPE_INTEGER || IL2C_TYPE_UNSIGNED_INTEGER)
     il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER) && ((stackType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER));
     il2c_assert((valueType->bodySize <= 8) && (stackType->bodySize <= 8));
     il2c_assert((valueType->bodySize >= 1) && (stackType->bodySize >= 1));
 
     // TODO: value type --> interface type
 
-    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
+    union { // Lesser stack spaces for this combined variables.
+        int8_t i1;
+        int16_t i2;
+        int32_t i4;
+        int64_t i8;
+        uint8_t u1;
+        uint16_t u2;
+        uint32_t u4;
+        uint64_t u8;
+    } v;
 
-    pBoxed->vptr0__ = vptr0;
+    // Destination integer value is unsigned.
+    const bool vui = (valueType->flags & IL2C_TYPE_UNSIGNED_INTEGER) == IL2C_TYPE_UNSIGNED_INTEGER;
+    // Source integer value is unsigned.
+    const bool sui = (stackType->flags & IL2C_TYPE_UNSIGNED_INTEGER) == IL2C_TYPE_UNSIGNED_INTEGER;
 
-    // MEMO: This verbose implemenation makes safer for endian order.
-
-    uint8_t v1;
-    uint16_t v2;
-    uint32_t v4;
-    uint64_t v8;
+    // Destination size
     switch (valueType->bodySize)
     {
     case 1:
+        // Source size
         switch (stackType->bodySize)
         {
         case 2:
-            v1 = (uint8_t)*(uint16_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v1, 1);
+            if (vui && sui) v.u1 = (uint8_t)*(uint16_t*)pValue;
+            else if (vui) v.u1 = (uint8_t)*(int16_t*)pValue;
+            else if (sui) v.i1 = (int8_t)*(uint16_t*)pValue;
+            else v.i1 = (int8_t)*(int16_t*)pValue;
             break;
         case 4:
-            v1 = (uint8_t)*(uint32_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v1, 1);
+            if (vui && sui) v.u1 = (uint8_t)*(uint32_t*)pValue;
+            else if (vui) v.u1 = (uint8_t)*(int32_t*)pValue;
+            else if (sui) v.i1 = (int8_t)*(uint32_t*)pValue;
+            else v.i1 = (int8_t)*(int32_t*)pValue;
             break;
         default:
             // TODO: throw InvalidCastException()
@@ -368,15 +381,20 @@ System_ValueType* il2c_box2__(
         }
         break;
     case 2:
+        // Source size
         switch (stackType->bodySize)
         {
         case 1:
-            v2 = *(uint8_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v2, 2);
+            if (vui && sui) v.u2 = (uint16_t)*(uint8_t*)pValue;
+            else if (vui) v.u2 = (uint16_t)*(int8_t*)pValue;
+            else if (sui) v.i2 = (int16_t)*(uint8_t*)pValue;
+            else v.i2 = (int16_t)*(int8_t*)pValue;
             break;
         case 4:
-            v2 = (uint16_t)*(uint32_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v2, 2);
+            if (vui && sui) v.u2 = (uint16_t)*(uint32_t*)pValue;
+            else if (vui) v.u2 = (uint16_t)*(int32_t*)pValue;
+            else if (sui) v.i2 = (int16_t)*(uint32_t*)pValue;
+            else v.i2 = (int16_t)*(int32_t*)pValue;
             break;
         default:
             // TODO: throw InvalidCastException()
@@ -385,19 +403,26 @@ System_ValueType* il2c_box2__(
         }
         break;
     case 4:
+        // Source size
         switch (stackType->bodySize)
         {
         case 1:
-            v4 = *(uint8_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v4, 4);
+            if (vui && sui) v.u4 = (uint32_t)*(uint8_t*)pValue;
+            else if (vui) v.u4 = (uint32_t)*(int8_t*)pValue;
+            else if (sui) v.i4 = (int32_t)*(uint8_t*)pValue;
+            else v.i4 = (int32_t)*(int8_t*)pValue;
             break;
         case 2:
-            v4 = *(uint16_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v4, 4);
+            if (vui && sui) v.u4 = (uint32_t)*(uint16_t*)pValue;
+            else if (vui) v.u4 = (uint32_t)*(int16_t*)pValue;
+            else if (sui) v.i4 = (int32_t)*(uint16_t*)pValue;
+            else v.i4 = (int32_t)*(int16_t*)pValue;
             break;
         case 8:   // Hmm, the ECMA-335 not contains this conversion but .NET CLR 4 can do it.
-            v4 = *(uint64_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v4, 4);
+            if (vui && sui) v.u4 = (uint32_t)*(uint64_t*)pValue;
+            else if (vui) v.u4 = (uint32_t)*(int64_t*)pValue;
+            else if (sui) v.i4 = (int32_t)*(uint64_t*)pValue;
+            else v.i4 = (int32_t)*(int64_t*)pValue;
             break;
         default:
             // TODO: throw InvalidCastException()
@@ -406,17 +431,46 @@ System_ValueType* il2c_box2__(
         }
         break;
     case 8:
+        // Source size
         switch (stackType->bodySize)
         {
         case 4:   // Hmm, the ECMA-335 not contains this conversion but .NET CLR 4 can do it.
-            v8 = *(uint32_t*)pValue;
-            il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v8, 8);
+            if (vui && sui) v.u8 = (uint64_t)*(uint32_t*)pValue;
+            else if (vui) v.u8 = (uint64_t)*(int32_t*)pValue;
+            else if (sui) v.i8 = (int64_t)*(uint32_t*)pValue;
+            else v.i8 = (int64_t)*(int32_t*)pValue;
             break;
         default:
             // TODO: throw InvalidCastException()
             il2c_assert(0);
             break;
         }
+        break;
+    default:
+        // TODO: throw InvalidCastException()
+        il2c_assert(0);
+        break;
+    }
+
+    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
+    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
+
+    // vptr0 setup.
+    pBoxed->vptr0__ = vptr0;
+
+    switch (valueType->bodySize)
+    {
+    case 1:
+        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i1, 1);
+        break;
+    case 2:
+        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i2, 2);
+        break;
+    case 4:
+        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i4, 4);
+        break;
+    case 8:
+        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i8, 8);
         break;
     }
 

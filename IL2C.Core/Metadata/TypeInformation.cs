@@ -29,7 +29,9 @@ namespace IL2C.Metadata
         bool IsByReference { get; }
         bool IsPointer { get; }
         bool IsPrimitive { get; }
+        bool IsIntegerPrimitive { get; }
         bool IsNumericPrimitive { get; }
+        bool IsUnsigned { get; }
 
         bool IsInt32StackFriendlyType { get; }
         bool IsInt64StackFriendlyType { get; }
@@ -166,51 +168,46 @@ namespace IL2C.Metadata
         public bool IsByReference => this.Member.IsByReference;
         public bool IsPointer => this.Member.IsPointer;
         public bool IsPrimitive => this.Member.IsPrimitive;
-        public bool IsNumericPrimitive => this.Member.IsPrimitive
-            && (this.Equals(this.MetadataContext.ByteType)
-                || this.Equals(this.MetadataContext.SByteType)
-                || this.Equals(this.MetadataContext.Int16Type)
-                || this.Equals(this.MetadataContext.UInt16Type)
-                || this.Equals(this.MetadataContext.Int32Type)
-                || this.Equals(this.MetadataContext.UInt32Type)
-                || this.Equals(this.MetadataContext.Int64Type)
-                || this.Equals(this.MetadataContext.UInt64Type)
-                || this.Equals(this.MetadataContext.IntPtrType)
-                || this.Equals(this.MetadataContext.UIntPtrType)
-                || this.Equals(this.MetadataContext.SingleType)
-                || this.Equals(this.MetadataContext.DoubleType)
-                || this.Equals(this.MetadataContext.CharType));
+        public bool IsIntegerPrimitive => this.Member.IsPrimitive &&
+            (this.Equals(this.MetadataContext.ByteType) ||
+             this.Equals(this.MetadataContext.SByteType) ||
+             this.Equals(this.MetadataContext.Int16Type) ||
+             this.Equals(this.MetadataContext.UInt16Type) ||
+             this.Equals(this.MetadataContext.Int32Type) ||
+             this.Equals(this.MetadataContext.UInt32Type) ||
+             this.Equals(this.MetadataContext.Int64Type) ||
+             this.Equals(this.MetadataContext.UInt64Type) ||
+             this.Equals(this.MetadataContext.CharType));
+        public bool IsNumericPrimitive => this.Member.IsPrimitive &&
+            (this.IsIntegerPrimitive ||
+             this.Equals(this.MetadataContext.IntPtrType) ||
+             this.Equals(this.MetadataContext.UIntPtrType) ||
+             this.Equals(this.MetadataContext.SingleType) ||
+             this.Equals(this.MetadataContext.DoubleType));
+        public bool IsUnsigned => this.Member.IsPrimitive &&
+            (this.Equals(this.MetadataContext.ByteType) ||
+             this.Equals(this.MetadataContext.UInt16Type) ||
+             this.Equals(this.MetadataContext.UInt32Type) ||
+             this.Equals(this.MetadataContext.UInt64Type) ||
+             this.Equals(this.MetadataContext.UIntPtrType) ||
+             this.Equals(this.MetadataContext.CharType));
 
         public bool IsInt32StackFriendlyType =>
-            this.Equals(this.MetadataContext.ByteType)
-            || this.Equals(this.MetadataContext.SByteType)
-            || this.Equals(this.MetadataContext.Int16Type)
-            || this.Equals(this.MetadataContext.UInt16Type)
-            || this.Equals(this.MetadataContext.Int32Type)
-            || this.Equals(this.MetadataContext.UInt32Type)
-            || this.Equals(this.MetadataContext.BooleanType)
-            || this.Equals(this.MetadataContext.CharType);
+            (this.IsIntegerPrimitive || this.IsBooleanType || this.IsEnum) &&
+            (this.SizeOfValue >= 1) && (this.SizeOfValue <= 4);
 
         public bool IsInt64StackFriendlyType =>
-            this.Equals(this.MetadataContext.ByteType)
-            || this.Equals(this.MetadataContext.SByteType)
-            || this.Equals(this.MetadataContext.Int16Type)
-            || this.Equals(this.MetadataContext.UInt16Type)
-            || this.Equals(this.MetadataContext.Int32Type)
-            || this.Equals(this.MetadataContext.UInt32Type)
-            || this.Equals(this.MetadataContext.Int64Type)
-            || this.Equals(this.MetadataContext.UInt64Type)
-            || this.Equals(this.MetadataContext.BooleanType)
-            || this.Equals(this.MetadataContext.CharType);
+            (this.IsIntegerPrimitive || this.IsBooleanType || this.IsEnum) &&
+            (this.SizeOfValue >= 1) && (this.SizeOfValue <= 8);
 
         public bool IsFloatStackFriendlyType =>
-            this.Equals(this.MetadataContext.SingleType)
-            || this.Equals(this.MetadataContext.DoubleType);
+            this.Equals(this.MetadataContext.SingleType) ||
+            this.Equals(this.MetadataContext.DoubleType);
 
         public bool IsIntPtrStackFriendlyType =>
-            this.IsPointer
-            || this.Equals(this.MetadataContext.IntPtrType)
-            || this.Equals(this.MetadataContext.UIntPtrType);
+            this.IsPointer ||
+            this.Equals(this.MetadataContext.IntPtrType) ||
+            this.Equals(this.MetadataContext.UIntPtrType);
 
         public bool IsVoidType => this.Equals(this.MetadataContext.VoidType);
         public bool IsObjectType => this.Equals(this.MetadataContext.ObjectType);
@@ -235,13 +232,17 @@ namespace IL2C.Metadata
 
         public bool IsUntypedReferenceType => false;
 
-        public int SizeOfValue =>
+        private static int GetSizeOfValue(ITypeInformation type) =>
             // Recently, the bool type is usually defined by 1byte space type.
-            (this.IsByteType || this.IsSByteType || this.IsBooleanType) ? 1 :
-            (this.IsInt16Type || this.IsUInt16Type || this.IsCharType) ? 2 :
-            (this.IsInt32Type || this.IsUInt32Type || this.IsSingleType) ? 4 :
-            (this.IsInt64Type || this.IsUInt64Type || this.IsDoubleType || this.IsIntPtrType || this.IsUIntPtrType) ? 8 :
+            (type.IsByteType || type.IsSByteType || type.IsBooleanType) ? 1 :
+            (type.IsInt16Type || type.IsUInt16Type || type.IsCharType) ? 2 :
+            (type.IsInt32Type || type.IsUInt32Type || type.IsSingleType) ? 4 :
+            (type.IsInt64Type || type.IsUInt64Type || type.IsDoubleType || type.IsIntPtrType || type.IsUIntPtrType) ? 8 :
+            type.IsEnum ? GetSizeOfValue(type.ElementType) :  // Enum size is element (underlying) type size.
             0;
+
+        public int SizeOfValue => GetSizeOfValue(this);
+
         public object PseudoEmptyValue
         {
             get

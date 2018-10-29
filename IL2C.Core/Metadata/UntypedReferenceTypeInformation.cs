@@ -33,7 +33,9 @@ namespace IL2C.Metadata
         public bool IsByReference => false;
         public bool IsPointer => false;
         public bool IsPrimitive => false;
+        public bool IsIntegerPrimitive => false;
         public bool IsNumericPrimitive => false;
+        public bool IsUnsigned => false;
 
         public bool IsInt32StackFriendlyType => false;
         public bool IsInt64StackFriendlyType => false;

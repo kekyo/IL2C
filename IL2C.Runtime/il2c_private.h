@@ -238,7 +238,6 @@ extern void WriteLineToError(const wchar_t* pMessage);
 // Internal runtime definitions
 
 // IL2C_RUNTIME_TYPE_DECL.flags
-#define IL2C_TYPE_INTEGER 0x03
 #define IL2C_TYPE_VARIABLE 0x04
 
 // Generator macro for the trampoline virtual function using the value type.

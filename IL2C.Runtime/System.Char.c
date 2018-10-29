@@ -57,4 +57,4 @@ bool System_Char_TryParse(System_String* s, wchar_t* result)
 
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Char);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Char);
-IL2C_DECLARE_RUNTIME_TYPE(System_Char, "System.Char", IL2C_TYPE_INTEGER, System_ValueType);
+IL2C_DECLARE_RUNTIME_TYPE(System_Char, "System.Char", IL2C_TYPE_UNSIGNED_INTEGER, System_ValueType);

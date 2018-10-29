@@ -1,7 +1,7 @@
 # Supported IL opcodes
 
 * Number of opcode implementations: 88 / 219
-* Number of opcode tests: 568 [63 / 219]
+* Number of opcode tests: 598 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
 |:---|:---|:---|:---|:---|
@@ -30,7 +30,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [blt.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.blt_un_s) | 0x37 |  |  |  |
 | [bne.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bne_un) | 0x40 |  |  |  |
 | [bne.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bne_un_s) | 0x33 | Implemented |  | IL2C.ILConverters.Bne_Un_sConverter |
-| [box](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.box) | 0x8c | Implemented | [Test [31]](tests/IL2C.Core.Test.Target/ILConverters/Box) | IL2C.ILConverters.BoxConverter |
+| [box](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.box) | 0x8c | Implemented | [Test [61]](tests/IL2C.Core.Test.Target/ILConverters/Box) | IL2C.ILConverters.BoxConverter |
 | [br](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.br) | 0x38 | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Br) | IL2C.ILConverters.BrConverter |
 | [br.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.br_s) | 0x2b | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Br_S) | IL2C.ILConverters.Br_sConverter |
 | [break](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.break) | 0x1 | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Break) | IL2C.ILConverters.BreakConverter |

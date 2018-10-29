@@ -57,6 +57,8 @@ struct IL2C_REF_HEADER
 // IL2C_RUNTIME_TYPE_DECL.flags
 #define IL2C_TYPE_REFERENCE 0x00
 #define IL2C_TYPE_VALUE 0x01
+#define IL2C_TYPE_INTEGER 0x03
+#define IL2C_TYPE_UNSIGNED_INTEGER 0x0b
 
 #define il2c_typeof(typeName) (&(__##typeName##_RUNTIME_TYPE__))
 #define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)

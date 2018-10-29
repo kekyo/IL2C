@@ -65,4 +65,4 @@ bool System_Boolean_TryParse(System_String* s, bool* result)
 
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Boolean);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Boolean);
-IL2C_DECLARE_RUNTIME_TYPE(System_Boolean, "System.Boolean", IL2C_TYPE_INTEGER, System_ValueType);
+IL2C_DECLARE_RUNTIME_TYPE(System_Boolean, "System.Boolean", IL2C_TYPE_UNSIGNED_INTEGER, System_ValueType);

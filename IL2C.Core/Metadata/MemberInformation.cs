@@ -42,9 +42,7 @@ namespace IL2C.Metadata
             this.DeclaringModule;
 
         public ITypeInformation DeclaringType =>
-            this.MetadataContext.GetOrAddMember(
-                this.Member.DeclaringType,
-                type => new TypeInformation(type, this.DeclaringModule));
+            this.MetadataContext.GetOrAddType(this.Member.DeclaringType);
 
         public abstract bool IsCLanguagePublicScope { get; }
         public abstract bool IsCLanguageLinkageScope { get; }

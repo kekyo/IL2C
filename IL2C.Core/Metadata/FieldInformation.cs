@@ -43,9 +43,7 @@ namespace IL2C.Metadata
         public bool HasConstant => this.Definition.HasConstant;
 
         public ITypeInformation FieldType =>
-            this.MetadataContext.GetOrAddMember(
-                this.Member.FieldType,
-                type => new TypeInformation(type, this.DeclaringModule));
+            this.MetadataContext.GetOrAddType(this.Member.FieldType);
 
         public object ConstantValue => this.Definition.Constant;
 

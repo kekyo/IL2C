@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using System;
 
 namespace IL2C.Metadata
 {
@@ -10,8 +11,7 @@ namespace IL2C.Metadata
     }
 
     internal sealed class ModuleInformation
-        : MetadataInformation<ModuleReference, ModuleDefinition>
-        , IModuleInformation
+        : MetadataInformation<ModuleReference, ModuleDefinition>, IModuleInformation
     {
         public ModuleInformation(ModuleReference module, AssemblyInformation assembly)
             : base(module, assembly.MetadataContext)
@@ -28,9 +28,7 @@ namespace IL2C.Metadata
         public IAssemblyInformation DeclaringAssembly { get; }
 
         public ITypeInformation[] Types =>
-            this.MetadataContext.GetOrAddMembers(
-                this.Definition.Types,
-                type => new TypeInformation(type, this));
+            this.MetadataContext.GetOrAddTypes(this.Definition.Types);
 
         protected override ModuleDefinition OnResolve(ModuleReference member)
         {

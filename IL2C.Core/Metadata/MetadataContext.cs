@@ -15,7 +15,9 @@ namespace IL2C.Metadata
         ITypeInformation VoidType { get; }
         ITypeInformation ObjectType { get; }
         ITypeInformation ValueTypeType { get; }
+        ITypeInformation EnumType { get; }
         ITypeInformation DelegateType { get; }
+        ITypeInformation MulticastDelegateType { get; }
         ITypeInformation UntypedReferenceType { get; }
 
         ITypeInformation ByteType { get; }
@@ -38,14 +40,25 @@ namespace IL2C.Metadata
     internal sealed class MetadataContext
         : IMetadataContext
     {
-        private static readonly HashSet<string> objectMethodValidTarget =
-            new HashSet<string>(new[] {
-            ".ctor", "ReferenceEquals", "ToString", "GetHashCode", "Finalize", "Equals", "GetType"});
+        // These tables are the method filter entries for mscorlib 4.0 library.
+        // Reconstruct if we're ganna change to netstandard.
+        private static readonly Dictionary<string, HashSet<string>> validMethodTarget =
+            new Dictionary<string, HashSet<string>>
+            {
+                { "System.Object", new HashSet<string> { ".ctor", "ReferenceEquals", "ToString", "GetHashCode", "Finalize", "Equals", "GetType" } },
+                { "System.ValueType", new HashSet<string> { "ToString", "GetHashCode", "Equals" } },
+                { "System.Enum", new HashSet<string> { "ToString", "GetHashCode", "Equals" } },
+                { "System.Delegate", new HashSet<string> { "GetHashCode", "Equals" } },
+                { "System.MulticastDelegate", new HashSet<string> { "GetHashCode", "Equals" } },
+            };
 
-        private readonly Dictionary<AssemblyDefinition, IAssemblyInformation> assemblies =
-            new Dictionary<AssemblyDefinition, IAssemblyInformation>(AssemblyDefinitionComparer.Instance);
-        private readonly Dictionary<ModuleReference, IModuleInformation> modules =
-            new Dictionary<ModuleReference, IModuleInformation>(ModuleReferenceComparer.Instance);
+        private readonly AssemblyDefinition resolvedCoreAssembly;
+        private readonly ModuleDefinition resolvedCoreModule;
+
+        private readonly Dictionary<AssemblyDefinition, AssemblyInformation> assemblies =
+            new Dictionary<AssemblyDefinition, AssemblyInformation>(AssemblyDefinitionComparer.Instance);
+        private readonly Dictionary<ModuleReference, ModuleInformation> modules =
+            new Dictionary<ModuleReference, ModuleInformation>(ModuleReferenceComparer.Instance);
         private readonly Dictionary<ModuleReference, AssemblyDefinition> assemblyByModule =
             new Dictionary<ModuleReference, AssemblyDefinition>(ModuleReferenceComparer.Instance);
         private readonly Dictionary<MemberReference, IMemberInformation> members =
@@ -61,173 +74,122 @@ namespace IL2C.Metadata
             };
 
             var mainAssembly = AssemblyDefinition.ReadAssembly(assemblyPath, parameter);
+            var mainAssemblyInformation = new AssemblyInformation(mainAssembly, this);
 
-            var resolvedCoreModule = mainAssembly.MainModule.TypeSystem.Object.Resolve().Module;
-            var resolvedCoreAssembly = resolvedCoreModule.Assembly;
+            resolvedCoreModule = mainAssembly.MainModule.TypeSystem.Object.Resolve().Module;
+            resolvedCoreAssembly = resolvedCoreModule.Assembly;
             var resolvedCoreAssemblyInformation = new AssemblyInformation(
                 resolvedCoreAssembly, this);
             var resolvedCoreModuleInformation = new ModuleInformation(
                 resolvedCoreModule, resolvedCoreAssemblyInformation);
 
-            assemblies.Add(resolvedCoreModule.Assembly, resolvedCoreAssemblyInformation);
+            this.MainAssembly = mainAssemblyInformation;
+            assemblies.Add(mainAssembly, mainAssemblyInformation);
+            assemblies.Add(resolvedCoreAssembly, resolvedCoreAssemblyInformation);
             modules.Add(resolvedCoreModule, resolvedCoreModuleInformation);
             assemblyByModule.Add(resolvedCoreModule, resolvedCoreAssembly);
 
-            this.VoidType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Void,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.ObjectType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Object,
-                type => new TypeInformation(type, resolvedCoreModuleInformation, objectMethodValidTarget));
-            this.ValueTypeType = this.GetOrAddMember(
-                resolvedCoreModule.GetType("System.ValueType"),
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.DelegateType = this.GetOrAddMember(
-                resolvedCoreModule.GetType("System.Delegate"),
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
+            this.VoidType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Void);
+            this.ObjectType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Object);
+            this.ValueTypeType = this.GetOrAddType(resolvedCoreModule.GetType("System.ValueType"));
+            this.EnumType = this.GetOrAddType(resolvedCoreModule.GetType("System.Enum"));
+            this.DelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.Delegate"));
+            this.MulticastDelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.MulticastDelegate"));
 
-            this.ByteType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Byte,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.SByteType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.SByte,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.Int16Type = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Int16,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.UInt16Type = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.UInt16,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.Int32Type = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Int32,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.UInt32Type = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.UInt32,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.Int64Type = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Int64,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.UInt64Type = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.UInt64,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.SingleType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Single,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.DoubleType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Double,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.IntPtrType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.IntPtr,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.UIntPtrType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.UIntPtr,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.CharType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Char,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.StringType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.String,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-            this.BooleanType = this.GetOrAddMember(
-                resolvedCoreModule.TypeSystem.Boolean,
-                type => new TypeInformation(type, resolvedCoreModuleInformation));
-
-            this.MainAssembly = new AssemblyInformation(mainAssembly, this);
-            assemblies.Add(mainAssembly, this.MainAssembly);
+            this.ByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Byte);
+            this.SByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.SByte);
+            this.Int16Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.Int16);
+            this.UInt16Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.UInt16);
+            this.Int32Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.Int32);
+            this.UInt32Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.UInt32);
+            this.Int64Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.Int64);
+            this.UInt64Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.UInt64);
+            this.SingleType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Single);
+            this.DoubleType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Double);
+            this.IntPtrType = this.GetOrAddType(resolvedCoreModule.TypeSystem.IntPtr);
+            this.UIntPtrType = this.GetOrAddType(resolvedCoreModule.TypeSystem.UIntPtr);
+            this.CharType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Char);
+            this.StringType = this.GetOrAddType(resolvedCoreModule.TypeSystem.String);
+            this.BooleanType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Boolean);
         }
 
         public IAssemblyInformation MainAssembly { get; }
         public IEnumerable<IAssemblyInformation> Assemblies => assemblies.Values;
 
         #region IAssemblyInformation
-        internal TInformation GetOrAddAssembly<TInformation>(
-            AssemblyDefinition assemblyDefinition,
-            Func<AssemblyDefinition, TInformation> factory)
-            where TInformation : IAssemblyInformation
+        internal AssemblyInformation GetOrAddAssembly(
+            AssemblyDefinition assemblyDefinition)
         {
             if (assemblyDefinition == null)
             {
-                return default(TInformation);
+                return default(AssemblyInformation);
             }
 
             lock (assemblies)
             {
                 if (!assemblies.TryGetValue(assemblyDefinition, out var assembly))
                 {
-                    assembly = factory(assemblyDefinition);
+                    assembly = new AssemblyInformation(assemblyDefinition, this);
                     assemblies.Add(assemblyDefinition, assembly);
                 }
-                return (TInformation)assembly;
+                return assembly;
             }
         }
 
-        internal TInformation[] GetOrAddAssemblies<TInformation>(
-            IEnumerable<AssemblyDefinition> assemblyDefinitions,
-            Func<AssemblyDefinition, TInformation> factory)
-            where TInformation : IAssemblyInformation
+        internal AssemblyInformation GetOrAddAssembly(
+            ModuleReference moduleReference)
         {
-            return assemblyDefinitions
-                .Select(type => this.GetOrAddAssembly(type, factory))
-                .ToArray();
+            if (moduleReference == null)
+            {
+                return default(AssemblyInformation);
+            }
+
+            lock (assemblyByModule)
+            {
+                if (!assemblyByModule.TryGetValue(moduleReference, out var assemblyDefinition))
+                {
+                    assemblyDefinition = ((ModuleDefinition)moduleReference).Assembly;
+                    assemblyByModule.Add(moduleReference, assemblyDefinition);
+                }
+                return this.GetOrAddAssembly(assemblyDefinition);
+            }
         }
         #endregion
 
         #region IModuleInformation
-        internal TInformation GetOrAddModule<TInformation>(
-            AssemblyDefinition assemblyDefinition,
-            ModuleReference moduleReference,
-            Func<AssemblyDefinition, ModuleReference, TInformation> factory)
-            where TInformation : IModuleInformation
+        internal ModuleInformation GetOrAddModule(
+            ModuleReference moduleReference)
         {
             if (moduleReference == null)
             {
-                return default(TInformation);
+                return default(ModuleInformation);
             }
 
             lock (modules)
             {
-                IModuleInformation module;
-                if (assemblyDefinition == null)
+                if (!modules.TryGetValue(moduleReference, out var module))
                 {
-                    if (!assemblyByModule.TryGetValue(moduleReference, out assemblyDefinition))
-                    {
-                        module = factory(assemblyDefinition, moduleReference);
-
-                        modules.Add(moduleReference, module);
-                        assemblyByModule.Add(moduleReference, assemblyDefinition);
-
-                        return (TInformation)module;
-                    }
-                }
-
-                if (!modules.TryGetValue(moduleReference, out module))
-                {
-                    module = factory(assemblyDefinition, moduleReference);
-
+                    var assembly = this.GetOrAddAssembly(moduleReference);
+                    module = new ModuleInformation(moduleReference, assembly);
                     modules.Add(moduleReference, module);
-                    assemblyByModule.Add(moduleReference, assemblyDefinition);
                 }
-
-                return (TInformation)module;
+                return module;
             }
         }
 
-        internal TInformation[] GetOrAddModules<TInformation>(
-            AssemblyDefinition assemblyDefinition,
-            IEnumerable<ModuleReference> moduleReferences,
-            Func<AssemblyDefinition, ModuleReference, TInformation> factory)
-            where TInformation : IModuleInformation
+        internal ModuleInformation[] GetOrAddModules(
+            IEnumerable<ModuleReference> moduleReferences)
         {
-            return moduleReferences
-                .Select(moduleReference => this.GetOrAddModule(assemblyDefinition, moduleReference, factory))
-                .ToArray();
+            return moduleReferences.
+                Select(module => this.GetOrAddModule(module)).
+                ToArray();
         }
         #endregion
 
-        #region IMemberInformation
-        internal TInformation GetOrAddMember<TReference, TInformation>(
+        #region GetOrAddMember
+        private TInformation GetOrAddMember<TInformation, TReference>(
             TReference memberReference,
-            Func<TReference, TInformation> factory)
+            Func<TInformation> generator)
             where TReference : MemberReference
             where TInformation : IMemberInformation
         {
@@ -240,22 +202,77 @@ namespace IL2C.Metadata
             {
                 if (!members.TryGetValue(memberReference, out var member))
                 {
-                    member = factory(memberReference);
+                    member = generator();
                     members.Add(memberReference, member);
                 }
                 return (TInformation)member;
             }
         }
+        #endregion
 
-        internal TInformation[] GetOrAddMembers<TReference, TInformation>(
-            IEnumerable<TReference> memberReferences,
-            Func<TReference, TInformation> factory)
-            where TReference : MemberReference
-            where TInformation : IMemberInformation
+        #region ITypeInformation
+        internal TypeInformation GetOrAddType(
+            TypeReference typeReference)
         {
-            return memberReferences
-                .Select(member => this.GetOrAddMember(member, factory))
-                .ToArray();
+            return this.GetOrAddMember(
+                typeReference,
+                () =>
+                {
+                    var module = this.GetOrAddModule(typeReference.Module);
+                    if (typeReference.Module.Equals(resolvedCoreModule) &&
+                        validMethodTarget.TryGetValue(typeReference.FullName, out var filterList))
+                    {
+                        return new TypeInformation(typeReference, module, filterList);
+                    }
+                    else
+                    {
+                        return new TypeInformation(typeReference, module);
+                    }
+                });
+        }
+
+        internal TypeInformation[] GetOrAddTypes(
+            IEnumerable<TypeReference> typeReferences)
+        {
+            return typeReferences.
+                Select(type => this.GetOrAddType(type)).
+                ToArray();
+        }
+        #endregion
+
+        #region IFieldInformation
+        internal FieldInformation GetOrAddField(
+            FieldReference fieldReference)
+        {
+            return this.GetOrAddMember(
+                fieldReference,
+                () => new FieldInformation(fieldReference, this.GetOrAddModule(fieldReference.Module)));
+        }
+
+        internal FieldInformation[] GetOrAddFields(
+            IEnumerable<FieldReference> fieldReferences)
+        {
+            return fieldReferences.
+                Select(field => this.GetOrAddField(field)).
+                ToArray();
+        }
+        #endregion
+
+        #region IMethodInformation
+        internal MethodInformation GetOrAddMethod(
+            MethodReference methodReference)
+        {
+            return this.GetOrAddMember(
+                methodReference,
+                () => new MethodInformation(methodReference, this.GetOrAddModule(methodReference.Module)));
+        }
+
+        internal MethodInformation[] GetOrAddMethods(
+            IEnumerable<MethodReference> methodReferences)
+        {
+            return methodReferences.
+                Select(method => this.GetOrAddMethod(method)).
+                ToArray();
         }
         #endregion
 
@@ -263,7 +280,9 @@ namespace IL2C.Metadata
         public ITypeInformation VoidType { get; }
         public ITypeInformation ObjectType { get; }
         public ITypeInformation ValueTypeType { get; }
+        public ITypeInformation EnumType { get; }
         public ITypeInformation DelegateType { get; }
+        public ITypeInformation MulticastDelegateType { get; }
         public ITypeInformation UntypedReferenceType =>
             UntypedReferenceTypeInformation.UntypedReferenceType;
 

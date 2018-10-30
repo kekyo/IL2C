@@ -90,18 +90,7 @@ namespace IL2C.Metadata
                 this,
                 this.HasThis ? (parameter.Index + 1) : parameter.Index,
                 parameter.Name,
-                this.MetadataContext.GetOrAddMember(
-                    parameter.ParameterType,
-                    type_ => new TypeInformation(
-                        type_,
-                        this.MetadataContext.GetOrAddModule(
-                            type_.Module.Assembly,
-                            type_.Module,
-                            (assembly_, module_) => new ModuleInformation(
-                                module_,
-                                this.MetadataContext.GetOrAddAssembly(
-                                    assembly_,
-                                    assembly__ => new AssemblyInformation(assembly__, this.MetadataContext)))))));
+                this.MetadataContext.GetOrAddType(parameter.ParameterType));
 
         public override string MetadataTypeName => "Method";
 
@@ -142,9 +131,7 @@ namespace IL2C.Metadata
             this.Definition.HasBody;
 
         public ITypeInformation ReturnType =>
-            this.MetadataContext.GetOrAddMember(
-                this.Member.ReturnType,
-                type => (type != null) ? new TypeInformation(type, this.DeclaringModule) : this.MetadataContext.VoidType);
+            this.MetadataContext.GetOrAddType(this.Member.ReturnType) ?? this.MetadataContext.VoidType;
         public VariableInformation[] Parameters =>
             (this.Member.HasThis) ?
                 new[] { this.CreateThisParameterInformation(this.DeclaringType) }.
@@ -161,23 +148,11 @@ namespace IL2C.Metadata
                     this.Definition.Body.Method.DebugInformation.TryGetName(variable, out var name) ?
                         name :
                         string.Format("local{0}__", variable.Index),
-                    this.MetadataContext.GetOrAddMember(
-                        variable.VariableType,
-                        variableType => new TypeInformation(
-                            variableType,
-                            this.MetadataContext.GetOrAddModule(
-                                variableType.Module.Assembly,
-                                variableType.Module,
-                                (assembly, module_) => new ModuleInformation(
-                                    module_,
-                                    this.MetadataContext.GetOrAddAssembly(
-                                        assembly,
-                                        assembly_ => new AssemblyInformation(assembly_, this.MetadataContext)))))))).
+                    this.MetadataContext.GetOrAddType(variable.VariableType))).
                 ToArray();
         public IMethodInformation[] Overrides =>
             this.Definition.Overrides.
-                Select(om => this.MetadataContext.GetOrAddMember(
-                    om, m => new MethodInformation(m, this.DeclaringModule))).
+                Select(om => this.MetadataContext.GetOrAddMethod(om)).
                 ToArray();
         public IMethodInformation BaseMethod =>
             this.DeclaringType.BaseType?.
@@ -232,22 +207,19 @@ namespace IL2C.Metadata
                     var typeRef = operand as TypeReference;
                     if (typeRef != null)
                     {
-                        return this.MetadataContext.GetOrAddMember(
-                            typeRef, t => new TypeInformation(t, this.DeclaringModule));
+                        return this.MetadataContext.GetOrAddType(typeRef);
                     }
 
                     var fieldRef = operand as FieldReference;
                     if (fieldRef != null)
                     {
-                        return this.MetadataContext.GetOrAddMember(
-                            fieldRef, f => new FieldInformation(f, this.DeclaringModule));
+                        return this.MetadataContext.GetOrAddField(fieldRef);
                     }
 
                     var methodRef = operand as MethodReference;
                     if (methodRef != null)
                     {
-                        return this.MetadataContext.GetOrAddMember(
-                            methodRef, m => new MethodInformation(m, this.DeclaringModule));
+                        return this.MetadataContext.GetOrAddMethod(methodRef);
                     }
 
                     return operand;

@@ -41,7 +41,9 @@ namespace IL2C.Metadata
         bool IsVoidType { get; }
         bool IsObjectType { get; }
         bool IsValueTypeType { get; }
+        bool IsEnumType { get; }
         bool IsDelegateType { get; }
+        bool IsMulticastDelegateType { get; }
         bool IsBooleanType { get; }
         bool IsByteType { get; }
         bool IsSByteType { get; }
@@ -212,7 +214,9 @@ namespace IL2C.Metadata
         public bool IsVoidType => this.Equals(this.MetadataContext.VoidType);
         public bool IsObjectType => this.Equals(this.MetadataContext.ObjectType);
         public bool IsValueTypeType => this.Equals(this.MetadataContext.ValueTypeType);
+        public bool IsEnumType => this.Equals(this.MetadataContext.EnumType);
         public bool IsDelegateType => this.Equals(this.MetadataContext.DelegateType);
+        public bool IsMulticastDelegateType => this.Equals(this.MetadataContext.MulticastDelegateType);
 
         public bool IsByteType => this.Equals(this.MetadataContext.ByteType);
         public bool IsSByteType => this.Equals(this.MetadataContext.SByteType);
@@ -269,29 +273,23 @@ namespace IL2C.Metadata
         }
 
         public ITypeInformation BaseType =>
-            this.MetadataContext.GetOrAddMember(
-                (this.Definition as TypeDefinition)?.BaseType,
-                baseType => new TypeInformation(baseType, this.DeclaringModule));
+            this.MetadataContext.GetOrAddType(
+                (this.Definition as TypeDefinition)?.BaseType);
         public ITypeInformation ElementType =>
-            this.MetadataContext.GetOrAddMember(
-                this.IsEnum ? ((TypeDefinition)this.Definition).GetEnumUnderlyingType() : this.Member.GetElementType(),
-                elementType => new TypeInformation(elementType, this.DeclaringModule));
+            this.MetadataContext.GetOrAddType(
+                this.IsEnum ? ((TypeDefinition)this.Definition).GetEnumUnderlyingType() : this.Member.GetElementType());
         public ITypeInformation[] InterfaceTypes =>
-            this.MetadataContext.GetOrAddMembers(
-                (this.Definition as TypeDefinition)?.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType),
-                interfaceType => new TypeInformation(interfaceType, this.DeclaringModule));
+            this.MetadataContext.GetOrAddTypes(
+                (this.Definition as TypeDefinition)?.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType));
         public ITypeInformation[] NestedTypes =>
-            this.MetadataContext.GetOrAddMembers(
-                (this.Definition as TypeDefinition)?.NestedTypes,
-                nestedType => new TypeInformation(nestedType, this.DeclaringModule));
+            this.MetadataContext.GetOrAddTypes(
+                (this.Definition as TypeDefinition)?.NestedTypes);
         public IFieldInformation[] Fields =>
-            this.MetadataContext.GetOrAddMembers(
-                (this.Definition as TypeDefinition)?.Fields,
-                field => new FieldInformation(field, this.DeclaringModule));
+            this.MetadataContext.GetOrAddFields(
+                (this.Definition as TypeDefinition)?.Fields);
         public IMethodInformation[] DeclaredMethods =>
-            this.MetadataContext.GetOrAddMembers(
-                (this.Definition as TypeDefinition)?.Methods.Where(filterMethod),
-                method => new MethodInformation(method, this.DeclaringModule));
+            this.MetadataContext.GetOrAddMethods(
+                (this.Definition as TypeDefinition)?.Methods.Where(filterMethod));
 
         private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods()
         {
@@ -505,9 +503,7 @@ namespace IL2C.Metadata
 
         public ITypeInformation MakeByReference()
         {
-            return this.MetadataContext.GetOrAddMember(
-                this.Definition.MakeByReferenceType(),
-                type => new TypeInformation(type, this.DeclaringModule));
+            return this.MetadataContext.GetOrAddType(this.Definition.MakeByReferenceType());
         }
 
         protected override TypeReference OnResolve(TypeReference member)

@@ -45,7 +45,9 @@ namespace IL2C.Metadata
         public bool IsVoidType => false;
         public bool IsObjectType => false;
         public bool IsValueTypeType => false;
+        public bool IsEnumType => false;
         public bool IsDelegateType => false;
+        public bool IsMulticastDelegateType => false;
 
         public bool IsBooleanType => false;
         public bool IsByteType => false;

@@ -31,10 +31,7 @@ namespace IL2C.Metadata
         public string CLanguageIncludeFileName => assembly.Name.Name + ".h";
 
         public IModuleInformation[] Modules =>
-            this.MetadataContext.GetOrAddModules(
-                assembly,
-                assembly.Modules,
-                (_, module) => new ModuleInformation(module, this));
+            this.MetadataContext.GetOrAddModules(assembly.Modules);
 
         public bool Equals(IAssemblyInformation other)
         {

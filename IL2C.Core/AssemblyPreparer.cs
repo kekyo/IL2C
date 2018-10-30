@@ -208,7 +208,7 @@ namespace IL2C
 
             var allTypes = translateContext.Assembly.Modules.
                 SelectMany(module => module.Types).
-                Where(type => type.IsValidDefinition && predictType(type)).
+                Where(predictType).
                 Distinct().
                 ToArray();
 

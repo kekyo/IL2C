@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IL2C.Metadata
+namespace IL2C.Metadata.Specialized
 {
     // It's pseudo referenced-type null value used by ldnull.
     internal sealed class UntypedReferenceTypeInformation

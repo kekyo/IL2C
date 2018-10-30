@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using IL2C.Metadata.Specialized;
 using Mono.Cecil;
 
 namespace IL2C.Metadata
@@ -42,7 +42,7 @@ namespace IL2C.Metadata
     {
         // These tables are the method filter entries for mscorlib 4.0 library.
         // Reconstruct if we're ganna change to netstandard.
-        private static readonly Dictionary<string, HashSet<string>> validMethodTarget =
+        private static readonly Dictionary<string, HashSet<string>> validTargetMethods =
             new Dictionary<string, HashSet<string>>
             {
                 { "System.Object", new HashSet<string> { ".ctor", "ReferenceEquals", "ToString", "GetHashCode", "Finalize", "Equals", "GetType" } },
@@ -51,6 +51,8 @@ namespace IL2C.Metadata
                 { "System.Delegate", new HashSet<string> { "GetHashCode", "Equals" } },
                 { "System.MulticastDelegate", new HashSet<string> { "GetHashCode", "Equals" } },
             };
+        private static readonly HashSet<string> derivedFromMulticastDelegateValidTargetMethods =
+            new HashSet<string> { ".ctor", "Invoke" };
 
         private readonly AssemblyDefinition resolvedCoreAssembly;
         private readonly ModuleDefinition resolvedCoreModule;
@@ -181,7 +183,8 @@ namespace IL2C.Metadata
             IEnumerable<ModuleReference> moduleReferences)
         {
             return moduleReferences.
-                Select(module => this.GetOrAddModule(module)).
+                Select(moduleReference => this.GetOrAddModule(moduleReference)).
+                Where(module => module != null).
                 ToArray();
         }
         #endregion
@@ -218,16 +221,32 @@ namespace IL2C.Metadata
                 typeReference,
                 () =>
                 {
+                    if (typeReference.FullName == "<Module>")
+                    {
+                        return default(TypeInformation);
+                    }
+
                     var module = this.GetOrAddModule(typeReference.Module);
                     if (typeReference.Module.Equals(resolvedCoreModule) &&
-                        validMethodTarget.TryGetValue(typeReference.FullName, out var filterList))
+                        validTargetMethods.TryGetValue(typeReference.FullName, out var filterList))
                     {
                         return new TypeInformation(typeReference, module, filterList);
                     }
-                    else
+
+                    // Special filter for the delegate type.
+                    if (!typeReference.IsValueType && !typeReference.IsArray &&
+                        !typeReference.IsByReference && !typeReference.IsPointer)
                     {
-                        return new TypeInformation(typeReference, module);
+                        var typeDefinition = typeReference.Resolve();
+                        if (typeDefinition.IsClass && !typeDefinition.IsAbstract &&
+                            MemberReferenceComparer.Instance.Equals(
+                                typeDefinition.BaseType, ((TypeInformation)MulticastDelegateType).Member))
+                        {
+                            return new TypeInformation(typeReference, module, derivedFromMulticastDelegateValidTargetMethods);
+                        }
                     }
+
+                    return new TypeInformation(typeReference, module);
                 });
         }
 
@@ -235,7 +254,8 @@ namespace IL2C.Metadata
             IEnumerable<TypeReference> typeReferences)
         {
             return typeReferences.
-                Select(type => this.GetOrAddType(type)).
+                Select(typeReference => this.GetOrAddType(typeReference)).
+                Where(type => type != null).
                 ToArray();
         }
         #endregion
@@ -253,7 +273,8 @@ namespace IL2C.Metadata
             IEnumerable<FieldReference> fieldReferences)
         {
             return fieldReferences.
-                Select(field => this.GetOrAddField(field)).
+                Select(fieldReference => this.GetOrAddField(fieldReference)).
+                Where(field => field != null).
                 ToArray();
         }
         #endregion
@@ -271,7 +292,8 @@ namespace IL2C.Metadata
             IEnumerable<MethodReference> methodReferences)
         {
             return methodReferences.
-                Select(method => this.GetOrAddMethod(method)).
+                Select(methodReference => this.GetOrAddMethod(methodReference)).
+                Where(method => method != null).
                 ToArray();
         }
         #endregion

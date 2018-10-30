@@ -10,8 +10,6 @@ namespace IL2C.Metadata
 {
     public interface ITypeInformation : IMemberInformation
     {
-        bool IsValidDefinition { get; }
-
         bool IsPublic { get; }
         bool IsNestedPublic { get; }
         bool IsNestedFamily { get; }
@@ -85,7 +83,7 @@ namespace IL2C.Metadata
         ITypeInformation MakeByReference();
     }
 
-    internal sealed class TypeInformation
+    internal class TypeInformation
         : MemberInformation<TypeReference, TypeReference>, ITypeInformation
     {
         private readonly Func<MethodDefinition, bool> filterMethod;
@@ -118,26 +116,9 @@ namespace IL2C.Metadata
                 ? "Struct"
                 : this.IsInterface
                     ? "Interface"
-                    : "Class";
-
-        public bool IsValidDefinition
-        {
-            get
-            {
-                var definition = this.Definition as TypeDefinition;
-                if (definition != null)
-                {
-                    return (((this.Member.IsValueType || definition.IsClass)
-                        && (definition.BaseType != null))
-                        || definition.IsInterface)
-                        && (this.Member.Name != "<Module>");
-                }
-                else
-                {
-                    return true;
-                }
-            }
-        }
+                    : this.IsDelegate
+                        ? "Delegate"
+                        : "Class";
 
         public bool IsPublic => (this.Definition as TypeDefinition)?.IsPublic ?? false;
         public bool IsNestedPublic => (this.Definition as TypeDefinition)?.IsNestedPublic ?? false;

@@ -80,7 +80,7 @@ namespace IL2C.Metadata
             this.member = member;
         }
 
-        protected TReference Member => definition ?? member;
+        internal TReference Member => definition ?? member;
 
         protected TDefinition Definition => this.GetDefinition();
 

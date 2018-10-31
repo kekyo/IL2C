@@ -152,7 +152,7 @@ namespace IL2C
                 prepareContext.RegisterType(parameter.TargetType);
             }
 
-            if (method.IsAbstract)
+            if (method.IsVirtual && method.IsAbstract)
             {
                 Debug.Assert(!method.HasBody);
                 return null;

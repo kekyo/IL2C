@@ -79,11 +79,11 @@ namespace IL2C
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());
 
-        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes, Type[] includeTypes)
+        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes)
         {
             return includeBaseTypes ?
-                typeof(T).Traverse(type => type.BaseType).Concat(includeTypes) :
-                new[] { typeof(T) }.Concat(includeTypes);
+                typeof(T).Traverse(type => type.BaseType) :
+                new[] { typeof(T) };
         }
 
         public static TestCaseInformation[] GetTestCaseInformations<T>()
@@ -103,12 +103,16 @@ namespace IL2C
                  let additionalMethods =
                     testCase.AdditionalMethodNames.
                     SelectMany(methodName =>
-                        TraverseTypes<T>(testCase.IncludeBaseTypes, testCase.IncludeTypes).
+                        TraverseTypes<T>(testCase.IncludeBaseTypes).
                         SelectMany(type => type.GetMembers(
                             BindingFlags.Public | BindingFlags.NonPublic |
                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly).  // Both instance or static method
                             OfType<MethodBase>().
                             Where(m => m.Name == methodName))).
+                    Concat(testCase.IncludeTypes.SelectMany(type => type.GetMembers(   // The IncludeTypes import all members implicitly.
+                        BindingFlags.Public | BindingFlags.NonPublic |
+                        BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly).  // Both instance or static method
+                        OfType<MethodBase>())).
                     ToArray()
                  let totalAdditionalMethods =
                     // If contains instance method in set of additional methods (test case is implicitly required the instance), add the constructor.

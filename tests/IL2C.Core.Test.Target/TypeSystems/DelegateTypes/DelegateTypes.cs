@@ -12,9 +12,9 @@
         }
     }
 
-    [TestCase("12345678ABC", new[] { "Static_Int32ToString", "Static_Int32ToStringImpl", ".ctor" }, 12345678, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
-    [TestCase("87654321ABC123", new[] { "Instance_Int32ToString", "Instance_Int32ToStringImpl", ".ctor" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
-    [TestCase("11223344DEF456", new[] { "AnotherInstance_Int32ToString", "AnotherInstance_Int32ToStringImpl", ".ctor" }, 11223344, IncludeTypes = new[] { typeof(Int32ToStringDelegate), typeof(AnotherDelegateTypes) })]
+    [TestCase("12345678ABC", new[] { "Static_Int32ToString", "Static_Int32ToStringImpl" }, 12345678, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
+    [TestCase("87654321ABC123", new[] { "Instance_Int32ToString", "Instance_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
+    [TestCase("11223344DEF456", new[] { "AnotherInstance_Int32ToString", "AnotherInstance_Int32ToStringImpl" }, 11223344, IncludeTypes = new[] { typeof(Int32ToStringDelegate), typeof(AnotherDelegateTypes) })]
     public sealed class DelegateTypes
     {
         private static string Static_Int32ToStringImpl(int value)

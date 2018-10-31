@@ -283,6 +283,29 @@ System_String* System_String_Concat_6(System_Object* arg0, System_Object* arg1)
     return System_String_Concat_5(str0, str1);
 }
 
+System_String* System_String_Concat_7(System_String* str0, System_String* str1, System_String* str2)
+{
+    // TODO: NullReferenceException
+    il2c_assert(str0 != NULL);
+    il2c_assert(str1 != NULL);
+    il2c_assert(str2 != NULL);
+
+    il2c_assert(str0->string_body__ != NULL);
+    il2c_assert(str1->string_body__ != NULL);
+    il2c_assert(str2->string_body__ != NULL);
+
+    uintptr_t str0Size = (uintptr_t)il2c_wcslen(str0->string_body__) * sizeof(wchar_t);
+    uintptr_t str1Size = (uintptr_t)il2c_wcslen(str1->string_body__) * sizeof(wchar_t);
+    uintptr_t str2Size = (uintptr_t)il2c_wcslen(str2->string_body__) * sizeof(wchar_t);
+
+    System_String* pString = new_string_internal__(str0Size + str1Size + str2Size + sizeof(wchar_t));
+    il2c_memcpy((wchar_t*)(pString->string_body__), str0->string_body__, str0Size);
+    il2c_memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size);
+    il2c_memcpy(((uint8_t*)(pString->string_body__)) + str0Size + str1Size, str2->string_body__, str2Size + sizeof(wchar_t));
+
+    return pString;
+}
+
 System_String* System_String_Substring(System_String* this__, int32_t startIndex)
 {
     il2c_assert(this__ != NULL);

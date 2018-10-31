@@ -19,6 +19,8 @@ typedef __System_ValueType_VTABLE_DECL__ __System_Boolean_VTABLE_DECL__;
 extern __System_Boolean_VTABLE_DECL__ __System_Boolean_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_Boolean_RUNTIME_TYPE__;
 
+#define __System_Boolean_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+
 extern /* virtual */ System_String* System_Boolean_ToString(bool* this__);
 extern /* virtual */ int32_t System_Boolean_GetHashCode(bool* this__);
 extern bool System_Boolean_Equals(bool* this__, bool obj);

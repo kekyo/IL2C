@@ -284,7 +284,7 @@ IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
     typeNameString, \
     flags, \
     sizeof(typeName), \
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER, \
+    /* internalcall */ (IL2C_MARK_HANDLER)__##typeName##_IL2C_MarkHandler__, \
     il2c_typeof(baseTypeName) \
 }
 

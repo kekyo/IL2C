@@ -159,36 +159,25 @@ namespace IL2C
                 return null;
             }
 
-            // If delegate's method
-            if (method.Context.DelegateType.IsAssignableFrom(method.DeclaringType))
-            {
-                // "extern internalcall"
-                Debug.Assert(method.IsExtern);
-                Debug.Assert(!method.HasBody);
-                return null;
-            }
-
+            // internalcall or DllImport
             if (method.IsExtern)
             {
-                var pinvokeInfo = method.PInvokeInfo;
-                if (pinvokeInfo == null)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Missing DllImport attribute at P/Invoke entry: Method={0}",
-                        method.FriendlyName);
-                }
-
-                // TODO: Switch DllImport.Value include direction to library direction.
-                if (string.IsNullOrWhiteSpace(pinvokeInfo.Module.Name))
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Not given DllImport attribute argument. Name={0}",
-                        method.FriendlyName);
-                }
-
-                prepareContext.RegisterPrivateIncludeFile(pinvokeInfo.Module.Name);
-
                 Debug.Assert(!method.HasBody);
+
+                var pinvokeInfo = method.PInvokeInfo;
+                if (pinvokeInfo != null)
+                {
+                    // TODO: Switch DllImport.Value include direction to library direction.
+                    if (string.IsNullOrWhiteSpace(pinvokeInfo.Module.Name))
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Not given DllImport attribute argument. Name={0}",
+                            method.FriendlyName);
+                    }
+
+                    prepareContext.RegisterPrivateIncludeFile(pinvokeInfo.Module.Name);
+                }
+
                 return null;
             }
 
@@ -229,9 +218,7 @@ namespace IL2C
                 allTypes,
                 (from type in allTypes
                  from method in type.DeclaredMethods
-                 where predictMethod(method) &&
-                    // Exclude delegate's constructor
-                    (!method.IsConstructor || !method.DeclaringType.IsDelegate)
+                 where predictMethod(method)
                  let preparedMethod = PrepareMethod(prepareContext, method)
                  where preparedMethod != null
                  select preparedMethod).
@@ -247,7 +234,7 @@ namespace IL2C
                 // All types
                 type => true,
                 // Standard methods and instance constructors.
-                method => !method.IsConstructor || !method.IsStatic);
+                method => !(method.IsConstructor && method.IsStatic));
         }
     }
 }

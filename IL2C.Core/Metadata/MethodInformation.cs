@@ -127,7 +127,9 @@ namespace IL2C.Metadata
         public bool IsReuseSlot =>
             this.Definition.IsReuseSlot;
         public bool IsExtern =>
-            this.Definition.IsPInvokeImpl || this.Definition.IsInternalCall;
+            this.Definition.IsPInvokeImpl || this.Definition.IsInternalCall ||
+            // HACK: Externed but not marked method (ex: delegate constructor)
+            (!this.HasBody && (this.IsConstructor || !this.IsAbstract));
         public bool HasThis =>
             this.Definition.HasThis;
         public bool HasBody => 

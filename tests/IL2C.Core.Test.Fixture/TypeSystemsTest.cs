@@ -12,5 +12,10 @@ namespace IL2C
         [Test]
         public static Task EnumTypes([ValueSource(nameof(_EnumTypes))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
+
+        public static readonly TestCaseInformation[] _DelegateTypes = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.DelegateTypes>();
+        [Test]
+        public static Task DelegateTypes([ValueSource(nameof(_DelegateTypes))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
     }
 }

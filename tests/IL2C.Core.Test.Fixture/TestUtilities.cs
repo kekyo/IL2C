@@ -104,10 +104,11 @@ namespace IL2C
                     testCase.AdditionalMethodNames.
                     SelectMany(methodName =>
                         TraverseTypes<T>(testCase.IncludeBaseTypes, testCase.IncludeTypes).
-                        SelectMany(type => type.GetMethods(
+                        SelectMany(type => type.GetMembers(
                             BindingFlags.Public | BindingFlags.NonPublic |
                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly).  // Both instance or static method
-                        Where(m => m.Name == methodName))).
+                            OfType<MethodBase>().
+                            Where(m => m.Name == methodName))).
                     ToArray()
                  let totalAdditionalMethods =
                     // If contains instance method in set of additional methods (test case is implicitly required the instance), add the constructor.

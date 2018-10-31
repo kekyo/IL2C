@@ -21,6 +21,7 @@ namespace IL2C.Metadata.Specialized
         public bool IsNestedFamily => false;
         public bool IsNestedFamilyOrAssembly => false;
 
+        public bool IsAbstract => false;
         public bool IsStatic => false;
         public bool IsSealed => false;
 

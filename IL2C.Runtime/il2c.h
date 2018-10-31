@@ -107,7 +107,6 @@ typedef void* untyped_ptr;
 
 // TODO: Runtime-related types
 //   System.Array
-//   System.Delegate, System.MulticastDelegate
 //   System.Exception
 
 #include <System.Object.h>
@@ -129,6 +128,8 @@ typedef void* untyped_ptr;
 #include <System.Single.h>
 #include <System.Double.h>
 #include <System.Enum.h>
+#include <System.Delegate.h>
+#include <System.MulticastDelegate.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

@@ -19,6 +19,8 @@ typedef __System_ValueType_VTABLE_DECL__ __System_SByte_VTABLE_DECL__;
 extern __System_SByte_VTABLE_DECL__ __System_SByte_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_SByte_RUNTIME_TYPE__;
 
+#define __System_SByte_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+
 extern /* virtual */ System_String* System_SByte_ToString(int8_t* this__);
 extern /* virtual */ int32_t System_SByte_GetHashCode(int8_t* this__);
 extern bool System_SByte_Equals(int8_t* this__, int8_t obj);

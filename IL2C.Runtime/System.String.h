@@ -27,6 +27,8 @@ struct System_String
 extern IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__;
 extern __System_String_VTABLE_DECL__ __System_String_VTABLE__;
 
+#define __System_String_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+
 extern /* virtual */ System_String* System_String_ToString(System_String* this__);
 extern bool System_String_Equals(System_String* this__, System_String* obj);
 extern /* virtual */ bool System_String_Equals_1(System_String* this__, System_Object* obj);
@@ -52,7 +54,7 @@ typedef struct
     // IL2C_REF_HEADER
     const void* pNext;
     IL2C_RUNTIME_TYPE_DECL* type;
-    const intptr_t gcMark;           // Pretty hack: const string always marked (GCMARK_LIVE:0)
+    const intptr_t gcMark;           // Pretty hack: const string always marked (GCMARK_CONST:2)
 
     // Instance's vptr
     __System_String_VTABLE_DECL__* vptr0__;

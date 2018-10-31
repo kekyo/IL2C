@@ -25,6 +25,8 @@
 #include "System.Single.c"
 #include "System.Double.c"
 #include "System.Enum.c"
+#include "System.Delegate.c"
+#include "System.MulticastDelegate.c"
 
 #include "System.Console.c"
 

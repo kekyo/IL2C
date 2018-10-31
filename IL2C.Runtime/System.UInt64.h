@@ -19,6 +19,8 @@ typedef __System_ValueType_VTABLE_DECL__ __System_UInt64_VTABLE_DECL__;
 extern __System_UInt64_VTABLE_DECL__ __System_UInt64_VTABLE__;
 extern IL2C_RUNTIME_TYPE_DECL __System_UInt64_RUNTIME_TYPE__;
 
+#define __System_UInt64_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+
 extern /* virtual */ System_String* System_UInt64_ToString(uint64_t* this__);
 extern /* virtual */ int32_t System_UInt64_GetHashCode(uint64_t* this__);
 extern bool System_UInt64_Equals(uint64_t* this__, uint64_t obj);

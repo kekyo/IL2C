@@ -15,6 +15,7 @@ namespace IL2C.Metadata
         bool IsNestedFamily { get; }
         bool IsNestedFamilyOrAssembly { get; }
 
+        bool IsAbstract { get; }
         bool IsStatic { get; }
         bool IsSealed { get; }
 
@@ -86,7 +87,7 @@ namespace IL2C.Metadata
     internal class TypeInformation
         : MemberInformation<TypeReference, TypeReference>, ITypeInformation
     {
-        private readonly Func<MethodDefinition, bool> filterMethod;
+        private readonly Func<MemberReference, bool> memberFilter;
 
         public TypeInformation(TypeReference type, ModuleInformation module)
             : this(type, module, _ => true)
@@ -102,10 +103,10 @@ namespace IL2C.Metadata
 
         internal TypeInformation(
             TypeReference type, ModuleInformation module,
-            Func<MethodDefinition, bool> filterMethod)
+            Func<MemberReference, bool> memberFilter)
             : base(type, module)
         {
-            this.filterMethod = filterMethod;
+            this.memberFilter = memberFilter;
         }
 
         public override string MetadataTypeName => "Type";
@@ -124,6 +125,7 @@ namespace IL2C.Metadata
         public bool IsNestedPublic => (this.Definition as TypeDefinition)?.IsNestedPublic ?? false;
         public bool IsNestedFamily => (this.Definition as TypeDefinition)?.IsNestedFamily ?? false;
         public bool IsNestedFamilyOrAssembly => (this.Definition as TypeDefinition)?.IsNestedFamilyOrAssembly ?? false;
+        public bool IsAbstract => (this.Definition as TypeDefinition)?.IsAbstract ?? false;
 
         public bool IsStatic
         {
@@ -258,19 +260,30 @@ namespace IL2C.Metadata
                 (this.Definition as TypeDefinition)?.BaseType);
         public ITypeInformation ElementType =>
             this.MetadataContext.GetOrAddType(
-                this.IsEnum ? ((TypeDefinition)this.Definition).GetEnumUnderlyingType() : this.Member.GetElementType());
+                this.IsEnum ?
+                    ((TypeDefinition)this.Definition).GetEnumUnderlyingType() :
+                    this.Member.GetElementType());
         public ITypeInformation[] InterfaceTypes =>
             this.MetadataContext.GetOrAddTypes(
-                (this.Definition as TypeDefinition)?.Interfaces.Select(interfaceImpl => interfaceImpl.InterfaceType));
+                (this.Definition as TypeDefinition)?.
+                    Interfaces.
+                    Select(interfaceImpl => interfaceImpl.InterfaceType).
+                    Where(type => memberFilter(type)));
         public ITypeInformation[] NestedTypes =>
             this.MetadataContext.GetOrAddTypes(
-                (this.Definition as TypeDefinition)?.NestedTypes);
+                (this.Definition as TypeDefinition)?.
+                    NestedTypes.
+                    Where(type => memberFilter(type)));
         public IFieldInformation[] Fields =>
             this.MetadataContext.GetOrAddFields(
-                (this.Definition as TypeDefinition)?.Fields);
+                (this.Definition as TypeDefinition)?.
+                    Fields.
+                    Where(field => memberFilter(field)));
         public IMethodInformation[] DeclaredMethods =>
             this.MetadataContext.GetOrAddMethods(
-                (this.Definition as TypeDefinition)?.Methods.Where(filterMethod));
+                (this.Definition as TypeDefinition)?.
+                    Methods.
+                    Where(type => memberFilter(type)));
 
         private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods()
         {

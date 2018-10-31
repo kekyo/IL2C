@@ -40,16 +40,16 @@ namespace IL2C.Metadata
     internal sealed class MetadataContext
         : IMetadataContext
     {
-        // These tables are the method filter entries for mscorlib 4.0 library.
+        // These tables are the member filter entries for mscorlib 4.0 library.
         // Reconstruct if we're ganna change to netstandard.
-        private static readonly Dictionary<string, HashSet<string>> validTargetMethods =
+        private static readonly Dictionary<string, HashSet<string>> validTargetMembers =
             new Dictionary<string, HashSet<string>>
             {
                 { "System.Object", new HashSet<string> { ".ctor", "ReferenceEquals", "ToString", "GetHashCode", "Finalize", "Equals", "GetType" } },
                 { "System.ValueType", new HashSet<string> { "ToString", "GetHashCode", "Equals" } },
                 { "System.Enum", new HashSet<string> { "ToString", "GetHashCode", "Equals" } },
-                { "System.Delegate", new HashSet<string> { "GetHashCode", "Equals" } },
-                { "System.MulticastDelegate", new HashSet<string> { "GetHashCode", "Equals" } },
+                { "System.Delegate", new HashSet<string> { "GetHashCode", "Equals", "_target", "_methodPtr" } },
+                { "System.MulticastDelegate", new HashSet<string> { "GetHashCode", "Equals", "_target", "_methodPtr" } },
             };
         private static readonly HashSet<string> derivedFromMulticastDelegateValidTargetMethods =
             new HashSet<string> { ".ctor", "Invoke" };
@@ -228,7 +228,7 @@ namespace IL2C.Metadata
 
                     var module = this.GetOrAddModule(typeReference.Module);
                     if (typeReference.Module.Equals(resolvedCoreModule) &&
-                        validTargetMethods.TryGetValue(typeReference.FullName, out var filterList))
+                        validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
                     {
                         return new TypeInformation(typeReference, module, filterList);
                     }

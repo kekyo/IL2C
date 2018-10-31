@@ -635,28 +635,28 @@ namespace IL2C
             tw.WriteLine("}");
         }
 
-        private struct VirtualFunctionInformation
-        {
-            public readonly string MangledTypeName;
-            public readonly string CLanguageTypeName;
-            public readonly string CLanguageVirtualFunctionDeclarationName;
-            public readonly string CLanguageReturnTypeName;
-            public readonly KeyValuePair<string, string>[] Parameters;
+        //private struct VirtualFunctionInformation
+        //{
+        //    public readonly string MangledTypeName;
+        //    public readonly string CLanguageTypeName;
+        //    public readonly string CLanguageVirtualFunctionDeclarationName;
+        //    public readonly string CLanguageReturnTypeName;
+        //    public readonly KeyValuePair<string, string>[] Parameters;
 
-            public VirtualFunctionInformation(
-                string mangledTypeName,
-                string cLanguageTypeName,
-                string cLanguageVirtualFunctionDeclarationName,
-                string cLanguageReturnTypeName,
-                KeyValuePair<string, string>[] parameters)
-            {
-                this.MangledTypeName = mangledTypeName;
-                this.CLanguageTypeName = cLanguageTypeName;
-                this.CLanguageVirtualFunctionDeclarationName = cLanguageVirtualFunctionDeclarationName;
-                this.CLanguageReturnTypeName = cLanguageReturnTypeName;
-                this.Parameters = parameters;
-            }
-        }
+        //    public VirtualFunctionInformation(
+        //        string mangledTypeName,
+        //        string cLanguageTypeName,
+        //        string cLanguageVirtualFunctionDeclarationName,
+        //        string cLanguageReturnTypeName,
+        //        KeyValuePair<string, string>[] parameters)
+        //    {
+        //        this.MangledTypeName = mangledTypeName;
+        //        this.CLanguageTypeName = cLanguageTypeName;
+        //        this.CLanguageVirtualFunctionDeclarationName = cLanguageVirtualFunctionDeclarationName;
+        //        this.CLanguageReturnTypeName = cLanguageReturnTypeName;
+        //        this.Parameters = parameters;
+        //    }
+        //}
 
         //private static VirtualFunctionInformation[] GetVirtualFunctions(
         //    ITypeInformation adjustorThunkTargetType,
@@ -1034,6 +1034,133 @@ namespace IL2C
             tw.WriteLine("};");
         }
 
+        private static void InternalConvertFromDelegateConstructor(
+            TextWriter tw,
+            IExtractContext extractContext,
+            IMethodInformation method,
+            string indent)
+        {
+            if (!method.Parameters.
+                Skip(1).
+                Select(p => p.TargetType).
+                SequenceEqual(new[] {
+                    extractContext.MetadataContext.ObjectType,
+                    extractContext.MetadataContext.IntPtrType }))
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid delegate constrcutor. Name={0}",
+                    method.FriendlyName);
+            }
+
+            tw.WriteLine();
+            tw.WriteLine("///////////////////////////////////////");
+            tw.WriteLine("// [11-1] Delegate constructor: {0}", method.FriendlyName);
+            tw.WriteLine();
+
+            // DIRTY:
+            //   Cause undefined symbol error at C compilation if "System.Delegate" type on the mscorlib assembly
+            //   contains the fields with different symbol name.
+
+            var thisName = method.Parameters[0].SymbolName;
+            var targetName = method.Parameters[1].SymbolName;
+            var methodPtrName = method.Parameters[2].SymbolName;
+
+            tw.WriteLine(method.CLanguageFunctionPrototype);
+            tw.WriteLine("{");
+            tw.WriteLine("{0}il2c_assert({1} != NULL);", indent, thisName);
+            tw.WriteLine("{0}il2c_assert({1} != 0);", indent, methodPtrName);
+            tw.WriteLine();
+
+            tw.WriteLine("{0}{1}->_target = {2};", indent, thisName, targetName);
+            tw.WriteLine("{0}{1}->_methodPtr = {2};", indent, thisName, methodPtrName);
+            tw.WriteLine("}");
+        }
+
+        private static void InternalConvertFromDelegateInvoker(
+            TextWriter tw,
+            IExtractContext extractContext,
+            IMethodInformation method,
+            string indent)
+        {
+            if (method.Parameters.Length == 0)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid delegate invoker. Name={0}",
+                    method.FriendlyName);
+            }
+
+            tw.WriteLine();
+            tw.WriteLine("///////////////////////////////////////");
+            tw.WriteLine("// [11-2] Delegate invoker: {0}", method.FriendlyName);
+            tw.WriteLine();
+
+            // DIRTY:
+            //   Cause undefined symbol error at C compilation if "System.Delegate" type on the mscorlib assembly
+            //   contains the fields with different symbol name.
+
+            var thisName = method.Parameters[0].SymbolName;
+
+            tw.WriteLine(method.CLanguageFunctionPrototype);
+            tw.WriteLine("{");
+            tw.WriteLine("{0}il2c_assert({1} != NULL);", indent, thisName);
+            tw.WriteLine("{0}il2c_assert({1}->_methodPtr != 0);", indent, thisName);
+            tw.WriteLine();
+
+            if (method.ReturnType.IsVoidType)
+            {
+                tw.WriteLine("{0}if ({1}->_target != NULL)", indent, thisName);
+                tw.WriteLine(
+                    "{0}{0}((void (*)(System_Object*{1}))({2}->_methodPtr))({2}->_target{3});",
+                    indent,
+                    string.Join(string.Empty, method.Parameters.
+                        Skip(1).
+                        Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
+                    thisName,
+                    string.Join(string.Empty, method.Parameters.
+                        Skip(1).
+                        Select(p => string.Format(", {0}", p.SymbolName))));
+                tw.WriteLine("{0}else", indent);
+                tw.WriteLine(
+                    "{0}{0}(({void (*)({1}))({2}->_methodPtr))({3});",
+                    indent,
+                    string.Join(", ", method.Parameters.
+                        Skip(1).
+                        Select(p => p.TargetType.CLanguageTypeName)),
+                    thisName,
+                    string.Join(", ", method.Parameters.
+                        Skip(1).
+                        Select(p => p.SymbolName)));
+            }
+            else
+            {
+                tw.WriteLine("{0}if ({1}->_target != NULL)", indent, thisName);
+                tw.WriteLine(
+                    "{0}{0}return (({1} (*)(System_Object*{2}))({3}->_methodPtr))({3}->_target{4});",
+                    indent,
+                    method.ReturnType.CLanguageTypeName,
+                    string.Join(string.Empty, method.Parameters.
+                        Skip(1).
+                        Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
+                    thisName,
+                    string.Join(string.Empty, method.Parameters.
+                        Skip(1).
+                        Select(p => string.Format(", {0}", p.SymbolName))));
+                tw.WriteLine("{0}else", indent);
+                tw.WriteLine(
+                    "{0}{0}return (({1} (*)({2}))({3}->_methodPtr))({4});",
+                    indent,
+                    method.ReturnType.CLanguageTypeName,
+                    string.Join(", ", method.Parameters.
+                        Skip(1).
+                        Select(p => p.TargetType.CLanguageTypeName)),
+                    thisName,
+                    string.Join(", ", method.Parameters.
+                        Skip(1).
+                        Select(p => p.SymbolName)));
+            }
+            tw.WriteLine("}");
+        }
+
         internal static void InternalConvertFromMethod(
             TextWriter tw,
             IExtractContext extractContext,
@@ -1057,34 +1184,63 @@ namespace IL2C
                 }
             }
 
+            // internalcall or DllImport
             if (method.IsExtern)
             {
+                // DllImport
                 var pinvokeInfo = method.PInvokeInfo;
-                if (pinvokeInfo == null)
+                if (pinvokeInfo != null)
                 {
-                    // TODO: Support marked by internalcall.
-                    throw new InvalidProgramSequenceException(
-                        "Missing DllImport attribute at P/Invoke entry: Method={0}",
-                        method.FriendlyName);
+                    InternalConvertFromPInvokeFunction(
+                        tw,
+                        method,
+                        pinvokeInfo,
+                        indent);
+                    return;
                 }
 
-                InternalConvertFromPInvokeFunction(
-                    tw,
-                    method,
-                    pinvokeInfo,
-                    indent);
+                // Specialize delegate type methods:
+                if (method.DeclaringType.IsDelegate && !method.DeclaringType.IsAbstract)
+                {
+                    // Delegate constructor
+                    if (method.IsConstructor)
+                    {
+                        InternalConvertFromDelegateConstructor(
+                            tw,
+                            extractContext,
+                            method,
+                            indent);
+                        return;
+                    }
+
+                    // Delegate "Invoke"
+                    if (method.Name == "Invoke")
+                    {
+                        InternalConvertFromDelegateInvoker(
+                            tw,
+                            extractContext,
+                            method,
+                            indent);
+                        return;
+                    }
+                }
+
+                throw new InvalidProgramSequenceException(
+                    "Unknown internallcall method declaration. Name={0}",
+                    method.FriendlyName);
+            }
+
+            if (!preparedFunctions.Functions.TryGetValue(method, out var preparedMethod))
+            {
                 return;
             }
 
-            if (preparedFunctions.Functions.TryGetValue(method, out var preparedMethod))
-            {
-                InternalConvertFromFunction(
-                    tw,
-                    extractContext,
-                    preparedMethod,
-                    indent,
-                    debugInformationOption);
-            }
+            InternalConvertFromFunction(
+                tw,
+                extractContext,
+                preparedMethod,
+                indent,
+                debugInformationOption);
         }
 
         internal static void InternalWriteHeader(

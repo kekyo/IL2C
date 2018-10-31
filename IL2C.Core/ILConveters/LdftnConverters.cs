@@ -17,9 +17,9 @@ namespace IL2C.ILConverters
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
             return _ => new[] { string.Format(
-                "{0} = {1}",
+                "{0} = (intptr_t){1}",
                 symbolName,
-                operand.MangledName) };
+                operand.CLanguageFunctionName) };
         }
     }
 }

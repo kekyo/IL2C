@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.ILConverters;
@@ -65,11 +64,11 @@ namespace IL2C
             IMethodInformation method)
         {
             // TODO: move into MethodInformation
-            var localVariables = method.LocalVariables
+            var localVariables = method.LocalVariables.
                 // If found non named local variable, force named "local[n]__"
-                .GroupBy(variable => variable.SymbolName)
+                GroupBy(variable => variable.SymbolName).
                 // If contains both named symbol each different scope (in the method by C#'s block), try to named with index number.
-                .SelectMany(g =>
+                SelectMany(g =>
                 {
                     var list = g.ToArray();
                     return (list.Length >= 2)
@@ -83,16 +82,16 @@ namespace IL2C
                             list[0].Index,
                             string.Format("{0}", g.Key),
                             list[0].TargetType) };
-                })
-                .OrderBy(e => e.Index)
+                }).
+                OrderBy(e => e.Index).
 #if DEBUG
-                .Select((e, index) =>
+                Select((e, index) =>
                 {
                     Debug.Assert(e.Index == index);
                     return e;
-                })
+                }).
 #endif
-                .ToArray();
+                ToArray();
 
             foreach (var local in localVariables)
             {
@@ -178,7 +177,12 @@ namespace IL2C
                     prepareContext.RegisterPrivateIncludeFile(pinvokeInfo.Module.Name);
                 }
 
-                return null;
+                // Construct dummy information.
+                return new PreparedMethodInformation(
+                    method,
+                    null,
+                    null,
+                    null);
             }
 
             Debug.Assert(method.HasBody);
@@ -233,7 +237,7 @@ namespace IL2C
                 translateContext,
                 // All types
                 type => true,
-                // Standard methods and instance constructors.
+                // The methods except type initializer.
                 method => !(method.IsConstructor && method.IsStatic));
         }
     }

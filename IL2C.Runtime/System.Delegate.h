@@ -40,6 +40,7 @@ extern /* internalcall */ void __System_Delegate_IL2C_MarkHandler__(System_Deleg
 extern /* virtual */ int32_t System_Delegate_GetHashCode(System_Delegate* this__);
 extern /* virtual */ bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj);
 extern System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b);
+extern System_Delegate* System_Delegate_Remove(System_Delegate* a, System_Delegate* b);
 
 /////////////////////////////////////////////////
 // Delegate special functions

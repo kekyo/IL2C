@@ -123,6 +123,7 @@ namespace IL2C
                 typeof(Type),
                 typeof(ValueType),
                 typeof(Enum),
+                typeof(Delegate),
                 typeof(void),
                 typeof(byte),
                 typeof(sbyte),

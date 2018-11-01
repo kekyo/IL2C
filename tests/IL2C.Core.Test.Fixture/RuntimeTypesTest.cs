@@ -92,5 +92,10 @@ namespace IL2C
         [Test]
         public static Task System_Type([ValueSource(nameof(_System_Type))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
+
+        public static readonly TestCaseInformation[] _System_Delegate = TestUtilities.GetTestCaseInformations<IL2C.RuntimeTypes.System_Delegate>();
+        [Test]
+        public static Task System_Delegate([ValueSource(nameof(_System_Delegate))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
     }
 }

@@ -98,6 +98,24 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     return dlg;
 }
 
+System_Delegate* System_Delegate_Remove(System_Delegate* a, System_Delegate* b)
+{
+    if (a == NULL)
+    {
+        return NULL;
+    }
+
+    if (b == NULL)
+    {
+        il2c_assert(a->vptr0__ == &__System_Delegate_VTABLE__);
+        il2c_assert(a->count__ >= 1);
+        return a;
+    }
+
+    // TODO:
+    return a;
+}
+
 /////////////////////////////////////////////////
 // Delegate special functions
 

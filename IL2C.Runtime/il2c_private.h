@@ -244,6 +244,9 @@ extern void WriteLineToError(const wchar_t* pMessage);
 // IL2C_RUNTIME_TYPE_DECL.flags
 #define IL2C_TYPE_VARIABLE 0x04
 
+#define il2c_get_header__(pReference) \
+    ((IL2C_REF_HEADER*)(((uint8_t*)(pReference)) - sizeof(IL2C_REF_HEADER)))
+
 // Generator macro for the trampoline virtual function using the value type.
 // These are using the unsafe_unbox. Because we can understand what type the this__ pointer,
 // these function only invoke from the (known value type) trampoline vtable.

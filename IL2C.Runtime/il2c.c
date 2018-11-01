@@ -104,8 +104,7 @@ void il2c_mark_from_handler__(/* System_Object* */ void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
-        (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
     interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
@@ -191,8 +190,7 @@ void il2c_step2_mark_gcmark__()
             }
 
             // Marking process.
-            IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
-                (((uint8_t*)*ppReference) - sizeof(IL2C_REF_HEADER));
+            IL2C_REF_HEADER* pHeader = il2c_get_header__(*ppReference);
             interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {
@@ -277,9 +275,7 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DEC
         return NULL;
     }
 
-    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
-        (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
-
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
     IL2C_RUNTIME_TYPE_DECL* currentType = pHeader->type;
     do
     {

@@ -46,7 +46,56 @@ bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj)
 
 System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
 {
-    // TODO:
+    if (a == NULL)
+    {
+        if (b == NULL)
+        {
+            return NULL;
+        }
+        else
+        {
+            il2c_assert(b->vptr0__ == &__System_Delegate_VTABLE__);
+            il2c_assert(b->count__ >= 1);
+            return b;
+        }
+    }
+    else
+    {
+        if (b == NULL)
+        {
+            il2c_assert(a->vptr0__ == &__System_Delegate_VTABLE__);
+            il2c_assert(a->count__ >= 1);
+            return a;
+        }
+    }
+
+    il2c_assert(a->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(a->count__ >= 1);
+    il2c_assert(b->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(b->count__ >= 1);
+
+    // Requires same delegate type.
+    IL2C_REF_HEADER* pHeaderA = il2c_get_header__(a);
+    IL2C_REF_HEADER* pHeaderB = il2c_get_header__(b);
+    if (pHeaderA->type != pHeaderB->type)
+    {
+        // https://docs.microsoft.com/en-us/dotnet/api/system.delegate.combine
+        // TODO: throw new ArgumentException
+        il2c_assert(0);
+    }
+
+    int32_t count = a->count__ + b->count__;
+    uintptr_t size = sizeof(System_Delegate) +
+        (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
+    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size);
+    dlg->vptr0__ = &__System_Delegate_VTABLE__;
+    
+    dlg->count__ = count;
+    IL2C_METHOD_TABLE_DECL* pMethodtbl = dlg->methodtbl__;
+    il2c_memcpy(&pMethodtbl[0], &a->methodtbl__[0], a->count__ * sizeof(IL2C_METHOD_TABLE_DECL));
+    il2c_memcpy(&pMethodtbl[a->count__], &b->methodtbl__[0], b->count__ * sizeof(IL2C_METHOD_TABLE_DECL));
+
+    return dlg;
 }
 
 /////////////////////////////////////////////////
@@ -60,6 +109,7 @@ System_Delegate* il2c_new_delegate__(
 
     System_Delegate* dlg = il2c_get_uninitialized_object_internal__(delegateType, sizeof(System_Delegate));
     dlg->vptr0__ = &__System_Delegate_VTABLE__;
+    
     dlg->count__ = 1;
     dlg->methodtbl__[0].target = object;
     dlg->methodtbl__[0].methodPtr = method;

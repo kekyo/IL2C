@@ -24,9 +24,7 @@ System_Type* System_Object_GetType(System_Object* this__)
 
     System_Type* pType = il2c_get_uninitialized_object(System_Type);
 
-    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)
-        (((uint8_t*)this__) - sizeof(IL2C_REF_HEADER));
-
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(this__);
     pType->type__ = pHeader->type;
 
     return pType;

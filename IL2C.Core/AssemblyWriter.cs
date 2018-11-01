@@ -1103,6 +1103,10 @@ namespace IL2C
                 indent,
                 thisName);
             tw.WriteLine(
+                "{0}il2c_assert({1}->vptr0__ == &__System_Delegate_VTABLE__);",
+                indent,
+                thisName);
+            tw.WriteLine(
                 "{0}il2c_assert({1}->count__ >= 1);",
                 indent,
                 thisName);
@@ -1110,6 +1114,13 @@ namespace IL2C
             tw.WriteLine(
                 "{0}int32_t index;",
                 indent);
+            if (!method.ReturnType.IsVoidType)
+            {
+                tw.WriteLine(
+                    "{0}{1} result;",
+                    indent,
+                    method.ReturnType.CLanguageTypeName);
+            }
             tw.WriteLine(
                 "{0}for (index = 0; index < {1}->count__; index++)",
                 indent,
@@ -1156,7 +1167,7 @@ namespace IL2C
                     indent,
                     thisName);
                 tw.WriteLine(
-                    "{0}{0}{0}return (({1} (*)(System_Object*{2}))(pMethodtbl->methodPtr))(pMethodtbl->target{3});",
+                    "{0}{0}{0}result = (({1} (*)(System_Object*{2}))(pMethodtbl->methodPtr))(pMethodtbl->target{3});",
                     indent,
                     method.ReturnType.CLanguageTypeName,
                     string.Join(string.Empty, method.Parameters.
@@ -1169,7 +1180,7 @@ namespace IL2C
                     "{0}{0}else",
                     indent);
                 tw.WriteLine(
-                    "{0}{0}{0}return (({1} (*)({2}))(pMethodtbl->methodPtr))({3});",
+                    "{0}{0}{0}result = (({1} (*)({2}))(pMethodtbl->methodPtr))({3});",
                     indent,
                     method.ReturnType.CLanguageTypeName,
                     string.Join(", ", method.Parameters.
@@ -1183,6 +1194,12 @@ namespace IL2C
             tw.WriteLine(
                 "{0}}}",
                 indent);
+            if (!method.ReturnType.IsVoidType)
+            {
+                tw.WriteLine(
+                    "{0}return result;",
+                    indent);
+            }
             tw.WriteLine("}");
         }
 

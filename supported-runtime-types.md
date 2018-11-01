@@ -1,14 +1,14 @@
 # Supported runtime types
 
 * Number of types: 21
-* Number of tests: 114 [18 / 21]
+* Number of tests: 115 [18 / 21]
 
 Type | Test
 |:---|:---|
 | [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Boolean) |
 | [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/system.byte) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Byte) |
 | [System.Char](https://docs.microsoft.com/en-us/dotnet/api/system.char) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Char) |
-| [System.Delegate](https://docs.microsoft.com/en-us/dotnet/api/system.delegate) | [Test [1]](tests/IL2C.Core.Test.Target/TypeSystems/System_Delegate) |
+| [System.Delegate](https://docs.microsoft.com/en-us/dotnet/api/system.delegate) | [Test [2]](tests/IL2C.Core.Test.Target/TypeSystems/System_Delegate) |
 | [System.Double](https://docs.microsoft.com/en-us/dotnet/api/system.double) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Double) |
 | [System.Enum](https://docs.microsoft.com/en-us/dotnet/api/system.enum) |  |
 | [System.Int16](https://docs.microsoft.com/en-us/dotnet/api/system.int16) | [Test [6]](tests/IL2C.Core.Test.Target/TypeSystems/System_Int16) |

@@ -29,10 +29,10 @@ namespace IL2C.Metadata
                     .Concat(new[] { member.Name }));
         }
 
-        public sealed class TypeComparerImpl
+        public sealed class MethodSignatureTypeComparerImpl
             : IComparer<ITypeInformation>, IEqualityComparer<ITypeInformation>
         {
-            public TypeComparerImpl()
+            public MethodSignatureTypeComparerImpl()
             {
             }
 
@@ -132,22 +132,17 @@ namespace IL2C.Metadata
             }
         }
 
-        public static readonly TypeComparerImpl TypeComparer =
-            new TypeComparerImpl();
+        public static readonly MethodSignatureTypeComparerImpl MethodSignatureTypeComparer =
+            new MethodSignatureTypeComparerImpl();
 
-        public sealed class MethodSignatureComparerImpl
-            : IComparer<IMethodInformation>, IEqualityComparer<IMethodInformation>
+        public sealed class MethodSignatureParameterComparerImpl
+            : IComparer<VariableInformation>, IEqualityComparer<VariableInformation>
         {
-            // This is a overload stablizer
-
-            private readonly bool isVirtual;
-
-            public MethodSignatureComparerImpl(bool isVirtual)
+            public MethodSignatureParameterComparerImpl()
             {
-                this.isVirtual = isVirtual;
             }
 
-            private static int Compare(VariableInformation x, VariableInformation y)
+            public int Compare(VariableInformation x, VariableInformation y)
             {
                 var xt = x.TargetType;
                 var yt = y.TargetType;
@@ -155,15 +150,36 @@ namespace IL2C.Metadata
                 var xr = xt.IsAssignableFrom(yt);
                 var yr = yt.IsAssignableFrom(xt);
 
-                return TypeComparer.Compare(xt, yt);
+                return MethodSignatureTypeComparer.Compare(xt, yt);
             }
 
-            private static bool Equals(VariableInformation x, VariableInformation y)
+            public bool Equals(VariableInformation x, VariableInformation y)
             {
                 var xt = x.TargetType;
                 var yt = y.TargetType;
 
-                return TypeComparer.Equals(xt, yt);
+                return MethodSignatureTypeComparer.Equals(xt, yt);
+            }
+
+            public int GetHashCode(VariableInformation obj)
+            {
+                return obj.TargetType.GetHashCode();
+            }
+        }
+
+        public static readonly MethodSignatureParameterComparerImpl MethodSignatureParameterComparer =
+            new MethodSignatureParameterComparerImpl();
+
+        public sealed class MethodSignatureComparerImpl
+            : IComparer<IMethodInformation>, IEqualityComparer<IMethodInformation>
+        {
+            // This is a overload stabilizer
+
+            private readonly bool isVirtual;
+
+            public MethodSignatureComparerImpl(bool isVirtual)
+            {
+                this.isVirtual = isVirtual;
             }
 
             public int Compare(IMethodInformation x, IMethodInformation y)
@@ -186,7 +202,8 @@ namespace IL2C.Metadata
                 // The arg0 type for virtual method has to ignore different types.
                 return xps.
                     Zip(yps, (xp, yp) => new { xp, yp }).
-                    Select((entry, index) => (isVirtual && (index == 0)) ? 0 : Compare(entry.xp, entry.yp)).
+                    Select((entry, index) =>
+                        (isVirtual && (index == 0)) ? 0 : MethodSignatureParameterComparer.Compare(entry.xp, entry.yp)).
                     FirstOrDefault(r => r != 0);
             }
 
@@ -208,7 +225,8 @@ namespace IL2C.Metadata
                 // The arg0 type for virtual method has to ignore different types.
                 return xps.
                     Zip(yps, (xp, yp) => new { xp, yp }).
-                    Select((entry, index) => (isVirtual && (index == 0)) ? true : Equals(entry.xp, entry.yp)).
+                    Select((entry, index) =>
+                        (isVirtual && (index == 0)) ? true : MethodSignatureParameterComparer.Equals(entry.xp, entry.yp)).
                     FirstOrDefault(r => r);
             }
 
@@ -232,6 +250,7 @@ namespace IL2C.Metadata
             {
                 var r = g.
                     OrderBy(method => method.IsStatic ? 1 : 0).
+                    ThenBy(method => method.Parameters.Any(p => p.IsParamArray) ? 1 : 0).
                     ThenBy(method => method.Parameters.Length).
                     ThenBy(method => method.IsReuseSlot ? 1 : 0).
                     ThenBy(method => method, MethodSignatureComparer).

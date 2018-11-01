@@ -70,13 +70,17 @@ namespace IL2C.Metadata
         }
 
         public override string MemberTypeName =>
-            this.IsStatic
-                ? "Static method"
-                : this.IsAbstract
-                    ? this.DeclaringType.IsInterface
-                        ? "Interface method"
-                        : "Abstract method"
-                    : "Method";
+            this.IsConstructor ?
+                (this.IsStatic ? "Type initializer" : "Constructor") :
+                this.IsStatic ?
+                    "Static method" :
+                    this.IsAbstract ?
+                        this.DeclaringType.IsInterface ?
+                            "Interface method" :
+                            "Abstract method" :
+                        this.IsVirtual ?
+                            "Virtual method" :
+                            "Method";
 
         private VariableInformation CreateThisParameterInformation(ITypeInformation thisType) =>
             new VariableInformation(
@@ -90,7 +94,8 @@ namespace IL2C.Metadata
                 this,
                 this.HasThis ? (parameter.Index + 1) : parameter.Index,
                 parameter.Name,
-                this.MetadataContext.GetOrAddType(parameter.ParameterType));
+                this.MetadataContext.GetOrAddType(parameter.ParameterType),
+                parameter.Resolve().CustomAttributes.ToArray());
 
         public override string MetadataTypeName => "Method";
 

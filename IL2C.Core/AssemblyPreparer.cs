@@ -152,9 +152,20 @@ namespace IL2C
                 prepareContext.RegisterType(parameter.TargetType);
             }
 
+            // Pure abstract method (ignored.)
             if (method.IsVirtual && method.IsAbstract)
             {
                 Debug.Assert(!method.HasBody);
+                return null;
+            }
+
+            // Delegate constructor (ignored, it will be handled by the AssemblyWriter.)
+            if (method.IsConstructor && method.DeclaringType.IsDelegate &&
+                (method.Parameters.Length == 3) &&
+                method.Parameters[1].TargetType.IsObjectType &&
+                method.Parameters[2].TargetType.IsIntPtrType)
+            {
+                // Debug.Assert(!method.HasBody);  // Depended for the compiler (it has no body for Roslyn)
                 return null;
             }
 

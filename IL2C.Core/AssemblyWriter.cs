@@ -346,8 +346,8 @@ namespace IL2C
                     }
                 }
 
-                foreach (var method in type.DeclaredMethods
-                    .Where(predictMethod))
+                foreach (var method in type.DeclaredMethods.
+                    Where(predictMethod))
                 {
                     tw.WriteLine(
                         "extern {0}{1};",

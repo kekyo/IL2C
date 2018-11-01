@@ -1,4 +1,5 @@
-using System.Runtime.CompilerServices;
+
+using System;
 
 namespace IL2C.RuntimeTypes
 {
@@ -9,6 +10,7 @@ namespace IL2C.RuntimeTypes
     [TestCase("System.String", "ToString", "ABC")]
     [TestCase("System.ValueType", "BaseType", 123)]
     [TestCase("System.Object", "BaseType", "ABC")]
+    [TestCase(null, "Object_BaseType")]
     public sealed class System_Type
     {
         public static string ToString(object value)
@@ -24,6 +26,13 @@ namespace IL2C.RuntimeTypes
         public static string BaseType(object value)
         {
             return value.GetType().BaseType.FullName;
+        }
+
+        public static Type Object_BaseType()
+        {
+            // TODO: We have to handle GetTypeFromHandle.
+            //return typeof(object).BaseType;
+            return 123.GetType().BaseType.BaseType.BaseType;
         }
     }
 }

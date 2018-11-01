@@ -252,7 +252,7 @@ int32_t System_String_GetHashCode(System_String* this__)
     return value;
 }
 
-System_String* System_String_Concat_5(System_String* str0, System_String* str1)
+System_String* System_String_Concat_3(System_String* str0, System_String* str1)
 {
     // TODO: NullReferenceException
     il2c_assert(str0 != NULL);
@@ -271,7 +271,7 @@ System_String* System_String_Concat_5(System_String* str0, System_String* str1)
     return pString;
 }
 
-System_String* System_String_Concat_6(System_Object* arg0, System_Object* arg1)
+System_String* System_String_Concat_4(System_Object* arg0, System_Object* arg1)
 {
     // TODO: NullReferenceException
     il2c_assert(arg0 != NULL);
@@ -280,10 +280,10 @@ System_String* System_String_Concat_6(System_Object* arg0, System_Object* arg1)
     System_String* str0 = arg0->vptr0__->ToString(arg0);
     System_String* str1 = arg1->vptr0__->ToString(arg1);
 
-    return System_String_Concat_5(str0, str1);
+    return System_String_Concat_3(str0, str1);
 }
 
-System_String* System_String_Concat_7(System_String* str0, System_String* str1, System_String* str2)
+System_String* System_String_Concat_5(System_String* str0, System_String* str1, System_String* str2)
 {
     // TODO: NullReferenceException
     il2c_assert(str0 != NULL);

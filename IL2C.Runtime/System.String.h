@@ -33,9 +33,9 @@ extern /* virtual */ System_String* System_String_ToString(System_String* this__
 extern bool System_String_Equals(System_String* this__, System_String* obj);
 extern /* virtual */ bool System_String_Equals_1(System_String* this__, System_Object* obj);
 extern /* virtual */ int32_t System_String_GetHashCode(System_String* this__);
-extern System_String* System_String_Concat_5(System_String* str0, System_String* str1);
-extern System_String* System_String_Concat_6(System_Object* arg0, System_Object* arg1);
-extern System_String* System_String_Concat_7(System_String* str0, System_String* str1, System_String* str2);
+extern System_String* System_String_Concat_3(System_String* str0, System_String* str1);
+extern System_String* System_String_Concat_4(System_Object* arg0, System_Object* arg1);
+extern System_String* System_String_Concat_5(System_String* str0, System_String* str1, System_String* str2);
 extern System_String* System_String_Substring(System_String* this__, int32_t startIndex);
 extern System_String* System_String_Substring_1(System_String* this__, int32_t startIndex, int32_t length);
 extern wchar_t System_String_get_Chars(System_String* this__, int32_t index);

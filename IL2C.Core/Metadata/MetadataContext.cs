@@ -48,7 +48,7 @@ namespace IL2C.Metadata
                 { "System.Object", new HashSet<string> { ".ctor", "ReferenceEquals", "ToString", "GetHashCode", "Finalize", "Equals", "GetType" } },
                 { "System.ValueType", new HashSet<string> { "ToString", "GetHashCode", "Equals" } },
                 { "System.Enum", new HashSet<string> { "ToString", "GetHashCode", "Equals" } },
-                { "System.Delegate", new HashSet<string> { "GetHashCode", "Equals", "_target", "_methodPtr" } },
+                { "System.Delegate", new HashSet<string> { "GetHashCode", "Equals", "Combine", "_target", "_methodPtr" } },
                 { "System.MulticastDelegate", new HashSet<string> { "GetHashCode", "Equals", "_target", "_methodPtr" } },
             };
         private static readonly HashSet<string> derivedFromMulticastDelegateValidTargetMethods =

@@ -55,7 +55,7 @@ namespace IL2C.ILConverters
                     method.FriendlyName);
             }
 
-            var overloadIndex = method.OverloadIndex;
+            // Generate the constructor's argument expressions.
             var type = method.DeclaringType;
             string thisSymbolName = null;
 
@@ -82,6 +82,46 @@ namespace IL2C.ILConverters
             Debug.Assert(!string.IsNullOrWhiteSpace(thisSymbolName));
 
             var codeInformation = decodeContext.CurrentCode;
+
+            // Specialized the delegate type:
+            //   We can use for instantiate the delegate instance with "il2c_new_delegate()."
+            if (type.IsDelegate)
+            {
+                if (type.IsAbstract || type.IsDelegateType || type.IsMulticastDelegateType)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid delegate type: Location={0}, Method={1}",
+                        codeInformation.RawLocation,
+                        type.FriendlyName);
+                }
+
+                if (!(method.Parameters.Length == 2) &&
+                    (method.Parameters[0].TargetType.IsObjectType) &&
+                    (method.Parameters[0].TargetType.IsIntPtrType))
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid delegate constructor: Location={0}, Method={1}",
+                        codeInformation.RawLocation,
+                        method.FriendlyName);
+                }
+
+                return extractContext =>
+                {
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        pairParameters.Skip(1).ToArray(), extractContext, codeInformation);
+
+                    return new[]
+                    {
+                        string.Format(
+                            "{0} = il2c_new_delegate({1}, {2})",
+                            thisSymbolName,
+                            type.MangledName,
+                            parameterString)
+                    };
+                };
+            }
+
+            var overloadIndex = method.OverloadIndex;
 
             return extractContext =>
             {

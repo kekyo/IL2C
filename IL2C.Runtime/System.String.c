@@ -427,4 +427,10 @@ __System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
     (System_String* (*)(void*))System_String_ToString,
 };
 
-IL2C_DECLARE_RUNTIME_TYPE(System_String, "System.String", IL2C_TYPE_VARIABLE, System_Object);
+IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
+    "System.String",
+    IL2C_TYPE_VARIABLE,
+    0,
+    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER,
+    il2c_typeof(System_Object)
+};

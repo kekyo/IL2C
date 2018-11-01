@@ -114,14 +114,18 @@ namespace IL2C
                     declaredType.MangledName);
             }
 
-            tw.WriteLine();
-            tw.WriteLine(
-                "// [1-1] {0} layout",
-                declaredType.MemberTypeName);
-
-            // Write a enum:
-            if (declaredType.IsEnum)
+            // Delegate types doesn't write the layout structure because it's same as System.MulticastDelegate.
+            if (declaredType.IsDelegate)
             {
+            }
+            // Write a enum:
+            else if (declaredType.IsEnum)
+            {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [1-1] {0} layout",
+                    declaredType.MemberTypeName);
+
                 // Emit enum values:
                 //   Unfortunately the enum type at C language has not the underlying type.
                 //   IL2C emits the enum types using not C language syntax.
@@ -138,6 +142,11 @@ namespace IL2C
             // Write a class/interface/struct:
             else
             {
+                tw.WriteLine();
+                tw.WriteLine(
+                    "// [1-1] {0} layout",
+                    declaredType.MemberTypeName);
+
                 tw.WriteLine(
                     "struct {0}",
                     declaredType.MangledName);
@@ -252,10 +261,26 @@ namespace IL2C
             {
                 // Unfortunately the enum type at C language has not the underlying type.
                 // IL2C emits the enum types using not C language syntax.
-                tw.WriteLine(
-                    "typedef {0} {1};",
-                    type.IsEnum ? type.ElementType.CLanguageTypeName : ("struct " + type.MangledName),
-                    type.MangledName);
+                if (type.IsEnum)
+                {
+                    tw.WriteLine(
+                        "typedef {0} {1};",
+                        type.ElementType.CLanguageTypeName,
+                        type.MangledName);
+                }
+                // The delegate derived types are same as System.MulticastDelegate.
+                else if (type.IsDelegate)
+                {
+                    tw.WriteLine(
+                        "typedef System_MulticastDelegate {0};",
+                        type.MangledName);
+                }
+                else
+                {
+                    tw.WriteLine(
+                        "typedef struct {0} {0};",
+                        type.MangledName);
+                }
             }
 
             // Output value type and object reference type.
@@ -304,10 +329,20 @@ namespace IL2C
                 {
                     if (!type.IsInterface)
                     {
-                        tw.WriteLine(
-                            "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1} this__);",
-                            type.MangledName,
-                            type.CLanguageThisTypeName);
+                        if (type.IsDelegate)
+                        {
+                            // TODO: Another types can maybe transfer same method.
+                            tw.WriteLine(
+                                "#define __{0}_IL2C_MarkHandler__ __System_MulticastDelegate_IL2C_MarkHandler__",
+                                type.MangledName);
+                        }
+                        else
+                        {
+                            tw.WriteLine(
+                                "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1} this__);",
+                                type.MangledName,
+                                type.CLanguageThisTypeName);
+                        }
                     }
                 }
 
@@ -688,7 +723,9 @@ namespace IL2C
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// [7] Runtime helpers:");
 
-            if (!declaredType.IsEnum)
+            // Enum is same as primitive numeric value type.
+            // Delegate mark handler is same as System.MulticastDelegate.
+            if (!declaredType.IsEnum && !declaredType.IsDelegate)
             {
                 // Write mark handler:
                 tw.WriteLine();
@@ -982,10 +1019,11 @@ namespace IL2C
                 "{0}{1},",
                 indent,
                 declaredType.IsEnum ?
-                    declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER" :
-                    declaredType.IsValueType ? "IL2C_TYPE_VALUE" : "IL2C_TYPE_REFERENCE");
+                    (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
+                declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
+                declaredType.IsValueType ? "IL2C_TYPE_VALUE" : "IL2C_TYPE_REFERENCE");
             tw.WriteLine(
-                "{0}sizeof({1}),",
+                declaredType.IsDelegate ? "{0}0," : "{0}sizeof({1}),",
                 indent,
                 declaredType.MangledName);
             if (declaredType.IsEnum)
@@ -1034,48 +1072,6 @@ namespace IL2C
             tw.WriteLine("};");
         }
 
-        private static void InternalConvertFromDelegateConstructor(
-            TextWriter tw,
-            IExtractContext extractContext,
-            IMethodInformation method,
-            string indent)
-        {
-            if (!method.Parameters.
-                Skip(1).
-                Select(p => p.TargetType).
-                SequenceEqual(new[] {
-                    extractContext.MetadataContext.ObjectType,
-                    extractContext.MetadataContext.IntPtrType }))
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid delegate constrcutor. Name={0}",
-                    method.FriendlyName);
-            }
-
-            tw.WriteLine();
-            tw.WriteLine("///////////////////////////////////////");
-            tw.WriteLine("// [11-1] Delegate constructor: {0}", method.FriendlyName);
-            tw.WriteLine();
-
-            // DIRTY:
-            //   Cause undefined symbol error at C compilation if "System.Delegate" type on the mscorlib assembly
-            //   contains the fields with different symbol name.
-
-            var thisName = method.Parameters[0].SymbolName;
-            var targetName = method.Parameters[1].SymbolName;
-            var methodPtrName = method.Parameters[2].SymbolName;
-
-            tw.WriteLine(method.CLanguageFunctionPrototype);
-            tw.WriteLine("{");
-            tw.WriteLine("{0}il2c_assert({1} != NULL);", indent, thisName);
-            tw.WriteLine("{0}il2c_assert({1} != 0);", indent, methodPtrName);
-            tw.WriteLine();
-
-            tw.WriteLine("{0}{1}->_target = {2};", indent, thisName, targetName);
-            tw.WriteLine("{0}{1}->_methodPtr = {2};", indent, thisName, methodPtrName);
-            tw.WriteLine("}");
-        }
-
         private static void InternalConvertFromDelegateInvoker(
             TextWriter tw,
             IExtractContext extractContext,
@@ -1102,62 +1098,91 @@ namespace IL2C
 
             tw.WriteLine(method.CLanguageFunctionPrototype);
             tw.WriteLine("{");
-            tw.WriteLine("{0}il2c_assert({1} != NULL);", indent, thisName);
-            tw.WriteLine("{0}il2c_assert({1}->_methodPtr != 0);", indent, thisName);
+            tw.WriteLine(
+                "{0}il2c_assert({1} != NULL);",
+                indent,
+                thisName);
+            tw.WriteLine(
+                "{0}il2c_assert({1}->count__ >= 1);",
+                indent,
+                thisName);
             tw.WriteLine();
+            tw.WriteLine(
+                "{0}int32_t index;",
+                indent);
+            tw.WriteLine(
+                "{0}for (index = 0; index < {1}->count__; index++)",
+                indent,
+                thisName);
+            tw.WriteLine(
+                "{0}{{",
+                indent);
+            tw.WriteLine(
+                "{0}{0}IL2C_METHOD_TABLE_DECL* pMethodtbl = &({1}->methodtbl__[index]);",
+                indent,
+                thisName);
 
             if (method.ReturnType.IsVoidType)
             {
-                tw.WriteLine("{0}if ({1}->_target != NULL)", indent, thisName);
                 tw.WriteLine(
-                    "{0}{0}((void (*)(System_Object*{1}))({2}->_methodPtr))({2}->_target{3});",
+                    "{0}{0}if (pMethodtbl->target != NULL)",
+                    indent);
+                tw.WriteLine(
+                    "{0}{0}{0}((void (*)(System_Object*{1}))(pMethodtbl->methodPtr))(pMethodtbl->target{2});",
                     indent,
                     string.Join(string.Empty, method.Parameters.
                         Skip(1).
                         Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
-                    thisName,
                     string.Join(string.Empty, method.Parameters.
                         Skip(1).
                         Select(p => string.Format(", {0}", p.SymbolName))));
-                tw.WriteLine("{0}else", indent);
                 tw.WriteLine(
-                    "{0}{0}(({void (*)({1}))({2}->_methodPtr))({3});",
+                    "{0}{0}else",
+                    indent);
+                tw.WriteLine(
+                    "{0}{0}{0}((void (*)({1}))(pMethodtbl->methodPtr))({2});",
                     indent,
                     string.Join(", ", method.Parameters.
                         Skip(1).
                         Select(p => p.TargetType.CLanguageTypeName)),
-                    thisName,
                     string.Join(", ", method.Parameters.
                         Skip(1).
                         Select(p => p.SymbolName)));
             }
             else
             {
-                tw.WriteLine("{0}if ({1}->_target != NULL)", indent, thisName);
                 tw.WriteLine(
-                    "{0}{0}return (({1} (*)(System_Object*{2}))({3}->_methodPtr))({3}->_target{4});",
+                    "{0}{0}if (pMethodtbl->target != NULL)",
+                    indent,
+                    thisName);
+                tw.WriteLine(
+                    "{0}{0}{0}return (({1} (*)(System_Object*{2}))(pMethodtbl->methodPtr))(pMethodtbl->target{3});",
                     indent,
                     method.ReturnType.CLanguageTypeName,
                     string.Join(string.Empty, method.Parameters.
                         Skip(1).
                         Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
-                    thisName,
                     string.Join(string.Empty, method.Parameters.
                         Skip(1).
                         Select(p => string.Format(", {0}", p.SymbolName))));
-                tw.WriteLine("{0}else", indent);
                 tw.WriteLine(
-                    "{0}{0}return (({1} (*)({2}))({3}->_methodPtr))({4});",
+                    "{0}{0}else",
+                    indent);
+                tw.WriteLine(
+                    "{0}{0}{0}return (({1} (*)({2}))(pMethodtbl->methodPtr))({3});",
                     indent,
                     method.ReturnType.CLanguageTypeName,
                     string.Join(", ", method.Parameters.
                         Skip(1).
                         Select(p => p.TargetType.CLanguageTypeName)),
-                    thisName,
                     string.Join(", ", method.Parameters.
                         Skip(1).
                         Select(p => p.SymbolName)));
             }
+
+            tw.WriteLine(
+                "{0}}}",
+                indent);
             tw.WriteLine("}");
         }
 
@@ -1205,11 +1230,7 @@ namespace IL2C
                     // Delegate constructor
                     if (method.IsConstructor)
                     {
-                        InternalConvertFromDelegateConstructor(
-                            tw,
-                            extractContext,
-                            method,
-                            indent);
+                        // Ignore. We have to use the "il2c_new_delegate()" instead this constructor translated body.
                         return;
                     }
 

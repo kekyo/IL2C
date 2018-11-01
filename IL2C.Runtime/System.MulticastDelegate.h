@@ -12,24 +12,31 @@ extern "C" {
 /////////////////////////////////////////////////////////////
 // System.MulticastDelegate
 
-typedef struct System_MulticastDelegate System_MulticastDelegate;
+// Maybe all delegate derived types are same as System.Delegate internally.
+
+typedef System_Delegate System_MulticastDelegate;
 
 typedef __System_Delegate_VTABLE_DECL__ __System_MulticastDelegate_VTABLE_DECL__;
 
-struct System_MulticastDelegate
-{
-    __System_MulticastDelegate_VTABLE_DECL__* vptr0__;
-    System_Object* _target;
-    intptr_t _methodPtr;
-};
-
-extern __System_MulticastDelegate_VTABLE_DECL__ __System_MulticastDelegate_VTABLE__;
+#define __System_MulticastDelegate_VTABLE__ __System_Delegate_VTABLE__
 extern IL2C_RUNTIME_TYPE_DECL __System_MulticastDelegate_RUNTIME_TYPE__;
 
-extern /* internalcall */ void __System_MulticastDelegate_IL2C_MarkHandler__(System_MulticastDelegate* this__);
+// All members transfered to System.Delegate.
 
-extern /* virtual */ int32_t System_MulticastDelegate_GetHashCode(System_MulticastDelegate* this__);
-extern /* virtual */ bool System_MulticastDelegate_Equals(System_MulticastDelegate* this__, System_Object* obj);
+static inline void __System_MulticastDelegate_IL2C_MarkHandler__(System_MulticastDelegate* this__)
+{
+    __System_Delegate_IL2C_MarkHandler__((System_Delegate*)this__);
+}
+
+static inline int32_t System_MulticastDelegate_GetHashCode(System_MulticastDelegate* this__)
+{
+    return System_Delegate_GetHashCode((System_Delegate*)this__);
+}
+
+static inline bool System_MulticastDelegate_Equals(System_MulticastDelegate* this__, System_Object* obj)
+{
+    return System_Delegate_Equals((System_Delegate*)this__, obj);
+}
 
 #ifdef __cplusplus
 }

@@ -35,7 +35,7 @@ System_Type* System_Object_GetType(System_Object* this__)
 void System_Object_Finalize(System_Object* this__)
 {
     // Caution: This function only uses for GC tracking, don't access this__ pointer inside this function.
-    //   Because we can't understand what this__ pointer at here, the pointer came from objref or byref.
+    //   Because we can't understand what this__ pointer at here, the pointer came from objref [O] or byref [&].
     il2c_assert(0);
 }
 

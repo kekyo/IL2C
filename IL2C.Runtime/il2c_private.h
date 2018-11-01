@@ -41,6 +41,7 @@ typedef long interlock_t;
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_memcmp memcmp
 #define il2c_initialize_heap() _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF)
 #define il2c_check_heap() _CrtCheckMemory()
 #define il2c_shutdown_heap() _CrtDumpMemoryLeaks()
@@ -95,11 +96,12 @@ typedef long interlock_t;
 #define il2c_check_heap()
 #define il2c_shutdown_heap()
 
-extern void* il2c_memcpy(void* to, const void* from, size_t n);
-extern void* il2c_memset(void* target, int ch, size_t n);
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 
+#define il2c_memcpy memcpy
+#define il2c_memset memset
+#define il2c_memcmp memcmp
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
 #define il2c_iyield()
@@ -146,6 +148,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_memcmp memcmp
 #define il2c_initialize_heap()
 #define il2c_check_heap()
 #define il2c_shutdown_heap()
@@ -202,6 +205,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
+#define il2c_memcmp memcmp
 #define il2c_initialize_heap()
 #define il2c_check_heap()
 #define il2c_shutdown_heap()

@@ -45,7 +45,7 @@ namespace IL2C.ILConverters
 
             // Write friendly expression only predefined types.
             return _ => new[] { string.Format(
-                "{0}->item__[{1}] = {2}",
+                "{0}->Item[{1}] = {2}",
                 siArray.SymbolName,
                 siIndex.SymbolName,
                 siValue.SymbolName) };

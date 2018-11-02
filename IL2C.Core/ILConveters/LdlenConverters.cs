@@ -28,7 +28,7 @@ namespace IL2C.ILConverters
                 decodeContext.PrepareContext.MetadataContext.UIntPtrType);
 
             return _ => new[] { string.Format(
-                "{0} = System_Array_getLength((System_Array*){1})",
+                "{0} = {1}->Length",
                 symbolName,
                 siArray.SymbolName) };
         }

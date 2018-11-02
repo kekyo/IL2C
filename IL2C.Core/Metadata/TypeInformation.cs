@@ -438,7 +438,7 @@ namespace IL2C.Metadata
                 else if (this.IsArray)
                 {
                     typeName = string.Format(
-                        "il2c_array_type({0})*",
+                        "il2c_array({0})*",
                         this.ElementType.MangledName);
                 }
                 else

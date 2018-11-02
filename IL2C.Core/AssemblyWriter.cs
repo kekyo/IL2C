@@ -1300,7 +1300,7 @@ namespace IL2C
         {
             IExtractContext extractContext = translateContext;
 
-            var assemblyName = extractContext.Assembly.MangledName;
+            var assemblyName = Utilities.ToMangledName(extractContext.Assembly.FriendlyName);
 
             twHeader.WriteLine("#ifndef __{0}_H__", assemblyName);
             twHeader.WriteLine("#define __{0}_H__", assemblyName);

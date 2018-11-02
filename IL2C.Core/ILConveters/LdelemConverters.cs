@@ -38,7 +38,7 @@ namespace IL2C.ILConverters
                 decodeContext.PrepareContext.MetadataContext.Int32Type);
 
             return _ => new[] { string.Format(
-                "{0} = {1}->item__[{2}]",
+                "{0} = {1}->Item[{2}]",
                 symbolName,
                 siArray.SymbolName,
                 siIndex.SymbolName) };

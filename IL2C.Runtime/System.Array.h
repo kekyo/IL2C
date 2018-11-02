@@ -21,8 +21,8 @@ struct System_Array
     __System_Array_VTABLE_DECL__* vptr0__;
 
     IL2C_RUNTIME_TYPE_DECL* elementType__;
-    intptr_t count__;
-    uint8_t item__[1];    // Element body
+    uintptr_t Length;
+    uint8_t Item[1];    // Element body
 };
 
 #define  __System_Array_VTABLE__ __System_Object_VTABLE__
@@ -41,20 +41,20 @@ typedef struct System_Array_##elementTypeName \
     __System_Array_VTABLE_DECL__* vptr0__; \
  \
     IL2C_RUNTIME_TYPE_DECL* elementType__; \
-    intptr_t count__; \
-    elementTypeName item__[1]; \
+    uintptr_t Length; \
+    elementTypeName Item[1]; \
 } System_Array_##elementTypeName
 
 /////////////////////////////////////////////////
 // Array special functions
 
-#define il2c_array_type(elementTypeName) \
+#define il2c_array(elementTypeName) \
     System_Array_##elementTypeName
 
 extern System_Array* il2c_new_array__(
-    IL2C_RUNTIME_TYPE_DECL* elementType, intptr_t count);
-#define il2c_new_array(elementTypeName, count) \
-    ((System_Array_##elementTypeName*)il2c_new_array__(il2c_typeof(elementTypeName), count))
+    IL2C_RUNTIME_TYPE_DECL* elementType, intptr_t length);
+#define il2c_new_array(elementTypeName, length) \
+    ((System_Array_##elementTypeName*)il2c_new_array__(il2c_typeof(elementTypeName), length))
 
 #ifdef __cplusplus
 }

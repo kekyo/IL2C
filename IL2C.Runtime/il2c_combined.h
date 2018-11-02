@@ -9,6 +9,7 @@
 #include "System.Object.c"
 #include "System.Type.c"
 #include "System.ValueType.c"
+#include "System.Array.c"
 #include "System.Char.c"
 #include "System.String.c"
 #include "System.Boolean.c"

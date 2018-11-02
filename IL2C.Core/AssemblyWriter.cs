@@ -448,7 +448,7 @@ namespace IL2C
                     indent,
                     local.TargetType.CLanguageTypeName,
                     local.SymbolName,
-                    local.TargetType.IsClass ? " = NULL" : string.Empty);
+                    local.TargetType.IsValueType ? string.Empty : " = NULL");
             }
 
             tw.WriteLine();
@@ -463,13 +463,13 @@ namespace IL2C
                     indent,
                     stack.TargetType.CLanguageTypeName,
                     stack.SymbolName,
-                    stack.TargetType.IsClass ? " = NULL" : string.Empty);
+                    stack.TargetType.IsValueType ? string.Empty : " = NULL");
             }
 
-            var frameEntries = locals
-                .Concat(preparedMethod.Stacks)
-                .Where(local => local.TargetType.IsClass)
-                .ToArray();
+            var frameEntries = locals.
+                Concat(preparedMethod.Stacks).
+                Where(v => !v.TargetType.IsValueType).
+                ToArray();
 
             if (frameEntries.Length >= 1)
             {

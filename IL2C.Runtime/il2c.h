@@ -63,8 +63,13 @@ struct IL2C_REF_HEADER
 #define IL2C_TYPE_INTEGER 0x03
 #define IL2C_TYPE_UNSIGNED_INTEGER 0x0b
 
-#define il2c_typeof(typeName) (&(__##typeName##_RUNTIME_TYPE__))
-#define il2c_sizeof(typeName) (il2c_typeof(typeName)->bodySize)
+#define il2c_typeof(typeName) \
+    (&(__##typeName##_RUNTIME_TYPE__))
+
+#define il2c_sizeof__(type) \
+    (((type)->flags & IL2C_TYPE_VALUE) ? (type)->bodySize : (uint32_t)sizeof(intptr_t))
+#define il2c_sizeof(typeName) \
+    (il2c_sizeof__(il2c_typeof(typeName)))
 
 // dynamic cast operator
 extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
@@ -115,6 +120,7 @@ typedef void* untyped_ptr;
 #include <System.Object.h>
 #include <System.Type.h>
 #include <System.ValueType.h>
+#include <System.Array.h>
 #include <System.Char.h>
 #include <System.String.h>
 #include <System.Boolean.h>

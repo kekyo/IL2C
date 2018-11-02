@@ -82,6 +82,7 @@ namespace IL2C.Metadata
         bool IsAssignableFrom(ITypeInformation rhs);
 
         ITypeInformation MakeByReference();
+        ITypeInformation MakeArray();
     }
 
     internal class TypeInformation
@@ -111,15 +112,18 @@ namespace IL2C.Metadata
 
         public override string MetadataTypeName => "Type";
 
-        public override string MemberTypeName => this.IsEnum
-            ? "Enum"
-            : this.IsValueType
-                ? "Struct"
-                : this.IsInterface
-                    ? "Interface"
-                    : this.IsDelegate
-                        ? "Delegate"
-                        : "Class";
+        public override string MemberTypeName =>
+            this.IsEnum ?
+            "Enum" :
+            this.IsValueType ?
+                "Struct" :
+                this.IsInterface ?
+                    "Interface" :
+                    this.IsDelegate ?
+                        "Delegate" :
+                        this.IsArray ?
+                            "Array" :
+                            "Class";
 
         public bool IsPublic => (this.Definition as TypeDefinition)?.IsPublic ?? false;
         public bool IsNestedPublic => (this.Definition as TypeDefinition)?.IsNestedPublic ?? false;
@@ -146,10 +150,10 @@ namespace IL2C.Metadata
 
         public bool IsValueType => this.Member.IsValueType;
         public bool IsClass => !this.Member.IsValueType && ((this.Definition as TypeDefinition)?.IsClass ?? false);
-        public bool IsInterface => (this.Definition as TypeDefinition)?.IsInterface ?? false;
+        public bool IsInterface => !this.Member.IsValueType && ((this.Definition as TypeDefinition)?.IsInterface ?? false);
         public bool IsEnum => (this.Definition as TypeDefinition)?.IsEnum ?? false;
-        public bool IsArray => (this.Definition as TypeDefinition)?.IsArray ?? false;
-        public bool IsDelegate => this.MetadataContext.DelegateType.IsAssignableFrom(this);
+        public bool IsArray => this.Member.IsArray;
+        public bool IsDelegate => !this.Member.IsValueType && this.MetadataContext.DelegateType.IsAssignableFrom(this);
         public bool IsByReference => this.Member.IsByReference;
         public bool IsPointer => this.Member.IsPointer;
         public bool IsPrimitive => this.Member.IsPrimitive;
@@ -431,6 +435,12 @@ namespace IL2C.Metadata
                 {
                     typeName = "void";
                 }
+                else if (this.IsArray)
+                {
+                    typeName = string.Format(
+                        "il2c_array_type({0})*",
+                        this.ElementType.MangledName);
+                }
                 else
                 {
                     typeName = this.MangledName;
@@ -498,6 +508,11 @@ namespace IL2C.Metadata
         public ITypeInformation MakeByReference()
         {
             return this.MetadataContext.GetOrAddType(this.Definition.MakeByReferenceType());
+        }
+
+        public ITypeInformation MakeArray()
+        {
+            return this.MetadataContext.GetOrAddType(this.Definition.MakeArrayType());
         }
 
         protected override TypeReference OnResolve(TypeReference member)

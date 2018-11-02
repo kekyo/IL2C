@@ -246,9 +246,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             ITypeInformation operand, DecodeContext decodeContext)
         {
-            // TODO: If we use it by string and array type (flexible size.)
-
-            // III.4.25 sizeof - load the size, in bytes,of a type 
+            // ECMA-335 III.4.25 sizeof - load the size, in bytes,of a type 
             //   sizeof opcode has to push size by UInt32 (not Int32.)
             var symbolName = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UInt32Type);

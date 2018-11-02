@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="il2c.c" />
+    <ClCompile Include="System.Array.c" />
     <ClCompile Include="System.Boolean.c" />
     <ClCompile Include="System.Byte.c" />
     <ClCompile Include="System.Char.c" />
@@ -45,6 +46,7 @@
     <ClInclude Include="debugbreak.h" />
     <ClInclude Include="il2c.h" />
     <ClInclude Include="il2c_private.h" />
+    <ClInclude Include="System.Array.h" />
     <ClInclude Include="System.Boolean.h" />
     <ClInclude Include="System.Byte.h" />
     <ClInclude Include="System.Char.h" />

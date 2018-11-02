@@ -54,6 +54,29 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Conv_i4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Conv_I4;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var siFrom = decodeContext.PopStack();
+            if (siFrom.TargetType.IsNumericPrimitive == false)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Cannot convert to numeric type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
+            }
+
+            // See also: ECMA-335: III.1.5 Operand type table - Conversion Operations
+
+            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+
+            return _ => new[] { string.Format("{0} = (int32_t){1}", resultName, siFrom.SymbolName) };
+        }
+    }
+
     internal sealed class Conv_i8Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Conv_I8;

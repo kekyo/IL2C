@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 
@@ -205,6 +204,32 @@ namespace IL2C.ILConverters
                         .ToArray();
                 }
             };
+        }
+    }
+
+    internal sealed class NewarrConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Newarr;
+
+        public override Func<IExtractContext, string[]> Apply(
+            ITypeInformation elementType, DecodeContext decodeContext)
+        {
+            var siCount = decodeContext.PopStack();
+            if (!(siCount.TargetType.IsInt32StackFriendlyType || siCount.TargetType.IsIntPtrStackFriendlyType))
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid array size type: Location={0}, StackType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siCount.TargetType.FriendlyName);
+            }
+
+            var symbolName = decodeContext.PushStack(elementType.MakeArray());
+
+            return _ => new[] { string.Format(
+                "{0} = il2c_new_array({1}, {2})",
+                symbolName,
+                elementType.MangledName,
+                siCount.SymbolName) };
         }
     }
 }

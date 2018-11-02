@@ -23,5 +23,11 @@ namespace IL2C
         [Test]
         public static Task DelegateTypes([ValueSource(nameof(_DelegateTypes))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
+
+        public static readonly TestCaseInformation[] _ArrayTypes = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.ArrayTypes>();
+        [Test]
+        public static Task ArrayTypes([ValueSource(nameof(_ArrayTypes))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
+
     }
 }

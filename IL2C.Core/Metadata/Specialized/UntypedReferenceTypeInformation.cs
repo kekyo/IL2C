@@ -124,9 +124,9 @@ namespace IL2C.Metadata.Specialized
             return rhs.IsClass || rhs.IsInterface || rhs.IsByReference || rhs.IsPointer;
         }
 
-        public ITypeInformation MakeByReference()
-        {
+        public ITypeInformation MakeByReference() =>
             throw new NotImplementedException();
-        }
+        public ITypeInformation MakeArray() =>
+            throw new NotImplementedException();
     }
 }

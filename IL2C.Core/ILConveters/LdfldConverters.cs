@@ -74,7 +74,7 @@ namespace IL2C.ILConverters
                 return _ =>
                 {
                     return new[] { string.Format(
-                    "{0} = &({1})",
+                    "{0} = &{1}",
                     resultName,
                     siReference.SymbolName + oper + field.Name) };
                 };

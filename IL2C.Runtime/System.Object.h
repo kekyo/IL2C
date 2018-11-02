@@ -45,7 +45,7 @@ extern System_Type* System_Object_GetType(System_Object* this__);
 extern /* virtual */ void System_Object_Finalize(System_Object* this__);
 extern /* virtual */ bool System_Object_Equals(System_Object* this__, System_Object* obj);
 
-extern bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB);
+extern /* static */ bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB);
 
 #ifdef __cplusplus
 }

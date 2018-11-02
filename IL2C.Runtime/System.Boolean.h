@@ -25,7 +25,7 @@ extern /* virtual */ System_String* System_Boolean_ToString(bool* this__);
 extern /* virtual */ int32_t System_Boolean_GetHashCode(bool* this__);
 extern bool System_Boolean_Equals(bool* this__, bool obj);
 extern /* virtual */ bool System_Boolean_Equals_1(bool* this__, System_Object* obj);
-extern bool System_Boolean_TryParse(System_String* s, bool* result);
+extern /* static */ bool System_Boolean_TryParse(System_String* s, bool* result);
 
 #ifdef __cplusplus
 }

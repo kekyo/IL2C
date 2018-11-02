@@ -25,7 +25,7 @@ extern /* virtual */ System_String* System_SByte_ToString(int8_t* this__);
 extern /* virtual */ int32_t System_SByte_GetHashCode(int8_t* this__);
 extern bool System_SByte_Equals(int8_t* this__, int8_t obj);
 extern /* virtual */ bool System_SByte_Equals_1(int8_t* this__, System_Object* obj);
-extern bool System_SByte_TryParse(System_String* s, int8_t* result);
+extern /* static */ bool System_SByte_TryParse(System_String* s, int8_t* result);
 
 #ifdef __cplusplus
 }

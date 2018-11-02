@@ -26,12 +26,12 @@ extern IL2C_RUNTIME_TYPE_DECL __System_Console_RUNTIME_TYPE__;
 
 #define __System_Console_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
 
-extern void System_Console_Write_9(System_String* value);
-extern void System_Console_WriteLine();
-extern void System_Console_WriteLine_6(int32_t value);
-extern void System_Console_WriteLine_10(System_String* value);
+extern /* static */ void System_Console_Write_9(System_String* value);
+extern /* static */ void System_Console_WriteLine();
+extern /* static */ void System_Console_WriteLine_6(int32_t value);
+extern /* static */ void System_Console_WriteLine_10(System_String* value);
 
-extern System_String* System_Console_ReadLine();
+extern /* static */ System_String* System_Console_ReadLine();
 
 #ifdef __cplusplus
 }

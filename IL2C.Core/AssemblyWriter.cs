@@ -351,7 +351,11 @@ namespace IL2C
                 {
                     tw.WriteLine(
                         "extern {0}{1};",
-                        method.IsVirtual ? "/* virtual */ " : string.Empty,
+                        method.IsStatic ?
+                            "/* static */ " :
+                            method.IsVirtual ?
+                                (method.IsReuseSlot ? "/* override */ " : "/* virtual */ ") :
+                                string.Empty,
                         method.CLanguageFunctionPrototype);
                 }
 
@@ -1129,7 +1133,7 @@ namespace IL2C
                 "{0}{{",
                 indent);
             tw.WriteLine(
-                "{0}{0}IL2C_METHOD_TABLE_DECL* pMethodtbl = &({1}->methodtbl__[index]);",
+                "{0}{0}IL2C_METHOD_TABLE_DECL* pMethodtbl = &{1}->methodtbl__[index];",
                 indent,
                 thisName);
 

@@ -23,7 +23,6 @@ typedef long interlock_t;
 #include <intrin.h>
 #include <windows.h>
 #include <stdio.h>
-#include <assert.h>
 
 // Compatibility symbols (required platform depended functions)
 #define il2c_itow _itow
@@ -47,7 +46,6 @@ typedef long interlock_t;
 #define il2c_shutdown_heap() _CrtDumpMemoryLeaks()
 #define il2c_malloc malloc
 #define il2c_free free
-#define il2c_assert assert
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
 #define il2c_iyield() Sleep(0)
@@ -116,10 +114,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #if defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
     WriteLineToError(L## #message); }
-#define il2c_assert(actual) if (!(actual)) DEBUG_WRITE(0, #actual)
 #else
 #define DEBUG_WRITE(step, message)
-#define il2c_assert(actual)
 #endif
 
 #endif
@@ -171,10 +167,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
     strcat(buffer, message); \
     strcat(buffer, "\r\n"); \
     DbgPrint(buffer); }
-#define il2c_assert(actual) if (!(actual)) DEBUG_WRITE(0, #actual)
 #else
 #define DEBUG_WRITE(step, message)
-#define il2c_assert(actual)
 #endif
 
 #endif
@@ -185,7 +179,6 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #if !defined(_MSC_VER)
 
 #include <x86intrin.h>
-#include <assert.h>
 #include <stdio.h>
 #include <wchar.h>
 
@@ -211,7 +204,6 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_shutdown_heap()
 #define il2c_malloc malloc
 #define il2c_free free
-#define il2c_assert assert
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
 

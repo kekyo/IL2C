@@ -25,7 +25,7 @@ extern /* virtual */ System_String* System_UInt16_ToString(uint16_t* this__);
 extern /* virtual */ int32_t System_UInt16_GetHashCode(uint16_t* this__);
 extern bool System_UInt16_Equals(uint16_t* this__, uint16_t obj);
 extern /* virtual */ bool System_UInt16_Equals_1(uint16_t* this__, System_Object* obj);
-extern bool System_UInt16_TryParse(System_String* s, uint16_t* result);
+extern /* static */ bool System_UInt16_TryParse(System_String* s, uint16_t* result);
 
 #ifdef __cplusplus
 }

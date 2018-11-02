@@ -25,7 +25,7 @@ extern /* virtual */ System_String* System_Int64_ToString(int64_t* this__);
 extern /* virtual */ int32_t System_Int64_GetHashCode(int64_t* this__);
 extern bool System_Int64_Equals(int64_t* this__, int64_t obj);
 extern /* virtual */ bool System_Int64_Equals_1(int64_t* this__, System_Object* obj);
-extern bool System_Int64_TryParse(System_String* s, int64_t* result);
+extern /* static */ bool System_Int64_TryParse(System_String* s, int64_t* result);
 
 #ifdef __cplusplus
 }

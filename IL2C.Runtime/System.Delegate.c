@@ -98,22 +98,73 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     return dlg;
 }
 
-System_Delegate* System_Delegate_Remove(System_Delegate* a, System_Delegate* b)
+System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate* value)
 {
-    if (a == NULL)
+    if (source == NULL)
     {
         return NULL;
     }
 
-    if (b == NULL)
+    il2c_assert(source->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(source->count__ >= 1);
+
+    if (value == NULL)
     {
-        il2c_assert(a->vptr0__ == &__System_Delegate_VTABLE__);
-        il2c_assert(a->count__ >= 1);
-        return a;
+        return source;
     }
 
-    // TODO:
-    return a;
+    il2c_assert(value->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(value->count__ >= 1);
+
+    // Requires same delegate type.
+    IL2C_REF_HEADER* pHeaderSource = il2c_get_header__(source);
+    IL2C_REF_HEADER* pHeaderValue = il2c_get_header__(value);
+    if (pHeaderSource->type != pHeaderValue->type)
+    {
+        // https://docs.microsoft.com/en-us/dotnet/api/system.delegate.remove
+        // TODO: throw new ArgumentException
+        il2c_assert(0);
+    }
+
+    // Can't match
+    if (source->count__ < value->count__)
+    {
+        return source;
+    }
+
+    // Last --> First
+    IL2C_METHOD_TABLE_DECL* pMethodtblValue = &value->methodtbl__[0];
+    int32_t index;
+    for (index = source->count__ - value->count__; index >= 0; index--)
+    {
+        IL2C_METHOD_TABLE_DECL* pMethodtblSource = &source->methodtbl__[index];
+
+        // Equals
+        if (il2c_memcmp(pMethodtblValue, pMethodtblSource, value->count__ * sizeof(IL2C_METHOD_TABLE_DECL)) == 0)
+        {
+            // Exactly match: result's gonna be empty
+            int32_t count = source->count__ - value->count__;
+            if (count <= 0)
+            {
+                return NULL;
+            }
+
+            uintptr_t size = sizeof(System_Delegate) +
+                (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
+            System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size);
+            dlg->vptr0__ = &__System_Delegate_VTABLE__;
+
+            dlg->count__ = count;
+            IL2C_METHOD_TABLE_DECL* pMethodtbl = dlg->methodtbl__;
+            il2c_memcpy(&pMethodtbl[0], &source->methodtbl__[0], index * sizeof(IL2C_METHOD_TABLE_DECL));
+            il2c_memcpy(&pMethodtbl[index], &source->methodtbl__[index + value->count__], (count - index) * sizeof(IL2C_METHOD_TABLE_DECL));
+
+            return dlg;
+        }
+    }
+
+    // Not found.
+    return source;
 }
 
 /////////////////////////////////////////////////

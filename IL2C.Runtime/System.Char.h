@@ -25,7 +25,7 @@ extern /* virtual */ System_String* System_Char_ToString(wchar_t* this__);
 extern /* virtual */ int32_t System_Char_GetHashCode(wchar_t* this__);
 extern bool System_Char_Equals(wchar_t* this__, wchar_t obj);
 extern /* virtual */ bool System_Char_Equals_1(wchar_t* this__, System_Object* obj);
-extern bool System_Char_TryParse(System_String* s, wchar_t* result);
+extern /* static */ bool System_Char_TryParse(System_String* s, wchar_t* result);
 
 #ifdef __cplusplus
 }

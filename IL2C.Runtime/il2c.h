@@ -18,6 +18,9 @@ extern "C" {
 #include <stdbool.h>
 #include <wchar.h>
 #include <float.h>
+#include <assert.h>
+
+#define il2c_assert assert
 
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime
@@ -66,9 +69,9 @@ struct IL2C_REF_HEADER
 // dynamic cast operator
 extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
 #define il2c_isinst(pReference, typeName) \
-    ((pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName)))
+    (((pReference) != NULL) ? ((pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName))) : NULL)
 #define il2c_castclass(pReference, typeName) \
-    il2c_isinst(pReference, typeName)
+    il2c_isinst(pReference, typeName) // TODO: InvalidCastException
 
 // static cast operators
 #define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \

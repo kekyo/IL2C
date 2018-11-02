@@ -22,8 +22,9 @@ int main()
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
     _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG | _CRTDBG_MODE_WNDW);
     _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
-
+#if _DEBUG
     _crtBreakAlloc = -1;
+#endif
 #endif
 
     ////////////////////////

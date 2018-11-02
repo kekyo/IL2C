@@ -18,8 +18,10 @@
     [TestCase("87654321ABC123", new[] { "Instance_Int32ToString", "Instance_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
     [TestCase(1123, new[] { "Instance_Void_RefInt", "Instance_Void_RefIntImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
     [TestCase("11223344DEF456", new[] { "AnotherInstance_Int32ToString", "AnotherInstance_Int32ToStringImpl" }, 11223344, IncludeTypes = new[] { typeof(Int32ToStringDelegate), typeof(AnotherDelegateTypes) })]
+    [TestCase("87654321ABC123", new[] { "Virtual_Int32ToString", "Virtual_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
     public sealed class DelegateTypes
     {
+        #region Static
         private static string Static_Int32ToStringImpl(int value)
         {
             return value.ToString() + "ABC";
@@ -43,7 +45,9 @@
             dlg(ref v);
             return v;
         }
+        #endregion
 
+        #region Instance
         private int v1 = 123;
 
         private string Instance_Int32ToStringImpl(int value)
@@ -78,5 +82,6 @@
             var dlg = new Int32ToStringDelegate(inst.AnotherInstance_Int32ToStringImpl);
             return dlg(value);
         }
+        #endregion
     }
 }

@@ -13,6 +13,8 @@ namespace IL2C.ILConverters
         public static Func<IExtractContext, string[]> Apply(
             IMethodInformation method, DecodeContext decodeContext, bool isVirtualCall)
         {
+            // ECMA-335 I.12.4.1.4: Virtual calling convention
+
             var pairParameters = method.Parameters
                 .Reverse()
                 .Select(parameter => new Utilities.RightExpressionGivenParameter(

@@ -1115,9 +1115,6 @@ namespace IL2C
                 indent,
                 thisName);
             tw.WriteLine();
-            tw.WriteLine(
-                "{0}int32_t index;",
-                indent);
             if (!method.ReturnType.IsVoidType)
             {
                 tw.WriteLine(
@@ -1126,7 +1123,10 @@ namespace IL2C
                     method.ReturnType.CLanguageTypeName);
             }
             tw.WriteLine(
-                "{0}for (index = 0; index < {1}->count__; index++)",
+                "{0}int32_t index = 0;",
+                indent);
+            tw.WriteLine(
+                "{0}do",
                 indent,
                 thisName);
             tw.WriteLine(
@@ -1196,7 +1196,13 @@ namespace IL2C
             }
 
             tw.WriteLine(
+                "{0}{0}index++;",
+                indent);
+            tw.WriteLine(
                 "{0}}}",
+                indent);
+            tw.WriteLine(
+                "{0}while (index < this__->count__);",
                 indent);
             if (!method.ReturnType.IsVoidType)
             {

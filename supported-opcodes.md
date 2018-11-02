@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 88 / 219
+* Number of opcode implementations: 89 / 219
 * Number of opcode tests: 619 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -158,7 +158,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldsflda](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldsflda) | 0x7f |  |  |  |
 | [ldstr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldstr) | 0x72 | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Ldstr) | IL2C.ILConverters.LdstrConverter |
 | [ldtoken](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldtoken) | 0xd0 |  |  |  |
-| [ldvirtftn](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldvirtftn) | 0xfe07 |  |  |  |
+| [ldvirtftn](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldvirtftn) | 0xfe07 | Implemented |  | IL2C.ILConverters.LdvirtftnConverter |
 | [leave](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.leave) | 0xdd |  |  |  |
 | [leave.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.leave_s) | 0xde |  |  |  |
 | [localloc](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.localloc) | 0xfe0f |  |  |  |

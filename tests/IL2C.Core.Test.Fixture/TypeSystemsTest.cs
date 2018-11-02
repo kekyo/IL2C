@@ -17,7 +17,9 @@ namespace IL2C
         public static readonly TestCaseInformation[] _DelegateTypes =
             TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.DelegateTypes>().
             Concat(TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.MulticastDelegateTypes>()).
-            ToArray();
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.DelegateTypesWithVirtual1>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.DelegateTypesWithVirtual2>()).
+           ToArray();
         [Test]
         public static Task DelegateTypes([ValueSource(nameof(_DelegateTypes))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);

@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Nito.AsyncEx;
@@ -44,8 +45,6 @@ namespace IL2C
 
         private static readonly string gccBasePath = Path.GetFullPath(Path.Combine(
             Path.GetDirectoryName(typeof(GccDriver).Assembly.Location), "gcc"));
-
-        private static readonly AsyncLock gccLock = new AsyncLock();
 
         private static async Task<(int, string)> ExecuteAsync(
             string workingPath, string[] searchPaths, string executablePath, params object[] args)
@@ -209,18 +208,35 @@ namespace IL2C
             // Download requirements for gcc (single)
             if (!Directory.Exists(gccBasePath))
             {
-                using (var l = await gccLock.LockAsync().ConfigureAwait(false))
+                await Task.Run(() =>
                 {
-                    if (!Directory.Exists(gccBasePath))
+                    using (var m = new Mutex(false, typeof(GccDriver).FullName))
                     {
-                        await DownloadGccRequirementsAsync(gccBasePath);
+                        m.WaitOne();
+                        try
+                        {
+                            if (!Directory.Exists(gccBasePath))
+                            {
+                                DownloadGccRequirementsAsync(gccBasePath + ".tmp").Wait();
+                                Directory.Move(gccBasePath + ".tmp", gccBasePath);
+                            }
+                        }
+                        finally
+                        {
+                            m.ReleaseMutex();
+                        }
                     }
-                }
+                });
             }
 
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+#if DEBUG
+            var optimizeFlag = "-O0";
+#else
+            var optimizeFlag = "-Ofast -flto";
+#endif
 
             if (!Directory.Exists(outPath))
             {
@@ -233,7 +249,7 @@ namespace IL2C
 
             var gccArguments = includePaths
                 .SelectMany(p => new[] { "-I", p })     // TODO: -std=c99, -Wall
-                .Concat(new[] { "-save-temps=obj", "-O0", "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-Wl,--enable-stdcall-fixup", "-o", executablePath, sourcePath })
+                .Concat(new[] { "-save-temps=obj", optimizeFlag, "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-Wl,--enable-stdcall-fixup", "-o", executablePath, sourcePath })
                 .ToArray();
 
             // TODO: turn to cmake based.
@@ -242,7 +258,8 @@ namespace IL2C
                 scriptPath, "make.bat",
                 new Dictionary<string, object>
                 {
-                    { "gccBinPath", gccBinPath }
+                    { "gccBinPath", gccBinPath },
+                    { "optimizeFlag", optimizeFlag }
                 });
 
             var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>

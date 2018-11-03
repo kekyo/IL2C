@@ -33,8 +33,8 @@ extern void il2c_shutdown();
 
 typedef long interlock_t;
 
-typedef struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
-typedef struct IL2C_REF_HEADER IL2C_REF_HEADER;
+typedef volatile struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
+typedef volatile struct IL2C_REF_HEADER IL2C_REF_HEADER;
 
 typedef void (*IL2C_MARK_HANDLER)(/* System_Object* */ void* pReference);
 
@@ -47,12 +47,12 @@ typedef const struct IL2C_RUNTIME_TYPE_DECL
     const struct IL2C_RUNTIME_TYPE_DECL* baseType;
 } IL2C_RUNTIME_TYPE_DECL;
 
-struct IL2C_REF_HEADER
+typedef volatile struct IL2C_REF_HEADER
 {
     IL2C_REF_HEADER* pNext;
     IL2C_RUNTIME_TYPE_DECL* type;
     interlock_t gcMark;
-};
+} IL2C_REF_HEADER;
 
 ///////////////////////////////////////////////////////
 // Runtime type information related declarations

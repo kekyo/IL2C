@@ -9,12 +9,12 @@
 #define GCMARK_LIVE ((interlock_t)0)
 #define GCMARK_CONST ((interlock_t)2)
 
-struct IL2C_EXECUTION_FRAME
+typedef volatile struct IL2C_EXECUTION_FRAME
 {
     IL2C_EXECUTION_FRAME* pNext;
     uint8_t targetCount;
     void** pTargets[1];      // We have to track object references.
-};
+} IL2C_EXECUTION_FRAME;
 
 // TODO: Become store to thread local storage
 static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
@@ -223,13 +223,13 @@ void il2c_step3_sweep_garbage__()
             DEBUG_WRITE("il2c_step3_sweep_garbage__", pCurrentHeader->type->pTypeName);
 
             // Heap discarded
-            il2c_free(pCurrentHeader);
+            il2c_free((void*)pCurrentHeader);
 
             pCurrentHeader = pNext;
         }
         else
         {
-            ppUnlinkTarget = &pCurrentHeader->pNext;
+            ppUnlinkTarget = (void*)&pCurrentHeader->pNext;
             pCurrentHeader = pNext;
         }
     }

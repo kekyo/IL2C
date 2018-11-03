@@ -291,7 +291,7 @@ namespace IL2C
                 "IL2C.Templates." + resourceName))
             {
                 var tr = new StreamReader(ts);
-                await WriteTextFileAsync(path, tr);
+                await WriteTextFileAsync(path, tr, replaceValues);
             }
         }
 

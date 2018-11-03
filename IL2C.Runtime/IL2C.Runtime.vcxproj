@@ -1,211 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="il2c.c" />
-    <ClCompile Include="System.Array.c" />
-    <ClCompile Include="System.Boolean.c" />
-    <ClCompile Include="System.Byte.c" />
-    <ClCompile Include="System.Char.c" />
-    <ClCompile Include="System.Console.c" />
-    <ClCompile Include="System.Delegate.c" />
-    <ClCompile Include="System.Double.c" />
-    <ClCompile Include="System.Enum.c" />
-    <ClCompile Include="System.Int16.c" />
-    <ClCompile Include="System.Int32.c" />
-    <ClCompile Include="System.Int64.c" />
-    <ClCompile Include="System.IntPtr.c" />
-    <ClCompile Include="System.MulticastDelegate.c" />
-    <ClCompile Include="System.Object.c" />
-    <ClCompile Include="System.SByte.c" />
-    <ClCompile Include="System.Single.c" />
-    <ClCompile Include="System.String.c" />
-    <ClCompile Include="System.Type.c" />
-    <ClCompile Include="System.UInt16.c" />
-    <ClCompile Include="System.UInt32.c" />
-    <ClCompile Include="System.UInt64.c" />
-    <ClCompile Include="System.UIntPtr.c" />
-    <ClCompile Include="System.ValueType.c" />
-    <ClInclude Include="debugbreak.h" />
-    <ClInclude Include="il2c.h" />
-    <ClInclude Include="il2c_private.h" />
-    <ClInclude Include="System.Array.h" />
-    <ClInclude Include="System.Boolean.h" />
-    <ClInclude Include="System.Byte.h" />
-    <ClInclude Include="System.Char.h" />
-    <ClInclude Include="System.Console.h" />
-    <ClInclude Include="System.Delegate.h" />
-    <ClInclude Include="System.Double.h" />
-    <ClInclude Include="System.Enum.h" />
-    <ClInclude Include="System.Int16.h" />
-    <ClInclude Include="System.Int32.h" />
-    <ClInclude Include="System.Int64.h" />
-    <ClInclude Include="System.IntPtr.h" />
-    <ClInclude Include="System.MulticastDelegate.h" />
-    <ClInclude Include="System.Object.h" />
-    <ClInclude Include="System.SByte.h" />
-    <ClInclude Include="System.Single.h" />
-    <ClInclude Include="System.String.h" />
-    <ClInclude Include="System.Type.h" />
-    <ClInclude Include="System.UInt16.h" />
-    <ClInclude Include="System.UInt32.h" />
-    <ClInclude Include="System.UInt64.h" />
-    <ClInclude Include="System.UIntPtr.h" />
-    <ClInclude Include="System.ValueType.h" />
-    <None Include="il2c_combined.h" />
-  </ItemGroup>
-  <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{182A62A4-47AC-4290-8EA5-250AE8131613}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>IL2CRuntime</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
-      <ExceptionHandling>false</ExceptionHandling>
-      <AssemblerOutput>All</AssemblerOutput>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
-      <ExceptionHandling>false</ExceptionHandling>
-      <AssemblerOutput>All</AssemblerOutput>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
-      <ExceptionHandling>false</ExceptionHandling>
-      <AssemblerOutput>All</AssemblerOutput>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <AdditionalIncludeDirectories>.</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
-      <ExceptionHandling>false</ExceptionHandling>
-      <AssemblerOutput>All</AssemblerOutput>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+    <ItemGroup Label="ProjectConfigurations">
+        <ProjectConfiguration Include="Debug|Win32">
+            <Configuration>Debug</Configuration>
+            <Platform>Win32</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Debug|x64">
+            <Configuration>Debug</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Release|Win32">
+            <Configuration>Release</Configuration>
+            <Platform>Win32</Platform>
+        </ProjectConfiguration>
+        <ProjectConfiguration Include="Release|x64">
+            <Configuration>Release</Configuration>
+            <Platform>x64</Platform>
+        </ProjectConfiguration>
+    </ItemGroup>
+    <ItemGroup>
+        <ClCompile Include="il2c.c" />
+        <ClCompile Include="System.Array.c" />
+        <ClCompile Include="System.Boolean.c" />
+        <ClCompile Include="System.Byte.c" />
+        <ClCompile Include="System.Char.c" />
+        <ClCompile Include="System.Console.c" />
+        <ClCompile Include="System.Delegate.c" />
+        <ClCompile Include="System.Double.c" />
+        <ClCompile Include="System.Enum.c" />
+        <ClCompile Include="System.Int16.c" />
+        <ClCompile Include="System.Int32.c" />
+        <ClCompile Include="System.Int64.c" />
+        <ClCompile Include="System.IntPtr.c" />
+        <ClCompile Include="System.MulticastDelegate.c" />
+        <ClCompile Include="System.Object.c" />
+        <ClCompile Include="System.SByte.c" />
+        <ClCompile Include="System.Single.c" />
+        <ClCompile Include="System.String.c" />
+        <ClCompile Include="System.Type.c" />
+        <ClCompile Include="System.UInt16.c" />
+        <ClCompile Include="System.UInt32.c" />
+        <ClCompile Include="System.UInt64.c" />
+        <ClCompile Include="System.UIntPtr.c" />
+        <ClCompile Include="System.ValueType.c" />
+        <ClInclude Include="debugbreak.h" />
+        <ClInclude Include="il2c.h" />
+        <ClInclude Include="il2c_private.h" />
+        <ClInclude Include="System.Array.h" />
+        <ClInclude Include="System.Boolean.h" />
+        <ClInclude Include="System.Byte.h" />
+        <ClInclude Include="System.Char.h" />
+        <ClInclude Include="System.Console.h" />
+        <ClInclude Include="System.Delegate.h" />
+        <ClInclude Include="System.Double.h" />
+        <ClInclude Include="System.Enum.h" />
+        <ClInclude Include="System.Int16.h" />
+        <ClInclude Include="System.Int32.h" />
+        <ClInclude Include="System.Int64.h" />
+        <ClInclude Include="System.IntPtr.h" />
+        <ClInclude Include="System.MulticastDelegate.h" />
+        <ClInclude Include="System.Object.h" />
+        <ClInclude Include="System.SByte.h" />
+        <ClInclude Include="System.Single.h" />
+        <ClInclude Include="System.String.h" />
+        <ClInclude Include="System.Type.h" />
+        <ClInclude Include="System.UInt16.h" />
+        <ClInclude Include="System.UInt32.h" />
+        <ClInclude Include="System.UInt64.h" />
+        <ClInclude Include="System.UIntPtr.h" />
+        <ClInclude Include="System.ValueType.h" />
+        <None Include="il2c_combined.h" />
+    </ItemGroup>
+    <PropertyGroup Label="Globals">
+        <VCProjectVersion>15.0</VCProjectVersion>
+        <ProjectGuid>{182A62A4-47AC-4290-8EA5-250AE8131613}</ProjectGuid>
+        <Keyword>Win32Proj</Keyword>
+        <RootNamespace>IL2CRuntime</RootNamespace>
+        <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+        <ConfigurationType>StaticLibrary</ConfigurationType>
+        <PlatformToolset>v141</PlatformToolset>
+        <LinkIncremental>false</LinkIncremental>
+        <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+        <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+    </PropertyGroup>
+    <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Debug'">
+        <UseDebugLibraries>true</UseDebugLibraries>
+    </PropertyGroup>
+    <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Release'">
+        <UseDebugLibraries>false</UseDebugLibraries>
+        <WholeProgramOptimization>false</WholeProgramOptimization>
+    </PropertyGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+    <ImportGroup Label="PropertySheets">
+        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    </ImportGroup>
+    <ItemDefinitionGroup>
+        <ClCompile>
+            <WarningLevel>Level4</WarningLevel>
+            <SDLCheck>true</SDLCheck>
+            <StringPooling>true</StringPooling>
+            <IntrinsicFunctions>true</IntrinsicFunctions>
+            <FunctionLevelLinking>true</FunctionLevelLinking>
+            <CreateHotpatchableImage>false</CreateHotpatchableImage>
+            <AdditionalIncludeDirectories>.;..\..\..\..\..\..\..\..\IL2C.Runtime</AdditionalIncludeDirectories>
+            <DisableSpecificWarnings>4100</DisableSpecificWarnings>
+            <ExceptionHandling>false</ExceptionHandling>
+            <AssemblerOutput>All</AssemblerOutput>
+            <!-- <TreatWarningAsError>true</TreatWarningAsError> -->
+            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+            <MultiProcessorCompilation>true</MultiProcessorCompilation>
+        </ClCompile>
+        <ClCompile Condition="'$(Configuration)'=='Debug'">
+            <Optimization>Disabled</Optimization>
+            <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+            <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+        </ClCompile>
+        <ClCompile Condition="'$(Configuration)'=='Release'">
+            <Optimization>MaxSpeed</Optimization>
+            <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+            <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+            <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+            <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+            <OmitFramePointers>true</OmitFramePointers>
+            <WholeProgramOptimization>true</WholeProgramOptimization>
+            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+        </ClCompile>
+        <Link>
+            <SubSystem>Windows</SubSystem>
+            <GenerateDebugInformation>true</GenerateDebugInformation>
+            <GenerateMapFile>true</GenerateMapFile>
+            <MapExports>true</MapExports>
+            <OptimizeReferences>true</OptimizeReferences>
+            <EnableCOMDATFolding>true</EnableCOMDATFolding>
+        </Link>
+        <Link Condition="'$(Configuration)'=='Debug'">
+        </Link>
+        <Link Condition="'$(Configuration)'=='Release'">
+            <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+        </Link>
+    </ItemDefinitionGroup>
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

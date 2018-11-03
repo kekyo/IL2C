@@ -203,7 +203,7 @@ namespace IL2C
         }
 
         public static async Task<string> CompileAndRunAsync(
-            string sourcePath, params string[] includePaths)
+            bool optimize, string sourcePath, params string[] includePaths)
         {
             // Download requirements for gcc (single)
             if (!Directory.Exists(gccBasePath))
@@ -232,11 +232,7 @@ namespace IL2C
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
-#if DEBUG
-            var optimizeFlag = "-O0";
-#else
-            var optimizeFlag = "-Ofast -flto";
-#endif
+            var optimizeFlag = optimize ? "-Ofast -flto" : "-O0";
 
             if (!Directory.Exists(outPath))
             {

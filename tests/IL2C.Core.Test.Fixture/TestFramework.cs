@@ -318,7 +318,9 @@ namespace IL2C
                     // Use combined runtime source. 5 times faster!
                     Path.Combine(il2cRuntimePath, "il2c_combined.c")
                 };
-                var executedResult = await GccDriver.CompileAndRunAsync(sourcePath, il2cRuntimePath);
+
+                // TODO: !optimize
+                var executedResult = await GccDriver.CompileAndRunAsync(false, sourcePath, il2cRuntimePath);
                 sanitized = executedResult.Trim(' ', '\r', '\n');
             }
             catch (Exception ex)

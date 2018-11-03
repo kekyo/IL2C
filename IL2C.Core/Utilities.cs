@@ -10,6 +10,7 @@ using Mono.Cecil.Cil;
 using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
+using System.Collections;
 
 namespace IL2C
 {
@@ -320,5 +321,58 @@ namespace IL2C
         {
             return new KeyValuePair<TKey, TValue>(key, value);
         }
+
+        private sealed class LooseTypeKindComparerImpl
+            : IEqualityComparer<object>
+        {
+            public LooseTypeKindComparerImpl()
+            {
+            }
+
+            public new bool Equals(object x, object y)
+            {
+                if (object.ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+
+                var tx = x.GetType();
+                var ty = y.GetType();
+                if (!tx.Equals(ty))
+                {
+                    return false;
+                }
+
+                if (x is string)
+                {
+                    return x.Equals(y);
+                }
+                if (x is IEnumerable)
+                {
+                    var ex = ((IEnumerable)x).Cast<object>();
+                    var ey = ((IEnumerable)x).Cast<object>();
+                    return ex.SequenceEqual(ey, this);
+                }
+
+                return x.Equals(y);
+            }
+
+            public int GetHashCode(object obj)
+            {
+                if (obj is string)
+                {
+                    return obj.GetHashCode();
+                }
+                if (obj is IEnumerable)
+                {
+                    return ((IEnumerable)obj).
+                        Cast<object>().
+                        Aggregate(0, (s, v) => s ^ this.GetHashCode(v));
+                }
+                return obj.GetHashCode();
+            }
+        }
+
+        public static readonly IEqualityComparer<object> LooseTypeKindComparer = new LooseTypeKindComparerImpl();
     }
 }

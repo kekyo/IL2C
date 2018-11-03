@@ -99,6 +99,7 @@ namespace IL2C.Metadata
             this.EnumType = this.GetOrAddType(resolvedCoreModule.GetType("System.Enum"));
             this.DelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.Delegate"));
             this.MulticastDelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.MulticastDelegate"));
+            this.ArrayType = this.GetOrAddType(resolvedCoreModule.GetType("System.Array"));
 
             this.ByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Byte);
             this.SByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.SByte);
@@ -223,7 +224,8 @@ namespace IL2C.Metadata
                 typeReference,
                 () =>
                 {
-                    if (typeReference.FullName == "<Module>")
+                    // Ignore global namespace
+                    if (typeReference.FullName.Split('.').Length == 1)
                     {
                         return default(TypeInformation);
                     }
@@ -307,6 +309,7 @@ namespace IL2C.Metadata
         public ITypeInformation EnumType { get; }
         public ITypeInformation DelegateType { get; }
         public ITypeInformation MulticastDelegateType { get; }
+        public ITypeInformation ArrayType { get; }
         public ITypeInformation UntypedReferenceType =>
             UntypedReferenceTypeInformation.UntypedReferenceType;
 

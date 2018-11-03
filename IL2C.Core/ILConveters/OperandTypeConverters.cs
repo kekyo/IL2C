@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using IL2C.Metadata;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
 
+using IL2C.Metadata;
 using IL2C.Translators;
 
 namespace IL2C.ILConverters
@@ -44,6 +42,10 @@ namespace IL2C.ILConverters
     }
 
     internal abstract class InlineTypeConverter : ILConverter<ITypeInformation>
+    {
+    }
+
+    internal abstract class InlineMemberConverter : ILConverter<IMemberInformation>
     {
     }
 

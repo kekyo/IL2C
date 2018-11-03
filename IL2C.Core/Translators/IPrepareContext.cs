@@ -13,6 +13,7 @@ namespace IL2C.Translators
         void RegisterPrivateIncludeFile(string includeFileName);
         void RegisterType(ITypeInformation type);
         void RegisterStaticField(IFieldInformation staticField);
-        string RegisterConstString(string operand);
+        string RegisterConstString(string value);
+        string RegisterDeclaredValue(object value);
     }
 }

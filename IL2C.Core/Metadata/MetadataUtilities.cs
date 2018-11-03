@@ -29,8 +29,8 @@ namespace IL2C.Metadata
                     .Concat(new[] { member.Name }));
         }
 
-        public sealed class MethodSignatureTypeComparerImpl
-            : IComparer<ITypeInformation>, IEqualityComparer<ITypeInformation>
+        private sealed class MethodSignatureTypeComparerImpl
+            : ICombinedComparer<ITypeInformation>
         {
             public MethodSignatureTypeComparerImpl()
             {
@@ -132,11 +132,11 @@ namespace IL2C.Metadata
             }
         }
 
-        public static readonly MethodSignatureTypeComparerImpl MethodSignatureTypeComparer =
+        public static readonly ICombinedComparer<ITypeInformation> MethodSignatureTypeComparer =
             new MethodSignatureTypeComparerImpl();
 
-        public sealed class MethodSignatureParameterComparerImpl
-            : IComparer<VariableInformation>, IEqualityComparer<VariableInformation>
+        private sealed class MethodSignatureParameterComparerImpl
+            : ICombinedComparer<VariableInformation>
         {
             public MethodSignatureParameterComparerImpl()
             {
@@ -167,11 +167,11 @@ namespace IL2C.Metadata
             }
         }
 
-        public static readonly MethodSignatureParameterComparerImpl MethodSignatureParameterComparer =
+        public static readonly ICombinedComparer<VariableInformation> MethodSignatureParameterComparer =
             new MethodSignatureParameterComparerImpl();
 
-        public sealed class MethodSignatureComparerImpl
-            : IComparer<IMethodInformation>, IEqualityComparer<IMethodInformation>
+        private sealed class MethodSignatureComparerImpl
+            : ICombinedComparer<IMethodInformation>
         {
             // This is a overload stabilizer
 
@@ -236,9 +236,9 @@ namespace IL2C.Metadata
             }
         }
 
-        public static readonly MethodSignatureComparerImpl MethodSignatureComparer =
+        public static readonly ICombinedComparer<IMethodInformation> MethodSignatureComparer =
             new MethodSignatureComparerImpl(false);
-        public static readonly MethodSignatureComparerImpl VirtualMethodSignatureComparer =
+        public static readonly ICombinedComparer<IMethodInformation> VirtualMethodSignatureComparer =
             new MethodSignatureComparerImpl(true);
 
         public static IDictionary<string, IMethodInformation[]> CalculateOverloadMethods(

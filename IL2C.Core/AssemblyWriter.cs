@@ -136,7 +136,7 @@ namespace IL2C
                         declaredType.CLanguageTypeName,
                         declaredType.MangledName,
                         field.Name,
-                        Utilities.ToCLanguageExpression(field.ConstantValue));
+                        Utilities.ToCLanguageExpression(field.DeclaredValue));
                 }
             }
             // Write a class/interface/struct:

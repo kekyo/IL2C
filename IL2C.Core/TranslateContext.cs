@@ -20,6 +20,8 @@ namespace IL2C
             new Dictionary<string, IFieldInformation>();
         private readonly Dictionary<string, string> constStrings =
             new Dictionary<string, string>();
+        private readonly Dictionary<object, string> declaredValues =
+            new Dictionary<object, string>(Utilities.LooseTypeKindComparer);
         #endregion
 
         #region Constructors
@@ -95,20 +97,36 @@ namespace IL2C
             this.RegisterStaticField(staticField);
         }
 
-        private string RegisterConstString(string str)
+        private string RegisterConstString(string value)
         {
-            if (!constStrings.TryGetValue(str, out var symbolName))
+            if (!constStrings.TryGetValue(value, out var symbolName))
             {
                 symbolName = string.Format("string{0}__", constStrings.Count);
-                constStrings.Add(str, symbolName);
+                constStrings.Add(value, symbolName);
             }
 
             return symbolName;
         }
 
-        string IPrepareContext.RegisterConstString(string str)
+        string IPrepareContext.RegisterConstString(string value)
         {
-            return this.RegisterConstString(str);
+            return this.RegisterConstString(value);
+        }
+
+        private string RegisterDeclaredValue(object value)
+        {
+            if (!declaredValues.TryGetValue(value, out var symbolName))
+            {
+                symbolName = string.Format("declaredValue{0}__", declaredValues.Count);
+                declaredValues.Add(value, symbolName);
+            }
+
+            return symbolName;
+        }
+
+        string IPrepareContext.RegisterDeclaredValue(object value)
+        {
+            return this.RegisterDeclaredValue(value);
         }
         #endregion
 

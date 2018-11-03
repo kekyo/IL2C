@@ -260,8 +260,10 @@ namespace IL2C.Metadata
         }
 
         public ITypeInformation BaseType =>
-            this.MetadataContext.GetOrAddType(
-                (this.Definition as TypeDefinition)?.BaseType);
+            (this.Definition is ArrayType) ?
+                this.MetadataContext.ArrayType :
+                this.MetadataContext.GetOrAddType(
+                    (this.Definition as TypeDefinition)?.BaseType);
         public ITypeInformation ElementType =>
             this.MetadataContext.GetOrAddType(
                 this.IsEnum ?
@@ -356,7 +358,7 @@ namespace IL2C.Metadata
                 }
             }
         }
-            
+
         public override bool IsCLanguageFileScope =>
             (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
 
@@ -476,11 +478,20 @@ namespace IL2C.Metadata
             }
 
             // BaseClass <-- DerivedClass
-            if (this.IsClass && rhs.IsClass)
+            // BaseClass <-- DerivedArray
+            if (this.IsClass && (rhs.IsClass || rhs.IsArray))
             {
-                return rhs
-                    .Traverse(type => type.BaseType, true)
-                    .Any(this.Equals);
+                return rhs.
+                    Traverse(type => type.BaseType, true).
+                    Any(this.Equals);
+            }
+
+            // BaseArray <-- DerivedArray (covariant)
+            if (this.IsArray && rhs.IsArray)
+            {
+                return rhs.
+                    Traverse(type => type.BaseType, true).
+                    Any(type => type.IsArray && this.ElementType.Equals(type.ElementType));
             }
 
             // System.Object <-- Any

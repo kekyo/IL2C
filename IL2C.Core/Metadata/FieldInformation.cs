@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
-using Mono.Cecil;
+﻿using Mono.Cecil;
 
 namespace IL2C.Metadata
 {
@@ -15,7 +12,7 @@ namespace IL2C.Metadata
         bool HasConstant { get; }
 
         ITypeInformation FieldType { get; }
-        object ConstantValue { get; }
+        object DeclaredValue { get; }
 
         string GetCLanguageStaticPrototype(bool requireInitializerExpression);
     }
@@ -45,30 +42,18 @@ namespace IL2C.Metadata
         public ITypeInformation FieldType =>
             this.MetadataContext.GetOrAddType(this.Member.FieldType);
 
-        public object ConstantValue => this.Definition.Constant;
+        public object DeclaredValue =>
+            this.HasConstant ?
+                this.Definition.Constant :
+                this.Definition.InitialValue;
 
         public string GetCLanguageStaticPrototype(bool requireInitializerExpression)
         {
-            var initializer = String.Empty;
-            if (requireInitializerExpression)
-            {
-                if (this.FieldType.IsNumericPrimitive)
-                {
-                    // TODO: numericPrimitive and (literal or readonly static) ?
-                    Debug.Assert(this.IsStatic);
-                    var value = this.HasConstant ? this.ConstantValue : 0;
-
-                    Debug.Assert(value != null);
-
-                    initializer = this.FieldType.IsInt64Type
-                        ? String.Format(" = {0}LL", value)
-                        : String.Format(" = {0}", value);
-                }
-                else if (this.FieldType.IsValueType == false)
-                {
-                    initializer = " = NULL";
-                }
-            }
+            var initializer = requireInitializerExpression ?
+                string.Empty :
+                string.Format(
+                    " = {0}",
+                    Utilities.ToCLanguageExpression(this.DeclaredValue ?? 0));
 
             return string.Format(
                 "{0} {1}{2}",

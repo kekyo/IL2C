@@ -136,7 +136,7 @@ namespace IL2C
                         declaredType.CLanguageTypeName,
                         declaredType.MangledName,
                         field.Name,
-                        Utilities.ToCLanguageExpression(field.DeclaredValue));
+                        Utilities.GetCLanguageExpression(field.DeclaredValue));
                 }
             }
             // Write a class/interface/struct:
@@ -1300,7 +1300,7 @@ namespace IL2C
         {
             IExtractContext extractContext = translateContext;
 
-            var assemblyName = Utilities.ToMangledName(extractContext.Assembly.FriendlyName);
+            var assemblyName = Utilities.GetMangledName(extractContext.Assembly.FriendlyName);
 
             twHeader.WriteLine("#ifndef __{0}_H__", assemblyName);
             twHeader.WriteLine("#define __{0}_H__", assemblyName);
@@ -1355,7 +1355,7 @@ namespace IL2C
 
             foreach (var kv in extractContext.ExtractConstStrings())
             {
-                var expr = Utilities.ToCLanguageExpression(kv.Value);
+                var expr = Utilities.GetCLanguageExpression(kv.Value);
                 twSource.WriteLine(
                     "IL2C_CONST_STRING({0}, {1});",
                     kv.Key,

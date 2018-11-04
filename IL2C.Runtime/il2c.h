@@ -139,6 +139,7 @@ typedef void* untyped_ptr;
 #include <System.Enum.h>
 #include <System.Delegate.h>
 #include <System.MulticastDelegate.h>
+#include <System.RuntimeFieldHandle.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

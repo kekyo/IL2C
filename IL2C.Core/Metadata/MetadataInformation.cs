@@ -36,7 +36,7 @@ namespace IL2C.Metadata
         public abstract string FriendlyName { get; }
 
         public virtual string MangledName =>
-            Utilities.ToMangledName(this.UniqueName);
+            Utilities.GetMangledName(this.UniqueName);
 
         public string DebuggerDisplayString
         {

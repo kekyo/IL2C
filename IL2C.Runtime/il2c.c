@@ -346,6 +346,7 @@ System_ValueType* il2c_box2__(
         uint32_t u4;
         uint64_t u8;
     } v;
+    v.u8 = 0;
 
     // Destination integer value is unsigned.
     const bool vui = (valueType->flags & IL2C_TYPE_UNSIGNED_INTEGER) == IL2C_TYPE_UNSIGNED_INTEGER;

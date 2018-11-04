@@ -309,7 +309,7 @@ namespace IL2C.Metadata
                 index,
                 arguments);
 
-            return Mangled(type) ? Utilities.ToMangledName(name) : name;
+            return Mangled(type) ? Utilities.GetMangledName(name) : name;
         }
 
         public VariableInformation[] GetParameters(ITypeInformation thisType)

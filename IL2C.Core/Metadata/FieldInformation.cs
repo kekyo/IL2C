@@ -53,7 +53,7 @@ namespace IL2C.Metadata
                 string.Empty :
                 string.Format(
                     " = {0}",
-                    Utilities.ToCLanguageExpression(this.DeclaredValue ?? 0));
+                    Utilities.GetCLanguageExpression(this.DeclaredValue ?? 0));
 
             return string.Format(
                 "{0} {1}{2}",

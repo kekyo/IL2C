@@ -134,7 +134,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(int operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.ToCLanguageExpression(operand)) };
+            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
         }
     }
 
@@ -145,7 +145,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(long operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.ToCLanguageExpression(operand)) };
+            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
         }
     }
 
@@ -156,7 +156,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(float operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.ToCLanguageExpression(operand)) };
+            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
         }
     }
 
@@ -167,7 +167,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(double operand, DecodeContext decodeContext)
         {
             var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.ToCLanguageExpression(operand)) };
+            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
         }
     }
 }

@@ -37,6 +37,8 @@ namespace IL2C.Metadata
         ITypeInformation CharType { get; }
         ITypeInformation StringType { get; }
         ITypeInformation BooleanType { get; }
+
+        ITypeInformation RuntimeFieldHandle { get; }
     }
 
     internal sealed class MetadataContext
@@ -116,6 +118,8 @@ namespace IL2C.Metadata
             this.CharType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Char);
             this.StringType = this.GetOrAddType(resolvedCoreModule.TypeSystem.String);
             this.BooleanType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Boolean);
+
+            this.RuntimeFieldHandle = this.GetOrAddType(resolvedCoreModule.GetType("System.RuntimeFieldHandle"));
         }
 
         public IAssemblyInformation MainAssembly { get; }
@@ -328,6 +332,8 @@ namespace IL2C.Metadata
         public ITypeInformation CharType { get; }
         public ITypeInformation StringType { get; }
         public ITypeInformation BooleanType { get; }
+
+        public ITypeInformation RuntimeFieldHandle { get; }
         #endregion
     }
 }

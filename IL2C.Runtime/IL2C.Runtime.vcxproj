@@ -60,6 +60,7 @@
         <ClInclude Include="System.IntPtr.h" />
         <ClInclude Include="System.MulticastDelegate.h" />
         <ClInclude Include="System.Object.h" />
+        <ClInclude Include="System.RuntimeFieldHandle.h" />
         <ClInclude Include="System.SByte.h" />
         <ClInclude Include="System.Single.h" />
         <ClInclude Include="System.String.h" />

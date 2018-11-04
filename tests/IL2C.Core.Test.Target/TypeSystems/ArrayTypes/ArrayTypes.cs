@@ -1,4 +1,7 @@
-﻿namespace IL2C.TypeSystems
+﻿using System;
+using System.Runtime.InteropServices;
+
+namespace IL2C.TypeSystems
 {
     [TestCase(111, "FromInt32", 0)]
     [TestCase(222, "FromInt32", 1)]
@@ -30,6 +33,13 @@
             var arr = new int[] { 111, 222, 333 };
 
             return arr[index];
+        }
+
+        public static int FromStringResource(int index)
+        {
+            // Not use InitializeArray()
+            var arr = new string[] { "1", "22", "333" };
+            return int.Parse(arr[index]);
         }
 
         public static int Length(int length)

@@ -29,7 +29,7 @@ namespace IL2C
         {
             if (constantType != null)
             {
-                if (TestUtilities.GetCLanguageTypeName(constantType) == argumentType.CLanguageTypeName)
+                if (Utilities.GetCLanguageTypeName(constantType) == argumentType.CLanguageTypeName)
                 {
                     return constantExpression;
                 }
@@ -43,7 +43,7 @@ namespace IL2C
                 {
                     return string.Format("(System_Object*)il2c_box(&{0}, {1})",
                         constantExpression,
-                        Utilities.ToMangledName(constantType.FullName));
+                        Utilities.GetMangledName(constantType.FullName));
                 }
             }
 
@@ -186,7 +186,7 @@ namespace IL2C
                     p.SymbolName,
                     p.TargetType,
                     arg?.GetType(),
-                    Utilities.ToCLanguageExpression(arg))
+                    Utilities.GetCLanguageExpression(arg))
                 ).
                 ToArray();
             var argumentList = constants.
@@ -204,7 +204,7 @@ namespace IL2C
                         argument.SymbolName,
                         argument.TargetType,
                         argument.ExpressionType,
-                        Utilities.ToCLanguageExpression(expectedType.PseudoEmptyValue))).
+                        Utilities.GetCLanguageExpression(expectedType.PseudoEmptyValue))).
                 ToArray();
 
             if (!(expectedType.IsVoidType || (caseInfo.Assert == TestCaseAsserts.CauseBreak)))
@@ -216,7 +216,7 @@ namespace IL2C
                             "expected",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.ToCLanguageExpression(caseInfo.Expected)),
+                            Utilities.GetCLanguageExpression(caseInfo.Expected)),
                     }).
                     ToArray();
                 arguments = constants.
@@ -232,14 +232,14 @@ namespace IL2C
                             argument.SymbolName,
                             argument.TargetType,
                             argument.ExpressionType,
-                            Utilities.ToCLanguageExpression(argument.TargetType.PseudoEmptyValue))).
+                            Utilities.GetCLanguageExpression(argument.TargetType.PseudoEmptyValue))).
                     Concat(new Constant[]
                     {
                         new Constant(
                             "actual",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.ToCLanguageExpression(expectedType.PseudoEmptyValue)),
+                            Utilities.GetCLanguageExpression(expectedType.PseudoEmptyValue)),
                     }).
                     ToArray();
             }
@@ -252,7 +252,7 @@ namespace IL2C
                 { "body", body.ToString() },
                 { "constants", string.Join(" ", constants.
                     Select(entry => string.Format("{0} {1} = {2};",
-                        (entry.ExpressionType != null) ? TestUtilities.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
+                        (entry.ExpressionType != null) ? Utilities.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
                         entry.SymbolName,
                         entry.Expression))) },
                 { "locals", string.Join(" ", locals.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -301,93 +300,5 @@ namespace IL2C
             return CopyResourceToTextFileAsync(path, resourceName, empty);
         }
         #endregion
-
-        public static string GetCLanguageTypeName(Type type)
-        {
-            if (type.IsByRef || type.IsPointer)
-            {
-                return string.Format(
-                    "{0}*",
-                    GetCLanguageTypeName(type.GetElementType()));
-            }
-
-            string typeName = null;
-            if (type == typeof(bool))
-            {
-                typeName = "bool";
-            }
-            else if (type == typeof(byte))
-            {
-                typeName = "uint8_t";
-            }
-            else if (type == typeof(sbyte))
-            {
-                typeName = "int8_t";
-            }
-            else if (type == typeof(short))
-            {
-                typeName = "int16_t";
-            }
-            else if (type == typeof(ushort))
-            {
-                typeName = "uint16_t";
-            }
-            else if (type == typeof(int))
-            {
-                typeName = "int32_t";
-            }
-            else if (type == typeof(uint))
-            {
-                typeName = "uint32_t";
-            }
-            else if (type == typeof(long))
-            {
-                typeName = "int64_t";
-            }
-            else if (type == typeof(ulong))
-            {
-                typeName = "uint64_t";
-            }
-            else if (type == typeof(IntPtr))
-            {
-                typeName = "intptr_t";
-            }
-            else if (type == typeof(UIntPtr))
-            {
-                typeName = "uintptr_t";
-            }
-            else if (type == typeof(float))
-            {
-                typeName = "float";
-            }
-            else if (type == typeof(double))
-            {
-                typeName = "double";
-            }
-            else if (type == typeof(char))
-            {
-                typeName = "wchar_t";
-            }
-            else if (type == typeof(string))
-            {
-                typeName = "wchar_t*";
-            }
-            else if (type == typeof(void))
-            {
-                typeName = "void";
-            }
-            else
-            {
-                typeName = Utilities.ToMangledName(type.FullName);
-                if (!type.IsValueType)
-                {
-                    typeName += "*";
-                }
-            }
-
-            Debug.Assert(typeName != null);
-
-            return typeName;
-        }
     }
 }

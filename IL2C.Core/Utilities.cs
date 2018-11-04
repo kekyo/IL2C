@@ -11,6 +11,7 @@ using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
 using System.Collections;
+using System.Diagnostics;
 
 namespace IL2C
 {
@@ -39,7 +40,7 @@ namespace IL2C
         public static bool TryGetILConverter(OpCode opCode, out ILConverter ilc) =>
             ilConverters.TryGetValue(opCode, out ilc);
 
-        public static string ToMangledName(string name)
+        public static string GetMangledName(string name)
         {
             var sb = new StringBuilder(name);
             foreach (var ch in replaceChars)
@@ -49,8 +50,96 @@ namespace IL2C
             return sb.ToString();
         }
 
-        #region ToCLanguageExpression
-        public static string ToCLanguageExpression(int value)
+        public static string GetCLanguageTypeName(Type type)
+        {
+            if (type.IsByRef || type.IsPointer)
+            {
+                return string.Format(
+                    "{0}*",
+                    GetCLanguageTypeName(type.GetElementType()));
+            }
+
+            string typeName = null;
+            if (type == typeof(bool))
+            {
+                typeName = "bool";
+            }
+            else if (type == typeof(byte))
+            {
+                typeName = "uint8_t";
+            }
+            else if (type == typeof(sbyte))
+            {
+                typeName = "int8_t";
+            }
+            else if (type == typeof(short))
+            {
+                typeName = "int16_t";
+            }
+            else if (type == typeof(ushort))
+            {
+                typeName = "uint16_t";
+            }
+            else if (type == typeof(int))
+            {
+                typeName = "int32_t";
+            }
+            else if (type == typeof(uint))
+            {
+                typeName = "uint32_t";
+            }
+            else if (type == typeof(long))
+            {
+                typeName = "int64_t";
+            }
+            else if (type == typeof(ulong))
+            {
+                typeName = "uint64_t";
+            }
+            else if (type == typeof(IntPtr))
+            {
+                typeName = "intptr_t";
+            }
+            else if (type == typeof(UIntPtr))
+            {
+                typeName = "uintptr_t";
+            }
+            else if (type == typeof(float))
+            {
+                typeName = "float";
+            }
+            else if (type == typeof(double))
+            {
+                typeName = "double";
+            }
+            else if (type == typeof(char))
+            {
+                typeName = "wchar_t";
+            }
+            else if (type == typeof(string))
+            {
+                typeName = "wchar_t*";
+            }
+            else if (type == typeof(void))
+            {
+                typeName = "void";
+            }
+            else
+            {
+                typeName = GetMangledName(type.FullName);
+                if (!type.IsValueType)
+                {
+                    typeName += "*";
+                }
+            }
+
+            Debug.Assert(typeName != null);
+
+            return typeName;
+        }
+
+        #region GetCLanguageExpression
+        public static string GetCLanguageExpression(int value)
         {
             // HACK: if operand is int.MinValue, compiler will cause constant literal warning:
             //   "warning: this decimal constant is unsigned only in ISO C90 [enabled by default]" (it's gcc, but vc causes same)
@@ -60,7 +149,7 @@ namespace IL2C
                 : intMinValueExpression;
         }
 
-        public static string ToCLanguageExpression(long value)
+        public static string GetCLanguageExpression(long value)
         {
             // HACK: if operand is int.MinValue, compiler will cause constant literal warning:
             //   "warning: this decimal constant is unsigned only in ISO C90 [enabled by default]" (it's gcc, but vc causes same)
@@ -70,13 +159,13 @@ namespace IL2C
                 : longMinValueExpression;
         }
 
-        public static string ToCLanguageExpression(uint value) =>
+        public static string GetCLanguageExpression(uint value) =>
             value.ToString() + "U";
 
-        public static string ToCLanguageExpression(ulong value) =>
+        public static string GetCLanguageExpression(ulong value) =>
             value.ToString() + "ULL";
 
-        public static string ToCLanguageExpression(float value)
+        public static string GetCLanguageExpression(float value)
         {
             // Single type format issue: https://docs.microsoft.com/en-us/dotnet/api/system.single.tostring
             //   By default, the return value only contains 7 digits of precision although a maximum of
@@ -93,7 +182,7 @@ namespace IL2C
             return str.Contains(".") ? (str + "f") : (str + ".0f");
         }
 
-        public static string ToCLanguageExpression(double value)
+        public static string GetCLanguageExpression(double value)
         {
             // Double type format issue: https://docs.microsoft.com/en-us/dotnet/api/system.double.tostring
             //   By default, the return value only contains 15 digits of precision although a maximum of
@@ -154,7 +243,7 @@ namespace IL2C
             }
         }
 
-        public static string ToCLanguageExpression(char value)
+        public static string GetCLanguageExpression(char value)
         {
             var sb = new StringBuilder("L'");
             AppendEscapedCharString(sb, value);
@@ -162,7 +251,7 @@ namespace IL2C
             return sb.ToString();
         }
 
-        public static string ToCLanguageExpression(string value)
+        public static string GetCLanguageExpression(string value)
         {
             var sb = new StringBuilder("L\"");
             foreach (var ch in value)
@@ -173,43 +262,53 @@ namespace IL2C
             return sb.ToString();
         }
 
-        public static string ToCLanguageExpression(bool value) =>
+        public static string GetCLanguageExpression(bool value) =>
             value ? "true" : "false";
 
-        public static string ToCLanguageExpression(IntPtr value) =>
-            string.Format("((intptr_t){0})", ToCLanguageExpression(value.ToInt64()));
+        public static string GetCLanguageExpression(IntPtr value) =>
+            string.Format("((intptr_t){0})", GetCLanguageExpression(value.ToInt64()));
 
-        public static string ToCLanguageExpression(UIntPtr value) =>
-            string.Format("((uintptr_t){0})", ToCLanguageExpression(value.ToUInt64()));
+        public static string GetCLanguageExpression(UIntPtr value) =>
+            string.Format("((uintptr_t){0})", GetCLanguageExpression(value.ToUInt64()));
 
-        public static string ToCLanguageExpression(Enum value) =>
+        public static string GetCLanguageExpression(Enum value) =>
             Enum.IsDefined(value.GetType(), value) ?
                 string.Format("{0}_{1}",
-                    ToMangledName(value.GetType().FullName),
+                    GetMangledName(value.GetType().FullName),
                     value) :
                 string.Format("({0}){1}",
-                    ToMangledName(value.GetType().FullName),
-                    ToCLanguageExpression(
+                    GetMangledName(value.GetType().FullName),
+                    GetCLanguageExpression(
                         value.GetType().
                         GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly).
                         First().
                         GetValue(value)));
 
-        public static string ToCLanguageExpression(object value)
+        public static string GetCLanguageExpression(Array arr)
+        {
+            return string.Format(
+                "{{{0}}",
+                string.Join(
+                    ",",
+                    ((IEnumerable)arr).Cast<object>().Select(GetCLanguageExpression)));
+        }
+
+        public static string GetCLanguageExpression(object value)
         {
             if (value == null) return "NULL";
-            if (value is int) return ToCLanguageExpression((int)value);
-            if (value is uint) return ToCLanguageExpression((uint)value);
-            if (value is long) return ToCLanguageExpression((long)value);
-            if (value is ulong) return ToCLanguageExpression((ulong)value);
-            if (value is IntPtr) return ToCLanguageExpression((IntPtr)value);
-            if (value is UIntPtr) return ToCLanguageExpression((UIntPtr)value);
-            if (value is float) return ToCLanguageExpression((float)value);
-            if (value is double) return ToCLanguageExpression((double)value);
-            if (value is bool) return ToCLanguageExpression((bool)value);
-            if (value is char) return ToCLanguageExpression((char)value);
-            if (value is string) return ToCLanguageExpression((string)value);
-            if (value is Enum) return ToCLanguageExpression((Enum)value);
+            if (value is int) return GetCLanguageExpression((int)value);
+            if (value is uint) return GetCLanguageExpression((uint)value);
+            if (value is long) return GetCLanguageExpression((long)value);
+            if (value is ulong) return GetCLanguageExpression((ulong)value);
+            if (value is IntPtr) return GetCLanguageExpression((IntPtr)value);
+            if (value is UIntPtr) return GetCLanguageExpression((UIntPtr)value);
+            if (value is float) return GetCLanguageExpression((float)value);
+            if (value is double) return GetCLanguageExpression((double)value);
+            if (value is bool) return GetCLanguageExpression((bool)value);
+            if (value is char) return GetCLanguageExpression((char)value);
+            if (value is string) return GetCLanguageExpression((string)value);
+            if (value is Enum) return GetCLanguageExpression((Enum)value);
+            if (value is Array) return GetCLanguageExpression((Array)value);
             return value.ToString();
         }
         #endregion

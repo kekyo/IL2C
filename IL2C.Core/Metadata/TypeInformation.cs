@@ -513,6 +513,13 @@ namespace IL2C.Metadata
                 return rhs.InterfaceTypes.Any(this.Equals);
             }
 
+            // HACK: Special case lhs is runtime handles.
+            if (this.MetadataContext.RuntimeFieldHandle.Equals(this) &&
+                rhs.IsUntypedReferenceType)
+            {
+                return true;
+            }
+
             return false;
         }
 

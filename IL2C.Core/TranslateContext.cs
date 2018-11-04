@@ -156,7 +156,6 @@ namespace IL2C
 
             if (lhsType.IsAssignableFrom(rhsType))
             {
-                Debug.Assert(lhsType.IsValueType == false);
                 Debug.Assert((rhsType.IsValueType == false) || rhsType.IsUntypedReferenceType);
 
                 // (RefType) <-- UntypedReferenceType  (maybe ldnull value)

@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 98 / 219
+* Number of opcode implementations: 99 / 219
 * Number of opcode tests: 615 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -123,7 +123,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldelem.i4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_i4) | 0x94 | Implemented |  | IL2C.ILConverters.Ldelem_i4Converter |
 | [ldelem.i8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_i8) | 0x96 | Implemented |  | IL2C.ILConverters.Ldelem_i8Converter |
 | [ldelem.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_r4) | 0x98 |  |  |  |
-| [ldelem.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_r8) | 0x99 |  |  |  |
+| [ldelem.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_r8) | 0x99 | Implemented |  | IL2C.ILConverters.Ldelem_r8Converter |
 | [ldelem.ref](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_ref) | 0x9a |  |  |  |
 | [ldelem.u1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_u1) | 0x91 | Implemented |  | IL2C.ILConverters.Ldelem_u1Converter |
 | [ldelem.u2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_u2) | 0x93 |  |  |  |

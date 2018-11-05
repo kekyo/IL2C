@@ -18,6 +18,9 @@ namespace IL2C.TypeSystems
     [TestCase(11111111111111, "FromInt64Resource", 0)]
     [TestCase(22222222222222, "FromInt64Resource", 1)]
     [TestCase(33333333333333, "FromInt64Resource", 2)]
+    [TestCase(111.2222, "FromDoubleResource", 0)]
+    [TestCase(333.4444, "FromDoubleResource", 1)]
+    [TestCase(555.6666, "FromDoubleResource", 2)]
     [TestCase(0, "Length", 0)]
     [TestCase(1, "Length", 1)]
     [TestCase(1000, "Length", 1000)]
@@ -61,6 +64,14 @@ namespace IL2C.TypeSystems
         {
             // This expression invokes to System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray().
             var arr = new long[] { 11111111111111, 22222222222222, 33333333333333 };
+
+            return arr[index];
+        }
+
+        public static double FromDoubleResource(int index)
+        {
+            // This expression invokes to System.Runtime.CompilerServices.RuntimeHelpers::InitializeArray().
+            var arr = new double[] { 111.2222, 333.4444, 555.6666 };
 
             return arr[index];
         }

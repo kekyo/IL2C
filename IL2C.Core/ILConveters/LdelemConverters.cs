@@ -114,4 +114,17 @@ namespace IL2C.ILConverters
                 decodeContext);
         }
     }
+
+    internal sealed class Ldelem_r8Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldelem_R8;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdelemConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.DoubleType,
+                type => type.IsFloatStackFriendlyType,
+                decodeContext);
+        }
+    }
 }

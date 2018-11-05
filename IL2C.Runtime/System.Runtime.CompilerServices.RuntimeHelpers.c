@@ -7,10 +7,12 @@ void System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray(
     System_Array* array, System_RuntimeFieldHandle fldHandle)
 {
     il2c_assert(array != NULL);
-    il2c_assert(fldHandle != NULL);
+    il2c_assert(fldHandle.field__ != NULL);
 
-    // TODO: The field handle can't verify, we have to check it size.
-    il2c_memcpy(array->Item, fldHandle, array->Length * il2c_sizeof__(array->elementType__));
+    uintptr_t arraySize = array->Length * il2c_sizeof__(array->elementType__);
+    uintptr_t size = (fldHandle.size__ < arraySize) ? fldHandle.size__ : arraySize;
+
+    il2c_memcpy(array->Item, fldHandle.field__, size);
 }
 
 /////////////////////////////////////////////////

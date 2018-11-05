@@ -1366,24 +1366,31 @@ namespace IL2C
 
         internal static void WriteDeclaredValues(
             TextWriter twSource,
-            TranslateContext translateContext)
+            TranslateContext translateContext,
+            string indent)
         {
             IExtractContext extractContext = translateContext;
 
             twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [12-1] Declared values:");
-            twSource.WriteLine();
 
-            foreach (var (symbolName, value) in extractContext.ExtractDeclaredValues())
+            foreach (var (symbolName, field, value) in extractContext.ExtractDeclaredValues())
             {
                 Debug.Assert(value != null);
 
                 var lhs = Utilities.GetCLanguageTypeName(value.GetType(), symbolName, true);
                 var expr = Utilities.GetCLanguageExpression(value);
+                twSource.WriteLine();
                 twSource.WriteLine(
-                    "static const {0} = {1};",
-                    lhs,
+                    "// {0}",
+                    field.FriendlyName);
+                twSource.WriteLine(
+                    "static const {0} =",
+                    lhs);
+                twSource.WriteLine(
+                    "{0}{1};",
+                    indent,
                     expr);
             }
         }
@@ -1412,7 +1419,7 @@ namespace IL2C
 
             WriteConstStrings(twSource, translateContext);
 
-            WriteDeclaredValues(twSource, translateContext);
+            WriteDeclaredValues(twSource, translateContext, indent);
 
             twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");

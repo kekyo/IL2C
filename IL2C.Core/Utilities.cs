@@ -12,6 +12,7 @@ using Mono.Cecil.Cil;
 using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
+using System.Runtime.InteropServices;
 
 namespace IL2C
 {
@@ -159,6 +160,96 @@ namespace IL2C
 
             return typeName + sn;
         }
+
+        #region GetCLanguageSizeOf
+        private static string InternalGetCLanguageSizeOfExpression(Type type)
+        {
+            if (type.IsEnum)
+            {
+                return InternalGetCLanguageSizeOfExpression(type.GetEnumUnderlyingType());
+            }
+            if ((type == typeof(byte)) || (type == typeof(sbyte)) || (type == typeof(bool)))
+            {
+                return "sizeof(uint8_t)";
+            }
+            if ((type == typeof(short)) || (type == typeof(ushort)) || (type == typeof(char)))
+            {
+                return "sizeof(uint16_t)";
+            }
+            if ((type == typeof(int)) || (type == typeof(uint)) || (type == typeof(float)))
+            {
+                return "sizeof(uint32_t)";
+            }
+            if ((type == typeof(long)) || (type == typeof(ulong)) || (type == typeof(double)))
+            {
+                return "sizeof(uint64_t)";
+            }
+            if ((type == typeof(IntPtr)) || (type == typeof(UIntPtr)) ||
+                type.IsByRef || type.IsPointer)
+            {
+                return "sizeof(intptr_t)";
+            }
+            if (type == typeof(void))
+            {
+                return "0";
+            }
+            return null;
+        }
+
+        public static string GetCLanguageSizeOfExpression(Type type)
+        {
+            var expression = InternalGetCLanguageSizeOfExpression(type);
+            if (expression != null)
+            {
+                return expression;
+            }
+
+            throw new ArgumentException("Uninterpreted value size: " + type.FullName);
+        }
+
+        public static string GetCLanguageSizeOfExpression(object value)
+        {
+            if (value == null)
+            {
+                return "0";
+            }
+
+            if (value is string)
+            {
+                return (sizeof(char) * (((string)value).Length + 1)).ToString();
+            }
+
+            if (value is IEnumerable)
+            {
+                return string.Join(
+                    " + ",
+                    ((IEnumerable)value).RuntimeCast<object>().
+                    Select(v => GetCLanguageSizeOfExpression(v)).
+                    GroupBy(expr => expr).
+                    Select(
+                        g =>
+                        {
+                            var vs = g.ToArray();
+                            if (vs.Length == 1)
+                            {
+                                return g.Key;
+                            }
+                            else
+                            {
+                                return string.Format("{0} * {1}", g.Key, vs.Length);
+                            }
+                        }));
+            }
+
+            var expression = InternalGetCLanguageSizeOfExpression(value.GetType());
+            if (expression != null)
+            {
+                return expression;
+            }
+
+            throw new ArgumentException("Uninterpreted value size: " + value.GetType().FullName);
+        }
+        #endregion
 
         #region GetCLanguageExpression
         public static string GetCLanguageExpression(int value)
@@ -309,10 +400,10 @@ namespace IL2C
         public static string GetCLanguageExpression(Array arr)
         {
             return string.Format(
-                "{{{0}}}",
+                "{{ {0} }}",
                 string.Join(
-                    ",",
-                    ((IEnumerable)arr).Cast<object>().Select(GetCLanguageExpression)));
+                    ", ",
+                    ((IEnumerable)arr).RuntimeCast<object>().Select(GetCLanguageExpression)));
         }
 
         public static string GetCLanguageExpression(object value)
@@ -393,6 +484,14 @@ namespace IL2C
             }));
         }
 
+        public static IEnumerable<T> RuntimeCast<T>(this IEnumerable enumerable)
+        {
+            foreach (object value in enumerable)
+            {
+                yield return (T)value;
+            }
+        }
+
         public static IEnumerable<T> Traverse<T>(this T first, Func<T, T> next, bool invokeNextFirst = false)
             where T : class
         {
@@ -438,11 +537,6 @@ namespace IL2C
             return v;
         }
 
-        public static KeyValuePair<TKey, TValue> KeyValue<TKey, TValue>(TKey key, TValue value)
-        {
-            return new KeyValuePair<TKey, TValue>(key, value);
-        }
-
         private sealed class LooseTypeKindComparerImpl
             : IEqualityComparer<object>
         {
@@ -470,8 +564,8 @@ namespace IL2C
                 }
                 if (x is IEnumerable)
                 {
-                    var ex = ((IEnumerable)x).Cast<object>();
-                    var ey = ((IEnumerable)x).Cast<object>();
+                    var ex = ((IEnumerable)x).RuntimeCast<object>();
+                    var ey = ((IEnumerable)x).RuntimeCast<object>();
                     return ex.SequenceEqual(ey, this);
                 }
 
@@ -487,7 +581,7 @@ namespace IL2C
                 if (obj is IEnumerable)
                 {
                     return ((IEnumerable)obj).
-                        Cast<object>().
+                        RuntimeCast<object>().
                         Aggregate(0, (s, v) => s ^ this.GetHashCode(v));
                 }
                 return obj.GetHashCode();

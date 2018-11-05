@@ -30,12 +30,18 @@ namespace IL2C.ILConverters
                 var symbolName = decodeContext.PushStack(
                     decodeContext.PrepareContext.MetadataContext.RuntimeFieldHandle);
                 var declaredValueName = decodeContext.PrepareContext.
-                    RegisterDeclaredValue(field.DeclaredValue);
+                    RegisterDeclaredValue(field, field.DeclaredValue);
 
-                return _ => new[] { string.Format(
-                    "{0} = {1}",
-                    symbolName,
-                    declaredValueName) };
+                // Store into RuntimeFieldHandle structure.
+                return _ => new[] {
+                    string.Format(
+                        "{0}.size__ = sizeof({1})",
+                        symbolName,
+                        declaredValueName),
+                    string.Format(
+                        "{0}.field__ = {1}",
+                        symbolName,
+                        declaredValueName) };
             }
 
             throw new InvalidProgramSequenceException(

@@ -10,8 +10,7 @@ using IL2C.Metadata;
 namespace IL2C
 {
     public sealed class TranslateContext
-        : IPrepareContext
-        , IExtractContext
+        : IPrepareContext, IExtractContext
     {
         #region  Fields
         private readonly HashSet<string> includes = new HashSet<string>();
@@ -20,8 +19,8 @@ namespace IL2C
             new Dictionary<string, IFieldInformation>();
         private readonly Dictionary<string, string> constStrings =
             new Dictionary<string, string>();
-        private readonly Dictionary<object, string> declaredValues =
-            new Dictionary<object, string>(Utilities.LooseTypeKindComparer);
+        private readonly Dictionary<object, (string symbolName, IFieldInformation field)> declaredValues =
+            new Dictionary<object, (string symbolName, IFieldInformation field)>(Utilities.LooseTypeKindComparer);
         #endregion
 
         #region Constructors
@@ -48,20 +47,16 @@ namespace IL2C
             includes.Add(includeFileName);
         }
 
-        void IPrepareContext.RegisterIncludeFile(string includeFileName)
-        {
+        void IPrepareContext.RegisterIncludeFile(string includeFileName) =>
             this.RegisterIncludeFile(includeFileName);
-        }
 
         private void RegisterPrivateIncludeFile(string includeFileName)
         {
             privateIncludes.Add(includeFileName);
         }
 
-        void IPrepareContext.RegisterPrivateIncludeFile(string includeFileName)
-        {
+        void IPrepareContext.RegisterPrivateIncludeFile(string includeFileName) =>
             this.RegisterPrivateIncludeFile(includeFileName);
-        }
 
         private void RegisterType(ITypeInformation type)
         {
@@ -80,10 +75,8 @@ namespace IL2C
             }
         }
 
-        void IPrepareContext.RegisterType(ITypeInformation type)
-        {
+        void IPrepareContext.RegisterType(ITypeInformation type) =>
             this.RegisterType(type);
-        }
 
         private void RegisterStaticField(IFieldInformation staticField)
         {
@@ -92,10 +85,8 @@ namespace IL2C
             staticFields.Add(staticField.UniqueName, staticField);
         }
 
-        void IPrepareContext.RegisterStaticField(IFieldInformation staticField)
-        {
+        void IPrepareContext.RegisterStaticField(IFieldInformation staticField) =>
             this.RegisterStaticField(staticField);
-        }
 
         private string RegisterConstString(string value)
         {
@@ -108,43 +99,33 @@ namespace IL2C
             return symbolName;
         }
 
-        string IPrepareContext.RegisterConstString(string value)
-        {
-            return this.RegisterConstString(value);
-        }
+        string IPrepareContext.RegisterConstString(string value) =>
+            this.RegisterConstString(value);
 
-        private string RegisterDeclaredValue(object value)
+        private string RegisterDeclaredValue(IFieldInformation field, object value)
         {
-            if (!declaredValues.TryGetValue(value, out var symbolName))
+            if (!declaredValues.TryGetValue(value, out var entry))
             {
-                symbolName = string.Format("declaredValue{0}__", declaredValues.Count);
-                declaredValues.Add(value, symbolName);
+                entry = (string.Format("declaredValue{0}__", declaredValues.Count), field);
+                declaredValues.Add(value, entry);
             }
 
-            return symbolName;
+            return entry.symbolName;
         }
 
-        string IPrepareContext.RegisterDeclaredValue(object value)
-        {
-            return this.RegisterDeclaredValue(value);
-        }
+        string IPrepareContext.RegisterDeclaredValue(IFieldInformation field, object value) =>
+            this.RegisterDeclaredValue(field, value);
         #endregion
 
         #region IExtractContext
-        IEnumerable<string> IExtractContext.EnumerateRequiredIncludeFileNames()
-        {
-            return includes;
-        }
+        IEnumerable<string> IExtractContext.EnumerateRequiredIncludeFileNames() =>
+            includes;
 
-        IEnumerable<string> IExtractContext.EnumerateRequiredPrivateIncludeFileNames()
-        {
-            return privateIncludes;
-        }
+        IEnumerable<string> IExtractContext.EnumerateRequiredPrivateIncludeFileNames() =>
+            privateIncludes;
 
-        IEnumerable<IFieldInformation> IExtractContext.ExtractStaticFields()
-        {
-            return staticFields.Values;
-        }
+        IEnumerable<IFieldInformation> IExtractContext.ExtractStaticFields() =>
+            staticFields.Values;
 
         private string GetRightExpression(
             ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
@@ -257,10 +238,9 @@ namespace IL2C
             return null;
         }
 
-        string IExtractContext.GetRightExpression(ITypeInformation lhsType, VariableInformation rhs)
-        {
-            return this.GetRightExpression(lhsType, rhs.TargetType, rhs.SymbolName);
-        }
+        string IExtractContext.GetRightExpression(
+            ITypeInformation lhsType, VariableInformation rhs) =>
+            this.GetRightExpression(lhsType, rhs.TargetType, rhs.SymbolName);
 
         string IExtractContext.GetRightExpression(
             ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression) =>
@@ -275,13 +255,13 @@ namespace IL2C
         IEnumerable<(string symbolName, string value)> IExtractContext.ExtractConstStrings() =>
             this.ExtractConstStrings();
 
-        private IEnumerable<(string symbolName, object value)> ExtractDeclaredValues()
+        private IEnumerable<(string symbolName, IFieldInformation field, object value)> ExtractDeclaredValues()
         {
             return declaredValues.
-                Select(kv => (kv.Value, kv.Key));
+                Select(kv => (kv.Value.symbolName, kv.Value.field, kv.Key));
         }
 
-        IEnumerable<(string symbolName, object value)> IExtractContext.ExtractDeclaredValues() =>
+        IEnumerable<(string symbolName, IFieldInformation field, object value)> IExtractContext.ExtractDeclaredValues() =>
             this.ExtractDeclaredValues();
         #endregion
     }

@@ -14,6 +14,6 @@ namespace IL2C.Translators
         void RegisterType(ITypeInformation type);
         void RegisterStaticField(IFieldInformation staticField);
         string RegisterConstString(string value);
-        string RegisterDeclaredValue(object value);
+        string RegisterDeclaredValue(IFieldInformation field, object value);
     }
 }

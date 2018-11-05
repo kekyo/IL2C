@@ -277,6 +277,16 @@ __##typeName##_VTABLE_DECL__ __##typeName##_VTABLE__ = { \
     (System_String* (*)(void*))typeName##_ToString_Trampoline_VFunc__ \
 }
 
+// Generator macro for runtime static (abstract sealed) type information.
+#define IL2C_DECLARE_RUNTIME_STATIC_TYPE(typeName, typeNameString, baseTypeName) \
+IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
+    typeNameString, \
+    IL2C_TYPE_STATIC, \
+    0, \
+    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER, \
+    il2c_typeof(baseTypeName) \
+}
+
 // Generator macro for runtime type information.
 #define IL2C_DECLARE_RUNTIME_TYPE(typeName, typeNameString, flags, baseTypeName) \
 IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \

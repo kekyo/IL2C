@@ -76,6 +76,8 @@ namespace IL2C.Metadata
         IMethodInformation[] NewSlotMethods { get; }
         IMethodInformation[] OverrideBaseMethods { get; }
 
+        string GetCLanguageTypeName(string symbolName = null);
+
         string CLanguageTypeName { get; }
         string CLanguageThisTypeName { get; }
 
@@ -362,101 +364,105 @@ namespace IL2C.Metadata
         public override bool IsCLanguageFileScope =>
             (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
 
-        public string CLanguageTypeName
+        public string GetCLanguageTypeName(string symbolName = null)
         {
-            get
+            var sn = (symbolName != null) ? (" " + symbolName) : string.Empty;
+
+            if (this.IsByReference || this.IsPointer)
             {
-                if (this.IsByReference || this.IsPointer)
-                {
-                    return string.Format(
-                        "{0}*",
-                        this.ElementType.CLanguageTypeName);
-                }
-
-                string typeName = null;
-                if (this.Member.IsPrimitive)
-                {
-                    if (this.IsBooleanType)
-                    {
-                        typeName = "bool";
-                    }
-                    else if (this.IsByteType)
-                    {
-                        typeName = "uint8_t";
-                    }
-                    else if (this.IsSByteType)
-                    {
-                        typeName = "int8_t";
-                    }
-                    else if (this.IsInt16Type)
-                    {
-                        typeName = "int16_t";
-                    }
-                    else if (this.IsUInt16Type)
-                    {
-                        typeName = "uint16_t";
-                    }
-                    else if (this.IsInt32Type)
-                    {
-                        typeName = "int32_t";
-                    }
-                    else if (this.IsUInt32Type)
-                    {
-                        typeName = "uint32_t";
-                    }
-                    else if (this.IsInt64Type)
-                    {
-                        typeName = "int64_t";
-                    }
-                    else if (this.IsUInt64Type)
-                    {
-                        typeName = "uint64_t";
-                    }
-                    else if (this.IsIntPtrType)
-                    {
-                        typeName = "intptr_t";
-                    }
-                    else if (this.IsUIntPtrType)
-                    {
-                        typeName = "uintptr_t";
-                    }
-                    else if (this.IsSingleType)
-                    {
-                        typeName = "float";
-                    }
-                    else if (this.IsDoubleType)
-                    {
-                        typeName = "double";
-                    }
-                    else if (this.IsCharType)
-                    {
-                        typeName = "wchar_t";
-                    }
-                }
-                else if (this.IsVoidType)
-                {
-                    typeName = "void";
-                }
-                else if (this.IsArray)
-                {
-                    typeName = string.Format(
-                        "il2c_array({0})*",
-                        this.ElementType.MangledName);
-                }
-                else
-                {
-                    typeName = this.MangledName;
-                    if (!this.IsValueType)
-                    {
-                        typeName += "*";
-                    }
-                }
-
-                Debug.Assert(typeName != null);
-
-                return typeName;
+                return string.Format(
+                    "{0}*{1}",
+                    this.ElementType.CLanguageTypeName,
+                    sn);
             }
+
+            else if (this.IsArray)
+            {
+                return string.Format(
+                    "il2c_array({0})*",
+                    this.ElementType.MangledName);
+            }
+
+            string typeName = null;
+            if (this.Member.IsPrimitive)
+            {
+                if (this.IsBooleanType)
+                {
+                    typeName = "bool";
+                }
+                else if (this.IsByteType)
+                {
+                    typeName = "uint8_t";
+                }
+                else if (this.IsSByteType)
+                {
+                    typeName = "int8_t";
+                }
+                else if (this.IsInt16Type)
+                {
+                    typeName = "int16_t";
+                }
+                else if (this.IsUInt16Type)
+                {
+                    typeName = "uint16_t";
+                }
+                else if (this.IsInt32Type)
+                {
+                    typeName = "int32_t";
+                }
+                else if (this.IsUInt32Type)
+                {
+                    typeName = "uint32_t";
+                }
+                else if (this.IsInt64Type)
+                {
+                    typeName = "int64_t";
+                }
+                else if (this.IsUInt64Type)
+                {
+                    typeName = "uint64_t";
+                }
+                else if (this.IsIntPtrType)
+                {
+                    typeName = "intptr_t";
+                }
+                else if (this.IsUIntPtrType)
+                {
+                    typeName = "uintptr_t";
+                }
+                else if (this.IsSingleType)
+                {
+                    typeName = "float";
+                }
+                else if (this.IsDoubleType)
+                {
+                    typeName = "double";
+                }
+                else if (this.IsCharType)
+                {
+                    typeName = "wchar_t";
+                }
+            }
+            else if (this.IsVoidType)
+            {
+                typeName = "void";
+            }
+            else
+            {
+                typeName = this.MangledName;
+                if (!this.IsValueType)
+                {
+                    typeName += "*";
+                }
+            }
+
+            Debug.Assert(typeName != null);
+
+            return typeName + sn;
         }
+
+        public string CLanguageTypeName =>
+            this.GetCLanguageTypeName();
 
         public string CLanguageThisTypeName =>
             this.IsValueType ? (this.CLanguageTypeName + "*") : this.CLanguageTypeName;

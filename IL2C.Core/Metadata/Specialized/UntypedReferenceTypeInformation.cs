@@ -83,6 +83,9 @@ namespace IL2C.Metadata.Specialized
         public IMethodInformation[] NewSlotMethods => throw new NotImplementedException();
         public IMethodInformation[] OverrideBaseMethods => throw new NotImplementedException();
 
+        public string GetCLanguageTypeName(string symbolName = null) =>
+            "untyped_ptr" + ((symbolName != null) ? (" " + symbolName) : string.Empty);
+
         public string CLanguageTypeName => "untyped_ptr";
         public string CLanguageThisTypeName => throw new NotImplementedException();
         public string MemberTypeName => throw new NotImplementedException();

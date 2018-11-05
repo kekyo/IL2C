@@ -62,6 +62,7 @@ typedef volatile struct IL2C_REF_HEADER
 #define IL2C_TYPE_VALUE 0x01
 #define IL2C_TYPE_INTEGER 0x03
 #define IL2C_TYPE_UNSIGNED_INTEGER 0x0b
+#define IL2C_TYPE_STATIC 0x10
 
 #define il2c_typeof(typeName) \
     (&(__##typeName##_RUNTIME_TYPE__))
@@ -140,6 +141,7 @@ typedef void* untyped_ptr;
 #include <System.Delegate.h>
 #include <System.MulticastDelegate.h>
 #include <System.RuntimeFieldHandle.h>
+#include <System.Runtime.CompilerServices.RuntimeHelpers.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

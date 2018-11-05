@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -10,8 +12,6 @@ using Mono.Cecil.Cil;
 using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
-using System.Collections;
-using System.Diagnostics;
 
 namespace IL2C
 {
@@ -28,13 +28,13 @@ namespace IL2C
 
         static Utilities()
         {
-            ilConverters = typeof(ILConverter)
-                .GetTypeInfo()
-                .Assembly
-                .DefinedTypes
-                .Where(type => type.IsSealed && typeof(ILConverter).GetTypeInfo().IsAssignableFrom(type))
-                .Select(type => (ILConverter)Activator.CreateInstance(type.AsType()))
-                .ToDictionary(ilc => ilc.OpCode);
+            ilConverters = typeof(ILConverter).
+                GetTypeInfo().
+                Assembly.
+                DefinedTypes.
+                Where(type => type.IsSealed && typeof(ILConverter).GetTypeInfo().IsAssignableFrom(type)).
+                Select(type => (ILConverter)Activator.CreateInstance(type.AsType())).
+                ToDictionary(ilc => ilc.OpCode);
         }
 
         public static bool TryGetILConverter(OpCode opCode, out ILConverter ilc) =>
@@ -50,13 +50,35 @@ namespace IL2C
             return sb.ToString();
         }
 
-        public static string GetCLanguageTypeName(Type type)
+        public static string GetCLanguageTypeName(
+            Type type, string symbolName = null, bool arrayExpression = false)
         {
+            var sn = (symbolName != null) ? (" " + symbolName) : string.Empty;
+
             if (type.IsByRef || type.IsPointer)
             {
                 return string.Format(
-                    "{0}*",
-                    GetCLanguageTypeName(type.GetElementType()));
+                    "{0}*{1}",
+                    GetCLanguageTypeName(type.GetElementType()),
+                    sn);
+            }
+
+            if (type.IsArray)
+            {
+                if (arrayExpression)
+                {
+                    return string.Format(
+                        "{0}{1}[]",
+                        GetCLanguageTypeName(type.GetElementType()),
+                        sn);
+                }
+                else
+                {
+                    return string.Format(
+                        "{0}*{1}",
+                        GetCLanguageTypeName(type.GetElementType()),
+                        sn);
+                }
             }
 
             string typeName = null;
@@ -135,7 +157,7 @@ namespace IL2C
 
             Debug.Assert(typeName != null);
 
-            return typeName;
+            return typeName + sn;
         }
 
         #region GetCLanguageExpression
@@ -287,7 +309,7 @@ namespace IL2C
         public static string GetCLanguageExpression(Array arr)
         {
             return string.Format(
-                "{{{0}}",
+                "{{{0}}}",
                 string.Join(
                     ",",
                     ((IEnumerable)arr).Cast<object>().Select(GetCLanguageExpression)));

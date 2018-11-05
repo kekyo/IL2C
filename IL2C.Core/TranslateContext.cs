@@ -263,21 +263,26 @@ namespace IL2C
         }
 
         string IExtractContext.GetRightExpression(
-            ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
+            ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression) =>
+            this.GetRightExpression(lhsType, rhsType, rhsExpression);
+
+        private IEnumerable<(string symbolName, string value)> ExtractConstStrings()
         {
-            return this.GetRightExpression(lhsType, rhsType, rhsExpression);
+            return constStrings.
+                Select(kv => (kv.Value, kv.Key));
         }
 
-        private IEnumerable<KeyValuePair<string, string>> ExtractConstStrings()
+        IEnumerable<(string symbolName, string value)> IExtractContext.ExtractConstStrings() =>
+            this.ExtractConstStrings();
+
+        private IEnumerable<(string symbolName, object value)> ExtractDeclaredValues()
         {
-            return constStrings
-                .Select(kv => new KeyValuePair<string, string>(kv.Value, kv.Key));
+            return declaredValues.
+                Select(kv => (kv.Value, kv.Key));
         }
 
-        IEnumerable<KeyValuePair<string, string>> IExtractContext.ExtractConstStrings()
-        {
-            return this.ExtractConstStrings();
-        }
+        IEnumerable<(string symbolName, object value)> IExtractContext.ExtractDeclaredValues() =>
+            this.ExtractDeclaredValues();
         #endregion
     }
 }

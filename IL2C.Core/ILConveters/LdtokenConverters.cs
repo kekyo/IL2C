@@ -28,9 +28,9 @@ namespace IL2C.ILConverters
                 }
 
                 var symbolName = decodeContext.PushStack(
-                    decodeContext.PrepareContext.MetadataContext.UntypedReferenceType);
-                var declaredValueName = decodeContext.PrepareContext
-                    .RegisterDeclaredValue(field.DeclaredValue);
+                    decodeContext.PrepareContext.MetadataContext.RuntimeFieldHandle);
+                var declaredValueName = decodeContext.PrepareContext.
+                    RegisterDeclaredValue(field.DeclaredValue);
 
                 return _ => new[] { string.Format(
                     "{0} = {1}",

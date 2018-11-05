@@ -34,6 +34,7 @@
         <ClCompile Include="System.IntPtr.c" />
         <ClCompile Include="System.MulticastDelegate.c" />
         <ClCompile Include="System.Object.c" />
+        <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c" />
         <ClCompile Include="System.SByte.c" />
         <ClCompile Include="System.Single.c" />
         <ClCompile Include="System.String.c" />
@@ -61,6 +62,7 @@
         <ClInclude Include="System.MulticastDelegate.h" />
         <ClInclude Include="System.Object.h" />
         <ClInclude Include="System.RuntimeFieldHandle.h" />
+        <ClInclude Include="System.Runtime.CompilerServices.RuntimeHelpers.h" />
         <ClInclude Include="System.SByte.h" />
         <ClInclude Include="System.Single.h" />
         <ClInclude Include="System.String.h" />

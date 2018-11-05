@@ -12,7 +12,7 @@ extern "C" {
 /////////////////////////////////////////////////////////////
 // System.RuntimeFieldHandle
 
-typedef intptr_t System_RuntimeFieldHandle;
+typedef const void* System_RuntimeFieldHandle;
 
 #ifdef __cplusplus
 }

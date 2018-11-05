@@ -7,6 +7,7 @@ using Mono.Cecil;
 
 using IL2C.Translators;
 using IL2C.Metadata;
+using System.Diagnostics;
 
 namespace IL2C
 {
@@ -1353,12 +1354,36 @@ namespace IL2C
             twSource.WriteLine("// [9-1] Const strings:");
             twSource.WriteLine();
 
-            foreach (var kv in extractContext.ExtractConstStrings())
+            foreach (var (symbolName, value) in extractContext.ExtractConstStrings())
             {
-                var expr = Utilities.GetCLanguageExpression(kv.Value);
+                var expr = Utilities.GetCLanguageExpression(value);
                 twSource.WriteLine(
                     "IL2C_CONST_STRING({0}, {1});",
-                    kv.Key,
+                    symbolName,
+                    expr);
+            }
+        }
+
+        internal static void WriteDeclaredValues(
+            TextWriter twSource,
+            TranslateContext translateContext)
+        {
+            IExtractContext extractContext = translateContext;
+
+            twSource.WriteLine();
+            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+            twSource.WriteLine("// [12-1] Declared values:");
+            twSource.WriteLine();
+
+            foreach (var (symbolName, value) in extractContext.ExtractDeclaredValues())
+            {
+                Debug.Assert(value != null);
+
+                var lhs = Utilities.GetCLanguageTypeName(value.GetType(), symbolName, true);
+                var expr = Utilities.GetCLanguageExpression(value);
+                twSource.WriteLine(
+                    "static const {0} = {1};",
+                    lhs,
                     expr);
             }
         }
@@ -1386,6 +1411,8 @@ namespace IL2C
             }
 
             WriteConstStrings(twSource, translateContext);
+
+            WriteDeclaredValues(twSource, translateContext);
 
             twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");

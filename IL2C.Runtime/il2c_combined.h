@@ -28,6 +28,7 @@
 #include "System.Enum.c"
 #include "System.Delegate.c"
 #include "System.MulticastDelegate.c"
+#include "System.Runtime.CompilerServices.RuntimeHelpers.c"
 
 #include "System.Console.c"
 

@@ -62,7 +62,20 @@ namespace IL2C.ILConverters
             };
         }
     }
-    
+
+    internal sealed class Ldelem_i1Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldelem_I1;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdelemConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.SByteType,
+                type => type.IsInt32StackFriendlyType,
+                decodeContext);
+        }
+    }
+
     internal sealed class Ldelem_i2Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldelem_I2;
@@ -115,6 +128,32 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Ldelem_u2Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldelem_U2;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdelemConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.UInt16Type,
+                type => type.IsInt32StackFriendlyType,
+                decodeContext);
+        }
+    }
+
+    internal sealed class Ldelem_u4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldelem_U4;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdelemConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.UInt32Type,
+                type => type.IsInt32StackFriendlyType,
+                decodeContext);
+        }
+    }
+
     internal sealed class Ldelem_r8Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldelem_R8;
@@ -123,6 +162,19 @@ namespace IL2C.ILConverters
         {
             return LdelemConverterUtilities.Apply(
                 decodeContext.PrepareContext.MetadataContext.DoubleType,
+                type => type.IsFloatStackFriendlyType,
+                decodeContext);
+        }
+    }
+
+    internal sealed class Ldelem_r4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldelem_R4;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdelemConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.SingleType,
                 type => type.IsFloatStackFriendlyType,
                 decodeContext);
         }

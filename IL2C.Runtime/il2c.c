@@ -336,7 +336,7 @@ System_ValueType* il2c_box2__(
 
     // TODO: value type --> interface type
 
-    union { // Lesser stack spaces for this combined variables.
+    union _v { // Lesser stack spaces for this combined variables.
         int8_t i1;
         int16_t i2;
         int32_t i4;
@@ -421,22 +421,6 @@ System_ValueType* il2c_box2__(
             else if (vui) v.u4 = (uint32_t)*(int64_t*)pValue;
             else if (sui) v.i4 = (int32_t)*(uint64_t*)pValue;
             else v.i4 = (int32_t)*(int64_t*)pValue;
-            break;
-        default:
-            // TODO: throw InvalidCastException()
-            il2c_assert(0);
-            break;
-        }
-        break;
-    case 8:
-        // Source size
-        switch (stackType->bodySize)
-        {
-        case 4:   // Hmm, the ECMA-335 not contains this conversion but .NET CLR 4 can do it.
-            if (vui && sui) v.u8 = (uint64_t)*(uint32_t*)pValue;
-            else if (vui) v.u8 = (uint64_t)*(int32_t*)pValue;
-            else if (sui) v.i8 = (int64_t)*(uint32_t*)pValue;
-            else v.i8 = (int64_t)*(int32_t*)pValue;
             break;
         default:
             // TODO: throw InvalidCastException()

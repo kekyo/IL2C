@@ -8,7 +8,6 @@ namespace IL2C.ILConverters
     [TestCase(1012345, new[] { "Int16ToInt32", "Box_Int16ToInt32" }, 12345)]
     [TestCase(1000123, new[] { "SByteToInt32", "Box_SByteToInt32" }, 123)]
     [TestCase(1012345, new[] { "UInt16ToInt32", "Box_UInt16ToInt32" }, 12345)]
-    [TestCase(100001234567L, new[] { "UInt32ToInt64", "Box_UInt32ToInt64" }, 1234567U)]  // Hmm, the ECMA-335 not contains this conversion but .NET CLR 4 can do it.
     [TestCase(1, new[] { "BoolToInt32", "Box_BoolToInt32" }, true)]
     [TestCase(0, new[] { "BoolToInt32", "Box_BoolToInt32" }, false)]
     [TestCase(0x41, new[] { "CharToInt32", "Box_CharToInt32" }, 'A')]
@@ -44,14 +43,6 @@ namespace IL2C.ILConverters
         public static int UInt16ToInt32(ushort value)
         {
             return (int)Box_UInt16ToInt32(value) + 1000000;
-        }
-
-            [MethodImpl(MethodImplOptions.ForwardRef)]
-            private static extern object Box_UInt32ToInt64(uint value);
-
-        public static long UInt32ToInt64(uint value)
-        {
-            return (long)Box_UInt32ToInt64(value) + 100000000000L;
         }
 
             [MethodImpl(MethodImplOptions.ForwardRef)]

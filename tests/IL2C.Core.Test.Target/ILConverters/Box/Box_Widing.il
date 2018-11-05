@@ -32,14 +32,6 @@
         ret
     }
 
-    .method public static object Box_UInt32ToInt64(uint32 v) cil managed
-    {
-        .maxstack 1
-        ldarg.0
-        box [mscorlib]System.Int64
-        ret
-    }
-
     .method public static object Box_BoolToInt32(bool v) cil managed
     {
         .maxstack 1

@@ -27,8 +27,6 @@ extern bool System_Int32_Equals(int32_t* this__, int32_t obj);
 extern /* virtual */ bool System_Int32_Equals_1(int32_t* this__, System_Object* obj);
 extern /* static */ bool System_Int32_TryParse(System_String* s, int32_t* result);
 
-IL2C_DECLARE_ARRAY_TYPE(System_Int32);
-
 #ifdef __cplusplus
 }
 #endif

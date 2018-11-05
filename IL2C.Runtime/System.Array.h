@@ -22,7 +22,6 @@ struct System_Array
 
     IL2C_RUNTIME_TYPE_DECL* elementType__;
     uintptr_t Length;
-    uint8_t Item[1];    // Element body
 };
 
 #define  __System_Array_VTABLE__ __System_Object_VTABLE__
@@ -33,28 +32,19 @@ extern /* internalcall */ void __System_Array_IL2C_MarkHandler__(System_Array* t
 extern int32_t System_Array_getLength(System_Array* this__);
 
 /////////////////////////////////////////////////
-// Predefine basic element types
-
-#define IL2C_DECLARE_ARRAY_TYPE(elementTypeName) \
-typedef struct System_Array_##elementTypeName \
-{ \
-    __System_Array_VTABLE_DECL__* vptr0__; \
- \
-    IL2C_RUNTIME_TYPE_DECL* elementType__; \
-    uintptr_t Length; \
-    elementTypeName Item[1]; \
-} System_Array_##elementTypeName
-
-/////////////////////////////////////////////////
 // Array special functions
 
+// It made identical type expression for array type.
 #define il2c_array(elementTypeName) \
-    System_Array_##elementTypeName
+    System_Array
+
+#define il2c_array_item(array, elementTypeName, index) \
+    (((elementTypeName*)(((intptr_t)array) + sizeof(System_Array)))[index])
 
 extern System_Array* il2c_new_array__(
     IL2C_RUNTIME_TYPE_DECL* elementType, intptr_t length);
 #define il2c_new_array(elementTypeName, length) \
-    ((System_Array_##elementTypeName*)il2c_new_array__(il2c_typeof(elementTypeName), length))
+    ((il2c_array(elementTypeName)*)il2c_new_array__(il2c_typeof(elementTypeName), length))
 
 #ifdef __cplusplus
 }

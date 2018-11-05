@@ -56,7 +56,7 @@ void __System_Array_IL2C_MarkHandler__(System_Array* this__)
     uintptr_t index;
     for (index = 0; index < this__->Length; index++)
     {
-        System_Object* pReference = (System_Object*)&this__->Item[index];
+        System_Object* pReference = il2c_array_item(this__, System_Object*, index);
         il2c_try_mark_from_handler(pReference);
     }
 }

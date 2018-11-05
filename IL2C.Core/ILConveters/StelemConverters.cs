@@ -43,12 +43,12 @@ namespace IL2C.ILConverters
                     siArray.TargetType.FriendlyName);
             }
 
-            // Write friendly expression only predefined types.
-            return _ => new[] { string.Format(
-                "{0}->Item[{1}] = {2}",
-                siArray.SymbolName,
-                siIndex.SymbolName,
-                siValue.SymbolName) };
+            return _ => new[] {
+                string.Format("il2c_array_item({0}, {1}, {2}) = {3}",
+                    siArray.SymbolName,
+                    siArray.TargetType.ElementType.MangledName,
+                    siIndex.SymbolName,
+                    siValue.SymbolName) };
         }
     }
 }

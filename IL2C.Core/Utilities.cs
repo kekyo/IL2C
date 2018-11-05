@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,7 +13,6 @@ using Mono.Cecil.Cil;
 using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
-using System.Runtime.InteropServices;
 
 namespace IL2C
 {

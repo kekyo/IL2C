@@ -28,10 +28,10 @@ namespace IL2C.Translators
             {
             }
 
-            public string GetOrAdd(ITypeInformation targetType, IMethodInformation method)
+            public string GetOrAdd(ITypeInformation targetType, IMethodInformation method, object hintInformation)
             {
-                var index = typedStackInformation
-                    .FindIndex(si => si.TargetType == targetType);
+                var index = typedStackInformation.
+                    FindIndex(si => si.TargetType == targetType);
                 if (index >= 0)
                 {
                     selectedStackInformation = index;
@@ -48,7 +48,8 @@ namespace IL2C.Translators
                     method,
                     stackPointer,
                     symbolName,
-                    targetType);
+                    targetType,
+                    hintInformation);
                 typedStackInformation.Add(stackInformation);
 
                 return symbolName;
@@ -172,7 +173,7 @@ namespace IL2C.Translators
         #endregion
 
         #region Stack
-        public string PushStack(ITypeInformation targetType)
+        public string PushStack(ITypeInformation targetType, object hintInformation = null)
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
@@ -191,7 +192,7 @@ namespace IL2C.Translators
 
             stackPointer++;
 
-            return stackInformationHolder.GetOrAdd(targetType, this.Method);
+            return stackInformationHolder.GetOrAdd(targetType, this.Method, hintInformation);
         }
 
         public VariableInformation PopStack()
@@ -275,7 +276,8 @@ namespace IL2C.Translators
                 {
                     stackList[index].GetOrAdd(
                         beforeBranchStackSnapshot.StackInformations[index].TargetType,
-                        this.Method);
+                        this.Method,
+                        beforeBranchStackSnapshot.StackInformations[index].HintInformation);
                 }
                 stackPointer = beforeBranchStackSnapshot.StackInformations.Length;
 

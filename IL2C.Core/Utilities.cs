@@ -13,6 +13,7 @@ using Mono.Cecil.Cil;
 using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
+using System.IO;
 
 namespace IL2C
 {
@@ -52,7 +53,7 @@ namespace IL2C
         }
 
         public static string GetCLanguageTypeName(
-            Type type, string symbolName = null, bool arrayExpression = false)
+            Type type, string symbolName = null, bool cArrayExpression = false)
         {
             var sn = (symbolName != null) ? (" " + symbolName) : string.Empty;
 
@@ -66,18 +67,18 @@ namespace IL2C
 
             if (type.IsArray)
             {
-                if (arrayExpression)
+                if (cArrayExpression)
                 {
                     return string.Format(
                         "{0}{1}[]",
-                        GetCLanguageTypeName(type.GetElementType()),
+                        GetCLanguageTypeName(type.GetElementType(), null, true),
                         sn);
                 }
                 else
                 {
                     return string.Format(
                         "{0}*{1}",
-                        GetCLanguageTypeName(type.GetElementType()),
+                        GetCLanguageTypeName(type.GetElementType(), null, true),
                         sn);
                 }
             }
@@ -425,6 +426,102 @@ namespace IL2C
             return value.ToString();
         }
         #endregion
+
+        public static Array ResourceDataToSpecificArray(byte[] values, Type elementType)
+        {
+            if (elementType == typeof(byte))
+            {
+                return values;
+            }
+
+            var ms = new MemoryStream(values);
+            var br = new EndiannessBinaryReader(ms, EndianSpecific.Little, Encoding.Unicode);
+            var temp = new ArrayList();
+
+            if (elementType == typeof(sbyte))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadSByte());
+                }
+            }
+            else if (elementType == typeof(short))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadInt16());
+                }
+            }
+            else if (elementType == typeof(int))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadInt32());
+                }
+            }
+            else if (elementType == typeof(long))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadInt64());
+                }
+            }
+            else if (elementType == typeof(ushort))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadUInt16());
+                }
+            }
+            else if (elementType == typeof(uint))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadUInt32());
+                }
+            }
+            else if (elementType == typeof(ulong))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadUInt64());
+                }
+            }
+            else if (elementType == typeof(float))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadSingle());
+                }
+            }
+            else if (elementType == typeof(double))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadDouble());
+                }
+            }
+            else if (elementType == typeof(char))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadChar());
+                }
+            }
+            else if (elementType == typeof(bool))
+            {
+                while (!br.IsEOF)
+                {
+                    temp.Add(br.ReadBoolean());
+                }
+            }
+            else
+            {
+                Debug.Fail("Cannot convert");
+            }
+
+            return temp.ToArray(elementType);
+        }
 
         public static string GetMarshaledInExpression(this VariableInformation parameter)
         {

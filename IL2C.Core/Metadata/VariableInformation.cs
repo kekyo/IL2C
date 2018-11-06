@@ -14,8 +14,9 @@ namespace IL2C.Metadata
             IMethodInformation declaredMethod,
             int index,
             string symbolName,
-            ITypeInformation targetType)
-            : this(declaredMethod, index, symbolName, targetType, empty)
+            ITypeInformation targetType,
+            object hintInformation = null)
+            : this(declaredMethod, index, symbolName, targetType, empty, hintInformation)
         {
         }
 
@@ -24,19 +25,22 @@ namespace IL2C.Metadata
             int index,
             string symbolName, 
             ITypeInformation targetType,
-            CustomAttribute[] customAttributes)
+            CustomAttribute[] customAttributes,
+            object hintInformation = null)
         {
             this.Index = index;
             this.SymbolName = symbolName;
             this.TargetType = targetType;
             this.DeclaredMethod = declaredMethod;
             this.customAttributes = customAttributes;
+            this.HintInformation = hintInformation;
         }
 
         public int Index { get; }
         public string SymbolName { get; }
         public ITypeInformation TargetType { get; }
         public IMethodInformation DeclaredMethod { get; }
+        public object HintInformation { get; }
 
         public bool IsParamArray =>
             customAttributes.Any(attribute => attribute.AttributeType.FullName == "System.ParamArrayAttribute");

@@ -83,7 +83,7 @@ namespace IL2C.Metadata.Specialized
         public IMethodInformation[] NewSlotMethods => throw new NotImplementedException();
         public IMethodInformation[] OverrideBaseMethods => throw new NotImplementedException();
 
-        public string GetCLanguageTypeName(string symbolName = null) =>
+        public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false) =>
             "untyped_ptr" + ((symbolName != null) ? (" " + symbolName) : string.Empty);
 
         public string CLanguageTypeName => "untyped_ptr";
@@ -130,6 +130,9 @@ namespace IL2C.Metadata.Specialized
         public ITypeInformation MakeByReference() =>
             throw new NotImplementedException();
         public ITypeInformation MakeArray() =>
+            throw new NotImplementedException();
+
+        public Type ResolveToRuntimeType() =>
             throw new NotImplementedException();
     }
 }

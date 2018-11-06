@@ -27,10 +27,15 @@ namespace IL2C.ILConverters
                         field.FriendlyName);
                 }
 
-                var symbolName = decodeContext.PushStack(
-                    decodeContext.PrepareContext.MetadataContext.RuntimeFieldHandle);
+                var resourceData = (byte[])field.DeclaredValue;
                 var declaredValueName = decodeContext.PrepareContext.
-                    RegisterDeclaredValue(field, field.DeclaredValue);
+                    RegisterDeclaredValues(field, resourceData);
+
+                // HACK: Push RuntimeFieldHandle with specific declared values hint.
+                //   (Prepare to call the "RuntimeHelpers.InitializeArray") method, see the CallConverter.)
+                var symbolName = decodeContext.PushStack(
+                    decodeContext.PrepareContext.MetadataContext.RuntimeFieldHandle,
+                    declaredValueName);
 
                 // Store into RuntimeFieldHandle structure.
                 return _ => new[] {

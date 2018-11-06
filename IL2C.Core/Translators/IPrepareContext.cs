@@ -14,6 +14,7 @@ namespace IL2C.Translators
         void RegisterType(ITypeInformation type);
         void RegisterStaticField(IFieldInformation staticField);
         string RegisterConstString(string value);
-        string RegisterDeclaredValue(IFieldInformation field, object value);
+        string RegisterDeclaredValues(IFieldInformation declaredField, byte[] resourceData);
+        void RegisterDeclaredValuesHintType(string symbolName, ITypeInformation type);
     }
 }

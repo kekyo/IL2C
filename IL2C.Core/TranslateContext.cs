@@ -19,8 +19,10 @@ namespace IL2C
             new Dictionary<string, IFieldInformation>();
         private readonly Dictionary<string, string> constStrings =
             new Dictionary<string, string>();
-        private readonly Dictionary<object, (string symbolName, IFieldInformation field)> declaredValues =
-            new Dictionary<object, (string symbolName, IFieldInformation field)>(Utilities.LooseTypeKindComparer);
+        private readonly Dictionary<byte[], (string symbolName, HashSet<IFieldInformation> fields)> declaredValues =
+            new Dictionary<byte[], (string symbolName, HashSet<IFieldInformation> fields)>(Utilities.LooseTypeKindComparer);
+        private readonly Dictionary<string, HashSet<ITypeInformation>> declaredValueHintTypes =
+            new Dictionary<string, HashSet<ITypeInformation>>();
         #endregion
 
         #region Constructors
@@ -102,19 +104,35 @@ namespace IL2C
         string IPrepareContext.RegisterConstString(string value) =>
             this.RegisterConstString(value);
 
-        private string RegisterDeclaredValue(IFieldInformation field, object value)
+        private string RegisterDeclaredValue(IFieldInformation declaredField, byte[] resourceData)
         {
-            if (!declaredValues.TryGetValue(value, out var entry))
+            if (!declaredValues.TryGetValue(resourceData, out var entry))
             {
-                entry = (string.Format("declaredValue{0}__", declaredValues.Count), field);
-                declaredValues.Add(value, entry);
+                entry = (string.Format("declaredValue{0}__", declaredValues.Count), new HashSet<IFieldInformation>());
+                declaredValues.Add(resourceData, entry);
             }
+
+            entry.fields.Add(declaredField);
 
             return entry.symbolName;
         }
 
-        string IPrepareContext.RegisterDeclaredValue(IFieldInformation field, object value) =>
-            this.RegisterDeclaredValue(field, value);
+        string IPrepareContext.RegisterDeclaredValues(IFieldInformation declaredField, byte[] resourceData) =>
+            this.RegisterDeclaredValue(declaredField, resourceData);
+
+        private void RegisterDeclaredValuesHintType(string symbolName, ITypeInformation type)
+        {
+            if (!declaredValueHintTypes.TryGetValue(symbolName, out var types))
+            {
+                types = new HashSet<ITypeInformation>();
+                declaredValueHintTypes.Add(symbolName, types);
+            }
+
+            types.Add(type);
+        }
+
+        void IPrepareContext.RegisterDeclaredValuesHintType(string symbolName, ITypeInformation type) =>
+            this.RegisterDeclaredValuesHintType(symbolName, type);
         #endregion
 
         #region IExtractContext
@@ -255,13 +273,31 @@ namespace IL2C
         IEnumerable<(string symbolName, string value)> IExtractContext.ExtractConstStrings() =>
             this.ExtractConstStrings();
 
-        private IEnumerable<(string symbolName, IFieldInformation field, object value)> ExtractDeclaredValues()
+        private IEnumerable<DeclaredValuesInformation> ExtractDeclaredValues()
         {
             return declaredValues.
-                Select(kv => (kv.Value.symbolName, kv.Value.field, kv.Key));
+                Select(kv =>
+                {
+                    if (!declaredValueHintTypes.TryGetValue(kv.Value.symbolName, out var hintTypes))
+                    {
+                        return new DeclaredValuesInformation(
+                            kv.Value.symbolName,
+                            kv.Value.fields.ToArray(),
+                            new ITypeInformation[0],
+                            kv.Key);
+                    }
+                    else
+                    {
+                        return new DeclaredValuesInformation(
+                            kv.Value.symbolName,
+                            kv.Value.fields.ToArray(),
+                            hintTypes.ToArray(),
+                            kv.Key);
+                    }
+                });
         }
 
-        IEnumerable<(string symbolName, IFieldInformation field, object value)> IExtractContext.ExtractDeclaredValues() =>
+        IEnumerable<DeclaredValuesInformation> IExtractContext.ExtractDeclaredValues() =>
             this.ExtractDeclaredValues();
         #endregion
     }

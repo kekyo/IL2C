@@ -76,7 +76,7 @@ namespace IL2C.Metadata
         IMethodInformation[] NewSlotMethods { get; }
         IMethodInformation[] OverrideBaseMethods { get; }
 
-        string GetCLanguageTypeName(string symbolName = null);
+        string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false);
 
         string CLanguageTypeName { get; }
         string CLanguageThisTypeName { get; }
@@ -85,6 +85,8 @@ namespace IL2C.Metadata
 
         ITypeInformation MakeByReference();
         ITypeInformation MakeArray();
+
+        Type ResolveToRuntimeType();
     }
 
     internal class TypeInformation
@@ -364,7 +366,7 @@ namespace IL2C.Metadata
         public override bool IsCLanguageFileScope =>
             (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
 
-        public string GetCLanguageTypeName(string symbolName = null)
+        public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false)
         {
             var sn = (symbolName != null) ? (" " + symbolName) : string.Empty;
 
@@ -378,9 +380,20 @@ namespace IL2C.Metadata
 
             else if (this.IsArray)
             {
-                return string.Format(
-                    "il2c_array({0})*",
-                    this.ElementType.MangledName);
+                if (cArrayExpression)
+                {
+                    return string.Format(
+                        "{0}{1}[]",
+                        this.ElementType.GetCLanguageTypeName(null, true),
+                        sn);
+                }
+                else
+                {
+                    return string.Format(
+                        "il2c_array({0})*{1}",
+                        this.ElementType.MangledName,
+                        sn);
+                }
             }
 
             string typeName = null;
@@ -537,6 +550,24 @@ namespace IL2C.Metadata
         public ITypeInformation MakeArray()
         {
             return this.MetadataContext.GetOrAddType(this.Definition.MakeArrayType());
+        }
+
+        public Type ResolveToRuntimeType()
+        {
+            if (this.IsArray)
+            {
+                return this.ElementType.ResolveToRuntimeType().MakeArrayType();
+            }
+            if (this.IsByReference)
+            {
+                return this.ElementType.ResolveToRuntimeType().MakeByRefType();
+            }
+            if (this.IsPointer)
+            {
+                return this.ElementType.ResolveToRuntimeType().MakePointerType();
+            }
+
+            return typeof(object).Assembly.GetType(this.FriendlyName);
         }
 
         protected override TypeReference OnResolve(TypeReference member)

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -7,7 +7,9 @@ using Mono.Cecil;
 
 using IL2C.Translators;
 using IL2C.Metadata;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Collections;
+using System.Text;
 
 namespace IL2C
 {
@@ -1375,16 +1377,26 @@ namespace IL2C
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [12-1] Declared values:");
 
-            foreach (var (symbolName, field, value) in extractContext.ExtractDeclaredValues())
+            foreach (var information in extractContext.ExtractDeclaredValues())
             {
-                Debug.Assert(value != null);
-
-                var lhs = Utilities.GetCLanguageTypeName(value.GetType(), symbolName, true);
-                var expr = Utilities.GetCLanguageExpression(value);
                 twSource.WriteLine();
-                twSource.WriteLine(
-                    "// {0}",
-                    field.FriendlyName);
+                foreach (var declaredFields in information.DeclaredFields)
+                {
+                    twSource.WriteLine(
+                        "// {0}",
+                        declaredFields.FriendlyName);
+                }
+
+                var targetType = (information.HintTypes.Length == 1) ?
+                    information.HintTypes[0] :
+                    extractContext.MetadataContext.ByteType.MakeArray();
+                Debug.Assert(targetType.IsArray);
+
+                var elementType = targetType.ElementType.ResolveToRuntimeType();
+                var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
+
+                var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
+                var expr = Utilities.GetCLanguageExpression(values);
                 twSource.WriteLine(
                     "static const {0} =",
                     lhs);

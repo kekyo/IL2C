@@ -4,6 +4,23 @@ using IL2C.Metadata;
 
 namespace IL2C.Translators
 {
+    internal struct DeclaredValuesInformation
+    {
+        public readonly string SymbolName;
+        public readonly IFieldInformation[] DeclaredFields;
+        public readonly ITypeInformation[] HintTypes;
+        public readonly byte[] ResourceData;
+
+        public DeclaredValuesInformation(
+            string symbolName, IFieldInformation[] declaredFields, ITypeInformation[] hintTypes, byte[] resourceData)
+        {
+            this.SymbolName = symbolName;
+            this.DeclaredFields = declaredFields;
+            this.HintTypes = hintTypes;
+            this.ResourceData = resourceData;
+        }
+    }
+
     internal interface IExtractContext
     {
         IMetadataContext MetadataContext { get; }
@@ -15,6 +32,6 @@ namespace IL2C.Translators
         IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();
         IEnumerable<IFieldInformation> ExtractStaticFields();
         IEnumerable<(string symbolName, string value)> ExtractConstStrings();
-        IEnumerable<(string symbolName, IFieldInformation field, object value)> ExtractDeclaredValues();
+        IEnumerable<DeclaredValuesInformation> ExtractDeclaredValues();
     }
 }

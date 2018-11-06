@@ -5,6 +5,7 @@ using Mono.Cecil.Cil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
+using System.Diagnostics;
 
 namespace IL2C.ILConverters
 {
@@ -15,21 +16,34 @@ namespace IL2C.ILConverters
         {
             // ECMA-335 I.12.4.1.4: Virtual calling convention
 
-            var pairParameters = method.Parameters
-                .Reverse()
-                .Select(parameter => new Utilities.RightExpressionGivenParameter(
+            var pairParameters = method.Parameters.
+                Reverse().
+                Select(parameter => new Utilities.RightExpressionGivenParameter(
                     // Replace untyped type (will resolve by lvalue type) if it's virtual method and arg0.
                     (isVirtualCall && (parameter.Index == 0)) ?
                         decodeContext.PrepareContext.MetadataContext.UntypedReferenceType :
                         parameter.TargetType,
-                    decodeContext.PopStack()))
-                .Reverse()
-                .ToArray();
+                    decodeContext.PopStack())).
+                Reverse().
+                ToArray();
 
             var codeInformation = decodeContext.CurrentCode;
 
             if (method.ReturnType.IsVoidType)
             {
+                // HACK: If we will call the RuntimeHelpers.InitializeArray, we can memoize array type hint.
+                //   (See LdtokenConverter.)
+                if (method.FriendlyName.StartsWith(
+                    "System.Runtime.CompilerServices.RuntimeHelpers.InitializeArray"))
+                {
+                    Debug.Assert(pairParameters.Length == 2);
+                    Debug.Assert(pairParameters[1].SymbolInformation.HintInformation is string);
+
+                    decodeContext.PrepareContext.RegisterDeclaredValuesHintType(
+                        (string)pairParameters[1].SymbolInformation.HintInformation,
+                        pairParameters[0].SymbolInformation.TargetType);
+                }
+
                 return extractContext =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(

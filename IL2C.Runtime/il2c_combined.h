@@ -26,6 +26,7 @@
 #include "System.Single.c"
 #include "System.Double.c"
 #include "System.Enum.c"
+#include "System.Exception.c"
 #include "System.Delegate.c"
 #include "System.MulticastDelegate.c"
 #include "System.Runtime.CompilerServices.RuntimeHelpers.c"

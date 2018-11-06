@@ -28,6 +28,7 @@
         <ClCompile Include="System.Delegate.c" />
         <ClCompile Include="System.Double.c" />
         <ClCompile Include="System.Enum.c" />
+        <ClCompile Include="System.Exception.c" />
         <ClCompile Include="System.Int16.c" />
         <ClCompile Include="System.Int32.c" />
         <ClCompile Include="System.Int64.c" />
@@ -55,6 +56,7 @@
         <ClInclude Include="System.Delegate.h" />
         <ClInclude Include="System.Double.h" />
         <ClInclude Include="System.Enum.h" />
+        <ClCompile Include="System.Exception.h" />
         <ClInclude Include="System.Int16.h" />
         <ClInclude Include="System.Int32.h" />
         <ClInclude Include="System.Int64.h" />
@@ -123,7 +125,7 @@
             <Optimization>MaxSpeed</Optimization>
             <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-            <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+            <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
             <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
             <OmitFramePointers>true</OmitFramePointers>
             <WholeProgramOptimization>true</WholeProgramOptimization>

@@ -11,6 +11,7 @@ extern "C" {
 #include <intrin.h>
 #else
 #include <x86intrin.h>
+#include <signal.h>
 #endif
 
 #include <stddef.h>
@@ -139,6 +140,7 @@ typedef void* untyped_ptr;
 #include <System.Double.h>
 #include <System.Enum.h>
 #include <System.Delegate.h>
+#include <System.Exception.h>
 #include <System.MulticastDelegate.h>
 #include <System.RuntimeFieldHandle.h>
 #include <System.Runtime.CompilerServices.RuntimeHelpers.h>

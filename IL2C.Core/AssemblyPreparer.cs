@@ -98,6 +98,9 @@ namespace IL2C
                 prepareContext.RegisterType(local.TargetType);
             }
 
+            //////////////////////////////////////////////////////////////////////////////
+            // Construct decode context
+
             var decodeContext = new DecodeContext(
                 method,
                 prepareContext);

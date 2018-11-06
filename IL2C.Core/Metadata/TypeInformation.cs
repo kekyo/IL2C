@@ -25,6 +25,7 @@ namespace IL2C.Metadata
         bool IsEnum { get; }
         bool IsArray { get; }
         bool IsDelegate { get; }
+        bool IsException { get; }
         bool IsByReference { get; }
         bool IsPointer { get; }
         bool IsPrimitive { get; }
@@ -158,6 +159,8 @@ namespace IL2C.Metadata
         public bool IsEnum => (this.Definition as TypeDefinition)?.IsEnum ?? false;
         public bool IsArray => this.Member.IsArray;
         public bool IsDelegate => !this.Member.IsValueType && this.MetadataContext.DelegateType.IsAssignableFrom(this);
+        public bool IsException => !this.Member.IsValueType && this.MetadataContext.ExceptionType.IsAssignableFrom(this);
+
         public bool IsByReference => this.Member.IsByReference;
         public bool IsPointer => this.Member.IsPointer;
         public bool IsPrimitive => this.Member.IsPrimitive;

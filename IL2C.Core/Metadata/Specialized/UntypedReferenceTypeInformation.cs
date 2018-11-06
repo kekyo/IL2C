@@ -31,6 +31,7 @@ namespace IL2C.Metadata.Specialized
         public bool IsEnum => false;
         public bool IsArray => false;
         public bool IsDelegate => false;
+        public bool IsException => false;
         public bool IsByReference => false;
         public bool IsPointer => false;
         public bool IsPrimitive => false;

@@ -192,7 +192,18 @@ namespace IL2C.Metadata
                      select new { g.Key, sps }).
                     ToDictionary(g => g.Key, g => g.sps);
 
-                var codeStream = new CodeStream();
+                var exceptionHandlers =
+                    this.Definition.Body.ExceptionHandlers.
+                    Select(eh => new ExceptionHandler(
+                        this.MetadataContext.GetOrAddType(eh.CatchType),
+                        eh.TryStart.Offset,
+                        eh.TryEnd.Offset,
+                        eh.HandlerStart.Offset,
+                        eh.HandlerEnd.Offset,   // TODO: types
+                        (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionHandlerTypes.Catch : ExceptionHandlerTypes.Finally)).
+                    ToArray();
+
+                var codeStream = new CodeStream(exceptionHandlers);
 
                 object translateOperand(object operand)
                 {

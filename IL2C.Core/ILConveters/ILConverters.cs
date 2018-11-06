@@ -69,6 +69,42 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class ThrowConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Throw;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var si = decodeContext.PopStack();
+            if (!si.TargetType.IsException)
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid throw type: Location={0}, StackType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si.TargetType.FriendlyName);
+            }
+
+            return _ => new[] { string.Format(
+                "il2c_throw({0})",
+                si.SymbolName) };
+        }
+    }
+
+    internal sealed class Leave_sConverter : ShortInlineBrTargetConverter
+    {
+        public override OpCode OpCode => OpCodes.Leave_S;
+
+        public override bool IsEndOfPath => true;
+
+        public override Func<IExtractContext, string[]> Apply(
+            ICodeInformation operand, DecodeContext decodeContext)
+        {
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
+
+            return _ => new[] { string.Format("il2c_leave({0})", labelName) };
+        }
+    }
+
     internal sealed class LdstrConverter : InlineStringConverter
     {
         public override OpCode OpCode => OpCodes.Ldstr;
@@ -81,7 +117,7 @@ namespace IL2C.ILConverters
             var constStringName = decodeContext.PrepareContext
                 .RegisterConstString(operand);
 
-            return extractContext =>
+            return _ =>
             {
                 return new[] { string.Format(
                     "{0} = {1}",

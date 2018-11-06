@@ -6,7 +6,7 @@ using Mono.Cecil.Cil;
 
 namespace IL2C.Metadata
 {
-    public sealed class DebugInformation
+    public struct DebugInformation
     {
         public readonly string Path;
         public readonly int Line;
@@ -118,17 +118,49 @@ namespace IL2C.Metadata
                 this.Label);
     }
 
+    public enum ExceptionHandlerTypes
+    {
+        Catch,
+        Finally
+    }
+
+    public struct ExceptionHandler
+    {
+        public readonly ITypeInformation CatchType;
+        public readonly int TryStart;
+        public readonly int TryEnd;
+        public readonly int CatchStart;
+        public readonly int CatchEnd;
+        public readonly ExceptionHandlerTypes Type;
+
+        internal ExceptionHandler(
+            ITypeInformation catchType,
+            int tryStart, int tryEnd, int catchStart, int catchEnd,
+            ExceptionHandlerTypes type)
+        {
+            this.CatchType = catchType;
+            this.TryStart = tryStart;
+            this.TryEnd = tryEnd;
+            this.CatchStart = catchStart;
+            this.CatchEnd = catchEnd;
+            this.Type = type;
+        }
+    }
+
     public interface ICodeStream : IReadOnlyCollection<ICodeInformation>
     {
         bool Contains(int offset);
         bool TryGetValue(int offset, out ICodeInformation code);
+
+        ExceptionHandler[] ExceptionHandlers { get; }
     }
 
     internal sealed class CodeStream
         : SortedDictionary<int, ICodeInformation>, ICodeStream
     {
-        public CodeStream()
+        public CodeStream(ExceptionHandler[] exceptionHandlers)
         {
+            this.ExceptionHandlers = exceptionHandlers;
         }
 
         public bool Contains(int offset)
@@ -145,5 +177,7 @@ namespace IL2C.Metadata
         {
             return this.Values.GetEnumerator();
         }
+
+        public ExceptionHandler[] ExceptionHandlers { get; }
     }
 }

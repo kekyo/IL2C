@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 103 / 219
+* Number of opcode implementations: 105 / 219
 * Number of opcode tests: 615 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -160,7 +160,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldtoken](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldtoken) | 0xd0 | Implemented |  | IL2C.ILConverters.LdtokenConverters |
 | [ldvirtftn](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldvirtftn) | 0xfe07 | Implemented |  | IL2C.ILConverters.LdvirtftnConverter |
 | [leave](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.leave) | 0xdd |  |  |  |
-| [leave.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.leave_s) | 0xde |  |  |  |
+| [leave.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.leave_s) | 0xde | Implemented |  | IL2C.ILConverters.Leave_sConverter |
 | [localloc](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.localloc) | 0xfe0f |  |  |  |
 | [mkrefany](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mkrefany) | 0xc6 |  |  |  |
 | [mul](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul) | 0x5a | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Mul) | IL2C.ILConverters.MulConverter |
@@ -218,7 +218,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [sub.ovf.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub_ovf_un) | 0xdb |  |  |  |
 | [switch](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.switch) | 0x45 |  |  |  |
 | [tail](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.tailcall) | 0xfe14 |  |  |  |
-| [throw](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.throw) | 0x7a |  |  |  |
+| [throw](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.throw) | 0x7a | Implemented |  | IL2C.ILConverters.ThrowConverter |
 | [unaligned](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.unaligned) | 0xfe12 |  |  |  |
 | [unbox](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.unbox) | 0x79 |  |  |  |
 | [unbox.any](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.unbox_any) | 0xa5 | Implemented | [Test [2]](tests/IL2C.Core.Test.Target/ILConverters/Unbox_Any) | IL2C.ILConverters.Unbox_AnyConverter |

@@ -171,7 +171,7 @@ namespace IL2C.ILConverters
                             type.MangledName)
                     };
 
-                    // Setup vptr from vtables.
+                    // TODO: Setup vptr from vtables.
                     var vptrs = type.InterfaceTypes.Select(interfaceType =>
                     {
                         // Interface's vptr:
@@ -198,10 +198,10 @@ namespace IL2C.ILConverters
                                 parameterString)
                     };
 
-                    return get
-                        .Concat(vptrs)
-                        .Concat(ctor)
-                        .ToArray();
+                    return get.
+                        //Concat(vptrs). // TODO: 
+                        Concat(ctor).
+                        ToArray();
                 }
             };
         }

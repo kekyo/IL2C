@@ -102,6 +102,7 @@ namespace IL2C.Metadata
             this.DelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.Delegate"));
             this.MulticastDelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.MulticastDelegate"));
             this.ArrayType = this.GetOrAddType(resolvedCoreModule.GetType("System.Array"));
+            this.ExceptionType = this.GetOrAddType(resolvedCoreModule.GetType("System.Exception"));
 
             this.ByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Byte);
             this.SByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.SByte);
@@ -314,6 +315,7 @@ namespace IL2C.Metadata
         public ITypeInformation DelegateType { get; }
         public ITypeInformation MulticastDelegateType { get; }
         public ITypeInformation ArrayType { get; }
+        public ITypeInformation ExceptionType { get; }
         public ITypeInformation UntypedReferenceType =>
             UntypedReferenceTypeInformation.UntypedReferenceType;
 

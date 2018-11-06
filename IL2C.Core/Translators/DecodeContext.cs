@@ -71,19 +71,19 @@ namespace IL2C.Translators
 
         private struct StackSnapshot
         {
-            public readonly int Key;
+            public readonly int Offset;
             public readonly VariableInformation[] StackInformations;
 
             public StackSnapshot(
-                int key,
+                int offset,
                 int stackInformationsPosition,
                 IEnumerable<StackInformationHolder> stackInformationHolders)
             {
-                this.Key = key;
-                this.StackInformations = stackInformationHolders
-                    .Take(stackInformationsPosition)
-                    .Select(stackInformationList => stackInformationList.GetCurrent())
-                    .ToArray();
+                this.Offset = offset;
+                this.StackInformations = stackInformationHolders.
+                    Take(stackInformationsPosition).
+                    Select(stackInformationList => stackInformationList.GetCurrent()).
+                    ToArray();
             }
         }
         #endregion
@@ -118,7 +118,23 @@ namespace IL2C.Translators
             this.PrepareContext = prepareContext;
 
             // First valid process is TryDequeueNextPath.
-            this.pathRemains.Enqueue(new StackSnapshot(0, 0, new List<StackInformationHolder>()));
+            this.pathRemains.Enqueue(new StackSnapshot(0, 0, new StackInformationHolder[0]));
+
+            // Add exception hander paths.
+            foreach (var eh in method.CodeStream.ExceptionHandlers)
+            {
+                switch (eh.Type)
+                {
+                    case ExceptionHandlerTypes.Catch:
+                        var stackInformation = new StackInformationHolder(0);
+                        stackInformation.GetOrAdd(eh.CatchType, method, null);
+
+                        // TODO: stack position may cause mismatched.
+                        this.pathRemains.Enqueue(new StackSnapshot(
+                            eh.CatchStart, 1, new[] { stackInformation }));
+                        break;
+                }
+            }
         }
 
         #region Instruction
@@ -131,7 +147,7 @@ namespace IL2C.Translators
                 return false;
             }
 
-            stackSnapshot = new StackSnapshot(decodingPathNumber, stackPointer, stackList);
+            stackSnapshot = new StackSnapshot(nextOffset, stackPointer, stackList);
             stackSnapshortsAtOffset.Add(nextOffset, stackSnapshot);
 
             if (this.Method.CodeStream.TryGetValue(nextOffset, out var codeInformation) == false)
@@ -248,7 +264,7 @@ namespace IL2C.Translators
 
                 // If current position already decoded:
                 if (stackSnapshortsAtOffset.TryGetValue(
-                    beforeBranchStackSnapshot.Key,
+                    beforeBranchStackSnapshot.Offset,
                     out var stackSnapshot))
                 {
                     // Skip if stack information equals.
@@ -267,7 +283,7 @@ namespace IL2C.Translators
 
                 // Start next path.
                 decodingPathNumber++;
-                nextOffset = beforeBranchStackSnapshot.Key;
+                nextOffset = beforeBranchStackSnapshot.Offset;
 
                 // Retreive stack informations.
                 for (var index = 0;

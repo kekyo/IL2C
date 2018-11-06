@@ -3,6 +3,11 @@
 /////////////////////////////////////////////////////////////
 // System.Exception
 
+void System_Exception__ctor(System_Exception* this__)
+{
+    il2c_assert(this__ != NULL);
+}
+
 // TODO:
 IL2C_CONST_STRING(System_Exception_message, L"System.Exception");
 System_String* System_Exception_ToString(System_Exception* this__)
@@ -10,6 +15,13 @@ System_String* System_Exception_ToString(System_Exception* this__)
     il2c_assert(this__ != NULL);
 
     return System_Exception_message;
+}
+
+void il2c_throw(System_Exception* ex)
+{
+    il2c_assert(ex != NULL);
+
+    // TODO:
 }
 
 /////////////////////////////////////////////////

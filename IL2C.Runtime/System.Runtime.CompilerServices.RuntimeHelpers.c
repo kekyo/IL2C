@@ -3,6 +3,12 @@
 /////////////////////////////////////////////////////////////
 // System.Runtime.CompilerServices.RuntimeHelpers
 
+int32_t System_Runtime_CompilerServices_RuntimeHelpers_GetHashCode(
+    System_Object* o)
+{
+    return System_Object_GetHashCode(o);
+}
+
 void System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray(
     System_Array* array, System_RuntimeFieldHandle fldHandle)
 {

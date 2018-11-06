@@ -30,6 +30,8 @@ extern IL2C_RUNTIME_TYPE_DECL __System_Array_RUNTIME_TYPE__;
 extern /* internalcall */ void __System_Array_IL2C_MarkHandler__(System_Array* this__);
 
 extern int32_t System_Array_getLength(System_Array* this__);
+extern int32_t System_Array_GetLowerBound(System_Array* this__, int32_t dimension);
+extern int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension);
 
 /////////////////////////////////////////////////
 // Array special functions

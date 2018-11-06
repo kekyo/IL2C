@@ -71,7 +71,7 @@
             <Optimization>MaxSpeed</Optimization>
             <PreprocessorDefinitions>NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-            <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+            <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
             <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
             <OmitFramePointers>true</OmitFramePointers>
             <WholeProgramOptimization>true</WholeProgramOptimization>

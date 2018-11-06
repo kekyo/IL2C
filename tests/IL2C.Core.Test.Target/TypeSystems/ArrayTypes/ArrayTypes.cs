@@ -42,6 +42,7 @@ namespace IL2C.TypeSystems
     [TestCase(0, "Length", 0)]
     [TestCase(1, "Length", 1)]
     [TestCase(1000, "Length", 1000)]
+    [TestCase(55, "Enumerator")]
     public sealed class ArrayTypes
     {
         public static int FromInt32(int index)
@@ -154,6 +155,21 @@ namespace IL2C.TypeSystems
             var arr = new int[length];
 
             return arr.Length;
+        }
+
+        public static int Enumerator()
+        {
+            var arr = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+            // TODO: It auto translated using "for" loop by Roslyn.
+            //   We have to change it after full support for interface type system.
+            int result = 0;
+            foreach (var value in arr)
+            {
+                result += value;
+            }
+
+            return result;
         }
     }
 }

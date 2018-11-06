@@ -13,7 +13,35 @@ int32_t System_Array_getLength(System_Array* this__)
     return (int32_t)(this__->Length);
 }
 
-extern System_Array* il2c_new_array__(
+int32_t System_Array_GetLowerBound(System_Array* this__, int32_t dimension)
+{
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->vptr0__ == &__System_Array_VTABLE__);
+    il2c_assert(this__->elementType__ != NULL);
+    il2c_assert(this__->Length >= 0);
+
+    // TODO: IndexOutOfRangeException
+    il2c_assert(dimension == 0);
+
+    // TODO: MD array not implemented.
+    return 0;
+}
+
+int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension)
+{
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->vptr0__ == &__System_Array_VTABLE__);
+    il2c_assert(this__->elementType__ != NULL);
+    il2c_assert(this__->Length >= 0);
+
+    // TODO: IndexOutOfRangeException
+    il2c_assert(dimension == 0);
+
+    // TODO: MD array not implemented.
+    return (int32_t)(this__->Length - 1);
+}
+
+System_Array* il2c_new_array__(
     IL2C_RUNTIME_TYPE_DECL* elementType, intptr_t length)
 {
     il2c_assert(elementType != NULL);

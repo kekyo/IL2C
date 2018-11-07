@@ -17,11 +17,12 @@ System_String* System_Exception_ToString(System_Exception* this__)
     return System_Exception_message;
 }
 
-void il2c_throw(System_Exception* ex)
+void il2c_throw__(jmp_buf unwind_target, System_Exception* ex)
 {
     il2c_assert(ex != NULL);
 
     // TODO:
+    longjmp(unwind_target, 1);
 }
 
 /////////////////////////////////////////////////

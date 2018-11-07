@@ -148,12 +148,15 @@ namespace IL2C
                 .ToArray();
 
             // Step 1-4: Translate caseInfo.Method bodies.
-            var header = new StringWriter();
-            var body = new StringWriter();
+            var header = CodeTextWriter.Create(new StringWriter(), "    ");
             AssemblyWriter.InternalWriteHeader(
-                header, translateContext, prepared, "    ", false);
+                header, translateContext, prepared, false);
+            header.Flush();
+
+            var body = CodeTextWriter.Create(new StringWriter(), "    ");
             AssemblyWriter.InternalWriteSourceCode(
-                body, translateContext, prepared, "    ", DebugInformationOptions.Full, false);
+                body, translateContext, prepared, DebugInformationOptions.Full, false);
+            body.Flush();
 
             // Step 1-5: Write Visual C++ project file and Visual Studio Code launch config from template.
             //     Note: It's only debugging purpose. The test doesn't use.
@@ -249,7 +252,7 @@ namespace IL2C
             {
                 { "testName", targetMethod.FriendlyName},
                 { "type", targetMethod.ReturnType.CLanguageTypeName},
-                { "body", body.ToString() },
+                { "body", body.Parent.ToString() },
                 { "constants", string.Join(" ", constants.
                     Select(entry => string.Format("{0} {1} = {2};",
                         (entry.ExpressionType != null) ? Utilities.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
@@ -288,7 +291,7 @@ namespace IL2C
 
             await Task.WhenAll(
                 TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues),
-                TestUtilities.WriteTextFileAsync(headerPath, header.ToString()));
+                TestUtilities.WriteTextFileAsync(headerPath, header.Parent.ToString()));
 
             ///////////////////////////////////////////////
             // Step 2: Test and verify result by real IL code at this runtime.

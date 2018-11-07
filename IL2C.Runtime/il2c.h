@@ -9,9 +9,10 @@ extern "C" {
 
 #if defined(_MSC_VER)
 #include <intrin.h>
+#include <setjmp.h> // TODO:
 #else
 #include <x86intrin.h>
-#include <signal.h>
+#include <setjmp.h>
 #endif
 
 #include <stddef.h>

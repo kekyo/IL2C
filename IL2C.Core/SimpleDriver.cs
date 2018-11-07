@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text;
 
 namespace IL2C
 {
@@ -43,9 +42,9 @@ namespace IL2C
                 FileAccess.ReadWrite,
                 FileShare.None))
             {
-                var twSource = new StreamWriter(fsSource, Encoding.UTF8);
+                var twSource = CodeTextWriter.Create(fsSource, "    ");
                 AssemblyWriter.WriteSourceCode(
-                    twSource, translateContext, preparedFunctions, "    ", debugInformationOptions);
+                    twSource, translateContext, preparedFunctions, debugInformationOptions);
                 twSource.Flush();
             }
 
@@ -61,8 +60,8 @@ namespace IL2C
                 FileAccess.ReadWrite,
                 FileShare.None))
             {
-                var twHeader = new StreamWriter(fsHeader, Encoding.UTF8);
-                AssemblyWriter.WriteHeader(twHeader, translateContext, preparedFunctions, "    ");
+                var twHeader = CodeTextWriter.Create(fsHeader, "    ");
+                AssemblyWriter.WriteHeader(twHeader, translateContext, preparedFunctions);
                 twHeader.Flush();
             }
 

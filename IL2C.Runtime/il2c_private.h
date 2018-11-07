@@ -307,6 +307,13 @@ IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
+struct IL2C_EXCEPTION_FRAME
+{
+    jmp_buf saved;  // Cannot change order
+    IL2C_EXCEPTION_FRAME *pNext;
+    System_Exception* ex;
+};
+
 extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize);
 
 extern void il2c_step1_clear_gcmark__();

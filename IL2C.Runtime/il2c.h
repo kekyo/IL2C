@@ -36,6 +36,7 @@ extern void il2c_shutdown();
 typedef long interlock_t;
 
 typedef volatile struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
+typedef volatile struct IL2C_EXCEPTION_FRAME IL2C_EXCEPTION_FRAME;
 typedef volatile struct IL2C_REF_HEADER IL2C_REF_HEADER;
 
 typedef void (*IL2C_MARK_HANDLER)(/* System_Object* */ void* pReference);

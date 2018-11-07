@@ -20,9 +20,9 @@ System_String* System_Exception_ToString(System_Exception* this__)
 /////////////////////////////////////////////////
 // Exception special functions
 
-extern jmp_buf* g_pTopUnwindTarget;
+extern IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget;
 
-void il2c_link_unwind_target__(jmp_buf** ppLastUnwindTarget, jmp_buf* pUnwindTarget)
+void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME** ppLastUnwindTarget, IL2C_EXCEPTION_FRAME* pUnwindTarget)
 {
     il2c_assert(ppLastUnwindTarget != NULL);
     il2c_assert(pUnwindTarget != NULL);
@@ -31,7 +31,7 @@ void il2c_link_unwind_target__(jmp_buf** ppLastUnwindTarget, jmp_buf* pUnwindTar
     g_pTopUnwindTarget = pUnwindTarget;
 }
 
-void il2c_unlink_unwind_target__(jmp_buf* pLastUnwindTarget)
+void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pLastUnwindTarget)
 {
     il2c_assert(pLastUnwindTarget != NULL);
 
@@ -42,8 +42,8 @@ void il2c_throw__(System_Exception* ex)
 {
     il2c_assert(ex != NULL);
 
-    // TODO:
-    longjmp(*g_pTopUnwindTarget, 1);
+    g_pTopUnwindTarget->ex = ex;
+    longjmp((void*)g_pTopUnwindTarget->saved, 1);
 }
 
 /////////////////////////////////////////////////

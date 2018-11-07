@@ -35,16 +35,16 @@ extern void il2c_throw__(System_Exception* ex);
 #define il2c_throw(ex) \
     il2c_throw__((System_Exception*)ex)
 
-extern void il2c_link_unwind_target__(jmp_buf** ppLastUnwindTarget, jmp_buf* pUnwindTarget);
-extern void il2c_unlink_unwind_target__(jmp_buf* pLastUnwindTarget);
+extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME** ppLastUnwindTarget, IL2C_EXCEPTION_FRAME* pUnwindTarget);
+extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pLastUnwindTarget);
 
 #define il2c_try \
     { \
-        jmp_buf unwind_target__; \
-        jmp_buf* last_unwind_target__; \
+        IL2C_EXCEPTION_FRAME unwind_target__; \
+        IL2C_EXCEPTION_FRAME* last_unwind_target__; \
         il2c_link_unwind_target__(&last_unwind_target__, &unwind_target__); \
         { \
-            if (!setjmp(unwind_target__))
+            if (!setjmp((void*)&unwind_target__))   /* saved */
 
 #define il2c_catch(ex) \
             else

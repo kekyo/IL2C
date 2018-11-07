@@ -18,6 +18,8 @@ typedef volatile struct IL2C_EXECUTION_FRAME
 
 // TODO: Become store to thread local storage
 static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
+static jmp_buf g_BottomUnwindTarget;
+jmp_buf* g_pTopUnwindTarget = NULL;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 
@@ -254,6 +256,13 @@ void il2c_initialize()
 
     g_pBeginFrame__ = NULL;
     g_pBeginHeader__ = NULL;
+
+    g_pTopUnwindTarget = &g_BottomUnwindTarget;
+    if (setjmp(g_BottomUnwindTarget))
+    {
+        // TODO: Unhandled exception
+        il2c_assert(0);
+    }
 }
 
 void il2c_shutdown()

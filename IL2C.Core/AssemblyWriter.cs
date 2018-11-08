@@ -408,6 +408,132 @@ namespace IL2C
             tw.WriteLine("#endif");
         }
 
+        private sealed class ExceptionHandlerController
+        {
+            private sealed class ExceptionHandlerState
+            {
+                private readonly ExceptionHandler handler;
+                private int index = -1;
+                private bool inBlock = false;
+
+                public ExceptionHandlerState(ExceptionHandler handler)
+                {
+                    this.handler = handler;
+                }
+
+                public bool Update(
+                    ICodeInformation code,
+                    Action tryEnd,
+                    Action<ExceptionCatchHandler> catchStart,
+                    Action<ExceptionCatchHandler> catchEnd)
+                {
+                    while (true)
+                    {
+                        if (index == -1)
+                        {
+                            if (handler.TryEnd == code.Offset)
+                            {
+                                tryEnd();
+                                index = 0;
+                                continue;
+                            }
+
+                            return false;
+                        }
+                        
+                        if (index < handler.CatchHandlers.Length)
+                        {
+                            var catchHandler = handler.CatchHandlers[index];
+                            if (!inBlock)
+                            {
+                                if (catchHandler.CatchStart == code.Offset)
+                                {
+                                    catchStart(catchHandler);
+                                    inBlock = true;
+                                }
+
+                                return false;
+                            }
+                            else
+                            {
+                                if (catchHandler.CatchEnd == code.Offset)
+                                {
+                                    catchEnd(catchHandler);
+                                    inBlock = false;
+                                    index++;
+                                    continue;
+                                }
+
+                                return false;
+                            }
+                        }
+
+                        // Require emit end-try.
+                        return true;
+                    }
+                }
+            }
+
+            private readonly Queue<ExceptionHandler> queue;
+            private readonly Stack<ExceptionHandlerState> stack = new Stack<ExceptionHandlerState>();
+
+            private readonly Action tryStart;
+            private readonly Action tryEnd;
+            private readonly Action<ExceptionCatchHandler> catchStart;
+            private readonly Action<ExceptionCatchHandler> catchEnd;
+            private readonly Action finished;
+
+            public ExceptionHandlerController(
+                ExceptionHandler[] handlers,
+                Action tryStart,
+                Action tryEnd,
+                Action<ExceptionCatchHandler> catchStart,
+                Action<ExceptionCatchHandler> catchEnd,
+                Action finished)
+            {
+                queue = new Queue<ExceptionHandler>(handlers);
+
+                this.tryStart = tryStart;
+                this.tryEnd = tryEnd;
+                this.catchStart = catchStart;
+                this.catchEnd = catchEnd;
+                this.finished = finished;
+            }
+
+            public bool IsFinished => (queue.Count == 0) && (stack.Count == 0);
+
+            public void Update(ICodeInformation code)
+            {
+                while (true)
+                {
+                    if (queue.Count >= 1)
+                    {
+                        var handler = queue.Peek();
+                        if (handler.TryStart == code.Offset)
+                        {
+                            tryStart();
+                            queue.Dequeue();
+                            stack.Push(new ExceptionHandlerState(handler));
+                            continue;
+                        }
+                    }
+
+                    if (stack.Count >= 1)
+                    {
+                        var handler = stack.Peek();
+                        if (handler.Update(code, tryEnd, catchStart, catchEnd))
+                        {
+                            stack.Pop();
+                            finished();
+                            continue;
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
         private static void InternalConvertFromFunction(
             CodeTextWriter tw,
             IExtractContext extractContext,
@@ -514,60 +640,50 @@ namespace IL2C
                 tw.WriteLine("// [3-4] IL body:");
                 tw.WriteLine();
 
-                // Construct exception handler hints.
-                // If these handlers nested, we need sort by [block start - block end] order.
+                // Construct exception handler controller.
                 var codeStream = preparedMethod.Method.CodeStream;
-                var handlersByTryStart =
-                    codeStream.ExceptionHandlers.
-                    GroupBy(eh => eh.TryStart).
-                    OrderBy(g => g.Key).
-                    Select(g => (g.Key, g.OrderBy(eh => eh.TryEnd).ToArray())).
-                    ToDictionary(entry => entry.Item1, entry => entry.Item2);
-                var exceptionBlockStack = new Stack<ExceptionHandler>();
+                var exceptionHandlerController = new ExceptionHandlerController(
+                    codeStream.ExceptionHandlers,
+                    () =>
+                    {
+                        // Reached try block:
+                        tw.WriteLine("il2c_try");
+                        tw.WriteLine("{");
+                        tw.Shift();
+                    },
+                    () =>
+                    {
+                        // Reached try end block:
+                        tw.Shift(-1);
+                        tw.WriteLine("}");
+                    },
+                    ech =>
+                    {
+                        // Reached catch block:
+                        tw.WriteLine("il2c_catch({0}, {1})",
+                            ech.CatchType.MangledName, preparedMethod.CatchExpressions[ech.CatchStart]);
+                        tw.WriteLine("{");
+                        tw.Shift();
+                    },
+                    ech =>
+                    {
+                        // Reached catch end block:
+                        tw.Shift(-1);
+                        tw.WriteLine("}");
+                    },
+                    () =>
+                    {
+                        // Reached finish:
+                        tw.WriteLine("il2c_end_try;");
+                    });
 
                 // Traverse code fragments.
                 var canWriteSequencePoint = true;
                 foreach (var ci in codeStream)
                 {
-                    // 1: Write try end block if required.
-                    while (exceptionBlockStack.Count >= 1)
-                    {
-                        // Reached try end block:
-                        var handler = exceptionBlockStack.Peek();
-                        if (handler.TryEnd == ci.Offset)
-                        {
-                            tw.Shift(-1);
-                            tw.WriteLine(
-                                "}");
-                        }
-
-                        // Reached catch begin block:
-                        if (handler.CatchStart == ci.Offset)
-                        {
-                            tw.WriteLine(
-                                "il2c_catch({0} ex)",
-                                handler.CatchType.CLanguageTypeName);
-                            tw.WriteLine(
-                                "{");
-                            tw.Shift();
-                        }
-
-                        // Reached catch end block:
-                        if (handler.CatchEnd == ci.Offset)
-                        {
-                            tw.Shift(-1);
-                            tw.WriteLine(
-                                "}");
-                            tw.WriteLine(
-                                "il2c_end_try;");
-
-                            exceptionBlockStack.Pop();
-                            continue;
-                        }
-
-                        // Nothing to do.
-                        break;
-                    }
+                    // 1: Update the exception handler controller.
+                    //    (Will write exception related sentences.)
+                    exceptionHandlerController.Update(ci);
 
                     // 2: Write label if available and used.
                     if (preparedMethod.LabelNames.TryGetValue(ci.Offset, out var labelName))
@@ -601,22 +717,7 @@ namespace IL2C
                         canWriteSequencePoint = false;
                     }
 
-                    // 4: Reached try start block if required.
-                    if (handlersByTryStart.TryGetValue(ci.Offset, out var tryStartHandlers))
-                    {
-                        foreach (var handler in tryStartHandlers)
-                        {
-                            tw.WriteLine(
-                                "il2c_try");
-                            tw.WriteLine(
-                                "{");
-                            tw.Shift();
-
-                            exceptionBlockStack.Push(handler);
-                        }
-                    }
-
-                    // 5: Generate source code fragments and write.
+                    // 4: Generate source code fragments and write.
                     if (debugInformationOption != DebugInformationOptions.None)
                     {
                         // Write debugging information.
@@ -645,7 +746,7 @@ namespace IL2C
                     }
                 }
 
-                if (exceptionBlockStack.Count >= 1)
+                if (!exceptionHandlerController.IsFinished)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid exception handler range. MethodName={0}",

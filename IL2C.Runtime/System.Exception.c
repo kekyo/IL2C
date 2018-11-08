@@ -58,3 +58,8 @@ __System_Exception_VTABLE_DECL__ __System_Exception_VTABLE__ = {
 };
 
 IL2C_DECLARE_RUNTIME_TYPE(System_Exception, "System.Exception", IL2C_TYPE_REFERENCE, System_Object);
+
+
+
+
+IL2C_DECLARE_RUNTIME_TYPE(System_InvalidCastException, "System.InvalidCastException", IL2C_TYPE_REFERENCE, System_Exception);

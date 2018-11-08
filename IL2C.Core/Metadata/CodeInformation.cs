@@ -118,32 +118,44 @@ namespace IL2C.Metadata
                 this.Label);
     }
 
-    public enum ExceptionHandlerTypes
+    public enum ExceptionCatchHandlerTypes
     {
         Catch,
         Finally
     }
 
-    public struct ExceptionHandler
+    public struct ExceptionCatchHandler
     {
+        public readonly ExceptionCatchHandlerTypes CatchHandlerType;
         public readonly ITypeInformation CatchType;
-        public readonly int TryStart;
-        public readonly int TryEnd;
         public readonly int CatchStart;
         public readonly int CatchEnd;
-        public readonly ExceptionHandlerTypes Type;
 
-        internal ExceptionHandler(
+        public ExceptionCatchHandler(
+            ExceptionCatchHandlerTypes catchHandlerType,
             ITypeInformation catchType,
-            int tryStart, int tryEnd, int catchStart, int catchEnd,
-            ExceptionHandlerTypes type)
+            int catchStart,
+            int catchEnd)
         {
+            this.CatchHandlerType = catchHandlerType;
             this.CatchType = catchType;
-            this.TryStart = tryStart;
-            this.TryEnd = tryEnd;
             this.CatchStart = catchStart;
             this.CatchEnd = catchEnd;
-            this.Type = type;
+        }
+    }
+
+    public struct ExceptionHandler
+    {
+        public readonly int TryStart;
+        public readonly int TryEnd;
+        public readonly ExceptionCatchHandler[] CatchHandlers;
+
+        internal ExceptionHandler(
+            int tryStart, int tryEnd, ExceptionCatchHandler[] catchHandlers)
+        {
+            this.TryStart = tryStart;
+            this.TryEnd = tryEnd;
+            this.CatchHandlers = catchHandlers;
         }
     }
 

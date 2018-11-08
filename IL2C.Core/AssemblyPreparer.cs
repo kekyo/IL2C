@@ -135,10 +135,14 @@ namespace IL2C
             var labelNames = decodeContext.
                 ExtractLabelNames();
 
+            var catchExpressions = decodeContext.
+                ExtractCatchExpressions();
+
             return new PreparedMethodInformation(
                 method,
                 stacks,
                 labelNames,
+                catchExpressions,
                 generators);
         }
 
@@ -194,6 +198,7 @@ namespace IL2C
                 // Construct dummy information.
                 return new PreparedMethodInformation(
                     method,
+                    null,
                     null,
                     null,
                     null);

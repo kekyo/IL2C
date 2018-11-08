@@ -194,13 +194,17 @@ namespace IL2C.Metadata
 
                 var exceptionHandlers =
                     this.Definition.Body.ExceptionHandlers.
-                    Select(eh => new ExceptionHandler(
-                        this.MetadataContext.GetOrAddType(eh.CatchType),
-                        eh.TryStart.Offset,
-                        eh.TryEnd.Offset,
-                        eh.HandlerStart.Offset,
-                        eh.HandlerEnd.Offset,   // TODO: types
-                        (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionHandlerTypes.Catch : ExceptionHandlerTypes.Finally)).
+                    GroupBy(eh => (eh.TryStart, eh.TryEnd)).
+                    OrderBy(g => g.Key.TryStart).
+                    ThenBy(g => g.Key.TryEnd).
+                    Select(g => new ExceptionHandler(
+                        g.Key.TryStart.Offset, g.Key.TryEnd.Offset,
+                        g.Select(eh => new ExceptionCatchHandler(
+                            (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
+                            this.MetadataContext.GetOrAddType(eh.CatchType),
+                            eh.HandlerStart.Offset,
+                            eh.HandlerEnd.Offset)).
+                        ToArray())).
                     ToArray();
 
                 var codeStream = new CodeStream(exceptionHandlers);

@@ -104,6 +104,8 @@ namespace IL2C.Translators
         private int stackPointer = -1;
         private readonly Dictionary<int, string> labelNames = 
             new Dictionary<int, string>();
+        private readonly Dictionary<int, string> catchExpressions = 
+            new Dictionary<int, string>();
         private readonly Queue<StackSnapshot> pathRemains =
             new Queue<StackSnapshot>();
         #endregion
@@ -120,19 +122,30 @@ namespace IL2C.Translators
             // First valid process is TryDequeueNextPath.
             this.pathRemains.Enqueue(new StackSnapshot(0, 0, new StackInformationHolder[0]));
 
-            // Add exception hander paths.
-            foreach (var eh in method.CodeStream.ExceptionHandlers)
+            // Add exception handler paths.
+            if (method.CodeStream.ExceptionHandlers.Any(eh => eh.CatchHandlers.Any()))
             {
-                switch (eh.Type)
-                {
-                    case ExceptionHandlerTypes.Catch:
-                        var stackInformation = new StackInformationHolder(0);
-                        stackInformation.GetOrAdd(eh.CatchType, method, null);
+                var stackInformation = new StackInformationHolder(0);
+                stackList.Add(stackInformation);
 
-                        // TODO: stack position may cause mismatched.
-                        this.pathRemains.Enqueue(new StackSnapshot(
-                            eh.CatchStart, 1, new[] { stackInformation }));
-                        break;
+                foreach (var eh in method.CodeStream.ExceptionHandlers)
+                {
+                    foreach (var ech in eh.CatchHandlers)
+                    {
+                        switch (ech.CatchHandlerType)
+                        {
+                            case ExceptionCatchHandlerTypes.Catch:
+                                var symbolName = stackInformation.GetOrAdd(ech.CatchType, method, null);
+                                catchExpressions.Add(ech.CatchStart, symbolName);
+
+                                // TODO: stack position rarely cause mismatched.
+                                //   If already pushed some values before try block,
+                                //   the stackpointer progressed.
+                                this.pathRemains.Enqueue(new StackSnapshot(
+                                    ech.CatchStart, 1 /* ??? */, stackList));
+                                break;
+                        }
+                    }
                 }
             }
         }
@@ -315,6 +328,11 @@ namespace IL2C.Translators
         public IReadOnlyDictionary<int, string> ExtractLabelNames()
         {
             return labelNames;
+        }
+
+        public IReadOnlyDictionary<int, string> ExtractCatchExpressions()
+        {
+            return catchExpressions;
         }
         #endregion
     }

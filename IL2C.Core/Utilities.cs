@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.InteropServices;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,7 +13,6 @@ using Mono.Cecil.Cil;
 using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
-using System.IO;
 
 namespace IL2C
 {
@@ -581,6 +580,7 @@ namespace IL2C
             }));
         }
 
+        #region Linq
         public static IEnumerable<T> RuntimeCast<T>(this IEnumerable enumerable)
         {
             foreach (object value in enumerable)
@@ -617,6 +617,19 @@ namespace IL2C
                 }
             }
         }
+
+        public static IEnumerable<T> Distinct<T, U>(this IEnumerable<T> enumerable, Func<T, U> keySelector)
+        {
+            var took = new HashSet<U>();
+            foreach (var value in enumerable)
+            {
+                if (took.Add(keySelector(value)))
+                {
+                    yield return value;
+                }
+            }
+        }
+        #endregion
 
         public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
         {

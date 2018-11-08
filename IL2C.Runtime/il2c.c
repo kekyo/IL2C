@@ -106,7 +106,15 @@ void il2c_mark_from_handler__(/* System_Object* */ void* pReference)
 {
     il2c_assert(pReference != NULL);
 
+    // Has to ignore if objref is const.
+    // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
+    //   (at x86/x64 cause, another platform may cause)
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
+    if (pHeader->gcMark == GCMARK_CONST)
+    {
+        return;
+    }
+
     interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark == GCMARK_NOMARK)
     {
@@ -191,8 +199,16 @@ void il2c_step2_mark_gcmark__()
                 continue;
             }
 
-            // Marking process.
+            // Has to ignore if objref is const.
+            // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
+            //   (at x86/x64 cause, another platform may cause)
             IL2C_REF_HEADER* pHeader = il2c_get_header__(*ppReference);
+            if (pHeader->gcMark == GCMARK_CONST)
+            {
+                continue;
+            }
+
+            // Marking process.
             interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
             if (currentMark == GCMARK_NOMARK)
             {

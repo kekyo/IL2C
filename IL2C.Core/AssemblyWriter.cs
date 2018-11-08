@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -513,11 +514,62 @@ namespace IL2C
                 tw.WriteLine("// [3-4] IL body:");
                 tw.WriteLine();
 
-                var canWriteSequencePoint = true;
+                // Construct exception handler hints.
+                // If these handlers nested, we need sort by [block start - block end] order.
                 var codeStream = preparedMethod.Method.CodeStream;
+                var handlersByTryStart =
+                    codeStream.ExceptionHandlers.
+                    GroupBy(eh => eh.TryStart).
+                    OrderBy(g => g.Key).
+                    Select(g => (g.Key, g.OrderBy(eh => eh.TryEnd).ToArray())).
+                    ToDictionary(entry => entry.Item1, entry => entry.Item2);
+                var exceptionBlockStack = new Stack<ExceptionHandler>();
+
+                // Traverse code fragments.
+                var canWriteSequencePoint = true;
                 foreach (var ci in codeStream)
                 {
-                    // Write label if available and used.
+                    // 1: Write try end block if required.
+                    while (exceptionBlockStack.Count >= 1)
+                    {
+                        // Reached try end block:
+                        var handler = exceptionBlockStack.Peek();
+                        if (handler.TryEnd == ci.Offset)
+                        {
+                            tw.Shift(-1);
+                            tw.WriteLine(
+                                "}");
+                        }
+
+                        // Reached catch begin block:
+                        if (handler.CatchStart == ci.Offset)
+                        {
+                            tw.WriteLine(
+                                "il2c_catch({0} ex)",
+                                handler.CatchType.CLanguageTypeName);
+                            tw.WriteLine(
+                                "{");
+                            tw.Shift();
+                        }
+
+                        // Reached catch end block:
+                        if (handler.CatchEnd == ci.Offset)
+                        {
+                            tw.Shift(-1);
+                            tw.WriteLine(
+                                "}");
+                            tw.WriteLine(
+                                "il2c_end_try;");
+
+                            exceptionBlockStack.Pop();
+                            continue;
+                        }
+
+                        // Nothing to do.
+                        break;
+                    }
+
+                    // 2: Write label if available and used.
                     if (preparedMethod.LabelNames.TryGetValue(ci.Offset, out var labelName))
                     {
                         using (var __ = tw.Shift(-1))
@@ -526,7 +578,7 @@ namespace IL2C
                         }
                     }
 
-                    // Write the line preprocessor directive if available.
+                    // 3: Write the line preprocessor directive if available.
                     if (canWriteSequencePoint && ci.Debug.Any())
                     {
                         var sp = ci.Debug.First();
@@ -549,6 +601,22 @@ namespace IL2C
                         canWriteSequencePoint = false;
                     }
 
+                    // 4: Reached try start block if required.
+                    if (handlersByTryStart.TryGetValue(ci.Offset, out var tryStartHandlers))
+                    {
+                        foreach (var handler in tryStartHandlers)
+                        {
+                            tw.WriteLine(
+                                "il2c_try");
+                            tw.WriteLine(
+                                "{");
+                            tw.Shift();
+
+                            exceptionBlockStack.Push(handler);
+                        }
+                    }
+
+                    // 5: Generate source code fragments and write.
                     if (debugInformationOption != DebugInformationOptions.None)
                     {
                         // Write debugging information.
@@ -557,7 +625,6 @@ namespace IL2C
                             ci);
                     }
 
-                    // Generate source code fragments and write.
                     var sourceCodes = preparedMethod.Generators[ci.Offset](extractContext);
                     foreach (var sourceCode in sourceCodes)
                     {
@@ -576,6 +643,13 @@ namespace IL2C
 
                         canWriteSequencePoint = true;
                     }
+                }
+
+                if (exceptionBlockStack.Count >= 1)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid exception handler range. MethodName={0}",
+                        preparedMethod.Method.FriendlyName);
                 }
             }
 

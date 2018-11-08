@@ -50,17 +50,17 @@ extern System_String* il2c_new_string(const wchar_t* pString);
 extern System_String* il2c_new_string_from_utf8(const char* pUtf8String);
 extern const wchar_t* il2c_c_str(System_String* str);
 
-typedef struct
+typedef const struct
 {
     // IL2C_REF_HEADER
-    const void* pNext;             // Const string will not collect by GC, so this link is always NULL.
+    void* pNext;             // Const string will not collect by GC, so this link is always NULL.
     IL2C_RUNTIME_TYPE_DECL* type;  // Const string always fixed runtime type pointer from "__System_String_RUNTIME_TYPE__."
-    const intptr_t gcMark;         // Const string always marked (GCMARK_CONST:2)
+    intptr_t gcMark;         // Const string always marked (GCMARK_CONST:2)
 
     // Instance's vptr
     __System_String_VTABLE_DECL__* vptr0__;   // Const string always fixed VTable pointer from "__System_String_VTABLE__."
 
-    const wchar_t* string_body__;
+    wchar_t* string_body__;
 } IL2C_CONST_STRING_DECL;
 
 #define IL2C_CONST_STRING(name, string_body) \

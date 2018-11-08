@@ -93,6 +93,10 @@ namespace IL2C
                     declaredType.MemberTypeName,
                     declaredType.BaseType.FriendlyName);
 
+                // Important: The vtable structure definition marked for "const",
+                //    because these vtables place into the ".rdata" section or same location.
+                //    Many small system have very tiny space for RAM (writable memory),
+                //    IL2C has to efficient memory space, vtable can place into ROM location.
                 tw.WriteLine("typedef const struct");
                 tw.WriteLine("{");
                 using (var _ = tw.Shift())

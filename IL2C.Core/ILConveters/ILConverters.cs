@@ -73,6 +73,8 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Throw;
 
+        public override bool IsEndOfPath => true;
+
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();

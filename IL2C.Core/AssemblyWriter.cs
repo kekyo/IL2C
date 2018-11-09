@@ -571,7 +571,7 @@ namespace IL2C
 
                     var filterName = string.Format(
                         "__{0}_ExceptionFilter{1}__",
-                        preparedMethod.Method.MangledName,
+                        preparedMethod.Method.CLanguageFunctionName,
                         handlerIndex);
                     tw.WriteLine(
                         "static uint16_t {0}(System_Exception* ex)",
@@ -589,7 +589,7 @@ namespace IL2C
                             var catchHandler = handler.CatchHandlers[catchHandlerIndex];
 
                             tw.WriteLine(
-                                "if (il2c_isinst(ex, {0})) return {1};",
+                                "if (il2c_isinst_unsafe(ex, {0})) return {1};",
                                 catchHandler.CatchType.MangledName,
                                 catchHandlerIndex + 1);
                         }
@@ -703,7 +703,7 @@ namespace IL2C
                     {
                         var filterName = string.Format(
                             "__{0}_ExceptionFilter{1}__",
-                            preparedMethod.Method.MangledName,
+                            preparedMethod.Method.CLanguageFunctionName,
                             handlerIndex);
 
                         // Reached try block:

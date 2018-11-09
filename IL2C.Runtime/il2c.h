@@ -86,8 +86,10 @@ typedef volatile struct IL2C_REF_HEADER
 
 // dynamic cast operator
 extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
+#define il2c_isinst_unsafe(pReference, typeName) \
+    ((pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName)))
 #define il2c_isinst(pReference, typeName) \
-    (((pReference) != NULL) ? ((pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName))) : NULL)
+    (((pReference) != NULL) ? il2c_isinst_unsafe(pReference, typeName) : NULL)
 #define il2c_castclass(pReference, typeName) \
     il2c_isinst(pReference, typeName) // TODO: InvalidCastException
 
@@ -191,15 +193,11 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
         case 0:
 
 #define il2c_catch(filteredNumber) \
-            break; \
         case filteredNumber :
 
 #define il2c_end_try \
-            break; \
-        default: \
-            il2c_assert(0); \
-            break; \
         } \
+        il2c_assert(0); \
         il2c_unlink_unwind_target__(&unwind_target__); \
     }
 

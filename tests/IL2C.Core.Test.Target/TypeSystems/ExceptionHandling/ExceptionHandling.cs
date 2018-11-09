@@ -11,6 +11,8 @@ namespace IL2C.TypeSystems
     [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
     [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
     [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
+    [TestCase(123, "RaiseAndNestedCaughtLocal", 123)]
+    [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
     public sealed class ExceptionHandling
     {
         public static int RaiseAndCaughtLocal(bool sw)
@@ -55,6 +57,50 @@ namespace IL2C.TypeSystems
                 return 456;
             }
             return 123;
+        }
+
+        public static int RaiseAndNestedCaughtLocal(int value)
+        {
+            int r = 0;
+            try
+            {
+                try
+                {
+                    throw new Exception();
+                }
+                catch (Exception)
+                {
+                    r += value;
+                }
+            }
+            catch (Exception)
+            {
+                r += 100;
+            }
+
+            return r;
+        }
+
+        public static int RaiseAndNestedCaughtOuterLocal(int value)
+        {
+            int r = 0;
+            try
+            {
+                try
+                {
+                    throw new Exception();
+                }
+                catch (InvalidCastException)
+                {
+                    r += 100;
+                }
+            }
+            catch (Exception)
+            {
+                r += value;
+            }
+
+            return r;
         }
     }
 }

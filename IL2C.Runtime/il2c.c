@@ -282,6 +282,8 @@ void il2c_initialize()
 
 void il2c_shutdown()
 {
+    il2c_assert(g_pTopUnwindTarget__ == NULL);
+
     il2c_collect();
 
     il2c_shutdown_heap();
@@ -538,6 +540,10 @@ void il2c_throw__(System_Exception* ex)
         int result = pCurrentFrame->filter(ex);
         if (result != 0)
         {
+            // Update current frame.
+            g_pTopUnwindTarget__ = pCurrentFrame;
+
+            // Transision to target handler.
             longjmp((void*)pCurrentFrame->saved, result);
         }
 

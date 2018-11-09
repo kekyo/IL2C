@@ -194,11 +194,11 @@ namespace IL2C.Metadata
 
                 var exceptionHandlers =
                     this.Definition.Body.ExceptionHandlers.
-                    GroupBy(eh => (eh.TryStart, eh.TryEnd)).
-                    OrderBy(g => g.Key.TryStart).
-                    ThenBy(g => g.Key.TryEnd).
+                    GroupBy(eh => (tryStart: eh.TryStart.Offset, tryEnd: eh.TryEnd.Offset)).
+                    OrderBy(g => g.Key.tryStart).
+                    ThenBy(g => g.Key.tryEnd).
                     Select(g => new ExceptionHandler(
-                        g.Key.TryStart.Offset, g.Key.TryEnd.Offset,
+                        g.Key.tryStart, g.Key.tryEnd,
                         g.Select(eh => new ExceptionCatchHandler(
                             (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
                             this.MetadataContext.GetOrAddType(eh.CatchType),

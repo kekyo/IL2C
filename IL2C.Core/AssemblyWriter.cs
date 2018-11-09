@@ -812,8 +812,9 @@ namespace IL2C
                 if (!exceptionHandlerController.IsFinished)
                 {
                     throw new InvalidProgramSequenceException(
-                        "Invalid exception handler range. MethodName={0}",
-                        preparedMethod.Method.FriendlyName);
+                        "Invalid exception handler range. MethodName={0}, ExceptionHandlers=[{1}]",
+                        preparedMethod.Method.FriendlyName,
+                        string.Join(", ", codeStream.ExceptionHandlers.Select(handler => string.Format("[{0}]", handler))));
                 }
             }
 

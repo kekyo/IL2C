@@ -19,6 +19,8 @@ namespace IL2C.TypeSystems
     [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
     [TestCase(223, "RaiseCaughtAndRethrowLocal", 123)]
     [TestCase(223, "RaiseCaughtAndThrowNewExceptionLocal", 123)]
+    [TestCase(123, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, false)]
+    [TestCase(456, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, true)]
     public sealed class ExceptionHandling
     {
         public static int RaiseAndCaughtLocal(bool sw)
@@ -179,6 +181,24 @@ namespace IL2C.TypeSystems
             }
 
             return r;
+        }
+
+        private static void RaiseException(bool sw)
+        {
+            if (sw) throw new Exception();
+        }
+
+        public static int RaiseAndCaughtGlobal(bool sw)
+        {
+            try
+            {
+                RaiseException(sw);
+            }
+            catch (Exception)
+            {
+                return 456;
+            }
+            return 123;
         }
     }
 }

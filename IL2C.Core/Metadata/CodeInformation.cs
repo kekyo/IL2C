@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using Mono.Cecil.Cil;
 
 namespace IL2C.Metadata
@@ -142,6 +142,16 @@ namespace IL2C.Metadata
             this.CatchStart = catchStart;
             this.CatchEnd = catchEnd;
         }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "{0}({1}, {2} - {3})",
+                this.CatchHandlerType,
+                this.CatchType.MangledName,
+                this.CatchStart,
+                this.CatchEnd);
+        }
     }
 
     public struct ExceptionHandler
@@ -156,6 +166,18 @@ namespace IL2C.Metadata
             this.TryStart = tryStart;
             this.TryEnd = tryEnd;
             this.CatchHandlers = catchHandlers;
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "Try({0} - {1}), {2}",
+                this.TryStart,
+                this.TryEnd,
+                string.Join(
+                    ", ",
+                    this.CatchHandlers.
+                        Select(catchHandler => string.Format("[{0}]", catchHandler))));
         }
     }
 

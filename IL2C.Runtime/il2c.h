@@ -200,6 +200,10 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
             il2c_assert(unwind_target__.ex != NULL); \
             symbolName = unwind_target__.ex;
 
+#define il2c_finally(filteredNumber)
+
+#define il2c_end_finally()
+
 #define il2c_end_try \
         } \
         il2c_assert(0); \

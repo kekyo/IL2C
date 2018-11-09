@@ -108,6 +108,18 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class EndfinallyConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Endfinally;
+
+        public override bool IsEndOfPath => true;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return _ => new[] { "il2c_end_finally()" };
+        }
+    }
+
     internal sealed class RethrowConverter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Rethrow;

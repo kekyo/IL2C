@@ -132,17 +132,23 @@ namespace IL2C.Translators
                 {
                     foreach (var ech in eh.CatchHandlers)
                     {
+                        // TODO: stack position rarely cause mismatched by very cleverly IL code.
+                        //   If already pushed some values before try block, the stackpointer progressed.
+                        //   (marked ???)
                         switch (ech.CatchHandlerType)
                         {
                             case ExceptionCatchHandlerTypes.Catch:
                                 var symbolName = stackInformation.GetOrAdd(ech.CatchType, method, null);
                                 catchExpressions.Add(ech.CatchStart, symbolName);
 
-                                // TODO: stack position rarely cause mismatched.
-                                //   If already pushed some values before try block,
-                                //   the stackpointer progressed.
                                 this.pathRemains.Enqueue(new StackSnapshot(
                                     ech.CatchStart, 1 /* ??? */, stackList));
+                                break;
+
+                            case ExceptionCatchHandlerTypes.Finally:
+                                // Finally block doesn't need any argument.
+                                this.pathRemains.Enqueue(new StackSnapshot(
+                                    ech.CatchStart, 0 /* ??? */, stackList));
                                 break;
                         }
                     }

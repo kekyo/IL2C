@@ -587,14 +587,27 @@ namespace IL2C
                             catchHandlerIndex++)
                         {
                             var catchHandler = handler.CatchHandlers[catchHandlerIndex];
-
-                            tw.WriteLine(
-                                "if (il2c_isinst_unsafe(ex, {0})) return {1};",
-                                catchHandler.CatchType.MangledName,
-                                catchHandlerIndex + 1);
+                            if (catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Catch)
+                            {
+                                tw.WriteLine(
+                                    "if (il2c_isinst_unsafe(ex, {0})) return {1};",
+                                    catchHandler.CatchType.MangledName,
+                                    catchHandlerIndex + 1);
+                            }
                         }
 
-                        tw.WriteLine("return 0;  // Not matched");
+                        // Write finally block index if contains.
+                        var finallyHandler = handler.CatchHandlers.
+                            Select((catchHandler, index) => new { catchHandler, index }).
+                            FirstOrDefault(entry => entry.catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Finally);
+                        if (finallyHandler != null)
+                        {
+                            tw.WriteLine("return {0};  // Not matched (goto finally)", finallyHandler.index + 1);
+                        }
+                        else
+                        {
+                            tw.WriteLine("return 0;  // Not matched");
+                        }
                     }
 
                     tw.WriteLine("}");
@@ -701,12 +714,11 @@ namespace IL2C
                     codeStream.ExceptionHandlers,
                     (handler, handlerIndex) =>
                     {
+                        // Reached try block:
                         var filterName = string.Format(
                             "__{0}_ExceptionFilter{1}__",
                             preparedMethod.Method.CLanguageFunctionName,
                             handlerIndex);
-
-                        // Reached try block:
                         tw.WriteLine("il2c_try({0})", filterName);
                         tw.WriteLine("{");
                         tw.Shift();
@@ -719,12 +731,23 @@ namespace IL2C
                     },
                     (catchHandler, catchHandlerIndex) =>
                     {
-                        // Reached catch block:
-                        tw.WriteLine(
-                            "il2c_catch({0}, {1})  // catch ({2})",
-                            catchHandlerIndex + 1,
-                            preparedMethod.CatchExpressions[catchHandler.CatchStart],
-                            catchHandler.CatchType.MangledName);
+                        switch (catchHandler.CatchHandlerType)
+                        {
+                            case ExceptionCatchHandlerTypes.Catch:
+                                // Reached catch block:
+                                tw.WriteLine(
+                                    "il2c_catch({0}, {1})  // catch ({2})",
+                                    catchHandlerIndex + 1,
+                                    preparedMethod.CatchExpressions[catchHandler.CatchStart],
+                                    catchHandler.CatchType.MangledName);
+                                break;
+                            case ExceptionCatchHandlerTypes.Finally:
+                                // Reached finally block:
+                                tw.WriteLine(
+                                    "il2c_finally({0})",
+                                    catchHandlerIndex + 1);
+                                break;
+                        }
                         tw.WriteLine("{");
                         tw.Shift();
                     },

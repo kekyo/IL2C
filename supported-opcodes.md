@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 108 / 219
+* Number of opcode implementations: 109 / 219
 * Number of opcode tests: 615 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -88,7 +88,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [div.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.div_un) | 0x5c |  |  |  |
 | [dup](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.dup) | 0x25 | Implemented | [Test [2]](tests/IL2C.Core.Test.Target/ILConverters/Dup) | IL2C.ILConverters.DupConverter |
 | [endfilter](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.endfilter) | 0xfe11 |  |  |  |
-| [endfinally](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.endfinally) | 0xdc |  |  |  |
+| [endfinally](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.endfinally) | 0xdc | Implemented |  | IL2C.ILConverters.EndfinallyConverter |
 | [initblk](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.initblk) | 0xfe18 |  |  |  |
 | [initobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.initobj) | 0xfe15 | Implemented |  | IL2C.ILConverters.InitobjConverter |
 | [isinst](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.isinst) | 0x75 | Implemented | [Test [4]](tests/IL2C.Core.Test.Target/ILConverters/Isinst) | IL2C.ILConverters.IsinstConverter |

@@ -170,6 +170,19 @@ namespace IL2C.Metadata
                 SelectMany(type => type.DeclaredMethods.Where(m => m.Overrides.Contains(this))).
                 FirstOrDefault();
 
+        private static int GetExceptionHandlerTypePriority(ExceptionHandlerType type)
+        {
+            switch (type)
+            {
+                case ExceptionHandlerType.Catch:
+                case ExceptionHandlerType.Filter:
+                case ExceptionHandlerType.Fault: return 0;
+                case ExceptionHandlerType.Finally: return 1;
+                default:
+                    throw new Exception();
+            }
+        }
+
         public ICodeStream CodeStream
         {
             get
@@ -199,7 +212,9 @@ namespace IL2C.Metadata
                     ThenByDescending(g => g.Key.tryEnd).
                     Select(g => new ExceptionHandler(
                         g.Key.tryStart, g.Key.tryEnd,
-                        g.Select(eh => new ExceptionCatchHandler(
+                        // Ordered by handler type: catch --> finally
+                        g.OrderBy(eh => GetExceptionHandlerTypePriority(eh.HandlerType)).
+                            Select(eh => new ExceptionCatchHandler(
                             (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
                             this.MetadataContext.GetOrAddType(eh.CatchType),
                             eh.HandlerStart.Offset,

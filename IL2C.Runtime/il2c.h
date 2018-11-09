@@ -54,7 +54,8 @@ typedef uint16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
 
 struct IL2C_EXCEPTION_FRAME
 {
-    IL2C_EXCEPTION_FRAME *pNext;
+    IL2C_EXCEPTION_FRAME* pNext;
+    IL2C_EXECUTION_FRAME* pFrame;
     /* System_Exception* */ void* ex;
     IL2C_EXCEPTION_FILTER filter;
     jmp_buf saved;

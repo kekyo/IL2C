@@ -516,6 +516,7 @@ void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTI
     il2c_assert(pUnwindTarget != NULL);
     il2c_assert(filter != NULL);
 
+    pUnwindTarget->pFrame = g_pBeginFrame__;
     pUnwindTarget->ex = NULL;
     pUnwindTarget->filter = filter;
     pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget);
@@ -541,13 +542,17 @@ void il2c_throw__(System_Exception* ex)
     while (pCurrentFrame != NULL)
     {
         il2c_assert(pCurrentFrame->filter != NULL);
+        il2c_assert(pCurrentFrame->pFrame != NULL);
 
         int result = pCurrentFrame->filter(ex);
         if (result != 0)
         {
-            // Update current frame.
+            // Update current exception frame.
             pCurrentFrame->ex = ex;
             g_pTopUnwindTarget__ = pCurrentFrame;
+
+            // Update execution frame.
+            g_pBeginFrame__ = pCurrentFrame->pFrame;
 
             // Transision to target handler.
             longjmp((void*)pCurrentFrame->saved, result);

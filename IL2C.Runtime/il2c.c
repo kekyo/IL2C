@@ -516,6 +516,7 @@ void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTI
     il2c_assert(pUnwindTarget != NULL);
     il2c_assert(filter != NULL);
 
+    pUnwindTarget->ex = NULL;
     pUnwindTarget->filter = filter;
     pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget);
 }
@@ -541,6 +542,7 @@ void il2c_throw__(System_Exception* ex)
         if (result != 0)
         {
             // Update current frame.
+            pCurrentFrame->ex = ex;
             g_pTopUnwindTarget__ = pCurrentFrame;
 
             // Transision to target handler.
@@ -553,6 +555,19 @@ void il2c_throw__(System_Exception* ex)
 
     // TODO: Unhandled exception
     il2c_assert(0);
+}
+
+void il2c_rethrow()
+{
+    il2c_assert(g_pTopUnwindTarget__ != NULL);
+    il2c_assert(g_pTopUnwindTarget__->ex != NULL);
+    il2c_assert(g_pTopUnwindTarget__->pNext != NULL);   // Will cause unhandled exception
+
+    // Unwind one frame.
+    System_Exception* ex = g_pTopUnwindTarget__->ex;
+    il2c_ixchgptr(&g_pTopUnwindTarget__, g_pTopUnwindTarget__->pNext);
+
+    il2c_throw__(ex);
 }
 
 ///////////////////////////////////////////////////////

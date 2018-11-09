@@ -55,6 +55,7 @@ typedef uint16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
 struct IL2C_EXCEPTION_FRAME
 {
     IL2C_EXCEPTION_FRAME *pNext;
+    /* System_Exception* */ void* ex;
     IL2C_EXCEPTION_FILTER filter;
     jmp_buf saved;
 };
@@ -181,6 +182,7 @@ extern void il2c_throw__(System_Exception* ex);
 #define il2c_throw(ex) \
     il2c_throw__((System_Exception*)ex)
 
+extern void il2c_rethrow();
 extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter);
 extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 

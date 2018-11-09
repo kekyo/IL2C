@@ -90,8 +90,8 @@ namespace IL2C.ILConverters
                 string.Format(
                     "il2c_throw({0})",
                     si.SymbolName) };
+        }
     }
-}
 
     internal sealed class Leave_sConverter : ShortInlineBrTargetConverter
     {
@@ -105,6 +105,19 @@ namespace IL2C.ILConverters
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
             return _ => new[] { string.Format("il2c_leave({0})", labelName) };
+        }
+    }
+
+    internal sealed class RethrowConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Rethrow;
+
+        public override bool IsEndOfPath => true;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return _ => new[] {
+                "il2c_rethrow()" };
         }
     }
 

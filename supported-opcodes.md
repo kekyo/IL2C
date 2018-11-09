@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 107 / 219
+* Number of opcode implementations: 108 / 219
 * Number of opcode tests: 615 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -180,7 +180,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [rem](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem) | 0x5d | Implemented | [Test [9]](tests/IL2C.Core.Test.Target/ILConverters/Rem) | IL2C.ILConverters.RemConverter |
 | [rem.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem_un) | 0x5e |  |  |  |
 | [ret](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ret) | 0x2a | Implemented | [Test [6]](tests/IL2C.Core.Test.Target/ILConverters/Ret) | IL2C.ILConverters.RetConverter |
-| [rethrow](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rethrow) | 0xfe1a |  |  |  |
+| [rethrow](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rethrow) | 0xfe1a | Implemented |  | IL2C.ILConverters.RethrowConverter |
 | [shl](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shl) | 0x62 |  |  |  |
 | [shr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shr) | 0x63 |  |  |  |
 | [shr.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shr_un) | 0x64 |  |  |  |

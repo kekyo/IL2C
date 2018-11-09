@@ -533,7 +533,11 @@ void il2c_throw__(System_Exception* ex)
 {
     il2c_assert(ex != NULL);
 
-    IL2C_EXCEPTION_FRAME* pCurrentFrame = g_pTopUnwindTarget__;
+    // If this state is inside for caught block, skip current frame.
+    // (Throwing new exception instance)
+    IL2C_EXCEPTION_FRAME* pCurrentFrame =
+        (g_pTopUnwindTarget__->ex != NULL) ? g_pTopUnwindTarget__->pNext : g_pTopUnwindTarget__;
+
     while (pCurrentFrame != NULL)
     {
         il2c_assert(pCurrentFrame->filter != NULL);

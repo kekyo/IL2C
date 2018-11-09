@@ -117,10 +117,6 @@ extern void il2c_no_mark_handler__(/* System_Object* */ void* pReference);
 // It's pseudo referenced-type null value used by ldnull.
 typedef void* untyped_ptr;
 
-// TODO: Runtime-related types
-//   System.Array
-//   System.Exception
-
 #include <System.Object.h>
 #include <System.Type.h>
 #include <System.ValueType.h>
@@ -165,6 +161,50 @@ extern void* il2c_unbox__(
     ((valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
 #define il2c_unsafe_unbox__(pObject, typeName) \
     ((typeName*)(((uint8_t*)pObject) + sizeof(System_ValueType)))
+
+/////////////////////////////////////////////////
+// Exception special functions
+
+typedef uint16_t(*IL2C_EXCEPTION_FILTER)(System_Exception* ex);
+
+struct IL2C_EXCEPTION_FRAME
+{
+    IL2C_EXCEPTION_FRAME *pNext;
+    IL2C_EXCEPTION_FILTER filter;
+    jmp_buf saved;
+};
+
+extern void il2c_throw__(System_Exception* ex);
+#define il2c_throw(ex) \
+    il2c_throw__((System_Exception*)ex)
+
+extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter);
+extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
+
+#define il2c_try(filterName) \
+    { \
+        IL2C_EXCEPTION_FRAME unwind_target__; \
+        il2c_link_unwind_target__(&unwind_target__, filterName); \
+        switch (setjmp((void*)&unwind_target__)) \
+        { \
+        case 0:
+
+#define il2c_catch(filteredNumber) \
+            break; \
+        case filteredNumber :
+
+#define il2c_end_try \
+            break; \
+        default: \
+            il2c_assert(0); \
+            break; \
+        } \
+        il2c_unlink_unwind_target__(&unwind_target__); \
+    }
+
+#define il2c_leave(label) \
+        il2c_unlink_unwind_target__(&unwind_target__); \
+        goto label
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions

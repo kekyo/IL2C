@@ -84,11 +84,12 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            return _ => new[] { string.Format(
-                "il2c_throw({0})",
-                si.SymbolName) };
-        }
+            return _ => new[] {
+                string.Format(
+                    "il2c_throw({0})",
+                    si.SymbolName) };
     }
+}
 
     internal sealed class Leave_sConverter : ShortInlineBrTargetConverter
     {

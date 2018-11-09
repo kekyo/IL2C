@@ -8,6 +8,7 @@ namespace IL2C.TypeSystems
     [TestCase(456, "RaiseAndCaughtLocal", true)]
     [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
     [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
+    [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
     public sealed class ExceptionHandling
     {
         public static int RaiseAndCaughtLocal(bool sw)

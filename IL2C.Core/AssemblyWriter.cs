@@ -412,28 +412,31 @@ namespace IL2C
         {
             private sealed class ExceptionHandlerState
             {
-                private readonly ExceptionHandler handler;
+                public readonly ExceptionHandler Handler;
+                public readonly int HandlerIndex;
+
                 private int index = -1;
                 private bool inBlock = false;
 
-                public ExceptionHandlerState(ExceptionHandler handler)
+                public ExceptionHandlerState(ExceptionHandler handler, int handlerIndex)
                 {
-                    this.handler = handler;
+                    this.Handler = handler;
+                    this.HandlerIndex = handlerIndex;
                 }
 
                 public bool Update(
                     ICodeInformation code,
-                    Action tryEnd,
-                    Action<ExceptionCatchHandler> catchStart,
-                    Action<ExceptionCatchHandler> catchEnd)
+                    Action<ExceptionHandler, int> tryEnd,
+                    Action<ExceptionCatchHandler, int> catchStart,
+                    Action<ExceptionCatchHandler, int> catchEnd)
                 {
                     while (true)
                     {
                         if (index == -1)
                         {
-                            if (handler.TryEnd == code.Offset)
+                            if (this.Handler.TryEnd == code.Offset)
                             {
-                                tryEnd();
+                                tryEnd(this.Handler, this.HandlerIndex);
                                 index = 0;
                                 continue;
                             }
@@ -441,14 +444,14 @@ namespace IL2C
                             return false;
                         }
                         
-                        if (index < handler.CatchHandlers.Length)
+                        if (index < this.Handler.CatchHandlers.Length)
                         {
-                            var catchHandler = handler.CatchHandlers[index];
+                            var catchHandler = this.Handler.CatchHandlers[index];
                             if (!inBlock)
                             {
                                 if (catchHandler.CatchStart == code.Offset)
                                 {
-                                    catchStart(catchHandler);
+                                    catchStart(catchHandler, index);
                                     inBlock = true;
                                 }
 
@@ -458,7 +461,7 @@ namespace IL2C
                             {
                                 if (catchHandler.CatchEnd == code.Offset)
                                 {
-                                    catchEnd(catchHandler);
+                                    catchEnd(catchHandler, index);
                                     inBlock = false;
                                     index++;
                                     continue;
@@ -474,24 +477,25 @@ namespace IL2C
                 }
             }
 
-            private readonly Queue<ExceptionHandler> queue;
+            private readonly Queue<(ExceptionHandler handler, int index)> queue;
             private readonly Stack<ExceptionHandlerState> stack = new Stack<ExceptionHandlerState>();
 
-            private readonly Action tryStart;
-            private readonly Action tryEnd;
-            private readonly Action<ExceptionCatchHandler> catchStart;
-            private readonly Action<ExceptionCatchHandler> catchEnd;
-            private readonly Action finished;
+            private readonly Action<ExceptionHandler, int> tryStart;
+            private readonly Action<ExceptionHandler, int> tryEnd;
+            private readonly Action<ExceptionCatchHandler, int> catchStart;
+            private readonly Action<ExceptionCatchHandler, int> catchEnd;
+            private readonly Action<ExceptionHandler, int> finished;
 
             public ExceptionHandlerController(
                 ExceptionHandler[] handlers,
-                Action tryStart,
-                Action tryEnd,
-                Action<ExceptionCatchHandler> catchStart,
-                Action<ExceptionCatchHandler> catchEnd,
-                Action finished)
+                Action<ExceptionHandler, int> tryStart,
+                Action<ExceptionHandler, int> tryEnd,
+                Action<ExceptionCatchHandler, int> catchStart,
+                Action<ExceptionCatchHandler, int> catchEnd,
+                Action<ExceptionHandler, int> finished)
             {
-                queue = new Queue<ExceptionHandler>(handlers);
+                queue = new Queue<(ExceptionHandler handler, int index)>(
+                    handlers.Select((handler, index) => (handler, index)));
 
                 this.tryStart = tryStart;
                 this.tryEnd = tryEnd;
@@ -508,23 +512,23 @@ namespace IL2C
                 {
                     if (queue.Count >= 1)
                     {
-                        var handler = queue.Peek();
-                        if (handler.TryStart == code.Offset)
+                        var entry = queue.Peek();
+                        if (entry.handler.TryStart == code.Offset)
                         {
-                            tryStart();
+                            tryStart(entry.handler, entry.index);
                             queue.Dequeue();
-                            stack.Push(new ExceptionHandlerState(handler));
+                            stack.Push(new ExceptionHandlerState(entry.handler, entry.index));
                             continue;
                         }
                     }
 
                     if (stack.Count >= 1)
                     {
-                        var handler = stack.Peek();
-                        if (handler.Update(code, tryEnd, catchStart, catchEnd))
+                        var state = stack.Peek();
+                        if (state.Update(code, tryEnd, catchStart, catchEnd))
                         {
+                            finished(state.Handler, state.HandlerIndex);
                             stack.Pop();
-                            finished();
                             continue;
                         }
                     }
@@ -548,8 +552,60 @@ namespace IL2C
                 "// [3] {0}{1}",
                 preparedMethod.Method.IsVirtual ? "Virtual: " : string.Empty,
                 preparedMethod.Method.FriendlyName);
-            tw.WriteLine();
 
+            var codeStream = preparedMethod.Method.CodeStream;
+
+            // Write exception filters:
+            if (codeStream.ExceptionHandlers.Length >= 1)
+            {
+                tw.WriteLine();
+                tw.WriteLine("//-------------------");
+                tw.WriteLine("// [3-1] Exception filters:");
+                tw.WriteLine();
+
+                for (var handlerIndex = 0;
+                    handlerIndex < codeStream.ExceptionHandlers.Length;
+                    handlerIndex++)
+                {
+                    var handler = codeStream.ExceptionHandlers[handlerIndex];
+
+                    var filterName = string.Format(
+                        "__{0}_ExceptionFilter{1}__",
+                        preparedMethod.Method.MangledName,
+                        handlerIndex);
+                    tw.WriteLine(
+                        "static uint16_t {0}(System_Exception* ex)",
+                        filterName);
+                    tw.WriteLine("{");
+
+                    using (var _ = tw.Shift())
+                    {
+                        tw.WriteLine("il2c_assert(ex != NULL);");
+
+                        for (var catchHandlerIndex = 0;
+                            catchHandlerIndex < handler.CatchHandlers.Length;
+                            catchHandlerIndex++)
+                        {
+                            var catchHandler = handler.CatchHandlers[catchHandlerIndex];
+
+                            tw.WriteLine(
+                                "if (il2c_isinst(ex, {0})) return {1};",
+                                catchHandler.CatchType.MangledName,
+                                catchHandlerIndex + 1);
+                        }
+
+                        tw.WriteLine("return 0;  // Not matched");
+                    }
+
+                    tw.WriteLine("}");
+                }
+            }
+
+            // Start function:
+            tw.WriteLine();
+            tw.WriteLine("//-------------------");
+            tw.WriteLine("// [3-2] Function body:");
+            tw.WriteLine();
             tw.WriteLine(preparedMethod.Method.CLanguageFunctionPrototype);
             tw.WriteLine("{");
 
@@ -563,7 +619,7 @@ namespace IL2C
                 }
 
                 tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-1] Local variables:");
+                tw.WriteLine("// [3-3] Local variables:");
                 tw.WriteLine();
 
                 // Important NULL assigner (p = NULL):
@@ -580,7 +636,7 @@ namespace IL2C
 
                 tw.WriteLine();
                 tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-2] Evaluation stacks:");
+                tw.WriteLine("// [3-4] Evaluation stacks:");
                 tw.WriteLine();
 
                 foreach (var stack in preparedMethod.Stacks)
@@ -601,7 +657,7 @@ namespace IL2C
                 {
                     tw.WriteLine();
                     tw.WriteLine("//-------------------");
-                    tw.WriteLine("// [3-3] Setup stack frame:");
+                    tw.WriteLine("// [3-5] Setup stack frame:");
                     tw.WriteLine();
 
                     tw.WriteLine("struct /* IL2C_EXECUTION_FRAME */");
@@ -637,41 +693,48 @@ namespace IL2C
 
                 tw.WriteLine();
                 tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-4] IL body:");
+                tw.WriteLine("// [3-6] IL body:");
                 tw.WriteLine();
 
                 // Construct exception handler controller.
-                var codeStream = preparedMethod.Method.CodeStream;
                 var exceptionHandlerController = new ExceptionHandlerController(
                     codeStream.ExceptionHandlers,
-                    () =>
+                    (handler, handlerIndex) =>
                     {
+                        var filterName = string.Format(
+                            "__{0}_ExceptionFilter{1}__",
+                            preparedMethod.Method.MangledName,
+                            handlerIndex);
+
                         // Reached try block:
-                        tw.WriteLine("il2c_try");
+                        tw.WriteLine("il2c_try({0})", filterName);
                         tw.WriteLine("{");
                         tw.Shift();
                     },
-                    () =>
+                    (handler, handlerIndex) =>
                     {
                         // Reached try end block:
                         tw.Shift(-1);
                         tw.WriteLine("}");
                     },
-                    ech =>
+                    (catchHandler, catchHandlerIndex) =>
                     {
                         // Reached catch block:
-                        tw.WriteLine("il2c_catch({0}, {1})",
-                            ech.CatchType.MangledName, preparedMethod.CatchExpressions[ech.CatchStart]);
+                        tw.WriteLine(
+                            "il2c_catch({0})  // catch ({1} {2})",
+                            catchHandlerIndex + 1,
+                            catchHandler.CatchType.CLanguageTypeName,
+                            preparedMethod.CatchExpressions[catchHandler.CatchStart]);
                         tw.WriteLine("{");
                         tw.Shift();
                     },
-                    ech =>
+                    (catchHandler, catchHandlerIndex) =>
                     {
                         // Reached catch end block:
                         tw.Shift(-1);
                         tw.WriteLine("}");
                     },
-                    () =>
+                    (handler, handlerIndex) =>
                     {
                         // Reached finish:
                         tw.WriteLine("il2c_end_try;");

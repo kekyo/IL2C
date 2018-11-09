@@ -266,6 +266,12 @@ void il2c_collect()
     il2c_check_heap();
 }
 
+static uint16_t __Bottom_ExceptionFilter__(System_Exception* ex)
+{
+    il2c_assert(ex != NULL);
+    return 1;  // Unhandled exception
+}
+
 void il2c_initialize()
 {
     il2c_initialize_heap();
@@ -274,7 +280,7 @@ void il2c_initialize()
     g_pBeginHeader__ = NULL;
 
     g_pTopUnwindTarget = &g_BottomUnwindTarget;
-    g_BottomUnwindTarget.ex = NULL;
+    g_BottomUnwindTarget.filter = __Bottom_ExceptionFilter__;
     g_BottomUnwindTarget.pNext = NULL;
     if (setjmp((void*)g_BottomUnwindTarget.saved))
     {
@@ -507,6 +513,47 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE_D
     }
 
     return il2c_unsafe_unbox__(pReference, void);
+}
+
+/////////////////////////////////////////////////
+// Exception special functions
+
+extern IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget;
+
+void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter)
+{
+    il2c_assert(pUnwindTarget != NULL);
+    il2c_assert(filter != NULL);
+
+    pUnwindTarget->filter = filter;
+    pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget, pUnwindTarget);
+}
+
+void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pLastUnwindTarget)
+{
+    il2c_assert(pLastUnwindTarget != NULL);
+
+    g_pTopUnwindTarget = pLastUnwindTarget;
+}
+
+void il2c_throw__(System_Exception* ex)
+{
+    il2c_assert(ex != NULL);
+
+    IL2C_EXCEPTION_FRAME* pCurrentFrame = g_pTopUnwindTarget;
+    while (1)
+    {
+        il2c_assert(pCurrentFrame != NULL);
+
+        int result = pCurrentFrame->filter(ex);
+        if (result != 0)
+        {
+            longjmp((void*)pCurrentFrame->saved, result);
+        }
+
+        // Not matched: next frame.
+        pCurrentFrame = pCurrentFrame->pNext;
+    }
 }
 
 ///////////////////////////////////////////////////////

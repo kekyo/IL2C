@@ -814,7 +814,10 @@ namespace IL2C
                     throw new InvalidProgramSequenceException(
                         "Invalid exception handler range. MethodName={0}, ExceptionHandlers=[{1}]",
                         preparedMethod.Method.FriendlyName,
-                        string.Join(", ", codeStream.ExceptionHandlers.Select(handler => string.Format("[{0}]", handler))));
+                        string.Join(
+                            ",",
+                            codeStream.ExceptionHandlers.
+                                Select(handler => string.Format("[{0}]", handler))));
                 }
             }
 

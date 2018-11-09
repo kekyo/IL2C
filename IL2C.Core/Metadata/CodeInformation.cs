@@ -146,7 +146,7 @@ namespace IL2C.Metadata
         public override string ToString()
         {
             return string.Format(
-                "{0}({1}, {2} - {3})",
+                "{0}({1},{2}-{3})",
                 this.CatchHandlerType,
                 this.CatchType.MangledName,
                 this.CatchStart,
@@ -171,13 +171,12 @@ namespace IL2C.Metadata
         public override string ToString()
         {
             return string.Format(
-                "Try({0} - {1}), {2}",
+                "Try({0}-{1}),{2}",
                 this.TryStart,
                 this.TryEnd,
                 string.Join(
-                    ", ",
-                    this.CatchHandlers.
-                        Select(catchHandler => string.Format("[{0}]", catchHandler))));
+                    ",",
+                    this.CatchHandlers));
         }
     }
 

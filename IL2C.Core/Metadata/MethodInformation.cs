@@ -196,7 +196,7 @@ namespace IL2C.Metadata
                     this.Definition.Body.ExceptionHandlers.
                     GroupBy(eh => (tryStart: eh.TryStart.Offset, tryEnd: eh.TryEnd.Offset)).
                     OrderBy(g => g.Key.tryStart).
-                    ThenBy(g => g.Key.tryEnd).
+                    ThenByDescending(g => g.Key.tryEnd).
                     Select(g => new ExceptionHandler(
                         g.Key.tryStart, g.Key.tryEnd,
                         g.Select(eh => new ExceptionCatchHandler(

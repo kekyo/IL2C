@@ -50,6 +50,15 @@ typedef const struct IL2C_RUNTIME_TYPE_DECL
     const struct IL2C_RUNTIME_TYPE_DECL* baseType;
 } IL2C_RUNTIME_TYPE_DECL;
 
+typedef uint16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
+
+struct IL2C_EXCEPTION_FRAME
+{
+    IL2C_EXCEPTION_FRAME *pNext;
+    IL2C_EXCEPTION_FILTER filter;
+    jmp_buf saved;
+};
+
 typedef volatile struct IL2C_REF_HEADER
 {
     IL2C_REF_HEADER* pNext;
@@ -165,15 +174,6 @@ extern void* il2c_unbox__(
 /////////////////////////////////////////////////
 // Exception special functions
 
-typedef uint16_t(*IL2C_EXCEPTION_FILTER)(System_Exception* ex);
-
-struct IL2C_EXCEPTION_FRAME
-{
-    IL2C_EXCEPTION_FRAME *pNext;
-    IL2C_EXCEPTION_FILTER filter;
-    jmp_buf saved;
-};
-
 extern void il2c_throw__(System_Exception* ex);
 #define il2c_throw(ex) \
     il2c_throw__((System_Exception*)ex)
@@ -184,8 +184,8 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 #define il2c_try(filterName) \
     { \
         IL2C_EXCEPTION_FRAME unwind_target__; \
-        il2c_link_unwind_target__(&unwind_target__, filterName); \
-        switch (setjmp((void*)&unwind_target__)) \
+        il2c_link_unwind_target__(&unwind_target__, (IL2C_EXCEPTION_FILTER)(filterName)); \
+        switch (setjmp(*(jmp_buf*)&unwind_target__.saved)) \
         { \
         case 0:
 

@@ -18,8 +18,7 @@ typedef volatile struct IL2C_EXECUTION_FRAME
 
 // TODO: Become store to thread local storage
 static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
-static IL2C_EXCEPTION_FRAME g_BottomUnwindTarget;
-IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget = NULL;
+static IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget__ = NULL;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 
@@ -278,15 +277,7 @@ void il2c_initialize()
 
     g_pBeginFrame__ = NULL;
     g_pBeginHeader__ = NULL;
-
-    g_pTopUnwindTarget = &g_BottomUnwindTarget;
-    g_BottomUnwindTarget.filter = __Bottom_ExceptionFilter__;
-    g_BottomUnwindTarget.pNext = NULL;
-    if (setjmp((void*)g_BottomUnwindTarget.saved))
-    {
-        // TODO: Unhandled exception
-        il2c_assert(0);
-    }
+    g_pTopUnwindTarget__ = NULL;
 }
 
 void il2c_shutdown()
@@ -518,32 +509,31 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE_D
 /////////////////////////////////////////////////
 // Exception special functions
 
-extern IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget;
-
 void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter)
 {
     il2c_assert(pUnwindTarget != NULL);
     il2c_assert(filter != NULL);
 
     pUnwindTarget->filter = filter;
-    pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget, pUnwindTarget);
+    pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget);
 }
 
-void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pLastUnwindTarget)
+void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget)
 {
-    il2c_assert(pLastUnwindTarget != NULL);
+    il2c_assert(pUnwindTarget != NULL);
 
-    g_pTopUnwindTarget = pLastUnwindTarget;
+    IL2C_EXCEPTION_FRAME* p = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget->pNext);
+    il2c_assert(p == pUnwindTarget);
 }
 
 void il2c_throw__(System_Exception* ex)
 {
     il2c_assert(ex != NULL);
 
-    IL2C_EXCEPTION_FRAME* pCurrentFrame = g_pTopUnwindTarget;
-    while (1)
+    IL2C_EXCEPTION_FRAME* pCurrentFrame = g_pTopUnwindTarget__;
+    while (pCurrentFrame != NULL)
     {
-        il2c_assert(pCurrentFrame != NULL);
+        il2c_assert(pCurrentFrame->filter != NULL);
 
         int result = pCurrentFrame->filter(ex);
         if (result != 0)
@@ -554,6 +544,9 @@ void il2c_throw__(System_Exception* ex)
         // Not matched: next frame.
         pCurrentFrame = pCurrentFrame->pNext;
     }
+
+    // TODO: Unhandled exception
+    il2c_assert(0);
 }
 
 ///////////////////////////////////////////////////////

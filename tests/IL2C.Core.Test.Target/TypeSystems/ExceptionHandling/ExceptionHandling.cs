@@ -10,6 +10,8 @@ namespace IL2C.TypeSystems
     [TestCase(null, "RaiseCaughtAndAccessLocal", null)]
     [TestCase("ABC", "RaiseCaughtNarrowingLocal", "ABC")]
     [TestCase(null, "RaiseCaughtNarrowingLocal", null)]
+    [TestCase("ABC", "RaiseCaughtWildcardLocal", "ABC")]
+    [TestCase(null, "RaiseCaughtWildcardLocal", null)]
     [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
     [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
     [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
@@ -54,6 +56,19 @@ namespace IL2C.TypeSystems
             catch (Exception ex)
             {
                 return ex.Message;
+            }
+            return null;
+        }
+
+        public static string RaiseCaughtWildcardLocal(string value)
+        {
+            try
+            {
+                if (value != null) throw new Exception();
+            }
+            catch
+            {
+                return value;
             }
             return null;
         }

@@ -721,10 +721,10 @@ namespace IL2C
                     {
                         // Reached catch block:
                         tw.WriteLine(
-                            "il2c_catch({0})  // catch ({1} {2})",
+                            "il2c_catch({0}, {1})  // catch ({2})",
                             catchHandlerIndex + 1,
-                            catchHandler.CatchType.CLanguageTypeName,
-                            preparedMethod.CatchExpressions[catchHandler.CatchStart]);
+                            preparedMethod.CatchExpressions[catchHandler.CatchStart],
+                            catchHandler.CatchType.MangledName);
                         tw.WriteLine("{");
                         tw.Shift();
                     },

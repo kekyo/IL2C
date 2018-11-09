@@ -18,7 +18,6 @@ typedef __System_Object_VTABLE_DECL__ __System_String_VTABLE_DECL__;
 
 struct System_String
 {
-    // Instance's vptr
     __System_String_VTABLE_DECL__* vptr0__;
 
     const wchar_t* string_body__;

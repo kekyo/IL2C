@@ -6,31 +6,98 @@ using IL2C.Translators;
 
 namespace IL2C.ILConverters
 {
+    internal static class ConditionalConverterUtilities
+    {
+        public static Func<IExtractContext, string[]> Apply(
+            DecodeContext decodeContext,
+            string oper,
+            bool isUnsigned)
+        {
+            var si1 = decodeContext.PopStack();
+            var si0 = decodeContext.PopStack();
+
+            // ECMA-335 III.3.45 ldnull - load null pointer, said:
+            //   [Rationale: It might be thought that ldnull is redundant: why not use ldc.i4.0 or ldc.i8.0 instead?
+            //   The answer is that ldnull provides a size - agnostic null – analogous to an ldc.i instruction, which
+            //   does not exist.However, even if CIL were to include an ldc.i instruction it would still benefit
+            //   verification algorithms to retain the ldnull instruction because it makes type tracking easier.end
+            //   rationale]
+            // I found the Roslyn generated from C#:
+            //   if (stringValue != null)  // ...
+            // To IL:
+            //   ldarg.0
+            //   ldnull
+            //   cgt_un
+            //   stloc.0
+            // The conditional expression operator can compare between the 'O' type stack value and pseudo 'O' like null value.
+            // And I imagine these comparer maybe don't it another combination (ex: int32 and null, int64 and null...)
+
+            if (si0.TargetType.IsInt32StackFriendlyType &&
+                si1.TargetType.IsInt32StackFriendlyType)
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return _ => new[] { string.Format(
+                    "{1} = (({0}int32_t){2} {3} ({0}int32_t){4}) ? 1 : 0",
+                    isUnsigned ? "u" : string.Empty,
+                    resultName,
+                    si0.SymbolName,
+                    oper,
+                    si1.SymbolName) };
+            }
+
+            if (si0.TargetType.IsInt64StackFriendlyType ||
+                si1.TargetType.IsInt64StackFriendlyType)
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return _ => new[] { string.Format(
+                    "{1} = (({0}int64_t){2} {3} ({0}int64_t){4}) ? 1 : 0",
+                    isUnsigned ? "u" : string.Empty,
+                    resultName,
+                    si0.SymbolName,
+                    oper,
+                    si1.SymbolName) };
+            }
+
+            if ((si0.TargetType.IsIntPtrStackFriendlyType || !si0.TargetType.IsValueType || si0.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType) &&
+                (si1.TargetType.IsIntPtrStackFriendlyType || !si1.TargetType.IsValueType || si1.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType))
+            {
+                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return _ => new[] { string.Format(
+                    "{1} = (({0}intptr_t){2} {3} ({0}intptr_t){4}) ? 1 : 0",
+                    isUnsigned ? "u" : string.Empty,
+                    resultName,
+                    si0.SymbolName,
+                    oper,
+                    si1.SymbolName) };
+            }
+
+            throw new InvalidProgramSequenceException(
+                "Unknown conditional operation: Location={0}, Type0={1}, Type1={2}",
+                decodeContext.CurrentCode.RawLocation,
+                si0.TargetType.FriendlyName,
+                si1.TargetType.FriendlyName);
+        }
+    }
+
     internal sealed class CgtConverter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Cgt;
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var si1 = decodeContext.PopStack();
-            var si0 = decodeContext.PopStack();
+            return ConditionalConverterUtilities.Apply(
+                decodeContext, ">", false);
+        }
+    }
 
-            if (si0.TargetType.IsNumericPrimitive
-                && si1.TargetType.IsNumericPrimitive)
-            {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return _ => new[] { string.Format(
-                    "{0} = ({1} > {2}) ? 1 : 0",
-                    resultName,
-                    si0.SymbolName,
-                    si1.SymbolName) };
-            }
+    internal sealed class Cgt_unConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Cgt_Un;
 
-            throw new InvalidProgramSequenceException(
-                "Unknown cgt operation: Location={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.RawLocation,
-                si0.TargetType.FriendlyName,
-                si1.TargetType.FriendlyName);
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return ConditionalConverterUtilities.Apply(
+                decodeContext, ">", true);
         }
     }
 
@@ -40,25 +107,19 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var si1 = decodeContext.PopStack();
-            var si0 = decodeContext.PopStack();
+            return ConditionalConverterUtilities.Apply(
+                decodeContext, "<", false);
+        }
+    }
 
-            if (si0.TargetType.IsNumericPrimitive
-                && si1.TargetType.IsNumericPrimitive)
-            {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return _ => new[] { string.Format(
-                    "{0} = ({1} < {2}) ? 1 : 0",
-                    resultName,
-                    si0.SymbolName,
-                    si1.SymbolName) };
-            }
+    internal sealed class Clt_unConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Clt_Un;
 
-            throw new InvalidProgramSequenceException(
-                "Unknown clt operation: Location={0}, Type0={1}, Type1={2}",
-                decodeContext.CurrentCode.RawLocation,
-                si0.TargetType.FriendlyName,
-                si1.TargetType.FriendlyName);
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return ConditionalConverterUtilities.Apply(
+                decodeContext, "<", true);
         }
     }
 
@@ -68,39 +129,8 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var si1 = decodeContext.PopStack();
-            var si0 = decodeContext.PopStack();
-
-            var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-
-            if (si0.TargetType.IsNumericPrimitive
-                && si1.TargetType.IsNumericPrimitive)
-            {
-                return _ => new[] { string.Format(
-                    "{0} = ({1} == {2}) ? 1 : 0",
-                    resultName,
-                    si0.SymbolName,
-                    si1.SymbolName) };
-            }
-
-            return extractContext =>
-            {
-                var rhsExpr = extractContext.GetRightExpression(si0.TargetType, si1);
-                if (rhsExpr == null)
-                {
-                    throw new InvalidProgramSequenceException(
-                        "Unknown cgt operation: Location={0}, Type0={1}, Type1={2}",
-                        decodeContext.CurrentCode.RawLocation,
-                        si0.TargetType.FriendlyName,
-                        si1.TargetType.FriendlyName);
-                }
-
-                return new[] { string.Format(
-                    "{0} = ({1} == ({2})) ? 1 : 0",
-                    resultName,
-                    si0.SymbolName,
-                    rhsExpr) };
-            };
+            return ConditionalConverterUtilities.Apply(
+                decodeContext, "==", false);
         }
     }
 }

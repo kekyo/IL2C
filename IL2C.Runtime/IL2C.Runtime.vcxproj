@@ -33,6 +33,7 @@
         <ClCompile Include="System.Int32.c" />
         <ClCompile Include="System.Int64.c" />
         <ClCompile Include="System.IntPtr.c" />
+        <ClCompile Include="System.InvalidCastException.c" />
         <ClCompile Include="System.MulticastDelegate.c" />
         <ClCompile Include="System.Object.c" />
         <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c" />
@@ -61,6 +62,7 @@
         <ClInclude Include="System.Int32.h" />
         <ClInclude Include="System.Int64.h" />
         <ClInclude Include="System.IntPtr.h" />
+        <ClCompile Include="System.InvalidCastException.h" />
         <ClInclude Include="System.MulticastDelegate.h" />
         <ClInclude Include="System.Object.h" />
         <ClInclude Include="System.RuntimeFieldHandle.h" />

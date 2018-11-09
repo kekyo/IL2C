@@ -147,10 +147,11 @@ typedef void* untyped_ptr;
 #include <System.Double.h>
 #include <System.Enum.h>
 #include <System.Delegate.h>
-#include <System.Exception.h>
 #include <System.MulticastDelegate.h>
 #include <System.RuntimeFieldHandle.h>
 #include <System.Runtime.CompilerServices.RuntimeHelpers.h>
+#include <System.Exception.h>
+#include <System.InvalidCastException.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

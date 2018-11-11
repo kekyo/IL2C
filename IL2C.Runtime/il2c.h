@@ -56,6 +56,7 @@ struct IL2C_EXCEPTION_FRAME
 {
     IL2C_EXCEPTION_FRAME* pNext;
     IL2C_EXECUTION_FRAME* pFrame;
+    int continuationIndex;
     /* System_Exception* */ void* ex;
     IL2C_EXCEPTION_FILTER filter;
     jmp_buf saved;
@@ -187,32 +188,36 @@ extern void il2c_rethrow();
 extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter);
 extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 
+#define IL2C_FILTER_NOMATCH (0)
+#define IL2C_FILTER_FINALLY (-1)
+
 #define il2c_try(filterName) \
     { \
         IL2C_EXCEPTION_FRAME unwind_target__; \
         il2c_link_unwind_target__(&unwind_target__, (IL2C_EXCEPTION_FILTER)(filterName)); \
-        switch (setjmp(*(jmp_buf*)&unwind_target__.saved)) \
-        { \
-        case 0:
+        do { \
+            switch (setjmp(*(jmp_buf*)&unwind_target__.saved)) { \
+            case 0: // try
 
 #define il2c_catch(filteredNumber, symbolName) \
-        case filteredNumber : \
-            il2c_assert(unwind_target__.ex != NULL); \
-            symbolName = unwind_target__.ex;
+                il2c_assert(0); /* reached if don't emit leave. */ \
+            case filteredNumber : \
+                il2c_assert(unwind_target__.ex != NULL); \
+                symbolName = unwind_target__.ex;
 
-#define il2c_finally(filteredNumber)
-
-#define il2c_end_finally()
+#define il2c_finally \
+                il2c_assert(0); /* reached if don't emit leave. */ \
+            } \
+        } while (0); \
+        do { \
+            {
 
 #define il2c_end_try \
-        } \
-        il2c_assert(0); \
+                il2c_assert(0); /* reached if don't emit leave. */ \
+            } \
+        } while (0); \
         il2c_unlink_unwind_target__(&unwind_target__); \
     }
-
-#define il2c_leave(label) \
-        il2c_unlink_unwind_target__(&unwind_target__); \
-        goto label
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions

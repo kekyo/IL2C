@@ -517,7 +517,8 @@ void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTI
     il2c_assert(filter != NULL);
 
     pUnwindTarget->pFrame = g_pBeginFrame__;
-    pUnwindTarget->ex = NULL;
+    pUnwindTarget->ex = NULL;   // Current caught exception
+    pUnwindTarget->continuationIndex = -1;
     pUnwindTarget->filter = filter;
     pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget);
 }
@@ -538,6 +539,7 @@ void il2c_throw__(System_Exception* ex)
     // (Throwing new exception instance)
     IL2C_EXCEPTION_FRAME* pCurrentFrame =
         (g_pTopUnwindTarget__->ex != NULL) ? g_pTopUnwindTarget__->pNext : g_pTopUnwindTarget__;
+    IL2C_EXCEPTION_FRAME* pFinallyFrame = NULL;
 
     while (pCurrentFrame != NULL)
     {
@@ -545,17 +547,46 @@ void il2c_throw__(System_Exception* ex)
         il2c_assert(pCurrentFrame->pFrame != NULL);
 
         int result = pCurrentFrame->filter(ex);
-        if (result != 0)
+
+        // Found finally block
+        if (result == IL2C_FILTER_FINALLY)
         {
-            // Update current exception frame.
-            pCurrentFrame->ex = ex;
-            g_pTopUnwindTarget__ = pCurrentFrame;
+            // Memoize finally frame
+            if (pFinallyFrame == NULL)
+            {
+                pFinallyFrame = pCurrentFrame;
+            }
+        }
+        // Found catch block
+        else if (result > IL2C_FILTER_NOMATCH)
+        {
+            // Already found finally block
+            if (pFinallyFrame != NULL)
+            {
+                // Update current exception frame.
+                pFinallyFrame->ex = ex;
+                g_pTopUnwindTarget__ = pFinallyFrame;
 
-            // Update execution frame.
-            g_pBeginFrame__ = pCurrentFrame->pFrame;
+                // Update execution frame.
+                g_pBeginFrame__ = pFinallyFrame->pFrame;
 
-            // Transision to target handler.
-            longjmp((void*)pCurrentFrame->saved, result);
+                // Transision to target finally handler.
+                longjmp((void*)pFinallyFrame->saved, IL2C_FILTER_FINALLY);
+            }
+            else
+            {
+                // MEMO: This place is the first-chance.
+
+                // Update current exception frame.
+                pCurrentFrame->ex = ex;
+                g_pTopUnwindTarget__ = pCurrentFrame;
+
+                // Update execution frame.
+                g_pBeginFrame__ = pCurrentFrame->pFrame;
+
+                // Transision to target catch handler.
+                longjmp((void*)pCurrentFrame->saved, result);
+            }
         }
 
         // Not matched: next frame.

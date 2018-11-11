@@ -106,6 +106,8 @@ namespace IL2C.Translators
             new Dictionary<int, string>();
         private readonly Dictionary<int, string> catchExpressions = 
             new Dictionary<int, string>();
+        private readonly Dictionary<string, int> continuationLabelNames =
+            new Dictionary<string, int>();
         private readonly Queue<StackSnapshot> pathRemains =
             new Queue<StackSnapshot>();
         #endregion
@@ -273,6 +275,17 @@ namespace IL2C.Translators
             return labelName;
         }
 
+        public int RegisterContinuationLabelName(string labelName)
+        {
+            if (!continuationLabelNames.TryGetValue(labelName, out var index))
+            {
+                index = continuationLabelNames.Count;
+                continuationLabelNames.Add(labelName, index);
+            }
+
+            return index;
+        }
+
         public bool TryDequeueNextPath()
         {
             // Finish if remains path is empty.
@@ -325,21 +338,18 @@ namespace IL2C.Translators
         #endregion
 
         #region Extractors
-        public IEnumerable<VariableInformation> ExtractStacks()
-        {
-            return stackList
-                .SelectMany(stackInformations => stackInformations.ExtractStacks());
-        }
+        public IEnumerable<VariableInformation> ExtractStacks() =>
+            stackList.SelectMany(stackInformations => stackInformations.ExtractStacks());
 
-        public IReadOnlyDictionary<int, string> ExtractLabelNames()
-        {
-            return labelNames;
-        }
+        public IReadOnlyDictionary<int, string> ExtractLabelNames() =>
+            labelNames;
 
-        public IReadOnlyDictionary<int, string> ExtractCatchExpressions()
-        {
-            return catchExpressions;
-        }
+        public IReadOnlyDictionary<int, string> ExtractCatchExpressions() =>
+            catchExpressions;
+
+        public IReadOnlyDictionary<int, string> ExtractContinuationLabelNames() =>
+            continuationLabelNames.
+                ToDictionary(entry => entry.Value, entry => entry.Key);
         #endregion
     }
 }

@@ -602,11 +602,11 @@ namespace IL2C
                             FirstOrDefault(entry => entry.catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Finally);
                         if (finallyHandler != null)
                         {
-                            tw.WriteLine("return {0};  // Not matched (goto finally)", finallyHandler.index + 1);
+                            tw.WriteLine("return IL2C_FILTER_FINALLY;  // Not matched (will go to finally)");
                         }
                         else
                         {
-                            tw.WriteLine("return 0;  // Not matched");
+                            tw.WriteLine("return IL2C_FILTER_NOMATCH;  // Not matched");
                         }
                     }
 
@@ -743,9 +743,7 @@ namespace IL2C
                                 break;
                             case ExceptionCatchHandlerTypes.Finally:
                                 // Reached finally block:
-                                tw.WriteLine(
-                                    "il2c_finally({0})",
-                                    catchHandlerIndex + 1);
+                                tw.WriteLine("il2c_finally");
                                 break;
                         }
                         tw.WriteLine("{");

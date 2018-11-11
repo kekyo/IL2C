@@ -102,9 +102,18 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             ICodeInformation operand, DecodeContext decodeContext)
         {
-            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
+            // Strategy:
+            //   The exception handlers have to use "leave" opcode to exit.
+            //   It will be transition to finally block if declared.
+            //   AND, continue to operand label (therefore it delayed evaluation.)
+            //   The AssemblyWriter will write these fragments by labelName side-by-side declared continuationIndex.
 
-            return _ => new[] { string.Format("il2c_leave({0})", labelName) };
+            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
+            var continuationIndex = decodeContext.RegisterContinuationLabelName(labelName);
+
+            return _ => new[] {
+                string.Format("unwind_target__.continuationIndex = {0}", continuationIndex),
+                "break" };
         }
     }
 
@@ -116,7 +125,8 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return _ => new[] { "il2c_end_finally()" };
+            // Finally exit block fragment totally will write by AssemblyWriter.
+            return _ => new[] { "break" };
         }
     }
 
@@ -128,8 +138,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return _ => new[] {
-                "il2c_rethrow()" };
+            return _ => new[] { "il2c_rethrow()" };
         }
     }
 

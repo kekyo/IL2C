@@ -217,20 +217,25 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
             {
 
 #define il2c_endfinally \
-            if (unwind_target__.ex != NULL) il2c_rethrow(); \
-            break
+                if (unwind_target__.ex != NULL) il2c_rethrow(); \
+                break
 
 #define il2c_leave_to \
                 il2c_assert(0); /* reached if don't emit leave or endfinally. */ \
             } \
         } while (0); \
         il2c_unlink_unwind_target__(&unwind_target__); \
-        switch (continuationIndex__)
+        do { \
+            { \
+                switch (continuationIndex__)
 
 #define il2c_leave_bind(continuationIndex, labelName) \
-        case continuationIndex : goto labelName
+                case continuationIndex : goto labelName
 
 #define il2c_end_try \
+                il2c_assert(0); /* reached if don't emit leave or endfinally. */ \
+            } \
+        } while (0); \
     }
 
 ///////////////////////////////////////////////////////

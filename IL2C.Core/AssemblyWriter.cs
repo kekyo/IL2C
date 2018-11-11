@@ -757,31 +757,38 @@ namespace IL2C
                     },
                     (handler, handlerIndex) =>
                     {
-                        // Reached finish: Write leave bind expressions.
-                        tw.WriteLine("il2c_leave_to");
-                        tw.WriteLine("{");
-                        using (var __ = tw.Shift())
+                        // Write leave bind expressions if needed.
+                        // Extract the continuation fromOffset inside at mostly inner exception handler.
+                        var bindEntries =
+                            preparedMethod.LeaveContinuations.
+                            SelectMany(entry => codeStream.ExceptionHandlers.
+                                // nested exception handlers: inner --> outer
+                                Reverse().
+                                // Is this handler contains leave continuation target?
+                                Where(h => entry.Value.fromOffsets.Any(offset => h.ContainsOffset(offset))).
+                                // Found.
+                                Select(h => new { handler = h, continuationIndex = entry.Key, entry.Value.targetOffset }).
+                                // Only first item.
+                                Take(1)).
+                            // ... is current handler?
+                            Where(entry => entry.handler.Equals(handler)).
+                            ToArray();
+                        if (bindEntries.Length >= 1)
                         {
-                            foreach (var entry in
-                                // Extract the continuation fromOffset inside at mostly inner exception handler.
-                                preparedMethod.LeaveContinuations.
-                                SelectMany(entry => codeStream.ExceptionHandlers.
-                                    // nested exception handlers: inner --> outer
-                                    Reverse().
-                                    // Is this handler contains leave continuation target?
-                                    Where(h => entry.Value.fromOffsets.Any(offset => h.ContainsOffset(offset))).
-                                    // Found.
-                                    Select(h => new { handler = h, continuationIndex = entry.Key, entry.Value.targetOffset }).
-                                    // Only first item.
-                                    Take(1)).
-                                // ... is current handler?
-                                Where(entry => entry.handler.Equals(handler)))
+                            tw.WriteLine("il2c_leave_to");
+                            tw.WriteLine("{");
+                            using (var __ = tw.Shift())
                             {
-                                var labelName = preparedMethod.LabelNames[entry.targetOffset];
-                                tw.WriteLine("il2c_leave_bind({0}, {1});", entry.continuationIndex, labelName);
+                                foreach (var bind in bindEntries)
+                                {
+                                    var labelName = preparedMethod.LabelNames[bind.targetOffset];
+                                    tw.WriteLine("il2c_leave_bind({0}, {1});", bind.continuationIndex, labelName);
+                                }
                             }
+                            tw.WriteLine("}");
                         }
-                        tw.WriteLine("}");
+
+                        // Reached end of entire try block.
                         tw.WriteLine("il2c_end_try;");
                     });
 

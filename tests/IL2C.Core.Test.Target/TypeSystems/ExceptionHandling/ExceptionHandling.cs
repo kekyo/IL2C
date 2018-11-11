@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace IL2C.TypeSystems
 {
+    [Description("These tests are verified the IL2C translates with simple and/or complext exception handling.")]
     [TestCase(123, "RaiseAndCaughtLocal", false)]
     [TestCase(456, "RaiseAndCaughtLocal", true)]
     [TestCase("ABC", "RaiseCaughtAndAccessLocal", "ABC")]

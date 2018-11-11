@@ -1,4 +1,6 @@
-﻿namespace IL2C.TypeSystems
+﻿using System.ComponentModel;
+
+namespace IL2C.TypeSystems
 {
     public enum Int32EnumType
     {
@@ -18,6 +20,7 @@
         Max = long.MaxValue
     }
 
+    [Description("The enum types have the underlying primitive integer types. These tests are verified the IL2C can manage enum underlying types at the boxing-unboxing conversion with narrowing-widing combinations.")]
     [TestCase(Int32EnumType.Min, "Int32", int.MinValue, IncludeTypes = new[] { typeof(Int32EnumType) })]
     [TestCase(Int32EnumType.MinusOne, "Int32", -1, IncludeTypes = new[] { typeof(Int32EnumType) })]
     [TestCase(Int32EnumType.Zero, "Int32", 0, IncludeTypes = new[] { typeof(Int32EnumType) })]

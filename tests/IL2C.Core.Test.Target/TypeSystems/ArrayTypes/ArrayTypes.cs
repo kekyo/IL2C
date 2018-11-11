@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace IL2C.TypeSystems
 {
+    [Description("Array type generates on the runtime. Example: System.Int32[] isn't declared anything assembly. These tests are verified the IL2C can handle runtime array types and initialize array items from resources.")]
     [TestCase(1111111, "FromInt32", 0)]
     [TestCase(2222222, "FromInt32", 1)]
     [TestCase(3333333, "FromInt32", 2)]

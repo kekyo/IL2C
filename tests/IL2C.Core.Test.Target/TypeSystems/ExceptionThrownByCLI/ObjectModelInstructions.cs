@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,6 +11,7 @@ namespace IL2C.TypeSystems
     // Because IL2C choices short sentence by unbox operator message because better footprint.
     //   (See also "il2c_cast_failed" symbol at il2c.c)
 
+    [Description("These tests are verified the IL2C throw some exceptions from the internal runtimes by ECMA-335 I.12.4.2.1.")]
     [TestId("ExceptionThrownByCLI")]
     [TestCase(true, "InvalidCastExceptionFromStringToString")]
     [TestCase(true, "InvalidCastExceptionFromInt32ToString", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]

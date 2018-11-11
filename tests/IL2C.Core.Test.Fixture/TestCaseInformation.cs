@@ -8,6 +8,7 @@ namespace IL2C
         public readonly string CategoryName;
         public readonly string Id;
         public readonly string Name;
+        public readonly string Description;
         public readonly MethodInfo Method;
         public readonly Type[] AdditionalTypes;
         public readonly MethodBase[] AdditionalMethods;
@@ -16,12 +17,13 @@ namespace IL2C
         public readonly TestCaseAsserts Assert;
 
         public TestCaseInformation(
-            string categoryName, string id, string name, object expected, TestCaseAsserts assert,
+            string categoryName, string id, string name, string description, object expected, TestCaseAsserts assert,
             MethodInfo method, Type[] additionalTypes, MethodBase[] additionalMethods, object[] arguments)
         {
             this.CategoryName = categoryName;
             this.Id = id;
             this.Name = name;
+            this.Description = description;
             this.Method = method;
             this.AdditionalTypes = additionalTypes;
             this.AdditionalMethods = additionalMethods;

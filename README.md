@@ -69,6 +69,8 @@ Under Apache v2.
 
 * [Supported runtime types](supported-runtime-types.md)
 
+* [Supported type-system features](supported-typesystem-features.md)
+
 #### Support basic types
 
 | Issue | Status | Milestone

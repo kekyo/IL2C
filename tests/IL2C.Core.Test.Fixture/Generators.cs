@@ -65,7 +65,7 @@ namespace IL2C
                 GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
                 Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
                 SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
-                GroupBy(entry => entry.Id).
+                GroupBy(testCase => testCase.Id).
                 ToDictionary(g => g.Key, g => g.Count(), StringComparer.InvariantCultureIgnoreCase);
 
             var path = Path.Combine(generatedDocumentBasePath, "supported-opcodes.md");
@@ -151,7 +151,7 @@ namespace IL2C
                 GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
                 Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
                 SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
-                GroupBy(entry => entry.Method.DeclaringType.Name).
+                GroupBy(testCase => testCase.Method.DeclaringType.Name).
                 ToDictionary(g => g.Key, g => new { Name = g.Key, Count = g.Count() });
 
             var path = Path.Combine(generatedDocumentBasePath, "supported-runtime-types.md");
@@ -184,9 +184,58 @@ namespace IL2C
                             type.FullName.ToLowerInvariant(),
                             (entry != null) ?
                                 ((entry.Count >= 1) ?
-                                    string.Format("[Test [{0}]](tests/IL2C.Core.Test.Target/TypeSystems/{1})", entry.Count, entry.Name) :
+                                    string.Format("[Test [{0}]](tests/IL2C.Core.Test.Target/RuntimeTypes/{1})", entry.Count, entry.Name) :
                                     string.Empty) :
                                 string.Empty));
+                }
+
+                await tw.FlushAsync();
+            }
+        }
+
+        [Test]
+        public static async Task DumpSupportedTypeSystems()
+        {
+            var typeSystemsTests =
+                typeof(TypeSystemsTest).
+                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
+                Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
+                SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
+                GroupBy(testCase => testCase.Id).
+                ToDictionary(
+                    g => g.Key,
+                    g => new {
+                        Name = g.Key,
+                        Count = g.Count(),
+                        Description = g.
+                            Select(testCase => testCase.Description).
+                            Distinct().
+                            FirstOrDefault(d => !string.IsNullOrWhiteSpace(d)) ?? string.Empty });
+
+            var path = Path.Combine(generatedDocumentBasePath, "supported-typesystem-features.md");
+
+            using (var fs = await TestUtilities.CreateStreamAsync(path))
+            {
+                var tw = new StreamWriter(fs);
+
+                await tw.WriteLineAsync("# Supported type-system features");
+                await tw.WriteLineAsync();
+                //await tw.WriteLineAsync(
+                //    string.Format("* Number of tests: {0} [{1} / {2}]",
+                //        types.Sum(type => typeSystemsTests.TryGetValue(type.FullName.Replace('.', '_'), out var entry) ? entry.Count : 0),
+                //        types.Count(type => typeSystemsTests.ContainsKey(type.FullName.Replace('.', '_'))),
+                //        types.Length));
+                await tw.WriteLineAsync();
+                await tw.WriteLineAsync("Feature | Test | Descrition");
+                await tw.WriteLineAsync("|:---|:---|:---|");
+
+                foreach (var typeSystemTest in typeSystemsTests)
+                {
+                    await tw.WriteLineAsync(
+                        string.Format("| {0} | [Test [{1}]](tests/IL2C.Core.Test.Target/TypeSystems/{0}) | {2} |",
+                        typeSystemTest.Key,
+                        typeSystemTest.Value.Count,
+                        typeSystemTest.Value.Description));
                 }
 
                 await tw.FlushAsync();

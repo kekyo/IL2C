@@ -1,4 +1,6 @@
-﻿namespace IL2C.TypeSystems
+﻿using System.ComponentModel;
+
+namespace IL2C.TypeSystems
 {
     public delegate string Int32ToStringDelegate(int value);
     public delegate void RefIntDelegate(ref int value);
@@ -13,6 +15,7 @@
         }
     }
 
+    [Description("The delegate types contain special member fields, the objref instance reference and the raw method pointer. These tests are verified the IL2C can invoke delegate types combination features between static, instance, virtual method and multicasting at the runtime.")]
     [TestCase("12345678ABC", new[] { "Static_Int32ToString", "Static_Int32ToStringImpl" }, 12345678, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
     [TestCase(1111, new[] { "Static_Void_RefInt", "Static_Void_RefIntImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
     [TestCase("87654321ABC123", new[] { "Instance_Int32ToString", "Instance_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]

@@ -92,8 +92,9 @@ extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_T
     ((pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName)))
 #define il2c_isinst(pReference, typeName) \
     (((pReference) != NULL) ? il2c_isinst_unsafe(pReference, typeName) : NULL)
+extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
 #define il2c_castclass(pReference, typeName) \
-    il2c_isinst(pReference, typeName) // TODO: InvalidCastException
+    (((pReference) != NULL) ? il2c_castclass__(pReference, il2c_typeof(typeName)) : NULL)
 
 // static cast operators
 #define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \

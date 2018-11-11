@@ -215,18 +215,17 @@ namespace IL2C.ILConverters
         }
     }
 
-    internal sealed class IsinstConverter : InlineTypeConverter
+    internal static class IsinstConverterUtilities
     {
-        public override OpCode OpCode => OpCodes.Isinst;
-
-        public override Func<IExtractContext, string[]> Apply(
-            ITypeInformation operand, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> Apply(
+            ITypeInformation operand, DecodeContext decodeContext, bool check)
         {
             var si = decodeContext.PopStack();
             if (si.TargetType.IsValueType || si.TargetType.IsByReference || si.TargetType.IsPointer)
             {
                 throw new InvalidProgramSequenceException(
-                    "Invalid isinst operation: Location={0}, StackType={1}",
+                    "Invalid {0} operation: Location={1}, StackType={2}",
+                    check ? "castclass" : "isinst",
                     decodeContext.CurrentCode.RawLocation,
                     si.TargetType.FriendlyName);
             }
@@ -237,7 +236,7 @@ namespace IL2C.ILConverters
                 operand;
             var symbolName = decodeContext.PushStack(resultType);
 
-            // If this type can cast statically
+            // If this type can cast statically:
             if (operand.IsAssignableFrom(si.TargetType))
             {
                 return _ =>
@@ -249,17 +248,27 @@ namespace IL2C.ILConverters
                         si.SymbolName) };
                 };
             }
-            else
-            {
-                return _ =>
-                {
-                    return new[] { string.Format(
-                        "{0} = il2c_isinst({1}, {2})",
-                        symbolName,
-                        si.SymbolName,
-                        operand.MangledName) };
-                };
-            }
+
+            var expression = string.Format(
+                "{0} = {1}({2}, {3})",
+                symbolName,
+                check ? "il2c_castclass" : "il2c_isinst",
+                si.SymbolName,
+                operand.MangledName);
+
+            return _ => { return new[] { expression }; };
+        }
+    }
+
+    internal sealed class IsinstConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Isinst;
+
+        public override Func<IExtractContext, string[]> Apply(
+            ITypeInformation operand, DecodeContext decodeContext)
+        {
+            return IsinstConverterUtilities.Apply(
+                operand, decodeContext, false);
         }
     }
 
@@ -270,44 +279,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             ITypeInformation operand, DecodeContext decodeContext)
         {
-            var si = decodeContext.PopStack();
-            if (si.TargetType.IsValueType || si.TargetType.IsByReference || si.TargetType.IsPointer)
-            {
-                throw new InvalidProgramSequenceException(
-                    "Invalid isinst operation: Location={0}, StackType={1}",
-                    decodeContext.CurrentCode.RawLocation,
-                    si.TargetType.FriendlyName);
-            }
-
-            // It's maybe boxed objref if operand is value type.
-            var resultType = operand.IsValueType ?
-                decodeContext.PrepareContext.MetadataContext.ValueTypeType :
-                operand;
-            var symbolName = decodeContext.PushStack(resultType);
-
-            // If this type can cast statically
-            if (operand.IsAssignableFrom(si.TargetType))
-            {
-                return _ =>
-                {
-                    return new[] { string.Format(
-                        "{0} = ({1}){2}",
-                        symbolName,
-                        operand.CLanguageTypeName,
-                        si.SymbolName) };
-                };
-            }
-            else
-            {
-                return _ =>
-                {
-                    return new[] { string.Format(
-                        "{0} = il2c_isinst({1}, {2})",
-                        symbolName,
-                        si.SymbolName,
-                        operand.MangledName) };
-                };
-            }
+            return IsinstConverterUtilities.Apply(
+                operand, decodeContext, true);
         }
     }
 

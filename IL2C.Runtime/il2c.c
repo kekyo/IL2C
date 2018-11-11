@@ -289,11 +289,7 @@ void il2c_shutdown()
 void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
 {
     il2c_assert(type != NULL);
-
-    if (pReference == NULL)
-    {
-        return NULL;
-    }
+    il2c_assert(pReference != NULL);
 
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
     IL2C_RUNTIME_TYPE_DECL* currentType = pHeader->type;
@@ -308,6 +304,32 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DEC
     while (currentType != NULL);
 
     return NULL;
+}
+
+// MEMO: Hmm, the unbox failed message different to the castclass opcode...
+//   IL2C choices short sentence by unbox operator message because better footprint.
+//   .NET 4 castclass message format: "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
+IL2C_CONST_STRING(il2c_cast_failed, L"Specified cast is not valid.");
+
+static void il2c_throw_invalidcastexception__()
+{
+    System_InvalidCastException* ex = il2c_get_uninitialized_object(System_InvalidCastException);
+    System_InvalidCastException__ctor_1(ex, il2c_cast_failed);
+    il2c_throw(ex);
+}
+
+void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
+{
+    il2c_assert(type != NULL);
+    il2c_assert(pReference != NULL);
+
+    void* p = il2c_isinst__(pReference, type);
+    if (p != NULL)
+    {
+        return p;
+    }
+
+    il2c_throw_invalidcastexception__();
 }
 
 /////////////////////////////////////////////////////////////
@@ -393,9 +415,8 @@ System_ValueType* il2c_box2__(
             else v.i1 = (int8_t)*(int32_t*)pValue;
             break;
         default:
-            // TODO: throw InvalidCastException()
-            il2c_assert(0);
-            break;
+            // TODO: InvalidProgramException?
+            il2c_throw_invalidcastexception__();
         }
         break;
     case 2:
@@ -415,9 +436,8 @@ System_ValueType* il2c_box2__(
             else v.i2 = (int16_t)*(int32_t*)pValue;
             break;
         default:
-            // TODO: throw InvalidCastException()
-            il2c_assert(0);
-            break;
+            // TODO: InvalidProgramException?
+            il2c_throw_invalidcastexception__();
         }
         break;
     case 4:
@@ -443,15 +463,13 @@ System_ValueType* il2c_box2__(
             else v.i4 = (int32_t)*(int64_t*)pValue;
             break;
         default:
-            // TODO: throw InvalidCastException()
-            il2c_assert(0);
-            break;
+            // TODO: InvalidProgramException?
+            il2c_throw_invalidcastexception__();
         }
         break;
     default:
-        // TODO: throw InvalidCastException()
-        il2c_assert(0);
-        break;
+        // TODO: InvalidProgramException?
+        il2c_throw_invalidcastexception__();
     }
 
     uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
@@ -495,8 +513,7 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE_D
         (((uint8_t*)pReference) - sizeof(IL2C_REF_HEADER));
     if (pHeader->type != valueType)
     {
-        // throw InvalidCastException();
-        il2c_assert(0);
+        il2c_throw_invalidcastexception__();
     }
 
     return il2c_unsafe_unbox__(pReference, void);

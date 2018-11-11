@@ -19,7 +19,7 @@ namespace IL2C
             Concat(TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.MulticastDelegateTypes>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.DelegateTypesWithVirtual1>()).
             Concat(TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.DelegateTypesWithVirtual2>()).
-           ToArray();
+            ToArray();
         [Test]
         public static Task DelegateTypes([ValueSource(nameof(_DelegateTypes))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
@@ -29,9 +29,16 @@ namespace IL2C
         public static Task ArrayTypes([ValueSource(nameof(_ArrayTypes))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
-        public static readonly TestCaseInformation[] _ExceptionHandling = TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.ExceptionHandling>();
+        public static readonly TestCaseInformation[] _ExceptionHandling =
+            TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.ExceptionHandling>();
         [Test]
         public static Task ExceptionHandling([ValueSource(nameof(_ExceptionHandling))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
+
+        public static readonly TestCaseInformation[] _ExceptionThrownByCLI =
+            TestUtilities.GetTestCaseInformations<IL2C.TypeSystems.ObjectModelInstructions>();
+        [Test]
+        public static Task ExceptionThrownByCLI([ValueSource(nameof(_ExceptionThrownByCLI))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
     }
 }

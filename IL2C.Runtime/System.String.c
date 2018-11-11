@@ -416,6 +416,18 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
     return wcscmp(lhs->string_body__, rhs->string_body__) == 0;
 }
 
+bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(lhs != NULL);
+    il2c_assert(rhs != NULL);
+
+    il2c_assert(lhs->string_body__ != NULL);
+    il2c_assert(rhs->string_body__ != NULL);
+
+    return wcscmp(lhs->string_body__, rhs->string_body__) != 0;
+}
+
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 

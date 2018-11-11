@@ -138,15 +138,15 @@ namespace IL2C
             var catchExpressions = decodeContext.
                 ExtractCatchExpressions();
 
-            var continuationLabelNames = decodeContext.
-                ExtractContinuationLabelNames();
+            var leaveContinuations = decodeContext.
+                ExtractLeaveContinuations();
 
             return new PreparedMethodInformation(
                 method,
                 stacks,
                 labelNames,
                 catchExpressions,
-                continuationLabelNames,
+                leaveContinuations,
                 generators);
         }
 

@@ -106,8 +106,8 @@ namespace IL2C.Translators
             new Dictionary<int, string>();
         private readonly Dictionary<int, string> catchExpressions = 
             new Dictionary<int, string>();
-        private readonly Dictionary<string, int> continuationLabelNames =
-            new Dictionary<string, int>();
+        private readonly Dictionary<int, (HashSet<int> fromOffsets, int continuationIndex)> leaveContinuationsByTarget =
+            new Dictionary<int, (HashSet<int> fromOffsets, int continuationIndex)>();
         private readonly Queue<StackSnapshot> pathRemains =
             new Queue<StackSnapshot>();
         #endregion
@@ -275,15 +275,27 @@ namespace IL2C.Translators
             return labelName;
         }
 
-        public int RegisterContinuationLabelName(string labelName)
+        public int RegisterLeaveContinuation(int fromOffset, int targetOffset)
         {
-            if (!continuationLabelNames.TryGetValue(labelName, out var index))
+            // This sample contains two from offset to one target offset.
+            // The from offset holds with HashSet<int>.
+            // <from>         <target>
+            // IL_0014: leave IL_0065
+            //            :
+            //            :
+            // IL_0033: leave IL_0065
+            //            :
+            //            :
+            // IL_0065: ...
+
+            if (!leaveContinuationsByTarget.TryGetValue(targetOffset, out var entry))
             {
-                index = continuationLabelNames.Count;
-                continuationLabelNames.Add(labelName, index);
+                entry = (new HashSet<int> { fromOffset }, leaveContinuationsByTarget.Count);
+                leaveContinuationsByTarget.Add(targetOffset, entry);
             }
 
-            return index;
+            entry.fromOffsets.Add(fromOffset);
+            return entry.continuationIndex;
         }
 
         public bool TryDequeueNextPath()
@@ -347,9 +359,9 @@ namespace IL2C.Translators
         public IReadOnlyDictionary<int, string> ExtractCatchExpressions() =>
             catchExpressions;
 
-        public IReadOnlyDictionary<int, string> ExtractContinuationLabelNames() =>
-            continuationLabelNames.
-                ToDictionary(entry => entry.Value, entry => entry.Key);
+        public IReadOnlyDictionary<int, (ISet<int> fromOffsets, int targetOffset)> ExtractLeaveContinuations() =>
+            leaveContinuationsByTarget.
+                ToDictionary(entry => entry.Value.continuationIndex, entry => ((ISet<int>)entry.Value.fromOffsets, entry.Key));
         #endregion
     }
 }

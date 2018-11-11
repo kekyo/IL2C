@@ -108,8 +108,9 @@ namespace IL2C.ILConverters
             //   AND, continue to operand label (therefore it delayed evaluation.)
             //   The AssemblyWriter will write these fragments by labelName side-by-side declared continuationIndex.
 
-            var labelName = decodeContext.EnqueueNewPath(operand.Offset);
-            var continuationIndex = decodeContext.RegisterContinuationLabelName(labelName);
+            decodeContext.EnqueueNewPath(operand.Offset);
+            var continuationIndex = decodeContext.RegisterLeaveContinuation(
+                decodeContext.CurrentCode.Offset, operand.Offset);
 
             return _ => new[] { string.Format("il2c_leave({0})", continuationIndex) };
         }

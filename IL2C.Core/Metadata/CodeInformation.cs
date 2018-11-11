@@ -124,7 +124,7 @@ namespace IL2C.Metadata
         Finally
     }
 
-    public struct ExceptionCatchHandler
+    public sealed class ExceptionCatchHandler : IEquatable<ExceptionCatchHandler>
     {
         public readonly ExceptionCatchHandlerTypes CatchHandlerType;
         public readonly ITypeInformation CatchType;
@@ -143,6 +143,38 @@ namespace IL2C.Metadata
             this.CatchEnd = catchEnd;
         }
 
+        public bool ContainsOffset(int offset)
+        {
+            return (offset >= this.CatchStart) && (offset < this.CatchEnd);
+        }
+
+        public bool Equals(ExceptionCatchHandler other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return
+                (this.CatchHandlerType == other.CatchHandlerType) &&
+                (this.CatchStart == other.CatchStart) &&
+                (this.CatchEnd == other.CatchEnd) &&
+                (this.CatchType?.Equals(other.CatchType) ?? (other.CatchType == null));
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as ExceptionCatchHandler);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.CatchHandlerType.GetHashCode() ^
+                this.CatchType.GetHashCode() ^
+                this.CatchStart.GetHashCode() ^
+                this.CatchEnd.GetHashCode();
+        }
+
         public override string ToString()
         {
             return string.Format(
@@ -154,7 +186,7 @@ namespace IL2C.Metadata
         }
     }
 
-    public struct ExceptionHandler
+    public sealed class ExceptionHandler : IEquatable<ExceptionHandler>
     {
         public readonly int TryStart;
         public readonly int TryEnd;
@@ -168,6 +200,38 @@ namespace IL2C.Metadata
             this.CatchHandlers = catchHandlers;
         }
 
+        public bool ContainsOffset(int offset)
+        {
+            return
+                ((offset >= this.TryStart) && (offset < this.TryEnd)) ||
+                this.CatchHandlers.Any(catchHandler => catchHandler.ContainsOffset(offset));
+        }
+
+        public bool Equals(ExceptionHandler other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return
+                 (this.TryStart == other.TryStart) &&
+                (this.TryEnd == other.TryEnd) &&
+                this.CatchHandlers.SequenceEqual(other.CatchHandlers);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as ExceptionHandler);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.CatchHandlers.Aggregate(
+                this.TryStart.GetHashCode() ^ this.TryEnd.GetHashCode(),
+                (s, catchHander) => s ^ catchHander.GetHashCode());
+        }
+
         public override string ToString()
         {
             return string.Format(
@@ -176,7 +240,7 @@ namespace IL2C.Metadata
                 this.TryEnd,
                 string.Join(
                     ",",
-                    this.CatchHandlers));
+                    this.CatchHandlers.AsEnumerable()));
         }
     }
 

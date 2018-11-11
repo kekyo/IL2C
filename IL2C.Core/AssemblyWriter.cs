@@ -757,14 +757,28 @@ namespace IL2C
                     },
                     (handler, handlerIndex) =>
                     {
-                        // Reached finish:
+                        // Reached finish: Write leave bind expressions.
                         tw.WriteLine("il2c_leave_to");
                         tw.WriteLine("{");
                         using (var __ = tw.Shift())
                         {
-                            foreach (var entry in preparedMethod.ContinuationLabelNames)
+                            foreach (var entry in
+                                // Extract the continuation fromOffset inside at mostly inner exception handler.
+                                preparedMethod.LeaveContinuations.
+                                SelectMany(entry => codeStream.ExceptionHandlers.
+                                    // nested exception handlers: inner --> outer
+                                    Reverse().
+                                    // Is this handler contains leave continuation target?
+                                    Where(h => entry.Value.fromOffsets.Any(offset => h.ContainsOffset(offset))).
+                                    // Found.
+                                    Select(h => new { handler = h, continuationIndex = entry.Key, entry.Value.targetOffset }).
+                                    // Only first item.
+                                    Take(1)).
+                                // ... is current handler?
+                                Where(entry => entry.handler.Equals(handler)))
                             {
-                                tw.WriteLine("il2c_leave_bind({0}, {1});", entry.Key, entry.Value);
+                                var labelName = preparedMethod.LabelNames[entry.targetOffset];
+                                tw.WriteLine("il2c_leave_bind({0}, {1});", entry.continuationIndex, labelName);
                             }
                         }
                         tw.WriteLine("}");

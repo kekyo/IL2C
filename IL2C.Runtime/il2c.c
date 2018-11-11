@@ -518,7 +518,6 @@ void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTI
 
     pUnwindTarget->pFrame = g_pBeginFrame__;
     pUnwindTarget->ex = NULL;   // Current caught exception
-    pUnwindTarget->continuationIndex = -1;
     pUnwindTarget->filter = filter;
     pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget);
 }

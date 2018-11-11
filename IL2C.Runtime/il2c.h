@@ -56,7 +56,6 @@ struct IL2C_EXCEPTION_FRAME
 {
     IL2C_EXCEPTION_FRAME* pNext;
     IL2C_EXECUTION_FRAME* pFrame;
-    int continuationIndex;
     /* System_Exception* */ void* ex;
     IL2C_EXCEPTION_FILTER filter;
     jmp_buf saved;
@@ -194,13 +193,14 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 #define il2c_try(filterName) \
     { \
         IL2C_EXCEPTION_FRAME unwind_target__; \
+        int continuationIndex__ = -1; \
         il2c_link_unwind_target__(&unwind_target__, (IL2C_EXCEPTION_FILTER)(filterName)); \
         do { \
             switch (setjmp(*(jmp_buf*)&unwind_target__.saved)) { \
             case 0: // try
 
-#define il2c_leave(index) \
-                unwind_target__.continuationIndex = index; \
+#define il2c_leave(continuationIndex) \
+                continuationIndex__ = continuationIndex; \
                 break
 
 #define il2c_catch(filteredNumber, symbolName) \
@@ -225,7 +225,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
             } \
         } while (0); \
         il2c_unlink_unwind_target__(&unwind_target__); \
-        switch (unwind_target__.continuationIndex)
+        switch (continuationIndex__)
 
 #define il2c_leave_bind(continuationIndex, labelName) \
         case continuationIndex : goto labelName

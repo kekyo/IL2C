@@ -11,7 +11,7 @@ namespace IL2C.Translators
         public readonly VariableInformation[] Stacks;
         public readonly IReadOnlyDictionary<int, string> LabelNames;
         public readonly IReadOnlyDictionary<int, string> CatchExpressions;
-        public readonly IReadOnlyDictionary<int, string> ContinuationLabelNames;
+        public readonly IReadOnlyDictionary<int, (ISet<int> fromOffsets, int targetOffset)> LeaveContinuations;
         internal readonly IReadOnlyDictionary<int, Func<IExtractContext, string[]>> Generators;
 
         internal PreparedMethodInformation(
@@ -19,14 +19,14 @@ namespace IL2C.Translators
             VariableInformation[] stacks,
             IReadOnlyDictionary<int, string> labelNames,
             IReadOnlyDictionary<int, string> catchExpressions,
-            IReadOnlyDictionary<int, string> continuationLabelNames,
+            IReadOnlyDictionary<int, (ISet<int> fromOffsets, int targetOffset)> leaveContinuations,
             IReadOnlyDictionary<int, Func<IExtractContext, string[]>> generators)
         {
             this.Method = method;
             this.Stacks = stacks;
             this.LabelNames = labelNames;
             this.CatchExpressions = catchExpressions;
-            this.ContinuationLabelNames = continuationLabelNames;
+            this.LeaveContinuations = leaveContinuations;
             this.Generators = generators;
         }
     }

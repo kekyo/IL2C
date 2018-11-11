@@ -27,6 +27,7 @@ namespace IL2C.TypeSystems
     [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
     [TestCase(223, "RaiseCaughtAndRethrowLocal", 123)]
     [TestCase(223, "RaiseCaughtAndThrowNewExceptionLocal", 123)]
+    [TestCase(223, "FinallyThrowNewExceptionLocal", 123)]
     [TestCase(123, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, false)]
     [TestCase(456, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, true)]
     public sealed class ExceptionHandling
@@ -282,6 +283,29 @@ namespace IL2C.TypeSystems
             catch (InvalidCastException)
             {
                 r += value;
+            }
+
+            return r;
+        }
+
+        public static int FinallyThrowNewExceptionLocal(int value)
+        {
+            int r = 0;
+            try
+            {
+                try
+                {
+                    throw new Exception();
+                }
+                finally
+                {
+                    r += value;
+                    throw new InvalidCastException();
+                }
+            }
+            catch (InvalidCastException)
+            {
+                r += 100;
             }
 
             return r;

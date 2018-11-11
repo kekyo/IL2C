@@ -265,12 +265,6 @@ void il2c_collect()
     il2c_check_heap();
 }
 
-static uint16_t __Bottom_ExceptionFilter__(System_Exception* ex)
-{
-    il2c_assert(ex != NULL);
-    return 1;  // Unhandled exception
-}
-
 void il2c_initialize()
 {
     il2c_initialize_heap();
@@ -530,6 +524,20 @@ void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget)
     il2c_assert(p == pUnwindTarget);
 }
 
+static void il2c_throw_internal__(
+    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t value)
+{
+    // Update current exception frame.
+    pTargetFrame->ex = ex;
+    g_pTopUnwindTarget__ = pTargetFrame;
+
+    // Update execution frame.
+    g_pBeginFrame__ = pTargetFrame->pFrame;
+
+    // Transision to target handler.
+    longjmp((void*)pTargetFrame->saved, value);
+}
+
 void il2c_throw__(System_Exception* ex)
 {
     il2c_assert(ex != NULL);
@@ -556,40 +564,31 @@ void il2c_throw__(System_Exception* ex)
                 pFinallyFrame = pCurrentFrame;
             }
         }
-        // Found catch block
-        else if (result > IL2C_FILTER_NOMATCH)
+        else if (result != IL2C_FILTER_NOMATCH)
         {
             // Already found finally block
             if (pFinallyFrame != NULL)
             {
-                // Update current exception frame.
-                pFinallyFrame->ex = ex;
-                g_pTopUnwindTarget__ = pFinallyFrame;
-
-                // Update execution frame.
-                g_pBeginFrame__ = pFinallyFrame->pFrame;
-
-                // Transision to target finally handler.
-                longjmp((void*)pFinallyFrame->saved, IL2C_FILTER_FINALLY);
+                // Send to finally
+                il2c_throw_internal__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
             }
             else
             {
                 // MEMO: This place is the first-chance.
-
-                // Update current exception frame.
-                pCurrentFrame->ex = ex;
-                g_pTopUnwindTarget__ = pCurrentFrame;
-
-                // Update execution frame.
-                g_pBeginFrame__ = pCurrentFrame->pFrame;
-
-                // Transision to target catch handler.
-                longjmp((void*)pCurrentFrame->saved, result);
+                // Send to catch
+                il2c_throw_internal__(ex, pCurrentFrame, result);
             }
         }
 
         // Not matched: next frame.
         pCurrentFrame = pCurrentFrame->pNext;
+    }
+
+    // Already found finally block
+    if (pFinallyFrame != NULL)
+    {
+        // Send to finally
+        il2c_throw_internal__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
     }
 
     // TODO: Unhandled exception

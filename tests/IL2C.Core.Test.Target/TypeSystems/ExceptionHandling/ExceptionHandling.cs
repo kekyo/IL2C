@@ -15,7 +15,8 @@ namespace IL2C.TypeSystems
     [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
     [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
     [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
-    [TestCase(246, "Finally", 123)]
+    [TestCase(246, "FinallyWithNonThrowingLocal", 123)]
+    [TestCase(223, "FinallyWithThrowingAndNestedLocal", 123)]
     [TestCase(123, "RaiseAndNestedCaughtLocal", 123)]
     [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
     [TestCase(223, "RaiseCaughtAndRethrowLocal", 123)]
@@ -94,7 +95,7 @@ namespace IL2C.TypeSystems
             return 123;
         }
 
-        public static int Finally(int value)
+        public static int FinallyWithNonThrowingLocal(int value)
         {
             int r = 0;
             try
@@ -104,6 +105,28 @@ namespace IL2C.TypeSystems
             finally
             {
                 r += value;
+            }
+
+            return r;
+        }
+
+        public static int FinallyWithThrowingAndNestedLocal(int value)
+        {
+            int r = 0;
+            try
+            {
+                try
+                {
+                    throw new Exception();
+                }
+                finally
+                {
+                    r += value;
+                }
+            }
+            catch (Exception)
+            {
+                r += 100;
             }
 
             return r;

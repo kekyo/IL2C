@@ -217,6 +217,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
             {
 
 #define il2c_endfinally \
+            if (unwind_target__.ex != NULL) il2c_rethrow(); \
             break
 
 #define il2c_leave_to \

@@ -19,6 +19,10 @@ namespace IL2C.TypeSystems
     [TestCase(129, "FinallyWithThrowingAndNestedLocal", 123)]
     [TestCase(129, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, true)]
     [TestCase(29, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, false)]
+    [TestCase(30, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, false, false)]
+    [TestCase(30, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, false, true)]
+    [TestCase(12, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, true, false)]
+    [TestCase(112, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, true, true)]
     [TestCase(123, "RaiseAndNestedCaughtLocal", 123)]
     [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
     [TestCase(223, "RaiseCaughtAndRethrowLocal", 123)]
@@ -161,6 +165,38 @@ namespace IL2C.TypeSystems
             return r;
         }
 
+        private static void RaiseException(bool sw)
+        {
+            if (sw) throw new Exception();
+        }
+
+        public static int FinallyAndCaughtWithThrowingAndNestedGlobal(int value, bool sw, bool rethrow)
+        {
+            int r = 500;
+            try
+            {
+                try
+                {
+                    RaiseException(sw);
+                }
+                catch (Exception)
+                {
+                    r += value;
+                    if (rethrow) throw;
+                }
+                finally
+                {
+                    r %= 47;
+                }
+            }
+            catch (Exception)
+            {
+                r += 100;
+            }
+
+            return r;
+        }
+
         public static int RaiseAndNestedCaughtLocal(int value)
         {
             int r = 0;
@@ -249,11 +285,6 @@ namespace IL2C.TypeSystems
             }
 
             return r;
-        }
-
-        private static void RaiseException(bool sw)
-        {
-            if (sw) throw new Exception();
         }
 
         public static int RaiseAndCaughtGlobal(bool sw)

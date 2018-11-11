@@ -574,7 +574,7 @@ namespace IL2C
                         preparedMethod.Method.CLanguageFunctionName,
                         handlerIndex);
                     tw.WriteLine(
-                        "static uint16_t {0}(System_Exception* ex)",
+                        "static int16_t {0}(System_Exception* ex)",
                         filterName);
                     tw.WriteLine("{");
 
@@ -758,6 +758,16 @@ namespace IL2C
                     (handler, handlerIndex) =>
                     {
                         // Reached finish:
+                        tw.WriteLine("il2c_leave_to");
+                        tw.WriteLine("{");
+                        using (var __ = tw.Shift())
+                        {
+                            foreach (var entry in preparedMethod.ContinuationLabelNames)
+                            {
+                                tw.WriteLine("il2c_leave_bind({0}, {1});", entry.Key, entry.Value);
+                            }
+                        }
+                        tw.WriteLine("}");
                         tw.WriteLine("il2c_end_try;");
                     });
 

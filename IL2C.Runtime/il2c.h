@@ -50,7 +50,7 @@ typedef const struct IL2C_RUNTIME_TYPE_DECL
     const struct IL2C_RUNTIME_TYPE_DECL* baseType;
 } IL2C_RUNTIME_TYPE_DECL;
 
-typedef uint16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
+typedef int16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
 
 struct IL2C_EXCEPTION_FRAME
 {
@@ -199,6 +199,10 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
             switch (setjmp(*(jmp_buf*)&unwind_target__.saved)) { \
             case 0: // try
 
+#define il2c_leave(index) \
+                unwind_target__.continuationIndex = index; \
+                break
+
 #define il2c_catch(filteredNumber, symbolName) \
                 il2c_assert(0); /* reached if don't emit leave. */ \
             case filteredNumber : \
@@ -212,11 +216,20 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
         do { \
             {
 
-#define il2c_end_try \
-                il2c_assert(0); /* reached if don't emit leave. */ \
+#define il2c_endfinally \
+            break
+
+#define il2c_leave_to \
+                il2c_assert(0); /* reached if don't emit leave or endfinally. */ \
             } \
         } while (0); \
         il2c_unlink_unwind_target__(&unwind_target__); \
+        switch (unwind_target__.continuationIndex)
+
+#define il2c_leave_bind(continuationIndex, labelName) \
+        case continuationIndex : goto labelName
+
+#define il2c_end_try \
     }
 
 ///////////////////////////////////////////////////////

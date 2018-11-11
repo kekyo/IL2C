@@ -546,7 +546,7 @@ void il2c_throw__(System_Exception* ex)
         il2c_assert(pCurrentFrame->filter != NULL);
         il2c_assert(pCurrentFrame->pFrame != NULL);
 
-        int result = pCurrentFrame->filter(ex);
+        int16_t result = pCurrentFrame->filter(ex);
 
         // Found finally block
         if (result == IL2C_FILTER_FINALLY)

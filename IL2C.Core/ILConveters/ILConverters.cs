@@ -111,9 +111,7 @@ namespace IL2C.ILConverters
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
             var continuationIndex = decodeContext.RegisterContinuationLabelName(labelName);
 
-            return _ => new[] {
-                string.Format("unwind_target__.continuationIndex = {0}", continuationIndex),
-                "break" };
+            return _ => new[] { string.Format("il2c_leave({0})", continuationIndex) };
         }
     }
 
@@ -126,7 +124,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             // Finally exit block fragment totally will write by AssemblyWriter.
-            return _ => new[] { "break" };
+            return _ => new[] { "il2c_endfinally" };
         }
     }
 

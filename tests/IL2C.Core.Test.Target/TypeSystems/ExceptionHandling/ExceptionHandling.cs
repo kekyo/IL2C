@@ -15,8 +15,10 @@ namespace IL2C.TypeSystems
     [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
     [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
     [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
-    [TestCase(246, "FinallyWithNonThrowingLocal", 123)]
-    [TestCase(223, "FinallyWithThrowingAndNestedLocal", 123)]
+    [TestCase(29, "FinallyWithNonThrowingLocal", 123)]
+    [TestCase(129, "FinallyWithThrowingAndNestedLocal", 123)]
+    [TestCase(129, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, true)]
+    [TestCase(29, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, false)]
     [TestCase(123, "RaiseAndNestedCaughtLocal", 123)]
     [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
     [TestCase(223, "RaiseCaughtAndRethrowLocal", 123)]
@@ -104,7 +106,7 @@ namespace IL2C.TypeSystems
             }
             finally
             {
-                r += value;
+                r %= 47;
             }
 
             return r;
@@ -112,7 +114,7 @@ namespace IL2C.TypeSystems
 
         public static int FinallyWithThrowingAndNestedLocal(int value)
         {
-            int r = 0;
+            int r = value;
             try
             {
                 try
@@ -121,7 +123,34 @@ namespace IL2C.TypeSystems
                 }
                 finally
                 {
+                    r %= 47;
+                }
+            }
+            catch (Exception)
+            {
+                r += 100;
+            }
+
+            return r;
+        }
+
+        public static int FinallyAndCaughtWithThrowingAndNestedLocal(int value, bool rethrow)
+        {
+            int r = 0;
+            try
+            {
+                try
+                {
+                    throw new Exception();
+                }
+                catch (Exception)
+                {
                     r += value;
+                    if (rethrow) throw;
+                }
+                finally
+                {
+                    r %= 47;
                 }
             }
             catch (Exception)

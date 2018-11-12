@@ -217,3 +217,12 @@ Under Apache v2.
 * How to do overload/override/virtual method symbol calculus.
 
   ![How to do overload/override/virtual method symbol calculus](images/IMG_20181028_165314.jpg)
+  
+* How to translate exception handlers when combined the local unwind and global unwind.
+  * We are thinking about at [Center CLR Try! development meetup (11/10/2018, Japanese)](https://centerclr.connpass.com/event/107981/)
+
+  ![How to translate exception handlers when combined the local unwind and global unwind](images/IMG_20181110_181756.jpg)
+    
+* This is the strcuture graph for the exection-frame and exception-frame.
+
+  ![This is the strcuture graph for the exection-frame and exception-frame](images/IMG_20181112_120412.jpg)

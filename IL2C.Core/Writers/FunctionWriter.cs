@@ -97,51 +97,47 @@ namespace IL2C.Writers
             {
                 if (!preparedMethod.Method.IsStatic)
                 {
-                    tw.WriteLine(
-                        "il2c_assert(this__ != NULL);");
+                    tw.WriteLine("il2c_assert(this__ != NULL);");
                     tw.WriteLine();
                 }
 
                 tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-3] Local variables:");
+                tw.WriteLine("// [3-3] Local variables (only value type):");
                 tw.WriteLine();
 
-                // Important NULL assigner (p = NULL):
-                //   Because these variables are pointer (of object reference 'O' type).
-                //   So GC will traverse these variables just setup the stack frame.
-                foreach (var local in preparedMethod.Method.LocalVariables)
+                foreach (var local in preparedMethod.Method.LocalVariables.
+                    Where(local => local.TargetType.IsValueType))
                 {
                     tw.WriteLine(
-                        "{0} {1}{2};",
+                        "{0} {1};",
                         local.TargetType.CLanguageTypeName,
-                        local.SymbolName,
-                        local.TargetType.IsValueType ? string.Empty : " = NULL");
+                        local.SymbolName);
                 }
 
                 tw.WriteLine();
                 tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-4] Evaluation stacks:");
+                tw.WriteLine("// [3-4] Evaluation stacks (only value type):");
                 tw.WriteLine();
 
-                foreach (var stack in preparedMethod.Stacks)
+                foreach (var stack in preparedMethod.Stacks.
+                    Where(stack => stack.TargetType.IsValueType))
                 {
                     tw.WriteLine(
-                        "{0} {1}{2};",
+                        "{0} {1};",
                         stack.TargetType.CLanguageTypeName,
-                        stack.SymbolName,
-                        stack.TargetType.IsValueType ? string.Empty : " = NULL");
+                        stack.SymbolName);
                 }
 
-                var frameEntries = locals.
+                var objRefEntries = locals.
                     Concat(preparedMethod.Stacks).
-                    Where(v => !v.TargetType.IsValueType).
+                    Where(v => !v.TargetType.IsValueType).  // Only objref
                     ToArray();
 
-                if (frameEntries.Length >= 1)
+                if (objRefEntries.Length >= 1)
                 {
                     tw.WriteLine();
                     tw.WriteLine("//-------------------");
-                    tw.WriteLine("// [3-5] Setup stack frame:");
+                    tw.WriteLine("// [3-5] Setup execution frame:");
                     tw.WriteLine();
 
                     tw.WriteLine("struct /* IL2C_EXECUTION_FRAME */");
@@ -149,30 +145,33 @@ namespace IL2C.Writers
 
                     using (var __ = tw.Shift())
                     {
-                        tw.WriteLine("IL2C_EXECUTION_FRAME* pNext;");
-                        tw.WriteLine("uint8_t targetCount;");
+                        tw.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
+                        tw.WriteLine("uint8_t objRefCount__;");
+                        tw.WriteLine("uint8_t objRefRefCount__;");
 
-                        foreach (var frameEntry in frameEntries)
+                        foreach (var objRefEntry in objRefEntries)
                         {
                             tw.WriteLine(
-                                "{0}* p{1};",
-                                frameEntry.TargetType.CLanguageTypeName,
-                                frameEntry.SymbolName);
+                                "{0} {1};",
+                                objRefEntry.TargetType.CLanguageTypeName,
+                                objRefEntry.SymbolName);
                         }
                     }
 
-                    tw.WriteLine("} __executionFrame__;");
+                    tw.WriteLine("} frame__;");
                     tw.WriteLine();
-                    tw.WriteLine("__executionFrame__.targetCount = {0};", frameEntries.Length);
+                    tw.WriteLine("frame__.objRefCount__ = {0};", objRefEntries.Length);
+                    tw.WriteLine("frame__.objRefRefCount__ = 0;  // TODO: https://github.com/kekyo/IL2C/issues/12");
 
-                    foreach (var frameEntry in frameEntries)
-                    {
-                        tw.WriteLine(
-                            "__executionFrame__.p{0} = &{0};",
-                            frameEntry.SymbolName);
-                    }
+                    // Important NULL assigner (p = NULL):
+                    //   Because these variables are pointer (of object reference 'O' type).
+                    //   So GC will traverse these variables just setup the stack frame.
+                    tw.WriteLine(
+                        "il2c_memset(&frame__.{0}, 0, {1} * sizeof(void*));",
+                        objRefEntries[0].SymbolName,
+                        objRefEntries.Length);
 
-                    tw.WriteLine("il2c_link_execution_frame(&__executionFrame__);");
+                    tw.WriteLine("il2c_link_execution_frame(&frame__);");
                 }
 
                 tw.WriteLine();
@@ -318,10 +317,10 @@ namespace IL2C.Writers
                         // Dirty hack:
                         //   Write unlink execution frame code if cause exiting method.
                         if (sourceCode.StartsWith("return")
-                            && (frameEntries.Length >= 1))
+                            && (objRefEntries.Length >= 1))
                         {
                             tw.WriteLine(
-                                "il2c_unlink_execution_frame(&__executionFrame__);");
+                                "il2c_unlink_execution_frame(&frame__);");
                         }
 
                         tw.WriteLine(

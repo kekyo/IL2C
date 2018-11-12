@@ -6,14 +6,14 @@
 
 ## What's this?
 
-* IL2C is a translator implementation of .NET intermediate language to C language, and the project for step-by-step designing and video recording.
+* IL2C is a translator implementation of .NET intermediate language to C language.
 
-* IL2C's implementation priorities:
-  * Better predictability for runtime cost.
-  * Better code portability.
-
-* Public YouTube recorded videos: ["Making archive IL2C play list"](http://bit.ly/2xtu4MH)
-  * "How to create IL2C or same tool of IL2CPP? This video contains pure design process through concept and details."
+* IL2C's implementation priorities, we're aiming for:
+  * Better predictability for runtime costs, better human readability for the IL2C translated C source code.
+  * Very tiny footprint requirements, we are thinking about how fit between tiny embedded system and large system with many resources.
+  * Better code/runtime portability, minimum requirements are only C99 compiler.
+  * Better interoperabilities for exist C libraries, we can use standard .NET interop technics (likely P/Invoke.)
+  * Contains seamless building system for major C toolkits, for example: CMake system, Arduino IDE, VC++ ...
 
 ## Very simple translation sample
 
@@ -161,6 +161,9 @@ Under Apache v2.
 | Support continuous integrations | Partial supported |
 
 ## Related informations
+
+* Public YouTube recorded videos: ["Making archive IL2C play list"](http://bit.ly/2xtu4MH)
+  * "How to create IL2C or same tool of IL2CPP? This video contains pure design process through concept and details."
 
 * Polish notation calculator project for IL2C proof of concept
   * [Minimum, but useful impls for "Win32", "UEFI" and "M5Stack(ESP32)"](samples/Calculator)

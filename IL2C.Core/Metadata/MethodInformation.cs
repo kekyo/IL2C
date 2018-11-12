@@ -38,8 +38,8 @@ namespace IL2C.Metadata
         bool HasBody { get; }
 
         ITypeInformation ReturnType { get; }
-        VariableInformation[] Parameters { get; }
-        VariableInformation[] LocalVariables { get; }
+        IParameterInformation[] Parameters { get; }
+        ILocalVariableInformation[] LocalVariables { get; }
         IMethodInformation[] Overrides { get; }
         IMethodInformation BaseMethod { get; }
 
@@ -47,7 +47,7 @@ namespace IL2C.Metadata
         int OverloadIndex { get; }
 
         string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full);
-        VariableInformation[] GetParameters(ITypeInformation thisType);
+        IParameterInformation[] GetParameters(ITypeInformation thisType);
 
         PInvokeInfo PInvokeInfo { get; }
 
@@ -62,7 +62,8 @@ namespace IL2C.Metadata
     internal sealed class MethodInformation
         : MemberInformation<MethodReference, MethodDefinition>, IMethodInformation
     {
-        private static readonly DebugInformation[] empty = new DebugInformation[0];
+        private static readonly DebugInformation[] emptyDebug = new DebugInformation[0];
+        private static readonly CustomAttribute[] emptyCustomAttribute = new CustomAttribute[0];
 
         public MethodInformation(MethodReference method, ModuleInformation module)
             : base(method, module)
@@ -82,15 +83,16 @@ namespace IL2C.Metadata
                             "Virtual method" :
                             "Method";
 
-        private VariableInformation CreateThisParameterInformation(ITypeInformation thisType) =>
-            new VariableInformation(
+        private IParameterInformation CreateThisParameterInformation(ITypeInformation thisType) =>
+            new ParameterInformation(
                 this,
                 0,
                 "this__",
-                thisType.IsValueType ? thisType.MakeByReference() : thisType);
+                thisType.IsValueType ? thisType.MakeByReference() : thisType,
+                emptyCustomAttribute);
 
-        private VariableInformation ToParameterInformation(ParameterReference parameter) =>
-            new VariableInformation(
+        private IParameterInformation ToParameterInformation(ParameterReference parameter) =>
+            new ParameterInformation(
                 this,
                 this.HasThis ? (parameter.Index + 1) : parameter.Index,
                 parameter.Name,
@@ -142,7 +144,7 @@ namespace IL2C.Metadata
 
         public ITypeInformation ReturnType =>
             this.MetadataContext.GetOrAddType(this.Member.ReturnType) ?? this.MetadataContext.VoidType;
-        public VariableInformation[] Parameters =>
+        public IParameterInformation[] Parameters =>
             (this.Member.HasThis) ?
                 new[] { this.CreateThisParameterInformation(this.DeclaringType) }.
                     Concat(this.Member.Parameters.Select(this.ToParameterInformation)).
@@ -150,12 +152,12 @@ namespace IL2C.Metadata
                 this.Member.Parameters.
                     Select(ToParameterInformation).
                     ToArray();
-        public VariableInformation[] LocalVariables =>
+        public ILocalVariableInformation[] LocalVariables =>
             this.Definition.Body.Variables.
-                Select(variable => new VariableInformation(
+                Select(variable => new LocalVariableInformation(
                     this,
                     variable.Index,
-                    this.Definition.Body.Method.DebugInformation.TryGetName(variable, out var name) ?
+                    this.Definition.Body.Method.DebugInformation.TryGetName(variable, out var name) ?       // TODO: every failed?
                         name :
                         string.Format("local{0}__", variable.Index),
                     this.MetadataContext.GetOrAddType(variable.VariableType))).
@@ -273,7 +275,7 @@ namespace IL2C.Metadata
                         instruction.OpCode,
                         instruction.Operand,
                         instruction.GetSize(),
-                        spd.TryGetValue(instruction.Offset, out var sps) ? sps : empty,
+                        spd.TryGetValue(instruction.Offset, out var sps) ? sps : emptyDebug,
                         translateOperand)))
                 {
                     codeStream.Add(inst.Offset, inst);
@@ -327,10 +329,10 @@ namespace IL2C.Metadata
                                 ? string.Format(
                                     "{0} {1}",
                                     parameter.TargetType.FriendlyName,
-                                    parameter.SymbolName)
+                                    parameter.ParameterName)
                                 : IncludeTypes(type)
                                     ? parameter.TargetType.FriendlyName
-                                    : parameter.SymbolName)))
+                                    : parameter.ParameterName)))
                 : string.Empty;
 
             var name = string.Format(
@@ -342,13 +344,13 @@ namespace IL2C.Metadata
             return Mangled(type) ? Utilities.GetMangledName(name) : name;
         }
 
-        public VariableInformation[] GetParameters(ITypeInformation thisType)
+        public IParameterInformation[] GetParameters(ITypeInformation thisType)
         {
             Debug.Assert(this.Member.HasThis);
 
-            return new[] { this.CreateThisParameterInformation(thisType) }
-                .Concat(this.Member.Parameters.Select(this.ToParameterInformation))
-                .ToArray();
+            return new[] { this.CreateThisParameterInformation(thisType) }.
+                Concat(this.Member.Parameters.Select(this.ToParameterInformation)).
+                ToArray();
         }
 
         public PInvokeInfo PInvokeInfo =>
@@ -373,7 +375,7 @@ namespace IL2C.Metadata
                     this.Parameters.Select(parameter => string.Format(
                         "{0} {1}",
                         parameter.TargetType.CLanguageTypeName,
-                        parameter.SymbolName)));
+                        parameter.ParameterName)));
 
                 var returnTypeName =
                     this.ReturnType.CLanguageTypeName;
@@ -414,7 +416,7 @@ namespace IL2C.Metadata
                 this.Parameters.Select((parameter, index) => string.Format(
                     "{0}{1}",
                     (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
-                    (overloadIndex == -1) ? string.Empty : (" " + parameter.SymbolName))));
+                    (overloadIndex == -1) ? string.Empty : (" " + parameter.ParameterName))));
 
             var returnTypeName = this.ReturnType.CLanguageTypeName;
             var name = this.GetCLanguageDeclarationName(overloadIndex);

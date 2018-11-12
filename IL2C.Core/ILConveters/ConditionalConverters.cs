@@ -9,9 +9,9 @@ namespace IL2C.ILConverters
     internal static class ConditionalConverterUtilities
     {
         public static Func<IExtractContext, string[]> Apply(
-            DecodeContext decodeContext,
             string oper,
-            bool isUnsigned)
+            bool isUnsigned,
+            DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -35,40 +35,40 @@ namespace IL2C.ILConverters
             if (si0.TargetType.IsInt32StackFriendlyType &&
                 si1.TargetType.IsInt32StackFriendlyType)
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return _ => new[] { string.Format(
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return extractContext => new[] { string.Format(
                     "{1} = (({0}int32_t){2} {3} ({0}int32_t){4}) ? 1 : 0",
                     isUnsigned ? "u" : string.Empty,
-                    resultName,
-                    si0.SymbolName,
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
                     oper,
-                    si1.SymbolName) };
+                    extractContext.GetSymbolName(si1)) };
             }
 
             if (si0.TargetType.IsInt64StackFriendlyType ||
                 si1.TargetType.IsInt64StackFriendlyType)
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return _ => new[] { string.Format(
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return extractContext => new[] { string.Format(
                     "{1} = (({0}int64_t){2} {3} ({0}int64_t){4}) ? 1 : 0",
                     isUnsigned ? "u" : string.Empty,
-                    resultName,
-                    si0.SymbolName,
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
                     oper,
-                    si1.SymbolName) };
+                    extractContext.GetSymbolName(si1)) };
             }
 
             if ((si0.TargetType.IsIntPtrStackFriendlyType || !si0.TargetType.IsValueType || si0.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType) &&
                 (si1.TargetType.IsIntPtrStackFriendlyType || !si1.TargetType.IsValueType || si1.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType))
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return _ => new[] { string.Format(
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return extractContext => new[] { string.Format(
                     "{1} = (({0}intptr_t){2} {3} ({0}intptr_t){4}) ? 1 : 0",
                     isUnsigned ? "u" : string.Empty,
-                    resultName,
-                    si0.SymbolName,
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
                     oper,
-                    si1.SymbolName) };
+                    extractContext.GetSymbolName(si1)) };
             }
 
             throw new InvalidProgramSequenceException(
@@ -86,7 +86,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return ConditionalConverterUtilities.Apply(
-                decodeContext, ">", false);
+                ">", false, decodeContext);
         }
     }
 
@@ -97,7 +97,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return ConditionalConverterUtilities.Apply(
-                decodeContext, ">", true);
+                ">", true, decodeContext);
         }
     }
 
@@ -108,7 +108,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return ConditionalConverterUtilities.Apply(
-                decodeContext, "<", false);
+                "<", false, decodeContext);
         }
     }
 
@@ -119,7 +119,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return ConditionalConverterUtilities.Apply(
-                decodeContext, "<", true);
+                "<", true, decodeContext);
         }
     }
 
@@ -130,7 +130,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return ConditionalConverterUtilities.Apply(
-                decodeContext, "==", false);
+                "==", false, decodeContext);
         }
     }
 }

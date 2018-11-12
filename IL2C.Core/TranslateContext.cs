@@ -10,7 +10,7 @@ using IL2C.Metadata;
 namespace IL2C
 {
     public sealed class TranslateContext
-        : IPrepareContext, IExtractContext
+        : IPrepareContext, IExtractContextHost
     {
         #region  Fields
         private readonly HashSet<string> includes = new HashSet<string>();
@@ -23,6 +23,7 @@ namespace IL2C
             new Dictionary<byte[], (string symbolName, HashSet<IFieldInformation> fields)>(Utilities.LooseTypeKindComparer);
         private readonly Dictionary<string, HashSet<ITypeInformation>> declaredValueHintTypes =
             new Dictionary<string, HashSet<ITypeInformation>>();
+        private Func<ILocalVariableInformation, string> prefixGenerator;
         #endregion
 
         #region Constructors
@@ -142,9 +143,6 @@ namespace IL2C
         IEnumerable<string> IExtractContext.EnumerateRequiredPrivateIncludeFileNames() =>
             privateIncludes;
 
-        IEnumerable<IFieldInformation> IExtractContext.ExtractStaticFields() =>
-            staticFields.Values;
-
         private string GetRightExpression(
             ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
         {
@@ -256,24 +254,38 @@ namespace IL2C
             return null;
         }
 
+        private string GetSymbolName(IVariableInformation variable)
+        {
+            var local = variable as ILocalVariableInformation;
+            if (local != null)
+            {
+                var prefix = prefixGenerator?.Invoke(local);
+                return local.ExtractSymbolName(prefix);
+            }
+            else
+            {
+                return variable.UnsafeRawSymbolName;
+            }
+        }
+
         string IExtractContext.GetRightExpression(
-            ITypeInformation lhsType, VariableInformation rhs) =>
-            this.GetRightExpression(lhsType, rhs.TargetType, rhs.SymbolName);
+            ITypeInformation lhsType, IVariableInformation rhs) =>
+            this.GetRightExpression(lhsType, rhs.TargetType, this.GetSymbolName(rhs));
 
         string IExtractContext.GetRightExpression(
             ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression) =>
             this.GetRightExpression(lhsType, rhsType, rhsExpression);
 
-        private IEnumerable<(string symbolName, string value)> ExtractConstStrings()
-        {
-            return constStrings.
-                Select(kv => (kv.Value, kv.Key));
-        }
+        string IExtractContext.GetSymbolName(IVariableInformation variable) =>
+            this.GetSymbolName(variable);
+
+        IEnumerable<IFieldInformation> IExtractContext.ExtractStaticFields() =>
+            staticFields.Values;
 
         IEnumerable<(string symbolName, string value)> IExtractContext.ExtractConstStrings() =>
-            this.ExtractConstStrings();
+            constStrings.Select(kv => (kv.Value, kv.Key));
 
-        private IEnumerable<DeclaredValuesInformation> ExtractDeclaredValues()
+        IEnumerable<DeclaredValuesInformation> IExtractContext.ExtractDeclaredValues()
         {
             return declaredValues.
                 Select(kv =>
@@ -297,8 +309,33 @@ namespace IL2C
                 });
         }
 
-        IEnumerable<DeclaredValuesInformation> IExtractContext.ExtractDeclaredValues() =>
-            this.ExtractDeclaredValues();
+        private sealed class LocalVariablePrefixDisposer : IDisposable
+        {
+            private TranslateContext parent;
+
+            public LocalVariablePrefixDisposer(TranslateContext parent)
+            {
+                this.parent = parent;
+            }
+
+            public void Dispose()
+            {
+                if (parent != null)
+                {
+                    parent.prefixGenerator = null;
+                    parent = null;
+                }
+            }
+        }
+
+        IDisposable IExtractContextHost.BeginLocalVariablePrefix(Func<ILocalVariableInformation, string> prefixGenerator)
+        {
+            Debug.Assert(this.prefixGenerator == null);
+
+            this.prefixGenerator = prefixGenerator;
+
+            return new LocalVariablePrefixDisposer(this);
+        }
         #endregion
     }
 }

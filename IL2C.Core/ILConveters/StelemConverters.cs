@@ -3,7 +3,6 @@
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
-using IL2C.Metadata;
 
 namespace IL2C.ILConverters
 {
@@ -43,12 +42,12 @@ namespace IL2C.ILConverters
                     siArray.TargetType.FriendlyName);
             }
 
-            return _ => new[] {
+            return extractContext => new[] {
                 string.Format("il2c_array_item({0}, {1}, {2}) = {3}",
-                    siArray.SymbolName,
+                    extractContext.GetSymbolName(siArray),
                     siArray.TargetType.ElementType.MangledName,
-                    siIndex.SymbolName,
-                    siValue.SymbolName) };
+                    extractContext.GetSymbolName(siIndex),
+                    extractContext.GetSymbolName(siValue)) };
         }
     }
 }

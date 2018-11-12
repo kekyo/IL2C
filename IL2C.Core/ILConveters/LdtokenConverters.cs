@@ -33,19 +33,19 @@ namespace IL2C.ILConverters
 
                 // HACK: Push RuntimeFieldHandle with specific declared values hint.
                 //   (Prepare to call the "RuntimeHelpers.InitializeArray") method, see the CallConverter.)
-                var symbolName = decodeContext.PushStack(
+                var symbol = decodeContext.PushStack(
                     decodeContext.PrepareContext.MetadataContext.RuntimeFieldHandle,
                     declaredValueName);
 
                 // Store into RuntimeFieldHandle structure.
-                return _ => new[] {
+                return extractContext => new[] {
                     string.Format(
                         "{0}.size__ = sizeof({1})",
-                        symbolName,
+                        extractContext.GetSymbolName(symbol),
                         declaredValueName),
                     string.Format(
                         "{0}.field__ = {1}",
-                        symbolName,
+                        extractContext.GetSymbolName(symbol),
                         declaredValueName) };
             }
 

@@ -10,7 +10,7 @@ namespace IL2C.ILConverters
     internal static class StlocConverterUtilities
     {
         private static Func<IExtractContext, string[]> Apply(
-            string targetName,
+            ILocalVariableInformation target,
             ITypeInformation targetType,
             DecodeContext decodeContext)
         {
@@ -28,12 +28,12 @@ namespace IL2C.ILConverters
                         codeInformation.RawLocation,
                         si.TargetType.FriendlyName,
                         targetType.FriendlyName,
-                        targetName);
+                        target);
                 }
 
                 return new[] { string.Format(
                     "{0} = {1}",
-                    targetName,
+                    extractContext.GetSymbolName(target),
                     rightExpression) };
             };
         }
@@ -43,7 +43,7 @@ namespace IL2C.ILConverters
             DecodeContext decodeContext)
         {
             var local = decodeContext.Method.LocalVariables[localIndex];
-            return Apply(local.SymbolName, local.TargetType, decodeContext);
+            return Apply(local, local.TargetType, decodeContext);
         }
 
         public static Func<IExtractContext, string[]> Apply(
@@ -51,7 +51,7 @@ namespace IL2C.ILConverters
             DecodeContext decodeContext)
         {
             var local = decodeContext.Method.LocalVariables[localVariable.Index];
-            return Apply(local.SymbolName, local.TargetType, decodeContext);
+            return Apply(local, local.TargetType, decodeContext);
         }
     }
 

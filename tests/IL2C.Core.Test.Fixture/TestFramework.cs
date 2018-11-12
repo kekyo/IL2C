@@ -186,7 +186,7 @@ namespace IL2C
 
             var constants = caseInfo.Arguments.
                 Zip(targetMethod.Parameters, (arg, p) => new Constant(
-                    p.SymbolName,
+                    p.ParameterName,
                     p.TargetType,
                     arg?.GetType(),
                     Utilities.GetCLanguageExpression(arg))

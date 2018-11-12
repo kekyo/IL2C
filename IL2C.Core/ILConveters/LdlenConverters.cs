@@ -24,13 +24,13 @@ namespace IL2C.ILConverters
             }
 
             // push size by UIntPtr (not Int32.)
-            var symbolName = decodeContext.PushStack(
+            var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UIntPtrType);
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "{0} = {1}->Length",
-                symbolName,
-                siArray.SymbolName) };
+                extractContext.GetSymbolName(symbol),
+                extractContext.GetSymbolName(siArray)) };
         }
     }
 }

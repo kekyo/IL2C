@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 using Mono.Cecil.Cil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
-using System.Diagnostics;
 
 namespace IL2C.ILConverters
 {
@@ -59,7 +59,7 @@ namespace IL2C.ILConverters
                             // TODO: interface member vptr
                             string.Format(
                                 "{0}->vptr0__->{1}({2})",
-                                pairParameters[0].SymbolInformation.SymbolName,
+                                extractContext.GetSymbolName(pairParameters[0].SymbolInformation),
                                 method.GetCLanguageDeclarationName(overloadIndex),
                                 parameterString)
                         };
@@ -78,7 +78,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                var resultName = decodeContext.PushStack(method.ReturnType);
+                var result = decodeContext.PushStack(method.ReturnType);
 
                 return extractContext =>
                 {
@@ -95,8 +95,8 @@ namespace IL2C.ILConverters
                             // TODO: interface member vptr
                             string.Format(
                                 "{0} = {1}->vptr0__->{2}({3})",
-                                resultName,
-                                pairParameters[0].SymbolInformation.SymbolName,
+                                extractContext.GetSymbolName(result),
+                                extractContext.GetSymbolName(pairParameters[0].SymbolInformation),
                                 method.GetCLanguageDeclarationName(overloadIndex),
                                 parameterString)
                         };
@@ -107,7 +107,7 @@ namespace IL2C.ILConverters
                         {
                             string.Format(
                                 "{0} = {1}({2})",
-                                resultName,
+                                extractContext.GetSymbolName(result),
                                 method.CLanguageFunctionName,
                                 parameterString)
                         };

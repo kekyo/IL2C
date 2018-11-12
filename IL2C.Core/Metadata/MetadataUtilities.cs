@@ -136,13 +136,13 @@ namespace IL2C.Metadata
             new MethodSignatureTypeComparerImpl();
 
         private sealed class MethodSignatureParameterComparerImpl
-            : ICombinedComparer<VariableInformation>
+            : ICombinedComparer<IParameterInformation>
         {
             public MethodSignatureParameterComparerImpl()
             {
             }
 
-            public int Compare(VariableInformation x, VariableInformation y)
+            public int Compare(IParameterInformation x, IParameterInformation y)
             {
                 var xt = x.TargetType;
                 var yt = y.TargetType;
@@ -153,7 +153,7 @@ namespace IL2C.Metadata
                 return MethodSignatureTypeComparer.Compare(xt, yt);
             }
 
-            public bool Equals(VariableInformation x, VariableInformation y)
+            public bool Equals(IParameterInformation x, IParameterInformation y)
             {
                 var xt = x.TargetType;
                 var yt = y.TargetType;
@@ -161,13 +161,13 @@ namespace IL2C.Metadata
                 return MethodSignatureTypeComparer.Equals(xt, yt);
             }
 
-            public int GetHashCode(VariableInformation obj)
+            public int GetHashCode(IParameterInformation obj)
             {
                 return obj.TargetType.GetHashCode();
             }
         }
 
-        public static readonly ICombinedComparer<VariableInformation> MethodSignatureParameterComparer =
+        public static readonly ICombinedComparer<IParameterInformation> MethodSignatureParameterComparer =
             new MethodSignatureParameterComparerImpl();
 
         private sealed class MethodSignatureComparerImpl

@@ -10,33 +10,33 @@ namespace IL2C.ILConverters
     internal static class LdlocConverterUtilities
     {
         private static Func<IExtractContext, string[]> Apply(
-            string targetName, ITypeInformation targetType, DecodeContext decodeContext, bool isReference)
+            ILocalVariableInformation target, ITypeInformation targetType, DecodeContext decodeContext, bool isReference)
         {
             targetType = isReference ? targetType.MakeByReference() : targetType;
                 
-            var symbolName = decodeContext.PushStack(targetType);
+            var symbol = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
                 "{0} = {1}{2}",
-                symbolName,
+                extractContext.GetSymbolName(symbol),
                 // MEMO: Don't check "targetType.IsByReference" instead "isReference."
                 //   Because it's maybe double encoded byref type.
                 isReference ? "&" : string.Empty,
-                targetName) };
+                extractContext.GetSymbolName(target)) };
         }
 
         public static Func<IExtractContext, string[]> Apply(
             int localIndex, DecodeContext decodeContext, bool isReference = false)
         {
             var local = decodeContext.Method.LocalVariables[localIndex];
-            return Apply(local.SymbolName, local.TargetType, decodeContext, isReference);
+            return Apply(local, local.TargetType, decodeContext, isReference);
         }
 
         public static Func<IExtractContext, string[]> Apply(
             VariableInformation localVariable, DecodeContext decodeContext, bool isReference = false)
         {
             var local = decodeContext.Method.LocalVariables[localVariable.Index];
-            return Apply(local.SymbolName, local.TargetType, decodeContext, isReference);
+            return Apply(local, local.TargetType, decodeContext, isReference);
         }
     }
 

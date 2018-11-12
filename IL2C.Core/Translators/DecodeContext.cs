@@ -12,30 +12,30 @@ namespace IL2C.Translators
         #region Private types
         private sealed class StackInformationHolder
         {
-            private readonly List<VariableInformation> typedStackInformation;
+            private readonly List<ILocalVariableInformation> typedStackInformation;
             private readonly int stackPointer;
             private int selectedStackInformation = -1;
 
             private StackInformationHolder(
-                int stackPointer, List<VariableInformation> typedStackInformation)
+                int stackPointer, List<ILocalVariableInformation> typedStackInformation)
             {
                 this.stackPointer = stackPointer;
                 this.typedStackInformation = typedStackInformation;
             }
 
             public StackInformationHolder(int stackPointer)
-                : this(stackPointer, new List<VariableInformation>())
+                : this(stackPointer, new List<ILocalVariableInformation>())
             {
             }
 
-            public string GetOrAdd(ITypeInformation targetType, IMethodInformation method, object hintInformation)
+            public ILocalVariableInformation GetOrAdd(ITypeInformation targetType, IMethodInformation method, object hintInformation)
             {
                 var index = typedStackInformation.
                     FindIndex(si => si.TargetType == targetType);
                 if (index >= 0)
                 {
                     selectedStackInformation = index;
-                    return typedStackInformation[index].SymbolName;
+                    return typedStackInformation[index];
                 }
 
                 var symbolName = string.Format(
@@ -44,7 +44,7 @@ namespace IL2C.Translators
                     typedStackInformation.Count);
 
                 selectedStackInformation = typedStackInformation.Count;
-                var stackInformation = new VariableInformation(
+                var stackInformation = new LocalVariableInformation(
                     method,
                     stackPointer,
                     symbolName,
@@ -52,10 +52,10 @@ namespace IL2C.Translators
                     hintInformation);
                 typedStackInformation.Add(stackInformation);
 
-                return symbolName;
+                return stackInformation;
             }
 
-            public VariableInformation GetCurrent()
+            public ILocalVariableInformation GetCurrent()
             {
                 Debug.Assert(selectedStackInformation >= 0);
                 Debug.Assert(typedStackInformation.Any());
@@ -63,7 +63,7 @@ namespace IL2C.Translators
                 return typedStackInformation[selectedStackInformation];
             }
 
-            public IEnumerable<VariableInformation> ExtractStacks() => typedStackInformation;
+            public IEnumerable<ILocalVariableInformation> ExtractStacks() => typedStackInformation;
 
             public override string ToString() =>
                 string.Format("[{0}]", string.Join(", ", typedStackInformation.Select(si => si.TargetType.FriendlyName)));
@@ -72,7 +72,7 @@ namespace IL2C.Translators
         private struct StackSnapshot
         {
             public readonly int Offset;
-            public readonly VariableInformation[] StackInformations;
+            public readonly ILocalVariableInformation[] StackInformations;
 
             public StackSnapshot(
                 int offset,
@@ -104,8 +104,8 @@ namespace IL2C.Translators
         private int stackPointer = -1;
         private readonly Dictionary<int, string> labelNames = 
             new Dictionary<int, string>();
-        private readonly Dictionary<int, string> catchExpressions = 
-            new Dictionary<int, string>();
+        private readonly Dictionary<int, ILocalVariableInformation> catchVariables = 
+            new Dictionary<int, ILocalVariableInformation>();
         private readonly Dictionary<int, (HashSet<int> fromOffsets, int continuationIndex)> leaveContinuationsByTarget =
             new Dictionary<int, (HashSet<int> fromOffsets, int continuationIndex)>();
         private readonly Queue<StackSnapshot> pathRemains =
@@ -140,8 +140,8 @@ namespace IL2C.Translators
                         switch (ech.CatchHandlerType)
                         {
                             case ExceptionCatchHandlerTypes.Catch:
-                                var symbolName = stackInformation.GetOrAdd(ech.CatchType, method, null);
-                                catchExpressions.Add(ech.CatchStart, symbolName);
+                                var variable = stackInformation.GetOrAdd(ech.CatchType, method, null);
+                                catchVariables.Add(ech.CatchStart, variable);
 
                                 this.pathRemains.Enqueue(new StackSnapshot(
                                     ech.CatchStart, 1 /* ??? */, stackList));
@@ -210,7 +210,7 @@ namespace IL2C.Translators
         #endregion
 
         #region Stack
-        public string PushStack(ITypeInformation targetType, object hintInformation = null)
+        public ILocalVariableInformation PushStack(ITypeInformation targetType, IMethodInformation method, object hintInformation = null)
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
@@ -229,10 +229,19 @@ namespace IL2C.Translators
 
             stackPointer++;
 
-            return stackInformationHolder.GetOrAdd(targetType, this.Method, hintInformation);
+            return stackInformationHolder.GetOrAdd(targetType, method, hintInformation);
         }
 
-        public VariableInformation PopStack()
+        public ILocalVariableInformation PushStack(ITypeInformation targetType, object hintInformation = null)
+        {
+            Debug.Assert(decodingPathNumber >= 1);
+            Debug.Assert(stackList != null);
+            Debug.Assert(stackPointer >= 0);
+
+            return this.PushStack(targetType, this.Method, hintInformation);
+        }
+
+        public ILocalVariableInformation PopStack()
         {
             Debug.Assert(decodingPathNumber >= 1);
             Debug.Assert(stackList != null);
@@ -350,14 +359,14 @@ namespace IL2C.Translators
         #endregion
 
         #region Extractors
-        public IEnumerable<VariableInformation> ExtractStacks() =>
+        public IEnumerable<ILocalVariableInformation> ExtractStacks() =>
             stackList.SelectMany(stackInformations => stackInformations.ExtractStacks());
 
         public IReadOnlyDictionary<int, string> ExtractLabelNames() =>
             labelNames;
 
-        public IReadOnlyDictionary<int, string> ExtractCatchExpressions() =>
-            catchExpressions;
+        public IReadOnlyDictionary<int, ILocalVariableInformation> ExtractCatchVariables() =>
+            catchVariables;
 
         public IReadOnlyDictionary<int, (ISet<int> fromOffsets, int targetOffset)> ExtractLeaveContinuations() =>
             leaveContinuationsByTarget.

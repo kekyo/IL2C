@@ -69,26 +69,26 @@ namespace IL2C.ILConverters
 
             if (requestPointer)
             {
-                var resultName = decodeContext.PushStack(field.FieldType.MakeByReference());
+                var result = decodeContext.PushStack(field.FieldType.MakeByReference());
 
-                return _ =>
+                return extractContext =>
                 {
                     return new[] { string.Format(
                     "{0} = &{1}",
-                    resultName,
-                    siReference.SymbolName + oper + field.Name) };
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(siReference) + oper + field.Name) };
                 };
             }
             else
             {
-                var resultName = decodeContext.PushStack(field.FieldType);
+                var result = decodeContext.PushStack(field.FieldType);
 
-                return _ =>
+                return extractContext =>
                 {
                     return new[] { string.Format(
                     "{0} = {1}",
-                    resultName,
-                    siReference.SymbolName + oper + field.Name) };
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(siReference) + oper + field.Name) };
                 };
             }
         }
@@ -106,11 +106,11 @@ namespace IL2C.ILConverters
             decodeContext.PrepareContext.RegisterStaticField(field);
 
             var targetType = field.FieldType;
-            var symbolName = decodeContext.PushStack(targetType);
+            var symbol = decodeContext.PushStack(targetType);
 
             return extractContext => new [] { string.Format(
                 "{0} = {1}",
-                symbolName,
+                extractContext.GetSymbolName(symbol),
                 extractContext.GetRightExpression(targetType, field.FieldType, field.MangledName)) };
         }
     }

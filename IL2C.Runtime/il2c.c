@@ -136,15 +136,16 @@ void il2c_no_mark_handler__(/* System_Object* */ void* pReference)
 
 //////////////////////////
 
-void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
+void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pNewFrame)
 {
     il2c_assert(pNewFrame != NULL);
+    il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
 
     ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = g_pBeginFrame__;
     g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)pNewFrame;
 }
 
-void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ void* pFrame)
+void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pFrame)
 {
     il2c_assert(pFrame != NULL);
 
@@ -313,12 +314,12 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_
     il2c_assert(pReference != NULL);
 
     void* p = il2c_isinst__(pReference, type);
-    if (p != NULL)
+    if (p == NULL)
     {
-        return p;
+        il2c_throw_invalidcastexception__();
     }
 
-    il2c_throw_invalidcastexception__();
+    return p;
 }
 
 /////////////////////////////////////////////////////////////

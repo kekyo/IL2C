@@ -35,7 +35,7 @@ namespace IL2C.ILConverters
                     siArray.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(targetType);
+            var symbol = decodeContext.PushStack(targetType);
 
             return extractContext =>
             {
@@ -43,9 +43,9 @@ namespace IL2C.ILConverters
                     targetType,
                     siArray.TargetType.ElementType,
                     string.Format("il2c_array_item({0}, {1}, {2})",
-                        siArray.SymbolName,
+                        extractContext.GetSymbolName(siArray),
                         siArray.TargetType.ElementType.MangledName,
-                        siIndex.SymbolName));
+                        extractContext.GetSymbolName(siIndex)));
                 if (expression == null)
                 {
                     throw new InvalidProgramSequenceException(
@@ -57,7 +57,7 @@ namespace IL2C.ILConverters
 
                 return new[] { string.Format(
                     "{0} = {1}",
-                    symbolName,
+                    extractContext.GetSymbolName(symbol),
                     expression) };
             };
         }

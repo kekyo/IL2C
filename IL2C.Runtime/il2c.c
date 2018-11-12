@@ -11,9 +11,9 @@
 
 typedef volatile struct IL2C_EXECUTION_FRAME
 {
-    IL2C_EXECUTION_FRAME* pNext__;
     uint8_t objRefCount__;
     uint8_t objRefRefCount__;
+    IL2C_EXECUTION_FRAME* pNext__;
     void* pReferences__[1];
     // void** ppReferences__[];
 } IL2C_EXECUTION_FRAME;

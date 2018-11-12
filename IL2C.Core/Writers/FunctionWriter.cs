@@ -145,9 +145,9 @@ namespace IL2C.Writers
 
                     using (var __ = tw.Shift())
                     {
-                        tw.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
                         tw.WriteLine("uint8_t objRefCount__;");
                         tw.WriteLine("uint8_t objRefRefCount__;");
+                        tw.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
 
                         foreach (var objRefEntry in objRefEntries)
                         {
@@ -158,19 +158,16 @@ namespace IL2C.Writers
                         }
                     }
 
-                    tw.WriteLine("} frame__;");
+                    // TODO: https://github.com/kekyo/IL2C/issues/12
+                    tw.WriteLine("}} frame__ = {{ {0}, 0 }};", objRefEntries.Length);
                     tw.WriteLine();
-                    tw.WriteLine("frame__.objRefCount__ = {0};", objRefEntries.Length);
-                    tw.WriteLine("frame__.objRefRefCount__ = 0;  // TODO: https://github.com/kekyo/IL2C/issues/12");
 
                     // Important NULL assigner (p = NULL):
                     //   Because these variables are pointer (of object reference 'O' type).
                     //   So GC will traverse these variables just setup the stack frame.
                     tw.WriteLine(
-                        "il2c_memset(&frame__.{0}, 0, {1} * sizeof(void*));",
-                        objRefEntries[0].SymbolName,
+                        "il2c_memset(&frame__.pNext__, 0, (1 + {0}) * sizeof(void*));",
                         objRefEntries.Length);
-
                     tw.WriteLine("il2c_link_execution_frame(&frame__);");
                 }
 

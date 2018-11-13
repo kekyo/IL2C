@@ -156,6 +156,7 @@ typedef void* untyped_ptr;
 #include <System.RuntimeFieldHandle.h>
 #include <System.Runtime.CompilerServices.RuntimeHelpers.h>
 #include <System.Exception.h>
+#include <System.NullReferenceException.h>
 #include <System.InvalidCastException.h>
 #include <System.IndexOutOfRangeException.h>
 

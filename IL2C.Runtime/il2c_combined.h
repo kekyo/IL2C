@@ -30,6 +30,7 @@
 #include "System.MulticastDelegate.c"
 #include "System.Runtime.CompilerServices.RuntimeHelpers.c"
 #include "System.Exception.c"
+#include "System.NullReferenceException.c"
 #include "System.InvalidCastException.c"
 #include "System.IndexOutOfRangeException.c"
 

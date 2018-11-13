@@ -36,6 +36,7 @@
     <ClCompile Include="System.IndexOutOfRangeException.c" />
     <ClCompile Include="System.InvalidCastException.c" />
     <ClCompile Include="System.MulticastDelegate.c" />
+    <ClCompile Include="System.NullReferenceException.c" />
     <ClCompile Include="System.Object.c" />
     <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c" />
     <ClCompile Include="System.SByte.c" />
@@ -66,6 +67,7 @@
     <ClInclude Include="System.IndexOutOfRangeException.h" />
     <ClInclude Include="System.InvalidCastException.h" />
     <ClInclude Include="System.MulticastDelegate.h" />
+    <ClInclude Include="System.NullReferenceException.h" />
     <ClInclude Include="System.Object.h" />
     <ClInclude Include="System.RuntimeFieldHandle.h" />
     <ClInclude Include="System.Runtime.CompilerServices.RuntimeHelpers.h" />

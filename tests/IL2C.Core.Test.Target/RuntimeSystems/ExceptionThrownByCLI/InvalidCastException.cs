@@ -32,15 +32,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(true, "InvalidCastExceptionFromInt64ToInt16")]
     [TestCase(true, "InvalidCastExceptionFromInt64ToInt32")]
     [TestCase(true, "InvalidCastExceptionFromInt64ToInt64")]
-    [TestCase(false, "ArrayIndexOutOfRangeByLoad", 0)]
-    [TestCase(false, "ArrayIndexOutOfRangeByLoad", 6)]
-    [TestCase(true, "ArrayIndexOutOfRangeByLoad", -1)]
-    [TestCase(true, "ArrayIndexOutOfRangeByLoad", 7)]
-    [TestCase(false, "ArrayIndexOutOfRangeByStore", 0)]
-    [TestCase(false, "ArrayIndexOutOfRangeByStore", 6)]
-    [TestCase(true, "ArrayIndexOutOfRangeByStore", -1)]
-    [TestCase(true, "ArrayIndexOutOfRangeByStore", 7)]
-    public sealed class ObjectModelInstructions
+    public sealed class InvalidCastExceptions
     {
         // These cases become from ECMA-335 I.12.4.2.1 - Exceptions thrown by the CLI - Object Model Instructions
 
@@ -369,34 +361,6 @@ namespace IL2C.RuntimeSystems
                 return false;
             }
             return true;
-        }
-
-        public static bool ArrayIndexOutOfRangeByLoad(int index)
-        {
-            try
-            {
-                var arr = new int[7];
-                var v = arr[index];
-            }
-            catch (IndexOutOfRangeException)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static bool ArrayIndexOutOfRangeByStore(int index)
-        {
-            try
-            {
-                var arr = new int[7];
-                arr[index] = 123;
-            }
-            catch (IndexOutOfRangeException)
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

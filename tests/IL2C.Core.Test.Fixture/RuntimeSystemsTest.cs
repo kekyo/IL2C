@@ -36,7 +36,9 @@ namespace IL2C
             TestFramework.ExecuteTestAsync(caseInfo);
 
         public static readonly TestCaseInformation[] _ExceptionThrownByCLI =
-            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ObjectModelInstructions>();
+            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.InvalidCastExceptions>().
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ArrayIndexOutOfRangeExceptions>()).
+            ToArray();
         [Test]
         public static Task ExceptionThrownByCLI([ValueSource(nameof(_ExceptionThrownByCLI))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);

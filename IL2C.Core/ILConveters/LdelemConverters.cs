@@ -10,8 +10,8 @@ namespace IL2C.ILConverters
     internal static class LdelemConverterUtilities
     {
         public static Func<IExtractContext, string[]> Apply(
-            ITypeInformation targetType,
             Func<ITypeInformation, bool> validateElementType,
+            Func<ITypeInformation, ITypeInformation> extractElementType,
             DecodeContext decodeContext)
         {
             // ECMA-335 III.4.8 ldelem.<type> - load an element of an array
@@ -35,16 +35,17 @@ namespace IL2C.ILConverters
                     siArray.TargetType.FriendlyName);
             }
 
-            var symbol = decodeContext.PushStack(targetType);
+            var elementType = extractElementType(siArray.TargetType);
+            var symbol = decodeContext.PushStack(elementType);
 
             return extractContext =>
             {
                 var expression = extractContext.GetRightExpression(
-                    targetType,
+                    elementType,
                     siArray.TargetType.ElementType,
                     string.Format("il2c_array_item({0}, {1}, {2})",
                         extractContext.GetSymbolName(siArray),
-                        siArray.TargetType.ElementType.MangledName,
+                        siArray.TargetType.ElementType.CLanguageTypeName,
                         extractContext.GetSymbolName(siIndex)));
                 if (expression == null)
                 {
@@ -52,7 +53,7 @@ namespace IL2C.ILConverters
                         "Invalid target type: Location={0}, StackType={1}, TargetType={2}",
                         decodeContext.CurrentCode.RawLocation,
                         siArray.TargetType.FriendlyName,
-                        targetType.FriendlyName);
+                        elementType.FriendlyName);
                 }
 
                 return new[] { string.Format(
@@ -60,6 +61,14 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(symbol),
                     expression) };
             };
+        }
+
+        public static Func<IExtractContext, string[]> Apply(
+            Func<ITypeInformation, bool> validateElementType,
+            ITypeInformation elementType,
+            DecodeContext decodeContext)
+        {
+            return Apply(validateElementType, _ => elementType, decodeContext);
         }
     }
 
@@ -70,8 +79,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.SByteType,
-                type => type.IsInt32StackFriendlyType,
                 decodeContext);
         }
     }
@@ -83,8 +92,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int16Type,
-                type => type.IsInt32StackFriendlyType,
                 decodeContext);
         }
     }
@@ -96,8 +105,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int32Type,
-                type => type.IsInt32StackFriendlyType,
                 decodeContext);
         }
     }
@@ -109,8 +118,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsInt64StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int64Type,
-                type => type.IsInt64StackFriendlyType,
                 decodeContext);
         }
     }
@@ -122,8 +131,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.ByteType,
-                type => type.IsInt32StackFriendlyType,
                 decodeContext);
         }
     }
@@ -135,8 +144,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.UInt16Type,
-                type => type.IsInt32StackFriendlyType,
                 decodeContext);
         }
     }
@@ -148,8 +157,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.UInt32Type,
-                type => type.IsInt32StackFriendlyType,
                 decodeContext);
         }
     }
@@ -161,8 +170,8 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsFloatStackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.DoubleType,
-                type => type.IsFloatStackFriendlyType,
                 decodeContext);
         }
     }
@@ -174,8 +183,21 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsFloatStackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.SingleType,
-                type => type.IsFloatStackFriendlyType,
+                decodeContext);
+        }
+    }
+
+    internal sealed class Ldelem_refConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldelem_Ref;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdelemConverterUtilities.Apply(
+                elementType => elementType.IsReferenceType,
+                arrayType => arrayType.ElementType,
                 decodeContext);
         }
     }

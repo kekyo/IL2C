@@ -41,6 +41,9 @@ namespace IL2C.TypeSystems
     [TestCase('A', "FromCharResource", 0)]
     [TestCase('B', "FromCharResource", 1)]
     [TestCase('C', "FromCharResource", 2)]
+    [TestCase(1, "FromString", 0)]
+    [TestCase(22, "FromString", 1)]
+    [TestCase(333, "FromString", 2)]
     [TestCase(0, "Length", 0)]
     [TestCase(1, "Length", 1)]
     [TestCase(1000, "Length", 1000)]
@@ -145,11 +148,12 @@ namespace IL2C.TypeSystems
             return arr[index];
         }
 
-        public static int FromStringResource(int index)
+        public static int FromString(int index)
         {
             // Not use InitializeArray()
             var arr = new string[] { "1", "22", "333" };
-            return int.Parse(arr[index]);
+            int.TryParse(arr[index], out var r);
+            return r;
         }
 
         public static int Length(int length)

@@ -54,7 +54,6 @@ namespace IL2C.Writers
             CodeTextWriter tw,
             ITypeInformation declaredType)
         {
-            tw.WriteLine();
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// [7] Runtime helpers:");
 
@@ -63,7 +62,7 @@ namespace IL2C.Writers
             if (!declaredType.IsEnum && !declaredType.IsDelegate)
             {
                 // Write mark handler:
-                tw.WriteLine();
+                tw.SplitLine();
                 tw.WriteLine(
                     "// [7-5] GC's mark handler");
                 tw.WriteLine(
@@ -82,7 +81,7 @@ namespace IL2C.Writers
                         ToArray();
                     if (fields.Length >= 1)
                     {
-                        tw.WriteLine();
+                        tw.SplitLine();
                         tw.WriteLine(
                             "// [7-6] Try marking each object reference fields");
 
@@ -128,7 +127,7 @@ namespace IL2C.Writers
                             Traverse(type => type.BaseType).
                             Any(type => type.Fields.Length >= 1) == false)
                         {
-                            tw.WriteLine();
+                            tw.SplitLine();
                             tw.WriteLine(
                                 "// [7-7] Delegate checking base types");
                             tw.WriteLine(
@@ -138,7 +137,7 @@ namespace IL2C.Writers
                         }
                         else
                         {
-                            tw.WriteLine();
+                            tw.SplitLine();
                             tw.WriteLine(
                                 "/* Suppressed invoke base mark handler */");
                         }
@@ -146,6 +145,7 @@ namespace IL2C.Writers
                 }
 
                 tw.WriteLine("}");
+                tw.SplitLine();
             }
 
             // Write trampoline virtual functions if type is value type.
@@ -156,7 +156,6 @@ namespace IL2C.Writers
                 ToArray();
             foreach (var method in trampolineTargets)
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [7-12] Trampoline virtual function: {0}",
                     method.FriendlyName);
@@ -174,7 +173,7 @@ namespace IL2C.Writers
                 {
                     tw.WriteLine(
                         "il2c_assert(this__ != NULL);");
-                    tw.WriteLine();
+                    tw.SplitLine();
                     tw.WriteLine(
                         "{0}* pValue =",
                         declaredType.CLanguageTypeName);
@@ -196,6 +195,7 @@ namespace IL2C.Writers
 
                 tw.WriteLine(
                     "}");
+                tw.SplitLine();
             }
 
             var overrideMethods = declaredType.OverrideMethods;
@@ -206,16 +206,15 @@ namespace IL2C.Writers
             // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
             if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [7-10-1] Vtable (Not defined, same as {0})",
                     declaredType.BaseType.FriendlyName);
+                tw.SplitLine();
             }
             // Require new vtable.
             else
             {
                 // Write virtual methods
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [7-10-2] Vtable");
                 tw.WriteLine(
@@ -242,10 +241,10 @@ namespace IL2C.Writers
                 }
 
                 tw.WriteLine("};");
+                tw.SplitLine();
             }
 #else
             // Write virtual methods
-            tw.WriteLine();
             tw.WriteLine(
                 "// [7-10] Vtable of {0}",
                 declaredType.FriendlyName);
@@ -271,6 +270,7 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("};");
+            tw.SplitLine();
 
             foreach (var interfaceType in declaredType.InterfaceTypes)
             {
@@ -281,7 +281,6 @@ namespace IL2C.Writers
                 foreach (var function in interfaceVirtualFunctions)
                 {
                     // Adjustor thunk will not invoke direct, so try to emit static function.
-                    tw.WriteLine();
                     tw.WriteLine(
                         "// [7-11] Adjustor thunk: {0}.{1}",
                         function.CLanguageTypeName,
@@ -324,9 +323,9 @@ namespace IL2C.Writers
                                     : parameter.Value)));
                     tw.WriteLine(
                         "}");
+                    tw.SplitLine();
                 }
 
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [7-12] Vtable of {0} (with adjustor thunk)",
                     interfaceType.FriendlyName);
@@ -346,11 +345,11 @@ namespace IL2C.Writers
                 }
 
                 tw.WriteLine("};");
+                tw.SplitLine();
             }
 #endif
 
             // Write runtime type information
-            tw.WriteLine();
             tw.WriteLine("// [7-8] Runtime type information");
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
@@ -397,18 +396,18 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("};");
+            tw.SplitLine();
         }
 
         public static void InternalConvertTypeHelperForInterface(
             CodeTextWriter tw,
             ITypeInformation declaredType)
         {
-            tw.WriteLine();
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// [8] Runtime helpers:");
 
             // Write runtime type information
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine("// [8-1] Runtime type information");
 
             // TODO: IL2C_RUNTIME_TYPE_DECL's some fields not used.
@@ -424,6 +423,7 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("};");
+            tw.SplitLine();
         }
     }
 }

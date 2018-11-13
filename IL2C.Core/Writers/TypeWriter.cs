@@ -19,6 +19,7 @@ namespace IL2C.Writers
             tw.WriteLine(
                 "// [1] {0}",
                 declaredType.FriendlyName);
+            tw.SplitLine();
 
             // IL2C vtable model case [1]:
             //
@@ -60,7 +61,6 @@ namespace IL2C.Writers
             // If virtual method collection doesn't contain newslot method at this declared type:
             if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [1-2-1] {0} vtable layout (Same as {1})",
                     declaredType.MemberTypeName,
@@ -70,11 +70,11 @@ namespace IL2C.Writers
                     "typedef __{0}_VTABLE_DECL__ __{1}_VTABLE_DECL__;",
                     declaredType.BaseType.MangledName,
                     declaredType.MangledName);
+                tw.SplitLine();
             }
             // Require new vtable layout.
             else
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [1-2-2] {0} vtable layout (Derived from {1})",
                     declaredType.MemberTypeName,
@@ -101,6 +101,7 @@ namespace IL2C.Writers
                 tw.WriteLine(
                     "}} __{0}_VTABLE_DECL__;",
                     declaredType.MangledName);
+                tw.SplitLine();
             }
 
             // Delegate types doesn't write the layout structure because it's same as System.MulticastDelegate.
@@ -110,7 +111,6 @@ namespace IL2C.Writers
             // Write a enum:
             else if (declaredType.IsEnum)
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [1-1] {0} layout",
                     declaredType.MemberTypeName);
@@ -127,11 +127,11 @@ namespace IL2C.Writers
                         field.Name,
                         Utilities.GetCLanguageExpression(field.DeclaredValue));
                 }
+                tw.SplitLine();
             }
             // Write a class/interface/struct:
             else
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [1-1] {0} layout",
                     declaredType.MemberTypeName);
@@ -191,40 +191,39 @@ namespace IL2C.Writers
                 }
 
                 tw.WriteLine("};");
+                tw.SplitLine();
             }
 
             // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
             if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [1-5-1] Vtable (Same as {0})",
                     declaredType.BaseType.FriendlyName);
-
                 tw.WriteLine(
                     "#define __{0}_VTABLE__ __{1}_VTABLE__",
                     declaredType.MangledName,
                     declaredType.BaseType.MangledName);
+                tw.SplitLine();
             }
             // Require new vtable.
             else
             {
-                tw.WriteLine();
                 tw.WriteLine(
                     "// [1-5-2] Vtable (Derived from {0})",
                     declaredType.BaseType.FriendlyName);
-
                 tw.WriteLine(
                     "extern __{0}_VTABLE_DECL__ __{0}_VTABLE__;",
                     declaredType.MangledName);
+                tw.SplitLine();
             }
 
-            tw.WriteLine();
             tw.WriteLine(
                 "// [1-4] Runtime type information");
             tw.WriteLine(
                 "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
                 declaredType.MangledName);
+            tw.SplitLine();
         }
     }
 }

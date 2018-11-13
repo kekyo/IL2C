@@ -27,14 +27,14 @@ namespace IL2C
 
             twHeader.WriteLine("#ifndef __{0}_H__", assemblyName);
             twHeader.WriteLine("#define __{0}_H__", assemblyName);
-            twHeader.WriteLine();
+            twHeader.SplitLine();
             twHeader.WriteLine("#pragma once");
-            twHeader.WriteLine();
+            twHeader.SplitLine();
             twHeader.WriteLine("#include <il2c.h>");
 
             if (includeAssemblyHeader)
             {
-                twHeader.WriteLine();
+                twHeader.SplitLine();
                 foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
                 {
                     twHeader.WriteLine("#include <{0}>", fileName);
@@ -50,8 +50,9 @@ namespace IL2C
                 method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
                     prepared.Functions.ContainsKey(method));
 
-            twHeader.WriteLine();
+            twHeader.SplitLine();
             twHeader.WriteLine("#endif");
+            twHeader.SplitLine();
         }
 
         public static void WriteHeader(
@@ -69,10 +70,9 @@ namespace IL2C
         {
             IExtractContext extractContext = translateContext;
 
-            twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [9-1] Const strings:");
-            twSource.WriteLine();
+            twSource.SplitLine();
 
             foreach (var (symbolName, value) in extractContext.ExtractConstStrings())
             {
@@ -82,6 +82,8 @@ namespace IL2C
                     symbolName,
                     expr);
             }
+
+            twSource.SplitLine();
         }
 
         internal static void WriteDeclaredValues(
@@ -90,13 +92,12 @@ namespace IL2C
         {
             IExtractContext extractContext = translateContext;
 
-            twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [12-1] Declared values:");
 
             foreach (var information in extractContext.ExtractDeclaredValues())
             {
-                twSource.WriteLine();
+                twSource.SplitLine();
                 foreach (var declaredFields in information.DeclaredFields)
                 {
                     twSource.WriteLine(
@@ -124,6 +125,8 @@ namespace IL2C
                         expr);
                 }
             }
+
+            twSource.SplitLine();
         }
 
         internal static void InternalWriteSourceCode(
@@ -137,23 +140,20 @@ namespace IL2C
 
             if (includeAssemblyHeader)
             {
-                twSource.WriteLine();
-
                 foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
                 {
                     twSource.WriteLine("#include \"{0}\"", fileName);
                 }
-
                 twSource.WriteLine("#include \"{0}.h\"", extractContext.Assembly.Name);
+                twSource.SplitLine();
             }
 
             WriteConstStrings(twSource, translateContext);
-
             WriteDeclaredValues(twSource, translateContext);
 
-            twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [9-2] File scope prototypes:");
+            twSource.SplitLine();
 
             // All types exclude publics and internals (for file scope prototypes)
             PrototypeWriter.InternalConvertToPrototypes(
@@ -164,15 +164,13 @@ namespace IL2C
                 method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
                     prepared.Functions.ContainsKey(method));
 
-            twSource.WriteLine();
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             twSource.WriteLine("// [9-3] Declare static fields:");
+            twSource.SplitLine();
 
             foreach (var type in prepared.Types.
                 Where(type => !type.IsEnum))
             {
-                twSource.WriteLine();
-
                 // All static fields
                 foreach (var field in type.Fields.
                     Where(field => field.IsStatic))
@@ -181,13 +179,14 @@ namespace IL2C
                         "{0};",
                         field.GetCLanguageStaticPrototype(true));
                 }
+                twSource.SplitLine();
             }
 
             foreach (var type in prepared.Types)
             {
-                twSource.WriteLine();
                 twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
                 twSource.WriteLine("// [9-4] Type: {0}", type.FriendlyName);
+                twSource.SplitLine();
 
                 // All methods and constructor exclude type initializer
                 foreach (var method in type.DeclaredMethods)
@@ -213,6 +212,8 @@ namespace IL2C
                         type);
                 }
             }
+
+            twSource.SplitLine();
         }
 
         public static void WriteSourceCode(

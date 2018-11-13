@@ -14,15 +14,14 @@ namespace IL2C.Writers
             Func<IFieldInformation, bool> predictField,
             Func<IMethodInformation, bool> predictMethod)
         {
-            tw.WriteLine();
             tw.WriteLine("#ifdef __cplusplus");
             tw.WriteLine("extern \"C\" {");
             tw.WriteLine("#endif");
 
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             tw.WriteLine("// [2-1] Types:");
-            tw.WriteLine();
+            tw.SplitLine();
 
             // Output prototypes.
             foreach (var type in types
@@ -56,20 +55,20 @@ namespace IL2C.Writers
             foreach (var type in types.
                 Where(predictType))
             {
-                tw.WriteLine();
+                tw.SplitLine();
                 TypeWriter.InternalConvertType(
                     tw,
                     type);
             }
 
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             tw.WriteLine("// [2-2] Public static fields:");
 
             foreach (var type in types.
                 Where(type => !type.IsEnum))
             {
-                tw.WriteLine();
+                tw.SplitLine();
 
                 foreach (var field in type.Fields
                     .Where(field => field.IsPublic && field.IsStatic && predictField(field)))
@@ -80,18 +79,18 @@ namespace IL2C.Writers
                 }
             }
 
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             tw.WriteLine("// [2-3] Methods:");
 
             foreach (var type in types.
                 Where(type => !type.IsEnum))
             {
-                tw.WriteLine();
+                tw.SplitLine();
                 tw.WriteLine(
                     "// [2-4] Member methods: {0}",
                     type.FriendlyName);
-                tw.WriteLine();
+                tw.SplitLine();
 
                 if (!type.IsStatic)
                 {
@@ -129,11 +128,11 @@ namespace IL2C.Writers
 
                 if (!type.IsStatic)
                 {
-                    tw.WriteLine();
+                    tw.SplitLine();
                     tw.WriteLine(
                         "// [2-5] Virtual methods: {0}",
                         type.FriendlyName);
-                    tw.WriteLine();
+                    tw.SplitLine();
 
 #if true
                     tw.WriteLine("/* TODO: virtual methods [2] */");
@@ -168,11 +167,11 @@ namespace IL2C.Writers
                 }
             }
 
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine("#ifdef __cplusplus");
             tw.WriteLine("}");
             tw.WriteLine("#endif");
+            tw.SplitLine();
         }
-
     }
 }

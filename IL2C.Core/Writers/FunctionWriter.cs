@@ -17,7 +17,7 @@ namespace IL2C.Writers
         {
             var locals = preparedMethod.Method.LocalVariables;
 
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine(
                 "// [3] {0}{1}",
@@ -29,10 +29,10 @@ namespace IL2C.Writers
             // Write exception filters:
             if (codeStream.ExceptionHandlers.Length >= 1)
             {
-                tw.WriteLine();
+                tw.SplitLine();
                 tw.WriteLine("//-------------------");
                 tw.WriteLine("// [3-1] Exception filters:");
-                tw.WriteLine();
+                tw.SplitLine();
 
                 for (var handlerIndex = 0;
                     handlerIndex < codeStream.ExceptionHandlers.Length;
@@ -86,10 +86,10 @@ namespace IL2C.Writers
             }
 
             // Start function:
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine("//-------------------");
             tw.WriteLine("// [3-2] Function body:");
-            tw.WriteLine();
+            tw.SplitLine();
             tw.WriteLine(preparedMethod.Method.CLanguageFunctionPrototype);
             tw.WriteLine("{");
 
@@ -98,6 +98,7 @@ namespace IL2C.Writers
                 if (!preparedMethod.Method.IsStatic)
                 {
                     tw.WriteLine("il2c_assert(this__ != NULL);");
+                    tw.SplitLine();
                 }
 
                 var localDefinitions = preparedMethod.Method.LocalVariables.
@@ -105,10 +106,9 @@ namespace IL2C.Writers
                     ToArray();
                 if (localDefinitions.Length >= 1)
                 {
-                    tw.WriteLine();
                     tw.WriteLine("//-------------------");
                     tw.WriteLine("// [3-3] Local variables (not objref):");
-                    tw.WriteLine();
+                    tw.SplitLine();
 
                     foreach (var local in localDefinitions)
                     {
@@ -122,6 +122,8 @@ namespace IL2C.Writers
                             local.TargetType.CLanguageTypeName,
                             extractContext.GetSymbolName(local));
                     }
+
+                    tw.SplitLine();
                 }
 
                 var stackDefinitions = preparedMethod.Stacks.
@@ -129,10 +131,9 @@ namespace IL2C.Writers
                     ToArray();
                 if (stackDefinitions.Length >= 1)
                 {
-                    tw.WriteLine();
                     tw.WriteLine("//-------------------");
                     tw.WriteLine("// [3-4] Evaluation stacks (not objref):");
-                    tw.WriteLine();
+                    tw.SplitLine();
 
                     foreach (var stack in stackDefinitions)
                     {
@@ -141,6 +142,8 @@ namespace IL2C.Writers
                             stack.TargetType.CLanguageTypeName,
                             extractContext.GetSymbolName(stack));
                     }
+
+                    tw.SplitLine();
                 }
 
                 var objRefEntries = locals.
@@ -149,10 +152,9 @@ namespace IL2C.Writers
                     ToArray();
                 if (objRefEntries.Length >= 1)
                 {
-                    tw.WriteLine();
                     tw.WriteLine("//-------------------");
                     tw.WriteLine("// [3-5] Setup execution frame:");
-                    tw.WriteLine();
+                    tw.SplitLine();
 
                     tw.WriteLine("struct /* IL2C_EXECUTION_FRAME */");
                     tw.WriteLine("{");
@@ -177,15 +179,13 @@ namespace IL2C.Writers
                     //   So GC will traverse these variables just setup the stack frame.
                     // TODO: https://github.com/kekyo/IL2C/issues/12
                     tw.WriteLine("}} frame__ = {{ {0}, 0 }};", objRefEntries.Length);
-                    tw.WriteLine();
-
                     tw.WriteLine("il2c_link_execution_frame(&frame__);");
+                    tw.SplitLine();
                 }
 
-                tw.WriteLine();
                 tw.WriteLine("//-------------------");
                 tw.WriteLine("// [3-6] IL body:");
-                tw.WriteLine();
+                tw.SplitLine();
 
                 // Set symbol prefix to make valid access variables.
                 using (var __ = extractContext.BeginLocalVariablePrefix(
@@ -357,16 +357,16 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("}");
+            tw.SplitLine();
         }
 
         private static void InternalConvertFromDelegateFunction(
             CodeTextWriter tw,
             IMethodInformation method)
         {
-            tw.WriteLine();
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine("// [4] Abstract: {0}", method.FriendlyName);
-            tw.WriteLine();
+            tw.SplitLine();
 
             tw.WriteLine(method.CLanguageFunctionPrototype);
             tw.WriteLine("{");
@@ -388,16 +388,16 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("}");
+            tw.SplitLine();
         }
 
         private static void InternalConvertFromAbstractFunction(
             CodeTextWriter tw,
             IMethodInformation method)
         {
-            tw.WriteLine();
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine("// [5] Abstract: {0}", method.FriendlyName);
-            tw.WriteLine();
+            tw.SplitLine();
 
             tw.WriteLine(method.CLanguageFunctionPrototype);
             tw.WriteLine("{");
@@ -419,6 +419,7 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("}");
+            tw.SplitLine();
         }
 
         private static void InternalConvertFromPInvokeFunction(
@@ -426,10 +427,9 @@ namespace IL2C.Writers
             IMethodInformation method,
             PInvokeInfo pinvokeInfo)
         {
-            tw.WriteLine();
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine("// [6] P/Invoke: {0}", method.FriendlyName);
-            tw.WriteLine();
+            tw.SplitLine();
 
             tw.WriteLine(method.CLanguageFunctionPrototype);
             tw.WriteLine("{");
@@ -452,6 +452,7 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("}");
+            tw.SplitLine();
         }
 
         private static void InternalConvertFromDelegateInvoker(
@@ -466,10 +467,9 @@ namespace IL2C.Writers
                     method.FriendlyName);
             }
 
-            tw.WriteLine();
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine("// [11-2] Delegate invoker: {0}", method.FriendlyName);
-            tw.WriteLine();
+            tw.SplitLine();
 
             // DIRTY:
             //   Cause undefined symbol error at C compilation if "System.Delegate" type on the mscorlib assembly
@@ -491,7 +491,7 @@ namespace IL2C.Writers
                 tw.WriteLine(
                     "il2c_assert({0}->count__ >= 1);",
                     thisName);
-                tw.WriteLine();
+                tw.SplitLine();
                 if (!method.ReturnType.IsVoidType)
                 {
                     tw.WriteLine(
@@ -589,6 +589,7 @@ namespace IL2C.Writers
             }
 
             tw.WriteLine("}");
+            tw.SplitLine();
         }
 
         public static void InternalConvertFromMethod(

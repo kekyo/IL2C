@@ -348,8 +348,12 @@ namespace IL2C
                     Path.Combine(il2cRuntimePath, "il2c_combined.c")
                 };
 
-                // TODO: !optimize
+#if DEBUG
                 var executedResult = await GccDriver.CompileAndRunAsync(false, sourcePath, il2cRuntimePath);
+#else
+                var executedResult = await GccDriver.CompileAndRunAsync(true, sourcePath, il2cRuntimePath);
+#endif
+
                 sanitized = executedResult.Trim(' ', '\r', '\n');
             }
             catch (Exception ex)

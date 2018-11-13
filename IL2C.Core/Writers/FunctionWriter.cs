@@ -108,8 +108,13 @@ namespace IL2C.Writers
                 foreach (var local in preparedMethod.Method.LocalVariables.
                     Where(local => !local.TargetType.IsReferenceType))
                 {
+                    // HACK: The local variables mark to "volatile."
+                    //   Because the gcc misread these variables calculated statically (or maybe assigned to the registers)
+                    //   at compile time with optimization.
+                    //   It will cause the strange results for exception handling (with sjlj.)
                     tw.WriteLine(
-                        "{0} {1};",
+                        "{0}{1} {2};",
+                        (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
                         local.TargetType.CLanguageTypeName,
                         extractContext.GetSymbolName(local));
                 }

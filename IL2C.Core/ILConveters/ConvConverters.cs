@@ -24,8 +24,12 @@ namespace IL2C.ILConverters
             // See also: ECMA-335: III.1.5 Operand type table - Conversion Operations
 
             var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SByteType);
+
+            // HACK: On gcc 4, if only uses int16_t cast expression, result may causes INT16_MIN value.
+            //   On Visual C++ result is good.
+            //   This workaround makes good result, we have to use downgrade cast step by step "F --> int32 --> int8"
             return extractContext => new[] { string.Format(
-                "{0} = (int8_t){1}",
+                "{0} = (int8_t)(int32_t){1}",
                 extractContext.GetSymbolName(result),
                 extractContext.GetSymbolName(siFrom)) };
         }
@@ -149,8 +153,12 @@ namespace IL2C.ILConverters
             }
 
             var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.ByteType);
+
+            // HACK: On gcc 4, if only uses int16_t cast expression, result may causes INT16_MIN value.
+            //   On Visual C++ result is good.
+            //   This workaround makes good result, we have to use downgrade cast step by step "F --> uint32 --> uint8"
             return extractContext => new[] { string.Format(
-                "{0} = (uint8_t){1}",
+                "{0} = (uint8_t)(uint32_t){1}",
                 extractContext.GetSymbolName(result),
                 extractContext.GetSymbolName(siFrom)) };
         }

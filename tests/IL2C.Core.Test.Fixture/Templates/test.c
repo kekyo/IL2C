@@ -55,7 +55,7 @@ int main()
     ////////////////////////
     // Execute target function.
 
-    actual = {function}({argumentList});
+    {actual} = {function}({argumentList});
 
     int result;
     if ({equality}) { wprintf(L"Success\n"); result = 0; }

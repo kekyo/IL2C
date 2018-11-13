@@ -21,7 +21,7 @@ namespace IL2C.ILConverters
         }
 
         public static Func<IExtractContext, string[]> Apply(
-            object value, DecodeContext decodeContext)
+            int value, DecodeContext decodeContext)
         {
             return Apply(decodeContext.PrepareContext.MetadataContext.Int32Type, value, decodeContext);
         }
@@ -123,7 +123,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            return LdcConverterUtilities.Apply(9, decodeContext);
+            return LdcConverterUtilities.Apply(-1, decodeContext);
         }
     }
 
@@ -143,7 +143,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(int operand, DecodeContext decodeContext)
         {
-            return LdcConverterUtilities.Apply(Utilities.GetCLanguageExpression(operand), decodeContext);
+            return LdcConverterUtilities.Apply(operand, decodeContext);
         }
     }
 

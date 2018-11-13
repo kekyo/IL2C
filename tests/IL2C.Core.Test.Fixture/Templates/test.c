@@ -45,7 +45,6 @@ int main()
         {frames}
     } frame__ = { {frameCount}, 0 };
 
-    {frameInitializers}
     il2c_link_execution_frame(&frame__);
 
     ////////////////////////

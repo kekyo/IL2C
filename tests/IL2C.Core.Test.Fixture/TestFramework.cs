@@ -265,15 +265,11 @@ namespace IL2C
                         entry.Expression))) },
                 { "frames", string.Join(" ", locals.
                     Where(entry => entry.TargetType.IsClass).
-                    Select(entry => string.Format("{0}* {1}__;",
+                    Select(entry => string.Format("{0} {1}__;",
                         entry.TargetType.CLanguageTypeName,
                         entry.SymbolName))) },
                 { "frameCount", locals.
                     Where(entry => entry.TargetType.IsClass).Count() },
-                { "frameInitializers", string.Join(" ", locals.
-                    Where(entry => entry.TargetType.IsClass).
-                    Select(entry => string.Format("__executionFrame__.{0}__ = &{0};",
-                        entry.SymbolName))) },
                 { "arguments", string.Join(" ", arguments.
                     Select(entry => string.Format("{0} = {1};",
                         entry.SymbolName, entry.Expression))) },

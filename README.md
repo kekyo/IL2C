@@ -69,9 +69,9 @@ Under Apache v2.
 
 * [Supported IL opcodes list](supported-opcodes.md)
 
-* [Supported runtime types](supported-runtime-types.md)
+* [Supported basic types](supported-basic-types.md)
 
-* [Supported type-system features](supported-typesystem-features.md)
+* [Supported runtime system features](supported-runtime-system-features.md)
 
 ### These list are manually maintanance (and maybe older...)
 

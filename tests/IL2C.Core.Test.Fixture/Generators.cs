@@ -114,7 +114,7 @@ namespace IL2C
         }
 
         [Test]
-        public static async Task DumpSupportedRuntimeTypes()
+        public static async Task DumpSupportedBasicTypes()
         {
             // TODO: Has to add manually 
             var types = new Type[]
@@ -147,20 +147,20 @@ namespace IL2C
             ToArray();
 
             var runtimeTypesTests =
-                typeof(RuntimeTypesTest).
+                typeof(BasicTypesTest).
                 GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
                 Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
                 SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
                 GroupBy(testCase => testCase.Method.DeclaringType.Name).
                 ToDictionary(g => g.Key, g => new { Name = g.Key, Count = g.Count() });
 
-            var path = Path.Combine(generatedDocumentBasePath, "supported-runtime-types.md");
+            var path = Path.Combine(generatedDocumentBasePath, "supported-basic-types.md");
 
             using (var fs = await TestUtilities.CreateStreamAsync(path))
             {
                 var tw = new StreamWriter(fs);
 
-                await tw.WriteLineAsync("# Supported runtime types");
+                await tw.WriteLineAsync("# Supported basic types");
                 await tw.WriteLineAsync();
                 await tw.WriteLineAsync(
                     string.Format("* Number of types: {0}",
@@ -184,7 +184,7 @@ namespace IL2C
                             type.FullName.ToLowerInvariant(),
                             (entry != null) ?
                                 ((entry.Count >= 1) ?
-                                    string.Format("[Test [{0}]](tests/IL2C.Core.Test.Target/RuntimeTypes/{1})", entry.Count, entry.Name) :
+                                    string.Format("[Test [{0}]](tests/IL2C.Core.Test.Target/BasicTypes/{1})", entry.Count, entry.Name) :
                                     string.Empty) :
                                 string.Empty));
                 }
@@ -194,10 +194,10 @@ namespace IL2C
         }
 
         [Test]
-        public static async Task DumpSupportedTypeSystems()
+        public static async Task DumpSupportedRuntimeSystems()
         {
             var typeSystemsTests =
-                typeof(TypeSystemsTest).
+                typeof(RuntimeSystemsTest).
                 GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
                 Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
                 SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
@@ -212,13 +212,13 @@ namespace IL2C
                             Distinct().
                             FirstOrDefault(d => !string.IsNullOrWhiteSpace(d)) ?? string.Empty });
 
-            var path = Path.Combine(generatedDocumentBasePath, "supported-typesystem-features.md");
+            var path = Path.Combine(generatedDocumentBasePath, "supported-runtime-system-features.md");
 
             using (var fs = await TestUtilities.CreateStreamAsync(path))
             {
                 var tw = new StreamWriter(fs);
 
-                await tw.WriteLineAsync("# Supported type-system features");
+                await tw.WriteLineAsync("# Supported runtime system features");
                 await tw.WriteLineAsync();
                 //await tw.WriteLineAsync(
                 //    string.Format("* Number of tests: {0} [{1} / {2}]",
@@ -232,7 +232,7 @@ namespace IL2C
                 foreach (var typeSystemTest in typeSystemsTests)
                 {
                     await tw.WriteLineAsync(
-                        string.Format("| {0} | [Test [{1}]](tests/IL2C.Core.Test.Target/TypeSystems/{0}) | {2} |",
+                        string.Format("| {0} | [Test [{1}]](tests/IL2C.Core.Test.Target/RuntimeSystems/{0}) | {2} |",
                         typeSystemTest.Key,
                         typeSystemTest.Value.Count,
                         typeSystemTest.Value.Description));

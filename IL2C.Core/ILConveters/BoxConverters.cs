@@ -32,7 +32,7 @@ namespace IL2C.ILConverters
             //   Because the boxed value types can implicit cast to both types.
             //   The upcast can be inlining (System.ValueType --> System.Object),
             //   but downcast requires runtime cast operator (System.Object --> System.ValueType).
-            var symbolName = decodeContext.PushStack(
+            var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.ValueTypeType);
 
             // MEMO: The IL2C strict type infers the evaluation stack.
@@ -46,23 +46,23 @@ namespace IL2C.ILConverters
             //     box [mscorlib]System.Byte    // int32_t --> objref(uint8_t)   // size[4] --> size[1]
             if (operand.SizeOfValue == si.TargetType.SizeOfValue)
             {
-                return _ =>
+                return extractContext =>
                 {
                     return new[] { string.Format(
                         "{0} = il2c_box(&{1}, {2})",
-                        symbolName,
-                        si.SymbolName,
+                        extractContext.GetSymbolName(symbol),
+                        extractContext.GetSymbolName(si),
                         operand.MangledName) };
                 };
             }
             else
             {
-                return _ =>
+                return extractContext =>
                 {
                     return new[] { string.Format(
                         "{0} = il2c_box2(&{1}, {2}, {3})",
-                        symbolName,
-                        si.SymbolName,
+                        extractContext.GetSymbolName(symbol),
+                        extractContext.GetSymbolName(si),
                         operand.MangledName,
                         si.TargetType.MangledName) };
                 };
@@ -88,14 +88,14 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(operand);
+            var symbol = decodeContext.PushStack(operand);
 
             return extractContext =>
             {
                 return new[] { string.Format(
                     "{0} = *il2c_unbox({1}, {2})",
-                    symbolName,
-                    si.SymbolName,
+                    extractContext.GetSymbolName(symbol),
+                    extractContext.GetSymbolName(si),
                     operand.MangledName) };
             };
         }

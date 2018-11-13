@@ -115,8 +115,8 @@ extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE_DECL* type, void*
 #define il2c_get_uninitialized_object(typeName) \
     il2c_get_uninitialized_object__(il2c_typeof(typeName), (void*)(&(__##typeName##_VTABLE__)))
 
-extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pNewFrame);
-extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ void* pFrame);
+extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame);
+extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame);
 
 extern void il2c_mark_from_handler__(/* System_Object* */ void* pReference);
 #define il2c_try_mark_from_handler(pReference) \

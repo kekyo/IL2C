@@ -39,14 +39,13 @@ int main()
 
     struct /* IL2C_EXECUTION_FRAME */
     {
-        IL2C_EXECUTION_FRAME* pNext;
-        uint8_t targetCount;
+        uint8_t objRefCount__;
+        uint8_t objRefRefCount__;
+        IL2C_EXECUTION_FRAME* pNext__;
         {frames}
-    } __executionFrame__;
+    } frame__ = { {frameCount}, 0 };
 
-    __executionFrame__.targetCount = {frameCount};
-    {frameInitializers}
-    il2c_link_execution_frame(&__executionFrame__);
+    il2c_link_execution_frame(&frame__);
 
     ////////////////////////
     // Construct required type arguments.
@@ -56,7 +55,7 @@ int main()
     ////////////////////////
     // Execute target function.
 
-    actual = {function}({argumentList});
+    {actual} = {function}({argumentList});
 
     int result;
     if ({equality}) { wprintf(L"Success\n"); result = 0; }
@@ -65,7 +64,7 @@ int main()
     ////////////////////////
     // Destruct frames.
 
-    il2c_unlink_execution_frame(&__executionFrame__);
+    il2c_unlink_execution_frame(&frame__);
 
     ////////////////////////
 

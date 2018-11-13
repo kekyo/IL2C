@@ -66,21 +66,21 @@ namespace IL2C
             // TODO: move into MethodInformation
             var localVariables = method.LocalVariables.
                 // If found non named local variable, force named "local[n]__"
-                GroupBy(variable => variable.SymbolName).
+                GroupBy(variable => variable).
                 // If contains both named symbol each different scope (in the method by C#'s block), try to named with index number.
                 SelectMany(g =>
                 {
                     var list = g.ToArray();
-                    return (list.Length >= 2)
-                        ? list.Select((variable, index) => new VariableInformation(
+                    return (list.Length >= 2) ?
+                        list.Select((variable, index) => new LocalVariableInformation(
                             method,
                             variable.Index,
-                            string.Format("{0}{1}", g.Key, index),
-                            variable.TargetType))
-                        : new[] { new VariableInformation(
+                            string.Format("{0}{1}", g.Key.UnsafeRawSymbolName, index),
+                            variable.TargetType)) :
+                        new[] { new LocalVariableInformation(
                             method,
                             list[0].Index,
-                            string.Format("{0}", g.Key),
+                            string.Format("{0}", g.Key.UnsafeRawSymbolName),
                             list[0].TargetType) };
                 }).
                 OrderBy(e => e.Index).
@@ -135,8 +135,8 @@ namespace IL2C
             var labelNames = decodeContext.
                 ExtractLabelNames();
 
-            var catchExpressions = decodeContext.
-                ExtractCatchExpressions();
+            var catchVariables = decodeContext.
+                ExtractCatchVariables();
 
             var leaveContinuations = decodeContext.
                 ExtractLeaveContinuations();
@@ -145,7 +145,7 @@ namespace IL2C
                 method,
                 stacks,
                 labelNames,
-                catchExpressions,
+                catchVariables,
                 leaveContinuations,
                 generators);
         }

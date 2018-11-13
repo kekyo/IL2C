@@ -133,7 +133,7 @@ namespace IL2C
             DebugInformationOptions debugInformationOption,
             bool includeAssemblyHeader)
         {
-            IExtractContext extractContext = translateContext;
+            IExtractContextHost extractContext = translateContext;
 
             if (includeAssemblyHeader)
             {

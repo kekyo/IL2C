@@ -522,11 +522,11 @@ namespace IL2C
             return temp.ToArray(elementType);
         }
 
-        public static string GetMarshaledInExpression(this VariableInformation parameter)
+        public static string GetMarshaledInExpression(this IParameterInformation parameter)
         {
             if (parameter.TargetType.IsStringType)
             {
-                return string.Format("{0}->string_body__", parameter.SymbolName);
+                return string.Format("{0}->string_body__", parameter.ParameterName);
             }
 
             if (parameter.TargetType.IsEnum)
@@ -534,19 +534,19 @@ namespace IL2C
                 return string.Format(
                     "({0}){1}",
                     parameter.TargetType.Name,      // Simple enum type name for use P/Invoke.
-                    parameter.SymbolName);
+                    parameter.ParameterName);
             }
 
-            return parameter.SymbolName;
+            return parameter.ParameterName;
         }
 
         public struct RightExpressionGivenParameter
         {
             public readonly ITypeInformation TargetType;
-            public readonly VariableInformation SymbolInformation;
+            public readonly IVariableInformation SymbolInformation;
 
             public RightExpressionGivenParameter(
-                ITypeInformation targetType, VariableInformation symbolinformation)
+                ITypeInformation targetType, IVariableInformation symbolinformation)
             {
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;

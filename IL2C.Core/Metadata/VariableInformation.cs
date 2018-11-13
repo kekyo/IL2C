@@ -1,74 +1,74 @@
-﻿using System.Linq;
-
-using Mono.Cecil;
+﻿using System;
 
 namespace IL2C.Metadata
 {
-    public struct VariableInformation
-        : IOperandPrintable
+    public interface IVariableInformation
+        : IEquatable<IVariableInformation>
     {
-        private static readonly CustomAttribute[] empty = new CustomAttribute[0];
-        private readonly CustomAttribute[] customAttributes;
+        int Index { get; }
+        ITypeInformation TargetType { get; }
+        IMethodInformation DeclaredMethod { get; }
+        object HintInformation { get; }
 
-        internal VariableInformation(
-            IMethodInformation declaredMethod,
-            int index,
-            string symbolName,
-            ITypeInformation targetType,
-            object hintInformation = null)
-            : this(declaredMethod, index, symbolName, targetType, empty, hintInformation)
-        {
-        }
+        string UnsafeRawSymbolName { get; }
+    }
 
-        internal VariableInformation(
+    internal abstract class VariableInformation
+        : IVariableInformation, IOperandPrintable
+    {
+        internal readonly string symbolName;
+
+        protected VariableInformation(
             IMethodInformation declaredMethod,
             int index,
             string symbolName, 
             ITypeInformation targetType,
-            CustomAttribute[] customAttributes,
             object hintInformation = null)
         {
             this.Index = index;
-            this.SymbolName = symbolName;
+            this.symbolName = symbolName;
             this.TargetType = targetType;
             this.DeclaredMethod = declaredMethod;
-            this.customAttributes = customAttributes;
             this.HintInformation = hintInformation;
         }
 
         public int Index { get; }
-        public string SymbolName { get; }
         public ITypeInformation TargetType { get; }
         public IMethodInformation DeclaredMethod { get; }
         public object HintInformation { get; }
 
-        public bool IsParamArray =>
-            customAttributes.Any(attribute => attribute.AttributeType.FullName == "System.ParamArrayAttribute");
+        public string UnsafeRawSymbolName => symbolName;
 
-        public bool Equals(VariableInformation rhs)
+        public bool Equals(IVariableInformation rhs)
         {
+            if (rhs == null)
+            {
+                return false;
+            }
+
             return this.Index.Equals(rhs.Index) &&
-                this.SymbolName.Equals(rhs.SymbolName) &&
+                symbolName.Equals(rhs.UnsafeRawSymbolName) &&
                 this.TargetType.Equals(rhs.TargetType) &&
                 this.DeclaredMethod.Equals(rhs.DeclaredMethod);
         }
 
         public override bool Equals(object rhs)
         {
-            return this.Equals((VariableInformation)rhs);
+            return this.Equals(rhs as IVariableInformation);
         }
 
         public override int GetHashCode()
         {
-            return this.Index.GetHashCode() ^
-                this.SymbolName.GetHashCode() ^
+            return
+                this.Index.GetHashCode() ^
+                symbolName.GetHashCode() ^
                 this.TargetType.GetHashCode() ^
                 this.DeclaredMethod.GetHashCode();
         }
 
         public override string ToString() =>
-            string.Format("{0}: {1}", this.TargetType.FriendlyName, this.SymbolName);
+            string.Format("{0}: {1}", this.TargetType.FriendlyName, symbolName);
 
-        string IOperandPrintable.PrintableString => this.SymbolName;
+        string IOperandPrintable.PrintableString => symbolName;
     }
 }

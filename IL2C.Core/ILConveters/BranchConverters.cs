@@ -50,23 +50,23 @@ namespace IL2C.ILConverters
 
             if (si.TargetType.IsBooleanType)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if (!({0})) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else if (si.TargetType.IsNumericPrimitive)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} == NULL) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
         }
@@ -85,23 +85,23 @@ namespace IL2C.ILConverters
 
             if (si.TargetType.IsBooleanType)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if (!({0})) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else if (si.TargetType.IsNumericPrimitive)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} == NULL) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
         }
@@ -120,23 +120,23 @@ namespace IL2C.ILConverters
 
             if (si.TargetType.IsBooleanType)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0}) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else if (si.TargetType.IsNumericPrimitive)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} != 0) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} != NULL) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
         }
@@ -155,23 +155,23 @@ namespace IL2C.ILConverters
 
             if (si.TargetType.IsBooleanType)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0}) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else if (si.TargetType.IsNumericPrimitive)
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} != 0) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
             else
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "if ({0} != NULL) goto {1}",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     labelName) };
             }
         }
@@ -189,10 +189,10 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "if ({0} == {1}) goto {2}",
-                si0.SymbolName,
-                si1.SymbolName,
+                extractContext.GetSymbolName(si0),
+                extractContext.GetSymbolName(si1),
                 labelName) };
         }
     }
@@ -209,10 +209,10 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "if ({0} < {1}) goto {2}",
-                si0.SymbolName,
-                si1.SymbolName,
+                extractContext.GetSymbolName(si0),
+                extractContext.GetSymbolName(si1),
                 labelName) };
         }
     }
@@ -229,10 +229,10 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "if ({0} != {1}) goto {2}",
-                si0.SymbolName,
-                si1.SymbolName,
+                extractContext.GetSymbolName(si0),
+                extractContext.GetSymbolName(si1),
                 labelName) };
         }
     }

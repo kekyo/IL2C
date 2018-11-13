@@ -166,7 +166,7 @@ namespace IL2C.Writers
                     method.CLanguageFunctionName,
                     string.Concat(method.Parameters.
                         Skip(1).
-                        Select(p => string.Format(", {0} {1}", p.TargetType.CLanguageTypeName, p.SymbolName))));
+                        Select(p => string.Format(", {0} {1}", p.TargetType.CLanguageTypeName, p.ParameterName))));
                 tw.WriteLine(
                     "{");
 
@@ -191,7 +191,7 @@ namespace IL2C.Writers
                         method.CLanguageFunctionName,
                         string.Concat(method.Parameters.
                             Skip(1).
-                            Select(p => string.Format(", {0}", p.SymbolName))));    // These aren't required expression evaluation.
+                            Select(p => string.Format(", {0}", p.ParameterName))));    // These aren't required expression evaluation.
                 }
 
                 tw.WriteLine(

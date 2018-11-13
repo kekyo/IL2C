@@ -50,11 +50,17 @@ namespace IL2C
             return string.Format("({0}){1}", argumentType.CLanguageTypeName, constantExpression);
         }
 
-        private static string GetCLanguageCompareExpression(ITypeInformation type)
+        private static string GetCLanguageCompareExpression(ITypeInformation type, string expectedSymbolName, string actualSymbolName)
         {
             return type.IsStringType ?
-                "((il2c_c_str(_expected) == NULL) && (il2c_c_str(actual) == NULL)) || \r\n        ((il2c_c_str(_expected) != NULL) && (il2c_c_str(actual) != NULL) && (wcscmp(il2c_c_str(_expected), il2c_c_str(actual)) == 0))" :
-                "_expected == actual";
+                string.Format(
+                    "((il2c_c_str({0}) == NULL) && (il2c_c_str({1}) == NULL)) || \r\n        ((il2c_c_str({0}) != NULL) && (il2c_c_str({1}) != NULL) && (wcscmp(il2c_c_str({0}), il2c_c_str({1})) == 0))",
+                    expectedSymbolName,
+                    actualSymbolName) :
+                string.Format(
+                    "{0} == {1}",
+                    expectedSymbolName,
+                    actualSymbolName);
         }
 
         private static string GetCLanguagePrintFormatFromType(ITypeInformation type)
@@ -186,7 +192,7 @@ namespace IL2C
 
             var constants = caseInfo.Arguments.
                 Zip(targetMethod.Parameters, (arg, p) => new Constant(
-                    p.SymbolName,
+                    p.ParameterName,
                     p.TargetType,
                     arg?.GetType(),
                     Utilities.GetCLanguageExpression(arg))
@@ -239,7 +245,7 @@ namespace IL2C
                     Concat(new Constant[]
                     {
                         new Constant(
-                            "actual",
+                            "_actual",
                             expectedType,
                             caseInfo.Expected?.GetType(),
                             Utilities.GetCLanguageExpression(expectedType.PseudoEmptyValue)),
@@ -248,6 +254,14 @@ namespace IL2C
             }
 
             // Construct test definitions.
+            var expectedSymbolName = locals.
+                Any(entry => (entry.SymbolName == "_expected") && !entry.TargetType.IsValueType) ?
+                    "frame__._expected" :
+                    "_expected";
+            var actualSymbolName = locals.
+                Any(entry => (entry.SymbolName == "_actual") && !entry.TargetType.IsValueType) ?
+                    "frame__._actual" :
+                    "_actual";
             var replaceValues = new Dictionary<string, object>
             {
                 { "testName", targetMethod.FriendlyName},
@@ -259,31 +273,34 @@ namespace IL2C
                         entry.SymbolName,
                         entry.Expression))) },
                 { "locals", string.Join(" ", locals.
+                    Where(entry => entry.TargetType.IsValueType).
                     Select(entry => string.Format("{0} {1} = {2};",
                         entry.TargetType.CLanguageTypeName,
                         entry.SymbolName,
                         entry.Expression))) },
                 { "frames", string.Join(" ", locals.
-                    Where(entry => entry.TargetType.IsClass).
-                    Select(entry => string.Format("{0}* {1}__;",
+                    Where(entry => !entry.TargetType.IsValueType).
+                    Select(entry => string.Format("{0} {1};",
                         entry.TargetType.CLanguageTypeName,
                         entry.SymbolName))) },
                 { "frameCount", locals.
                     Where(entry => entry.TargetType.IsClass).Count() },
-                { "frameInitializers", string.Join(" ", locals.
-                    Where(entry => entry.TargetType.IsClass).
-                    Select(entry => string.Format("__executionFrame__.{0}__ = &{0};",
-                        entry.SymbolName))) },
                 { "arguments", string.Join(" ", arguments.
-                    Select(entry => string.Format("{0} = {1};",
-                        entry.SymbolName, entry.Expression))) },
-                { "function", targetMethod.CLanguageFunctionName},
+                    Select(entry => string.Format("{0}{1} = {2};",
+                        entry.TargetType.IsValueType ? string.Empty : "frame__.",
+                        entry.SymbolName,
+                        entry.Expression))) },
+                { "actual", actualSymbolName },
+                { "function", targetMethod.CLanguageFunctionName },
                 { "argumentList", string.Join(", ", argumentList.
-                    Select(arg => arg.SymbolName))},
-                { "equality", GetCLanguageCompareExpression(expectedType)},
+                    Select(arg => string.Format(
+                        "{0}{1}",
+                        arg.TargetType.IsValueType ? string.Empty : "frame__.",
+                        arg.SymbolName)))},
+                { "equality", GetCLanguageCompareExpression(expectedType, expectedSymbolName, actualSymbolName)},
                 { "format", GetCLanguagePrintFormatFromType(targetMethod.ReturnType)},
-                { "expectedExpression", GetCLanguagePrintArgumentExpression(expectedType, "_expected")},
-                { "actualExpression", GetCLanguagePrintArgumentExpression(expectedType, "actual")},
+                { "expectedExpression", GetCLanguagePrintArgumentExpression(expectedType, expectedSymbolName)},
+                { "actualExpression", GetCLanguagePrintArgumentExpression(expectedType, actualSymbolName)},
             };
 
             var sourcePath = Path.Combine(translatedPath, "test.c");

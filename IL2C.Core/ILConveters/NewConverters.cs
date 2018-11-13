@@ -27,13 +27,11 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            decodeContext.PrepareContext.RegisterIncludeFile("string.h");
-
             return extractContext =>
             {
                 return new[] { string.Format(
                     "memset({0}, 0x00, sizeof({1}))",
-                    si.SymbolName,
+                    extractContext.GetSymbolName(si),
                     type.MangledName) };
             };
         }
@@ -44,41 +42,45 @@ namespace IL2C.ILConverters
         public override OpCode OpCode => OpCodes.Newobj;
 
         public override Func<IExtractContext, string[]> Apply(
-            IMethodInformation method, DecodeContext decodeContext)
+            IMethodInformation ctor, DecodeContext decodeContext)
         {
-            if (!method.IsConstructor)
+            if (!ctor.IsConstructor)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid new object constructor: Location={0}, Method={1}",
                     decodeContext.CurrentCode.RawLocation,
-                    method.FriendlyName);
+                    ctor.FriendlyName);
             }
 
             // Generate the constructor's argument expressions.
-            var type = method.DeclaringType;
-            string thisSymbolName = null;
+            var type = ctor.DeclaringType;
+            ILocalVariableInformation thisSymbol = null;
 
             var pairParameters = new LinkedList<Utilities.RightExpressionGivenParameter>();
-            foreach (var parameter in method.Parameters.Reverse())
+            foreach (var parameter in ctor.Parameters.Reverse())
             {
                 // Except this parameter
-                if (pairParameters.Count < (method.Parameters.Length) - 1)
+                if (pairParameters.Count < (ctor.Parameters.Length) - 1)
                 {
                     pairParameters.AddFirst(new Utilities.RightExpressionGivenParameter(
                         parameter.TargetType,
                         decodeContext.PopStack()));
                 }
-                // This parameter
+                // "this" parameter
                 else
                 {
-                    thisSymbolName = decodeContext.PushStack(type);
+                    Debug.Assert(thisSymbol == null);
+
+                    // Instance from get_uninitialized_object
+                    thisSymbol = decodeContext.PushStack(type, ctor);
+
                     pairParameters.AddFirst(new Utilities.RightExpressionGivenParameter(
                         parameter.TargetType,
-                        new VariableInformation(method, 0, thisSymbolName, type)));
+                        thisSymbol));
                 }
             }
 
-            Debug.Assert(!string.IsNullOrWhiteSpace(thisSymbolName));
+            Debug.Assert(thisSymbol != null);
 
             var codeInformation = decodeContext.CurrentCode;
 
@@ -94,14 +96,14 @@ namespace IL2C.ILConverters
                         type.FriendlyName);
                 }
 
-                if (!(method.Parameters.Length == 2) &&
-                    (method.Parameters[0].TargetType.IsObjectType) &&
-                    (method.Parameters[0].TargetType.IsIntPtrType))
+                if (!(ctor.Parameters.Length == 2) &&
+                    (ctor.Parameters[0].TargetType.IsObjectType) &&
+                    (ctor.Parameters[0].TargetType.IsIntPtrType))
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid delegate constructor: Location={0}, Method={1}",
                         codeInformation.RawLocation,
-                        method.FriendlyName);
+                        ctor.FriendlyName);
                 }
 
                 return extractContext =>
@@ -113,14 +115,14 @@ namespace IL2C.ILConverters
                     {
                         string.Format(
                             "{0} = il2c_new_delegate({1}, {2})",
-                            thisSymbolName,
+                            extractContext.GetSymbolName(thisSymbol),
                             type.MangledName,
                             parameterString)
                     };
                 };
             }
 
-            var overloadIndex = method.OverloadIndex;
+            var overloadIndex = ctor.OverloadIndex;
 
             return extractContext =>
             {
@@ -137,15 +139,15 @@ namespace IL2C.ILConverters
                         return new[] {
                             string.Format(
                                 "memset(&{0}, 0x00, sizeof({1}))",
-                                thisSymbolName,
+                                extractContext.GetSymbolName(thisSymbol),
                                 typeName),
-                            (overloadIndex >= 1)
-                                ? string.Format(
+                            (overloadIndex >= 1) ?
+                                string.Format(
                                     "{0}__ctor_{1}(&{2})",
                                     typeName,
                                     overloadIndex,
-                                    parameterString)
-                                : string.Format(
+                                    parameterString) :
+                                string.Format(
                                     "{0}__ctor(&{1})",
                                     typeName,
                                     parameterString)
@@ -156,7 +158,7 @@ namespace IL2C.ILConverters
                         // ValueType's default constructor not declared.
                         return new[] { string.Format(
                             "memset(&{0}, 0x00, sizeof({1}))",
-                            thisSymbolName,
+                            extractContext.GetSymbolName(thisSymbol),
                             typeName) };
                     }
                 }
@@ -167,7 +169,7 @@ namespace IL2C.ILConverters
                     {
                         string.Format(
                             "{0} = il2c_get_uninitialized_object({1})",
-                            thisSymbolName,
+                            extractContext.GetSymbolName(thisSymbol),
                             type.MangledName)
                     };
 
@@ -179,20 +181,20 @@ namespace IL2C.ILConverters
                         //   Because vtable has function pointers from unique adjustor thunk by instance type layout offset.
                         return string.Format(
                             "{0}->vptr_{1}__ = &__{2}_{1}_VTABLE__",
-                            thisSymbolName,
+                            extractContext.GetSymbolName(thisSymbol),
                             interfaceType.MangledName,
                             type.MangledName);
                     });
 
-                    var ctor = new[]
+                    var callCtor = new[]
                     {
-                        (overloadIndex >= 1)
-                            ? string.Format(
+                        (overloadIndex >= 1) ?
+                            string.Format(
                                 "{0}__ctor_{1}({2})",
                                 type.MangledName,
                                 overloadIndex,
-                                parameterString)
-                            : string.Format(
+                                parameterString) :
+                            string.Format(
                                 "{0}__ctor({1})",
                                 type.MangledName,
                                 parameterString)
@@ -200,7 +202,7 @@ namespace IL2C.ILConverters
 
                     return get.
                         //Concat(vptrs). // TODO: 
-                        Concat(ctor).
+                        Concat(callCtor).
                         ToArray();
                 }
             };
@@ -223,13 +225,13 @@ namespace IL2C.ILConverters
                     siCount.TargetType.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(elementType.MakeArray());
+            var symbol = decodeContext.PushStack(elementType.MakeArray());
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "{0} = il2c_new_array({1}, {2})",
-                symbolName,
+                extractContext.GetSymbolName(symbol),
                 elementType.MangledName,
-                siCount.SymbolName) };
+                extractContext.GetSymbolName(siCount)) };
         }
     }
 }

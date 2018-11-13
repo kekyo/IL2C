@@ -4,6 +4,7 @@ using Mono.Cecil.Cil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
+using System.Diagnostics;
 
 namespace IL2C.ILConverters
 {
@@ -86,10 +87,10 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            return _ => new[] {
+            return extractContext => new[] {
                 string.Format(
                     "il2c_throw({0})",
-                    si.SymbolName) };
+                    extractContext.GetSymbolName(si)) };
         }
     }
 
@@ -148,16 +149,16 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             string operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(
+            var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.StringType);
-            var constStringName = decodeContext.PrepareContext
-                .RegisterConstString(operand);
+            var constStringName = decodeContext.PrepareContext.
+                RegisterConstString(operand);
 
-            return _ =>
+            return extractContext =>
             {
                 return new[] { string.Format(
                     "{0} = {1}",
-                    symbolName,
+                    extractContext.GetSymbolName(symbol),
                     constStringName) };
             };
         }
@@ -174,12 +175,12 @@ namespace IL2C.ILConverters
             //   Because we can't understand whats the objref type at now.
             //   The "UntypedReferenceType" is pseudo type information.
             //   It will be resolved at later if using for GetRightExpression method.
-            var symbolName = decodeContext.PushStack(
+            var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UntypedReferenceType);
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "{0} = NULL",
-                symbolName) };
+                extractContext.GetSymbolName(symbol)) };
         }
     }
 
@@ -191,15 +192,17 @@ namespace IL2C.ILConverters
             DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            decodeContext.PushStack(si.TargetType);
+            var symbol0 = decodeContext.PushStack(si.TargetType);
 
-            var symbolName1 = decodeContext.PushStack(
+            Debug.Assert(si.Equals(symbol0));
+
+            var symbol1 = decodeContext.PushStack(
                 si.TargetType);
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "{0} = {1}",
-                symbolName1,
-                si.SymbolName) };
+                extractContext.GetSymbolName(symbol1),
+                extractContext.GetSymbolName(si)) };
         }
     }
 
@@ -234,29 +237,30 @@ namespace IL2C.ILConverters
             var resultType = operand.IsValueType ?
                 decodeContext.PrepareContext.MetadataContext.ValueTypeType :
                 operand;
-            var symbolName = decodeContext.PushStack(resultType);
+            var symbol = decodeContext.PushStack(resultType);
 
             // If this type can cast statically:
             if (operand.IsAssignableFrom(si.TargetType))
             {
-                return _ =>
+                return extractContext =>
                 {
                     return new[] { string.Format(
                         "{0} = ({1}){2}",
-                        symbolName,
+                        extractContext.GetSymbolName(symbol),
                         operand.CLanguageTypeName,
-                        si.SymbolName) };
+                        extractContext.GetSymbolName(si)) };
                 };
             }
 
-            var expression = string.Format(
-                "{0} = {1}({2}, {3})",
-                symbolName,
-                check ? "il2c_castclass" : "il2c_isinst",
-                si.SymbolName,
-                operand.MangledName);
-
-            return _ => { return new[] { expression }; };
+            return extractContext =>
+            {
+                return new[] { string.Format(
+                    "{0} = {1}({2}, {3})",
+                    extractContext.GetSymbolName(symbol),
+                    check ? "il2c_castclass" : "il2c_isinst",
+                    extractContext.GetSymbolName(si),
+                    operand.MangledName) };
+            };
         }
     }
 
@@ -293,14 +297,14 @@ namespace IL2C.ILConverters
         {
             // ECMA-335 III.4.25 sizeof - load the size, in bytes,of a type 
             //   sizeof opcode has to push size by UInt32 (not Int32.)
-            var symbolName = decodeContext.PushStack(
+            var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UInt32Type);
 
             return extractContext =>
             {
                 return new[] { string.Format(
                     "{0} = il2c_sizeof({1})",
-                    symbolName,
+                    extractContext.GetSymbolName(symbol),
                     operand.MangledName) };
             };
         }

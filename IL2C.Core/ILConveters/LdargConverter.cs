@@ -14,15 +14,15 @@ namespace IL2C.ILConverters
         {
             var parameter = decodeContext.Method.Parameters[parameterIndex];
             var targetType = isReference ? parameter.TargetType.MakeByReference() : parameter.TargetType;
-            var symbolName = decodeContext.PushStack(targetType);
+            var symbol = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
                 "{0} = {1}{2}",
-                symbolName,
+                extractContext.GetSymbolName(symbol),
                 // MEMO: Don't check "targetType.IsByReference" instead "isReference."
                 //   Because it's maybe double encoded byref type.
                 isReference ? "&" : string.Empty,
-                parameter.SymbolName) };
+                parameter.ParameterName) };
         }
     }
 

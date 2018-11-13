@@ -38,54 +38,77 @@ namespace IL2C.ILConverters
             // Int32 = (Int32) op (Int32)
             if (si0.TargetType.IsInt32StackFriendlyType && si1.TargetType.IsInt32StackFriendlyType)
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return _ => new[] { string.Format(
-                    "{0} = {1} {2} {3}", resultName, si0.SymbolName, opChar, si1.SymbolName) };
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return extractContext => new[] { string.Format(
+                    "{0} = {1} {2} {3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    opChar,
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // Int64 = (Int64) op (Int64)
             if (si0.TargetType.IsInt64StackFriendlyType && si1.TargetType.IsInt64StackFriendlyType)
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
-                return _ => new[] { string.Format(
-                    "{0} = {1} {2} {3}", resultName, si0.SymbolName, opChar, si1.SymbolName) };
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
+                return extractContext => new[] { string.Format(
+                    "{0} = {1} {2} {3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    opChar,
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // Double = (Float) % (Float)
             if (si0.TargetType.IsFloatStackFriendlyType && si1.TargetType.IsFloatStackFriendlyType &&
                 (binaryOperator == BinaryOperators.Rem))
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
 
                 // Use special runtime function.
-                return _ => new[] { string.Format(
-                    "{0} = il2c_fmod({1}, {2})", resultName, si0.SymbolName, si1.SymbolName) };
+                return extractContext => new[] { string.Format(
+                    "{0} = il2c_fmod({1}, {2})",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // Double = (Float) op (Float)
             if (si0.TargetType.IsFloatStackFriendlyType && si1.TargetType.IsFloatStackFriendlyType)
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
-                return _ => new[] { string.Format(
-                    "{0} = (double){1} {2} (double){3}", resultName, si0.SymbolName, opChar, si1.SymbolName) };
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+                return extractContext => new[] { string.Format(
+                    "{0} = (double){1} {2} (double){3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    opChar,
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // ByRef = (Int32) + (ByRef)
             if (si0.TargetType.IsInt32StackFriendlyType && si1.TargetType.IsByReference &&
                 (binaryOperator == BinaryOperators.Add))
             {
-                var resultName = decodeContext.PushStack(si1.TargetType);
-                return _ => new[] { string.Format(
-                    "{0} = ({1})((intptr_t){2} + (intptr_t){3})", resultName, si1.TargetType.CLanguageTypeName, si0.SymbolName, si1.SymbolName) };
+                var result = decodeContext.PushStack(si1.TargetType);
+                return extractContext => new[] { string.Format(
+                    "{0} = ({1})((intptr_t){2} + (intptr_t){3})",
+                    extractContext.GetSymbolName(result),
+                    si1.TargetType.CLanguageTypeName,
+                    extractContext.GetSymbolName(si0),
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // ByRef = (IntPtr) + (ByRef)
             if (si0.TargetType.IsIntPtrStackFriendlyType && si1.TargetType.IsByReference &&
                 (binaryOperator == BinaryOperators.Add))
             {
-                var resultName = decodeContext.PushStack(si1.TargetType);
-                return _ => new[] { string.Format(
-                    "{0} = ({1})((intptr_t){2} + (intptr_t){3})", resultName, si1.TargetType.CLanguageTypeName, si0.SymbolName, si1.SymbolName) };
+                var result = decodeContext.PushStack(si1.TargetType);
+                return extractContext => new[] { string.Format(
+                    "{0} = ({1})((intptr_t){2} + (intptr_t){3})",
+                    extractContext.GetSymbolName(result),
+                    si1.TargetType.CLanguageTypeName,
+                    extractContext.GetSymbolName(si0),
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // ByRef = (ByRef) +/- (Int32|IntPtr)
@@ -93,27 +116,40 @@ namespace IL2C.ILConverters
                 (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType) &&
                 ((binaryOperator == BinaryOperators.Add) || (binaryOperator == BinaryOperators.Sub)))
             {
-                var resultName = decodeContext.PushStack(si0.TargetType);
-                return _ => new[] { string.Format(
-                    "{0} = ({1})((intptr_t){2} {3} (intptr_t){4})", resultName, si0.TargetType.CLanguageTypeName, si0.SymbolName, opChar, si1.SymbolName) };
+                var result = decodeContext.PushStack(si0.TargetType);
+                return extractContext => new[] { string.Format(
+                    "{0} = ({1})((intptr_t){2} {3} (intptr_t){4})",
+                    extractContext.GetSymbolName(result),
+                    si0.TargetType.CLanguageTypeName,
+                    extractContext.GetSymbolName(si0),
+                    opChar,
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // ByRef = (ByRef) - (ByRef)
             if (si0.TargetType.IsByReference && si1.TargetType.IsByReference &&
                 (binaryOperator == BinaryOperators.Sub))
             {
-                var resultName = decodeContext.PushStack(si0.TargetType);
-                return _ => new[] { string.Format(
-                    "{0} = ({1})((intptr_t){2} - (intptr_t){3})", resultName, si0.TargetType.CLanguageTypeName, si0.SymbolName, si1.SymbolName) };
+                var result = decodeContext.PushStack(si0.TargetType);
+                return extractContext => new[] { string.Format(
+                    "{0} = ({1})((intptr_t){2} - (intptr_t){3})",
+                    extractContext.GetSymbolName(result),
+                    si0.TargetType.CLanguageTypeName,
+                    extractContext.GetSymbolName(si0),
+                    extractContext.GetSymbolName(si1)) };
             }
 
             // IntPtr = (Int32|IntPtr) op (Int32|IntPtr)
             if ((si0.TargetType.IsInt32StackFriendlyType || si0.TargetType.IsIntPtrStackFriendlyType) &&
                 (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))
             {
-                var resultName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
-                return _ => new[] { string.Format(
-                    "{0} = (intptr_t){1} {2} (intptr_t){3}", resultName, si0.SymbolName, opChar, si1.SymbolName) };
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
+                return extractContext => new[] { string.Format(
+                    "{0} = (intptr_t){1} {2} (intptr_t){3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    opChar,
+                    extractContext.GetSymbolName(si1)) };
             }
 
             throw new InvalidProgramSequenceException(

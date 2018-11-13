@@ -22,12 +22,12 @@ namespace IL2C.ILConverters
             }
 
             var targetType = siFrom.TargetType.ElementType;
-            var symbolName = decodeContext.PushStack(targetType);
+            var symbol = decodeContext.PushStack(targetType);
 
             return extractContext => new[] { string.Format(
                 "{0} = *{1}",
-                symbolName,
-                siFrom.SymbolName) };
+                extractContext.GetSymbolName(symbol),
+                extractContext.GetSymbolName(siFrom)) };
         }
     }
 

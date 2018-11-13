@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Linq;
 
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
 using IL2C.Metadata;
-using System.Linq;
 
 namespace IL2C.ILConverters
 {
@@ -15,11 +15,11 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             IMethodInformation operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
+            var symbol = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
-            return _ => new[] { string.Format(
+            return extractContext => new[] { string.Format(
                 "{0} = (intptr_t){1}",
-                symbolName,
+                extractContext.GetSymbolName(symbol),
                 operand.CLanguageFunctionName) };
         }
     }
@@ -50,7 +50,7 @@ namespace IL2C.ILConverters
                     operand.FriendlyName);
             }
 
-            var symbolName = decodeContext.PushStack(
+            var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
             if (operand.IsVirtual && !operand.IsSealed)
@@ -63,17 +63,17 @@ namespace IL2C.ILConverters
 
                 var vptrName = method.GetCLanguageDeclarationName(overloadIndex);
 
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "{0} = (intptr_t){1}->vptr0__->{2}",
-                    symbolName,
-                    si.SymbolName,
+                    extractContext.GetSymbolName(symbol),
+                    extractContext.GetSymbolName(si),
                     vptrName) };
             }
             else
             {
-                return _ => new[] { string.Format(
+                return extractContext => new[] { string.Format(
                     "{0} = (intptr_t){1}",
-                    symbolName,
+                    extractContext.GetSymbolName(symbol),
                     operand.CLanguageFunctionName) };
             }
         }

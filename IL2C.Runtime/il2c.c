@@ -11,9 +11,11 @@
 
 typedef volatile struct IL2C_EXECUTION_FRAME
 {
-    IL2C_EXECUTION_FRAME* pNext;
-    uint8_t targetCount;
-    void** pTargets[1];      // We have to track object references.
+    uint8_t objRefCount__;
+    uint8_t objRefRefCount__;
+    IL2C_EXECUTION_FRAME* pNext__;
+    void* pReferences__[1];
+    // void** ppReferences__[];
 } IL2C_EXECUTION_FRAME;
 
 // TODO: Become store to thread local storage
@@ -134,33 +136,23 @@ void il2c_no_mark_handler__(/* System_Object* */ void* pReference)
 
 //////////////////////////
 
-void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ void* pNewFrame)
+void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pNewFrame)
 {
     il2c_assert(pNewFrame != NULL);
+    il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
 
-    ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext = g_pBeginFrame__;
+    ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = g_pBeginFrame__;
     g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)pNewFrame;
-
-#ifdef _DEBUG
-    {
-        IL2C_EXECUTION_FRAME* p = (IL2C_EXECUTION_FRAME*)pNewFrame;
-        uint8_t index;
-        for (index = 0; index < p->targetCount; index++)
-        {
-            il2c_assert(*p->pTargets[index] == NULL);
-        }
-    }
-#endif
 }
 
-void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ void* pFrame)
+void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pFrame)
 {
     il2c_assert(pFrame != NULL);
 
     // TODO: always collect
     il2c_collect();
 
-    g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext;
+    g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
 }
 
 //////////////////////////
@@ -188,12 +180,10 @@ void il2c_step2_mark_gcmark__()
     {
         // Traverse current frame.
         uint8_t index;
-        for (index = 0; index < pCurrentFrame->targetCount; index++)
+        for (index = 0; index < pCurrentFrame->objRefCount__; index++)
         {
-            void** ppReference = pCurrentFrame->pTargets[index];
-            il2c_assert(ppReference != NULL);
-
-            if (*ppReference == NULL)
+            void* pReference = pCurrentFrame->pReferences__[index];
+            if (pReference == NULL)
             {
                 continue;
             }
@@ -201,7 +191,7 @@ void il2c_step2_mark_gcmark__()
             // Has to ignore if objref is const.
             // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
             //   (at x86/x64 cause, another platform may cause)
-            IL2C_REF_HEADER* pHeader = il2c_get_header__(*ppReference);
+            IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
             if (pHeader->gcMark == GCMARK_CONST)
             {
                 continue;
@@ -216,11 +206,11 @@ void il2c_step2_mark_gcmark__()
 
                 DEBUG_WRITE("il2c_step2_mark_gcmark__", pHeader->type->pTypeName);
 
-                pHeader->type->IL2C_MarkHandler(*ppReference);
+                pHeader->type->IL2C_MarkHandler(pReference);
             }
         }
 
-        pCurrentFrame = pCurrentFrame->pNext;
+        pCurrentFrame = pCurrentFrame->pNext__;
     }
 }
 
@@ -324,12 +314,12 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_
     il2c_assert(pReference != NULL);
 
     void* p = il2c_isinst__(pReference, type);
-    if (p != NULL)
+    if (p == NULL)
     {
-        return p;
+        il2c_throw_invalidcastexception__();
     }
 
-    il2c_throw_invalidcastexception__();
+    return p;
 }
 
 /////////////////////////////////////////////////////////////

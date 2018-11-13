@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using IL2C.Metadata;
 
@@ -26,12 +27,21 @@ namespace IL2C.Translators
         IMetadataContext MetadataContext { get; }
         IAssemblyInformation Assembly { get; }
 
-        string GetRightExpression(ITypeInformation lhsType, VariableInformation rhs);
+        string GetRightExpression(ITypeInformation lhsType, IVariableInformation rhs);
         string GetRightExpression(ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression);
+
+        string GetSymbolName(IVariableInformation variable);
+
         IEnumerable<string> EnumerateRequiredIncludeFileNames();
         IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();
         IEnumerable<IFieldInformation> ExtractStaticFields();
         IEnumerable<(string symbolName, string value)> ExtractConstStrings();
         IEnumerable<DeclaredValuesInformation> ExtractDeclaredValues();
+    }
+
+    internal interface IExtractContextHost
+        : IExtractContext
+    {
+        IDisposable BeginLocalVariablePrefix(Func<ILocalVariableInformation, string> prefixGenerator);
     }
 }

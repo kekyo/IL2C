@@ -3,17 +3,37 @@
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConverters
 {
+    internal static class LdcConverterUtilities
+    {
+        public static Func<IExtractContext, string[]> Apply(
+            ITypeInformation type, object value, DecodeContext decodeContext)
+        {
+            var symbol = decodeContext.PushStack(type);
+
+            return extractContext => new[] { string.Format(
+                "{0} = {1}",
+                extractContext.GetSymbolName(symbol),
+                Utilities.GetCLanguageExpression(value)) };
+        }
+
+        public static Func<IExtractContext, string[]> Apply(
+            int value, DecodeContext decodeContext)
+        {
+            return Apply(decodeContext.PrepareContext.MetadataContext.Int32Type, value, decodeContext);
+        }
+    }
+
     internal sealed class Ldc_i4_0Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldc_I4_0;
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 0", symbolName) };
+            return LdcConverterUtilities.Apply(0, decodeContext);
         }
     }
 
@@ -23,8 +43,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 1", symbolName) };
+            return LdcConverterUtilities.Apply(1, decodeContext);
         }
     }
 
@@ -34,8 +53,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 2", symbolName) };
+            return LdcConverterUtilities.Apply(2, decodeContext);
         }
     }
 
@@ -45,8 +63,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 3", symbolName) };
+            return LdcConverterUtilities.Apply(3, decodeContext);
         }
     }
 
@@ -56,8 +73,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 4", symbolName) };
+            return LdcConverterUtilities.Apply(4, decodeContext);
         }
     }
 
@@ -67,8 +83,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 5", symbolName) };
+            return LdcConverterUtilities.Apply(5, decodeContext);
         }
     }
 
@@ -78,8 +93,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 6", symbolName) };
+            return LdcConverterUtilities.Apply(6, decodeContext);
         }
     }
 
@@ -89,8 +103,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 7", symbolName) };
+            return LdcConverterUtilities.Apply(7, decodeContext);
         }
     }
 
@@ -100,8 +113,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = 8", symbolName) };
+            return LdcConverterUtilities.Apply(8, decodeContext);
         }
     }
 
@@ -111,8 +123,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = -1", symbolName) };
+            return LdcConverterUtilities.Apply(-1, decodeContext);
         }
     }
 
@@ -122,8 +133,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(sbyte operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, operand) };
+            return LdcConverterUtilities.Apply(operand, decodeContext);
         }
     }
 
@@ -133,8 +143,7 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(int operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
+            return LdcConverterUtilities.Apply(operand, decodeContext);
         }
     }
 
@@ -144,8 +153,10 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(long operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
+            return LdcConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.Int64Type,
+                operand,
+                decodeContext);
         }
     }
 
@@ -155,8 +166,10 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(float operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
+            return LdcConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.SingleType,
+                operand,
+                decodeContext);
         }
     }
 
@@ -166,8 +179,10 @@ namespace IL2C.ILConverters
 
         public override Func<IExtractContext, string[]> Apply(double operand, DecodeContext decodeContext)
         {
-            var symbolName = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
-            return _ => new[] { string.Format("{0} = {1}", symbolName, Utilities.GetCLanguageExpression(operand)) };
+            return LdcConverterUtilities.Apply(
+                decodeContext.PrepareContext.MetadataContext.DoubleType,
+                operand,
+                decodeContext);
         }
     }
 }

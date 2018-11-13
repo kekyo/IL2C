@@ -56,7 +56,7 @@ namespace IL2C.ILConverters
 
                 return new[] { string.Format(
                     "*{0} = {1}",
-                    siReference.SymbolName,
+                    extractContext.GetSymbolName(siReference),
                     rightExpression) };
             };
         }

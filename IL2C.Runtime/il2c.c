@@ -296,18 +296,6 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DEC
     return NULL;
 }
 
-// MEMO: Hmm, the unbox failed message different to the castclass opcode...
-//   IL2C choices short sentence by unbox operator message because better footprint.
-//   .NET 4 castclass message format: "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
-IL2C_CONST_STRING(il2c_cast_failed, L"Specified cast is not valid.");
-
-static void il2c_throw_invalidcastexception__()
-{
-    System_InvalidCastException* ex = il2c_get_uninitialized_object(System_InvalidCastException);
-    System_InvalidCastException__ctor_1(ex, il2c_cast_failed);
-    il2c_throw(ex);
-}
-
 void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
 {
     il2c_assert(type != NULL);
@@ -529,6 +517,7 @@ void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget)
 
     IL2C_EXCEPTION_FRAME* p = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget->pNext);
     il2c_assert(p == pUnwindTarget);
+    (void)p;
 }
 
 static void il2c_throw_internal__(
@@ -627,3 +616,16 @@ void il2c_break()
 {
     debug_break();
 }
+
+// MEMO: Hmm, the unbox failed message different to the castclass opcode...
+//   IL2C choices short sentence by unbox operator message because better footprint.
+//   .NET 4 castclass message format: "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
+IL2C_CONST_STRING(il2c_invalid_cast_message, L"Specified cast is not valid.");
+
+void il2c_throw_invalidcastexception__()
+{
+    System_InvalidCastException* ex = il2c_get_uninitialized_object(System_InvalidCastException);
+    System_InvalidCastException__ctor_1(ex, il2c_invalid_cast_message);
+    il2c_throw(ex);
+}
+

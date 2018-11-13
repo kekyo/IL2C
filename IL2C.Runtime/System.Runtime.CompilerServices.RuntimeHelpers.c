@@ -18,7 +18,7 @@ void System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray(
     uintptr_t arraySize = array->Length * il2c_sizeof__(array->elementType__);
     uintptr_t size = (fldHandle.size__ < arraySize) ? fldHandle.size__ : arraySize;
 
-    il2c_memcpy(&il2c_array_item(array, uint8_t*, 0), fldHandle.field__, size);
+    il2c_memcpy(il2c_array_item0ptr__(array), fldHandle.field__, size);
 }
 
 /////////////////////////////////////////////////

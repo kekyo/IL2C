@@ -157,6 +157,7 @@ typedef void* untyped_ptr;
 #include <System.Runtime.CompilerServices.RuntimeHelpers.h>
 #include <System.Exception.h>
 #include <System.InvalidCastException.h>
+#include <System.IndexOutOfRangeException.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations
@@ -244,6 +245,8 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 
 extern double il2c_fmod(double lhs, double rhs);
 extern void il2c_break();
+
+extern void il2c_throw_invalidcastexception__();
 
 #ifdef __cplusplus
 }

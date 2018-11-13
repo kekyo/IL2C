@@ -92,6 +92,9 @@ typedef long interlock_t;
 #define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
 #define il2c_wcslen wcslen
+#define il2c_memcpy memcpy
+#define il2c_memset memset
+#define il2c_memcmp memcmp
 #define il2c_initialize_heap()
 #define il2c_check_heap()
 #define il2c_shutdown_heap()
@@ -99,9 +102,6 @@ typedef long interlock_t;
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 
-#define il2c_memcpy memcpy
-#define il2c_memset memset
-#define il2c_memcmp memcmp
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))

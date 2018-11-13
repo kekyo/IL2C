@@ -31,6 +31,7 @@
 #include "System.Runtime.CompilerServices.RuntimeHelpers.c"
 #include "System.Exception.c"
 #include "System.InvalidCastException.c"
+#include "System.IndexOutOfRangeException.c"
 
 #include "System.Console.c"
 

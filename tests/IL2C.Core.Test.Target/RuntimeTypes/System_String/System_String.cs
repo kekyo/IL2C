@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 
 namespace IL2C.RuntimeTypes
@@ -16,6 +17,10 @@ namespace IL2C.RuntimeTypes
     [TestCase(true, "Equals1", "ABC", "ABC")]
     [TestCase(false, "Equals1", "ABC", "ABCDEF")]
     [TestCase(false, "Equals1", "ABC", "DEF")]
+    [TestCase(false, "IndexOutOfRange", "ABC", 0)]
+    [TestCase(false, "IndexOutOfRange", "ABC", 2)]
+    [TestCase(true, "IndexOutOfRange", "ABC", -1)]
+    [TestCase(true, "IndexOutOfRange", "ABC", 3)]
     public sealed class System_String
     {
         // MEMO: ToString and Equals are written by IL.
@@ -59,5 +64,18 @@ namespace IL2C.RuntimeTypes
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool Equals1(string value1, string value2);
+
+        public static bool IndexOutOfRange(string str, int index)
+        {
+            try
+            {
+                var ch = str[index];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

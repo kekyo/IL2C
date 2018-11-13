@@ -98,46 +98,55 @@ namespace IL2C.Writers
                 if (!preparedMethod.Method.IsStatic)
                 {
                     tw.WriteLine("il2c_assert(this__ != NULL);");
+                }
+
+                var localDefinitions = preparedMethod.Method.LocalVariables.
+                    Where(local => !local.TargetType.IsReferenceType).
+                    ToArray();
+                if (localDefinitions.Length >= 1)
+                {
                     tw.WriteLine();
+                    tw.WriteLine("//-------------------");
+                    tw.WriteLine("// [3-3] Local variables (not objref):");
+                    tw.WriteLine();
+
+                    foreach (var local in localDefinitions)
+                    {
+                        // HACK: The local variables mark to "volatile."
+                        //   Because the gcc misread these variables calculated statically (or maybe assigned to the registers)
+                        //   at compile time with optimization.
+                        //   It will cause the strange results for exception handling (with sjlj.)
+                        tw.WriteLine(
+                            "{0}{1} {2};",
+                            (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
+                            local.TargetType.CLanguageTypeName,
+                            extractContext.GetSymbolName(local));
+                    }
                 }
 
-                tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-3] Local variables (not objref):");
-                tw.WriteLine();
-
-                foreach (var local in preparedMethod.Method.LocalVariables.
-                    Where(local => !local.TargetType.IsReferenceType))
+                var stackDefinitions = preparedMethod.Stacks.
+                    Where(stack => !stack.TargetType.IsReferenceType).
+                    ToArray();
+                if (stackDefinitions.Length >= 1)
                 {
-                    // HACK: The local variables mark to "volatile."
-                    //   Because the gcc misread these variables calculated statically (or maybe assigned to the registers)
-                    //   at compile time with optimization.
-                    //   It will cause the strange results for exception handling (with sjlj.)
-                    tw.WriteLine(
-                        "{0}{1} {2};",
-                        (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
-                        local.TargetType.CLanguageTypeName,
-                        extractContext.GetSymbolName(local));
-                }
+                    tw.WriteLine();
+                    tw.WriteLine("//-------------------");
+                    tw.WriteLine("// [3-4] Evaluation stacks (not objref):");
+                    tw.WriteLine();
 
-                tw.WriteLine();
-                tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-4] Evaluation stacks (not objref):");
-                tw.WriteLine();
-
-                foreach (var stack in preparedMethod.Stacks.
-                    Where(stack => !stack.TargetType.IsReferenceType))
-                {
-                    tw.WriteLine(
-                        "{0} {1};",
-                        stack.TargetType.CLanguageTypeName,
-                        extractContext.GetSymbolName(stack));
+                    foreach (var stack in stackDefinitions)
+                    {
+                        tw.WriteLine(
+                            "{0} {1};",
+                            stack.TargetType.CLanguageTypeName,
+                            extractContext.GetSymbolName(stack));
+                    }
                 }
 
                 var objRefEntries = locals.
                     Concat(preparedMethod.Stacks).
                     Where(v => v.TargetType.IsReferenceType).  // Only objref
                     ToArray();
-
                 if (objRefEntries.Length >= 1)
                 {
                     tw.WriteLine();

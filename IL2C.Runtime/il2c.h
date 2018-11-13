@@ -23,6 +23,8 @@ extern "C" {
 #include <assert.h>
 
 #define il2c_assert assert
+#define il2c_setjmp setjmp
+#define IL2C_JUMP_BUFFER jmp_buf
 
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime
@@ -58,7 +60,7 @@ struct IL2C_EXCEPTION_FRAME
     IL2C_EXECUTION_FRAME* pFrame;
     /* System_Exception* */ void* ex;
     IL2C_EXCEPTION_FILTER filter;
-    jmp_buf saved;
+    IL2C_JUMP_BUFFER saved;
 };
 
 typedef volatile struct IL2C_REF_HEADER
@@ -199,7 +201,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
         int continuationIndex__ = -1; \
         il2c_link_unwind_target__(&unwind_target__, (IL2C_EXCEPTION_FILTER)(filterName)); \
         do { \
-            switch (setjmp(*(jmp_buf*)&unwind_target__.saved)) { \
+            switch (il2c_setjmp(*(IL2C_JUMP_BUFFER*)&unwind_target__.saved)) { \
             case 0: // try
 
 #define il2c_leave(continuationIndex) \

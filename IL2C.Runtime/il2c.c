@@ -242,8 +242,6 @@ void il2c_step3_sweep_garbage__()
     }
 }
 
-//////////////////////////
-
 void il2c_collect()
 {
     il2c_check_heap();
@@ -253,24 +251,6 @@ void il2c_collect()
     il2c_check_heap();
     il2c_step3_sweep_garbage__();
     il2c_check_heap();
-}
-
-void il2c_initialize()
-{
-    il2c_initialize_heap();
-
-    g_pBeginFrame__ = NULL;
-    g_pBeginHeader__ = NULL;
-    g_pTopUnwindTarget__ = NULL;
-}
-
-void il2c_shutdown()
-{
-    il2c_assert(g_pTopUnwindTarget__ == NULL);
-
-    il2c_collect();
-
-    il2c_shutdown_heap();
 }
 
 /////////////////////////////////////////////////////////////
@@ -531,7 +511,7 @@ static void il2c_throw_internal__(
     g_pBeginFrame__ = pTargetFrame->pFrame;
 
     // Transision to target handler.
-    longjmp((void*)pTargetFrame->saved, value);
+    il2c_longjmp((void*)pTargetFrame->saved, value);
 }
 
 void il2c_throw__(System_Exception* ex)
@@ -604,6 +584,75 @@ void il2c_rethrow()
     il2c_throw__(ex);
 }
 
+#ifdef IL2C_USE_SIGNAL
+IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
+
+static void il2c_SIGSEGV_handler(int sig)
+{
+    // MEMO 1:
+    //   Run in windows, this handler called from SEH filter context from "_seh_filter_exe()".
+    //   The SEH __try - __except() block contains at "__scrt_common_main_seh(),"
+    //   the callgraph is:
+    //     __scrt_common_main_seh() --> __try --> main() --> [SEGV] --> __except() --> _seh_filter_exe() --> handler()
+    //   But the "__except(...)" expression has correct only EBP register except ESP register (!!)
+    //   Therefore the "_seh_filter_exe()" called before NO any unroll stacks,
+    //   the "handler()" function at deeper stack than "main(),"
+    //   We can use the longjmp() and unwinding without any stack corruption.
+    //   https://gist.github.com/kekyo/cc9bace942b8c2aa2484431e047d267d
+
+    // MEMO 2:
+    //   This handler allocate the NullReferenceException and finally unwind using the longjmp(),
+    //   it's dangerous for some situations.
+    //   For example, we'll call the "malloc()" function and if it causes SEGV (invalid pointer access) at inside malloc
+    //   by the unknown issue, context is maybe unstable condition and will jump to this handler and
+    //   the handler call malloc() function recursivity.
+    //   It situation, all function will break and unstable our code.
+    //   The IL2C currently NOT recovery it state, we'll approach for this problem:
+    //     * We have to do not cause any SEGV issue at our using C runtime functions.
+    //     * Unhook the handler before enter P/Invoke or external functions and
+    //       rehook the handler after leave P/Invoke or external functions.
+    //   These external functions may cause unknown problem and cause SEGV, we can't recover it state.
+    //   https://wiki.sei.cmu.edu/confluence/display/c/SIG30-C.+Call+only+asynchronous-safe+functions+within+signal+handlers
+
+    // TODO: can turn to static allocate for NullReferenceException?
+
+    System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
+    System_NullReferenceException__ctor_1(ex, il2c_null_reference_message);
+    il2c_throw(ex);
+}
+
+static void* g_SIGSEGV_saved = NULL;
+#endif
+
+/////////////////////////////////////////////////////////////
+// IL2C runtime initialzer / shutdown
+
+void il2c_initialize()
+{
+    il2c_initialize_heap();
+
+    g_pBeginFrame__ = NULL;
+    g_pBeginHeader__ = NULL;
+    g_pTopUnwindTarget__ = NULL;
+
+#ifdef IL2C_USE_SIGNAL
+    g_SIGSEGV_saved = signal(SIGSEGV, il2c_SIGSEGV_handler);
+#endif
+}
+
+void il2c_shutdown()
+{
+    il2c_assert(g_pTopUnwindTarget__ == NULL);
+
+    il2c_collect();
+
+#ifdef IL2C_USE_SIGNAL
+    signal(SIGSEGV, g_SIGSEGV_saved);
+#endif
+
+    il2c_shutdown_heap();
+}
+
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
@@ -628,4 +677,3 @@ void il2c_throw_invalidcastexception__()
     System_InvalidCastException__ctor_1(ex, il2c_invalid_cast_message);
     il2c_throw(ex);
 }
-

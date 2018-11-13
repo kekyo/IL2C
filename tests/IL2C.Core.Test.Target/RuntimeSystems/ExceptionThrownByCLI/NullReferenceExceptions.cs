@@ -16,9 +16,9 @@ namespace IL2C.RuntimeSystems
             {
                 var r = v.ToString();
             }
-            catch (NullReferenceException)
+            catch (NullReferenceException ex)
             {
-                return true;
+                return ex.Message == "Object reference not set to an instance of an object.";
             }
             return false;
         }

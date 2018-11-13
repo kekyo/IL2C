@@ -194,51 +194,59 @@ namespace IL2C.Writers
                     // Construct exception handler controller.
                     var exceptionHandlerController = new ExceptionHandlerController(
                         codeStream.ExceptionHandlers,
-                        (handler, handlerIndex) =>
+                        (handler, handlerIndex, nestedIndex) =>
                         {
+                            var nestedIndexName = string.Format("nest{0}", nestedIndex);
+                            extractContext.SetNestedExceptionFrameIndexName(nestedIndexName);
+
                             // Reached try block:
                             var filterName = string.Format(
                                 "__{0}_ExceptionFilter{1}__",
                                 preparedMethod.Method.CLanguageFunctionName,
                                 handlerIndex);
-                            tw.WriteLine("il2c_try({0})", filterName);
+                            tw.WriteLine("il2c_try({0}, {1})", nestedIndexName, filterName);
                             tw.WriteLine("{");
                             tw.Shift();
                         },
-                        (handler, handlerIndex) =>
+                        (handler, handlerIndex, nestedIndex) =>
                         {
                             // Reached try end block:
                             tw.Shift(-1);
                             tw.WriteLine("}");
                         },
-                        (catchHandler, catchHandlerIndex) =>
+                        (handler, handlerIndex, nestedIndex, catchHandler, catchHandlerIndex) =>
                         {
+                            var nestedIndexName = extractContext.GetExceptionNestedFrameIndexName();
                             switch (catchHandler.CatchHandlerType)
                             {
                                 case ExceptionCatchHandlerTypes.Catch:
                                     // Reached catch block:
                                     tw.WriteLine(
-                                        "il2c_catch({0}, {1})  // catch ({2})",
+                                        "il2c_catch({0}, {1}, {2})  // catch ({3})",
+                                        nestedIndexName,
                                         catchHandlerIndex + 1,
                                         extractContext.GetSymbolName(preparedMethod.CatchVariables[catchHandler.CatchStart]),
                                         catchHandler.CatchType.MangledName);
                                     break;
                                 case ExceptionCatchHandlerTypes.Finally:
                                     // Reached finally block:
-                                    tw.WriteLine("il2c_finally");
+                                    tw.WriteLine("il2c_finally({0})", nestedIndexName);
                                     break;
                             }
                             tw.WriteLine("{");
                             tw.Shift();
                         },
-                        (catchHandler, catchHandlerIndex) =>
+                        (handler, handlerIndex, nestedIndex, catchHandler, catchHandlerIndex) =>
                         {
                             // Reached catch end block:
                             tw.Shift(-1);
                             tw.WriteLine("}");
                         },
-                        (handler, handlerIndex) =>
+                        (handler, handlerIndex, nestedIndex, parentHandler, parentHandlerIndex, parentNestedIndex) =>
                         {
+                            var nestedIndexName = extractContext.GetExceptionNestedFrameIndexName();
+                            var parentNestedIndexName = (parentNestedIndex >= 0) ? string.Format("nest{0}", parentNestedIndex) : null;
+
                             // Write leave bind expressions if needed.
                             // Extract the continuation fromOffset inside at mostly inner exception handler.
                             var bindEntries =
@@ -249,29 +257,43 @@ namespace IL2C.Writers
                                     // Is this handler contains leave continuation target?
                                     Where(h => entry.Value.fromOffsets.Any(offset => h.ContainsOffset(offset))).
                                     // Found.
-                                    Select(h => new { handler = h, continuationIndex = entry.Key, entry.Value.targetOffset }).
-                                    // Only first item.
-                                    Take(1)).
+                                    Select(h => new { handler = h, continuationIndex = entry.Key, entry.Value.targetOffset })).
                                 // ... is current handler?
                                 Where(entry => entry.handler.Equals(handler)).
                                 ToArray();
                             if (bindEntries.Length >= 1)
                             {
-                                tw.WriteLine("il2c_leave_to");
+                                tw.WriteLine("il2c_leave_to({0})", nestedIndexName);
                                 tw.WriteLine("{");
                                 using (var ___ = tw.Shift())
                                 {
                                     foreach (var bind in bindEntries)
                                     {
-                                        var labelName = preparedMethod.LabelNames[bind.targetOffset];
-                                        tw.WriteLine("il2c_leave_bind({0}, {1});", bind.continuationIndex, labelName);
+                                        if ((parentNestedIndex < 0) ||
+                                            codeStream.ExceptionHandlers[parentNestedIndex].ContainsOffset(bind.targetOffset))
+                                        {
+                                            var labelName = preparedMethod.LabelNames[bind.targetOffset];
+                                            tw.WriteLine(
+                                                "il2c_leave_bind({0}, {1}, {2});",
+                                                nestedIndexName,
+                                                bind.continuationIndex,
+                                                labelName);
+                                        }
+                                        else
+                                        {
+                                            tw.WriteLine(
+                                                "il2c_leave_through({0}, {1}, {2});",
+                                                nestedIndexName, bind.continuationIndex, parentNestedIndexName);
+                                        }
                                     }
                                 }
                                 tw.WriteLine("}");
                             }
 
                             // Reached end of entire try block.
-                            tw.WriteLine("il2c_end_try;");
+                            tw.WriteLine("il2c_end_try({0});", nestedIndexName);
+
+                            extractContext.SetNestedExceptionFrameIndexName(parentNestedIndexName);
                         });
 
                     // Traverse code fragments.

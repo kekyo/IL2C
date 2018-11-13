@@ -94,6 +94,18 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class RethrowConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Rethrow;
+
+        public override bool IsEndOfPath => true;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return _ => new[] { "il2c_rethrow()" };
+        }
+    }
+
     internal sealed class Leave_sConverter : ShortInlineBrTargetConverter
     {
         public override OpCode OpCode => OpCodes.Leave_S;
@@ -113,7 +125,15 @@ namespace IL2C.ILConverters
             var continuationIndex = decodeContext.RegisterLeaveContinuation(
                 decodeContext.CurrentCode.Offset, operand.Offset);
 
-            return _ => new[] { string.Format("il2c_leave({0})", continuationIndex) };
+            return extractContext =>
+            {
+                var nestedIndexName = extractContext.GetExceptionNestedFrameIndexName();
+
+                return new[] { string.Format(
+                    "il2c_leave({0}, {1})",
+                    nestedIndexName,
+                    continuationIndex) };
+            };
         }
     }
 
@@ -126,19 +146,14 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {
             // Finally exit block fragment totally will write by AssemblyWriter.
-            return _ => new[] { "il2c_endfinally" };
-        }
-    }
+            return extractContext =>
+            {
+                var nestedIndexName = extractContext.GetExceptionNestedFrameIndexName();
 
-    internal sealed class RethrowConverter : InlineNoneConverter
-    {
-        public override OpCode OpCode => OpCodes.Rethrow;
-
-        public override bool IsEndOfPath => true;
-
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
-        {
-            return _ => new[] { "il2c_rethrow()" };
+                return new[] { string.Format(
+                    "il2c_endfinally({0})",
+                    nestedIndexName) };
+            };
         }
     }
 

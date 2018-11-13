@@ -195,52 +195,56 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 #define IL2C_FILTER_NOMATCH (0)
 #define IL2C_FILTER_FINALLY (-1)
 
-#define il2c_try(filterName) \
+#define il2c_try(nestIndex, filterName) \
     { \
-        IL2C_EXCEPTION_FRAME unwind_target__; \
-        int continuationIndex__ = -1; \
-        il2c_link_unwind_target__(&unwind_target__, (IL2C_EXCEPTION_FILTER)(filterName)); \
-        do { \
-            switch (il2c_setjmp(*(IL2C_JUMP_BUFFER*)&unwind_target__.saved)) { \
+        IL2C_EXCEPTION_FRAME unwind_target_##nestIndex##__; \
+        int continuationIndex_##nestIndex##__ = -1; \
+        il2c_link_unwind_target__(&unwind_target_##nestIndex##__, (IL2C_EXCEPTION_FILTER)(filterName)); \
+        while (1) { \
+            switch (il2c_setjmp(*(IL2C_JUMP_BUFFER*)&unwind_target_##nestIndex##__.saved)) { \
             case 0: // try
 
-#define il2c_leave(continuationIndex) \
-                continuationIndex__ = continuationIndex; \
+#define il2c_leave(nestedIndex, continuationIndex) \
+                continuationIndex_##nestedIndex##__ = continuationIndex; \
                 break
 
-#define il2c_catch(filteredNumber, symbolName) \
+#define il2c_catch(nestedIndex, filteredNumber, symbolName) \
                 il2c_assert(0); /* reached if don't emit leave. */ \
             case filteredNumber : \
-                il2c_assert(unwind_target__.ex != NULL); \
-                symbolName = unwind_target__.ex;
+                il2c_assert(unwind_target_##nestedIndex##__.ex != NULL); \
+                symbolName = unwind_target_##nestedIndex##__.ex;
 
-#define il2c_finally \
+#define il2c_finally(nestedIndex) \
                 il2c_assert(0); /* reached if don't emit leave. */ \
             } \
-        } while (0); \
-        do { \
+            break; \
+        } \
+        while (1) { \
             {
 
-#define il2c_endfinally \
-                if (unwind_target__.ex != NULL) il2c_rethrow(); \
+#define il2c_endfinally(nestedIndex) \
+                if (unwind_target_##nestedIndex##__.ex != NULL) il2c_rethrow(); \
                 break
 
-#define il2c_leave_to \
-                il2c_assert(0); /* reached if don't emit leave or endfinally. */ \
+#define il2c_leave_to(nestedIndex) \
             } \
-        } while (0); \
-        il2c_unlink_unwind_target__(&unwind_target__); \
-        do { \
-            { \
-                switch (continuationIndex__)
+            break; \
+        } \
+        il2c_unlink_unwind_target__(&unwind_target_##nestedIndex##__); \
+        while (1) { \
+            {
 
-#define il2c_leave_bind(continuationIndex, labelName) \
-                case continuationIndex : goto labelName
+#define il2c_leave_bind(nestedIndex, continuationIndex, labelName) \
+                if (continuationIndex_##nestedIndex##__ == continuationIndex) goto labelName
 
-#define il2c_end_try \
-                il2c_assert(0); /* reached if don't emit leave or endfinally. */ \
+#define il2c_leave_through(nestedIndex, continuationIndex, parentNestedIndex) \
+                if (continuationIndex_##nestedIndex##__ == continuationIndex) \
+                    continuationIndex_##parentNestedIndex##__ = continuationIndex
+
+#define il2c_end_try(nestedIndex) \
             } \
-        } while (0); \
+            break; \
+        } \
     }
 
 ///////////////////////////////////////////////////////

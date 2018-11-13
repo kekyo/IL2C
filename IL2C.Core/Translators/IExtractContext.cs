@@ -27,6 +27,8 @@ namespace IL2C.Translators
         IMetadataContext MetadataContext { get; }
         IAssemblyInformation Assembly { get; }
 
+        string GetExceptionNestedFrameIndexName();
+
         string GetRightExpression(ITypeInformation lhsType, IVariableInformation rhs);
         string GetRightExpression(ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression);
 
@@ -43,5 +45,6 @@ namespace IL2C.Translators
         : IExtractContext
     {
         IDisposable BeginLocalVariablePrefix(Func<ILocalVariableInformation, string> prefixGenerator);
+        void SetNestedExceptionFrameIndexName(string nestedIndexName);
     }
 }

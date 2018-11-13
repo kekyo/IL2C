@@ -12,44 +12,46 @@ namespace IL2C.Writers
         {
             public readonly ExceptionHandler Handler;
             public readonly int HandlerIndex;
+            public readonly int NestedIndex;
 
-            private int index = -1;
+            private int catchHandlerIndex = -1;
             private bool inBlock = false;
 
-            public ExceptionHandlerState(ExceptionHandler handler, int handlerIndex)
+            public ExceptionHandlerState(ExceptionHandler handler, int handlerIndex, int nestedIndex)
             {
                 this.Handler = handler;
                 this.HandlerIndex = handlerIndex;
+                this.NestedIndex = nestedIndex;
             }
 
             public bool Update(
                 ICodeInformation code,
-                Action<ExceptionHandler, int> tryEnd,
-                Action<ExceptionCatchHandler, int> catchStart,
-                Action<ExceptionCatchHandler, int> catchEnd)
+                Action<ExceptionHandler, int, int> tryEnd,
+                Action<ExceptionHandler, int, int, ExceptionCatchHandler, int> catchStart,
+                Action<ExceptionHandler, int, int, ExceptionCatchHandler, int> catchEnd)
             {
                 while (true)
                 {
-                    if (index == -1)
+                    if (catchHandlerIndex == -1)
                     {
                         if (this.Handler.TryEnd == code.Offset)
                         {
-                            tryEnd(this.Handler, this.HandlerIndex);
-                            index = 0;
+                            tryEnd(this.Handler, this.HandlerIndex, this.NestedIndex);
+                            catchHandlerIndex = 0;
                             continue;
                         }
 
                         return false;
                     }
 
-                    if (index < this.Handler.CatchHandlers.Length)
+                    if (catchHandlerIndex < this.Handler.CatchHandlers.Length)
                     {
-                        var catchHandler = this.Handler.CatchHandlers[index];
+                        var catchHandler = this.Handler.CatchHandlers[catchHandlerIndex];
                         if (!inBlock)
                         {
                             if (catchHandler.CatchStart == code.Offset)
                             {
-                                catchStart(catchHandler, index);
+                                catchStart(this.Handler, this.HandlerIndex, this.NestedIndex, catchHandler, catchHandlerIndex);
                                 inBlock = true;
                             }
 
@@ -59,9 +61,9 @@ namespace IL2C.Writers
                         {
                             if (catchHandler.CatchEnd == code.Offset)
                             {
-                                catchEnd(catchHandler, index);
+                                catchEnd(this.Handler, this.HandlerIndex, this.NestedIndex, catchHandler, catchHandlerIndex);
                                 inBlock = false;
-                                index++;
+                                catchHandlerIndex++;
                                 continue;
                             }
 
@@ -75,25 +77,25 @@ namespace IL2C.Writers
             }
         }
 
-        private readonly Queue<(ExceptionHandler handler, int index)> queue;
+        private readonly Queue<(ExceptionHandler handler, int handlerIndex)> queue;
         private readonly Stack<ExceptionHandlerState> stack = new Stack<ExceptionHandlerState>();
 
-        private readonly Action<ExceptionHandler, int> tryStart;
-        private readonly Action<ExceptionHandler, int> tryEnd;
-        private readonly Action<ExceptionCatchHandler, int> catchStart;
-        private readonly Action<ExceptionCatchHandler, int> catchEnd;
-        private readonly Action<ExceptionHandler, int> finished;
+        private readonly Action<ExceptionHandler, int, int> tryStart;
+        private readonly Action<ExceptionHandler, int, int> tryEnd;
+        private readonly Action<ExceptionHandler, int, int, ExceptionCatchHandler, int> catchStart;
+        private readonly Action<ExceptionHandler, int, int, ExceptionCatchHandler, int> catchEnd;
+        private readonly Action<ExceptionHandler, int, int, ExceptionHandler, int, int> finished;
 
         public ExceptionHandlerController(
             ExceptionHandler[] handlers,
-            Action<ExceptionHandler, int> tryStart,
-            Action<ExceptionHandler, int> tryEnd,
-            Action<ExceptionCatchHandler, int> catchStart,
-            Action<ExceptionCatchHandler, int> catchEnd,
-            Action<ExceptionHandler, int> finished)
+            Action<ExceptionHandler, int, int> tryStart,
+            Action<ExceptionHandler, int, int> tryEnd,
+            Action<ExceptionHandler, int, int, ExceptionCatchHandler, int> catchStart,
+            Action<ExceptionHandler, int, int, ExceptionCatchHandler, int> catchEnd,
+            Action<ExceptionHandler, int, int, ExceptionHandler, int, int> finished)
         {
-            queue = new Queue<(ExceptionHandler handler, int index)>(
-                handlers.Select((handler, index) => (handler, index)));
+            queue = new Queue<(ExceptionHandler handler, int handlerIndex)>(
+                handlers.Select((handler, handlerIndex) => (handler, handlerIndex)));
 
             this.tryStart = tryStart;
             this.tryEnd = tryEnd;
@@ -113,9 +115,10 @@ namespace IL2C.Writers
                     var entry = queue.Peek();
                     if (entry.handler.TryStart == code.Offset)
                     {
-                        tryStart(entry.handler, entry.index);
+                        var nestedIndex = stack.Count;
+                        tryStart(entry.handler, entry.handlerIndex, nestedIndex);
                         queue.Dequeue();
-                        stack.Push(new ExceptionHandlerState(entry.handler, entry.index));
+                        stack.Push(new ExceptionHandlerState(entry.handler, entry.handlerIndex, nestedIndex));
                         continue;
                     }
                 }
@@ -125,8 +128,9 @@ namespace IL2C.Writers
                     var state = stack.Peek();
                     if (state.Update(code, tryEnd, catchStart, catchEnd))
                     {
-                        finished(state.Handler, state.HandlerIndex);
                         stack.Pop();
+                        var parent = (stack.Count >= 1) ? stack.Peek() : null;
+                        finished(state.Handler, state.HandlerIndex, state.NestedIndex, parent?.Handler, parent?.HandlerIndex??-1, parent?.NestedIndex??-1);
                         continue;
                     }
                 }

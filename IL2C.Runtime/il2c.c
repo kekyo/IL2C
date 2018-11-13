@@ -614,14 +614,18 @@ static void il2c_SIGSEGV_handler(int sig)
     //   These external functions may cause unknown problem and cause SEGV, we can't recover it state.
     //   https://wiki.sei.cmu.edu/confluence/display/c/SIG30-C.+Call+only+asynchronous-safe+functions+within+signal+handlers
 
-    // TODO: can turn to static allocate for NullReferenceException?
+    // Re-register
+    signal(SIGSEGV, il2c_SIGSEGV_handler);
 
+    // TODO: can turn to static allocate for NullReferenceException?
     System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
     System_NullReferenceException__ctor_1(ex, il2c_null_reference_message);
     il2c_throw(ex);
 }
 
-static void* g_SIGSEGV_saved = NULL;
+typedef void (*il2c_sighandler)(int sig);
+
+static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 #endif
 
 /////////////////////////////////////////////////////////////

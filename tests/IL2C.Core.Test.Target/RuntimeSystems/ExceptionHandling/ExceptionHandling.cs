@@ -32,6 +32,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(223, "FinallyThrowNewExceptionLocal", 123)]
     [TestCase(123, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, false)]
     [TestCase(456, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, true)]
+    [TestCase(true, "RaiseCaughtAndNestedBlockLocal")]
     public sealed class ExceptionHandling
     {
         public static int RaiseAndCaughtLocal(bool sw)
@@ -324,6 +325,27 @@ namespace IL2C.RuntimeSystems
                 return 456;
             }
             return 123;
+        }
+
+        public static bool RaiseCaughtAndNestedBlockLocal()
+        {
+            var ex1 = new Exception();
+            var ex2 = new Exception();
+            try
+            {
+                throw ex1;
+            }
+            catch (Exception exo)
+            {
+                try
+                {
+                    throw ex2;
+                }
+                catch (Exception exi)
+                {
+                    return object.ReferenceEquals(ex1, exo) && object.ReferenceEquals(ex2, exi);
+                }
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace IL2C
         private readonly Dictionary<string, HashSet<ITypeInformation>> declaredValueHintTypes =
             new Dictionary<string, HashSet<ITypeInformation>>();
         private Func<ILocalVariableInformation, string> prefixGenerator;
+        private string currentExceptionNestedFrameIndexName;
         #endregion
 
         #region Constructors
@@ -142,6 +143,12 @@ namespace IL2C
 
         IEnumerable<string> IExtractContext.EnumerateRequiredPrivateIncludeFileNames() =>
             privateIncludes;
+
+        string IExtractContext.GetExceptionNestedFrameIndexName()
+        {
+            Debug.Assert(currentExceptionNestedFrameIndexName != null);
+            return currentExceptionNestedFrameIndexName;
+        }
 
         private string GetRightExpression(
             ITypeInformation lhsType, ITypeInformation rhsType, string rhsExpression)
@@ -344,6 +351,11 @@ namespace IL2C
             this.prefixGenerator = prefixGenerator;
 
             return new LocalVariablePrefixDisposer(this);
+        }
+
+        void IExtractContextHost.SetNestedExceptionFrameIndexName(string nestedIndexName)
+        {
+            currentExceptionNestedFrameIndexName = nestedIndexName;
         }
         #endregion
     }

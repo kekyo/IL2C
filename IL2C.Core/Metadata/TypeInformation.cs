@@ -20,6 +20,7 @@ namespace IL2C.Metadata
         bool IsSealed { get; }
 
         bool IsValueType { get; }
+        bool IsReferenceType { get; }
         bool IsClass { get; }
         bool IsInterface { get; }
         bool IsEnum { get; }
@@ -154,8 +155,35 @@ namespace IL2C.Metadata
         }
 
         public bool IsValueType => this.Member.IsValueType;
-        public bool IsClass => !this.Member.IsValueType && ((this.Definition as TypeDefinition)?.IsClass ?? false);
-        public bool IsInterface => !this.Member.IsValueType && ((this.Definition as TypeDefinition)?.IsInterface ?? false);
+        public bool IsReferenceType
+        {
+            get
+            {
+                if (this.Member.IsValueType || this.Member.IsPointer)
+                {
+                    return false;
+                }
+
+                if (this.Member.IsArray)
+                {
+                    return true;
+                }
+
+                var def = this.Definition as TypeDefinition;
+                if (def == null)
+                {
+                    return false;
+                }
+
+                return def.IsClass || def.IsInterface;
+            }
+        }
+        public bool IsClass =>
+            !this.Member.IsValueType &&
+            ((this.Definition as TypeDefinition)?.IsClass ?? false);
+        public bool IsInterface =>
+            !this.Member.IsValueType &&
+            ((this.Definition as TypeDefinition)?.IsInterface ?? false);
         public bool IsEnum => (this.Definition as TypeDefinition)?.IsEnum ?? false;
         public bool IsArray => this.Member.IsArray;
         public bool IsDelegate => !this.Member.IsValueType && this.MetadataContext.DelegateType.IsAssignableFrom(this);

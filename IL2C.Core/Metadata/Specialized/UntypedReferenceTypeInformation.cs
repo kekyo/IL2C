@@ -26,6 +26,7 @@ namespace IL2C.Metadata.Specialized
         public bool IsSealed => false;
 
         public bool IsValueType => false;
+        public bool IsReferenceType => false;
         public bool IsClass => false;
         public bool IsInterface => false;
         public bool IsEnum => false;

@@ -78,7 +78,7 @@ namespace IL2C.Writers
                         "il2c_assert(this__ != NULL);");
 
                     var fields = declaredType.Fields.
-                        Where(field => !field.IsStatic && !field.FieldType.IsValueType).
+                        Where(field => !field.IsStatic && field.FieldType.IsReferenceType).
                         ToArray();
                     if (fields.Length >= 1)
                     {
@@ -369,7 +369,7 @@ namespace IL2C.Writers
                     declaredType.IsEnum ?
                         (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
                     declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
-                    declaredType.IsValueType ? "IL2C_TYPE_VALUE" : "IL2C_TYPE_REFERENCE");
+                    declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" : "IL2C_TYPE_VALUE");
 
                 // HACK: C language compiler causes error at the structure with empty member,
                 //   so IL2C generate and use the emitted size literal instead sizeof(...) operator.

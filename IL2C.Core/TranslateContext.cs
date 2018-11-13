@@ -153,7 +153,7 @@ namespace IL2C
 
             if (lhsType.IsAssignableFrom(rhsType))
             {
-                Debug.Assert((rhsType.IsValueType == false) || rhsType.IsUntypedReferenceType);
+                Debug.Assert(rhsType.IsReferenceType || rhsType.IsUntypedReferenceType);
 
                 // (RefType) <-- UntypedReferenceType  (maybe ldnull value)
                 if (rhsType.IsUntypedReferenceType)
@@ -183,6 +183,7 @@ namespace IL2C
 
             if (rhsType.IsNumericPrimitive)
             {
+                // intValue = longValue
                 if (lhsType.IsNumericPrimitive)
                 {
                     return string.Format(
@@ -191,6 +192,7 @@ namespace IL2C
                         rhsExpression);
                 }
 
+                // boolValue = intValue  (implicitly conversion)
                 if (lhsType.IsBooleanType)
                 {
                     return string.Format(
@@ -198,6 +200,7 @@ namespace IL2C
                         rhsExpression);
                 }
 
+                // TODO: ??
                 if (!lhsType.IsValueType && rhsType.IsIntPtrType)
                 {
                     return string.Format(
@@ -206,6 +209,7 @@ namespace IL2C
                         rhsExpression);
                 }
 
+                // enumValue = intValue  (implicitly conversion)
                 if (lhsType.IsEnum)
                 {
                     return string.Format(
@@ -216,6 +220,7 @@ namespace IL2C
             }
             else if (rhsType.IsBooleanType)
             {
+                // intValue = boolValue  (implicitly conversion)
                 if (lhsType.IsNumericPrimitive)
                 {
                     return string.Format(
@@ -225,6 +230,7 @@ namespace IL2C
             }
             else if (rhsType.IsByReference)
             {
+                // TODO: &intValue = &longValue
                 if (lhsType.IsByReference)
                 {
                     return string.Format(
@@ -233,6 +239,7 @@ namespace IL2C
                         rhsExpression);
                 }
             }
+            // TODO: &intValue = intValue
             else if (lhsType.IsByReference)
             {
                 return string.Format(
@@ -242,7 +249,9 @@ namespace IL2C
             }
             else if (rhsType.IsUntypedReferenceType)
             {
-                if (lhsType.IsIntPtrType || lhsType.IsUIntPtrType || lhsType.IsClass || lhsType.IsInterface)
+                // intptrValue = null
+                // objRefValue = null
+                if (lhsType.IsIntPtrType || lhsType.IsUIntPtrType || lhsType.IsReferenceType)
                 {
                     return string.Format(
                         "({0}){1}",

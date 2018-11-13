@@ -102,11 +102,11 @@ namespace IL2C.Writers
                 }
 
                 tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-3] Local variables (only value type):");
+                tw.WriteLine("// [3-3] Local variables (not objref):");
                 tw.WriteLine();
 
                 foreach (var local in preparedMethod.Method.LocalVariables.
-                    Where(local => local.TargetType.IsValueType))
+                    Where(local => !local.TargetType.IsReferenceType))
                 {
                     tw.WriteLine(
                         "{0} {1};",
@@ -116,11 +116,11 @@ namespace IL2C.Writers
 
                 tw.WriteLine();
                 tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-4] Evaluation stacks (only value type):");
+                tw.WriteLine("// [3-4] Evaluation stacks (not objref):");
                 tw.WriteLine();
 
                 foreach (var stack in preparedMethod.Stacks.
-                    Where(stack => stack.TargetType.IsValueType))
+                    Where(stack => !stack.TargetType.IsReferenceType))
                 {
                     tw.WriteLine(
                         "{0} {1};",
@@ -130,7 +130,7 @@ namespace IL2C.Writers
 
                 var objRefEntries = locals.
                     Concat(preparedMethod.Stacks).
-                    Where(v => !v.TargetType.IsValueType).  // Only objref
+                    Where(v => v.TargetType.IsReferenceType).  // Only objref
                     ToArray();
 
                 if (objRefEntries.Length >= 1)
@@ -175,7 +175,7 @@ namespace IL2C.Writers
 
                 // Set symbol prefix to make valid access variables.
                 using (var __ = extractContext.BeginLocalVariablePrefix(
-                    local => local.TargetType.IsValueType ? null : "frame__."))
+                    local => local.TargetType.IsReferenceType ? "frame__." : null))
                 {
                     // Construct exception handler controller.
                     var exceptionHandlerController = new ExceptionHandlerController(

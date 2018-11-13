@@ -50,7 +50,8 @@ namespace IL2C
             return string.Format("({0}){1}", argumentType.CLanguageTypeName, constantExpression);
         }
 
-        private static string GetCLanguageCompareExpression(ITypeInformation type, string expectedSymbolName, string actualSymbolName)
+        private static string GetCLanguageCompareExpression(
+            ITypeInformation type, string expectedSymbolName, string actualSymbolName)
         {
             return type.IsStringType ?
                 string.Format(
@@ -255,11 +256,11 @@ namespace IL2C
 
             // Construct test definitions.
             var expectedSymbolName = locals.
-                Any(entry => (entry.SymbolName == "_expected") && !entry.TargetType.IsValueType) ?
+                Any(entry => (entry.SymbolName == "_expected") && entry.TargetType.IsReferenceType) ?
                     "frame__._expected" :
                     "_expected";
             var actualSymbolName = locals.
-                Any(entry => (entry.SymbolName == "_actual") && !entry.TargetType.IsValueType) ?
+                Any(entry => (entry.SymbolName == "_actual") && entry.TargetType.IsReferenceType) ?
                     "frame__._actual" :
                     "_actual";
             var replaceValues = new Dictionary<string, object>
@@ -273,13 +274,13 @@ namespace IL2C
                         entry.SymbolName,
                         entry.Expression))) },
                 { "locals", string.Join(" ", locals.
-                    Where(entry => entry.TargetType.IsValueType).
+                    Where(entry => !entry.TargetType.IsReferenceType).
                     Select(entry => string.Format("{0} {1} = {2};",
                         entry.TargetType.CLanguageTypeName,
                         entry.SymbolName,
                         entry.Expression))) },
                 { "frames", string.Join(" ", locals.
-                    Where(entry => !entry.TargetType.IsValueType).
+                    Where(entry => entry.TargetType.IsReferenceType).
                     Select(entry => string.Format("{0} {1};",
                         entry.TargetType.CLanguageTypeName,
                         entry.SymbolName))) },
@@ -287,7 +288,7 @@ namespace IL2C
                     Where(entry => entry.TargetType.IsClass).Count() },
                 { "arguments", string.Join(" ", arguments.
                     Select(entry => string.Format("{0}{1} = {2};",
-                        entry.TargetType.IsValueType ? string.Empty : "frame__.",
+                        entry.TargetType.IsReferenceType ? "frame__." : string.Empty,
                         entry.SymbolName,
                         entry.Expression))) },
                 { "actual", actualSymbolName },
@@ -295,7 +296,7 @@ namespace IL2C
                 { "argumentList", string.Join(", ", argumentList.
                     Select(arg => string.Format(
                         "{0}{1}",
-                        arg.TargetType.IsValueType ? string.Empty : "frame__.",
+                        arg.TargetType.IsReferenceType ? "frame__." : string.Empty,
                         arg.SymbolName)))},
                 { "equality", GetCLanguageCompareExpression(expectedType, expectedSymbolName, actualSymbolName)},
                 { "format", GetCLanguagePrintFormatFromType(targetMethod.ReturnType)},

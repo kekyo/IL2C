@@ -10,8 +10,7 @@ namespace IL2C.Writers
             CodeTextWriter tw,
             ITypeInformation declaredType)
         {
-            if (declaredType.IsPrimitive
-                || !(declaredType.IsValueType || declaredType.IsClass || declaredType.IsInterface))
+            if (declaredType.IsPrimitive || !(declaredType.IsValueType || declaredType.IsReferenceType))
             {
                 return;
             }

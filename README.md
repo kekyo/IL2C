@@ -63,7 +63,7 @@ This is first step for use the IL2C:
 2. Build with "Debug - AnyCPU" configuration.
 3. If didn't show any errors, kick starts unit test at the Test Explorer (Run All).
 4. Unit tests need long time. These tests are running with the gcc from automated downloads mingw platform.
-5. All test passed, you are ready to hacks!
+5. All test passed, you are ready to hacks! I asked for you have to see in ["tests/IL2C.Core.Test.Target project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Target). It has a lot of unit test code. And if unit tests are success, you can find translated results in ["tests/IL2C.Core.Test.Fixture project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Fixture) subfolder "bin/Debug/net462."
 
 If you know the CI engineering, you can get more information from the ["appveyor.yml"](appveyor.yml) file.
 

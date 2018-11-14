@@ -500,9 +500,12 @@ void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget)
     (void)p;
 }
 
-static void il2c_throw_internal__(
+static void il2c_do_throw__(
     System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t value)
 {
+    il2c_assert(ex != NULL);
+    il2c_assert(pTargetFrame != NULL);
+
     // Update current exception frame.
     pTargetFrame->ex = ex;
     g_pTopUnwindTarget__ = pTargetFrame;
@@ -514,22 +517,20 @@ static void il2c_throw_internal__(
     il2c_longjmp((void*)pTargetFrame->saved, value);
 }
 
-void il2c_throw__(System_Exception* ex)
+static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame)
 {
     il2c_assert(ex != NULL);
+    il2c_assert(pTargetFrame != NULL);
 
-    // If this state is inside for caught block, skip current frame.
-    // (Throwing new exception instance)
-    IL2C_EXCEPTION_FRAME* pCurrentFrame =
-        (g_pTopUnwindTarget__->ex != NULL) ? g_pTopUnwindTarget__->pNext : g_pTopUnwindTarget__;
+    IL2C_EXCEPTION_FRAME* pFrame = pTargetFrame;
     IL2C_EXCEPTION_FRAME* pFinallyFrame = NULL;
 
-    while (pCurrentFrame != NULL)
+    while (pFrame != NULL)
     {
-        il2c_assert(pCurrentFrame->filter != NULL);
-        il2c_assert(pCurrentFrame->pFrame != NULL);
+        il2c_assert(pFrame->filter != NULL);
+        il2c_assert(pFrame->pFrame != NULL);
 
-        int16_t result = pCurrentFrame->filter(ex);
+        int16_t result = pFrame->filter(ex);
 
         // Found finally block
         if (result == IL2C_FILTER_FINALLY)
@@ -537,7 +538,7 @@ void il2c_throw__(System_Exception* ex)
             // Memoize finally frame
             if (pFinallyFrame == NULL)
             {
-                pFinallyFrame = pCurrentFrame;
+                pFinallyFrame = pFrame;
             }
         }
         else if (result != IL2C_FILTER_NOMATCH)
@@ -546,42 +547,75 @@ void il2c_throw__(System_Exception* ex)
             if (pFinallyFrame != NULL)
             {
                 // Send to finally
-                il2c_throw_internal__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
+                il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
             }
             else
             {
                 // MEMO: This place is the first-chance.
                 // Send to catch
-                il2c_throw_internal__(ex, pCurrentFrame, result);
+                il2c_do_throw__(ex, pFrame, result);
             }
         }
 
         // Not matched: next frame.
-        pCurrentFrame = pCurrentFrame->pNext;
+        pFrame = pFrame->pNext;
     }
 
     // Already found finally block
     if (pFinallyFrame != NULL)
     {
         // Send to finally
-        il2c_throw_internal__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
+        il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
     }
 
     // TODO: Unhandled exception
     il2c_assert(0);
 }
 
+void il2c_throw__(System_Exception* ex)
+{
+    il2c_assert(ex != NULL);
+
+    // If this state is inside for caught block, skip current frame.
+    // (Throwing new exception instance)
+    IL2C_EXCEPTION_FRAME* pFrame =
+        (g_pTopUnwindTarget__->ex != NULL) ? g_pTopUnwindTarget__->pNext : g_pTopUnwindTarget__;
+
+    il2c_throw_internal__(ex, pFrame);
+}
+
 void il2c_rethrow()
 {
     il2c_assert(g_pTopUnwindTarget__ != NULL);
-    il2c_assert(g_pTopUnwindTarget__->ex != NULL);
     il2c_assert(g_pTopUnwindTarget__->pNext != NULL);   // Will cause unhandled exception
 
-    // Unwind one frame.
-    System_Exception* ex = g_pTopUnwindTarget__->ex;
-    il2c_ixchgptr(&g_pTopUnwindTarget__, g_pTopUnwindTarget__->pNext);
+    // If this state is inside for caught block
+    if (g_pTopUnwindTarget__->ex != NULL)
+    {
+        // Unwind one frame.
+        System_Exception* ex = g_pTopUnwindTarget__->ex;
+        il2c_ixchgptr(&g_pTopUnwindTarget__, g_pTopUnwindTarget__->pNext);
 
-    il2c_throw__(ex);
+        // Throw with this exception
+        il2c_throw_internal__(ex, g_pTopUnwindTarget__);
+    }
+
+    // Search nearest caught exception
+    IL2C_EXCEPTION_FRAME* pFrame = g_pTopUnwindTarget__->pNext;
+    while (pFrame != NULL)
+    {
+        // Found.
+        System_Exception* ex = pFrame->ex;
+        if (ex != NULL)
+        {
+            // Throw with this exception (at the current frame)
+            il2c_throw_internal__(ex, g_pTopUnwindTarget__);
+        }
+        pFrame = pFrame->pNext;
+    }
+
+    // InvalidProgramException
+    il2c_assert(0);
 }
 
 #ifdef IL2C_USE_SIGNAL

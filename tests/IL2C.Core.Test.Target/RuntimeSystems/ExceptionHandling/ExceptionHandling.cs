@@ -33,6 +33,10 @@ namespace IL2C.RuntimeSystems
     [TestCase(123, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, false)]
     [TestCase(456, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, true)]
     [TestCase(true, "RaiseCaughtAndNestedBlockLocal")]
+    [TestCase(true, "RaiseCaughtAndRethrowOnNestedBlockLocal")]
+    [TestCase(true, "RaiseCaughtAndRethrowOnMultipleNestedBlockLocal")]
+    [TestCase(true, "RaiseCaughtAndRethrowInsideLocal")]
+    [TestCase(true, "RaiseCaughtAndRethrowOutsideLocal")]
     public sealed class ExceptionHandling
     {
         public static int RaiseAndCaughtLocal(bool sw)
@@ -345,6 +349,131 @@ namespace IL2C.RuntimeSystems
                 {
                     return object.ReferenceEquals(ex1, exo) && object.ReferenceEquals(ex2, exi);
                 }
+            }
+        }
+
+        public static bool RaiseCaughtAndRethrowOnNestedBlockLocal()
+        {
+            var ex1 = new Exception();
+            try
+            {
+                throw ex1;
+            }
+            catch (Exception exo)
+            {
+                try
+                {
+                    throw;
+                }
+                catch (Exception exi)
+                {
+                    return object.ReferenceEquals(ex1, exo) && object.ReferenceEquals(ex1, exi);
+                }
+            }
+        }
+
+        public static bool RaiseCaughtAndRethrowOnMultipleNestedBlockLocal()
+        {
+            var ex1 = new Exception();
+            try
+            {
+                throw ex1;
+            }
+            catch (Exception exo)
+            {
+                try
+                {
+                    throw;
+                }
+                catch (Exception exi1)
+                {
+                    try
+                    {
+                        throw;
+                    }
+                    catch (Exception exi2)
+                    {
+                        return object.ReferenceEquals(ex1, exo) &&
+                            object.ReferenceEquals(ex1, exi1) &&
+                            object.ReferenceEquals(ex1, exi2);
+                    }
+                }
+            }
+        }
+
+        public static bool RaiseCaughtAndRethrowInsideLocal()
+        {
+            var ex1 = new Exception();
+            var ex2 = new Exception();
+            Exception exi1_ = null;
+            Exception exi2_ = null;
+            try
+            {
+                throw ex1;
+            }
+            catch (Exception exo)
+            {
+                try
+                {
+                    try
+                    {
+                        throw ex2;
+                    }
+                    catch (Exception exi2)
+                    {
+                        exi2_ = exi2;
+
+                        // rethrow ex2
+                        throw;
+                    }
+                }
+                catch (Exception exi1)
+                {
+                    // ex2
+                    exi1_ = exi1;
+                }
+
+                return object.ReferenceEquals(ex1, exo) &&
+                    object.ReferenceEquals(ex2, exi1_) &&  // ex2
+                    object.ReferenceEquals(ex2, exi2_);
+            }
+        }
+
+        public static bool RaiseCaughtAndRethrowOutsideLocal()
+        {
+            var ex1 = new Exception();
+            var ex2 = new Exception();
+            Exception exi1_ = null;
+            Exception exi2_ = null;
+            try
+            {
+                throw ex1;
+            }
+            catch (Exception exo)
+            {
+                try
+                {
+                    try
+                    {
+                        throw ex2;
+                    }
+                    catch (Exception exi2)
+                    {
+                        exi2_ = exi2;
+                    }
+
+                    // rethrow ex1
+                    throw;
+                }
+                catch (Exception exi1)
+                {
+                    // ex1
+                    exi1_ = exi1;
+                }
+
+                return object.ReferenceEquals(ex1, exo) &&
+                    object.ReferenceEquals(ex1, exi1_) &&  // ex1
+                    object.ReferenceEquals(ex2, exi2_);
             }
         }
     }

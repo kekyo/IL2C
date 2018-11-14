@@ -1,12 +1,12 @@
-# IL2C - A translator implementation of .NET intermediate language to C language.
+# IL2C - A translator for ECMA-335 CIL/MSIL to C language.
 
-|Provider|Build|Tests|
+|Provider|Branch|Build|
 |:--|:--|:--|
-|AppVeyor master|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master)|[![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)|
+|AppVeyor|master|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=master&includeBuildsFromPullRequest=false)|
 
 ## What's this?
 
-* IL2C is a translator implementation of .NET intermediate language to C language.
+* IL2C is a translator (transpiler) for ECMA-335 CIL/MSIL to C language.
 
 * IL2C's implementation priorities, we're aiming for:
   * Better predictability for runtime costs, better human readability for the IL2C translated C source code.
@@ -15,53 +15,57 @@
   * Better interoperabilities for exist C libraries, we can use standard .NET interop technics (likely P/Invoke.)
   * Contains seamless building system for major C toolkits, for example: CMake system, Arduino IDE, VC++ ...
 
-## Very simple translation sample
+## Simple hello-world like code
 
 Original C# source code:
 
 ```csharp
-namespace il2c_test_target
+public static class HelloWorld
 {
-    public class Hoge1
+    public static void Main()
     {
-        public static int Add1(int a, bool isTwo)
-        {
-            return a + (isTwo ? 2 : 1);
-        }
+        Console.WriteLine("Hello world with IL2C!");
     }
 }
 ```
 
-Translate to C by [Milestone 3 version](https://github.com/kekyo/IL2C/commit/d94582a330fbb1aa0d62e73bc78344559abce3c2):
+Translated to C source code (all comments are stripped):
 
 ```c
-int32_t il2c_test_target_Hoge1_Add1(int32_t a, bool isTwo)
+IL2C_CONST_STRING(string0__, L"Hello world with IL2C!");
+
+void HelloWorld_Main()
 {
-    int32_t local0;
+    struct
+    {
+        uint8_t objRefCount__;
+        uint8_t objRefRefCount__;
+        IL2C_EXECUTION_FRAME* pNext__;
+        System_String* stack0_0__;
+    } frame__ = { 1, 0 };
+    il2c_link_execution_frame(&frame__);
 
-    int32_t __stack0_0;
-    int32_t __stack1_0;
-
-    __stack0_0 = a;
-    __stack1_0 = isTwo ? 1 : 0;
-    if (__stack1_0 != 0) goto L_0000;
-    __stack1_0 = 1;
-    goto L_0001;
-L_0000:
-    __stack1_0 = 2;
-L_0001:
-    __stack0_0 = __stack0_0 + __stack1_0;
-    local0 = __stack0_0;
-    goto L_0002;
-L_0002:
-    __stack0_0 = local0;
-    return __stack0_0;
+    frame__.stack0_0__ = string0__;
+    System_Console_WriteLine_10(frame__.stack0_0__);
+    il2c_unlink_execution_frame(&frame__);
+    return;
 }
 ```
 
-## License
+* [View with comments and other sample translation results (contains complex results), see this page.](sample-translation-results.md)
 
-Under Apache v2.
+## How to beginning
+
+The IL2C current status is experimental. Contributions are welcome but there's nothing the official guide documents.
+This is first step for use the IL2C:
+
+1. Open the il2c.sln by Visual Studio 2017. Your environment requires enabling the C# and VC++.
+2. Build with "Debug - AnyCPU" configuration.
+3. If didn't show any errors, kick starts unit test at the Test Explorer (Run All).
+4. Unit tests need long time. These tests are running with the gcc from automated downloads mingw platform.
+5. All test passed, you are ready to hacks!
+
+If you know the CI engineering, you can get more information from the ["appveyor.yml"](appveyor.yml) file.
 
 ## Overall status
 
@@ -83,13 +87,13 @@ Under Apache v2.
 | Class types | Partial supported |
 | Managed reference | Partial supported | M3
 | Unmanaged pointer |
-| Enum types |
-| Delegate types |
+| Enum types | Partial supported |
+| Delegate types | Partial supported |
 | Interface types | Partial supported |
 | Nested types |
 | Class inherits | Partial supported |
 | Interface implements | Partial supported |
-| Array types |
+| Array types | Partial supported |
 | Multi dimensional array types |
 | Closed generic types |
 | Open generic types | (not support) | -
@@ -138,6 +142,8 @@ Under Apache v2.
 | Value type boxed instance handler | Partial supported |
 | Collect unused instance (GC) | Partial supported |
 | Heap compaction (GC) |
+| Exception throw and handles | Partial supported |
+| Async exception throws | Partial supported |
 | Monitor lock features |
 | Platform invoke (P/Invoke) | Partial supported |
 | Can handle unsafe pointers |
@@ -151,14 +157,18 @@ Under Apache v2.
 | MSBuild (old/Task handler) |
 | MSBuild (new/.NET Core CLI) |
 | Platform independent core library |
-| Host platform on .NET 4.5 | Supported | M1
-| Host platform on .NET Core 1 | (not support) | -
-| Host platform on .NET Core 2 | Supported |
-| Host platform on mono |
+| Translator platform on .NET 4.5 | Supported | M1
+| Translator platform on .NET Core 1 | (not support) | -
+| Translator platform on .NET Core 2 | Supported |
+| Translator platform on mono |
 | Support C99 compilers | Supported | M1
 | Support non C99 (ANSI) compilers | Supported |
 | Support better C code output via C++ symbol declarations |
 | Support continuous integrations | Partial supported |
+
+## License
+
+Under Apache v2.
 
 ## Related informations
 

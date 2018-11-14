@@ -59,7 +59,7 @@ void HelloWorld_Main()
 The IL2C current status is experimental. Contributions are welcome but there's nothing the official guide documents.
 This is first step for use the IL2C:
 
-1. Open the il2c.sln by Visual Studio 2017. Your environment requires enabling the C# and VC++.
+1. Open the il2c.sln by Visual Studio 2017. Your environment requires enabling the C#, VC++ and NUnit3 vsix addin.
 2. Build with "Debug - AnyCPU" configuration.
 3. If didn't show any errors, kick starts unit test at the Test Explorer (Run All).
 4. Unit tests need long time. These tests are running with the gcc from automated downloads mingw platform.

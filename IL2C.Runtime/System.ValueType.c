@@ -33,4 +33,8 @@ __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
     (System_String* (*)(void*))System_ValueType_ToString
 };
 
-IL2C_DECLARE_RUNTIME_TYPE(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object);
+//IL2C_DECLARE_RUNTIME_TYPE(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object);
+
+
+IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
+IL2C_RUNTIME_TYPE_END()

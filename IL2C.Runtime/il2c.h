@@ -48,8 +48,16 @@ typedef const struct IL2C_RUNTIME_TYPE_DECL
     const char* pTypeName;
     const uint32_t flags;
     const uint32_t bodySize;
-    /* internalcall */ const IL2C_MARK_HANDLER IL2C_MarkHandler;
-    const struct IL2C_RUNTIME_TYPE_DECL* baseType;
+    const uint16_t markTargetCount;
+    const uint16_t interfaceTypeCount;
+    const void* additionals[];
+    //const struct IL2C_RUNTIME_TYPE_DECL* baseType;
+    //const void* vptr0;
+    //const void* markTargets[markTargetCount];
+    //const struct IL2C_RUNTIME_TYPE_DECL* interfaceType1;
+    //const void* vptr1;
+    //const struct IL2C_RUNTIME_TYPE_DECL* interfaceType2;
+    //const void* vptr2;
 } IL2C_RUNTIME_TYPE_DECL;
 
 typedef int16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
@@ -254,6 +262,20 @@ extern double il2c_fmod(double lhs, double rhs);
 extern void il2c_break();
 
 extern void il2c_throw_invalidcastexception__();
+
+// Generator macro for runtime type information.
+#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, baseTypeName, markTargetCount, interfaceTypeCount) \
+IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
+    typeNameString, \
+    flags, \
+    sizeof(typeName), \
+    markTargetCount, \
+    interfaceTypeCount, \
+    il2c_typeof(baseTypeName), \
+    &__##typeName##_VTABLE__,
+
+#define IL2C_RUNTIME_TYPE_END() \
+};
 
 #ifdef __cplusplus
 }

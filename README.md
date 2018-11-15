@@ -3,6 +3,7 @@
 |Provider|Branch|Build|
 |:--|:--|:--|
 |AppVeyor|master|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=master&includeBuildsFromPullRequest=false)|
+|AppVeyor|devel|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/devel?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/devel.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=devel&includeBuildsFromPullRequest=false)|
 
 ## What's this?
 

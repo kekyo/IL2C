@@ -88,8 +88,6 @@ namespace IL2C.Writers
                 tw.WriteLine("{");
                 using (var _ = tw.Shift())
                 {
-                    tw.WriteLine(
-                        "/* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);");
                     foreach (var (method, overloadIndex) in virtualMethods)
                     {
                         tw.WriteLine(

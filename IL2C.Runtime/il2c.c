@@ -158,21 +158,12 @@ void il2c_step1_clear_gcmark__()
 
 typedef void(*IL2C_MARK_HANDLER)(void* pReference);
 
-void il2c_default_mark_handler__(void* pReference)
+static void il2c_default_mark_handler_internal__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    // Has to ignore if objref is const.
-    // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
-    //   (at x86/x64 cause, another platform may cause)
-    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
-    if (pHeader->gcMark != GCMARK_NOMARK)
-    {
-        // (Or already marked.)
-        return;
-    }
-
     // Marking with atomic exchange.
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
     interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark != GCMARK_NOMARK)
     {
@@ -216,9 +207,26 @@ void il2c_default_mark_handler__(void* pReference)
             }
 
             // Use mark offset from type information.
-            il2c_default_mark_handler__(*ppReferenceInner);
+            il2c_default_mark_handler_internal__(*ppReferenceInner);
         }
     }
+}
+
+void il2c_default_mark_handler__(void* pReference)
+{
+    il2c_assert(pReference != NULL);
+
+    // Has to ignore if objref is const.
+    // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
+    //   (at x86/x64 cause, another platform may cause)
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
+    if (pHeader->gcMark != GCMARK_NOMARK)
+    {
+        // (Or already marked.)
+        return;
+    }
+
+    il2c_default_mark_handler_internal__(pReference);
 }
 
 void il2c_step2_mark_gcmark__()
@@ -238,8 +246,18 @@ void il2c_step2_mark_gcmark__()
                 continue;
             }
 
+            // Has to ignore if objref is const.
+            // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
+            //   (at x86/x64 cause, another platform may cause)
+            IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
+            if (pHeader->gcMark != GCMARK_NOMARK)
+            {
+                // (Or already marked.)
+                return;
+            }
+
             // Mark for this objref.
-            il2c_default_mark_handler__(pReference);
+            il2c_default_mark_handler_internal__(pReference);
         }
 
         pCurrentFrame = pCurrentFrame->pNext__;

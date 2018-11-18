@@ -84,7 +84,7 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
         il2c_assert(0);
     }
 
-    int32_t count = a->count__ + b->count__;
+    uintptr_t count = a->count__ + b->count__;
     uintptr_t size = sizeof(System_Delegate) +
         (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
     System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size);
@@ -134,7 +134,7 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
 
     // Last --> First
     IL2C_METHOD_TABLE_DECL* pMethodtblValue = &value->methodtbl__[0];
-    int32_t index;
+    uintptr_t index;
     for (index = source->count__ - value->count__; index >= 0; index--)
     {
         IL2C_METHOD_TABLE_DECL* pMethodtblSource = &source->methodtbl__[index];
@@ -143,12 +143,12 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
         if (il2c_memcmp(pMethodtblValue, pMethodtblSource, value->count__ * sizeof(IL2C_METHOD_TABLE_DECL)) == 0)
         {
             // Exactly match: result's gonna be empty
-            int32_t count = source->count__ - value->count__;
-            if (count <= 0)
+            if (source->count__ <= value->count__)
             {
                 return NULL;
             }
 
+            uintptr_t count = source->count__ - value->count__;
             uintptr_t size = sizeof(System_Delegate) +
                 (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
             System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size);
@@ -195,12 +195,19 @@ void System_Delegate_MarkHandler__(System_Delegate* this__)
     il2c_assert(this__->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(this__->count__ >= 1);
 
-    int32_t index;
+    uintptr_t index;
     for (index = 0; index < this__->count__; index++)
     {
         il2c_assert(this__->methodtbl__[index].methodPtr != 0);
 
-        il2c_default_mark_handler__(this__->methodtbl__[index].target);
+        // This target is static method.
+        void* pReference = this__->methodtbl__[index].target;
+        if (pReference == NULL)
+        {
+            continue;
+        }
+
+        il2c_default_mark_handler__(pReference);
     }
 }
 

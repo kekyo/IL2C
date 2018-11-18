@@ -61,7 +61,7 @@ namespace IL2C.Writers
                             if (catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Catch)
                             {
                                 tw.WriteLine(
-                                    "if (il2c_isinst_unsafe(ex, {0})) return {1};",
+                                    "if (il2c_isinst__(ex, il2c_typeof({0}))) return {1};",
                                     catchHandler.CatchType.MangledName,
                                     catchHandlerIndex + 1);
                             }
@@ -521,7 +521,7 @@ namespace IL2C.Writers
                         method.ReturnType.CLanguageTypeName);
                 }
                 tw.WriteLine(
-                    "int32_t index = 0;");
+                    "uintptr_t index = 0;");
                 tw.WriteLine(
                     "do",
                     thisName);

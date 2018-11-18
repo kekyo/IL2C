@@ -28,7 +28,7 @@ struct System_Delegate
 {
     System_Delegate_VTABLE_DECL__* vptr0__;
 
-    int32_t count__;
+    uintptr_t count__;
     IL2C_METHOD_TABLE_DECL methodtbl__[1];
 };
 

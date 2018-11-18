@@ -156,7 +156,9 @@ namespace IL2C.Writers
                     tw.WriteLine("// [3-5] Setup execution frame:");
                     tw.SplitLine();
 
-                    tw.WriteLine("struct /* IL2C_EXECUTION_FRAME */");
+                    tw.WriteLine(
+                        "struct {0}_EXECUTION_FRAME__",
+                        preparedMethod.Method.CLanguageFunctionName);
                     tw.WriteLine("{");
 
                     using (var __ = tw.Shift())
@@ -496,6 +498,8 @@ namespace IL2C.Writers
             // DIRTY:
             //   Cause undefined symbol error at C compilation if "System.Delegate" type on the mscorlib assembly
             //   contains the fields with different symbol name.
+
+            // TODO: We have to construct execution frame if result type is objref.
 
             var thisName = method.Parameters[0].ParameterName;
 

@@ -253,7 +253,7 @@ void il2c_step2_mark_gcmark__()
             if (pHeader->gcMark != GCMARK_NOMARK)
             {
                 // (Or already marked.)
-                return;
+                continue;
             }
 
             // Mark for this objref.

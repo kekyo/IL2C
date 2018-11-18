@@ -207,7 +207,7 @@ namespace IL2C.Writers
             if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
                 tw.WriteLine(
-                    "// [7-10-1] Vtable (Not defined, same as {0})",
+                    "// [7-10-1] VTable (Not defined, same as {0})",
                     declaredType.BaseType.FriendlyName);
                 tw.SplitLine();
             }
@@ -216,17 +216,13 @@ namespace IL2C.Writers
             {
                 // Write virtual methods
                 tw.WriteLine(
-                    "// [7-10-2] Vtable");
+                    "// [7-10-2] VTable");
                 tw.WriteLine(
-                    "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
+                    "{0}_VTABLE_DECL__ {0}_VTABLE__ = {{",
                     declaredType.MangledName);
 
                 using (var _ = tw.Shift())
                 {
-                    tw.WriteLine(
-                        "/* internalcall */ il2c_isinst__,",
-                        declaredType.MangledName);
-
                     foreach (var (method, _) in virtualMethods)
                     {
                         // MEMO: Transfer trampoline virtual function if declared type is value type.
@@ -249,11 +245,7 @@ namespace IL2C.Writers
                 "// [7-10] Vtable of {0}",
                 declaredType.FriendlyName);
             tw.WriteLine(
-                "__{0}_VTABLE_DECL__ __{0}_VTABLE__ = {{",
-                declaredType.MangledName);
-            tw.WriteLine(
-                "{0}/* internalcall */ il2c_runtime_isinst,",
-                indent,
+                "{0}_VTABLE_DECL__ {0}_VTABLE__ = {{",
                 declaredType.MangledName);
 
             var virtualFunctions = GetVirtualFunctions(
@@ -330,7 +322,7 @@ namespace IL2C.Writers
                     "// [7-12] Vtable of {0} (with adjustor thunk)",
                     interfaceType.FriendlyName);
                 tw.WriteLine(
-                    "__{0}_VTABLE_DECL__ __{1}_{0}_VTABLE__ = {{",
+                    "{0}_VTABLE_DECL__ {1}_{0}_VTABLE__ = {{",
                     interfaceType.MangledName,
                     declaredType.MangledName);
 
@@ -351,51 +343,27 @@ namespace IL2C.Writers
 
             // Write runtime type information
             tw.WriteLine("// [7-8] Runtime type information");
+
+            // IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
             tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
-                declaredType.MangledName);
-
-            using (var _ = tw.Shift())
-            {
-                // Type name (UTF-8 string, C compiler embeds)
-                tw.WriteLine(
-                    "\"{0}\",",
-                    declaredType.FriendlyName);
-
-                // Type attribute flags
-                tw.WriteLine(
-                    "{0},",
-                    declaredType.IsEnum ?
-                        (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
+                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5})",
+                declaredType.MangledName,
+                declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds)
+                declaredType.IsEnum ?      // Type attribute flags
+                    (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
                     declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
-                    declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" : "IL2C_TYPE_VALUE");
+                    declaredType.IsInterface ? "IL2C_TYPE_INTERFACE" :
+                    declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
+                    "IL2C_TYPE_VALUE",
+                    declaredType.BaseType.MangledName,
+                    declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : "0",
+                    0);
 
-                // HACK: C language compiler causes error at the structure with empty member,
-                //   so IL2C generate and use the emitted size literal instead sizeof(...) operator.
-                tw.WriteLine(
-                    declaredType.IsDelegate ? "0," : "sizeof({0}),",
-                    declaredType.MangledName);
+            // TODO: mark target offsets
+            // TODO: interfaces
 
-                // Mark handler
-                if (declaredType.IsEnum)
-                {
-                    tw.WriteLine(
-                        "/* internalcall */ IL2C_DEFAULT_MARK_HANDLER,");
-                }
-                else
-                {
-                    tw.WriteLine(
-                        "/* internalcall */ (IL2C_MARK_HANDLER)__{0}_IL2C_MarkHandler__,",
-                        declaredType.MangledName);
-                }
-
-                // Base (parent) type
-                tw.WriteLine(
-                    "il2c_typeof({0})",
-                    declaredType.BaseType.MangledName);
-            }
-
-            tw.WriteLine("};");
+            tw.WriteLine(
+                "IL2C_RUNTIME_TYPE_END();");
             tw.SplitLine();
         }
 
@@ -410,19 +378,25 @@ namespace IL2C.Writers
             tw.SplitLine();
             tw.WriteLine("// [8-1] Runtime type information");
 
-            // TODO: IL2C_RUNTIME_TYPE_DECL's some fields not used.
+            // IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
             tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__ = {{",
-                declaredType.MangledName);
+                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5})",
+                declaredType.MangledName,
+                declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds)
+                declaredType.IsEnum ?      // Type attribute flags
+                    (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
+                    declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
+                    declaredType.IsInterface ? "IL2C_TYPE_INTERFACE" :
+                    declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
+                    "IL2C_TYPE_VALUE",
+                    declaredType.BaseType.MangledName,
+                    declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : "0",
+                    0);
 
-            using (var _ = tw.Shift())
-            {
-                tw.WriteLine(
-                    "\"{0}\", 0, NULL",
-                    declaredType.FriendlyName);
-            }
+            // TODO: interfaces
 
-            tw.WriteLine("};");
+            tw.WriteLine(
+                "IL2C_RUNTIME_TYPE_END();");
             tw.SplitLine();
         }
     }

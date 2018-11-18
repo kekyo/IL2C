@@ -74,6 +74,7 @@ extern const uintptr_t typeName##_RUNTIME_TYPE__[]
 #define IL2C_TYPE_VARIABLE 0x04
 #define IL2C_TYPE_UNSIGNED_INTEGER 0x0b
 #define IL2C_TYPE_STATIC 0x10
+#define IL2C_TYPE_INTERFACE 0x20
 
 #define il2c_typeof(typeName) \
     ((IL2C_RUNTIME_TYPE)&(typeName##_RUNTIME_TYPE__))

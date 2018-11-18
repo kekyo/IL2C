@@ -56,11 +56,8 @@ void* il2c_get_uninitialized_object_internal__(
     }
 
     void* pReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
-    if (bodySize >= 1)
-    {
-        // Guarantee cleared body
-        il2c_memset(pReference, 0, bodySize);
-    }
+    // Guarantee cleared body
+    il2c_memset(pReference, 0, bodySize);
 
     pHeader->pNext = NULL;
     pHeader->type = type;
@@ -98,10 +95,27 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     il2c_assert((type->flags & IL2C_TYPE_VARIABLE) == 0);
     il2c_assert(type->bodySize >= sizeof(void*));   // vptr0
 
-    // TODO: Setup all vptrs
-    void** ppReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
-    *ppReference = type->vptr0;
-    return ppReference;
+    // Setup vptr0
+    uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
+    *((const void**)pReference) = type->vptr0;
+
+    // Setup interface vptrs.
+    const IL2C_RUNTIME_TYPE* pInterfaceType =
+        (const IL2C_RUNTIME_TYPE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
+    uintptr_t index;
+    for (index = 0;
+        index < type->interfaceTypeCount;
+        index++, pInterfaceType++)
+    {
+        IL2C_RUNTIME_TYPE interfaceType = *pInterfaceType;
+        il2c_assert((interfaceType->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
+
+        // The interface vptr offset placed at vptr[0].
+        uintptr_t offset = *(const uintptr_t*)(interfaceType->vptr0);
+        *((const void**)(pReference + offset)) = interfaceType->vptr0;
+    }
+
+    return pReference;
 }
 
 //////////////////////////

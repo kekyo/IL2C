@@ -92,27 +92,6 @@ namespace IL2C.Writers
                     type.FriendlyName);
                 tw.SplitLine();
 
-                if (!type.IsStatic)
-                {
-                    if (!type.IsInterface)
-                    {
-                        if (type.IsDelegate)
-                        {
-                            // TODO: Another types can maybe transfer same method.
-                            tw.WriteLine(
-                                "#define __{0}_IL2C_MarkHandler__ System_MulticastDelegate_IL2C_MarkHandler__",
-                                type.MangledName);
-                        }
-                        else
-                        {
-                            tw.WriteLine(
-                                "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1} this__);",
-                                type.MangledName,
-                                type.CLanguageThisTypeName);
-                        }
-                    }
-                }
-
                 foreach (var method in type.DeclaredMethods.
                     Where(predictMethod))
                 {

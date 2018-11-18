@@ -100,7 +100,7 @@ static void System_Array_MarkHandler(System_Array* arr)
         return;
     }
 
-    uintptr_t index;
+    intptr_t index;
     for (index = 0; index < arr->Length; index++)
     {
         System_Object* pReference = il2c_array_item(arr, System_Object*, index);

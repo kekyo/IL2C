@@ -155,16 +155,16 @@ typedef void* untyped_ptr;
 // Boxing related declarations
 
 extern System_ValueType* il2c_box__(
-    void* pValue, IL2C_RUNTIME_TYPE valueType, const void* vptr0);
+    void* pValue, IL2C_RUNTIME_TYPE valueType);
 extern System_ValueType* il2c_box2__(
-    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType, const void* vptr0);
+    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType);
 extern void* il2c_unbox__(
     /* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE valueType);
 
 #define il2c_box(pValue, valueTypeName) \
-    (il2c_box__(pValue, il2c_typeof(valueTypeName), &valueTypeName##_VTABLE__))
+    (il2c_box__(pValue, il2c_typeof(valueTypeName)))
 #define il2c_box2(pValue, valueTypeName, stackTypeName) \
-    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName), &valueTypeName##_VTABLE__))
+    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName)))
 #define il2c_unbox(pObject, valueTypeName) \
     ((valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
 #define il2c_unsafe_unbox__(pObject, typeName) \

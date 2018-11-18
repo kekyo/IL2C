@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 
 using IL2C.Metadata;
 
@@ -54,99 +55,11 @@ namespace IL2C.Writers
             CodeTextWriter tw,
             ITypeInformation declaredType)
         {
+            Debug.Assert(!declaredType.IsInterface);
+
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// [7] Runtime helpers:");
-
-            // Enum is same as primitive numeric value type.
-            // Delegate mark handler is same as System.MulticastDelegate.
-            if (!declaredType.IsEnum && !declaredType.IsDelegate)
-            {
-                // Write mark handler:
-                tw.SplitLine();
-                tw.WriteLine(
-                    "// [7-5] GC's mark handler");
-                tw.WriteLine(
-                    "void __{0}_IL2C_MarkHandler__({1} this__)",
-                    declaredType.MangledName,
-                    declaredType.CLanguageThisTypeName);
-                tw.WriteLine("{");
-
-                using (var _ = tw.Shift())
-                {
-                    tw.WriteLine(
-                        "il2c_assert(this__ != NULL);");
-
-                    var fields = declaredType.Fields.
-                        Where(field => !field.IsStatic && field.FieldType.IsReferenceType).
-                        ToArray();
-                    if (fields.Length >= 1)
-                    {
-                        tw.SplitLine();
-                        tw.WriteLine(
-                            "// [7-6] Try marking each object reference fields");
-
-                        // Write unbox function if type is value type.
-                        string thisRefForMarker;
-                        if (declaredType.IsValueType)
-                        {
-                            tw.WriteLine(
-                                "{0}* pValue =",
-                                declaredType.CLanguageTypeName);
-
-                            using (var __ = tw.Shift())
-                            {
-                                tw.WriteLine(
-                                    "il2c_unsafe_unbox__(this__, {0});",
-                                    declaredType.CLanguageTypeName);
-                            }
-
-                            thisRefForMarker = "pValue";
-                        }
-                        else
-                        {
-                            thisRefForMarker = "this__";
-                        }
-
-                        // Write marker expression.
-                        foreach (var field in fields)
-                        {
-                            tw.WriteLine(
-                                "il2c_try_mark_from_handler({0}->{1});",
-                                thisRefForMarker,
-                                field.Name);
-                        }
-                    }
-
-                    // NOTE:
-                    //   Invoke base class mark handler except contains NO fields.
-                    //   (ex: System.Object, System.ValueType...)
-                    var baseType = declaredType.BaseType;
-                    if (baseType != null)
-                    {
-                        if (baseType.
-                            Traverse(type => type.BaseType).
-                            Any(type => type.Fields.Length >= 1) == false)
-                        {
-                            tw.SplitLine();
-                            tw.WriteLine(
-                                "// [7-7] Delegate checking base types");
-                            tw.WriteLine(
-                                "__{0}_IL2C_MarkHandler__(({1})this__);",
-                                declaredType.BaseType.MangledName,
-                                declaredType.BaseType.CLanguageTypeName);
-                        }
-                        else
-                        {
-                            tw.SplitLine();
-                            tw.WriteLine(
-                                "/* Suppressed invoke base mark handler */");
-                        }
-                    }
-                }
-
-                tw.WriteLine("}");
-                tw.SplitLine();
-            }
+            tw.SplitLine();
 
             // Write trampoline virtual functions if type is value type.
             var virtualMethods = declaredType.CalculatedVirtualMethods;
@@ -344,7 +257,15 @@ namespace IL2C.Writers
             // Write runtime type information
             tw.WriteLine("// [7-8] Runtime type information");
 
-            // IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
+            // Aggregate mark target fields (except the enum type and the delegate type)
+            var markTargetFields =
+                (!declaredType.IsEnum && !declaredType.IsDelegate) ?
+                    declaredType.Fields.
+                    Where(field => !field.IsStatic && field.FieldType.IsReferenceType).
+                    ToArray() :
+                new IFieldInformation[0];
+
+            // ex: IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5})",
                 declaredType.MangledName,
@@ -352,18 +273,28 @@ namespace IL2C.Writers
                 declaredType.IsEnum ?      // Type attribute flags
                     (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
                     declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
-                    declaredType.IsInterface ? "IL2C_TYPE_INTERFACE" :
                     declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
                     "IL2C_TYPE_VALUE",
-                    declaredType.BaseType.MangledName,
-                    declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : "0",
-                    0);
+                declaredType.BaseType.MangledName,
+                declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
+                0);
 
-            // TODO: mark target offsets
+            // Mark target offsets.
+            using (var _ = tw.Shift())
+            {
+                foreach (var field in markTargetFields)
+                {
+                    // ex: IL2C_RUNTIME_TYPE_MARK_TARGET(System_Exception, message__)
+                    tw.WriteLine(
+                        "IL2C_RUNTIME_TYPE_MARK_TARGET({0}, {1})",
+                        declaredType.MangledName,
+                        field.Name);
+                }
+            }
+
             // TODO: interfaces
 
-            tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_END();");
+            tw.WriteLine("IL2C_RUNTIME_TYPE_END();");
             tw.SplitLine();
         }
 
@@ -371,27 +302,22 @@ namespace IL2C.Writers
             CodeTextWriter tw,
             ITypeInformation declaredType)
         {
+            Debug.Assert(declaredType.IsInterface);
+
             tw.WriteLine("//////////////////////");
             tw.WriteLine("// [8] Runtime helpers:");
+            tw.SplitLine();
 
             // Write runtime type information
-            tw.SplitLine();
             tw.WriteLine("// [8-1] Runtime type information");
 
-            // IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
+            // ex: IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_INTERFACE, System_Object, 0, 0)
             tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5})",
+                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", IL2C_TYPE_INTERFACE, {2}, 0, {3})",
                 declaredType.MangledName,
                 declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds)
-                declaredType.IsEnum ?      // Type attribute flags
-                    (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
-                    declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
-                    declaredType.IsInterface ? "IL2C_TYPE_INTERFACE" :
-                    declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
-                    "IL2C_TYPE_VALUE",
-                    declaredType.BaseType.MangledName,
-                    declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : "0",
-                    0);
+                declaredType.BaseType.MangledName,
+                0);
 
             // TODO: interfaces
 

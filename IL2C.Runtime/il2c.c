@@ -166,12 +166,13 @@ void il2c_default_mark_handler__(void* pReference)
     // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
     //   (at x86/x64 cause, another platform may cause)
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
-    if (pHeader->gcMark == GCMARK_CONST)
+    if (pHeader->gcMark != GCMARK_NOMARK)
     {
+        // (Or already marked.)
         return;
     }
 
-    // Marking atomic exchange.
+    // Marking with atomic exchange.
     interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark != GCMARK_NOMARK)
     {
@@ -202,8 +203,13 @@ void il2c_default_mark_handler__(void* pReference)
             index < pHeader->type->markTarget;
             index++, pMarkOffset++)
         {
+            // MEMO: If this type is value type, we have to shift additional offset for System_ValueType (just vptr0).
+            // TODO: value type with custom interfaces
+            void** ppReferenceInner =
+                (void**)(((uint8_t*)pReference) + *pMarkOffset +
+                    (pHeader->type->flags & IL2C_TYPE_VALUE ? sizeof(System_ValueType) : 0));
+
             // This variable isn't assigned.
-            void** ppReferenceInner = (void**)((uint8_t*)pReference) + *pMarkOffset;
             if (*ppReferenceInner == NULL)
             {
                 continue;
@@ -343,16 +349,15 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 // +----------------------+                   ---------------------------
 
 System_ValueType* il2c_box__(
-    void* pValue, IL2C_RUNTIME_TYPE valueType, const void* vptr0)
+    void* pValue, IL2C_RUNTIME_TYPE valueType)
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
-    il2c_assert(vptr0 != NULL);
 
     uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
-    pBoxed->vptr0__ = vptr0;
+    pBoxed->vptr0__ = valueType->vptr0;
     il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
 
     return pBoxed;
@@ -361,12 +366,11 @@ System_ValueType* il2c_box__(
 // Boxing with widing/narrowing combination for signed/unsigned integer value.
 // MEMO: This implemenation makes safer for endian order.
 System_ValueType* il2c_box2__(
-    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType, const void* vptr0)
+    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType)
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
     il2c_assert(stackType != NULL);
-    il2c_assert(vptr0 != NULL);
 
     // Require type conversion  (OK: IL2C_TYPE_INTEGER || IL2C_TYPE_UNSIGNED_INTEGER)
     il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER) && ((stackType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER));
@@ -469,7 +473,7 @@ System_ValueType* il2c_box2__(
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
     // vptr0 setup.
-    pBoxed->vptr0__ = vptr0;
+    pBoxed->vptr0__ = valueType->vptr0;
 
     switch (valueType->bodySize)
     {

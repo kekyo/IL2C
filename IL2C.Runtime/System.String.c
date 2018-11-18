@@ -38,7 +38,7 @@ static System_String* new_string_internal__(uintptr_t byteSize)
     System_String* pString = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
         bodySize);
-    pString->vptr0__ = &__System_String_VTABLE__;
+    pString->vptr0__ = &System_String_VTABLE__;
     wchar_t* string_body = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
     pString->string_body__ = string_body;
     return pString;
@@ -433,18 +433,12 @@ bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-__System_String_VTABLE_DECL__ __System_String_VTABLE__ = {
-    /* internalcall */ il2c_isinst__,
+System_String_VTABLE_DECL__ System_String_VTABLE__ = {
     (bool(*)(void*, System_Object*))System_String_Equals_1,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_String_GetHashCode,
     (System_String* (*)(void*))System_String_ToString,
 };
 
-IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__ = {
-    "System.String",
-    IL2C_TYPE_VARIABLE,
-    0,
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER,
-    il2c_typeof(System_Object)
-};
+IL2C_RUNTIME_TYPE_BEGIN(System_String, "System.String", IL2C_TYPE_VARIABLE, System_Object, NULL, 0)
+IL2C_RUNTIME_TYPE_END();

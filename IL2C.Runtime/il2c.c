@@ -27,7 +27,7 @@ static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 //////////////////////////
 
 void* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
 {
     // +----------------------+ <-- pHeader
     // | IL2C_REF_HEADER      |
@@ -88,50 +88,20 @@ void* il2c_get_uninitialized_object_internal__(
     return pReference;
 }
 
-void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE_DECL* type, void* vptr0)
+void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 {
     il2c_assert(type != NULL);
-    il2c_assert(vptr0 != NULL);
+    il2c_assert(type->vptr0 != NULL);
 
     // String, Delegate or Array (IL2C_TYPE_VARIABLE):
     // throw new InvalidProgramException();
     il2c_assert((type->flags & IL2C_TYPE_VARIABLE) == 0);
     il2c_assert(type->bodySize >= sizeof(void*));   // vptr0
 
+    // TODO: Setup all vptrs
     void** ppReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
-    *ppReference = vptr0;
+    *ppReference = type->vptr0;
     return ppReference;
-}
-
-void il2c_mark_from_handler__(/* System_Object* */ void* pReference)
-{
-    il2c_assert(pReference != NULL);
-
-    // Has to ignore if objref is const.
-    // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
-    //   (at x86/x64 cause, another platform may cause)
-    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
-    if (pHeader->gcMark == GCMARK_CONST)
-    {
-        return;
-    }
-
-    interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
-    if (currentMark == GCMARK_NOMARK)
-    {
-        il2c_assert(pHeader->type != NULL);
-        il2c_assert(pHeader->type->IL2C_MarkHandler != NULL);
-        pHeader->type->IL2C_MarkHandler(pReference);
-    }
-}
-
-void il2c_no_mark_handler__(/* System_Object* */ void* pReference)
-{
-    il2c_assert(pReference != NULL);
-
-    // Nothing to do.
-    // We can use this function only when the runtime type has no member fields
-    // (it contains maybe objref.)
 }
 
 //////////////////////////
@@ -172,6 +142,65 @@ void il2c_step1_clear_gcmark__()
     }
 }
 
+typedef void(*IL2C_MARK_HANDLER)(void* pReference);
+
+void il2c_default_mark_handler__(void* pReference)
+{
+    il2c_assert(pReference != NULL);
+
+    // Has to ignore if objref is const.
+    // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
+    //   (at x86/x64 cause, another platform may cause)
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
+    if (pHeader->gcMark == GCMARK_CONST)
+    {
+        return;
+    }
+
+    // Marking atomic exchange.
+    interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
+    if (currentMark != GCMARK_NOMARK)
+    {
+        // Already marked.
+        return;
+    }
+
+    il2c_assert(pHeader->type != NULL);
+    DEBUG_WRITE("il2c_step2_mark_gcmark_recursive__", pHeader->type->pTypeName);
+
+    // This type has the custom mark handler.
+    // Because it's variable type, can't fix pointer offsets.
+    if ((pHeader->type->flags & IL2C_TYPE_VARIABLE) == IL2C_TYPE_VARIABLE)
+    {
+        IL2C_MARK_HANDLER pMarkHandler = (IL2C_MARK_HANDLER)(pHeader->type->markTarget);
+        if (pMarkHandler != NULL)
+        {
+            pMarkHandler(pReference);
+        }
+    }
+    // This type doesn't have the custom mark handler, traverser works just now.
+    else
+    {
+        // Traverse variables recursivity.
+        const uintptr_t* pMarkOffset = (const uintptr_t*)(pHeader->type + 1);
+        uintptr_t index;
+        for (index = 0;
+            index < pHeader->type->markTarget;
+            index++, pMarkOffset++)
+        {
+            // This variable isn't assigned.
+            void** ppReferenceInner = (void**)((uint8_t*)pReference) + *pMarkOffset;
+            if (*ppReferenceInner == NULL)
+            {
+                continue;
+            }
+
+            // Use mark offset from type information.
+            il2c_default_mark_handler__(*ppReferenceInner);
+        }
+    }
+}
+
 void il2c_step2_mark_gcmark__()
 {
     // Mark headers.
@@ -182,32 +211,15 @@ void il2c_step2_mark_gcmark__()
         uint8_t index;
         for (index = 0; index < pCurrentFrame->objRefCount__; index++)
         {
+            // This variable isn't assigned.
             void* pReference = pCurrentFrame->pReferences__[index];
             if (pReference == NULL)
             {
                 continue;
             }
 
-            // Has to ignore if objref is const.
-            // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
-            //   (at x86/x64 cause, another platform may cause)
-            IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
-            if (pHeader->gcMark == GCMARK_CONST)
-            {
-                continue;
-            }
-
-            // Marking process.
-            interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
-            if (currentMark == GCMARK_NOMARK)
-            {
-                il2c_assert(pHeader->type != NULL);
-                il2c_assert(pHeader->type->IL2C_MarkHandler != NULL);
-
-                DEBUG_WRITE("il2c_step2_mark_gcmark__", pHeader->type->pTypeName);
-
-                pHeader->type->IL2C_MarkHandler(pReference);
-            }
+            // Mark for this objref.
+            il2c_default_mark_handler__(pReference);
         }
 
         pCurrentFrame = pCurrentFrame->pNext__;
@@ -256,13 +268,24 @@ void il2c_collect()
 /////////////////////////////////////////////////////////////
 // Runtime cast function
 
-void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
+uint32_t il2c_sizeof__(IL2C_RUNTIME_TYPE type)
+{
+    il2c_assert(type != NULL);
+
+    return ((type)->flags & IL2C_TYPE_VALUE) ?
+        (uint32_t)(type)->bodySize :
+        (uint32_t)sizeof(intptr_t);
+}
+
+void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE type)
 {
     il2c_assert(type != NULL);
     il2c_assert(pReference != NULL);
 
+    // TODO: interface types
+
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
-    IL2C_RUNTIME_TYPE_DECL* currentType = pHeader->type;
+    IL2C_RUNTIME_TYPE currentType = pHeader->type;
     do
     {
         if (currentType == type)
@@ -276,10 +299,12 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DEC
     return NULL;
 }
 
-void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type)
+void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE type)
 {
     il2c_assert(type != NULL);
     il2c_assert(pReference != NULL);
+
+    // TODO: interface types
 
     void* p = il2c_isinst__(pReference, type);
     if (p == NULL)
@@ -304,7 +329,7 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_
 // +----------------------+                   ---------------------------
 
 System_ValueType* il2c_box__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, const void* vptr0)
+    void* pValue, IL2C_RUNTIME_TYPE valueType, const void* vptr0)
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
@@ -322,7 +347,7 @@ System_ValueType* il2c_box__(
 // Boxing with widing/narrowing combination for signed/unsigned integer value.
 // MEMO: This implemenation makes safer for endian order.
 System_ValueType* il2c_box2__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0)
+    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType, const void* vptr0)
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
@@ -373,7 +398,6 @@ System_ValueType* il2c_box2__(
             else v.i1 = (int8_t)*(int32_t*)pValue;
             break;
         default:
-            // TODO: InvalidProgramException?
             il2c_throw_invalidcastexception__();
         }
         break;
@@ -394,7 +418,6 @@ System_ValueType* il2c_box2__(
             else v.i2 = (int16_t)*(int32_t*)pValue;
             break;
         default:
-            // TODO: InvalidProgramException?
             il2c_throw_invalidcastexception__();
         }
         break;
@@ -421,12 +444,10 @@ System_ValueType* il2c_box2__(
             else v.i4 = (int32_t)*(int64_t*)pValue;
             break;
         default:
-            // TODO: InvalidProgramException?
             il2c_throw_invalidcastexception__();
         }
         break;
     default:
-        // TODO: InvalidProgramException?
         il2c_throw_invalidcastexception__();
     }
 
@@ -455,7 +476,7 @@ System_ValueType* il2c_box2__(
     return pBoxed;
 }
 
-void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType)
+void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE valueType)
 {
     if (pReference == NULL)
     {

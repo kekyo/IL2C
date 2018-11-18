@@ -25,16 +25,12 @@ bool System_ValueType_Equals(System_ValueType* this__, System_Object* obj)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-__System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__ = {
-    /* internalcall */ il2c_isinst__,
+System_ValueType_VTABLE_DECL__ System_ValueType_VTABLE__ = {
     (bool(*)(void*, System_Object*))System_ValueType_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_ValueType_GetHashCode,
     (System_String* (*)(void*))System_ValueType_ToString
 };
 
-//IL2C_DECLARE_RUNTIME_TYPE(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object);
-
-
 IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
-IL2C_RUNTIME_TYPE_END()
+IL2C_RUNTIME_TYPE_END();

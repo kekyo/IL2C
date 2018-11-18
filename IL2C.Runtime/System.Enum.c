@@ -26,12 +26,12 @@ bool System_Enum_Equals(System_Enum* this__, System_Object* obj)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-__System_Enum_VTABLE_DECL__ __System_Enum_VTABLE__ = {
-    /* internalcall */ il2c_isinst__,
+System_Enum_VTABLE_DECL__ System_Enum_VTABLE__ = {
     (bool(*)(void*, System_Object*))System_Enum_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Enum_GetHashCode,
     (System_String* (*)(void*))System_Enum_ToString
 };
 
-IL2C_DECLARE_RUNTIME_TYPE(System_Enum, "System.Enum", IL2C_TYPE_REFERENCE, System_ValueType);
+IL2C_RUNTIME_TYPE_BEGIN(System_Enum, "System.Enum", IL2C_TYPE_REFERENCE, System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_END();

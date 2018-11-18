@@ -52,19 +52,19 @@ bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-__System_Object_VTABLE_DECL__ __System_Object_VTABLE__ = {
-    /* internalcall */ il2c_isinst__,
+System_Object_VTABLE_DECL__ System_Object_VTABLE__ = {
     (bool(*)(void*, System_Object*))System_Object_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Object_GetHashCode,
     (System_String* (*)(void*))System_Object_ToString
 };
 
-IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__ = {
-    "System.Object",
+const uintptr_t System_Object_RUNTIME_TYPE__[] = {
+    (uintptr_t)("System.Object"),
     IL2C_TYPE_REFERENCE,
     sizeof(System_Object),
-    NULL,
+    (uintptr_t)NULL,
+    (uintptr_t)&System_Object_VTABLE__,
     0,
     0
 };

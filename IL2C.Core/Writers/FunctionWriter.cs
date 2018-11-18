@@ -508,7 +508,7 @@ namespace IL2C.Writers
                     "il2c_assert({0} != NULL);",
                     thisName);
                 tw.WriteLine(
-                    "il2c_assert({0}->vptr0__ == &__System_Delegate_VTABLE__);",
+                    "il2c_assert({0}->vptr0__ == &System_Delegate_VTABLE__);",
                     thisName);
                 tw.WriteLine(
                     "il2c_assert({0}->count__ >= 1);",

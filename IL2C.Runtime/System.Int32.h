@@ -1,5 +1,5 @@
-#ifndef __System_Int32_H__
-#define __System_Int32_H__
+#ifndef System_Int32_H__
+#define System_Int32_H__
 
 #pragma once
 
@@ -14,12 +14,11 @@ extern "C" {
 
 typedef int32_t System_Int32;
 
-typedef __System_ValueType_VTABLE_DECL__ __System_Int32_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ System_Int32_VTABLE_DECL__;
 
-extern __System_Int32_VTABLE_DECL__ __System_Int32_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Int32_RUNTIME_TYPE__;
+extern System_Int32_VTABLE_DECL__ System_Int32_VTABLE__;
 
-#define __System_Int32_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Int32);
 
 extern /* virtual */ System_String* System_Int32_ToString(int32_t* this__);
 extern /* virtual */ int32_t System_Int32_GetHashCode(int32_t* this__);

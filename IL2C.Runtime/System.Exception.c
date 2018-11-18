@@ -38,20 +38,14 @@ System_String* System_Exception_ToString(System_Exception* this__)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void __System_Exception_IL2C_MarkHandler__(System_Exception* this__)
-{
-    il2c_assert(this__ != NULL);
-
-    il2c_try_mark_from_handler(this__->message__);
-}
-
-__System_Exception_VTABLE_DECL__ __System_Exception_VTABLE__ = {
-    /* internalcall */ il2c_isinst__,
+System_Exception_VTABLE_DECL__ System_Exception_VTABLE__ = {
     (bool(*)(void*, System_Object*))System_Object_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Object_GetHashCode,
     (System_String*(*)(void*))System_Exception_ToString,
-    (System_String*(*)(void*))System_Exception_get_Message,
+    (System_String*(*)(void*))System_Exception_get_Message
 };
 
-IL2C_DECLARE_RUNTIME_TYPE(System_Exception, "System.Exception", IL2C_TYPE_REFERENCE, System_Object);
+IL2C_RUNTIME_TYPE_BEGIN(System_Exception, "System.Exception", IL2C_TYPE_REFERENCE, System_Object, 1, 0)
+    IL2C_RUNTIME_TYPE_MARK_TARGET(System_Exception, message__)
+IL2C_RUNTIME_TYPE_END();

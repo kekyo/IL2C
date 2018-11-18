@@ -1,5 +1,5 @@
-#ifndef __System_Enum_H__
-#define __System_Enum_H__
+#ifndef System_Enum_H__
+#define System_Enum_H__
 
 #pragma once
 
@@ -14,17 +14,16 @@ extern "C" {
 
 typedef struct System_Enum System_Enum;
 
-typedef __System_ValueType_VTABLE_DECL__ __System_Enum_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ System_Enum_VTABLE_DECL__;
 
 struct System_Enum
 {
-    __System_Enum_VTABLE_DECL__* vptr0__;
+    System_Enum_VTABLE_DECL__* vptr0__;
 };
 
-extern __System_Enum_VTABLE_DECL__ __System_Enum_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Enum_RUNTIME_TYPE__;
+extern System_Enum_VTABLE_DECL__ System_Enum_VTABLE__;
 
-#define __System_Enum_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Enum);
 
 extern /* virtual */ System_String* System_Enum_ToString(System_Enum* this__);
 extern /* virtual */ int32_t System_Enum_GetHashCode(System_Enum* this__);

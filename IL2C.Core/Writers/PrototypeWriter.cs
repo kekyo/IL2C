@@ -100,7 +100,7 @@ namespace IL2C.Writers
                         {
                             // TODO: Another types can maybe transfer same method.
                             tw.WriteLine(
-                                "#define __{0}_IL2C_MarkHandler__ __System_MulticastDelegate_IL2C_MarkHandler__",
+                                "#define __{0}_IL2C_MarkHandler__ System_MulticastDelegate_IL2C_MarkHandler__",
                                 type.MangledName);
                         }
                         else

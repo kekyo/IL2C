@@ -45,12 +45,12 @@ bool System_Boolean_TryParse(System_String* s, bool* result)
     il2c_assert(result != NULL);
     il2c_assert(s->string_body__ != NULL);
 
-    if (wcsicmp(il2c_c_str(s), il2c_c_str(System_Boolean_True)) == 0)
+    if (il2c_wcsicmp(il2c_c_str(s), il2c_c_str(System_Boolean_True)) == 0)
     {
         *result = true;
         return true;
     }
-    if (wcsicmp(il2c_c_str(s), il2c_c_str(System_Boolean_False)) == 0)
+    if (il2c_wcsicmp(il2c_c_str(s), il2c_c_str(System_Boolean_False)) == 0)
     {
         *result = false;
         return true;
@@ -65,4 +65,6 @@ bool System_Boolean_TryParse(System_String* s, bool* result)
 
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Boolean);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Boolean);
-IL2C_DECLARE_RUNTIME_TYPE(System_Boolean, "System.Boolean", IL2C_TYPE_UNSIGNED_INTEGER, System_ValueType);
+
+IL2C_RUNTIME_TYPE_BEGIN(System_Boolean, "System.Boolean", IL2C_TYPE_UNSIGNED_INTEGER, System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_END();

@@ -1,5 +1,5 @@
-#ifndef __System_Byte_H__
-#define __System_Byte_H__
+#ifndef System_Byte_H__
+#define System_Byte_H__
 
 #pragma once
 
@@ -14,12 +14,11 @@ extern "C" {
 
 typedef uint8_t System_Byte;
 
-typedef __System_ValueType_VTABLE_DECL__ __System_Byte_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ System_Byte_VTABLE_DECL__;
 
-extern __System_Byte_VTABLE_DECL__ __System_Byte_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Byte_RUNTIME_TYPE__;
+extern System_Byte_VTABLE_DECL__ System_Byte_VTABLE__;
 
-#define __System_Byte_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Byte);
 
 extern /* virtual */ System_String* System_Byte_ToString(uint8_t* this__);
 extern /* virtual */ int32_t System_Byte_GetHashCode(uint8_t* this__);

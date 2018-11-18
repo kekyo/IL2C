@@ -1,5 +1,5 @@
-#ifndef __System_RuntimeFieldHandle_H__
-#define __System_RuntimeFieldHandle_H__
+#ifndef System_RuntimeFieldHandle_H__
+#define System_RuntimeFieldHandle_H__
 
 #pragma once
 
@@ -20,7 +20,7 @@ struct System_RuntimeFieldHandle
     const void* field__;
 };
 
-extern IL2C_RUNTIME_TYPE_DECL __System_RuntimeFieldHandle_RUNTIME_TYPE__;
+IL2C_DECLARE_RUNTIME_TYPE(System_RuntimeFieldHandle);
 
 #ifdef __cplusplus
 }

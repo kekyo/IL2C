@@ -6,7 +6,7 @@
 int32_t System_Delegate_GetHashCode(System_Delegate* this__)
 {
     il2c_assert(this__ != NULL);
-    il2c_assert(this__->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(this__->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(this__->count__ >= 1);
 
     System_Type* pType = System_Object_GetType((System_Object*)this__);
@@ -16,7 +16,7 @@ int32_t System_Delegate_GetHashCode(System_Delegate* this__)
 bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
-    il2c_assert(this__->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(this__->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(this__->count__ >= 1);
 
     if (System_Object_ReferenceEquals((System_Object*)this__, obj))
@@ -30,7 +30,7 @@ bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj)
         return false;
     }
 
-    il2c_assert(rhs->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(rhs->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(rhs->count__ >= 1);
 
     if (this__->count__ != rhs->count__)
@@ -54,7 +54,7 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
         }
         else
         {
-            il2c_assert(b->vptr0__ == &__System_Delegate_VTABLE__);
+            il2c_assert(b->vptr0__ == &System_Delegate_VTABLE__);
             il2c_assert(b->count__ >= 1);
             return b;
         }
@@ -63,15 +63,15 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     {
         if (b == NULL)
         {
-            il2c_assert(a->vptr0__ == &__System_Delegate_VTABLE__);
+            il2c_assert(a->vptr0__ == &System_Delegate_VTABLE__);
             il2c_assert(a->count__ >= 1);
             return a;
         }
     }
 
-    il2c_assert(a->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(a->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(a->count__ >= 1);
-    il2c_assert(b->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(b->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(b->count__ >= 1);
 
     // Requires same delegate type.
@@ -88,7 +88,7 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     uintptr_t size = sizeof(System_Delegate) +
         (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
     System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size);
-    dlg->vptr0__ = &__System_Delegate_VTABLE__;
+    dlg->vptr0__ = &System_Delegate_VTABLE__;
     
     dlg->count__ = count;
     IL2C_METHOD_TABLE_DECL* pMethodtbl = dlg->methodtbl__;
@@ -105,7 +105,7 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
         return NULL;
     }
 
-    il2c_assert(source->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(source->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(source->count__ >= 1);
 
     if (value == NULL)
@@ -113,7 +113,7 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
         return source;
     }
 
-    il2c_assert(value->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(value->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(value->count__ >= 1);
 
     // Requires same delegate type.
@@ -152,7 +152,7 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
             uintptr_t size = sizeof(System_Delegate) +
                 (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
             System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size);
-            dlg->vptr0__ = &__System_Delegate_VTABLE__;
+            dlg->vptr0__ = &System_Delegate_VTABLE__;
 
             dlg->count__ = count;
             IL2C_METHOD_TABLE_DECL* pMethodtbl = dlg->methodtbl__;
@@ -171,13 +171,13 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
 // Delegate special functions
 
 System_Delegate* il2c_new_delegate__(
-    IL2C_RUNTIME_TYPE_DECL* delegateType, System_Object* object, intptr_t method)
+    IL2C_RUNTIME_TYPE delegateType, System_Object* object, intptr_t method)
 {
     il2c_assert(delegateType != NULL);
     il2c_assert(method != 0);
 
     System_Delegate* dlg = il2c_get_uninitialized_object_internal__(delegateType, sizeof(System_Delegate));
-    dlg->vptr0__ = &__System_Delegate_VTABLE__;
+    dlg->vptr0__ = &System_Delegate_VTABLE__;
     
     dlg->count__ = 1;
     dlg->methodtbl__[0].target = object;
@@ -189,10 +189,10 @@ System_Delegate* il2c_new_delegate__(
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-void __System_Delegate_IL2C_MarkHandler__(System_Delegate* this__)
+void System_Delegate_MarkHandler__(System_Delegate* this__)
 {
     il2c_assert(this__ != NULL);
-    il2c_assert(this__->vptr0__ == &__System_Delegate_VTABLE__);
+    il2c_assert(this__->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(this__->count__ >= 1);
 
     int32_t index;
@@ -200,22 +200,16 @@ void __System_Delegate_IL2C_MarkHandler__(System_Delegate* this__)
     {
         il2c_assert(this__->methodtbl__[index].methodPtr != 0);
 
-        il2c_try_mark_from_handler(this__->methodtbl__[index].target);
+        il2c_default_mark_handler__(this__->methodtbl__[index].target);
     }
 }
 
-__System_Delegate_VTABLE_DECL__ __System_Delegate_VTABLE__ = {
-    /* internalcall */ il2c_isinst__,
+System_Delegate_VTABLE_DECL__ System_Delegate_VTABLE__ = {
     (bool(*)(void*, System_Object*))System_Delegate_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Delegate_GetHashCode,
     (System_String* (*)(void*))System_Object_ToString
 };
 
-IL2C_RUNTIME_TYPE_DECL __System_Delegate_RUNTIME_TYPE__ = {
-    "System.Delegate",
-    IL2C_TYPE_VARIABLE,
-    0,
-    /* internalcall */ (IL2C_MARK_HANDLER)__System_Delegate_IL2C_MarkHandler__,
-    il2c_typeof(System_Object)
-};
+IL2C_RUNTIME_TYPE_BEGIN(System_Delegate, "System.Delegate", IL2C_TYPE_VARIABLE, System_Object, System_Delegate_MarkHandler__, 0)
+IL2C_RUNTIME_TYPE_END();

@@ -43,5 +43,11 @@ namespace IL2C
         [Test]
         public static Task ExceptionThrownByCLI([ValueSource(nameof(_ExceptionThrownByCLI))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
+
+        public static readonly TestCaseInformation[] _TypeRelations =
+            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeRelations>();
+        [Test]
+        public static Task TypeRelations([ValueSource(nameof(_TypeRelations))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
     }
 }

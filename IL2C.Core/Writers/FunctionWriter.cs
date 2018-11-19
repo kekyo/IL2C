@@ -61,7 +61,7 @@ namespace IL2C.Writers
                             if (catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Catch)
                             {
                                 tw.WriteLine(
-                                    "if (il2c_isinst_unsafe(ex, {0})) return {1};",
+                                    "if (il2c_isinst__(ex, il2c_typeof({0}))) return {1};",
                                     catchHandler.CatchType.MangledName,
                                     catchHandlerIndex + 1);
                             }
@@ -156,7 +156,9 @@ namespace IL2C.Writers
                     tw.WriteLine("// [3-5] Setup execution frame:");
                     tw.SplitLine();
 
-                    tw.WriteLine("struct /* IL2C_EXECUTION_FRAME */");
+                    tw.WriteLine(
+                        "struct {0}_EXECUTION_FRAME__",
+                        preparedMethod.Method.CLanguageFunctionName);
                     tw.WriteLine("{");
 
                     using (var __ = tw.Shift())
@@ -508,20 +510,44 @@ namespace IL2C.Writers
                     "il2c_assert({0} != NULL);",
                     thisName);
                 tw.WriteLine(
-                    "il2c_assert({0}->vptr0__ == &__System_Delegate_VTABLE__);",
+                    "il2c_assert({0}->vptr0__ == &System_Delegate_VTABLE__);",
                     thisName);
                 tw.WriteLine(
                     "il2c_assert({0}->count__ >= 1);",
                     thisName);
                 tw.SplitLine();
+
                 if (!method.ReturnType.IsVoidType)
                 {
-                    tw.WriteLine(
-                        "{0} result;",
-                        method.ReturnType.CLanguageTypeName);
+                    if (method.ReturnType.IsReferenceType)
+                    {
+                        tw.WriteLine(
+                            "struct {0}_EXECUTION_FRAME__",
+                            method.CLanguageFunctionName);
+                        tw.WriteLine("{");
+                        using (var __ = tw.Shift())
+                        {
+                            tw.WriteLine("uint8_t objRefCount__;");
+                            tw.WriteLine("uint8_t objRefRefCount__;");
+                            tw.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
+                            tw.WriteLine(
+                                "{0} result;",
+                                method.ReturnType.CLanguageTypeName);
+                        }
+                        tw.WriteLine("} frame__ = { 1, 0 };");
+                        tw.WriteLine("il2c_link_execution_frame(&frame__);");
+                    }
+                    else
+                    {
+                        tw.WriteLine(
+                            "{0} result;",
+                            method.ReturnType.CLanguageTypeName);
+                    }
                 }
+
+                tw.SplitLine();
                 tw.WriteLine(
-                    "int32_t index = 0;");
+                    "uintptr_t index = 0;");
                 tw.WriteLine(
                     "do",
                     thisName);
@@ -536,8 +562,7 @@ namespace IL2C.Writers
 
                     if (method.ReturnType.IsVoidType)
                     {
-                        tw.WriteLine(
-                            "if (pMethodtbl->target != NULL)");
+                        tw.WriteLine("if (pMethodtbl->target != NULL)");
                         using (var ___ = tw.Shift())
                         {
                             tw.WriteLine(
@@ -549,8 +574,7 @@ namespace IL2C.Writers
                                     Skip(1).
                                     Select(p => string.Format(", {0}", p.ParameterName))));
                         }
-                        tw.WriteLine(
-                            "else");
+                        tw.WriteLine("else");
                         using (var ___ = tw.Shift())
                         {
                             tw.WriteLine(
@@ -565,13 +589,12 @@ namespace IL2C.Writers
                     }
                     else
                     {
-                        tw.WriteLine(
-                            "if (pMethodtbl->target != NULL)",
-                            thisName);
+                        tw.WriteLine("if (pMethodtbl->target != NULL)");
                         using (var ___ = tw.Shift())
                         {
                             tw.WriteLine(
-                                "result = (({0} (*)(System_Object*{1}))(pMethodtbl->methodPtr))(pMethodtbl->target{2});",
+                                "{0}result = (({1} (*)(System_Object*{2}))(pMethodtbl->methodPtr))(pMethodtbl->target{3});",
+                                method.ReturnType.IsReferenceType ? "frame__." : string.Empty,
                                 method.ReturnType.CLanguageTypeName,
                                 string.Join(string.Empty, method.Parameters.
                                     Skip(1).
@@ -580,12 +603,12 @@ namespace IL2C.Writers
                                     Skip(1).
                                     Select(p => string.Format(", {0}", p.ParameterName))));
                         }
-                        tw.WriteLine(
-                            "else");
+                        tw.WriteLine("else");
                         using (var ___ = tw.Shift())
                         {
                             tw.WriteLine(
-                                "result = (({0} (*)({1}))(pMethodtbl->methodPtr))({2});",
+                                "{0}result = (({1} (*)({2}))(pMethodtbl->methodPtr))({3});",
+                                method.ReturnType.IsReferenceType ? "frame__." : string.Empty,
                                 method.ReturnType.CLanguageTypeName,
                                 string.Join(", ", method.Parameters.
                                     Skip(1).
@@ -596,17 +619,23 @@ namespace IL2C.Writers
                         }
                     }
 
-                    tw.WriteLine(
-                        "index++;");
+                    tw.WriteLine("index++;");
                 }
-                tw.WriteLine(
-                    "}");
-                tw.WriteLine(
-                    "while (index < this__->count__);");
+                tw.WriteLine("}");
+                tw.WriteLine("while (index < this__->count__);");
+                tw.SplitLine();
+
                 if (!method.ReturnType.IsVoidType)
                 {
-                    tw.WriteLine(
-                        "return result;");
+                    if (method.ReturnType.IsReferenceType)
+                    {
+                        tw.WriteLine("il2c_unlink_execution_frame(&frame__);");
+                        tw.WriteLine("return frame__.result;");
+                    }
+                    else
+                    {
+                        tw.WriteLine("return result;");
+                    }
                 }
             }
 

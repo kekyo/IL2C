@@ -24,8 +24,8 @@ namespace IL2C.Writers
             tw.SplitLine();
 
             // Output prototypes.
-            foreach (var type in types
-                .Where(type => predictType(type)))
+            foreach (var type in types.
+                Where(type => predictType(type)))
             {
                 // Unfortunately the enum type at C language has not the underlying type.
                 // IL2C emits the enum types using not C language syntax.
@@ -91,27 +91,6 @@ namespace IL2C.Writers
                     "// [2-4] Member methods: {0}",
                     type.FriendlyName);
                 tw.SplitLine();
-
-                if (!type.IsStatic)
-                {
-                    if (!type.IsInterface)
-                    {
-                        if (type.IsDelegate)
-                        {
-                            // TODO: Another types can maybe transfer same method.
-                            tw.WriteLine(
-                                "#define __{0}_IL2C_MarkHandler__ __System_MulticastDelegate_IL2C_MarkHandler__",
-                                type.MangledName);
-                        }
-                        else
-                        {
-                            tw.WriteLine(
-                                "extern /* internalcall */ void __{0}_IL2C_MarkHandler__({1} this__);",
-                                type.MangledName,
-                                type.CLanguageThisTypeName);
-                        }
-                    }
-                }
 
                 foreach (var method in type.DeclaredMethods.
                     Where(predictMethod))

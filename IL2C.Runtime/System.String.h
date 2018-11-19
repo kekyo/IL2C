@@ -1,5 +1,5 @@
-#ifndef __System_String_H__
-#define __System_String_H__
+#ifndef System_String_H__
+#define System_String_H__
 
 #pragma once
 
@@ -14,19 +14,18 @@ extern "C" {
 
 typedef struct System_String System_String;
 
-typedef __System_Object_VTABLE_DECL__ __System_String_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ System_String_VTABLE_DECL__;
 
 struct System_String
 {
-    __System_String_VTABLE_DECL__* vptr0__;
+    System_String_VTABLE_DECL__* vptr0__;
 
     const wchar_t* string_body__;
 };
 
-extern IL2C_RUNTIME_TYPE_DECL __System_String_RUNTIME_TYPE__;
-extern __System_String_VTABLE_DECL__ __System_String_VTABLE__;
+extern System_String_VTABLE_DECL__ System_String_VTABLE__;
 
-#define __System_String_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_String);
 
 extern /* virtual */ System_String* System_String_ToString(System_String* this__);
 extern bool System_String_Equals(System_String* this__, System_String* obj);
@@ -54,19 +53,19 @@ typedef const struct
 {
     // IL2C_REF_HEADER
     void* pNext;             // Const string will not collect by GC, so this link is always NULL.
-    IL2C_RUNTIME_TYPE_DECL* type;  // Const string always fixed runtime type pointer from "__System_String_RUNTIME_TYPE__."
+    IL2C_RUNTIME_TYPE type;  // Const string always fixed runtime type pointer from "System_String_RUNTIME_TYPE__."
     intptr_t gcMark;         // Const string always marked (GCMARK_CONST:2)
 
     // Instance's vptr
-    __System_String_VTABLE_DECL__* vptr0__;   // Const string always fixed VTable pointer from "__System_String_VTABLE__."
+    System_String_VTABLE_DECL__* vptr0__;   // Const string always fixed VTable pointer from "System_String_VTABLE__."
 
     wchar_t* string_body__;
 } IL2C_CONST_STRING_DECL;
 
 #define IL2C_CONST_STRING(name, string_body) \
-    static IL2C_CONST_STRING_DECL __##name##_CONST_STRING__ = { \
-        NULL, &__System_String_RUNTIME_TYPE__, /* GCMARK_CONST */ 2, &__System_String_VTABLE__, string_body }; \
-    static System_String* const name = ((System_String*)&(__##name##_CONST_STRING__.vptr0__))
+    static IL2C_CONST_STRING_DECL name##_CONST_STRING__ = { \
+        NULL, il2c_typeof(System_String), /* GCMARK_CONST */ 2, &System_String_VTABLE__, string_body }; \
+    static System_String* const name = ((System_String*)&(name##_CONST_STRING__.vptr0__))
 
 #ifdef __cplusplus
 }

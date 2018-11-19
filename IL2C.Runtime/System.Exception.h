@@ -1,5 +1,5 @@
-#ifndef __System_Exception_H__
-#define __System_Exception_H__
+#ifndef System_Exception_H__
+#define System_Exception_H__
 
 #pragma once
 
@@ -16,24 +16,22 @@ typedef struct System_Exception System_Exception;
 
 typedef const struct
 {
-    /* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);
     bool(*Equals)(void* this__, System_Object* obj);
     void(*Finalize)(void* this__);
     int32_t(*GetHashCode)(void* this__);
     System_String* (*ToString)(void* this__);
     System_String* (*get_Message)(void* this__);
-} __System_Exception_VTABLE_DECL__;
+} System_Exception_VTABLE_DECL__;
 
 struct System_Exception
 {
-    __System_Exception_VTABLE_DECL__* vptr0__;
+    System_Exception_VTABLE_DECL__* vptr0__;
     System_String* message__;
 };
 
-extern __System_Exception_VTABLE_DECL__ __System_Exception_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Exception_RUNTIME_TYPE__;
+extern System_Exception_VTABLE_DECL__ System_Exception_VTABLE__;
 
-extern /* internalcall */ void __System_Exception_IL2C_MarkHandler__(System_Exception* this__);
+IL2C_DECLARE_RUNTIME_TYPE(System_Exception);
 
 extern void System_Exception__ctor(System_Exception* this__);
 extern void System_Exception__ctor_1(System_Exception* this__, System_String* message);

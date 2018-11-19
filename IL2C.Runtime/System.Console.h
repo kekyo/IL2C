@@ -1,5 +1,5 @@
-#ifndef __System_Console_H__
-#define __System_Console_H__
+#ifndef System_Console_H__
+#define System_Console_H__
 
 #pragma once
 
@@ -12,7 +12,7 @@ extern "C" {
 /////////////////////////////////////////////////////////////
 // System.Console
 
-extern IL2C_RUNTIME_TYPE_DECL __System_Console_RUNTIME_TYPE__;
+IL2C_DECLARE_RUNTIME_TYPE(System_Console);
 
 extern /* static */ void System_Console_Write_9(System_String* value);
 extern /* static */ void System_Console_WriteLine();

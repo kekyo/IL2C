@@ -1,5 +1,5 @@
-#ifndef __System_UIntPtr_H__
-#define __System_UIntPtr_H__
+#ifndef System_UIntPtr_H__
+#define System_UIntPtr_H__
 
 #pragma once
 
@@ -14,12 +14,11 @@ extern "C" {
 
 typedef uintptr_t System_UIntPtr;
 
-typedef __System_ValueType_VTABLE_DECL__ __System_UIntPtr_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ System_UIntPtr_VTABLE_DECL__;
 
-extern __System_UIntPtr_VTABLE_DECL__ __System_UIntPtr_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_UIntPtr_RUNTIME_TYPE__;
+extern System_UIntPtr_VTABLE_DECL__ System_UIntPtr_VTABLE__;
 
-#define __System_UIntPtr_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_UIntPtr);
 
 extern /* virtual */ System_String* System_UIntPtr_ToString(uintptr_t* this__);
 extern /* virtual */ int32_t System_UIntPtr_GetHashCode(uintptr_t* this__);

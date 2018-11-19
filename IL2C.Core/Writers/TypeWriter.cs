@@ -34,24 +34,24 @@ namespace IL2C.Writers
             //
             // +----------------------+
             // | IL2C_REF_HEADER      |
-            // +----------------------+ <-- this__       __A_VTABLE__
+            // +----------------------+ <-- this__       A_VTABLE__
             // | vptr0__              | -------------> +--------------------+
-            // +----------------------+                | ILC2_RuntimeCast() |
-            // | vptr_A_IB__          | ----------+    | ToString()         |
-            // +----------------------+           |    | GetHashCode()      |
-            // | int F1               |           |    | Finalize()         |
-            // | string F2            |           |    | Equals()           |
-            // +----------------------+           |    | Calc()             |
-            //                                    |    +--------------------+
-            //                                    |      __A_IB_VTABLE__
-            //                                    +--> +------------------------------+
-            //                                         | ILC2_RuntimeCast() [with AT] |
-            //                                         | ToString() [with AT]         |
-            //                                         | GetHashCode() [with AT]      |
-            //                                         | Finalize() [with AT]         |
-            //                                         | Equals() [with AT]           |
-            //                                         | Calc() [with AT]             |
-            //                                         +------------------------------+
+            // +----------------------+                | ToString()         |
+            // | vptr_A_IB__          | ----------+    | GetHashCode()      |
+            // +----------------------+           |    | Finalize()         |
+            // | int F1               |           |    | Equals()           |
+            // | string F2            |           |    | Calc()             |
+            // +----------------------+           |    +--------------------+
+            //                                    |
+            //                                    |      A_IB_VTABLE__
+            //                                    +--> +--------------------+
+            //                                         | [offset]           |
+            //                                         | ToString()         |
+            //                                         | GetHashCode()      |
+            //                                         | Finalize()         |
+            //                                         | Equals()           |
+            //                                         | Calc()             |
+            //                                         +--------------------+
 
             var virtualMethods = declaredType.CalculatedVirtualMethods;
             var overrideMethods = declaredType.OverrideMethods;
@@ -67,7 +67,7 @@ namespace IL2C.Writers
                     declaredType.BaseType.FriendlyName);
 
                 tw.WriteLine(
-                    "typedef __{0}_VTABLE_DECL__ __{1}_VTABLE_DECL__;",
+                    "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",
                     declaredType.BaseType.MangledName,
                     declaredType.MangledName);
                 tw.SplitLine();
@@ -88,8 +88,6 @@ namespace IL2C.Writers
                 tw.WriteLine("{");
                 using (var _ = tw.Shift())
                 {
-                    tw.WriteLine(
-                        "/* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);");
                     foreach (var (method, overloadIndex) in virtualMethods)
                     {
                         tw.WriteLine(
@@ -99,7 +97,7 @@ namespace IL2C.Writers
                 }
 
                 tw.WriteLine(
-                    "}} __{0}_VTABLE_DECL__;",
+                    "}} {0}_VTABLE_DECL__;",
                     declaredType.MangledName);
                 tw.SplitLine();
             }
@@ -147,7 +145,7 @@ namespace IL2C.Writers
                     if (declaredType.IsClass || declaredType.IsInterface)
                     {
                         tw.WriteLine(
-                            "__{0}_VTABLE_DECL__* vptr0__;",
+                            "{0}_VTABLE_DECL__* vptr0__;",
                             declaredType.MangledName);
                     }
 
@@ -165,7 +163,7 @@ namespace IL2C.Writers
                                         "vptr_{0}__",
                                         interfaceType.MangledName),
                                     TypeName = string.Format(
-                                        "__{0}_VTABLE_DECL__*",
+                                        "{0}_VTABLE_DECL__*",
                                         interfaceType.MangledName)
                                 });
 
@@ -201,7 +199,7 @@ namespace IL2C.Writers
                     "// [1-5-1] Vtable (Same as {0})",
                     declaredType.BaseType.FriendlyName);
                 tw.WriteLine(
-                    "#define __{0}_VTABLE__ __{1}_VTABLE__",
+                    "#define {0}_VTABLE__ {1}_VTABLE__",
                     declaredType.MangledName,
                     declaredType.BaseType.MangledName);
                 tw.SplitLine();
@@ -213,7 +211,7 @@ namespace IL2C.Writers
                     "// [1-5-2] Vtable (Derived from {0})",
                     declaredType.BaseType.FriendlyName);
                 tw.WriteLine(
-                    "extern __{0}_VTABLE_DECL__ __{0}_VTABLE__;",
+                    "extern {0}_VTABLE_DECL__ {0}_VTABLE__;",
                     declaredType.MangledName);
                 tw.SplitLine();
             }
@@ -221,7 +219,7 @@ namespace IL2C.Writers
             tw.WriteLine(
                 "// [1-4] Runtime type information");
             tw.WriteLine(
-                "extern IL2C_RUNTIME_TYPE_DECL __{0}_RUNTIME_TYPE__;",
+                "IL2C_DECLARE_RUNTIME_TYPE({0});",
                 declaredType.MangledName);
             tw.SplitLine();
         }

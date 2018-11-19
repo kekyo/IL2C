@@ -79,8 +79,7 @@ System_Type* System_Type_get_BaseType(System_Type* this__)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-__System_Type_VTABLE_DECL__ __System_Type_VTABLE__ = {
-    /* internalcall */ il2c_isinst__,
+System_Type_VTABLE_DECL__ System_Type_VTABLE__ = {
     (bool(*)(void*, System_Object*))System_Type_Equals_1,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Type_GetHashCode,
@@ -89,4 +88,5 @@ __System_Type_VTABLE_DECL__ __System_Type_VTABLE__ = {
     (System_String*(*)(void*))System_Type_get_FullName,
 };
 
-IL2C_DECLARE_RUNTIME_TYPE(System_Type, "System.Type", IL2C_TYPE_REFERENCE, System_Object);
+IL2C_RUNTIME_TYPE_BEGIN(System_Type, "System.Type", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
+IL2C_RUNTIME_TYPE_END();

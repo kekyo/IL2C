@@ -180,7 +180,7 @@ namespace IL2C.ILConverters
                         //   These are unique tables by pair of instance type and interface type.
                         //   Because vtable has function pointers from unique adjustor thunk by instance type layout offset.
                         return string.Format(
-                            "{0}->vptr_{1}__ = &__{2}_{1}_VTABLE__",
+                            "{0}->vptr_{1}__ = &{2}_{1}_VTABLE__",
                             extractContext.GetSymbolName(thisSymbol),
                             interfaceType.MangledName,
                             type.MangledName);

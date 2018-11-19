@@ -39,6 +39,7 @@ typedef long interlock_t;
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
+#define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
@@ -95,6 +96,7 @@ typedef long interlock_t;
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
+#define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
@@ -151,6 +153,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
+#define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
@@ -211,6 +214,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
+#define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_memcpy memcpy
 #define il2c_memset memset
@@ -253,8 +257,18 @@ extern void WriteLineToError(const wchar_t* pMessage);
 ///////////////////////////////////////////////////
 // Internal runtime definitions
 
-// IL2C_RUNTIME_TYPE_DECL.flags
-#define IL2C_TYPE_VARIABLE 0x04
+struct IL2C_RUNTIME_TYPE_DECL
+{
+    const char* pTypeName;
+    const uintptr_t flags;
+    const uintptr_t bodySize;       // uint32_t
+    const IL2C_RUNTIME_TYPE baseType;
+    const void* vptr0;
+    const uintptr_t markTarget;     // mark target count / custom mark handler (only variable type)
+    const uintptr_t interfaceTypeCount;
+    //const void* markTargets[markTarget];
+    //const IL2C_RUNTIME_TYPE interfaceTypes[interfaceTypeCount];
+};
 
 #define il2c_get_header__(pReference) \
     ((IL2C_REF_HEADER*)(((uint8_t*)(pReference)) - sizeof(IL2C_REF_HEADER)))
@@ -289,32 +303,11 @@ static bool typeName##_Equals_1_Trampoline_VFunc__(System_ValueType* this__, Sys
 
 // Generator macro for the trampoline virtual function table using the value type.
 #define IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(typeName) \
-__##typeName##_VTABLE_DECL__ __##typeName##_VTABLE__ = { \
-    /* internalcall */ il2c_isinst__, \
+typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
     (bool(*)(void*, System_Object*))typeName##_Equals_1_Trampoline_VFunc__, \
     (void(*)(void*))System_Object_Finalize, \
     (int32_t(*)(void*))typeName##_GetHashCode_Trampoline_VFunc__, \
     (System_String* (*)(void*))typeName##_ToString_Trampoline_VFunc__ \
-}
-
-// Generator macro for runtime static (abstract sealed) type information.
-#define IL2C_DECLARE_RUNTIME_STATIC_TYPE(typeName, typeNameString, baseTypeName) \
-IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
-    typeNameString, \
-    IL2C_TYPE_STATIC, \
-    0, \
-    /* internalcall */ IL2C_DEFAULT_MARK_HANDLER, \
-    il2c_typeof(baseTypeName) \
-}
-
-// Generator macro for runtime type information.
-#define IL2C_DECLARE_RUNTIME_TYPE(typeName, typeNameString, flags, baseTypeName) \
-IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
-    typeNameString, \
-    flags, \
-    sizeof(typeName), \
-    /* internalcall */ (IL2C_MARK_HANDLER)__##typeName##_IL2C_MarkHandler__, \
-    il2c_typeof(baseTypeName) \
 }
 
 ///////////////////////////////////////////////////
@@ -327,7 +320,9 @@ IL2C_RUNTIME_TYPE_DECL __##typeName##_RUNTIME_TYPE__ = { \
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
-extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE_DECL* type, uintptr_t bodySize);
+extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
+
+extern void il2c_default_mark_handler__(void* pReference);
 
 extern void il2c_step1_clear_gcmark__();
 extern void il2c_step2_mark_gcmark__();

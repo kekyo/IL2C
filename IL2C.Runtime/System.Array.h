@@ -1,5 +1,5 @@
-#ifndef __System_Array_H__
-#define __System_Array_H__
+#ifndef System_Array_H__
+#define System_Array_H__
 
 #pragma once
 
@@ -14,20 +14,19 @@ extern "C" {
 
 typedef struct System_Array System_Array;
 
-typedef __System_Object_VTABLE_DECL__ __System_Array_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ System_Array_VTABLE_DECL__;
 
 struct System_Array
 {
-    __System_Array_VTABLE_DECL__* vptr0__;
+    System_Array_VTABLE_DECL__* vptr0__;
 
-    IL2C_RUNTIME_TYPE_DECL* elementType__;
-    uintptr_t Length;
+    IL2C_RUNTIME_TYPE elementType__;
+    intptr_t Length;
 };
 
-#define  __System_Array_VTABLE__ __System_Object_VTABLE__
-extern IL2C_RUNTIME_TYPE_DECL __System_Array_RUNTIME_TYPE__;
+#define  System_Array_VTABLE__ System_Object_VTABLE__
 
-extern /* internalcall */ void __System_Array_IL2C_MarkHandler__(System_Array* this__);
+IL2C_DECLARE_RUNTIME_TYPE(System_Array);
 
 extern int32_t System_Array_getLength(System_Array* this__);
 extern int32_t System_Array_GetLowerBound(System_Array* this__, int32_t dimension);
@@ -49,7 +48,7 @@ static inline void* il2c_array_item__(
 {
     il2c_assert(array != NULL); // TODO: NullReferenceException
 
-    il2c_assert(array->vptr0__ == &__System_Array_VTABLE__);
+    il2c_assert(array->vptr0__ == &System_Array_VTABLE__);
     il2c_assert(array->elementType__ != NULL);
     il2c_assert(array->Length >= 0);
     il2c_assert(elementSize == il2c_sizeof__(array->elementType__));
@@ -65,7 +64,7 @@ static inline void* il2c_array_item__(
     (*(elementTypeName*)il2c_array_item__(array, sizeof(elementTypeName), index))
 
 extern System_Array* il2c_new_array__(
-    IL2C_RUNTIME_TYPE_DECL* elementType, intptr_t length);
+    IL2C_RUNTIME_TYPE elementType, intptr_t length);
 #define il2c_new_array(elementTypeName, length) \
     ((il2c_array(elementTypeName)*)il2c_new_array__(il2c_typeof(elementTypeName), length))
 

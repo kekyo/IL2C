@@ -1,5 +1,5 @@
-#ifndef __System_Object_H__
-#define __System_Object_H__
+#ifndef System_Object_H__
+#define System_Object_H__
 
 #pragma once
 
@@ -18,22 +18,20 @@ typedef struct System_Type System_Type;
 
 typedef const struct
 {
-    /* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);
     bool(*Equals)(void* this__, System_Object* obj);
     void(*Finalize)(void* this__);
     int32_t(*GetHashCode)(void* this__);
     System_String* (*ToString)(void* this__);
-} __System_Object_VTABLE_DECL__;
+} System_Object_VTABLE_DECL__;
 
 struct System_Object
 {
-    __System_Object_VTABLE_DECL__* vptr0__;
+    System_Object_VTABLE_DECL__* vptr0__;
 };
 
-extern __System_Object_VTABLE_DECL__ __System_Object_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Object_RUNTIME_TYPE__;
+extern System_Object_VTABLE_DECL__ System_Object_VTABLE__;
 
-#define __System_Object_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Object);
 
 static inline void System_Object__ctor(System_Object* this__)
 {

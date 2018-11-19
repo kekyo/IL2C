@@ -50,4 +50,4 @@ System_String* System_Console_ReadLine()
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_DECLARE_RUNTIME_STATIC_TYPE(System_Console, "System.Console", System_Object);
+IL2C_RUNTIME_TYPE_STATIC(System_Console, "System.Console", System_Object);

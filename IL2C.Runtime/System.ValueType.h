@@ -1,5 +1,5 @@
-#ifndef __System_ValueType_H__
-#define __System_ValueType_H__
+#ifndef System_ValueType_H__
+#define System_ValueType_H__
 
 #pragma once
 
@@ -14,17 +14,16 @@ extern "C" {
 
 typedef struct System_ValueType System_ValueType;
 
-typedef __System_Object_VTABLE_DECL__ __System_ValueType_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ System_ValueType_VTABLE_DECL__;
 
 struct System_ValueType
 {
-    __System_ValueType_VTABLE_DECL__* vptr0__;
+    System_ValueType_VTABLE_DECL__* vptr0__;
 };
 
-extern __System_ValueType_VTABLE_DECL__ __System_ValueType_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_ValueType_RUNTIME_TYPE__;
+extern System_ValueType_VTABLE_DECL__ System_ValueType_VTABLE__;
 
-#define __System_ValueType_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_ValueType);
 
 extern /* virtual */ System_String* System_ValueType_ToString(System_ValueType* this__);
 extern /* virtual */ int32_t System_ValueType_GetHashCode(System_ValueType* this__);

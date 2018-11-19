@@ -1,5 +1,5 @@
-#ifndef __System_Runtime_CompilerServices_RuntimeHelpers_H__
-#define __System_Runtime_CompilerServices_RuntimeHelpers_H__
+#ifndef System_Runtime_CompilerServices_RuntimeHelpers_H__
+#define System_Runtime_CompilerServices_RuntimeHelpers_H__
 
 #pragma once
 
@@ -12,7 +12,7 @@ extern "C" {
 /////////////////////////////////////////////////////////////
 // System.Runtime.CompilerServices.RuntimeHelpers
 
-extern IL2C_RUNTIME_TYPE_DECL __System_Runtime_CompilerServices_RuntimeHelpers_RUNTIME_TYPE__;
+IL2C_DECLARE_RUNTIME_TYPE(System_Runtime_CompilerServices_RuntimeHelpers);
 
 extern /* static */ int32_t System_Runtime_CompilerServices_RuntimeHelpers_GetHashCode(
     System_Object* o);

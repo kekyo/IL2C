@@ -1,5 +1,5 @@
-#ifndef __System_Type_H__
-#define __System_Type_H__
+#ifndef System_Type_H__
+#define System_Type_H__
 
 #pragma once
 
@@ -16,25 +16,21 @@ typedef struct System_Type System_Type;
 
 typedef const struct
 {
-    /* internalcall */ void* (*il2c_isinst__)(void* this__, IL2C_RUNTIME_TYPE_DECL* type);
     bool(*Equals)(void* this__, System_Object* obj);
     void(*Finalize)(void* this__);
     int32_t(*GetHashCode)(void* this__);
     System_String* (*ToString)(void* this__);
     System_Type* (*get_BaseType)(void* this__);
     System_String* (*get_FullName)(void* this__);
-} __System_Type_VTABLE_DECL__;
+} System_Type_VTABLE_DECL__;
 
 struct System_Type
 {
-    __System_Type_VTABLE_DECL__* vptr0__;
-    IL2C_RUNTIME_TYPE_DECL* type__;
+    System_Type_VTABLE_DECL__* vptr0__;
+    IL2C_RUNTIME_TYPE type__;
 };
 
-extern __System_Type_VTABLE_DECL__ __System_Type_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Type_RUNTIME_TYPE__;
-
-#define __System_Type_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Type);
 
 extern /* virtual */ System_String* System_Type_ToString(System_Type* this__);
 extern /* virtual */ int32_t System_Type_GetHashCode(System_Type* this__);

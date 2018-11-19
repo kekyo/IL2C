@@ -24,7 +24,7 @@ void System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray(
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_DECLARE_RUNTIME_STATIC_TYPE(
+IL2C_RUNTIME_TYPE_STATIC(
     System_Runtime_CompilerServices_RuntimeHelpers,
     "System.Runtime.CompilerServices.RuntimeHelpers",
     System_Object);

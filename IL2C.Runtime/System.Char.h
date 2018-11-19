@@ -1,5 +1,5 @@
-#ifndef __System_Char_H__
-#define __System_Char_H__
+#ifndef System_Char_H__
+#define System_Char_H__
 
 #pragma once
 
@@ -14,12 +14,11 @@ extern "C" {
 
 typedef wchar_t System_Char;
 
-typedef __System_ValueType_VTABLE_DECL__ __System_Char_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ System_Char_VTABLE_DECL__;
 
-extern __System_Char_VTABLE_DECL__ __System_Char_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Char_RUNTIME_TYPE__;
+extern System_Char_VTABLE_DECL__ System_Char_VTABLE__;
 
-#define __System_Char_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Char);
 
 extern /* virtual */ System_String* System_Char_ToString(wchar_t* this__);
 extern /* virtual */ int32_t System_Char_GetHashCode(wchar_t* this__);

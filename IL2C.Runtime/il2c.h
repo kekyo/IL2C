@@ -41,16 +41,7 @@ typedef volatile struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
 typedef volatile struct IL2C_EXCEPTION_FRAME IL2C_EXCEPTION_FRAME;
 typedef volatile struct IL2C_REF_HEADER IL2C_REF_HEADER;
 
-typedef void (*IL2C_MARK_HANDLER)(/* System_Object* */ void* pReference);
-
-typedef const struct IL2C_RUNTIME_TYPE_DECL
-{
-    const char* pTypeName;
-    const uint32_t flags;
-    const uint32_t bodySize;
-    /* internalcall */ const IL2C_MARK_HANDLER IL2C_MarkHandler;
-    const struct IL2C_RUNTIME_TYPE_DECL* baseType;
-} IL2C_RUNTIME_TYPE_DECL;
+typedef const struct IL2C_RUNTIME_TYPE_DECL* IL2C_RUNTIME_TYPE;
 
 typedef int16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
 
@@ -66,35 +57,40 @@ struct IL2C_EXCEPTION_FRAME
 typedef volatile struct IL2C_REF_HEADER
 {
     IL2C_REF_HEADER* pNext;
-    IL2C_RUNTIME_TYPE_DECL* type;
+    IL2C_RUNTIME_TYPE type;
     interlock_t gcMark;
 } IL2C_REF_HEADER;
 
 ///////////////////////////////////////////////////////
 // Runtime type information related declarations
 
+#define IL2C_DECLARE_RUNTIME_TYPE(typeName) \
+extern const uintptr_t typeName##_RUNTIME_TYPE__[]
+
 // IL2C_RUNTIME_TYPE_DECL.flags
 #define IL2C_TYPE_REFERENCE 0x00
 #define IL2C_TYPE_VALUE 0x01
 #define IL2C_TYPE_INTEGER 0x03
+#define IL2C_TYPE_VARIABLE 0x04
 #define IL2C_TYPE_UNSIGNED_INTEGER 0x0b
 #define IL2C_TYPE_STATIC 0x10
+#define IL2C_TYPE_INTERFACE 0x20
 
 #define il2c_typeof(typeName) \
-    (&(__##typeName##_RUNTIME_TYPE__))
+    ((IL2C_RUNTIME_TYPE)&(typeName##_RUNTIME_TYPE__))
+#define il2c_vptrof(typeName) \
+    (&(typeName##_VTABLE__))
 
-#define il2c_sizeof__(type) \
-    (((type)->flags & IL2C_TYPE_VALUE) ? (type)->bodySize : (uint32_t)sizeof(intptr_t))
+extern uint32_t il2c_sizeof__(IL2C_RUNTIME_TYPE type);
 #define il2c_sizeof(typeName) \
     (il2c_sizeof__(il2c_typeof(typeName)))
 
 // dynamic cast operator
-extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
-#define il2c_isinst_unsafe(pReference, typeName) \
-    ((pReference)->vptr0__->il2c_isinst__(pReference, il2c_typeof(typeName)))
+extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE type);
 #define il2c_isinst(pReference, typeName) \
-    (((pReference) != NULL) ? il2c_isinst_unsafe(pReference, typeName) : NULL)
-extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* type);
+    (((pReference) != NULL) ? il2c_isinst__(pReference, il2c_typeof(typeName)) : NULL)
+
+extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE type);
 #define il2c_castclass(pReference, typeName) \
     (((pReference) != NULL) ? il2c_castclass__(pReference, il2c_typeof(typeName)) : NULL)
 
@@ -113,19 +109,12 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 
 extern void il2c_collect();
 
-extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE_DECL* type, void* vptr0);
+extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type);
 #define il2c_get_uninitialized_object(typeName) \
-    il2c_get_uninitialized_object__(il2c_typeof(typeName), (void*)(&(__##typeName##_VTABLE__)))
+    il2c_get_uninitialized_object__(il2c_typeof(typeName))
 
 extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame);
 extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame);
-
-extern void il2c_mark_from_handler__(/* System_Object* */ void* pReference);
-#define il2c_try_mark_from_handler(pReference) \
-    { void* pRef = pReference; if (pRef != NULL) il2c_mark_from_handler__(pRef); }
-
-extern void il2c_no_mark_handler__(/* System_Object* */ void* pReference);
-#define IL2C_DEFAULT_MARK_HANDLER ((IL2C_MARK_HANDLER)il2c_no_mark_handler__)
 
 ///////////////////////////////////////////////////////
 // The basis types
@@ -166,16 +155,16 @@ typedef void* untyped_ptr;
 // Boxing related declarations
 
 extern System_ValueType* il2c_box__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, const void* vptr0);
+    void* pValue, IL2C_RUNTIME_TYPE valueType);
 extern System_ValueType* il2c_box2__(
-    void* pValue, IL2C_RUNTIME_TYPE_DECL* valueType, IL2C_RUNTIME_TYPE_DECL* stackType, const void* vptr0);
+    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType);
 extern void* il2c_unbox__(
-    /* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE_DECL* valueType);
+    /* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE valueType);
 
 #define il2c_box(pValue, valueTypeName) \
-    (il2c_box__(pValue, il2c_typeof(valueTypeName), &__##valueTypeName##_VTABLE__))
+    (il2c_box__(pValue, il2c_typeof(valueTypeName)))
 #define il2c_box2(pValue, valueTypeName, stackTypeName) \
-    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName), &__##valueTypeName##_VTABLE__))
+    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName)))
 #define il2c_unbox(pObject, valueTypeName) \
     ((valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
 #define il2c_unsafe_unbox__(pObject, typeName) \
@@ -254,6 +243,39 @@ extern double il2c_fmod(double lhs, double rhs);
 extern void il2c_break();
 
 extern void il2c_throw_invalidcastexception__();
+
+///////////////////////////////////////////////////////
+// Generator macro for runtime type information.
+
+#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, baseTypeName, markTarget, interfaceTypeCount) \
+const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
+    (uintptr_t)(typeNameString), \
+    flags, \
+    sizeof(typeName), \
+    (uintptr_t)il2c_typeof(baseTypeName), \
+    (uintptr_t)&typeName##_VTABLE__, \
+    (uintptr_t)markTarget, \
+    interfaceTypeCount,
+
+#define IL2C_RUNTIME_TYPE_MARK_TARGET(typeName, fieldName) \
+    offsetof(typeName, fieldName),
+
+#define IL2C_RUNTIME_TYPE_INTERFACE(interfaceTypeName) \
+    il2c_typeof(interfaceTypeName),
+
+#define IL2C_RUNTIME_TYPE_END() \
+}
+
+#define IL2C_RUNTIME_TYPE_STATIC(typeName, typeNameString, baseTypeName) \
+const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
+    (uintptr_t)(typeNameString), \
+    IL2C_TYPE_STATIC, \
+    0, \
+    (uintptr_t)il2c_typeof(baseTypeName), \
+    (uintptr_t)NULL, \
+    0, \
+    0 \
+}
 
 #ifdef __cplusplus
 }

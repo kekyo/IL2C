@@ -1,5 +1,5 @@
-#ifndef __System_Double_H__
-#define __System_Double_H__
+#ifndef System_Double_H__
+#define System_Double_H__
 
 #pragma once
 
@@ -14,12 +14,11 @@ extern "C" {
 
 typedef double System_Double;
 
-typedef __System_ValueType_VTABLE_DECL__ __System_Double_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ System_Double_VTABLE_DECL__;
 
-extern __System_Double_VTABLE_DECL__ __System_Double_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Double_RUNTIME_TYPE__;
+extern System_Double_VTABLE_DECL__ System_Double_VTABLE__;
 
-#define __System_Double_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Double);
 
 extern /* virtual */ System_String* System_Double_ToString(double* this__);
 extern /* virtual */ int32_t System_Double_GetHashCode(double* this__);

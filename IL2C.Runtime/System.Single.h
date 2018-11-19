@@ -1,5 +1,5 @@
-#ifndef __System_Single_H__
-#define __System_Single_H__
+#ifndef System_Single_H__
+#define System_Single_H__
 
 #pragma once
 
@@ -14,12 +14,11 @@ extern "C" {
 
 typedef float System_Single;
 
-typedef __System_ValueType_VTABLE_DECL__ __System_Single_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ System_Single_VTABLE_DECL__;
 
-extern __System_Single_VTABLE_DECL__ __System_Single_VTABLE__;
-extern IL2C_RUNTIME_TYPE_DECL __System_Single_RUNTIME_TYPE__;
+extern System_Single_VTABLE_DECL__ System_Single_VTABLE__;
 
-#define __System_Single_IL2C_MarkHandler__ IL2C_DEFAULT_MARK_HANDLER
+IL2C_DECLARE_RUNTIME_TYPE(System_Single);
 
 extern /* virtual */ System_String* System_Single_ToString(float* this__);
 extern /* virtual */ int32_t System_Single_GetHashCode(float* this__);

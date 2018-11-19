@@ -1,5 +1,5 @@
-#ifndef __System_MulticastDelegate_H__
-#define __System_MulticastDelegate_H__
+#ifndef System_MulticastDelegate_H__
+#define System_MulticastDelegate_H__
 
 #pragma once
 
@@ -16,16 +16,17 @@ extern "C" {
 
 typedef System_Delegate System_MulticastDelegate;
 
-typedef __System_Delegate_VTABLE_DECL__ __System_MulticastDelegate_VTABLE_DECL__;
+typedef System_Delegate_VTABLE_DECL__ System_MulticastDelegate_VTABLE_DECL__;
 
-#define __System_MulticastDelegate_VTABLE__ __System_Delegate_VTABLE__
-extern IL2C_RUNTIME_TYPE_DECL __System_MulticastDelegate_RUNTIME_TYPE__;
+#define System_MulticastDelegate_VTABLE__ System_Delegate_VTABLE__
+
+IL2C_DECLARE_RUNTIME_TYPE(System_MulticastDelegate);
 
 // All members transfered to System.Delegate.
 
-static inline void __System_MulticastDelegate_IL2C_MarkHandler__(System_MulticastDelegate* this__)
+static inline void System_MulticastDelegate_MarkHandler__(System_MulticastDelegate* this__)
 {
-    __System_Delegate_IL2C_MarkHandler__((System_Delegate*)this__);
+    System_Delegate_MarkHandler__((System_Delegate*)this__);
 }
 
 static inline int32_t System_MulticastDelegate_GetHashCode(System_MulticastDelegate* this__)

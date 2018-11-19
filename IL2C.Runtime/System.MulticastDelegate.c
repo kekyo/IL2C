@@ -8,10 +8,5 @@
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_RUNTIME_TYPE_DECL __System_MulticastDelegate_RUNTIME_TYPE__ = {
-    "System.MulticastDelegate",
-    IL2C_TYPE_VARIABLE,
-    0,
-    /* internalcall */ (IL2C_MARK_HANDLER)__System_Delegate_IL2C_MarkHandler__,
-    il2c_typeof(System_Delegate)
-};
+IL2C_RUNTIME_TYPE_BEGIN(System_MulticastDelegate, "System.MulticastDelegate", IL2C_TYPE_VARIABLE, System_Delegate, System_Delegate_MarkHandler__, 0)
+IL2C_RUNTIME_TYPE_END();

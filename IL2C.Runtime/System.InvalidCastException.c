@@ -6,4 +6,5 @@
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_DECLARE_RUNTIME_TYPE(System_InvalidCastException, "System.InvalidCastException", IL2C_TYPE_REFERENCE, System_Exception);
+IL2C_RUNTIME_TYPE_BEGIN(System_InvalidCastException, "System.InvalidCastException", IL2C_TYPE_INTEGER, System_Exception, 0, 0)
+IL2C_RUNTIME_TYPE_END();

@@ -1,5 +1,5 @@
-#ifndef __System_IndexOutOfRangeException_H__
-#define __System_IndexOutOfRangeException_H__
+#ifndef System_IndexOutOfRangeException_H__
+#define System_IndexOutOfRangeException_H__
 
 #pragma once
 
@@ -14,12 +14,11 @@ extern "C" {
 
 typedef System_Exception System_IndexOutOfRangeException;
 
-typedef __System_Exception_VTABLE_DECL__ __System_IndexOutOfRangeException_VTABLE_DECL__;
+typedef System_Exception_VTABLE_DECL__ System_IndexOutOfRangeException_VTABLE_DECL__;
 
-#define __System_IndexOutOfRangeException_VTABLE__ __System_Exception_VTABLE__
-extern IL2C_RUNTIME_TYPE_DECL __System_IndexOutOfRangeException_RUNTIME_TYPE__;
+#define System_IndexOutOfRangeException_VTABLE__ System_Exception_VTABLE__
 
-#define __System_IndexOutOfRangeException_IL2C_MarkHandler__ __System_Exception_IL2C_MarkHandler__
+IL2C_DECLARE_RUNTIME_TYPE(System_IndexOutOfRangeException);
 
 static inline void System_IndexOutOfRangeException__ctor(System_IndexOutOfRangeException* this__)
 {

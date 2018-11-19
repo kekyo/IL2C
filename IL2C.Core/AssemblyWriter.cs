@@ -70,20 +70,27 @@ namespace IL2C
         {
             IExtractContext extractContext = translateContext;
 
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// [9-1] Const strings:");
-            twSource.SplitLine();
+            var constStrings = extractContext.
+                ExtractConstStrings().
+                ToArray();
 
-            foreach (var (symbolName, value) in extractContext.ExtractConstStrings())
+            if (constStrings.Length >= 1)
             {
-                var expr = Utilities.GetCLanguageExpression(value);
-                twSource.WriteLine(
-                    "IL2C_CONST_STRING({0}, {1});",
-                    symbolName,
-                    expr);
-            }
+                twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                twSource.WriteLine("// [9-1] Const strings:");
+                twSource.SplitLine();
 
-            twSource.SplitLine();
+                foreach (var (symbolName, value) in extractContext.ExtractConstStrings())
+                {
+                    var expr = Utilities.GetCLanguageExpression(value);
+                    twSource.WriteLine(
+                        "IL2C_CONST_STRING({0}, {1});",
+                        symbolName,
+                        expr);
+                }
+
+                twSource.SplitLine();
+            }
         }
 
         internal static void WriteDeclaredValues(
@@ -92,41 +99,48 @@ namespace IL2C
         {
             IExtractContext extractContext = translateContext;
 
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// [12-1] Declared values:");
+            var declaredValues = extractContext.
+                ExtractDeclaredValues().
+                ToArray();
 
-            foreach (var information in extractContext.ExtractDeclaredValues())
+            if (declaredValues.Length >= 1)
             {
+                twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                twSource.WriteLine("// [12-1] Declared values:");
+
+                foreach (var information in extractContext.ExtractDeclaredValues())
+                {
+                    twSource.SplitLine();
+                    foreach (var declaredFields in information.DeclaredFields)
+                    {
+                        twSource.WriteLine(
+                            "// {0}",
+                            declaredFields.FriendlyName);
+                    }
+
+                    var targetType = (information.HintTypes.Length == 1) ?
+                        information.HintTypes[0] :
+                        extractContext.MetadataContext.ByteType.MakeArray();
+                    Debug.Assert(targetType.IsArray);
+
+                    var elementType = targetType.ElementType.ResolveToRuntimeType();
+                    var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
+
+                    var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
+                    var expr = Utilities.GetCLanguageExpression(values);
+                    twSource.WriteLine(
+                        "static const {0} =",
+                        lhs);
+                    using (var _ = twSource.Shift())
+                    {
+                        twSource.WriteLine(
+                            "{0};",
+                            expr);
+                    }
+                }
+
                 twSource.SplitLine();
-                foreach (var declaredFields in information.DeclaredFields)
-                {
-                    twSource.WriteLine(
-                        "// {0}",
-                        declaredFields.FriendlyName);
-                }
-
-                var targetType = (information.HintTypes.Length == 1) ?
-                    information.HintTypes[0] :
-                    extractContext.MetadataContext.ByteType.MakeArray();
-                Debug.Assert(targetType.IsArray);
-
-                var elementType = targetType.ElementType.ResolveToRuntimeType();
-                var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
-
-                var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
-                var expr = Utilities.GetCLanguageExpression(values);
-                twSource.WriteLine(
-                    "static const {0} =",
-                    lhs);
-                using (var _ = twSource.Shift())
-                {
-                    twSource.WriteLine(
-                        "{0};",
-                        expr);
-                }
             }
-
-            twSource.SplitLine();
         }
 
         internal static void InternalWriteSourceCode(
@@ -144,6 +158,7 @@ namespace IL2C
                 {
                     twSource.WriteLine("#include \"{0}\"", fileName);
                 }
+
                 twSource.WriteLine("#include \"{0}.h\"", extractContext.Assembly.Name);
                 twSource.SplitLine();
             }

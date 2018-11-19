@@ -27,6 +27,7 @@ bool System_Enum_Equals(System_Enum* this__, System_Object* obj)
 // VTable and runtime type info declarations
 
 System_Enum_VTABLE_DECL__ System_Enum_VTABLE__ = {
+    0, // Adjustor offset
     (bool(*)(void*, System_Object*))System_Enum_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Enum_GetHashCode,

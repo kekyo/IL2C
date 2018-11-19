@@ -301,9 +301,11 @@ namespace IL2C.Metadata
                     (this.Definition as TypeDefinition)?.BaseType);
         public ITypeInformation ElementType =>
             this.MetadataContext.GetOrAddType(
-                this.IsEnum ?
-                    ((TypeDefinition)this.Definition).GetEnumUnderlyingType() :
-                    this.Member.GetElementType());
+                (this.Member.IsArray || this.Member.IsByReference || this.Member.IsPointer) ?
+                    this.Member.GetElementType() :
+                    this.IsEnum ?
+                        ((TypeDefinition)this.Definition).GetEnumUnderlyingType() :
+                        null);
         public ITypeInformation[] InterfaceTypes =>
             this.MetadataContext.GetOrAddTypes(
                 (this.Definition as TypeDefinition)?.

@@ -18,6 +18,7 @@ typedef struct System_Type System_Type;
 
 typedef const struct
 {
+    intptr_t offset__; // Adjustor offset
     bool(*Equals)(void* this__, System_Object* obj);
     void(*Finalize)(void* this__);
     int32_t(*GetHashCode)(void* this__);

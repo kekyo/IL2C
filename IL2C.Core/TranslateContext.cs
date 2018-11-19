@@ -175,8 +175,8 @@ namespace IL2C
                 {
                     return string.Format(
                         "il2c_cast_to_interface({0}, {1}, {2})",
-                        lhsType.CLanguageTypeName,
-                        rhsType.CLanguageTypeName,
+                        lhsType.MangledName,
+                        rhsType.MangledName,
                         rhsExpression);
                 }
                 else

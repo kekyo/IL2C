@@ -53,6 +53,7 @@ bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB)
 // VTable and runtime type info declarations
 
 System_Object_VTABLE_DECL__ System_Object_VTABLE__ = {
+    0, // Adjustor offset
     (bool(*)(void*, System_Object*))System_Object_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Object_GetHashCode,

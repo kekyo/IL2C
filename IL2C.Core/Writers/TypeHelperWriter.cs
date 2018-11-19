@@ -7,50 +7,6 @@ namespace IL2C.Writers
 {
     internal static class TypeHelperWriter
     {
-        //private struct VirtualFunctionInformation
-        //{
-        //    public readonly string MangledTypeName;
-        //    public readonly string CLanguageTypeName;
-        //    public readonly string CLanguageVirtualFunctionDeclarationName;
-        //    public readonly string CLanguageReturnTypeName;
-        //    public readonly KeyValuePair<string, string>[] Parameters;
-
-        //    public VirtualFunctionInformation(
-        //        string mangledTypeName,
-        //        string cLanguageTypeName,
-        //        string cLanguageVirtualFunctionDeclarationName,
-        //        string cLanguageReturnTypeName,
-        //        KeyValuePair<string, string>[] parameters)
-        //    {
-        //        this.MangledTypeName = mangledTypeName;
-        //        this.CLanguageTypeName = cLanguageTypeName;
-        //        this.CLanguageVirtualFunctionDeclarationName = cLanguageVirtualFunctionDeclarationName;
-        //        this.CLanguageReturnTypeName = cLanguageReturnTypeName;
-        //        this.Parameters = parameters;
-        //    }
-        //}
-
-        //private static VirtualFunctionInformation[] GetVirtualFunctions(
-        //    ITypeInformation adjustorThunkTargetType,
-        //    ITypeInformation delegationTargetType) =>
-        //    adjustorThunkTargetType
-        //        .DeclaredMethods.Where(m => m.IsVirtual)        // TODO: virtual method
-        //        .Select(method => new VirtualFunctionInformation(
-        //            method.DeclaringType.Equals(adjustorThunkTargetType)
-        //                ? delegationTargetType.MangledName
-        //                : method.DeclaringType.MangledName,
-        //            method.DeclaringType.Equals(adjustorThunkTargetType)
-        //                ? delegationTargetType.CLanguageTypeName
-        //                : method.DeclaringType.CLanguageTypeName,
-        //            method.CLanguageVirtualFunctionDeclarationName,
-        //            method.ReturnType.CLanguageTypeName,
-        //            method.GetParameters(adjustorThunkTargetType)
-        //                .Select((parameter, index) => Utilities.KeyValue(
-        //                    (index == 0) ? parameter.TargetType.CLanguageThisTypeName : parameter.TargetType.CLanguageTypeName,
-        //                    parameter.SymbolName))
-        //                .ToArray()))
-        //        .ToArray();
-
         public static void InternalConvertTypeHelper(
             CodeTextWriter tw,
             ITypeInformation declaredType)
@@ -115,7 +71,6 @@ namespace IL2C.Writers
             var newSlotMethods = declaredType.NewSlotMethods;
             var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
-#if true
             // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
             if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
@@ -136,11 +91,13 @@ namespace IL2C.Writers
 
                 using (var _ = tw.Shift())
                 {
+                    tw.WriteLine("0, // Adjustor offset");
+
                     foreach (var (method, _) in virtualMethods)
                     {
                         // MEMO: Transfer trampoline virtual function if declared type is value type.
                         //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
-                        //   The trampoline unboxes from objref to target value type.
+                        //   The trampoline will unbox from objref to target value type.
                         tw.WriteLine(
                             "({0}){1}{2},",
                             method.CLanguageFunctionTypePrototype,
@@ -152,107 +109,40 @@ namespace IL2C.Writers
                 tw.WriteLine("};");
                 tw.SplitLine();
             }
-#else
-            // Write virtual methods
-            tw.WriteLine(
-                "// [7-10] Vtable of {0}",
-                declaredType.FriendlyName);
-            tw.WriteLine(
-                "{0}_VTABLE_DECL__ {0}_VTABLE__ = {{",
-                declaredType.MangledName);
 
-            var virtualFunctions = GetVirtualFunctions(
-                declaredType,
-                declaredType);
-
-            foreach (var function in virtualFunctions)
+            // Write interface VTables.
+            var interfaceTypes = declaredType.InterfaceTypes;
+            foreach (var interfaceType in interfaceTypes)
             {
+                var interfaceMethods = interfaceType.CalculatedVirtualMethods;
                 tw.WriteLine(
-                    "{0}{1}_{2},",
-                    indent,
-                    function.MangledTypeName,
-                    function.CLanguageVirtualFunctionDeclarationName);
-            }
-
-            tw.WriteLine("};");
-            tw.SplitLine();
-
-            foreach (var interfaceType in declaredType.InterfaceTypes)
-            {
-                var interfaceVirtualFunctions = GetVirtualFunctions(
-                    interfaceType,
-                    declaredType);
-
-                foreach (var function in interfaceVirtualFunctions)
-                {
-                    // Adjustor thunk will not invoke direct, so try to emit static function.
-                    tw.WriteLine(
-                        "// [7-11] Adjustor thunk: {0}.{1}",
-                        function.CLanguageTypeName,
-                        function.CLanguageVirtualFunctionDeclarationName);
-                    tw.WriteLine(
-                        "static {0} __{1}_{2}_AT_{3}__(",
-                        function.CLanguageReturnTypeName,
-                        function.CLanguageTypeName,
-                        function.CLanguageVirtualFunctionDeclarationName,
-                        interfaceType.MangledName);
-                    tw.WriteLine(
-                        "{0}{1})",
-                        indent,
-                        string.Join(
-                            ", ",
-                            function.Parameters.Select(parameter =>
-                                string.Format(
-                                    "{0} {1}",
-                                    parameter.Key,
-                                    parameter.Value))));
-                    tw.WriteLine(
-                        "{");
-                    tw.WriteLine(
-                        "{0}{1}__{2}_{3}__({4});",
-                        indent,
-                        (function.CLanguageReturnTypeName != "void") ? "return " : string.Empty,
-                        function.CLanguageTypeName,
-                        function.CLanguageVirtualFunctionDeclarationName,
-                        string.Join(
-                            ", ",
-                            function.Parameters.Select((parameter, index) =>
-                                (index == 0)
-                                    // Adjust vptr offset with il2c_cast_from_interface() macro.
-                                    ? string.Format(
-                                        "({0}*)il2c_cast_from_interface({1}, {2}, {3})",
-                                        function.CLanguageTypeName,
-                                        declaredType.MangledName,
-                                        interfaceType.MangledName,
-                                        parameter.Value)
-                                    : parameter.Value)));
-                    tw.WriteLine(
-                        "}");
-                    tw.SplitLine();
-                }
-
-                tw.WriteLine(
-                    "// [7-12] Vtable of {0} (with adjustor thunk)",
+                    "// [7-12] VTable of {0}",
                     interfaceType.FriendlyName);
                 tw.WriteLine(
                     "{0}_VTABLE_DECL__ {1}_{0}_VTABLE__ = {{",
                     interfaceType.MangledName,
                     declaredType.MangledName);
 
-                foreach (var function in interfaceVirtualFunctions)
+                using (var _ = tw.Shift())
                 {
                     tw.WriteLine(
-                        "{0}__{1}_{2}_AT_{3}__,",
-                        indent,
-                        function.CLanguageTypeName,
-                        function.CLanguageVirtualFunctionDeclarationName,
+                        "il2c_adjustor_offset({0}, {1}),",
+                        declaredType.MangledName,
                         interfaceType.MangledName);
+
+                    foreach (var (method, _) in interfaceMethods)
+                    {
+                        tw.WriteLine(
+                            "({0}){1}_{2},",
+                            method.CLanguageFunctionTypePrototype,
+                            declaredType.MangledName,
+                            method.MangledName);
+                    }
                 }
 
                 tw.WriteLine("};");
                 tw.SplitLine();
             }
-#endif
 
             // Write runtime type information
             tw.WriteLine("// [7-8] Runtime type information");
@@ -277,11 +167,11 @@ namespace IL2C.Writers
                     "IL2C_TYPE_VALUE",
                 declaredType.BaseType.MangledName,
                 declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
-                0);
+                interfaceTypes.Length);
 
-            // Mark target offsets.
             using (var _ = tw.Shift())
             {
+                // Mark target offsets.
                 foreach (var field in markTargetFields)
                 {
                     // ex: IL2C_RUNTIME_TYPE_MARK_TARGET(System_Exception, message__)
@@ -290,9 +180,17 @@ namespace IL2C.Writers
                         declaredType.MangledName,
                         field.Name);
                 }
-            }
 
-            // TODO: interfaces
+                // Write implemented interfaces (IL2C_IMPLEMENTED_INTERFACE)
+                foreach (var interfaceType in declaredType.InterfaceTypes)
+                {
+                    // ex: IL2C_RUNTIME_TYPE_INTERFACE(Foo, System_IDisposable)
+                    tw.WriteLine(
+                        "IL2C_RUNTIME_TYPE_INTERFACE({0}, {1})",
+                        declaredType.MangledName,
+                        interfaceType.MangledName);
+                }
+            }
 
             tw.WriteLine("IL2C_RUNTIME_TYPE_END();");
             tw.SplitLine();
@@ -311,15 +209,27 @@ namespace IL2C.Writers
             // Write runtime type information
             tw.WriteLine("// [8-1] Runtime type information");
 
-            // ex: IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_INTERFACE, System_Object, 0, 0)
+            // ex: IL2C_RUNTIME_TYPE_INTERFACE_BEGIN(System_IDisposable, "System.IDisposable", 0)
+            var interfaceTypes = declaredType.InterfaceTypes;
             tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", IL2C_TYPE_INTERFACE, {2}, 0, {3})",
+                "IL2C_RUNTIME_TYPE_INTERFACE_BEGIN({0}, \"{1}\", {2})",
                 declaredType.MangledName,
                 declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds)
-                declaredType.BaseType.MangledName,
-                0);
+                interfaceTypes.Length);
 
-            // TODO: interfaces
+            using (var _ = tw.Shift())
+            {
+                // TODO: can't place for IL2C_IMPLEMENTED_INTERFACE, because the interface type doesn't define the VTable.
+                // Write implemented interfaces (IL2C_IMPLEMENTED_INTERFACE)
+                foreach (var interfaceType in interfaceTypes)
+                {
+                    // ex: IL2C_RUNTIME_TYPE_INTERFACE(Foo, System_IDisposable)
+                    tw.WriteLine(
+                        "IL2C_RUNTIME_TYPE_INTERFACE({0}, {1})",
+                        declaredType.MangledName,
+                        interfaceType.MangledName);
+                }
+            }
 
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_END();");

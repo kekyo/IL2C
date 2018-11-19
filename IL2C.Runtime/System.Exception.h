@@ -16,6 +16,7 @@ typedef struct System_Exception System_Exception;
 
 typedef const struct
 {
+    intptr_t offset__; // Adjustor offset
     bool(*Equals)(void* this__, System_Object* obj);
     void(*Finalize)(void* this__);
     int32_t(*GetHashCode)(void* this__);

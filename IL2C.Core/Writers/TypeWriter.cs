@@ -36,16 +36,16 @@ namespace IL2C.Writers
             // | IL2C_REF_HEADER      |
             // +----------------------+ <-- this__       A_VTABLE__
             // | vptr0__              | -------------> +--------------------+
-            // +----------------------+                | ToString()         |
-            // | vptr_A_IB__          | ----------+    | GetHashCode()      |
-            // +----------------------+           |    | Finalize()         |
-            // | int F1               |           |    | Equals()           |
-            // | string F2            |           |    | Calc()             |
-            // +----------------------+           |    +--------------------+
-            //                                    |
+            // +----------------------+                | [0]                |
+            // | vptr_A_IB__          | ----------+    | ToString()         |
+            // +----------------------+           |    | GetHashCode()      |
+            // | int F1               |           |    | Finalize()         |
+            // | string F2            |           |    | Equals()           |
+            // +----------------------+           |    | Calc()             |
+            //                                    |    +--------------------+
             //                                    |      A_IB_VTABLE__
             //                                    +--> +--------------------+
-            //                                         | [offset]           |
+            //                                         | [offset__]         |
             //                                         | ToString()         |
             //                                         | GetHashCode()      |
             //                                         | Finalize()         |
@@ -62,7 +62,7 @@ namespace IL2C.Writers
             if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
                 tw.WriteLine(
-                    "// [1-2-1] {0} vtable layout (Same as {1})",
+                    "// [1-2-1] {0} VTable layout (Same as {1})",
                     declaredType.MemberTypeName,
                     declaredType.BaseType.FriendlyName);
 
@@ -75,10 +75,19 @@ namespace IL2C.Writers
             // Require new vtable layout.
             else
             {
-                tw.WriteLine(
-                    "// [1-2-2] {0} vtable layout (Derived from {1})",
-                    declaredType.MemberTypeName,
-                    declaredType.BaseType.FriendlyName);
+                if (declaredType.IsInterface)
+                {
+                    tw.WriteLine(
+                        "// [1-2-2] {0} VTable layout",
+                        declaredType.MemberTypeName);
+                }
+                else
+                {
+                    tw.WriteLine(
+                        "// [1-2-3] {0} VTable layout (Derived from {1})",
+                        declaredType.MemberTypeName,
+                        declaredType.BaseType.FriendlyName);
+                }
 
                 // Important: The vtable structure definition marked for "const",
                 //    because these vtables place into the ".rdata" section or same location.
@@ -88,6 +97,9 @@ namespace IL2C.Writers
                 tw.WriteLine("{");
                 using (var _ = tw.Shift())
                 {
+                    // This makes adjustor-thunk free VTable.
+                    tw.WriteLine("intptr_t offset__; // Adjustor offset");
+
                     foreach (var (method, overloadIndex) in virtualMethods)
                     {
                         tw.WriteLine(
@@ -110,7 +122,7 @@ namespace IL2C.Writers
             else if (declaredType.IsEnum)
             {
                 tw.WriteLine(
-                    "// [1-1] {0} layout",
+                    "// [1-1-1] {0} layout",
                     declaredType.MemberTypeName);
 
                 // Emit enum values:
@@ -131,7 +143,7 @@ namespace IL2C.Writers
             else
             {
                 tw.WriteLine(
-                    "// [1-1] {0} layout",
+                    "// [1-1-2] {0} layout",
                     declaredType.MemberTypeName);
 
                 tw.WriteLine(
@@ -192,27 +204,30 @@ namespace IL2C.Writers
                 tw.SplitLine();
             }
 
-            // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-            if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+            // VTable substance not required for interface type.
+            if (!declaredType.IsInterface)
             {
-                tw.WriteLine(
-                    "// [1-5-1] Vtable (Same as {0})",
-                    declaredType.BaseType.FriendlyName);
-                tw.WriteLine(
-                    "#define {0}_VTABLE__ {1}_VTABLE__",
-                    declaredType.MangledName,
-                    declaredType.BaseType.MangledName);
-                tw.SplitLine();
-            }
-            // Require new vtable.
-            else
-            {
-                tw.WriteLine(
-                    "// [1-5-2] Vtable (Derived from {0})",
-                    declaredType.BaseType.FriendlyName);
-                tw.WriteLine(
-                    "extern {0}_VTABLE_DECL__ {0}_VTABLE__;",
-                    declaredType.MangledName);
+                // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
+                if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+                {
+                    tw.WriteLine(
+                        "// [1-5-1] VTable (Same as {0})",
+                        declaredType.BaseType.FriendlyName);
+                    tw.WriteLine(
+                        "#define {0}_VTABLE__ {1}_VTABLE__",
+                        declaredType.MangledName,
+                        declaredType.BaseType.MangledName);
+                }
+                // Require new vtable
+                else
+                {
+                    tw.WriteLine(
+                        "// [1-5-2] VTable (Derived from {0})",
+                        declaredType.BaseType.FriendlyName);
+                    tw.WriteLine(
+                        "extern {0}_VTABLE_DECL__ {0}_VTABLE__;",
+                        declaredType.MangledName);
+                }
                 tw.SplitLine();
             }
 

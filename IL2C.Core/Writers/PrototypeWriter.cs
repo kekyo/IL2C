@@ -17,8 +17,8 @@ namespace IL2C.Writers
             tw.WriteLine("#ifdef __cplusplus");
             tw.WriteLine("extern \"C\" {");
             tw.WriteLine("#endif");
-
             tw.SplitLine();
+
             tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             tw.WriteLine("// [2-1] Types:");
             tw.SplitLine();
@@ -50,26 +50,25 @@ namespace IL2C.Writers
                         type.MangledName);
                 }
             }
+            tw.SplitLine();
 
             // Output value type and object reference type.
             foreach (var type in types.
                 Where(predictType))
             {
-                tw.SplitLine();
                 TypeWriter.InternalConvertType(
                     tw,
                     type);
             }
-
             tw.SplitLine();
+
             tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             tw.WriteLine("// [2-2] Public static fields:");
+            tw.SplitLine();
 
             foreach (var type in types.
                 Where(type => !type.IsEnum))
             {
-                tw.SplitLine();
-
                 foreach (var field in type.Fields
                     .Where(field => field.IsPublic && field.IsStatic && predictField(field)))
                 {
@@ -77,76 +76,44 @@ namespace IL2C.Writers
                         "extern {0};",
                         field.GetCLanguageStaticPrototype(false));
                 }
+
+                tw.SplitLine();
             }
 
-            tw.SplitLine();
             tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
             tw.WriteLine("// [2-3] Methods:");
+            tw.SplitLine();
 
             foreach (var type in types.
                 Where(type => !type.IsEnum))
             {
-                tw.SplitLine();
-                tw.WriteLine(
-                    "// [2-4] Member methods: {0}",
-                    type.FriendlyName);
-                tw.SplitLine();
+                var methods = type.DeclaredMethods.
+                    Where(predictMethod).
+                    ToArray();
 
-                foreach (var method in type.DeclaredMethods.
-                    Where(predictMethod))
+                if (methods.Length >= 1)
                 {
                     tw.WriteLine(
-                        "extern {0}{1};",
-                        method.IsStatic ?
-                            "/* static */ " :
-                            method.IsVirtual ?
-                                (method.IsReuseSlot ? "/* override */ " : "/* virtual */ ") :
-                                string.Empty,
-                        method.CLanguageFunctionPrototype);
-                }
-
-                if (!type.IsStatic)
-                {
-                    tw.SplitLine();
-                    tw.WriteLine(
-                        "// [2-5] Virtual methods: {0}",
+                        "// [2-4] Member methods: {0}",
                         type.FriendlyName);
                     tw.SplitLine();
 
-#if true
-                    tw.WriteLine("/* TODO: virtual methods [2] */");
-#else
-                    foreach (var method in type.VirtualMethods
-                        .Where(predictMethod))
+                    foreach (var method in type.DeclaredMethods.
+                        Where(predictMethod))
                     {
-                        var functionParametersDeclaration = string.Join(
-                            ", ",
-                            method.Parameters
-                                .Select(parameter => string.Format(
-                                    "/* {0} */ {1}",
-                                    type.MangledName,
-                                    parameter.SymbolName)));
                         tw.WriteLine(
-                            "#define {0}_{1}({2}) \\",
-                            type.MangledName,
-                            method.CLanguageVirtualFunctionDeclarationName,
-                            functionParametersDeclaration);
-
-                        var functionParameters = string.Join(
-                            ", ",
-                            method.Parameters
-                                .Select(parameter => parameter.SymbolName));
-                        tw.WriteLine(
-                            "{0}((this__)->vptr0__->{1}({2}))",
-                            indent,
-                            method.CLanguageVirtualFunctionDeclarationName,
-                            functionParameters);
+                            "extern {0}{1};",
+                            method.IsStatic ?
+                                "/* static */ " :
+                                method.IsVirtual ?
+                                    (method.IsReuseSlot ? "/* override */ " : "/* virtual */ ") :
+                                    string.Empty,
+                            method.CLanguageFunctionPrototype);
                     }
-#endif
+                    tw.SplitLine();
                 }
             }
 
-            tw.SplitLine();
             tw.WriteLine("#ifdef __cplusplus");
             tw.WriteLine("}");
             tw.WriteLine("#endif");

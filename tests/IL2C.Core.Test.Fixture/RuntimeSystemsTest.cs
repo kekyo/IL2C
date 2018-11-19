@@ -45,7 +45,9 @@ namespace IL2C
             TestFramework.ExecuteTestAsync(caseInfo);
 
         public static readonly TestCaseInformation[] _TypeRelations =
-            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeRelations>();
+            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeInheritance>().
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeImplements>()).
+            ToArray();
         [Test]
         public static Task TypeRelations([ValueSource(nameof(_TypeRelations))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);

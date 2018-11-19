@@ -39,6 +39,7 @@ System_String* System_Exception_ToString(System_Exception* this__)
 // VTable and runtime type info declarations
 
 System_Exception_VTABLE_DECL__ System_Exception_VTABLE__ = {
+    0, // Adjustor offset
     (bool(*)(void*, System_Object*))System_Object_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Object_GetHashCode,

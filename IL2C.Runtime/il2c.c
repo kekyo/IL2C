@@ -101,19 +101,18 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     *((const void**)pReference) = type->vptr0;
 
     // Setup interface vptrs.
-    const IL2C_RUNTIME_TYPE* pInterfaceType =
-        (const IL2C_RUNTIME_TYPE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
+    IL2C_IMPLEMENTED_INTERFACE* pInterface =
+        (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
     uintptr_t index;
     for (index = 0;
-        index < type->interfaceTypeCount;
-        index++, pInterfaceType++)
+        index < type->interfaceCount;
+        index++, pInterface++)
     {
-        IL2C_RUNTIME_TYPE interfaceType = *pInterfaceType;
-        il2c_assert((interfaceType->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
+        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
 
         // The interface vptr offset placed at vptr[0].
-        uintptr_t offset = *(const uintptr_t*)(interfaceType->vptr0);
-        *((const void**)(pReference + offset)) = interfaceType->vptr0;
+        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
+        *((const void**)(pReference + offset)) = pInterface->vptr0;
     }
 
     return pReference;
@@ -153,12 +152,16 @@ typedef void(*IL2C_MARK_HANDLER)(void* pReference);
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference); \
     if (pHeader->gcMark != GCMARK_NOMARK)
 
-static void il2c_default_mark_handler_internal__(void* pReference)
+// Calculate adjustor offset.
+#define GET_ADJUSTED_REFERENCE(pRawReference) \
+    ((void*)((uint8_t*)(pRawReference) - (**(const intptr_t**)(pRawReference))))
+
+static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
 {
-    il2c_assert(pReference != NULL);
+    il2c_assert(pAdjustedReference != NULL);
 
     // Marking with atomic exchange.
-    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
     interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark != GCMARK_NOMARK)
     {
@@ -176,7 +179,7 @@ static void il2c_default_mark_handler_internal__(void* pReference)
         IL2C_MARK_HANDLER pMarkHandler = (IL2C_MARK_HANDLER)(pHeader->type->markTarget);
         if (pMarkHandler != NULL)
         {
-            pMarkHandler(pReference);
+            pMarkHandler(pAdjustedReference);
         }
     }
     // This type doesn't have the custom mark handler, traverser works just now.
@@ -192,7 +195,7 @@ static void il2c_default_mark_handler_internal__(void* pReference)
             // MEMO: If this type is value type, we have to shift additional offset for System_ValueType (just vptr0).
             // TODO: value type with custom interfaces
             void** ppReferenceInner =
-                (void**)(((uint8_t*)pReference) + *pMarkOffset +
+                (void**)(((uint8_t*)pAdjustedReference) + *pMarkOffset +
                 (pHeader->type->flags & IL2C_TYPE_VALUE ? sizeof(System_ValueType) : 0));
 
             // This variable isn't assigned.
@@ -201,13 +204,14 @@ static void il2c_default_mark_handler_internal__(void* pReference)
                 continue;
             }
 
-            TRY_GET_HEADER(*ppReferenceInner)
+            void* pAdjustedReferenceInner = GET_ADJUSTED_REFERENCE(*ppReferenceInner);
+            TRY_GET_HEADER(pAdjustedReferenceInner)
             {
                 continue;
             }
 
             // Use mark offset from type information.
-            il2c_default_mark_handler_internal__(*ppReferenceInner);
+            il2c_default_mark_handler_internal__(pAdjustedReferenceInner);
         }
     }
 }
@@ -216,12 +220,13 @@ void il2c_default_mark_handler__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    TRY_GET_HEADER(pReference)
+    void* pAdjustedReference = GET_ADJUSTED_REFERENCE(pReference);
+    TRY_GET_HEADER(pAdjustedReference)
     {
         return;
     }
 
-    il2c_default_mark_handler_internal__(pReference);
+    il2c_default_mark_handler_internal__(pAdjustedReference);
 }
 
 /////////////////////////////////////////////////////////////
@@ -259,13 +264,14 @@ void il2c_step2_mark_gcmark__()
                 continue;
             }
 
-            TRY_GET_HEADER(pReference)
+            void* pAdjustedReference = GET_ADJUSTED_REFERENCE(pReference);
+            TRY_GET_HEADER(pAdjustedReference)
             {
                 continue;
             }
 
             // Mark for this objref.
-            il2c_default_mark_handler_internal__(pReference);
+            il2c_default_mark_handler_internal__(pAdjustedReference);
         }
 
         pCurrentFrame = pCurrentFrame->pNext__;

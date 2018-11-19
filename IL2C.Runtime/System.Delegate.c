@@ -212,6 +212,7 @@ void System_Delegate_MarkHandler__(System_Delegate* this__)
 }
 
 System_Delegate_VTABLE_DECL__ System_Delegate_VTABLE__ = {
+    0, // Adjustor offset
     (bool(*)(void*, System_Object*))System_Delegate_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Delegate_GetHashCode,

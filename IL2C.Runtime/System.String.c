@@ -434,6 +434,7 @@ bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
 // VTable and runtime type info declarations
 
 System_String_VTABLE_DECL__ System_String_VTABLE__ = {
+    0, // Adjustor offset
     (bool(*)(void*, System_Object*))System_String_Equals_1,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_String_GetHashCode,

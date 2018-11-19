@@ -80,6 +80,7 @@ System_Type* System_Type_get_BaseType(System_Type* this__)
 // VTable and runtime type info declarations
 
 System_Type_VTABLE_DECL__ System_Type_VTABLE__ = {
+    0, // Adjustor offset
     (bool(*)(void*, System_Object*))System_Type_Equals_1,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Type_GetHashCode,

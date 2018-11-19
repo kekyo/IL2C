@@ -95,14 +95,18 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
     (((pReference) != NULL) ? il2c_castclass__(pReference, il2c_typeof(typeName)) : NULL)
 
 // static cast operators
+#define il2c_adjustor_offset(typeName, interfaceTypeName) \
+    (offsetof(typeName, vptr_##interfaceTypeName##__) - offsetof(typeName, vptr0__))
 #define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
-    ((typeName*)(((uint8_t*)(pInterface)) - \
-     (offsetof(typeName, vptr_##interfaceTypeName##__) - \
-      offsetof(typeName, vptr0__))))
+    ((pReference != NULL) ? \
+        ((typeName*)(((uint8_t*)(pInterface)) - \
+         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
+        NULL)
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
-    ((interfaceTypeName *)(((uint8_t*)(pReference)) + \
-     (offsetof(typeName, vptr_##interfaceTypeName##__) - \
-      offsetof(typeName, vptr0__))))
+    ((pReference != NULL) ? \
+        ((interfaceTypeName*)(((uint8_t*)(pReference)) + \
+         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
+        NULL)
 
 ///////////////////////////////////////////////////////
 // Garbage collector related declarations
@@ -247,21 +251,28 @@ extern void il2c_throw_invalidcastexception__();
 ///////////////////////////////////////////////////////
 // Generator macro for runtime type information.
 
-#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, baseTypeName, markTarget, interfaceTypeCount) \
+#define IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, baseType, vptr0, markTarget, interfaceCount) \
 const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
     (uintptr_t)(typeNameString), \
     flags, \
     sizeof(typeName), \
-    (uintptr_t)il2c_typeof(baseTypeName), \
-    (uintptr_t)&typeName##_VTABLE__, \
+    (uintptr_t)baseType, \
+    (uintptr_t)vptr0, \
     (uintptr_t)markTarget, \
-    interfaceTypeCount,
+    interfaceCount,
+
+#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, baseTypeName, markTarget, interfaceCount) \
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, il2c_typeof(baseTypeName), il2c_vptrof(typeName), markTarget, interfaceCount)
+
+#define IL2C_RUNTIME_TYPE_INTERFACE_BEGIN(typeName, typeNameString, interfaceCount) \
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_INTERFACE, NULL, NULL, 0, interfaceCount)
 
 #define IL2C_RUNTIME_TYPE_MARK_TARGET(typeName, fieldName) \
     offsetof(typeName, fieldName),
 
-#define IL2C_RUNTIME_TYPE_INTERFACE(interfaceTypeName) \
-    il2c_typeof(interfaceTypeName),
+#define IL2C_RUNTIME_TYPE_INTERFACE(typeName, interfaceTypeName) \
+    (uintptr_t)il2c_typeof(interfaceTypeName), \
+    (uintptr_t)il2c_vptrof(typeName##_##interfaceTypeName),
 
 #define IL2C_RUNTIME_TYPE_END() \
 }

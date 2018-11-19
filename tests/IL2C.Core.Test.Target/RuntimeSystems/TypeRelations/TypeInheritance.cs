@@ -140,6 +140,7 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    [TestId("TypeRelations")]
     [Description("CLR type system contains single-inheritance class types and multiple-implementation interface types. These tests are verified the IL2C can handle the member methods both simple instance methods and complex overriden virtual methods.")]
     [TestCase("223", "InstanceBase", 123, IncludeTypes = new[] { typeof(InstanceBaseType) })]
     [TestCase("323", "InstanceNew", 123, IncludeTypes = new[] { typeof(InstanceBaseType), typeof(InstanceNewType) })]
@@ -167,7 +168,7 @@ namespace IL2C.RuntimeSystems
     [TestCase("223ABC", "VirtualNewVirtualCallBase", 123, IncludeTypes = new[] { typeof(VirtualBaseType), typeof(VirtualNewVirtualCallBaseType) })]
     [TestCase("323ABC", "VirtualOverrideOverrideCallBase", 123, IncludeTypes = new[] { typeof(VirtualBaseType), typeof(VirtualOverrideType), typeof(VirtualOverrideOverrideCallBaseType) })]
     [TestCase("323ABC", "VirtualNewVirtualOverrideCallBase", 123, IncludeTypes = new[] { typeof(VirtualBaseType), typeof(VirtualNewVirtualType), typeof(VirtualNewVirtualOverrideCallBaseType) })]
-    public sealed class TypeRelations
+    public sealed class TypeInheritance
     {
         public static string InstanceBase(int value)
         {

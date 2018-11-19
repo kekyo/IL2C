@@ -26,6 +26,7 @@ bool System_ValueType_Equals(System_ValueType* this__, System_Object* obj)
 // VTable and runtime type info declarations
 
 System_ValueType_VTABLE_DECL__ System_ValueType_VTABLE__ = {
+    0, // Adjustor offset
     (bool(*)(void*, System_Object*))System_ValueType_Equals,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_ValueType_GetHashCode,

@@ -257,6 +257,12 @@ extern void WriteLineToError(const wchar_t* pMessage);
 ///////////////////////////////////////////////////
 // Internal runtime definitions
 
+typedef const struct
+{
+    const IL2C_RUNTIME_TYPE type;
+    const void* vptr0;
+} IL2C_IMPLEMENTED_INTERFACE;
+
 struct IL2C_RUNTIME_TYPE_DECL
 {
     const char* pTypeName;
@@ -265,10 +271,25 @@ struct IL2C_RUNTIME_TYPE_DECL
     const IL2C_RUNTIME_TYPE baseType;
     const void* vptr0;
     const uintptr_t markTarget;     // mark target count / custom mark handler (only variable type)
-    const uintptr_t interfaceTypeCount;
+    const uintptr_t interfaceCount;
     //const void* markTargets[markTarget];
-    //const IL2C_RUNTIME_TYPE interfaceTypes[interfaceTypeCount];
+    //IL2C_IMPLEMENTED_INTERFACE interfaces[interfaceCount];
 };
+
+// TODO: shrink for interface types
+//struct IL2C_RUNTIME_TYPE_DECL
+//{
+//    const char* pTypeName;
+//    const uintptr_t flags;
+//    const uintptr_t interfaceCount;
+// ---------------------------------------
+//    const uintptr_t bodySize;       // uint32_t
+//    const IL2C_RUNTIME_TYPE baseType;
+//    const void* vptr0;
+//    const uintptr_t markTarget;     // mark target count / custom mark handler (only variable type)
+//    //IL2C_IMPLEMENTED_INTERFACE interfaces[interfaceCount];
+//    //const void* markTargets[markTarget];
+//};
 
 #define il2c_get_header__(pReference) \
     ((IL2C_REF_HEADER*)(((uint8_t*)(pReference)) - sizeof(IL2C_REF_HEADER)))
@@ -304,6 +325,7 @@ static bool typeName##_Equals_1_Trampoline_VFunc__(System_ValueType* this__, Sys
 // Generator macro for the trampoline virtual function table using the value type.
 #define IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(typeName) \
 typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
+    0, \
     (bool(*)(void*, System_Object*))typeName##_Equals_1_Trampoline_VFunc__, \
     (void(*)(void*))System_Object_Finalize, \
     (int32_t(*)(void*))typeName##_GetHashCode_Trampoline_VFunc__, \

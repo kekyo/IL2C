@@ -11,6 +11,3 @@ build_script:
   - cmd: pack.bat
 artifacts:
   - path: artifacts
-  - path: tests/IL2C.Core.Test.Fixture/bin/Release/net462/ILConverters
-  - path: tests/IL2C.Core.Test.Fixture/bin/Release/net462/BasicTypes
-  - path: tests/IL2C.Core.Test.Fixture/bin/Release/net462/RuntimeSystems

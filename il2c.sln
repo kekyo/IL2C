@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		pack.bat = pack.bat
 		pack.sh = pack.sh
 		README.md = README.md
+		sample-translation-results.md = sample-translation-results.md
 		supported-opcodes.md = supported-opcodes.md
 		supported-runtime-types.md = supported-runtime-types.md
 		supported-typesystem-features.md = supported-typesystem-features.md

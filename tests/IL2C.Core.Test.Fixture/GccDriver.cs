@@ -232,6 +232,7 @@ namespace IL2C
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+            var includePath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "..", "..", "..", "..", "IL2C.Runtime"));
             var optimizeFlag = optimize ? "-Ofast -flto" : "-O0";
 
             if (!Directory.Exists(outPath))
@@ -250,6 +251,7 @@ namespace IL2C
                 new Dictionary<string, object>
                 {
                     { "gccBinPath", gccBinPath },
+                    { "includePath", includePath },
                     { "optimizeFlag", optimizeFlag }
                 });
 

@@ -9,37 +9,37 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Nito.AsyncEx;
-
 namespace IL2C
 {
     internal static class GccDriver
     {
+        private static readonly string mingwBaseUrl =
+            "https://jaist.dl.sourceforge.net/project/mingw/MinGW";
         private static readonly string bsdTarUrl =
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Extension/bsdtar/basic-bsdtar-2.8.3-1/basic-bsdtar-2.8.3-1-mingw32-bin.zip";
+            mingwBaseUrl + "/Extension/bsdtar/basic-bsdtar-2.8.3-1/basic-bsdtar-2.8.3-1-mingw32-bin.zip";
 
         private static readonly string[] gccRequirementUrls =
         {
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/binutils/binutils-2.28/binutils-2.28-1-mingw32-bin.tar.xz",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/mingwrt/mingwrt-3.20/mingwrt-3.20-2-mingw32-dev.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/mingwrt/mingwrt-3.20/mingwrt-3.20-2-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/w32api/w32api-3.17/w32api-3.17-2-mingw32-dev.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/mpc/mpc-1.0.1-2/mpc-1.0.1-2-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/mpfr/mpfr-3.1.2-2/mpfr-3.1.2-2-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gmp/gmp-5.1.2/gmp-5.1.2-1-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/libiconv/libiconv-1.14-3/libiconv-1.14-3-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/pthreads-w32/pthreads-w32-2.9.1/pthreads-w32-2.9.1-1-mingw32-dev.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/pthreads-w32/pthreads-w32-2.9.1/pthreads-w32-2.9.1-1-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/zlib/zlib-1.2.8/zlib-1.2.8-1-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gettext/gettext-0.18.3.1-1/gettext-0.18.3.1-1-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-bin.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dev.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/binutils/binutils-2.28/binutils-2.28-1-mingw32-bin.tar.xz",
+            mingwBaseUrl + "/Base/mingwrt/mingwrt-3.20/mingwrt-3.20-2-mingw32-dev.tar.lzma",
+            mingwBaseUrl + "/Base/mingwrt/mingwrt-3.20/mingwrt-3.20-2-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/w32api/w32api-3.17/w32api-3.17-2-mingw32-dev.tar.lzma",
+            mingwBaseUrl + "/Base/mpc/mpc-1.0.1-2/mpc-1.0.1-2-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/mpfr/mpfr-3.1.2-2/mpfr-3.1.2-2-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/gmp/gmp-5.1.2/gmp-5.1.2-1-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/libiconv/libiconv-1.14-3/libiconv-1.14-3-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/pthreads-w32/pthreads-w32-2.9.1/pthreads-w32-2.9.1-1-mingw32-dev.tar.lzma",
+            mingwBaseUrl + "/Base/pthreads-w32/pthreads-w32-2.9.1/pthreads-w32-2.9.1-1-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/zlib/zlib-1.2.8/zlib-1.2.8-1-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/gettext/gettext-0.18.3.1-1/gettext-0.18.3.1-1-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-bin.tar.lzma",
+            mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dev.tar.lzma",
+            mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-core-4.8.1-4-mingw32-dll.tar.lzma",
             // Require C++
-            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-bin.tar.lzma",
-            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dev.tar.lzma",
-            //"https://jaist.dl.sourceforge.net/project/mingw/MinGW/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma",
-            "https://jaist.dl.sourceforge.net/project/mingw/MinGW/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
+            //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-bin.tar.lzma",
+            //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dev.tar.lzma",
+            //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma",
+            mingwBaseUrl + "/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
             "https://cmake.org/files/v3.12/cmake-3.12.3-win32-x86.zip",
         };
 
@@ -232,21 +232,18 @@ namespace IL2C
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+            var includePath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "..", "..", "..", "..", "IL2C.Runtime"));
             var optimizeFlag = optimize ? "-Ofast -flto" : "-O0";
+            var disableObjDump = optimize ? "rem " : string.Empty;
 
             if (!Directory.Exists(outPath))
             {
                 Directory.CreateDirectory(outPath);
             }
 
-            // Step1: Compile by gcc
+            // Step1: Compile by gcc (from batch script)
             var gccBinPath = Path.Combine(gccBasePath, "bin");
             var gccPath = Path.Combine(gccBinPath, "gcc.exe");
-
-            var gccArguments = includePaths
-                .SelectMany(p => new[] { "-I", p })     // TODO: -std=c99, -Wall
-                .Concat(new[] { "-save-temps=obj", optimizeFlag, "-g", "-fdata-sections", "-ffunction-sections", "-Wl,--gc-sections", "-Wl,--enable-stdcall-fixup", "-o", executablePath, sourcePath })
-                .ToArray();
 
             // TODO: turn to cmake based.
             var scriptPath = Path.Combine(basePath, "make.bat");
@@ -255,13 +252,15 @@ namespace IL2C
                 new Dictionary<string, object>
                 {
                     { "gccBinPath", gccBinPath },
-                    { "optimizeFlag", optimizeFlag }
+                    { "includePath", includePath },
+                    { "optimizeFlag", optimizeFlag },
+                    { "disableObjDump", disableObjDump }
                 });
 
             var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {
                 var (exitCode, log) = await ExecuteAsync(
-                    basePath, new[] { gccBinPath }, gccPath, gccArguments);
+                    basePath, new[] { gccBinPath }, scriptPath);
                 if ((exitCode != 0) || !string.IsNullOrWhiteSpace(log)
                     || !File.Exists(executablePath))
                 {

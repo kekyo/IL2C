@@ -134,8 +134,8 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
 
     // Last --> First
     IL2C_METHOD_TABLE_DECL* pMethodtblValue = &value->methodtbl__[0];
-    uintptr_t index;
-    for (index = source->count__ - value->count__; index >= 0; index--)
+    intptr_t index;
+    for (index = (intptr_t)(source->count__ - value->count__); index >= 0; index--)
     {
         IL2C_METHOD_TABLE_DECL* pMethodtblSource = &source->methodtbl__[index];
 

@@ -24,8 +24,8 @@ namespace IL2C.Writers
             tw.SplitLine();
 
             // Output prototypes.
-            foreach (var type in types
-                .Where(type => predictType(type)))
+            foreach (var type in types.
+                Where(type => predictType(type)))
             {
                 // Unfortunately the enum type at C language has not the underlying type.
                 // IL2C emits the enum types using not C language syntax.

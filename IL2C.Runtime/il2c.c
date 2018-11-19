@@ -24,7 +24,8 @@ static IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget__ = NULL;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 
-//////////////////////////
+/////////////////////////////////////////////////////////////
+// Instance allocator functions
 
 void* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
@@ -118,7 +119,8 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     return pReference;
 }
 
-//////////////////////////
+/////////////////////////////////////////////////////////////
+// Execution frame linker functions
 
 void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pNewFrame)
 {
@@ -139,24 +141,17 @@ void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pFrame)
     g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
 }
 
-//////////////////////////
-
-void il2c_step1_clear_gcmark__()
-{
-    // Clear header marks.
-    IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
-    while (pCurrentHeader != NULL)
-    {
-        // (Exclude GCMARK_CONST)
-        if (pCurrentHeader->gcMark == GCMARK_LIVE)
-        {
-            pCurrentHeader->gcMark = GCMARK_NOMARK;
-        }
-        pCurrentHeader = pCurrentHeader->pNext;
-    }
-}
+/////////////////////////////////////////////////////////////
+// GC Mark handler
 
 typedef void(*IL2C_MARK_HANDLER)(void* pReference);
+
+// Has to ignore if objref is const.
+// HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
+//   (at x86/x64 cause, another platform may cause)
+#define TRY_GET_HEADER(pReference) \
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference); \
+    if (pHeader->gcMark != GCMARK_NOMARK)
 
 static void il2c_default_mark_handler_internal__(void* pReference)
 {
@@ -198,10 +193,15 @@ static void il2c_default_mark_handler_internal__(void* pReference)
             // TODO: value type with custom interfaces
             void** ppReferenceInner =
                 (void**)(((uint8_t*)pReference) + *pMarkOffset +
-                    (pHeader->type->flags & IL2C_TYPE_VALUE ? sizeof(System_ValueType) : 0));
+                (pHeader->type->flags & IL2C_TYPE_VALUE ? sizeof(System_ValueType) : 0));
 
             // This variable isn't assigned.
             if (*ppReferenceInner == NULL)
+            {
+                continue;
+            }
+
+            TRY_GET_HEADER(*ppReferenceInner)
             {
                 continue;
             }
@@ -216,17 +216,30 @@ void il2c_default_mark_handler__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    // Has to ignore if objref is const.
-    // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
-    //   (at x86/x64 cause, another platform may cause)
-    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
-    if (pHeader->gcMark != GCMARK_NOMARK)
+    TRY_GET_HEADER(pReference)
     {
-        // (Or already marked.)
         return;
     }
 
     il2c_default_mark_handler_internal__(pReference);
+}
+
+/////////////////////////////////////////////////////////////
+// GC process
+
+void il2c_step1_clear_gcmark__()
+{
+    // Clear header marks.
+    IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
+    while (pCurrentHeader != NULL)
+    {
+        // (Exclude GCMARK_CONST)
+        if (pCurrentHeader->gcMark == GCMARK_LIVE)
+        {
+            pCurrentHeader->gcMark = GCMARK_NOMARK;
+        }
+        pCurrentHeader = pCurrentHeader->pNext;
+    }
 }
 
 void il2c_step2_mark_gcmark__()
@@ -246,13 +259,8 @@ void il2c_step2_mark_gcmark__()
                 continue;
             }
 
-            // Has to ignore if objref is const.
-            // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
-            //   (at x86/x64 cause, another platform may cause)
-            IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
-            if (pHeader->gcMark != GCMARK_NOMARK)
+            TRY_GET_HEADER(pReference)
             {
-                // (Or already marked.)
                 continue;
             }
 
@@ -304,7 +312,7 @@ void il2c_collect()
 }
 
 /////////////////////////////////////////////////////////////
-// Runtime cast function
+// Runtime cast functions
 
 uint32_t il2c_sizeof__(IL2C_RUNTIME_TYPE type)
 {

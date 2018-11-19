@@ -234,6 +234,7 @@ namespace IL2C
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
             var includePath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "..", "..", "..", "..", "IL2C.Runtime"));
             var optimizeFlag = optimize ? "-Ofast -flto" : "-O0";
+            var disableObjDump = optimize ? "rem " : string.Empty;
 
             if (!Directory.Exists(outPath))
             {
@@ -252,7 +253,8 @@ namespace IL2C
                 {
                     { "gccBinPath", gccBinPath },
                     { "includePath", includePath },
-                    { "optimizeFlag", optimizeFlag }
+                    { "optimizeFlag", optimizeFlag },
+                    { "disableObjDump", disableObjDump }
                 });
 
             var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>

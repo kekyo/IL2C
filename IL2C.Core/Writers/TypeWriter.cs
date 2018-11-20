@@ -100,7 +100,9 @@ namespace IL2C.Writers
                     // This makes adjustor-thunk free VTable.
                     tw.WriteLine("intptr_t offset__; // Adjustor offset");
 
-                    foreach (var (method, overloadIndex) in virtualMethods)
+                    // Write only visible methods because virtual method collection contains the explicitly implementation methods.
+                    foreach (var (method, overloadIndex) in virtualMethods.
+                        Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
                     {
                         tw.WriteLine(
                             "{0};",
@@ -216,7 +218,8 @@ namespace IL2C.Writers
             if (!declaredType.IsInterface)
             {
                 // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-                if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+                if (!overrideMethods.Any() &&
+                    !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
                 {
                     tw.WriteLine(
                         "// [1-5-1] VTable (Same as {0})",

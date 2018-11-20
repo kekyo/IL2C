@@ -66,7 +66,7 @@ This is first step for use the IL2C:
 4. Unit tests need long time for first time execution. These tests are running with the gcc by automated downloads mingw platform.
 5. All test passed, you are ready to hacks!
 
-### Memo
+### Note
 
 * You have to know the unit tests compared and verified results both executed on the .NET CLR and the gcc compiled native code.
 * I asked for you have to see in ["tests/IL2C.Core.Test.Target project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Target). It has a lot of unit test code. And if unit tests are success, you can find translated results in ["tests/IL2C.Core.Test.Fixture project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Fixture) subfolder "bin/Debug/net462."

@@ -72,7 +72,8 @@ namespace IL2C.Writers
             var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
             // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-            if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+            if (!overrideMethods.Any() &&
+                !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
                 tw.WriteLine(
                     "// [7-10-1] VTable (Not defined, same as {0})",
@@ -93,7 +94,9 @@ namespace IL2C.Writers
                 {
                     tw.WriteLine("0, // Adjustor offset");
 
-                    foreach (var (method, _) in virtualMethods)
+                    // Write only visible methods because virtual method collection contains the explicitly implementation methods.
+                    foreach (var (method, _) in virtualMethods.
+                        Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
                     {
                         // MEMO: Transfer trampoline virtual function if declared type is value type.
                         //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
@@ -114,9 +117,13 @@ namespace IL2C.Writers
             var interfaceTypes = declaredType.InterfaceTypes;
             foreach (var interfaceType in interfaceTypes)
             {
-                var interfaceMethods = interfaceType.CalculatedVirtualMethods;
+                // Extract interface implementation methods by relation from overrided.
+                var implementationMethods = virtualMethods.
+                    Where(entry => entry.method.Overrides.Any(m => m.DeclaringType.Equals(interfaceType))).
+                    ToArray();
+
                 tw.WriteLine(
-                    "// [7-12] VTable of {0}",
+                    "// [7-12] VTable for {0}",
                     interfaceType.FriendlyName);
                 tw.WriteLine(
                     "{0}_VTABLE_DECL__ {1}_{0}_VTABLE__ = {{",
@@ -130,13 +137,12 @@ namespace IL2C.Writers
                         declaredType.MangledName,
                         interfaceType.MangledName);
 
-                    foreach (var (method, _) in interfaceMethods)
+                    foreach (var (method, _) in implementationMethods)
                     {
                         tw.WriteLine(
-                            "({0}){1}_{2},",
+                            "({0}){1},",
                             method.CLanguageFunctionTypePrototype,
-                            declaredType.MangledName,
-                            method.MangledName);
+                            method.CLanguageFunctionName);
                     }
                 }
 

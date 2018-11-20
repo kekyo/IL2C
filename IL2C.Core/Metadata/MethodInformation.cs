@@ -41,7 +41,6 @@ namespace IL2C.Metadata
         IParameterInformation[] Parameters { get; }
         ILocalVariableInformation[] LocalVariables { get; }
         IMethodInformation[] Overrides { get; }
-        IMethodInformation BaseMethod { get; }
 
         ICodeStream CodeStream { get; }
         int OverloadIndex { get; }
@@ -162,15 +161,24 @@ namespace IL2C.Metadata
                         string.Format("local{0}__", variable.Index),
                     this.MetadataContext.GetOrAddType(variable.VariableType))).
                 ToArray();
-        public IMethodInformation[] Overrides =>
-            this.Definition.Overrides.
-                Select(om => this.MetadataContext.GetOrAddMethod(om)).
-                ToArray();
-        public IMethodInformation BaseMethod =>
-            this.DeclaringType.BaseType?.
-                Traverse(type => type.BaseType).
-                SelectMany(type => type.DeclaredMethods.Where(m => m.Overrides.Contains(this))).
-                FirstOrDefault();
+        public IMethodInformation[] Overrides
+        {
+            get
+            {
+                var overrides = this.Definition.Overrides.
+                    Select(om => this.MetadataContext.GetOrAddMethod(om)).
+                    ToArray();
+                if ((overrides.Length >= 1) || this.DeclaringType.IsInterface)
+                {
+                    return overrides;
+                }
+
+                return this.DeclaringType.CalculatedVirtualMethods.
+                    Where(entry => MetadataUtilities.VirtualMethodSignatureComparer.Equals(entry.method, this)).
+                    Select(entry => entry.method).
+                    ToArray();
+            }
+        }
 
         private static int GetExceptionHandlerTypePriority(ExceptionHandlerType type)
         {

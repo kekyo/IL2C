@@ -343,12 +343,17 @@ namespace IL2C.Metadata
         public IMethodInformation[] OverrideMethods =>
             this.EnumerateCalculatedVirtualMethods().
                 Select(entry => entry.method).
-                Where(method => method.DeclaringType.Equals(this) && method.IsReuseSlot).
+                Where(method =>
+                    method.IsReuseSlot &&
+                    method.DeclaringType.Equals(this)).
                 ToArray();
         public IMethodInformation[] NewSlotMethods =>
             this.EnumerateCalculatedVirtualMethods().
                 Select(entry => entry.method).
-                Where(method => method.DeclaringType.IsAssignableFrom(this) && method.IsNewSlot).
+                Where(method =>
+                    (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
+                    method.IsNewSlot &&
+                    method.DeclaringType.IsAssignableFrom(this)).
                 ToArray();
         public IMethodInformation[] OverrideBaseMethods =>
             ((ITypeInformation)this).

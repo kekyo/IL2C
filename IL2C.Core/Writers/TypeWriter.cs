@@ -168,27 +168,35 @@ namespace IL2C.Writers
                         Reverse().
                         SelectMany(type =>
                         {
-                            var vptrs = type.InterfaceTypes
-                                .Select(interfaceType => new
+                            var vptrs = type.InterfaceTypes.
+                                Select(interfaceType => new
                                 {
                                     Name = string.Format(
                                         "vptr_{0}__",
                                         interfaceType.MangledName),
                                     TypeName = string.Format(
                                         "{0}_VTABLE_DECL__*",
-                                        interfaceType.MangledName)
+                                        interfaceType.MangledName),
+                                    Required = true
                                 });
 
-                            var thisFields = type.Fields
-                                .Where(field => !field.IsStatic)
-                                .Select(field => new
+                            var thisFields = type.Fields.
+                                // It's instance field
+                                Where(field => !field.IsStatic).
+                                Select(field => new
                                 {
                                     field.Name,
-                                    TypeName = field.FieldType.CLanguageTypeName
+                                    TypeName = field.FieldType.CLanguageTypeName,
+                                    // This field's public or at the declared type.
+                                    // If not it, we have to declare the field but symbol name will be hide.
+                                    Required = field.IsPublic || field.DeclaringType.Equals(declaredType)
                                 });
 
                             return vptrs.Concat(thisFields);
                         }).
+                        Select((entry, index) => entry.Required ?
+                            new { entry.Name, entry.TypeName } :
+                            new { Name = string.Format("baseField{0}__", index), entry.TypeName }).
                         ToArray();
 
                     foreach (var field in fields)

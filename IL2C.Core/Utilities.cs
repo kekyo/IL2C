@@ -544,17 +544,22 @@ namespace IL2C
         {
             public readonly ITypeInformation TargetType;
             public readonly IVariableInformation SymbolInformation;
+            public readonly string Expression;
 
             public RightExpressionGivenParameter(
-                ITypeInformation targetType, IVariableInformation symbolinformation)
+                ITypeInformation targetType, IVariableInformation symbolinformation, string expression = null)
             {
                 this.TargetType = targetType;
                 this.SymbolInformation = symbolinformation;
+                this.Expression = expression;
             }
 
             public override string ToString()
             {
-                return string.Format("{0} <-- {1}", this.TargetType.FriendlyName, this.SymbolInformation);
+                return string.Format("{0} <-- {1}{2}",
+                    this.TargetType.FriendlyName,
+                    (this.Expression != null) ? (this.Expression + " ") : string.Empty,
+                    (this.Expression != null) ? ("[" + this.SymbolInformation + "]") : string.Empty);
             }
         }
 
@@ -563,17 +568,18 @@ namespace IL2C
             IExtractContext extractContext,
             ICodeInformation codeInformation)
         {
-            return string.Join(", ", parameters.Select(entry =>
+            return string.Join(", ", parameters.Select(parameter =>
             {
-                var rightExpression = extractContext.GetRightExpression(
-                    entry.TargetType, entry.SymbolInformation);
+                var rightExpression = (parameter.Expression != null) ?
+                    extractContext.GetRightExpression(parameter.TargetType, parameter.SymbolInformation.TargetType, parameter.Expression) :
+                    extractContext.GetRightExpression(parameter.TargetType, parameter.SymbolInformation);
                 if (rightExpression == null)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid parameter type: Location={0}, StackType={1}, ParameterType={2}",
                         codeInformation.RawLocation,
-                        entry.SymbolInformation.TargetType.FriendlyName,
-                        entry.TargetType.FriendlyName);
+                        parameter.SymbolInformation.TargetType.FriendlyName,
+                        parameter.TargetType.FriendlyName);
                 }
 
                 return rightExpression;

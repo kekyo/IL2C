@@ -11,9 +11,12 @@ namespace IL2C.RuntimeSystems
 
     public class InstanceImplementType : IInterfaceType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 100;
+
         public string GetStringFromInt32(int value)
         {
-            return (value + 100).ToString();
+            return (value + rhs).ToString();
         }
     }
 

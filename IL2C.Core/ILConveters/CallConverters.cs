@@ -18,12 +18,30 @@ namespace IL2C.ILConverters
 
             var pairParameters = method.Parameters.
                 Reverse().
-                Select(parameter => new Utilities.RightExpressionGivenParameter(
-                    // Replace untyped type (will resolve by lvalue type) if it's virtual method and arg0.
-                    (isVirtualCall && (parameter.Index == 0)) ?
-                        decodeContext.PrepareContext.MetadataContext.UntypedReferenceType :
-                        parameter.TargetType,
-                    decodeContext.PopStack())).
+                Select(parameter =>
+                {
+                    var arg = decodeContext.PopStack();
+
+                    // Adjust offset if it's virtual method and arg0.
+                    if (isVirtualCall && (parameter.Index == 0))
+                    {
+                        return new
+                        {
+                            Type = parameter.TargetType,
+                            Variable = arg,
+                            Format = "il2c_adjusted_reference({0})"
+                        };
+                    }
+                    else
+                    {
+                        return new
+                        {
+                            Type = parameter.TargetType,
+                            Variable = arg,
+                            Format = "{0}"
+                        };
+                    }
+                }).
                 Reverse().
                 ToArray();
 
@@ -37,17 +55,27 @@ namespace IL2C.ILConverters
                     "System.Runtime.CompilerServices.RuntimeHelpers.InitializeArray"))
                 {
                     Debug.Assert(pairParameters.Length == 2);
-                    Debug.Assert(pairParameters[1].SymbolInformation.HintInformation is string);
+                    Debug.Assert(pairParameters[1].Variable.HintInformation is string);
 
                     decodeContext.PrepareContext.RegisterDeclaredValuesHintType(
-                        (string)pairParameters[1].SymbolInformation.HintInformation,
-                        pairParameters[0].SymbolInformation.TargetType);
+                        (string)pairParameters[1].Variable.HintInformation,
+                        pairParameters[0].Variable.TargetType);
                 }
 
                 return extractContext =>
                 {
+                    var parameters = pairParameters.Select(parameter =>
+                        new Utilities.RightExpressionGivenParameter(
+                            parameter.Type,
+                            parameter.Variable,
+                            string.Format(parameter.Format, extractContext.GetSymbolName(parameter.Variable)))).
+                        ToArray();
+
                     var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters, extractContext, codeInformation);
+                        parameters,
+                        extractContext,
+                        codeInformation);
+
                     if (isVirtualCall && method.IsVirtual && !method.IsSealed)
                     {
                         var overloadIndex = method.DeclaringType.CalculatedVirtualMethods.
@@ -59,7 +87,7 @@ namespace IL2C.ILConverters
                             // TODO: interface member vptr
                             string.Format(
                                 "{0}->vptr0__->{1}({2})",
-                                extractContext.GetSymbolName(pairParameters[0].SymbolInformation),
+                                extractContext.GetSymbolName(pairParameters[0].Variable),
                                 method.GetCLanguageDeclarationName(overloadIndex),
                                 parameterString)
                         };
@@ -82,8 +110,16 @@ namespace IL2C.ILConverters
 
                 return extractContext =>
                 {
+                    var parameters = pairParameters.Select(parameter =>
+                        new Utilities.RightExpressionGivenParameter(
+                            parameter.Type,
+                            parameter.Variable,
+                            string.Format(parameter.Format, extractContext.GetSymbolName(parameter.Variable)))).
+                        ToArray();
+
                     var parameterString = Utilities.GetGivenParameterDeclaration(
-                        pairParameters, extractContext, codeInformation);
+                        parameters, extractContext, codeInformation);
+
                     if (isVirtualCall && method.IsVirtual && !method.IsSealed)
                     {
                         var overloadIndex = method.DeclaringType.CalculatedVirtualMethods.
@@ -96,7 +132,7 @@ namespace IL2C.ILConverters
                             string.Format(
                                 "{0} = {1}->vptr0__->{2}({3})",
                                 extractContext.GetSymbolName(result),
-                                extractContext.GetSymbolName(pairParameters[0].SymbolInformation),
+                                extractContext.GetSymbolName(pairParameters[0].Variable),
                                 method.GetCLanguageDeclarationName(overloadIndex),
                                 parameterString)
                         };

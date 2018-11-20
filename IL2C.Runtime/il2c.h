@@ -97,6 +97,8 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 // static cast operators
 #define il2c_adjustor_offset(typeName, interfaceTypeName) \
     (offsetof(typeName, vptr_##interfaceTypeName##__) - offsetof(typeName, vptr0__))
+#define il2c_adjusted_reference(pRawReference) \
+    ((void*)((uint8_t*)(pRawReference) - (**(const intptr_t**)(pRawReference))))
 #define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
     ((pReference != NULL) ? \
         ((typeName*)(((uint8_t*)(pInterface)) - \

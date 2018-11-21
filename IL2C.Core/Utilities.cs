@@ -624,12 +624,53 @@ namespace IL2C
             }
         }
 
-        public static IEnumerable<T> Distinct<T, U>(this IEnumerable<T> enumerable, Func<T, U> keySelector)
+        public static IEnumerable<T> Distinct<T, U>(
+            this IEnumerable<T> enumerable,
+            Func<T, U> keySelector)
         {
             var took = new HashSet<U>();
             foreach (var value in enumerable)
             {
                 if (took.Add(keySelector(value)))
+                {
+                    yield return value;
+                }
+            }
+        }
+
+        private sealed class DistinctEqualityComparer<T> : IEqualityComparer<T>
+        {
+            private readonly Func<T, int> getHashCode;
+            private readonly Func<T, T, bool> equals;
+
+            public DistinctEqualityComparer(
+                Func<T, int> getHashCode,
+                Func<T, T, bool> equals)
+            {
+                this.getHashCode = getHashCode;
+                this.equals = equals;
+            }
+
+            public bool Equals(T x, T y)
+            {
+                return equals(x, y);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                return getHashCode(obj);
+            }
+        }
+
+        public static IEnumerable<T> Distinct<T>(
+            this IEnumerable<T> enumerable,
+            Func<T, int> getHashCode,
+            Func<T, T, bool> equals)
+        {
+            var took = new HashSet<T>(new DistinctEqualityComparer<T>(getHashCode, equals));
+            foreach (var value in enumerable)
+            {
+                if (took.Add(value))
                 {
                     yield return value;
                 }

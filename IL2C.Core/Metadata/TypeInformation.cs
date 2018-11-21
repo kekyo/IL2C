@@ -567,7 +567,9 @@ namespace IL2C.Metadata
             // IBase <-- IDerived
             if (this.IsInterface)
             {
-                return rhs.InterfaceTypes.Any(this.Equals);
+                return rhs.
+                    Traverse(type => type.BaseType).
+                    Any(type => type.InterfaceTypes.Any(this.Equals));
             }
 
             // HACK: Special case lhs is runtime handles.

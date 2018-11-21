@@ -114,14 +114,20 @@ namespace IL2C.Writers
             }
 
             // Write interface VTables.
-            var interfaceTypes = declaredType.InterfaceTypes;
+            var interfaceTypes = declaredType.
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.InterfaceTypes).
+                Distinct(). // Important operator sequence: distinct --> reverse
+                Reverse().  // Because all interface types overrided by derived class type,
+                ToArray();  // we have to aggregate to be visible interface types.
             foreach (var interfaceType in interfaceTypes)
             {
                 var implementationMethods = interfaceType.DeclaredMethods.
                     Select(dm =>
                     {
-                        // Extract interface implementation methods by relation from overrided.
+                        // Extract interface implementation methods by overrided from derived to based.
                         var method = virtualMethods.
+                            Reverse().  // Derived to based
                             Select(entry => entry.method.Overrides.Any(om => om.Equals(dm)) ? entry.method : null).
                             FirstOrDefault(om => om != null);
                         if (method != null)
@@ -133,6 +139,7 @@ namespace IL2C.Writers
                         // try to find implicitly implementation by the method signature.
                         // (See also: InstanceMultipleCombinedImplement test)
                         return virtualMethods.
+                            Reverse().  // Derived to based
                             Select(entry => MetadataUtilities.VirtualMethodSignatureComparer.Equals(entry.method, dm) ? entry.method : null).
                             First(vm => vm != null);    // We will find exactly.
                     }).
@@ -205,7 +212,7 @@ namespace IL2C.Writers
                 }
 
                 // Write implemented interfaces (IL2C_IMPLEMENTED_INTERFACE)
-                foreach (var interfaceType in declaredType.InterfaceTypes)
+                foreach (var interfaceType in interfaceTypes)
                 {
                     // ex: IL2C_RUNTIME_TYPE_INTERFACE(Foo, System_IDisposable)
                     tw.WriteLine(

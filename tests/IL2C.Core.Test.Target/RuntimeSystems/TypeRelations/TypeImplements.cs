@@ -115,6 +115,75 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class InstanceMultipleCombinedAndParallelImplementType : IInterfaceType4
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs1 = 100;
+        private readonly int rhs2 = 200;
+        private readonly long rhs3 = 300;
+
+        public string GetStringFromInt32(int value)
+        {
+            return (value + rhs1).ToString();
+        }
+
+        string IInterfaceType4.GetStringFromInt32(int value)
+        {
+            return (value + rhs2).ToString();
+        }
+
+        string IInterfaceType4.GetStringFromInt64(long value)
+        {
+            return (value + rhs3).ToString();
+        }
+    }
+
+    public class InstanceMultipleCombinedImplementCombinationType1 : IInterfaceType1, IInterfaceType4
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs1 = 100;
+        private readonly int rhs2 = 200;
+        private readonly long rhs3 = 300;
+
+        public string GetStringFromInt32(int value)
+        {
+            return (value + rhs1).ToString();
+        }
+
+        string IInterfaceType4.GetStringFromInt32(int value)
+        {
+            return (value + rhs2).ToString();
+        }
+
+        string IInterfaceType4.GetStringFromInt64(long value)
+        {
+            return (value + rhs3).ToString();
+        }
+    }
+
+    public class InstanceMultipleCombinedImplementCombinationType2 : IInterfaceType1, IInterfaceType4
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs1 = 100;
+        private readonly int rhs2 = 200;
+        private readonly long rhs3 = 300;
+
+        public string GetStringFromInt32(int value)
+        {
+            return (value + rhs1).ToString();
+        }
+
+        string IInterfaceType1.GetStringFromInt32(int value)
+        {
+            return (value + rhs2).ToString();
+        }
+
+        string IInterfaceType4.GetStringFromInt64(long value)
+        {
+            return (value + rhs3).ToString();
+        }
+    }
+
     [TestId("TypeRelations")]
     [TestCase("223", "InstanceImplement", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
@@ -132,7 +201,18 @@ namespace IL2C.RuntimeSystems
     [TestCase("323", "InstanceMultipleImplementExplicitlyFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementExplicitlyType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
     [TestCase("223", "InstanceMultipleCombinedImplement", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
     [TestCase("223", "InstanceMultipleCombined1ImplementFromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
-    [TestCase("323", "InstanceMultipleCombined2ImplementFromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
+    [TestCase("323", "InstanceMultipleCombined2ImplementFromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
+    [TestCase("223", "InstanceMultipleCombinedAndParallelImplement", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
+    [TestCase("323", "InstanceMultipleCombinedAndParallel1ImplementFromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
+    [TestCase("423", "InstanceMultipleCombinedAndParallel2ImplementFromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
+    [TestCase("223", "InstanceMultipleCombinedImplementCombination1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("223", "InstanceMultipleCombined2ImplementCombination1FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("323", "InstanceMultipleCombined1ImplementCombination1FromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("423", "InstanceMultipleCombined2ImplementCombination1FromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("223", "InstanceMultipleCombinedImplementCombination2", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("323", "InstanceMultipleCombined2ImplementCombination2FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("223", "InstanceMultipleCombined1ImplementCombination2FromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("423", "InstanceMultipleCombined2ImplementCombination2FromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
     public sealed class TypeImplements
     {
         public static string InstanceImplement(int value)
@@ -234,6 +314,72 @@ namespace IL2C.RuntimeSystems
         public static string InstanceMultipleCombined2ImplementFromInterface4(long value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementType();
+            return inst.GetStringFromInt64(value);
+        }
+
+        public static string InstanceMultipleCombinedAndParallelImplement(int value)
+        {
+            var inst = new InstanceMultipleCombinedAndParallelImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombinedAndParallel1ImplementFromInterface4(int value)
+        {
+            IInterfaceType4 inst = new InstanceMultipleCombinedAndParallelImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombinedAndParallel2ImplementFromInterface4(long value)
+        {
+            IInterfaceType4 inst = new InstanceMultipleCombinedAndParallelImplementType();
+            return inst.GetStringFromInt64(value);
+        }
+
+        public static string InstanceMultipleCombinedImplementCombination1(int value)
+        {
+            var inst = new InstanceMultipleCombinedImplementCombinationType1();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombined1ImplementCombination1FromInterface1(int value)
+        {
+            IInterfaceType1 inst = new InstanceMultipleCombinedImplementCombinationType1();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombined1ImplementCombination1FromInterface4(int value)
+        {
+            IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType1();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombined2ImplementCombination1FromInterface4(long value)
+        {
+            IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType1();
+            return inst.GetStringFromInt64(value);
+        }
+
+        public static string InstanceMultipleCombinedImplementCombination2(int value)
+        {
+            var inst = new InstanceMultipleCombinedImplementCombinationType2();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombined1ImplementCombination2FromInterface1(int value)
+        {
+            IInterfaceType1 inst = new InstanceMultipleCombinedImplementCombinationType2();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombined1ImplementCombination2FromInterface4(int value)
+        {
+            IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType2();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleCombined2ImplementCombination2FromInterface4(long value)
+        {
+            IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType2();
             return inst.GetStringFromInt64(value);
         }
     }

@@ -113,6 +113,16 @@ namespace IL2C.Writers
                 tw.SplitLine();
             }
 
+            // Aggregate all declared methods from derived to base types.
+            var declaredMethods = declaredType.
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.DeclaredMethods).
+                Where(method =>
+                    !method.IsConstructor &&
+                    !method.IsStatic).
+                Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
+                ToArray();
+
             // Write interface VTables.
             var interfaceTypes = declaredType.
                 Traverse(type => type.BaseType).
@@ -123,25 +133,38 @@ namespace IL2C.Writers
             foreach (var interfaceType in interfaceTypes)
             {
                 var implementationMethods = interfaceType.DeclaredMethods.
-                    Select(dm =>
+                    Select(interfaceMethod =>
                     {
                         // Extract interface implementation methods by overrided from derived to based.
-                        var method = virtualMethods.
-                            Reverse().  // Derived to based
-                            Select(entry => entry.method.Overrides.Any(om => om.Equals(dm)) ? entry.method : null).
-                            FirstOrDefault(om => om != null);
-                        if (method != null)
+                        var targetMethod = declaredMethods.
+                            Select(dm => dm.Overrides.Contains(interfaceMethod) ? dm : null).
+                            FirstOrDefault(vm => vm != null);
+                        if (targetMethod != null)
                         {
-                            return method;
+                            return new { interfaceMethod, targetMethod };
                         }
+
+                        // Aggregate all visible declared methods from derived to base types.
+                        var firstInterfaceImplementedType = declaredType.
+                            Traverse(type => type.BaseType).
+                            First(type => type.InterfaceTypes.Contains(interfaceType));
+                        var declaredVisibleMethods = firstInterfaceImplementedType.
+                            Traverse(type => type.BaseType).
+                            SelectMany(type => type.DeclaredMethods).
+                            Where(method =>
+                                !method.IsConstructor &&
+                                !method.IsStatic &&
+                                (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly)).
+                            Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
+                            ToArray();
 
                         // If didn't find the method for explicitly implementation,
                         // try to find implicitly implementation by the method signature.
                         // (See also: InstanceMultipleCombinedImplement test)
-                        return virtualMethods.
-                            Reverse().  // Derived to based
-                            Select(entry => MetadataUtilities.VirtualMethodSignatureComparer.Equals(entry.method, dm) ? entry.method : null).
-                            First(vm => vm != null);    // We will find exactly.
+                        targetMethod = declaredVisibleMethods.
+                            Select(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod) ? dm : null).
+                            First(dm => dm != null);    // We will find exactly.
+                        return new { interfaceMethod, targetMethod };
                     }).
                     ToArray();
 
@@ -161,12 +184,12 @@ namespace IL2C.Writers
                         declaredType.MangledName,
                         interfaceType.MangledName);
 
-                    foreach (var method in implementationMethods)
+                    foreach (var entry in implementationMethods)
                     {
                         tw.WriteLine(
                             "({0}){1},",
-                            method.CLanguageFunctionTypePrototype,
-                            method.CLanguageFunctionName);
+                            entry.interfaceMethod.CLanguageFunctionTypePrototype,
+                            entry.targetMethod.CLanguageFunctionName);
                     }
                 }
 

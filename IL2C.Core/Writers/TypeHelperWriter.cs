@@ -117,9 +117,25 @@ namespace IL2C.Writers
             var interfaceTypes = declaredType.InterfaceTypes;
             foreach (var interfaceType in interfaceTypes)
             {
-                // Extract interface implementation methods by relation from overrided.
-                var implementationMethods = virtualMethods.
-                    Where(entry => entry.method.Overrides.Any(m => m.DeclaringType.Equals(interfaceType))).
+                var implementationMethods = interfaceType.DeclaredMethods.
+                    Select(dm =>
+                    {
+                        // Extract interface implementation methods by relation from overrided.
+                        var method = virtualMethods.
+                            Select(entry => entry.method.Overrides.Any(om => om.Equals(dm)) ? entry.method : null).
+                            FirstOrDefault(om => om != null);
+                        if (method != null)
+                        {
+                            return method;
+                        }
+
+                        // If didn't find the method for explicitly implementation,
+                        // try to find implicitly implementation by the method signature.
+                        // (See also: InstanceMultipleCombinedImplement test)
+                        return virtualMethods.
+                            Select(entry => MetadataUtilities.VirtualMethodSignatureComparer.Equals(entry.method, dm) ? entry.method : null).
+                            First(vm => vm != null);    // We will find exactly.
+                    }).
                     ToArray();
 
                 tw.WriteLine(
@@ -132,12 +148,13 @@ namespace IL2C.Writers
 
                 using (var _ = tw.Shift())
                 {
+                    // The adjustor offset.
                     tw.WriteLine(
                         "il2c_adjustor_offset({0}, {1}),",
                         declaredType.MangledName,
                         interfaceType.MangledName);
 
-                    foreach (var (method, _) in implementationMethods)
+                    foreach (var method in implementationMethods)
                     {
                         tw.WriteLine(
                             "({0}){1},",

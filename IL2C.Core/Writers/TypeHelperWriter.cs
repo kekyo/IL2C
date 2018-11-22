@@ -144,26 +144,59 @@ namespace IL2C.Writers
                             return new { interfaceMethod, targetMethod };
                         }
 
-                        // Aggregate all visible declared methods from derived to base types.
+                        /////////////////////////////////////////////////////////
+                        // If didn't find the method for explicitly implementation,
+                        // try to find implicitly implementation by the method signature.
+                        // (See also: InstanceMultipleCombinedImplement test)
+
+                        // Detect the implicitly interface implemented method:
+
+                        // (1) Aggregate all visible declared methods from derived to base types.
+                        //   firstInterfaceImplementedType = Foo2
+                        //     interfaceType: IBar1
+                        //     System.Object <-- Foo1 <-- Foo2 <-- Foo3
+                        //                       |        |        +-- IBar2 / Method1
+                        //                       |        +----------- IBar1 / Method2, Method3
+                        //                       +-------------------- IBar2 / Method1, Method3
+                        //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
+                        //     (Except Foo1.Method3 by VirtualMethodSignatureComparer)
                         var firstInterfaceImplementedType = declaredType.
                             Traverse(type => type.BaseType).
                             First(type => type.InterfaceTypes.Contains(interfaceType));
                         var declaredVisibleMethods = firstInterfaceImplementedType.
                             Traverse(type => type.BaseType).
                             SelectMany(type => type.DeclaredMethods).
-                            Where(method =>
-                                !method.IsConstructor &&
-                                !method.IsStatic &&
-                                (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly)).
+                            Where(dm => !dm.IsConstructor && !dm.IsStatic &&
+                                (dm.IsPublic || dm.IsFamily || dm.IsFamilyOrAssembly)).
                             Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
                             ToArray();
 
-                        // If didn't find the method for explicitly implementation,
-                        // try to find implicitly implementation by the method signature.
-                        // (See also: InstanceMultipleCombinedImplement test)
-                        targetMethod = declaredVisibleMethods.
+                        // (2) Find first matching declaredMethod for same as this interfaceMethod.
+                        //     "Same" means the method signature (using VirtualMethodSignatureComparer)
+                        //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
+                        //   interfaceMethod = IBar2.Method1
+                        //   targetBaseMethod = Foo1.Method1
+                        var targetBaseMethod = declaredVisibleMethods.
                             Select(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod) ? dm : null).
                             First(dm => dm != null);    // We will find exactly.
+
+                        // (3) Find last matching (mostly derived) method from base to overrides.
+                        //   baseInterfaceImplementedTypes = [Foo1, Foo2, Foo3]
+                        //   interfaceMethod = IBar2.Method1
+                        //   targetBaseMethod = Foo1.Method1
+                        //   lastMatchedMethod = Foo3.Method1
+                        var baseInterfaceImplementedTypes = declaredType.
+                            Traverse(type => type.BaseType).
+                            Reverse().
+                            Where(type => targetBaseMethod.DeclaringType.IsAssignableFrom(type)).
+                            ToArray();
+                        targetMethod = baseInterfaceImplementedTypes.
+                            SelectMany(type => type.DeclaredMethods.
+                                Where(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod))).
+                            TakeWhile(dm => (dm.IsVirtual && (!dm.IsNewSlot || dm.IsReuseSlot)) ||
+                                dm.Equals(targetBaseMethod)).
+                            Last();
+
                         return new { interfaceMethod, targetMethod };
                     }).
                     ToArray();

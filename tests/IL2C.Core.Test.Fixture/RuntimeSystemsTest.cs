@@ -47,6 +47,7 @@ namespace IL2C
         public static readonly TestCaseInformation[] _TypeRelations =
             TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeInheritance>().
             Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeImplements>()).
+            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeInheritanceAndImplements>()).
             ToArray();
         [Test]
         public static Task TypeRelations([ValueSource(nameof(_TypeRelations))] TestCaseInformation caseInfo) =>

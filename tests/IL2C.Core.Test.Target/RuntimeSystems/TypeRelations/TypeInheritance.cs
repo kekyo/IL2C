@@ -6,137 +6,188 @@ namespace IL2C.RuntimeSystems
 {
     public class InstanceBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 100;
+
         public string GetStringFromInt32(int value)
         {
-            return (value + 100).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class InstanceNewType : InstanceBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
         public new string GetStringFromInt32(int value)
         {
-            return (value + 200).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class InstanceNewVirtualType : InstanceBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
         public new virtual string GetStringFromInt32(int value)
         {
-            return (value + 200).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class InstanceNewVirtualOverrideType : InstanceNewVirtualType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
         public override string GetStringFromInt32(int value)
         {
-            return (value + 300).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class InstanceNewCallBaseType : InstanceBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public new string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 
     public class InstanceNewVirtualCallBaseType : InstanceBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public new virtual string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 
     public class InstanceNewVirtualOverrideCallBaseType : InstanceNewVirtualType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public override string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 
     public class VirtualBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 100;
+
         public virtual string GetStringFromInt32(int value)
         {
-            return (value + 100).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class VirtualOverrideType : VirtualBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
         public override string GetStringFromInt32(int value)
         {
-            return (value + 200).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class VirtualNewType : VirtualBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
         public new string GetStringFromInt32(int value)
         {
-            return (value + 200).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class VirtualNewVirtualType : VirtualBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
         public new virtual string GetStringFromInt32(int value)
         {
-            return (value + 200).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class VirtualNewVirtualOverrideType : VirtualNewVirtualType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
         public override string GetStringFromInt32(int value)
         {
-            return (value + 300).ToString();
+            return (value + rhs).ToString();
         }
     }
 
     public class VirtualOverrideCallBaseType : VirtualBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public override string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 
     public class VirtualNewCallBaseType : VirtualBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public new string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 
     public class VirtualNewVirtualCallBaseType : VirtualBaseType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public new virtual string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 
     public class VirtualOverrideOverrideCallBaseType : VirtualOverrideType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public override string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 
     public class VirtualNewVirtualOverrideCallBaseType : VirtualNewVirtualType
     {
+        // It's the instance field, referrer from the method at same type.
+        private readonly string rhs = "ABC";
+
         public override string GetStringFromInt32(int value)
         {
-            return base.GetStringFromInt32(value) + "ABC";
+            return base.GetStringFromInt32(value) + rhs;
         }
     }
 

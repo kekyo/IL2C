@@ -72,7 +72,8 @@ namespace IL2C.Writers
             var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
             // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-            if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+            if (!overrideMethods.Any() &&
+                !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
                 tw.WriteLine(
                     "// [7-10-1] VTable (Not defined, same as {0})",
@@ -93,7 +94,9 @@ namespace IL2C.Writers
                 {
                     tw.WriteLine("0, // Adjustor offset");
 
-                    foreach (var (method, _) in virtualMethods)
+                    // Write only visible methods because virtual method collection contains the explicitly implementation methods.
+                    foreach (var (method, _) in virtualMethods.
+                        Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
                     {
                         // MEMO: Transfer trampoline virtual function if declared type is value type.
                         //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
@@ -110,13 +113,96 @@ namespace IL2C.Writers
                 tw.SplitLine();
             }
 
+            // Aggregate all declared methods from derived to base types.
+            var declaredMethods = declaredType.
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.DeclaredMethods).
+                Where(method =>
+                    !method.IsConstructor &&
+                    !method.IsStatic).
+                Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
+                ToArray();
+
             // Write interface VTables.
-            var interfaceTypes = declaredType.InterfaceTypes;
+            var interfaceTypes = declaredType.
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.InterfaceTypes).
+                Distinct(). // Important operator sequence: distinct --> reverse
+                Reverse().  // Because all interface types overrided by derived class type,
+                ToArray();  // we have to aggregate to be visible interface types.
             foreach (var interfaceType in interfaceTypes)
             {
-                var interfaceMethods = interfaceType.CalculatedVirtualMethods;
+                var implementationMethods = interfaceType.DeclaredMethods.
+                    Select(interfaceMethod =>
+                    {
+                        // Extract interface implementation methods by overrided from derived to based.
+                        var targetMethod = declaredMethods.
+                            Select(dm => dm.Overrides.Contains(interfaceMethod) ? dm : null).
+                            FirstOrDefault(vm => vm != null);
+                        if (targetMethod != null)
+                        {
+                            return new { interfaceMethod, targetMethod };
+                        }
+
+                        /////////////////////////////////////////////////////////
+                        // If didn't find the method for explicitly implementation,
+                        // try to find implicitly implementation by the method signature.
+                        // (See also: InstanceMultipleCombinedImplement test)
+
+                        // Detect the implicitly interface implemented method:
+
+                        // (1) Aggregate all visible declared methods from derived to base types.
+                        //   firstInterfaceImplementedType = Foo2
+                        //     interfaceType: IBar1
+                        //     System.Object <-- Foo1 <-- Foo2 <-- Foo3
+                        //                       |        |        +-- IBar2 / Method1
+                        //                       |        +----------- IBar1 / Method2, Method3
+                        //                       +-------------------- IBar2 / Method1, Method3
+                        //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
+                        //     (Except Foo1.Method3 by VirtualMethodSignatureComparer)
+                        var firstInterfaceImplementedType = declaredType.
+                            Traverse(type => type.BaseType).
+                            First(type => type.InterfaceTypes.Contains(interfaceType));
+                        var declaredVisibleMethods = firstInterfaceImplementedType.
+                            Traverse(type => type.BaseType).
+                            SelectMany(type => type.DeclaredMethods).
+                            Where(dm => !dm.IsConstructor && !dm.IsStatic &&
+                                (dm.IsPublic || dm.IsFamily || dm.IsFamilyOrAssembly)).
+                            Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
+                            ToArray();
+
+                        // (2) Find first matching declaredMethod for same as this interfaceMethod.
+                        //     "Same" means the method signature (using VirtualMethodSignatureComparer)
+                        //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
+                        //   interfaceMethod = IBar2.Method1
+                        //   targetBaseMethod = Foo1.Method1
+                        var targetBaseMethod = declaredVisibleMethods.
+                            Select(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod) ? dm : null).
+                            First(dm => dm != null);    // We will find exactly.
+
+                        // (3) Find last matching (mostly derived) method from base to overrides.
+                        //   baseInterfaceImplementedTypes = [Foo1, Foo2, Foo3]
+                        //   interfaceMethod = IBar2.Method1
+                        //   targetBaseMethod = Foo1.Method1
+                        //   lastMatchedMethod = Foo3.Method1
+                        var baseInterfaceImplementedTypes = declaredType.
+                            Traverse(type => type.BaseType).
+                            Reverse().
+                            Where(type => targetBaseMethod.DeclaringType.IsAssignableFrom(type)).
+                            ToArray();
+                        targetMethod = baseInterfaceImplementedTypes.
+                            SelectMany(type => type.DeclaredMethods.
+                                Where(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod))).
+                            TakeWhile(dm => (dm.IsVirtual && (!dm.IsNewSlot || dm.IsReuseSlot)) ||
+                                dm.Equals(targetBaseMethod)).
+                            Last();
+
+                        return new { interfaceMethod, targetMethod };
+                    }).
+                    ToArray();
+
                 tw.WriteLine(
-                    "// [7-12] VTable of {0}",
+                    "// [7-12] VTable for {0}",
                     interfaceType.FriendlyName);
                 tw.WriteLine(
                     "{0}_VTABLE_DECL__ {1}_{0}_VTABLE__ = {{",
@@ -125,18 +211,18 @@ namespace IL2C.Writers
 
                 using (var _ = tw.Shift())
                 {
+                    // The adjustor offset.
                     tw.WriteLine(
                         "il2c_adjustor_offset({0}, {1}),",
                         declaredType.MangledName,
                         interfaceType.MangledName);
 
-                    foreach (var (method, _) in interfaceMethods)
+                    foreach (var entry in implementationMethods)
                     {
                         tw.WriteLine(
-                            "({0}){1}_{2},",
-                            method.CLanguageFunctionTypePrototype,
-                            declaredType.MangledName,
-                            method.MangledName);
+                            "({0}){1},",
+                            entry.interfaceMethod.CLanguageFunctionTypePrototype,
+                            entry.targetMethod.CLanguageFunctionName);
                     }
                 }
 
@@ -182,7 +268,7 @@ namespace IL2C.Writers
                 }
 
                 // Write implemented interfaces (IL2C_IMPLEMENTED_INTERFACE)
-                foreach (var interfaceType in declaredType.InterfaceTypes)
+                foreach (var interfaceType in interfaceTypes)
                 {
                     // ex: IL2C_RUNTIME_TYPE_INTERFACE(Foo, System_IDisposable)
                     tw.WriteLine(

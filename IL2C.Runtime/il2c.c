@@ -148,13 +148,9 @@ typedef void(*IL2C_MARK_HANDLER)(void* pReference);
 // Has to ignore if objref is const.
 // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
 //   (at x86/x64 cause, another platform may cause)
-#define TRY_GET_HEADER(pReference) \
+#define TRY_GET_HEADER(pHeader, pReference) \
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference); \
     if (pHeader->gcMark != GCMARK_NOMARK)
-
-// Calculate adjustor offset.
-#define GET_ADJUSTED_REFERENCE(pRawReference) \
-    ((void*)((uint8_t*)(pRawReference) - (**(const intptr_t**)(pRawReference))))
 
 static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
 {
@@ -204,8 +200,8 @@ static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
                 continue;
             }
 
-            void* pAdjustedReferenceInner = GET_ADJUSTED_REFERENCE(*ppReferenceInner);
-            TRY_GET_HEADER(pAdjustedReferenceInner)
+            void* pAdjustedReferenceInner = il2c_adjusted_reference(*ppReferenceInner);
+            TRY_GET_HEADER(pHeaderInner, pAdjustedReferenceInner)
             {
                 continue;
             }
@@ -220,8 +216,8 @@ void il2c_default_mark_handler__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    void* pAdjustedReference = GET_ADJUSTED_REFERENCE(pReference);
-    TRY_GET_HEADER(pAdjustedReference)
+    void* pAdjustedReference = il2c_adjusted_reference(pReference);
+    TRY_GET_HEADER(pHeader, pAdjustedReference)
     {
         return;
     }
@@ -264,8 +260,8 @@ void il2c_step2_mark_gcmark__()
                 continue;
             }
 
-            void* pAdjustedReference = GET_ADJUSTED_REFERENCE(pReference);
-            TRY_GET_HEADER(pAdjustedReference)
+            void* pAdjustedReference = il2c_adjusted_reference(pReference);
+            TRY_GET_HEADER(pHeader, pAdjustedReference)
             {
                 continue;
             }

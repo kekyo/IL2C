@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using IL2C.Metadata;
 
@@ -100,7 +101,9 @@ namespace IL2C.Writers
                     // This makes adjustor-thunk free VTable.
                     tw.WriteLine("intptr_t offset__; // Adjustor offset");
 
-                    foreach (var (method, overloadIndex) in virtualMethods)
+                    // Write only visible methods because virtual method collection contains the explicitly implementation methods.
+                    foreach (var (method, overloadIndex) in virtualMethods.
+                        Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
                     {
                         tw.WriteLine(
                             "{0};",
@@ -163,32 +166,51 @@ namespace IL2C.Writers
 
                     // TODO: If value type implements interfaces, how to assigns vptr into value type?
                     //   (We often have to resolve at enum types...)
+                    var tookInterfaceTypes = new HashSet<ITypeInformation>();
                     var fields = declaredType.
                         Traverse(type => type.BaseType).
                         Reverse().
                         SelectMany(type =>
                         {
-                            var vptrs = type.InterfaceTypes
-                                .Select(interfaceType => new
+                            // The vptr can contain only one unique interface type.
+                            var interfaceTypes = new List<ITypeInformation>();
+                            foreach (var interfaceType in type.InterfaceTypes)
+                            {
+                                if (tookInterfaceTypes.Add(interfaceType))
+                                {
+                                    interfaceTypes.Add(interfaceType);
+                                }
+                            }
+
+                            var vptrs = interfaceTypes.
+                                Select(interfaceType => new
                                 {
                                     Name = string.Format(
                                         "vptr_{0}__",
                                         interfaceType.MangledName),
                                     TypeName = string.Format(
                                         "{0}_VTABLE_DECL__*",
-                                        interfaceType.MangledName)
+                                        interfaceType.MangledName),
+                                    Required = true
                                 });
 
-                            var thisFields = type.Fields
-                                .Where(field => !field.IsStatic)
-                                .Select(field => new
+                            var thisFields = type.Fields.
+                                // It's instance field
+                                Where(field => !field.IsStatic).
+                                Select(field => new
                                 {
                                     field.Name,
-                                    TypeName = field.FieldType.CLanguageTypeName
+                                    TypeName = field.FieldType.CLanguageTypeName,
+                                    // This field's public or at the declared type.
+                                    // If not it, we have to declare the field but symbol name will be hide.
+                                    Required = field.IsPublic || field.DeclaringType.Equals(declaredType)
                                 });
 
                             return vptrs.Concat(thisFields);
                         }).
+                        Select((entry, index) => entry.Required ?
+                            new { entry.Name, entry.TypeName } :
+                            new { Name = string.Format("baseField{0}__", index), entry.TypeName }).
                         ToArray();
 
                     foreach (var field in fields)
@@ -208,7 +230,8 @@ namespace IL2C.Writers
             if (!declaredType.IsInterface)
             {
                 // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-                if (!overrideMethods.Any() && !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+                if (!overrideMethods.Any() &&
+                    !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
                 {
                     tw.WriteLine(
                         "// [1-5-1] VTable (Same as {0})",

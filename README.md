@@ -72,6 +72,7 @@ This is first step for use the IL2C:
 * I asked for you have to see in ["tests/IL2C.Core.Test.Target project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Target). It has a lot of unit test code. And if unit tests are success, you can find translated results in ["tests/IL2C.Core.Test.Fixture project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Fixture) subfolder "bin/Debug/net462."
 * If you know the CI engineering, you can get more information from the ["appveyor.yml"](appveyor.yml) file.
 * Currently IL2C contains the VC++ project folder because it's better debugging mates. The "IL2C.Runtime" project DOESN'T USE for any building (manually and CI buildings.)
+* If you wanna the IL2C internals, try to read [Making archive IL2C #6-55: dotNET 600 2018 session slide](https://www.slideshare.net/kekyo/making-archive-il2c-655-dotnet600-2018)
 
 ## Overall status
 
@@ -180,6 +181,10 @@ Under Apache v2.
 
 * Public YouTube recorded videos: ["Making archive IL2C play list"](http://bit.ly/2xtu4MH)
   * "How to create IL2C or same tool of IL2CPP? This video contains pure design process through concept and details."
+
+* [Making archive IL2C #6-55: dotNET 600 2018 session slide](https://www.slideshare.net/kekyo/making-archive-il2c-655-dotnet600-2018)
+  * I'm asked at the dotNET 600 2018 conference session.
+  * It slide is mostly covered informations about the IL2C internals in English.
 
 * Polish notation calculator project for IL2C proof of concept
   * [Minimum, but useful impls for "Win32", "UEFI" and "M5Stack(ESP32)"](samples/Calculator)

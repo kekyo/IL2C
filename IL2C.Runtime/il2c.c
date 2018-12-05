@@ -528,8 +528,7 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
     {
         if (valueType->flags & IL2C_TYPE_VALUE)
         {
-            // throw NullReferenceException();
-            il2c_assert(0);
+            il2c_throw_nullreferenceexception__();
         }
         return NULL;
     }
@@ -686,8 +685,6 @@ void il2c_rethrow()
 }
 
 #ifdef IL2C_USE_SIGNAL
-IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
-
 static void il2c_SIGSEGV_handler(int sig)
 {
     // MEMO 1:
@@ -718,10 +715,7 @@ static void il2c_SIGSEGV_handler(int sig)
     // Re-register
     signal(SIGSEGV, il2c_SIGSEGV_handler);
 
-    // TODO: can turn to static allocate for NullReferenceException?
-    System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
-    System_NullReferenceException__ctor_1(ex, il2c_null_reference_message);
-    il2c_throw(ex);
+    il2c_throw_nullreferenceexception__();
 }
 
 typedef void (*il2c_sighandler)(int sig);
@@ -769,6 +763,16 @@ double il2c_fmod(double lhs, double rhs)
 void il2c_break()
 {
     debug_break();
+}
+
+IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
+
+void il2c_throw_nullreferenceexception__()
+{
+    // TODO: can turn to static allocate for NullReferenceException?
+    System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
+    System_NullReferenceException__ctor_1(ex, il2c_null_reference_message);
+    il2c_throw(ex);
 }
 
 // MEMO: Hmm, the unbox failed message different to the castclass opcode...

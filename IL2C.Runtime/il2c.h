@@ -248,6 +248,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 extern double il2c_fmod(double lhs, double rhs);
 extern void il2c_break();
 
+extern void il2c_throw_nullreferenceexception__();
 extern void il2c_throw_invalidcastexception__();
 
 ///////////////////////////////////////////////////////

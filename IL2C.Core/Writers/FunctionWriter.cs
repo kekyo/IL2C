@@ -41,7 +41,7 @@ namespace IL2C.Writers
                     var handler = codeStream.ExceptionHandlers[handlerIndex];
 
                     var filterName = string.Format(
-                        "__{0}_ExceptionFilter{1}__",
+                        "{0}_ExceptionFilter{1}__",
                         preparedMethod.Method.CLanguageFunctionName,
                         handlerIndex);
                     tw.WriteLine(
@@ -203,7 +203,7 @@ namespace IL2C.Writers
 
                             // Reached try block:
                             var filterName = string.Format(
-                                "__{0}_ExceptionFilter{1}__",
+                                "{0}_ExceptionFilter{1}__",
                                 preparedMethod.Method.CLanguageFunctionName,
                                 handlerIndex);
                             tw.WriteLine("il2c_try({0}, {1})", nestedIndexName, filterName);

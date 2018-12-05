@@ -111,6 +111,93 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class VirtualOverrideAndNewImplementType : VirtualOverrideAndImplementType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
+        public new string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualOverrideAndImplicitlyAndNewImplementType : VirtualOverrideAndImplicitlyImplementType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
+        public new string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualOverrideAndNewVirtualImplementType : VirtualOverrideAndImplementType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
+        public new virtual string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualOverrideAndNewVirtualAndOverrideImplementType : VirtualOverrideAndNewVirtualImplementType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 400;
+
+        public override string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualOverrideAndNewVirtualAndOverrideReImplementType : VirtualOverrideAndNewVirtualImplementType, IInterfaceType1
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 400;
+
+        public override string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualNewVirtualStacked1Type : VirtualBaseType
+    {
+        public override string GetStringFromInt32(int value)
+        {
+            return base.GetStringFromInt32(value) + "AAA";
+        }
+    }
+
+    public class VirtualNewVirtualStacked2Type : VirtualNewVirtualStacked1Type, IInterfaceType1
+    {
+        public new virtual string GetStringFromInt32(int value)
+        {
+            return base.GetStringFromInt32(value) + "BBB";
+        }
+    }
+
+    public class VirtualNewVirtualStacked3Type : VirtualNewVirtualStacked2Type
+    {
+        public override string GetStringFromInt32(int value)
+        {
+            return base.GetStringFromInt32(value) + "CCC";
+        }
+    }
+
+    public class VirtualNewVirtualStacked4Type : VirtualNewVirtualStacked3Type
+    {
+        public new virtual string GetStringFromInt32(int value)
+        {
+            return base.GetStringFromInt32(value) + "DDD";
+        }
+    }
+
     [TestId("TypeRelations")]
     [TestCase("223", "InstanceImplicitlyImplement", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
@@ -134,6 +221,18 @@ namespace IL2C.RuntimeSystems
     [TestCase("323", "VirtualOverrideAndImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
     [TestCase("323", "VirtualOverrideAndImplicitlyImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
     [TestCase("323", "VirtualOverrideAndImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("423", "VirtualOverrideAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("323", "VirtualOverrideAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("423", "VirtualOverrideAndImplicitlyAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyAndNewImplementType), typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("323", "VirtualOverrideAndImplicitlyAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyAndNewImplementType), typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("423", "VirtualOverrideAndNewVirtualImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("323", "VirtualOverrideAndNewVirtualImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("323", "VirtualOverrideAndNewVirtualAndOverrideImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideReImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideReImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideReImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideReImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("223AAABBBCCCDDD", "VirtualNewVirtualStacked", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("223AAABBBCCC", "VirtualNewVirtualStackedFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
     public sealed class TypeInheritanceAndImplements
     {
         public static string InstanceImplicitlyImplement(int value)
@@ -265,6 +364,78 @@ namespace IL2C.RuntimeSystems
         public static string VirtualOverrideAndImplicitlyImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndImplicitlyImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewImplement(int value)
+        {
+            var inst = new VirtualOverrideAndNewImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewImplementFromInterface(int value)
+        {
+            IInterfaceType1 inst = new VirtualOverrideAndNewImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndImplicitlyAndNewImplement(int value)
+        {
+            var inst = new VirtualOverrideAndImplicitlyAndNewImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndImplicitlyAndNewImplementFromInterface(int value)
+        {
+            IInterfaceType1 inst = new VirtualOverrideAndImplicitlyAndNewImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewVirtualImplement(int value)
+        {
+            var inst = new VirtualOverrideAndNewVirtualImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewVirtualImplementFromInterface(int value)
+        {
+            IInterfaceType1 inst = new VirtualOverrideAndNewVirtualImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewVirtualAndOverrideImplement(int value)
+        {
+            var inst = new VirtualOverrideAndNewVirtualAndOverrideImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewVirtualAndOverrideImplementFromInterface(int value)
+        {
+            IInterfaceType1 inst = new VirtualOverrideAndNewVirtualAndOverrideImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewVirtualAndOverrideReImplement(int value)
+        {
+            var inst = new VirtualOverrideAndNewVirtualAndOverrideReImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideAndNewVirtualAndOverrideReImplementFromInterface(int value)
+        {
+            IInterfaceType1 inst = new VirtualOverrideAndNewVirtualAndOverrideReImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualNewVirtualStacked(int value)
+        {
+            var inst = new VirtualNewVirtualStacked4Type();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualNewVirtualStackedFromInterface(int value)
+        {
+            IInterfaceType1 inst = new VirtualNewVirtualStacked4Type();
             return inst.GetStringFromInt32(value);
         }
     }

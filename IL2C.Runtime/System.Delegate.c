@@ -219,5 +219,5 @@ System_Delegate_VTABLE_DECL__ System_Delegate_VTABLE__ = {
     (System_String* (*)(void*))System_Object_ToString
 };
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Delegate, "System.Delegate", IL2C_TYPE_VARIABLE, System_Object, System_Delegate_MarkHandler__, 0)
+IL2C_RUNTIME_TYPE_BEGIN(System_Delegate, "System.Delegate", IL2C_TYPE_VARIABLE, 0, System_Object, System_Delegate_MarkHandler__, 0)
 IL2C_RUNTIME_TYPE_END();

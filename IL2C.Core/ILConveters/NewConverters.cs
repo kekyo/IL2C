@@ -75,7 +75,7 @@ namespace IL2C.ILConverters
                     thisSymbol = decodeContext.PushStack(type, ctor);
 
                     pairParameters.AddFirst(new Utilities.RightExpressionGivenParameter(
-                        parameter.TargetType,
+                        type,
                         thisSymbol));
                 }
             }

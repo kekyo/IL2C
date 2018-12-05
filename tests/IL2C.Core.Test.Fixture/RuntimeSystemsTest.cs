@@ -29,6 +29,11 @@ namespace IL2C
         public static Task ArrayTypes([ValueSource(nameof(_ArrayTypes))] TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
+        public static readonly TestCaseInformation[] _ValueTypes = TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ValueTypes>();
+        [Test]
+        public static Task ValueTypes([ValueSource(nameof(_ValueTypes))] TestCaseInformation caseInfo) =>
+            TestFramework.ExecuteTestAsync(caseInfo);
+
         public static readonly TestCaseInformation[] _ExceptionHandling =
             TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ExceptionHandling>();
         [Test]

@@ -47,5 +47,5 @@ bool System_UIntPtr_Equals_1(uintptr_t* this__, System_Object* obj)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_UIntPtr);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_UIntPtr);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_UIntPtr, "System.UIntPtr", IL2C_TYPE_UNSIGNED_INTEGER, System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(System_UIntPtr, "System.UIntPtr", IL2C_TYPE_UNSIGNED_INTEGER, sizeof(System_UIntPtr), System_ValueType, 0, 0)
 IL2C_RUNTIME_TYPE_END();

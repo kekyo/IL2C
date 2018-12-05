@@ -188,6 +188,14 @@ namespace IL2C
                 }
             }
 
+            if (lhsType.IsInterface && rhsType.IsClass)
+            {
+                return string.Format(
+                    "il2c_castclass({0}, {1})",
+                    rhsExpression,
+                    lhsType.MangledName);
+            }
+
             if (rhsType.IsNumericPrimitive)
             {
                 // intValue = longValue

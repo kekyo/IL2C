@@ -164,8 +164,6 @@ namespace IL2C.Writers
                             declaredType.MangledName);
                     }
 
-                    // TODO: If value type implements interfaces, how to assigns vptr into value type?
-                    //   (We often have to resolve at enum types...)
                     var tookInterfaceTypes = new HashSet<ITypeInformation>();
                     var fields = declaredType.
                         Traverse(type => type.BaseType).
@@ -174,11 +172,15 @@ namespace IL2C.Writers
                         {
                             // The vptr can contain only one unique interface type.
                             var interfaceTypes = new List<ITypeInformation>();
-                            foreach (var interfaceType in type.InterfaceTypes)
+                            // Emit interface vptr (class/interface)
+                            if (declaredType.IsClass || declaredType.IsInterface)
                             {
-                                if (tookInterfaceTypes.Add(interfaceType))
+                                foreach (var interfaceType in type.InterfaceTypes)
                                 {
-                                    interfaceTypes.Add(interfaceType);
+                                    if (tookInterfaceTypes.Add(interfaceType))
+                                    {
+                                        interfaceTypes.Add(interfaceType);
+                                    }
                                 }
                             }
 

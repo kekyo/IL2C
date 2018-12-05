@@ -34,5 +34,5 @@ System_Enum_VTABLE_DECL__ System_Enum_VTABLE__ = {
     (System_String* (*)(void*))System_Enum_ToString
 };
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Enum, "System.Enum", IL2C_TYPE_REFERENCE, System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_ABSTRACT_BEGIN(System_Enum, "System.Enum", sizeof(System_Enum), System_ValueType, 0, 0)
 IL2C_RUNTIME_TYPE_END();

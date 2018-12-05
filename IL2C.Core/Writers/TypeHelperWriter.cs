@@ -113,6 +113,13 @@ namespace IL2C.Writers
                 tw.SplitLine();
             }
 
+            var declaredFields =
+                (!declaredType.IsEnum && !declaredType.IsDelegate) ?
+                    declaredType.Fields.
+                    Where(field => !field.IsStatic).
+                    ToArray() :
+                new IFieldInformation[0];
+
             // Aggregate all declared methods from derived to base types.
             var declaredMethods = declaredType.
                 Traverse(type => type.BaseType).
@@ -130,7 +137,7 @@ namespace IL2C.Writers
                 Distinct(). // Important operator sequence: distinct --> reverse
                 Reverse().  // Because all interface types overrided by derived class type,
                 ToArray();  // we have to aggregate to be visible interface types.
-            foreach (var interfaceType in interfaceTypes)
+            foreach (var (interfaceType, interfaceIndex) in interfaceTypes.Select((t, i) => (t, i)))
             {
                 var implementationMethods = interfaceType.DeclaredMethods.
                     Select(interfaceMethod =>
@@ -211,11 +218,25 @@ namespace IL2C.Writers
 
                 using (var _ = tw.Shift())
                 {
-                    // The adjustor offset.
-                    tw.WriteLine(
-                        "il2c_adjustor_offset({0}, {1}),",
-                        declaredType.MangledName,
-                        interfaceType.MangledName);
+                    // If value type:
+                    if (declaredType.IsValueType)
+                    {
+                        // The adjustor offset at the value type interface.
+                        // See 'System_ValueType.c' NOTE section.
+                        tw.WriteLine(
+                            "sizeof(System_ValueType) + {0} + sizeof(void*) * {1},",
+                            (declaredFields.Length >= 1) ?
+                                string.Format("sizeof({0})", declaredType.MangledName) :
+                                "0",
+                            interfaceIndex);
+                    }
+                    else
+                    {
+                        tw.WriteLine(
+                            "il2c_adjustor_offset({0}, {1}),",
+                            declaredType.MangledName,
+                            interfaceType.MangledName);
+                    }
 
                     foreach (var entry in implementationMethods)
                     {
@@ -235,15 +256,13 @@ namespace IL2C.Writers
 
             // Aggregate mark target fields (except the enum type and the delegate type)
             var markTargetFields =
-                (!declaredType.IsEnum && !declaredType.IsDelegate) ?
-                    declaredType.Fields.
-                    Where(field => !field.IsStatic && field.FieldType.IsReferenceType).
-                    ToArray() :
-                new IFieldInformation[0];
+                declaredFields.
+                Where(field => field.FieldType.IsReferenceType).
+                ToArray();
 
             // ex: IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
             tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5})",
+                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})",
                 declaredType.MangledName,
                 declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds)
                 declaredType.IsEnum ?      // Type attribute flags
@@ -251,6 +270,7 @@ namespace IL2C.Writers
                     declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
                     declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
                     "IL2C_TYPE_VALUE",
+                (declaredFields.Length >= 1) ? string.Format("sizeof({0})", declaredType.MangledName) : "0",
                 declaredType.BaseType.MangledName,
                 declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
                 interfaceTypes.Length);

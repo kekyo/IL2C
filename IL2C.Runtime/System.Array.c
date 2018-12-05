@@ -111,5 +111,5 @@ static void System_Array_MarkHandler(System_Array* arr)
     }
 }
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Array, "System.Array", IL2C_TYPE_VARIABLE, System_Object, System_Array_MarkHandler, 0)
+IL2C_RUNTIME_TYPE_BEGIN(System_Array, "System.Array", IL2C_TYPE_VARIABLE, 0, System_Object, System_Array_MarkHandler, 0)
 IL2C_RUNTIME_TYPE_END();

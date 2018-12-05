@@ -254,21 +254,24 @@ extern void il2c_throw_invalidcastexception__();
 ///////////////////////////////////////////////////////
 // Generator macro for runtime type information.
 
-#define IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, baseType, vptr0, markTarget, interfaceCount) \
+#define IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, size, baseType, vptr0, markTarget, interfaceCount) \
 const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
     (uintptr_t)(typeNameString), \
     flags, \
-    sizeof(typeName), \
+    size, \
     (uintptr_t)baseType, \
     (uintptr_t)vptr0, \
     (uintptr_t)markTarget, \
     interfaceCount,
 
-#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, baseTypeName, markTarget, interfaceCount) \
-    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, il2c_typeof(baseTypeName), il2c_vptrof(typeName), markTarget, interfaceCount)
+#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, size, baseTypeName, markTarget, interfaceCount) \
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, size, il2c_typeof(baseTypeName), il2c_vptrof(typeName), markTarget, interfaceCount)
+
+#define IL2C_RUNTIME_TYPE_ABSTRACT_BEGIN(typeName, typeNameString, size, baseTypeName, markTarget, interfaceCount) \
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_REFERENCE, size, il2c_typeof(baseTypeName), NULL, markTarget, interfaceCount)
 
 #define IL2C_RUNTIME_TYPE_INTERFACE_BEGIN(typeName, typeNameString, interfaceCount) \
-    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_INTERFACE, NULL, NULL, 0, interfaceCount)
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_INTERFACE, 0, NULL, NULL, 0, interfaceCount)
 
 #define IL2C_RUNTIME_TYPE_MARK_TARGET(typeName, fieldName) \
     offsetof(typeName, fieldName),

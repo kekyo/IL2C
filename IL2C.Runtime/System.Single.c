@@ -67,5 +67,5 @@ bool System_Single_TryParse(System_String* s, float* result)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Single);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Single);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Single, "System.Single", IL2C_TYPE_VALUE, System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(System_Single, "System.Single", IL2C_TYPE_VALUE, sizeof(System_Single), System_ValueType, 0, 0)
 IL2C_RUNTIME_TYPE_END();

@@ -86,6 +86,27 @@ void* il2c_get_uninitialized_object_internal__(
     return pReference;
 }
 
+static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
+{
+    il2c_assert(type != NULL);
+    il2c_assert(pReference != NULL);
+
+    // Setup interface vptrs.
+    IL2C_IMPLEMENTED_INTERFACE* pInterface =
+        (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
+    uintptr_t index;
+    for (index = 0;
+        index < type->interfaceCount;
+        index++, pInterface++)
+    {
+        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
+
+        // The interface vptr offset placed at vptr[0].
+        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
+        *((const void**)(((uint8_t*)pReference) + offset)) = pInterface->vptr0;
+    }
+}
+
 void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 {
     il2c_assert(type != NULL);
@@ -101,19 +122,7 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     *((const void**)pReference) = type->vptr0;
 
     // Setup interface vptrs.
-    IL2C_IMPLEMENTED_INTERFACE* pInterface =
-        (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
-    uintptr_t index;
-    for (index = 0;
-        index < type->interfaceCount;
-        index++, pInterface++)
-    {
-        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
-
-        // The interface vptr offset placed at vptr[0].
-        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
-        *((const void**)(pReference + offset)) = pInterface->vptr0;
-    }
+    il2c_setup_interface_vptrs(type, pReference);
 
     return pReference;
 }
@@ -330,19 +339,44 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE typ
     il2c_assert(type != NULL);
     il2c_assert(pReference != NULL);
 
-    // TODO: interface types
-
-    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
+    void* pAdjustedReference = il2c_adjusted_reference(pReference);
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
     IL2C_RUNTIME_TYPE currentType = pHeader->type;
-    do
+
+    if (type->flags & IL2C_TYPE_INTERFACE)
     {
-        if (currentType == type)
+        do
         {
-            return pReference;
-        }
-        currentType = currentType->baseType;
+            IL2C_IMPLEMENTED_INTERFACE* pInterface =
+                (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(currentType + 1)) + type->markTarget);
+            uintptr_t index;
+            for (index = 0;
+                index < currentType->interfaceCount;
+                index++, pInterface++)
+            {
+                il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
+
+                if (pInterface->type == type)
+                {
+                    uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
+                    return *((const void**)(((uint8_t*)pAdjustedReference) + offset));
+                }
+            }
+
+            currentType = currentType->baseType;
+        } while (currentType != NULL);
     }
-    while (currentType != NULL);
+    else
+    {
+        do
+        {
+            if (currentType == type)
+            {
+                return pReference;
+            }
+            currentType = currentType->baseType;
+        } while (currentType != NULL);
+    }
 
     return NULL;
 }
@@ -351,8 +385,6 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 {
     il2c_assert(type != NULL);
     il2c_assert(pReference != NULL);
-
-    // TODO: interface types
 
     void* p = il2c_isinst__(pReference, type);
     if (p == NULL)
@@ -375,6 +407,10 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 // | (value data)         | Copy from pValue    | type->bodySize      |
 // |        :             |                     v                     v
 // +----------------------+                   ---------------------------
+// | vptr_IFoo__          |                     | (optional implemented interface vptr)
+// +----------------------+                   ---------------------------
+// | vptr_IBar__          |                     | (optional implemented interface vptr)
+// +----------------------+                   ---------------------------
 
 System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType)
@@ -382,11 +418,16 @@ System_ValueType* il2c_box__(
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
 
-    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
+    uintptr_t bodySize = sizeof(System_ValueType) +
+        valueType->bodySize +
+        valueType->interfaceCount * sizeof(void*);  // interface vptrs
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
     pBoxed->vptr0__ = valueType->vptr0;
     il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
+
+    // Setup interface vptrs.
+    il2c_setup_interface_vptrs(valueType, pBoxed);
 
     return pBoxed;
 }
@@ -497,7 +538,9 @@ System_ValueType* il2c_box2__(
         il2c_throw_invalidcastexception__();
     }
 
-    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
+    uintptr_t bodySize = sizeof(System_ValueType) +
+        valueType->bodySize +
+        valueType->interfaceCount * sizeof(void*);  // interface vptrs
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
     // vptr0 setup.
@@ -518,6 +561,9 @@ System_ValueType* il2c_box2__(
         il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i8, 8);
         break;
     }
+
+    // Setup interface vptrs.
+    il2c_setup_interface_vptrs(valueType, pBoxed);
 
     return pBoxed;
 }

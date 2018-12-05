@@ -441,5 +441,5 @@ System_String_VTABLE_DECL__ System_String_VTABLE__ = {
     (System_String* (*)(void*))System_String_ToString,
 };
 
-IL2C_RUNTIME_TYPE_BEGIN(System_String, "System.String", IL2C_TYPE_VARIABLE, System_Object, NULL, 0)
+IL2C_RUNTIME_TYPE_BEGIN(System_String, "System.String", IL2C_TYPE_VARIABLE, 0, System_Object, NULL, 0)
 IL2C_RUNTIME_TYPE_END();

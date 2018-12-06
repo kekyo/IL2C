@@ -6,6 +6,7 @@ using Mono.Cecil.Cil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
+using IL2C.Metadata.Specialized;
 
 namespace IL2C.ILConverters
 {
@@ -21,9 +22,18 @@ namespace IL2C.ILConverters
 
             // Constrained prefix applied, drop virtual call and hack the boxing for arg0 if required.
             //   (See ConstrainedConverter.)
+            ITypeInformation requiredBoxingAtArg0ValueType = null;
             var prefixCode = decodeContext.PrefixCode;
             if (prefixCode?.OpCode == OpCodes.Constrained)
             {
+                // 'The constrained. prefix is permitted only on a callvirt instruction.'
+                if (!isVirtualCall)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Cannot apply constrained prefix: Location={0}",
+                        decodeContext.CurrentCode.RawLocation);
+                }
+
                 // ECMA-335 III.2.1 constrained. - (prefix) invoke a member on a value of a variable type
                 var constrainedType = (ITypeInformation)(prefixCode.Operand);
 
@@ -45,11 +55,12 @@ namespace IL2C.ILConverters
                         method = implementationMethod;
                     }
                     // '...and thisType does not implement method then'
-                    else if (constrainedType.IsValueType)
+                    else
                     {
                         // 'ptr is dereferenced, boxed, and passed as the ‘this’ pointer to the callvirt of method'
 
-                        // TODO:
+                        // VERY DIRTY
+                        requiredBoxingAtArg0ValueType = constrainedType;
                     }
                 }
             }
@@ -57,22 +68,60 @@ namespace IL2C.ILConverters
             //////////////////////////////////////////////////////////
             // Step 2:
 
+            ILocalVariableInformation requiredBoxingAtArg0PointerVariable = null;
+
             // Construct parameters with expressions.
             var pairParameters = method.Parameters.
-                Reverse().
+                Reverse().  // arg(n - 1) ... arg0
                 Select(parameter =>
                 {
                     var arg = decodeContext.PopStack();
 
-                    // Adjust offset if it's virtual method and arg0.
-                    if (isVirtualCall && (parameter.Index == 0))
+                    // Arg0
+                    if (parameter.Index == 0)
                     {
-                        return new
+                        // Required boxing at the arg0
+                        if (requiredBoxingAtArg0ValueType != null)
                         {
-                            Type = parameter.TargetType,
-                            Variable = arg,
-                            Format = "il2c_adjusted_reference({0})"
-                        };
+                            if (!arg.TargetType.IsByReference)
+                            {
+                                throw new InvalidProgramSequenceException(
+                                    "Cannot apply constrained prefix, arg0 isn't byref: Location={0}, Arg0Type={1}",
+                                    decodeContext.CurrentCode.RawLocation,
+                                    arg.TargetType.FriendlyName);
+                            }
+
+                            requiredBoxingAtArg0PointerVariable = arg;
+                            var arg0BoxedSymbol = decodeContext.PushStack(
+                                new BoxedValueTypeInformation(requiredBoxingAtArg0ValueType));
+                            decodeContext.PopStack();
+
+                            return new
+                            {
+                                Type = parameter.TargetType,
+                                Variable = arg0BoxedSymbol,
+                                Format = "{0}"
+                            };
+                        }
+                        // Include adjust offset expression if it's virtual method
+                        else if (isVirtualCall)
+                        {
+                            return new
+                            {
+                                Type = parameter.TargetType,
+                                Variable = arg,
+                                Format = "il2c_adjusted_reference({0})"
+                            };
+                        }
+                        else
+                        {
+                            return new
+                            {
+                                Type = parameter.TargetType,
+                                Variable = arg,
+                                Format = "{0}"
+                            };
+                        }
                     }
                     else
                     {
@@ -139,6 +188,9 @@ namespace IL2C.ILConverters
                     }
                     else
                     {
+                        Debug.Assert(requiredBoxingAtArg0ValueType == null);
+                        Debug.Assert(requiredBoxingAtArg0PointerVariable == null);
+
                         return new[]
                         {
                             string.Format(
@@ -171,19 +223,36 @@ namespace IL2C.ILConverters
                             First(entry => entry.method.Equals(method)).
                             overloadIndex;
 
-                        return new[]
+                        // TODO: interface member vptr
+                        var callBody = string.Format(
+                            "{0} = {1}->vptr0__->{2}({3})",
+                            extractContext.GetSymbolName(result),
+                            extractContext.GetSymbolName(pairParameters[0].Variable),
+                            method.GetCLanguageDeclarationName(overloadIndex),
+                            parameterString);
+
+                        if (requiredBoxingAtArg0ValueType != null)
                         {
-                            // TODO: interface member vptr
-                            string.Format(
-                                "{0} = {1}->vptr0__->{2}({3})",
-                                extractContext.GetSymbolName(result),
-                                extractContext.GetSymbolName(pairParameters[0].Variable),
-                                method.GetCLanguageDeclarationName(overloadIndex),
-                                parameterString)
-                        };
+                            Debug.Assert(requiredBoxingAtArg0PointerVariable != null);
+
+                            return new[] {
+                                string.Format(
+                                    "{0} = il2c_box({1}, {2})",
+                                    extractContext.GetSymbolName(pairParameters[0].Variable),
+                                    extractContext.GetSymbolName(requiredBoxingAtArg0PointerVariable),
+                                    requiredBoxingAtArg0ValueType.MangledName),
+                                callBody };
+                        }
+                        else
+                        {
+                            return new[] { callBody };
+                        }
                     }
                     else
                     {
+                        Debug.Assert(requiredBoxingAtArg0ValueType == null);
+                        Debug.Assert(requiredBoxingAtArg0PointerVariable == null);
+
                         return new[]
                         {
                             string.Format(

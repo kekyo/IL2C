@@ -5,7 +5,7 @@
 
 System_String* System_ValueType_ToString(System_ValueType* this__)
 {
-    return NULL;
+    return System_Object_ToString((System_Object*)this__);
 }
 
 int32_t System_ValueType_GetHashCode(System_ValueType* this__)

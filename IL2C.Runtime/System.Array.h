@@ -38,7 +38,7 @@ extern int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimensio
 extern void il2c_throw_indexoutofrangeexception__();
 
 // It made identical type expression for array type.
-#define il2c_array(elementTypeName) \
+#define il2c_arraytype(elementTypeName) \
     System_Array
 
 #define il2c_array_item0ptr__(array) \
@@ -66,7 +66,7 @@ static inline void* il2c_array_item__(
 extern System_Array* il2c_new_array__(
     IL2C_RUNTIME_TYPE elementType, intptr_t length);
 #define il2c_new_array(elementTypeName, length) \
-    ((il2c_array(elementTypeName)*)il2c_new_array__(il2c_typeof(elementTypeName), length))
+    ((il2c_arraytype(elementTypeName)*)il2c_new_array__(il2c_typeof(elementTypeName), length))
 
 #ifdef __cplusplus
 }

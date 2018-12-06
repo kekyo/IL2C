@@ -194,9 +194,9 @@ int32_t IL2C_RuntimeSystems_ArrayTypes_FromInt32Resource(int32_t index)
         uint8_t objRefCount__;
         uint8_t objRefRefCount__;
         IL2C_EXECUTION_FRAME* pNext__;
-        il2c_array(System_Int32)* local0__;
-        il2c_array(System_Int32)* stack0_1__;
-        il2c_array(System_Int32)* stack1_0__;
+        il2c_arraytype(System_Int32)* local0__;
+        il2c_arraytype(System_Int32)* stack0_1__;
+        il2c_arraytype(System_Int32)* stack1_0__;
     } frame__ = { 3, 0 };
     il2c_link_execution_frame(&frame__);
 

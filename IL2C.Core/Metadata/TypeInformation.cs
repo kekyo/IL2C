@@ -62,9 +62,10 @@ namespace IL2C.Metadata
         bool IsStringType { get; }
 
         bool IsUntypedReferenceType { get; }
+        bool IsBoxedType { get; }
 
-        int SizeOfValue { get; }
-        object PseudoEmptyValue { get; }
+        int InternalStaticSizeOfValue { get; }
+        object InternalStaticEmptyValue { get; }
 
         ITypeInformation BaseType { get; }
         ITypeInformation ElementType { get; }
@@ -82,6 +83,7 @@ namespace IL2C.Metadata
 
         string CLanguageTypeName { get; }
         string CLanguageThisTypeName { get; }
+        string CLanguageStaticSizeOfExpression { get; }
 
         bool IsAssignableFrom(ITypeInformation rhs);
 
@@ -218,11 +220,11 @@ namespace IL2C.Metadata
 
         public bool IsInt32StackFriendlyType =>
             (this.IsIntegerPrimitive || this.IsBooleanType || this.IsEnum) &&
-            (this.SizeOfValue >= 1) && (this.SizeOfValue <= 4);
+            (this.InternalStaticSizeOfValue >= 1) && (this.InternalStaticSizeOfValue <= 4);
 
         public bool IsInt64StackFriendlyType =>
             (this.IsIntegerPrimitive || this.IsBooleanType || this.IsEnum) &&
-            (this.SizeOfValue >= 1) && (this.SizeOfValue <= 8);
+            (this.InternalStaticSizeOfValue >= 1) && (this.InternalStaticSizeOfValue <= 8);
 
         public bool IsFloatStackFriendlyType =>
             this.Equals(this.MetadataContext.SingleType) ||
@@ -257,23 +259,24 @@ namespace IL2C.Metadata
         public bool IsBooleanType => this.Equals(this.MetadataContext.BooleanType);
 
         public bool IsUntypedReferenceType => false;
+        public bool IsBoxedType => false;
 
-        private static int GetSizeOfValue(ITypeInformation type) =>
+        private static int InternalGetStaticSizeOfValue(ITypeInformation type) =>
             // Recently, the bool type is usually defined by 1byte space type.
             (type.IsByteType || type.IsSByteType || type.IsBooleanType) ? 1 :
             (type.IsInt16Type || type.IsUInt16Type || type.IsCharType) ? 2 :
             (type.IsInt32Type || type.IsUInt32Type || type.IsSingleType) ? 4 :
             (type.IsInt64Type || type.IsUInt64Type || type.IsDoubleType || type.IsIntPtrType || type.IsUIntPtrType) ? 8 :
-            type.IsEnum ? GetSizeOfValue(type.ElementType) :  // Enum size is element (underlying) type size.
-            0;
+            type.IsEnum ? InternalGetStaticSizeOfValue(type.ElementType) :  // Enum size is element (underlying) type size.
+            0;  // TODO: throw
 
-        public int SizeOfValue => GetSizeOfValue(this);
+        public int InternalStaticSizeOfValue => InternalGetStaticSizeOfValue(this);
 
-        public object PseudoEmptyValue
+        public object InternalStaticEmptyValue
         {
             get
             {
-                if (this.IsClass || this.IsInterface) return null;
+                if (this.IsReferenceType) return null;
                 if (this.IsByReference || this.IsPointer) return null;
                 if (this.IsByteType) return (byte)0;
                 if (this.IsSByteType) return (sbyte)0;
@@ -289,7 +292,7 @@ namespace IL2C.Metadata
                 if (this.IsDoubleType) return (double)0;
                 if (this.IsCharType) return (char)0;
                 if (this.IsBooleanType) return false;
-                if (this.IsEnum) return 0;
+                if (this.IsEnum) return this.ElementType.InternalStaticEmptyValue;
                 return null;
             }
         }
@@ -428,7 +431,7 @@ namespace IL2C.Metadata
                 else
                 {
                     return string.Format(
-                        "il2c_array({0})*{1}",
+                        "il2c_arraytype({0})*{1}",
                         this.ElementType.MangledName,
                         sn);
                 }
@@ -517,6 +520,26 @@ namespace IL2C.Metadata
 
         public string CLanguageThisTypeName =>
             this.IsValueType ? (this.CLanguageTypeName + "*") : this.CLanguageTypeName;
+
+        public string CLanguageStaticSizeOfExpression
+        {
+            get
+            {
+                // The class type contains surely one or more vptrs.
+                if (this.IsClass || (this.Fields.Length >= 1))
+                {
+                    return string.Format("sizeof({0})", this.MangledName);
+                }
+                else if (this.IsInterface)
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    return "0";
+                }
+            }
+        }
 
         public bool IsAssignableFrom(ITypeInformation rhs)
         {

@@ -99,16 +99,21 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
     (offsetof(typeName, vptr_##interfaceTypeName##__) - offsetof(typeName, vptr0__))
 #define il2c_adjusted_reference(pRawReference) \
     ((void*)((uint8_t*)(pRawReference) - (**(const intptr_t**)(pRawReference))))
-#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
+
+//#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
+//    ((pReference != NULL) ? \
+//        ((typeName*)(((uint8_t*)(pInterface)) - \
+//         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
+//        NULL)
+
+#define il2c_cast_to_interface__(interfaceTypeName, offset, pReference) \
     ((pReference != NULL) ? \
-        ((typeName*)(((uint8_t*)(pInterface)) - \
-         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
+        ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset))) : \
         NULL)
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
-    ((pReference != NULL) ? \
-        ((interfaceTypeName*)(((uint8_t*)(pReference)) + \
-         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
-        NULL)
+    il2c_cast_to_interface__(interfaceTypeName, il2c_adjustor_offset(typeName, interfaceTypeName), (pReference))
+#define il2c_cast_from_boxed_to_interface(interfaceTypeName, size, interfaceIndex, pReference) \
+    il2c_cast_to_interface__(interfaceTypeName, sizeof(System_ValueType) + (size) + (interfaceIndex) * sizeof(void*), (pReference))
 
 ///////////////////////////////////////////////////////
 // Garbage collector related declarations
@@ -159,6 +164,10 @@ typedef void* untyped_ptr;
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations
+
+// It made identical type expression for boxed value type.
+#define il2c_boxedtype(valueTypeName) \
+    System_ValueType
 
 extern System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType);

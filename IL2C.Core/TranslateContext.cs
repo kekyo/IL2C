@@ -170,6 +170,24 @@ namespace IL2C
                         lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
+                // (RefType) <-- boxedtype<HogeValue>  (maybe box value)
+                else if (lhsType.IsClass && rhsType.IsBoxedType)
+                {
+                    return string.Format(
+                        "({0}){1}",
+                        lhsType.CLanguageTypeName,
+                        rhsExpression);
+                }
+                // IHoge <-- boxedtype<HogeValue>  (maybe box value)
+                else if (lhsType.IsInterface && rhsType.IsBoxedType)
+                {
+                    return string.Format(
+                        "il2c_cast_from_boxed_to_interface({0}, {1}, {2}, {3})",
+                        lhsType.MangledName,
+                        rhsType.ElementType.CLanguageStaticSizeOfExpression,
+                        rhsType.InterfaceTypes.Select((t, i) => (t, i)).First().i,
+                        rhsExpression);
+                }
                 // IHoge <-- Hoge  (use il2c_cast_to_interface() macro)
                 else if (lhsType.IsInterface && !rhsType.IsInterface)
                 {
@@ -186,14 +204,6 @@ namespace IL2C
                         lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
-            }
-
-            if (lhsType.IsInterface && rhsType.IsClass)
-            {
-                return string.Format(
-                    "il2c_castclass({0}, {1})",
-                    rhsExpression,
-                    lhsType.MangledName);
             }
 
             if (rhsType.IsNumericPrimitive)

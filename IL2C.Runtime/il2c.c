@@ -359,7 +359,7 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE typ
                 if (pInterface->type == type)
                 {
                     uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
-                    return *((const void**)(((uint8_t*)pAdjustedReference) + offset));
+                    return *((void**)(((uint8_t*)pAdjustedReference) + offset));
                 }
             }
 

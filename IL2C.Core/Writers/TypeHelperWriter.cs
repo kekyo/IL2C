@@ -225,9 +225,7 @@ namespace IL2C.Writers
                         // See 'System_ValueType.c' NOTE section.
                         tw.WriteLine(
                             "sizeof(System_ValueType) + {0} + sizeof(void*) * {1},",
-                            (declaredFields.Length >= 1) ?
-                                string.Format("sizeof({0})", declaredType.MangledName) :
-                                "0",
+                            declaredType.CLanguageStaticSizeOfExpression,
                             interfaceIndex);
                     }
                     else
@@ -260,17 +258,17 @@ namespace IL2C.Writers
                 Where(field => field.FieldType.IsReferenceType).
                 ToArray();
 
-            // ex: IL2C_RUNTIME_TYPE_BEGIN(System_ValueType, "System.ValueType", IL2C_TYPE_REFERENCE, System_Object, 0, 0)
+            // ex: IL2C_RUNTIME_TYPE_BEGIN(Foo_Bar, "Foo.Bar", IL2C_TYPE_REFERENCE, sizeof(Foo_Bar), System_Object, 0, 0)
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})",
                 declaredType.MangledName,
-                declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds)
+                declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
                 declaredType.IsEnum ?      // Type attribute flags
                     (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
                     declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
                     declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
                     "IL2C_TYPE_VALUE",
-                (declaredFields.Length >= 1) ? string.Format("sizeof({0})", declaredType.MangledName) : "0",
+                declaredType.CLanguageStaticSizeOfExpression,
                 declaredType.BaseType.MangledName,
                 declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
                 interfaceTypes.Length);
@@ -320,7 +318,7 @@ namespace IL2C.Writers
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_INTERFACE_BEGIN({0}, \"{1}\", {2})",
                 declaredType.MangledName,
-                declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds)
+                declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
                 interfaceTypes.Length);
 
             using (var _ = tw.Shift())

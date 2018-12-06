@@ -4,6 +4,7 @@ using Mono.Cecil.Cil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
+using IL2C.Metadata.Specialized;
 
 namespace IL2C.ILConverters
 {
@@ -28,12 +29,12 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            // MEMO: The 'O' type means System.Object, but we have to push the System.ValueType.
+            // MEMO: The 'O' type means System.Object, but we have to push the System.ValueType (BoxedValueTypeInformation).
             //   Because the boxed value types can implicit cast to both types.
             //   The upcast can be inlining (System.ValueType --> System.Object),
             //   but downcast requires runtime cast operator (System.Object --> System.ValueType).
             var symbol = decodeContext.PushStack(
-                decodeContext.PrepareContext.MetadataContext.ValueTypeType);
+                new BoxedValueTypeInformation(si.TargetType));
 
             // MEMO: The IL2C strict type infers the evaluation stack.
             //   The unbox operator is handling by the pointer.
@@ -44,7 +45,7 @@ namespace IL2C.ILConverters
             //     // object value = (byte)123;
             //     ldc.i4.s 123                 // int32_t
             //     box [mscorlib]System.Byte    // int32_t --> objref(uint8_t)   // size[4] --> size[1]
-            if (operand.SizeOfValue == si.TargetType.SizeOfValue)
+            if (operand.InternalStaticSizeOfValue == si.TargetType.InternalStaticSizeOfValue)
             {
                 return extractContext =>
                 {

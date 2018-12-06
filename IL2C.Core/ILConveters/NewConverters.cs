@@ -132,15 +132,15 @@ namespace IL2C.ILConverters
                 // newobj opcode can handle value type with parameter applied constructor.
                 if (type.IsValueType)
                 {
-                    var typeName = type.CLanguageTypeName;
                     // If constructor's arguments greater than or equal 2 (this and others)
                     if (pairParameters.Count >= 2)
                     {
+                        var typeName = type.CLanguageTypeName;
                         return new[] {
                             string.Format(
-                                "memset(&{0}, 0x00, sizeof({1}))",
+                                "memset(&{0}, 0x00, {1})",
                                 extractContext.GetSymbolName(thisSymbol),
-                                typeName),
+                                type.CLanguageStaticSizeOfExpression),
                             (overloadIndex >= 1) ?
                                 string.Format(
                                     "{0}__ctor_{1}(&{2})",
@@ -157,9 +157,9 @@ namespace IL2C.ILConverters
                     {
                         // ValueType's default constructor not declared.
                         return new[] { string.Format(
-                            "memset(&{0}, 0x00, sizeof({1}))",
+                            "memset(&{0}, 0x00, {1})",
                             extractContext.GetSymbolName(thisSymbol),
-                            typeName) };
+                            type.CLanguageStaticSizeOfExpression) };
                     }
                 }
                 // Object reference types.
@@ -172,19 +172,6 @@ namespace IL2C.ILConverters
                             extractContext.GetSymbolName(thisSymbol),
                             type.MangledName)
                     };
-
-                    // TODO: Setup vptr from vtables.
-                    var vptrs = type.InterfaceTypes.Select(interfaceType =>
-                    {
-                        // Interface's vptr:
-                        //   These are unique tables by pair of instance type and interface type.
-                        //   Because vtable has function pointers from unique adjustor thunk by instance type layout offset.
-                        return string.Format(
-                            "{0}->vptr_{1}__ = &{2}_{1}_VTABLE__",
-                            extractContext.GetSymbolName(thisSymbol),
-                            interfaceType.MangledName,
-                            type.MangledName);
-                    });
 
                     var callCtor = new[]
                     {
@@ -201,7 +188,6 @@ namespace IL2C.ILConverters
                     };
 
                     return get.
-                        //Concat(vptrs). // TODO: 
                         Concat(callCtor).
                         ToArray();
                 }

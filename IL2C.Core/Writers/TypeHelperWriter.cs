@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 using IL2C.Metadata;
@@ -7,44 +8,35 @@ namespace IL2C.Writers
 {
     internal static class TypeHelperWriter
     {
-        public static void InternalConvertTypeHelper(
+        private static void InternalConvertTrampolineVirtualFunction(
             CodeTextWriter tw,
-            ITypeInformation declaredType)
+            ITypeInformation declaredType,
+            IMethodInformation method)
         {
-            Debug.Assert(!declaredType.IsInterface);
+            tw.WriteLine(
+                "// [7-12] Trampoline virtual function: {0}",
+                method.FriendlyName);
+            tw.WriteLine(
+                "static {0} {1}_Trampoline_VFunc__(System_ValueType* this__{2})",
+                method.ReturnType.CLanguageTypeName,
+                method.CLanguageFunctionName,
+                string.Concat(method.Parameters.
+                    Skip(1).
+                    Select(p => string.Format(", {0} {1}", p.TargetType.CLanguageTypeName, p.ParameterName))));
+            tw.WriteLine(
+                "{");
 
-            tw.WriteLine("//////////////////////");
-            tw.WriteLine("// [7] Runtime helpers:");
-            tw.SplitLine();
-
-            // Write trampoline virtual functions if type is value type.
-            var virtualMethods = declaredType.CalculatedVirtualMethods;
-            var trampolineTargets = virtualMethods.
-                Where(entry => declaredType.IsValueType && entry.method.DeclaringType.Equals(declaredType)).
-                Select(entry => entry.method).
-                ToArray();
-            foreach (var method in trampolineTargets)
+            using (var _ = tw.Shift())
             {
                 tw.WriteLine(
-                    "// [7-12] Trampoline virtual function: {0}",
-                    method.FriendlyName);
-                tw.WriteLine(
-                    "static {0} {1}_Trampoline_VFunc__(System_ValueType* this__{2})",
-                    method.ReturnType.CLanguageTypeName,
-                    method.CLanguageFunctionName,
-                    string.Concat(method.Parameters.
-                        Skip(1).
-                        Select(p => string.Format(", {0} {1}", p.TargetType.CLanguageTypeName, p.ParameterName))));
-                tw.WriteLine(
-                    "{");
+                    "il2c_assert(this__ != NULL);");
+                tw.SplitLine();
 
-                using (var _ = tw.Shift())
+                // This method is virtual (or overrided).
+                if (method.IsVirtual)
                 {
                     tw.WriteLine(
-                        "il2c_assert(this__ != NULL);");
-                    tw.SplitLine();
-                    tw.WriteLine(
-                        "{0}* pValue =",
+                        "{0}* pValue =  // unbox without copy because it's truly objref",
                         declaredType.CLanguageTypeName);
 
                     using (var __ = tw.Shift())
@@ -61,10 +53,141 @@ namespace IL2C.Writers
                             Skip(1).
                             Select(p => string.Format(", {0}", p.ParameterName))));    // These aren't required expression evaluation.
                 }
+                // This method implemented onto the interface.
+                else
+                {
+                    Debug.Assert(method.IsOverridedOrImplemented);
 
-                tw.WriteLine(
-                    "}");
-                tw.SplitLine();
+                    // It requires unboxing WITH COPY.
+                    tw.WriteLine(
+                        "{0} value =  // unbox with copy because it will be from interface reference",
+                        declaredType.CLanguageTypeName);
+
+                    using (var __ = tw.Shift())
+                    {
+                        tw.WriteLine(
+                            "*il2c_unsafe_unbox__(this__, {0});",
+                            declaredType.CLanguageTypeName);
+                    }
+
+                    tw.WriteLine(
+                        "return {0}(&value{1});",
+                        method.CLanguageFunctionName,
+                        string.Concat(method.Parameters.
+                            Skip(1).
+                            Select(p => string.Format(", {0}", p.ParameterName))));    // These aren't required expression evaluation.
+                }
+            }
+
+            tw.WriteLine(
+                "}");
+            tw.SplitLine();
+        }
+
+        private static (IMethodInformation interfaceMethod, IMethodInformation targetMethod)[] CalculateImplementationMethods(
+            ITypeInformation declaredType, ITypeInformation interfaceType, IMethodInformation[] declaredMethods)
+        {
+            return interfaceType.DeclaredMethods.
+                Select(interfaceMethod =>
+                {
+                    // Extract interface implementation methods by overrided from derived to based.
+                    var targetMethod = declaredMethods.
+                        Select(dm => dm.Overrides.Contains(interfaceMethod) ? dm : null).
+                        FirstOrDefault(vm => vm != null);
+                    if (targetMethod != null)
+                    {
+                        return (interfaceMethod, targetMethod);
+                    }
+
+                    /////////////////////////////////////////////////////////
+                    // If didn't find the method for explicitly implementation,
+                    // try to find implicitly implementation by the method signature.
+                    // (See also: InstanceMultipleCombinedImplement test)
+
+                    // Detect the implicitly interface implemented method:
+
+                    // (1) Aggregate all visible declared methods from derived to base types.
+                    //   firstInterfaceImplementedType = Foo2
+                    //     interfaceType: IBar1
+                    //     System.Object <-- Foo1 <-- Foo2 <-- Foo3
+                    //                       |        |        +-- IBar2 / Method1
+                    //                       |        +----------- IBar1 / Method2, Method3
+                    //                       +-------------------- IBar2 / Method1, Method3
+                    //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
+                    //     (Except Foo1.Method3 by VirtualMethodSignatureComparer)
+                    var firstInterfaceImplementedType = declaredType.
+                        Traverse(type => type.BaseType).
+                        First(type => type.InterfaceTypes.Contains(interfaceType));
+                    var declaredVisibleMethods = firstInterfaceImplementedType.
+                        Traverse(type => type.BaseType).
+                        SelectMany(type => type.DeclaredMethods).
+                        Where(dm => !dm.IsConstructor && !dm.IsStatic &&
+                            (dm.IsPublic || dm.IsFamily || dm.IsFamilyOrAssembly)).
+                        Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
+                        ToArray();
+
+                    // (2) Find first matching declaredMethod for same as this interfaceMethod.
+                    //     "Same" means the method signature (using VirtualMethodSignatureComparer)
+                    //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
+                    //   interfaceMethod = IBar2.Method1
+                    //   targetBaseMethod = Foo1.Method1
+                    var targetBaseMethod = declaredVisibleMethods.
+                        Select(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod) ? dm : null).
+                        First(dm => dm != null);    // We will find exactly.
+
+                    // (3) Find last matching (mostly derived) method from base to overrides.
+                    //   baseInterfaceImplementedTypes = [Foo1, Foo2, Foo3]
+                    //   interfaceMethod = IBar2.Method1
+                    //   targetBaseMethod = Foo1.Method1
+                    //   lastMatchedMethod = Foo3.Method1
+                    var baseInterfaceImplementedTypes = declaredType.
+                        Traverse(type => type.BaseType).
+                        Reverse().
+                        Where(type => targetBaseMethod.DeclaringType.IsAssignableFrom(type)).
+                        ToArray();
+                    targetMethod = baseInterfaceImplementedTypes.
+                        SelectMany(type => type.DeclaredMethods.
+                            Where(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod))).
+                        TakeWhile(dm => (dm.IsVirtual && (!dm.IsNewSlot || dm.IsReuseSlot)) ||
+                            dm.Equals(targetBaseMethod)).
+                        Last();
+
+                    return (interfaceMethod, targetMethod);
+                }).
+                ToArray();
+        }
+
+        public static void InternalConvertTypeHelper(
+            CodeTextWriter tw,
+            ITypeInformation declaredType)
+        {
+            Debug.Assert(!declaredType.IsInterface);
+
+            tw.WriteLine("//////////////////////");
+            tw.WriteLine("// [7] Runtime helpers:");
+            tw.SplitLine();
+
+            // Get virtual methods.
+            var virtualMethods = declaredType.CalculatedVirtualMethods;
+
+            // Aggregate all declared methods from derived to base types.
+            var allDeclaredMethods = declaredType.
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.DeclaredMethods).
+                Where(method =>
+                    !method.IsConstructor &&
+                    !method.IsStatic &&
+                    (method.IsVirtual || method.IsOverridedOrImplemented)).
+                Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
+                ToArray();
+
+            // Write trampoline virtual functions if type is value type.
+            var trampolineVirtualMethods = allDeclaredMethods.
+                Where(method => declaredType.IsValueType && method.DeclaringType.Equals(declaredType)).
+                ToArray();
+            foreach (var method in trampolineVirtualMethods)
+            {
+                InternalConvertTrampolineVirtualFunction(tw, declaredType, method);
             }
 
             var overrideMethods = declaredType.OverrideMethods;
@@ -98,14 +221,14 @@ namespace IL2C.Writers
                     foreach (var (method, _) in virtualMethods.
                         Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
                     {
-                        // MEMO: Transfer trampoline virtual function if declared type is value type.
+                        // NOTE: Transfer trampoline virtual function if declared type is value type.
                         //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
                         //   The trampoline will unbox from objref to target value type.
                         tw.WriteLine(
                             "({0}){1}{2},",
                             method.CLanguageFunctionTypePrototype,
                             method.CLanguageFunctionName,
-                            (declaredType.IsValueType && method.DeclaringType.Equals(declaredType)) ? "_Trampoline_VFunc__" : string.Empty);
+                            trampolineVirtualMethods.Contains(method) ? "_Trampoline_VFunc__" : string.Empty);
                     }
                 }
 
@@ -120,16 +243,6 @@ namespace IL2C.Writers
                     ToArray() :
                 new IFieldInformation[0];
 
-            // Aggregate all declared methods from derived to base types.
-            var declaredMethods = declaredType.
-                Traverse(type => type.BaseType).
-                SelectMany(type => type.DeclaredMethods).
-                Where(method =>
-                    !method.IsConstructor &&
-                    !method.IsStatic).
-                Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
-                ToArray();
-
             // Write interface VTables.
             var interfaceTypes = declaredType.
                 Traverse(type => type.BaseType).
@@ -137,79 +250,15 @@ namespace IL2C.Writers
                 Distinct(). // Important operator sequence: distinct --> reverse
                 Reverse().  // Because all interface types overrided by derived class type,
                 ToArray();  // we have to aggregate to be visible interface types.
+
             foreach (var (interfaceType, interfaceIndex) in interfaceTypes.Select((t, i) => (t, i)))
             {
-                var implementationMethods = interfaceType.DeclaredMethods.
-                    Select(interfaceMethod =>
-                    {
-                        // Extract interface implementation methods by overrided from derived to based.
-                        var targetMethod = declaredMethods.
-                            Select(dm => dm.Overrides.Contains(interfaceMethod) ? dm : null).
-                            FirstOrDefault(vm => vm != null);
-                        if (targetMethod != null)
-                        {
-                            return new { interfaceMethod, targetMethod };
-                        }
-
-                        /////////////////////////////////////////////////////////
-                        // If didn't find the method for explicitly implementation,
-                        // try to find implicitly implementation by the method signature.
-                        // (See also: InstanceMultipleCombinedImplement test)
-
-                        // Detect the implicitly interface implemented method:
-
-                        // (1) Aggregate all visible declared methods from derived to base types.
-                        //   firstInterfaceImplementedType = Foo2
-                        //     interfaceType: IBar1
-                        //     System.Object <-- Foo1 <-- Foo2 <-- Foo3
-                        //                       |        |        +-- IBar2 / Method1
-                        //                       |        +----------- IBar1 / Method2, Method3
-                        //                       +-------------------- IBar2 / Method1, Method3
-                        //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
-                        //     (Except Foo1.Method3 by VirtualMethodSignatureComparer)
-                        var firstInterfaceImplementedType = declaredType.
-                            Traverse(type => type.BaseType).
-                            First(type => type.InterfaceTypes.Contains(interfaceType));
-                        var declaredVisibleMethods = firstInterfaceImplementedType.
-                            Traverse(type => type.BaseType).
-                            SelectMany(type => type.DeclaredMethods).
-                            Where(dm => !dm.IsConstructor && !dm.IsStatic &&
-                                (dm.IsPublic || dm.IsFamily || dm.IsFamilyOrAssembly)).
-                            Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
-                            ToArray();
-
-                        // (2) Find first matching declaredMethod for same as this interfaceMethod.
-                        //     "Same" means the method signature (using VirtualMethodSignatureComparer)
-                        //   declaredVisibleMethods = [Foo2.Method2, Foo2.Method3, Foo1.Method1]
-                        //   interfaceMethod = IBar2.Method1
-                        //   targetBaseMethod = Foo1.Method1
-                        var targetBaseMethod = declaredVisibleMethods.
-                            Select(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod) ? dm : null).
-                            First(dm => dm != null);    // We will find exactly.
-
-                        // (3) Find last matching (mostly derived) method from base to overrides.
-                        //   baseInterfaceImplementedTypes = [Foo1, Foo2, Foo3]
-                        //   interfaceMethod = IBar2.Method1
-                        //   targetBaseMethod = Foo1.Method1
-                        //   lastMatchedMethod = Foo3.Method1
-                        var baseInterfaceImplementedTypes = declaredType.
-                            Traverse(type => type.BaseType).
-                            Reverse().
-                            Where(type => targetBaseMethod.DeclaringType.IsAssignableFrom(type)).
-                            ToArray();
-                        targetMethod = baseInterfaceImplementedTypes.
-                            SelectMany(type => type.DeclaredMethods.
-                                Where(dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, interfaceMethod))).
-                            TakeWhile(dm => (dm.IsVirtual && (!dm.IsNewSlot || dm.IsReuseSlot)) ||
-                                dm.Equals(targetBaseMethod)).
-                            Last();
-
-                        return new { interfaceMethod, targetMethod };
-                    }).
-                    ToArray();
+                // Calculate current interface type's implementation methods.
+                var implementationMethods =
+                    CalculateImplementationMethods(declaredType, interfaceType, allDeclaredMethods);
 
                 tw.WriteLine(
-                    "// [7-12] VTable for {0}",
+                    "// [7-13] VTable for {0}",
                     interfaceType.FriendlyName);
                 tw.WriteLine(
                     "{0}_VTABLE_DECL__ {1}_{0}_VTABLE__ = {{",
@@ -224,7 +273,7 @@ namespace IL2C.Writers
                         // The adjustor offset at the value type interface.
                         // See 'System_ValueType.c' NOTE section.
                         tw.WriteLine(
-                            "sizeof(System_ValueType) + {0} + sizeof(void*) * {1},",
+                            "sizeof(System_ValueType) + {0} + sizeof(void*) * {1},  // value type interface offset: {1}",
                             declaredType.CLanguageStaticSizeOfExpression,
                             interfaceIndex);
                     }
@@ -239,9 +288,10 @@ namespace IL2C.Writers
                     foreach (var entry in implementationMethods)
                     {
                         tw.WriteLine(
-                            "({0}){1},",
+                            "({0}){1}{2},",
                             entry.interfaceMethod.CLanguageFunctionTypePrototype,
-                            entry.targetMethod.CLanguageFunctionName);
+                            entry.targetMethod.CLanguageFunctionName,
+                            trampolineVirtualMethods.Contains(entry.targetMethod) ? "_Trampoline_VFunc__" : string.Empty);
                     }
                 }
 

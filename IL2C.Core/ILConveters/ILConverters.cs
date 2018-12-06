@@ -186,7 +186,7 @@ namespace IL2C.ILConverters
         public override Func<IExtractContext, string[]> Apply(
             DecodeContext decodeContext)
         {
-            // MEMO: ldnull pushes the "UntypedReferenceType."
+            // NOTE: ldnull pushes the "UntypedReferenceType."
             //   Because we can't understand whats the objref type at now.
             //   The "UntypedReferenceType" is pseudo type information.
             //   It will be resolved at later if using for GetRightExpression method.

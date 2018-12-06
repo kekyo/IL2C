@@ -29,6 +29,7 @@ namespace IL2C.Metadata
         bool IsConstructor { get; }
         bool IsStatic { get; }
         bool IsVirtual { get; }
+        bool IsOverridedOrImplemented { get; }
         bool IsAbstract { get; }
         bool IsSealed { get; }
         bool IsNewSlot { get; }
@@ -124,6 +125,11 @@ namespace IL2C.Metadata
             //   2. The method at value type maybe marked virtual, so dropped it to make excluding from vtable entry.
             !(this.IsSealed && this.IsNewSlot) &&
             !(this.DeclaringType.IsValueType && !this.IsReuseSlot);
+        public bool IsOverridedOrImplemented =>
+            this.Definition.IsVirtual ||
+            (this.DeclaringType?.InterfaceTypes.
+                Any(t => t.DeclaredMethods.
+                    Any(m => MetadataUtilities.VirtualMethodSignatureComparer.Equals(m, this))) ?? false);
         public bool IsAbstract =>
             this.Definition.IsAbstract;
         public bool IsSealed =>

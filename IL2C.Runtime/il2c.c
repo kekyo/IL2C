@@ -197,7 +197,7 @@ static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
             index < pHeader->type->markTarget;
             index++, pMarkOffset++)
         {
-            // MEMO: If this type is value type, we have to shift additional offset for System_ValueType (just vptr0).
+            // NOTE: If this type is value type, we have to shift additional offset for System_ValueType (just vptr0).
             // TODO: value type with custom interfaces
             void** ppReferenceInner =
                 (void**)(((uint8_t*)pAdjustedReference) + *pMarkOffset +
@@ -433,7 +433,7 @@ System_ValueType* il2c_box__(
 }
 
 // Boxing with widing/narrowing combination for signed/unsigned integer value.
-// MEMO: This implemenation makes safer for endian order.
+// NOTE: This implemenation makes safer for endian order.
 System_ValueType* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType)
 {
@@ -663,7 +663,7 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
             }
             else
             {
-                // MEMO: This place is the first-chance.
+                // NOTE: This place is the first-chance.
                 // Send to catch
                 il2c_do_throw__(ex, pFrame, result);
             }
@@ -821,7 +821,7 @@ void il2c_throw_nullreferenceexception__()
     il2c_throw(ex);
 }
 
-// MEMO: Hmm, the unbox failed message different to the castclass opcode...
+// NOTE: Hmm, the unbox failed message different to the castclass opcode...
 //   IL2C choices short sentence by unbox operator message because better footprint.
 //   .NET 4 castclass message format: "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
 IL2C_CONST_STRING(il2c_invalid_cast_message, L"Specified cast is not valid.");

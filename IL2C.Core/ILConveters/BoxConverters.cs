@@ -29,14 +29,14 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            // MEMO: The 'O' type means System.Object, but we have to push the System.ValueType (BoxedValueTypeInformation).
+            // NOTE: The 'O' type means System.Object, but we have to push the System.ValueType (BoxedValueTypeInformation).
             //   Because the boxed value types can implicit cast to both types.
             //   The upcast can be inlining (System.ValueType --> System.Object),
             //   but downcast requires runtime cast operator (System.Object --> System.ValueType).
             var symbol = decodeContext.PushStack(
                 new BoxedValueTypeInformation(si.TargetType));
 
-            // MEMO: The IL2C strict type infers the evaluation stack.
+            // NOTE: The IL2C strict type infers the evaluation stack.
             //   The unbox operator is handling by the pointer.
             //   So, we have to simulate implicitly conversion from little size value to large size value.
             //   (It's only 8/16 --> 32bit. See ECMA-335 III.1.1.1 Numeric data types)

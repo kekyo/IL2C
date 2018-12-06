@@ -160,7 +160,7 @@ namespace IL2C
 
             if (lhsType.IsAssignableFrom(rhsType))
             {
-                Debug.Assert(rhsType.IsReferenceType || rhsType.IsUntypedReferenceType);
+                Debug.Assert(rhsType.IsReferenceType || rhsType.IsUntypedReferenceType || rhsType.IsByReference);
 
                 // (RefType) <-- UntypedReferenceType  (maybe ldnull value)
                 if (rhsType.IsUntypedReferenceType)
@@ -199,6 +199,9 @@ namespace IL2C
                 }
                 else
                 {
+                    // Special case: System.Object <-- managed pointer
+                    //   The value type arg0
+
                     return string.Format(
                         "({0}){1}",
                         lhsType.CLanguageTypeName,

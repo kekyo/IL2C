@@ -35,10 +35,24 @@ namespace IL2C.RuntimeSystems
             this.Value.ToString();
     }
 
+    public struct ValueTypeWithOverridedVirtual
+    {
+        public readonly int Value;
+
+        public ValueTypeWithOverridedVirtual(int value)
+        {
+            this.Value = value;
+        }
+
+        public override string ToString() =>
+            this.Value.ToString();
+    }
+
     [Description("Value types are specialized types at the .NET type system. Because the type inherited from the System.ValueType (objref type), all method has the managed pointer at the arg0 and these instances will box and apply the pseudo vptrs. These tests are verified the IL2C can handle value types.")]
     [TestCase("123", "CallInstanceMethod", 123, IncludeTypes = new[] { typeof(ValueType1) })]
     [TestCase("123", "CallInstanceMethodDirectly", 123, IncludeTypes = new[] { typeof(ValueType2), typeof(IValueTypeAccessor) })]
     [TestCase("123", "CallInstanceMethodBoxedInterface", 123, IncludeTypes = new[] { typeof(ValueType2), typeof(IValueTypeAccessor) })]
+    [TestCase("123", "CallOverrideMethod", 123, IncludeTypes = new[] { typeof(ValueTypeWithOverridedVirtual) })]
     public sealed class ValueTypes
     {
         public static string CallInstanceMethod(int value)
@@ -58,6 +72,12 @@ namespace IL2C.RuntimeSystems
             // implicitly boxed
             IValueTypeAccessor v = new ValueType2(value);
             return v.GetStringValue();
+        }
+
+        public static string CallOverrideMethod(int value)
+        {
+            var v = new ValueTypeWithOverridedVirtual(value);
+            return v.ToString();
         }
     }
 }

@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 111 / 219
+* Number of opcode implementations: 112 / 219
 * Number of opcode tests: 615 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -48,7 +48,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ckfinite](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ckfinite) | 0xc3 |  |  |  |
 | [clt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.clt) | 0xfe04 | Implemented |  | IL2C.ILConverters.CltConverter |
 | [clt.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.clt_un) | 0xfe05 | Implemented |  | IL2C.ILConverters.Clt_unConverter |
-| [constrained](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.constrained) | 0xfe16 |  |  |  |
+| [constrained](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.constrained) | 0xfe16 | Implemented |  | IL2C.ILConverters.ConstrainedConverter |
 | [conv.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i) | 0xd3 | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/Conv_I) | IL2C.ILConverters.Conv_iConverter |
 | [conv.i1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i1) | 0x67 | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Conv_I1) | IL2C.ILConverters.Conv_i1Converter |
 | [conv.i2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i2) | 0x68 | Implemented | [Test [10]](tests/IL2C.Core.Test.Target/ILConverters/Conv_I2) | IL2C.ILConverters.Conv_i2Converter |

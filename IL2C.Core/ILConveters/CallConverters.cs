@@ -16,6 +16,48 @@ namespace IL2C.ILConverters
         {
             // ECMA-335 I.12.4.1.4: Virtual calling convention
 
+            //////////////////////////////////////////////////////////
+            // Step 1:
+
+            // Constrained prefix applied, drop virtual call and hack the boxing for arg0 if required.
+            //   (See ConstrainedConverter.)
+            var prefixCode = decodeContext.PrefixCode;
+            if (prefixCode?.OpCode == OpCodes.Constrained)
+            {
+                // ECMA-335 III.2.1 constrained. - (prefix) invoke a member on a value of a variable type
+                var constrainedType = (ITypeInformation)(prefixCode.Operand);
+
+                // 'If thisType is a value type...'
+                if (constrainedType.IsValueType)
+                {
+                    // All declared methods from derived to base types.
+                    var allDeclaredMethods = constrainedType.AllInheritedDeclaredMethods;
+
+                    // '...and thisType implements method then'
+                    var implementationMethod = allDeclaredMethods.First(
+                        m => MetadataUtilities.VirtualMethodSignatureComparer.Equals(m, method));
+                    if (implementationMethod.DeclaringType.Equals(constrainedType))
+                    {
+                        // 'ptr is passed unmodified as the ‘this’ pointer to a call of method implemented by thisType'
+
+                        // Drop virtual call and turn to the direct call
+                        isVirtualCall = false;
+                        method = implementationMethod;
+                    }
+                    // '...and thisType does not implement method then'
+                    else if (constrainedType.IsValueType)
+                    {
+                        // 'ptr is dereferenced, boxed, and passed as the ‘this’ pointer to the callvirt of method'
+
+                        // TODO:
+                    }
+                }
+            }
+
+            //////////////////////////////////////////////////////////
+            // Step 2:
+
+            // Construct parameters with expressions.
             var pairParameters = method.Parameters.
                 Reverse().
                 Select(parameter =>
@@ -44,6 +86,9 @@ namespace IL2C.ILConverters
                 }).
                 Reverse().
                 ToArray();
+
+            //////////////////////////////////////////////////////////
+            // Step 3:
 
             var codeInformation = decodeContext.CurrentCode;
 

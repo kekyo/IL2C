@@ -170,16 +170,8 @@ namespace IL2C.Writers
             // Get virtual methods.
             var virtualMethods = declaredType.CalculatedVirtualMethods;
 
-            // Aggregate all declared methods from derived to base types.
-            var allDeclaredMethods = declaredType.
-                Traverse(type => type.BaseType).
-                SelectMany(type => type.DeclaredMethods).
-                Where(method =>
-                    !method.IsConstructor &&
-                    !method.IsStatic &&
-                    (method.IsVirtual || method.IsOverridedOrImplemented)).
-                Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
-                ToArray();
+            // All declared methods from derived to base types.
+            var allDeclaredMethods = declaredType.AllInheritedDeclaredMethods;
 
             // Write trampoline virtual functions if type is value type.
             var trampolineVirtualMethods = allDeclaredMethods.

@@ -74,6 +74,7 @@ namespace IL2C.Metadata
 
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
+        IMethodInformation[] AllInheritedDeclaredMethods { get; }
         (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods { get; }
         IMethodInformation[] OverrideMethods { get; }
         IMethodInformation[] NewSlotMethods { get; }
@@ -330,6 +331,16 @@ namespace IL2C.Metadata
                 (this.Definition as TypeDefinition)?.
                     Methods.
                     Where(type => memberFilter(type)));
+        public IMethodInformation[] AllInheritedDeclaredMethods =>
+            ((ITypeInformation)this).
+            Traverse(type => type.BaseType).
+            SelectMany(type => type.DeclaredMethods).
+            Where(m =>
+                !m.IsConstructor &&
+                !m.IsStatic &&
+                (m.IsVirtual || m.IsOverridedOrImplemented)).
+            Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
+            ToArray();
 
         private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods()
         {

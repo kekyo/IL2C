@@ -10,9 +10,6 @@ namespace IL2C.ILConverters
 {
     internal sealed class NopConverter : InlineNoneConverter
     {
-        private static readonly string[] empty = new string[0];
-        private static readonly Func<IExtractContext, string[]> emptyFunc = _ => empty;
-
         public override OpCode OpCode => OpCodes.Nop;
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)

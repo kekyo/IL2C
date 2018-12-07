@@ -9,6 +9,9 @@ namespace IL2C.ILConverters
 {
     internal abstract class ILConverter
     {
+        protected static readonly string[] empty = new string[0];
+        protected static readonly Func<IExtractContext, string[]> emptyFunc = _ => empty;
+
         public abstract OpCode OpCode { get; }
 
         public virtual bool IsEndOfPath => false;

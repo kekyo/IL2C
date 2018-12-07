@@ -50,7 +50,6 @@ namespace IL2C.RuntimeSystems
 
     public struct ValueTypeInheritedMethod
     {
-        public int Value;
     }
 
     [Description("Value types are specialized types at the .NET type system. Because the type inherited from the System.ValueType (objref type), all method has the managed pointer at the arg0 and these instances will box and apply the pseudo vptrs. These tests are verified the IL2C can handle value types.")]

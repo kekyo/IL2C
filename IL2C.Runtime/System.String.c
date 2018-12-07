@@ -362,7 +362,7 @@ wchar_t System_String_get_Chars(System_String* this__, int32_t index)
     il2c_assert(this__->string_body__ != NULL);
 
     // TODO: Improvement
-    if ((index < 0) || (index >= il2c_wcslen(this__->string_body__)))
+    if ((index < 0) || (index >= (int32_t)il2c_wcslen(this__->string_body__)))
     {
         il2c_throw_indexoutofrangeexception__();
     }

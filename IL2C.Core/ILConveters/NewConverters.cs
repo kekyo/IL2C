@@ -30,9 +30,9 @@ namespace IL2C.ILConverters
             return extractContext =>
             {
                 return new[] { string.Format(
-                    "memset({0}, 0x00, sizeof({1}))",
+                    "memset({0}, 0x00, {1})",
                     extractContext.GetSymbolName(si),
-                    type.MangledName) };
+                    type.CLanguageStaticSizeOfExpression) };
             };
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using IL2C.Metadata;
@@ -156,14 +157,6 @@ namespace IL2C.Writers
 
                 using (var _ = tw.Shift())
                 {
-                    // Emit vptr (class/interface)
-                    if (declaredType.IsClass || declaredType.IsInterface)
-                    {
-                        tw.WriteLine(
-                            "{0}_VTABLE_DECL__* vptr0__;",
-                            declaredType.MangledName);
-                    }
-
                     var tookInterfaceTypes = new HashSet<ITypeInformation>();
                     var fields = declaredType.
                         Traverse(type => type.BaseType).
@@ -215,12 +208,36 @@ namespace IL2C.Writers
                             new { Name = string.Format("baseField{0}__", index), entry.TypeName }).
                         ToArray();
 
-                    foreach (var field in fields)
+                    // Emit vptr (class/interface)
+                    if (declaredType.IsClass || declaredType.IsInterface)
                     {
                         tw.WriteLine(
-                            "{0} {1};",
-                            field.TypeName,
-                            field.Name);
+                            "{0}_VTABLE_DECL__* vptr0__;",
+                            declaredType.MangledName);
+                    }
+
+                    if (fields.Length >= 1)
+                    {
+                        // Emit fields.
+                        foreach (var field in fields)
+                        {
+                            tw.WriteLine(
+                                "{0} {1};",
+                                field.TypeName,
+                                field.Name);
+                        }
+                    }
+                    else
+                    {
+                        // HACK: Zero-sized value type can't directly translate to the C structure.
+                        //   Because ANSI C structure must have one or more fields and construct SIZED storage.
+                        //   IL2C hacks for the zero-sized value type, inserts a dummy field into it.
+                        if (declaredType.IsValueType)
+                        {
+                            Debug.Assert(declaredType.InternalStaticSizeOfValue == 0);
+                            tw.WriteLine("// The struct meaning size to zero. It doesn't use anything. It has validity for C compiler.");
+                            tw.WriteLine("uint8_t dummy_for_c_compiler__;");
+                        }
                     }
                 }
 

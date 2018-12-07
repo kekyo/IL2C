@@ -17,12 +17,12 @@ namespace IL2C.RuntimeSystems
             this.Value.ToString();
     }
 
-    public interface IValueTypeAccessor
+    public interface IValueTypeAccessor1
     {
         string GetStringValue();
     }
 
-    public struct ValueType2 : IValueTypeAccessor
+    public struct ValueType2 : IValueTypeAccessor1
     {
         public readonly int Value;
 
@@ -65,7 +65,42 @@ namespace IL2C.RuntimeSystems
         public override string ToString() =>
             this.Value.ToString();
     }
-    
+
+    public interface IValueTypeAccessor2
+    {
+        string GetStringValue();
+    }
+
+    public struct ValueTypeCombinedInterfaces : IValueTypeAccessor1, IValueTypeAccessor2
+    {
+        public readonly int Value;
+
+        public ValueTypeCombinedInterfaces(int value)
+        {
+            this.Value = value;
+        }
+
+        public string GetStringValue() =>
+            this.Value.ToString();
+    }
+
+    public struct ValueTypeCombinedExplicitlyInterfaces : IValueTypeAccessor1, IValueTypeAccessor2
+    {
+        public readonly int Value;
+
+        public ValueTypeCombinedExplicitlyInterfaces(int value)
+        {
+            this.Value = value;
+        }
+
+        public string GetStringValue() =>
+            this.Value.ToString();
+        string IValueTypeAccessor1.GetStringValue() =>
+            (this.Value + 100).ToString();
+        string IValueTypeAccessor2.GetStringValue() =>
+            (this.Value + 200).ToString();
+    }
+
     public struct ValueTypeInheritedMethod
     {
     }
@@ -111,8 +146,14 @@ namespace IL2C.RuntimeSystems
 
     [Description("Value types are specialized types at the .NET type system. Because the type inherited from the System.ValueType (objref type), all method has the managed pointer at the arg0 and these instances will box and apply the pseudo vptrs. These tests are verified the IL2C can handle value types.")]
     [TestCase("123", "CallInstanceMethod", 123, IncludeTypes = new[] { typeof(ValueType1) })]
-    [TestCase("123", "CallInstanceMethodDirectly", 123, IncludeTypes = new[] { typeof(ValueType2), typeof(IValueTypeAccessor) })]
-    [TestCase("123", "CallInstanceMethodBoxedInterface", 123, IncludeTypes = new[] { typeof(ValueType2), typeof(IValueTypeAccessor) })]
+    [TestCase("123", "CallInstanceMethodDirectly", 123, IncludeTypes = new[] { typeof(ValueType2), typeof(IValueTypeAccessor1) })]
+    [TestCase("123", "CallInstanceMethodBoxedInterface", 123, IncludeTypes = new[] { typeof(ValueType2), typeof(IValueTypeAccessor1) })]
+    [TestCase("123", "CallCombinedInstanceMethodDirectly", 123, IncludeTypes = new[] { typeof(ValueTypeCombinedInterfaces), typeof(IValueTypeAccessor1), typeof(IValueTypeAccessor2) })]
+    [TestCase("123", "CallCombinedInstanceMethodBoxedInterface1", 123, IncludeTypes = new[] { typeof(ValueTypeCombinedInterfaces), typeof(IValueTypeAccessor1), typeof(IValueTypeAccessor2) })]
+    [TestCase("123", "CallCombinedInstanceMethodBoxedInterface2", 123, IncludeTypes = new[] { typeof(ValueTypeCombinedInterfaces), typeof(IValueTypeAccessor1), typeof(IValueTypeAccessor2) })]
+    [TestCase("123", "CallCombinedInstanceMethodExplicitlyDirectly", 123, IncludeTypes = new[] { typeof(ValueTypeCombinedExplicitlyInterfaces), typeof(IValueTypeAccessor1), typeof(IValueTypeAccessor2) })]
+    [TestCase("223", "CallCombinedInstanceMethodExplicitlyBoxedInterface1", 123, IncludeTypes = new[] { typeof(ValueTypeCombinedExplicitlyInterfaces), typeof(IValueTypeAccessor1), typeof(IValueTypeAccessor2) })]
+    [TestCase("323", "CallCombinedInstanceMethodExplicitlyBoxedInterface2", 123, IncludeTypes = new[] { typeof(ValueTypeCombinedExplicitlyInterfaces), typeof(IValueTypeAccessor1), typeof(IValueTypeAccessor2) })]
     [TestCase("123", "CallOverrideMethod", 123, IncludeTypes = new[] { typeof(ValueTypeWithOverridedVirtual1) })]
     [TestCase("123", "CallOverrideMethodDirectly", 123, IncludeTypes = new[] { typeof(ValueTypeWithOverridedVirtual2), typeof(IValueTypeOverrideAccessor) })]
     [TestCase("123", "CallOverrideMethodBoxed", 123, IncludeTypes = new[] { typeof(ValueTypeWithOverridedVirtual2), typeof(IValueTypeOverrideAccessor) })]
@@ -139,7 +180,47 @@ namespace IL2C.RuntimeSystems
         public static string CallInstanceMethodBoxedInterface(int value)
         {
             // implicitly boxed
-            IValueTypeAccessor v = new ValueType2(value);
+            IValueTypeAccessor1 v = new ValueType2(value);
+            return v.GetStringValue();
+        }
+
+        public static string CallCombinedInstanceMethodDirectly(int value)
+        {
+            var v = new ValueTypeCombinedInterfaces(value);
+            return v.GetStringValue();
+        }
+
+        public static string CallCombinedInstanceMethodBoxedInterface1(int value)
+        {
+            // implicitly boxed
+            IValueTypeAccessor1 v = new ValueTypeCombinedInterfaces(value);
+            return v.GetStringValue();
+        }
+
+        public static string CallCombinedInstanceMethodBoxedInterface2(int value)
+        {
+            // implicitly boxed
+            IValueTypeAccessor2 v = new ValueTypeCombinedInterfaces(value);
+            return v.GetStringValue();
+        }
+
+        public static string CallCombinedInstanceMethodExplicitlyDirectly(int value)
+        {
+            var v = new ValueTypeCombinedExplicitlyInterfaces(value);
+            return v.GetStringValue();
+        }
+
+        public static string CallCombinedInstanceMethodExplicitlyBoxedInterface1(int value)
+        {
+            // implicitly boxed
+            IValueTypeAccessor1 v = new ValueTypeCombinedExplicitlyInterfaces(value);
+            return v.GetStringValue();
+        }
+
+        public static string CallCombinedInstanceMethodExplicitlyBoxedInterface2(int value)
+        {
+            // implicitly boxed
+            IValueTypeAccessor2 v = new ValueTypeCombinedExplicitlyInterfaces(value);
             return v.GetStringValue();
         }
 

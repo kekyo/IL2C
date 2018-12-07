@@ -184,6 +184,50 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class InstanceMultipleImplementDepthBaseType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 100;
+
+        public string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class InstanceMultipleImplement1DepthType : InstanceMultipleImplementDepthBaseType, IInterfaceType1
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
+        public new string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class InstanceMultipleImplement2DepthType : InstanceMultipleImplement1DepthType, IInterfaceType3
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
+        public new string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class InstanceMultipleImplement3DepthType : InstanceMultipleImplement2DepthType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 400;
+
+        public new string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
     [TestId("TypeRelations")]
     [TestCase("223", "InstanceImplement", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
@@ -213,6 +257,9 @@ namespace IL2C.RuntimeSystems
     [TestCase("323", "InstanceMultipleCombined2ImplementCombination2FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
     [TestCase("223", "InstanceMultipleCombined1ImplementCombination2FromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
     [TestCase("423", "InstanceMultipleCombined2ImplementCombination2FromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+    [TestCase("523", "InstanceMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
+    [TestCase("323", "InstanceMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
+    [TestCase("423", "InstanceMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
     public sealed class TypeImplements
     {
         public static string InstanceImplement(int value)
@@ -381,6 +428,24 @@ namespace IL2C.RuntimeSystems
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType2();
             return inst.GetStringFromInt64(value);
+        }
+
+        public static string InstanceMultipleImplementDepth(int value)
+        {
+            var inst = new InstanceMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleImplementDepthFromInterface1(int value)
+        {
+            IInterfaceType1 inst = new InstanceMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceMultipleImplementDepthFromInterface3(int value)
+        {
+            IInterfaceType3 inst = new InstanceMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
         }
     }
 }

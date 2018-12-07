@@ -198,6 +198,83 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class VirtualMultipleImplementDepthBaseType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 100;
+
+        public virtual string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualOverrideMultipleImplement1DepthType : VirtualMultipleImplementDepthBaseType, IInterfaceType1
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
+        public override string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualOverrideMultipleImplement2DepthType : VirtualOverrideMultipleImplement1DepthType, IInterfaceType3
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
+        public override string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualOverrideMultipleImplement3DepthType : VirtualOverrideMultipleImplement2DepthType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 400;
+
+        public override string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualNewVirtualMultipleImplement1DepthType : VirtualMultipleImplementDepthBaseType, IInterfaceType1
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 200;
+
+        public new virtual string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualNewVirtualMultipleImplement2DepthType : VirtualNewVirtualMultipleImplement1DepthType, IInterfaceType3
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 300;
+
+        public new virtual string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
+    public class VirtualNewVirtualMultipleImplement3DepthType : VirtualNewVirtualMultipleImplement2DepthType
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 400;
+
+        public new virtual string GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
     [TestId("TypeRelations")]
     [TestCase("223", "InstanceImplicitlyImplement", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
@@ -233,6 +310,12 @@ namespace IL2C.RuntimeSystems
     [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideReImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideReImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
     [TestCase("223AAABBBCCCDDD", "VirtualNewVirtualStacked", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
     [TestCase("223AAABBBCCC", "VirtualNewVirtualStackedFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
+    [TestCase("523", "VirtualOverrideMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
+    [TestCase("523", "VirtualOverrideMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
+    [TestCase("523", "VirtualOverrideMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
+    [TestCase("523", "VirtualNewVirtualMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
+    [TestCase("323", "VirtualNewVirtualMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
+    [TestCase("423", "VirtualNewVirtualMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
     public sealed class TypeInheritanceAndImplements
     {
         public static string InstanceImplicitlyImplement(int value)
@@ -436,6 +519,42 @@ namespace IL2C.RuntimeSystems
         public static string VirtualNewVirtualStackedFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualNewVirtualStacked4Type();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideMultipleImplementDepth(int value)
+        {
+            var inst = new VirtualOverrideMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideMultipleImplementDepthFromInterface1(int value)
+        {
+            IInterfaceType1 inst = new VirtualOverrideMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualOverrideMultipleImplementDepthFromInterface3(int value)
+        {
+            IInterfaceType3 inst = new VirtualOverrideMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualNewVirtualMultipleImplementDepth(int value)
+        {
+            var inst = new VirtualNewVirtualMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualNewVirtualMultipleImplementDepthFromInterface1(int value)
+        {
+            IInterfaceType1 inst = new VirtualNewVirtualMultipleImplement3DepthType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string VirtualNewVirtualMultipleImplementDepthFromInterface3(int value)
+        {
+            IInterfaceType3 inst = new VirtualNewVirtualMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
     }

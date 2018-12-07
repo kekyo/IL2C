@@ -243,8 +243,11 @@ namespace IL2C.Writers
                 Reverse().  // Because all interface types overrided by derived class type,
                 ToArray();  // we have to aggregate to be visible interface types.
 
-            foreach (var (interfaceType, interfaceIndex) in interfaceTypes.Select((t, i) => (t, i)))
+            foreach (var interfaceType in interfaceTypes)
             {
+                // Calculate interface index.
+                var interfaceIndex = declaredType.CalculateInterfaceIndex(interfaceType);
+
                 // Calculate current interface type's implementation methods.
                 var implementationMethods =
                     CalculateImplementationMethods(declaredType, interfaceType, allDeclaredMethods);
@@ -265,7 +268,7 @@ namespace IL2C.Writers
                         // The adjustor offset at the value type interface.
                         // See 'System_ValueType.c' NOTE section.
                         tw.WriteLine(
-                            "sizeof(System_ValueType) + {0} + sizeof(void*) * {1},  // value type interface offset: {1}",
+                            "sizeof(System_ValueType) + {0} + {1} * sizeof(void*),",
                             declaredType.CLanguageStaticSizeOfExpression,
                             interfaceIndex);
                     }

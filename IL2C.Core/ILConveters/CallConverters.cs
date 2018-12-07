@@ -245,7 +245,7 @@ namespace IL2C.ILConverters
                             extractContext.GetSymbolName(pairParameters[0].variable),
                             method.DeclaringType.MangledName,
                             arg0ValueType.ElementType.CLanguageStaticSizeOfExpression,
-                            arg0ValueType.InterfaceTypes.Select((t, i) => (t, i)).First().i,
+                            arg0ValueType.CalculateInterfaceIndex(method.DeclaringType),
                             extractContext.GetSymbolName(requiredCastingAtArg0PointerVariable)),
                         callExpression };
                 }

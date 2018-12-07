@@ -126,6 +126,9 @@ namespace IL2C.Metadata.Specialized
             return object.ReferenceEquals(this, other);
         }
 
+        public int CalculateInterfaceIndex(ITypeInformation interfaceType) =>
+            boxedType.CalculateInterfaceIndex(interfaceType);
+
         public bool IsAssignableFrom(ITypeInformation rhs)
         {
             return rhs.Equals(boxedType);

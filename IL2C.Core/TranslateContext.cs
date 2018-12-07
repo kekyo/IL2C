@@ -185,7 +185,7 @@ namespace IL2C
                         "il2c_cast_from_boxed_to_interface({0}, {1}, {2}, {3})",
                         lhsType.MangledName,
                         rhsType.ElementType.CLanguageStaticSizeOfExpression,
-                        rhsType.InterfaceTypes.Select((t, i) => (t, i)).First().i,
+                        rhsType.CalculateInterfaceIndex(lhsType),
                         rhsExpression);
                 }
                 // IHoge <-- Hoge  (use il2c_cast_to_interface() macro)

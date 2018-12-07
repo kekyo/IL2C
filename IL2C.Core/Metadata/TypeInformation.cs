@@ -86,6 +86,8 @@ namespace IL2C.Metadata
         string CLanguageThisTypeName { get; }
         string CLanguageStaticSizeOfExpression { get; }
 
+        int CalculateInterfaceIndex(ITypeInformation interfaceType);
+
         bool IsAssignableFrom(ITypeInformation rhs);
 
         ITypeInformation MakeByReference();
@@ -550,6 +552,17 @@ namespace IL2C.Metadata
                     return "0";
                 }
             }
+        }
+
+        public int CalculateInterfaceIndex(ITypeInformation interfaceType)
+        {
+            return ((ITypeInformation)this).
+                Traverse(type => type.BaseType).
+                SelectMany(type => type.InterfaceTypes).
+                Distinct(). // Important operator sequence: distinct --> reverse
+                Reverse().  // Because all interface types overrided by derived class type,
+                Select((t, i) => new { t, i }).
+                FirstOrDefault(entry => entry.t.Equals(interfaceType))?.i ?? -1;
         }
 
         public bool IsAssignableFrom(ITypeInformation rhs)

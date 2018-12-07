@@ -9,7 +9,7 @@
 
 * IL2C is a translator (transpiler) for ECMA-335 CIL/MSIL to C language.
 
-* IL2C's implementation priorities, we're aiming for:
+* We're aiming for:
   * Better predictability for runtime costs, better human readability for the IL2C translated C source code.
   * Very tiny footprint requirements, we are thinking about how fit between tiny embedded system and large system with many resources.
   * Better code/runtime portability, minimum requirements are only C99 compiler.

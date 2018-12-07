@@ -214,7 +214,7 @@ namespace IL2C
                         argument.SymbolName,
                         argument.TargetType,
                         argument.ExpressionType,
-                        Utilities.GetCLanguageExpression(expectedType.PseudoEmptyValue))).
+                        Utilities.GetCLanguageExpression(expectedType.InternalStaticEmptyValue))).
                 ToArray();
 
             if (!(expectedType.IsVoidType || (caseInfo.Assert == TestCaseAsserts.CauseBreak)))
@@ -242,14 +242,14 @@ namespace IL2C
                             argument.SymbolName,
                             argument.TargetType,
                             argument.ExpressionType,
-                            Utilities.GetCLanguageExpression(argument.TargetType.PseudoEmptyValue))).
+                            Utilities.GetCLanguageExpression(argument.TargetType.InternalStaticEmptyValue))).
                     Concat(new Constant[]
                     {
                         new Constant(
                             "_actual",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.GetCLanguageExpression(expectedType.PseudoEmptyValue)),
+                            Utilities.GetCLanguageExpression(expectedType.InternalStaticEmptyValue)),
                     }).
                     ToArray();
             }

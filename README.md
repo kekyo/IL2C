@@ -9,7 +9,7 @@
 
 * IL2C is a translator (transpiler) for ECMA-335 CIL/MSIL to C language.
 
-* IL2C's implementation priorities, we're aiming for:
+* We're aiming for:
   * Better predictability for runtime costs, better human readability for the IL2C translated C source code.
   * Very tiny footprint requirements, we are thinking about how fit between tiny embedded system and large system with many resources.
   * Better code/runtime portability, minimum requirements are only C99 compiler.
@@ -71,7 +71,7 @@ This is first step for use the IL2C:
 * You have to know the unit tests compared and verified results both executed on the .NET CLR and the gcc compiled native code.
 * I asked for you have to see in ["tests/IL2C.Core.Test.Target project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Target). It has a lot of unit test code. And if unit tests are success, you can find translated results in ["tests/IL2C.Core.Test.Fixture project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Fixture) subfolder "bin/Debug/net462."
 * If you know the CI engineering, you can get more information from the ["appveyor.yml"](appveyor.yml) file.
-* Currently IL2C contains the VC++ project folder because it's better debugging mates. The "IL2C.Runtime" project DOESN'T USE for any building (manually and CI buildings.)
+* Currently IL2C contains the VC++ project file in the folder because it's better debugging mates. The "IL2C.Runtime.vcxproj" project file DOESN'T REQUIRE for any building (manually and CI buildings.)
 * If you wanna the IL2C internals, try to read [Making archive IL2C #6-55: dotNET 600 2018 session slide](https://www.slideshare.net/kekyo/making-archive-il2c-655-dotnet600-2018)
 
 ## Overall status

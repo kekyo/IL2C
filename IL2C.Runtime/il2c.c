@@ -86,6 +86,27 @@ void* il2c_get_uninitialized_object_internal__(
     return pReference;
 }
 
+static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
+{
+    il2c_assert(type != NULL);
+    il2c_assert(pReference != NULL);
+
+    // Setup interface vptrs.
+    IL2C_IMPLEMENTED_INTERFACE* pInterface =
+        (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
+    uintptr_t index;
+    for (index = 0;
+        index < type->interfaceCount;
+        index++, pInterface++)
+    {
+        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
+
+        // The interface vptr offset placed at vptr[0].
+        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
+        *((const void**)(((uint8_t*)pReference) + offset)) = pInterface->vptr0;
+    }
+}
+
 void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 {
     il2c_assert(type != NULL);
@@ -101,19 +122,7 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     *((const void**)pReference) = type->vptr0;
 
     // Setup interface vptrs.
-    IL2C_IMPLEMENTED_INTERFACE* pInterface =
-        (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
-    uintptr_t index;
-    for (index = 0;
-        index < type->interfaceCount;
-        index++, pInterface++)
-    {
-        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
-
-        // The interface vptr offset placed at vptr[0].
-        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
-        *((const void**)(pReference + offset)) = pInterface->vptr0;
-    }
+    il2c_setup_interface_vptrs(type, pReference);
 
     return pReference;
 }
@@ -188,7 +197,7 @@ static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
             index < pHeader->type->markTarget;
             index++, pMarkOffset++)
         {
-            // MEMO: If this type is value type, we have to shift additional offset for System_ValueType (just vptr0).
+            // NOTE: If this type is value type, we have to shift additional offset for System_ValueType (just vptr0).
             // TODO: value type with custom interfaces
             void** ppReferenceInner =
                 (void**)(((uint8_t*)pAdjustedReference) + *pMarkOffset +
@@ -330,19 +339,44 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE typ
     il2c_assert(type != NULL);
     il2c_assert(pReference != NULL);
 
-    // TODO: interface types
-
-    IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference);
+    void* pAdjustedReference = il2c_adjusted_reference(pReference);
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
     IL2C_RUNTIME_TYPE currentType = pHeader->type;
-    do
+
+    if (type->flags & IL2C_TYPE_INTERFACE)
     {
-        if (currentType == type)
+        do
         {
-            return pReference;
-        }
-        currentType = currentType->baseType;
+            IL2C_IMPLEMENTED_INTERFACE* pInterface =
+                (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(currentType + 1)) + type->markTarget);
+            uintptr_t index;
+            for (index = 0;
+                index < currentType->interfaceCount;
+                index++, pInterface++)
+            {
+                il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
+
+                if (pInterface->type == type)
+                {
+                    uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
+                    return *((void**)(((uint8_t*)pAdjustedReference) + offset));
+                }
+            }
+
+            currentType = currentType->baseType;
+        } while (currentType != NULL);
     }
-    while (currentType != NULL);
+    else
+    {
+        do
+        {
+            if (currentType == type)
+            {
+                return pReference;
+            }
+            currentType = currentType->baseType;
+        } while (currentType != NULL);
+    }
 
     return NULL;
 }
@@ -351,8 +385,6 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 {
     il2c_assert(type != NULL);
     il2c_assert(pReference != NULL);
-
-    // TODO: interface types
 
     void* p = il2c_isinst__(pReference, type);
     if (p == NULL)
@@ -368,13 +400,17 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 
 // +----------------------+
 // | IL2C_REF_HEADER      |
-// +----------------------+ <-- pBoxed        ---------------------------
-// | vptr0__              | <-- pVTable0        | System_ValueType    ^
-// +----------------------+                   -----------             |
-// |        :             |                     ^                     | bodySize
-// | (value data)         | Copy from pValue    | type->bodySize      |
-// |        :             |                     v                     v
-// +----------------------+                   ---------------------------
+// +----------------------+ <-- pBoxed        -----------------------------------------------
+// | vptr0__              | <-- pVTable0        | System_ValueType                         ^
+// +----------------------+                   -----------                                  |
+// |        :             |                     ^                                          | bodySize
+// | (value data)         | Copy from pValue    | type->bodySize                           |
+// |        :             |                     v                                          |
+// +----------------------+                   ---------------------------                  |
+// | vptr_IFoo__          |                     | (optional implemented interface vptr)    |
+// +----------------------+                   ---------------------------                  |
+// | vptr_IBar__          |                     | (optional implemented interface vptr)    v
+// +----------------------+                   -----------------------------------------------
 
 System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType)
@@ -382,17 +418,22 @@ System_ValueType* il2c_box__(
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
 
-    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
+    uintptr_t bodySize = sizeof(System_ValueType) +
+        valueType->bodySize +
+        valueType->interfaceCount * sizeof(void*);  // interface vptrs
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
     pBoxed->vptr0__ = valueType->vptr0;
     il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
 
+    // Setup interface vptrs.
+    il2c_setup_interface_vptrs(valueType, pBoxed);
+
     return pBoxed;
 }
 
 // Boxing with widing/narrowing combination for signed/unsigned integer value.
-// MEMO: This implemenation makes safer for endian order.
+// NOTE: This implemenation makes safer for endian order.
 System_ValueType* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType)
 {
@@ -497,7 +538,9 @@ System_ValueType* il2c_box2__(
         il2c_throw_invalidcastexception__();
     }
 
-    uintptr_t bodySize = sizeof(System_ValueType) + valueType->bodySize;
+    uintptr_t bodySize = sizeof(System_ValueType) +
+        valueType->bodySize +
+        valueType->interfaceCount * sizeof(void*);  // interface vptrs
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
     // vptr0 setup.
@@ -519,6 +562,9 @@ System_ValueType* il2c_box2__(
         break;
     }
 
+    // Setup interface vptrs.
+    il2c_setup_interface_vptrs(valueType, pBoxed);
+
     return pBoxed;
 }
 
@@ -528,8 +574,7 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
     {
         if (valueType->flags & IL2C_TYPE_VALUE)
         {
-            // throw NullReferenceException();
-            il2c_assert(0);
+            il2c_throw_nullreferenceexception__();
         }
         return NULL;
     }
@@ -568,7 +613,7 @@ void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget)
 }
 
 static void il2c_do_throw__(
-    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t value)
+    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t filterNumber)
 {
     il2c_assert(ex != NULL);
     il2c_assert(pTargetFrame != NULL);
@@ -581,7 +626,7 @@ static void il2c_do_throw__(
     g_pBeginFrame__ = pTargetFrame->pFrame;
 
     // Transision to target handler.
-    il2c_longjmp((void*)pTargetFrame->saved, value);
+    il2c_longjmp((void*)pTargetFrame->saved, filterNumber);
 }
 
 static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame)
@@ -597,10 +642,10 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
         il2c_assert(pFrame->filter != NULL);
         il2c_assert(pFrame->pFrame != NULL);
 
-        int16_t result = pFrame->filter(ex);
+        int16_t filterNumber = pFrame->filter(ex);
 
         // Found finally block
-        if (result == IL2C_FILTER_FINALLY)
+        if (filterNumber == IL2C_FILTER_FINALLY)
         {
             // Memoize finally frame
             if (pFinallyFrame == NULL)
@@ -608,7 +653,7 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
                 pFinallyFrame = pFrame;
             }
         }
-        else if (result != IL2C_FILTER_NOMATCH)
+        else if (filterNumber != IL2C_FILTER_NOMATCH)
         {
             // Already found finally block
             if (pFinallyFrame != NULL)
@@ -618,9 +663,9 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
             }
             else
             {
-                // MEMO: This place is the first-chance.
+                // NOTE: This place is the first-chance.
                 // Send to catch
-                il2c_do_throw__(ex, pFrame, result);
+                il2c_do_throw__(ex, pFrame, filterNumber);
             }
         }
 
@@ -686,11 +731,9 @@ void il2c_rethrow()
 }
 
 #ifdef IL2C_USE_SIGNAL
-IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
-
 static void il2c_SIGSEGV_handler(int sig)
 {
-    // MEMO 1:
+    // NOTE 1:
     //   Run in windows, this handler called from SEH filter context from "_seh_filter_exe()".
     //   The SEH __try - __except() block contains at "__scrt_common_main_seh(),"
     //   the callgraph is:
@@ -701,7 +744,7 @@ static void il2c_SIGSEGV_handler(int sig)
     //   We can use the longjmp() and unwinding without any stack corruption.
     //   https://gist.github.com/kekyo/cc9bace942b8c2aa2484431e047d267d
 
-    // MEMO 2:
+    // NOTE 2:
     //   This handler allocate the NullReferenceException and finally unwind using the longjmp(),
     //   it's dangerous for some situations.
     //   For example, we'll call the "malloc()" function and if it causes SEGV (invalid pointer access) at inside malloc
@@ -718,10 +761,7 @@ static void il2c_SIGSEGV_handler(int sig)
     // Re-register
     signal(SIGSEGV, il2c_SIGSEGV_handler);
 
-    // TODO: can turn to static allocate for NullReferenceException?
-    System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
-    System_NullReferenceException__ctor_1(ex, il2c_null_reference_message);
-    il2c_throw(ex);
+    il2c_throw_nullreferenceexception__();
 }
 
 typedef void (*il2c_sighandler)(int sig);
@@ -771,7 +811,17 @@ void il2c_break()
     debug_break();
 }
 
-// MEMO: Hmm, the unbox failed message different to the castclass opcode...
+IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
+
+void il2c_throw_nullreferenceexception__()
+{
+    // TODO: can turn to static allocate for NullReferenceException?
+    System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
+    System_NullReferenceException__ctor_1(ex, il2c_null_reference_message);
+    il2c_throw(ex);
+}
+
+// NOTE: Hmm, the unbox failed message different to the castclass opcode...
 //   IL2C choices short sentence by unbox operator message because better footprint.
 //   .NET 4 castclass message format: "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
 IL2C_CONST_STRING(il2c_invalid_cast_message, L"Specified cast is not valid.");

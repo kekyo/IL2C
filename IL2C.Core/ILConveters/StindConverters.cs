@@ -11,7 +11,7 @@ namespace IL2C.ILConverters
         public static Func<IExtractContext, string[]> Apply(
             DecodeContext decodeContext)
         {
-            // MEMO: This method's sharing for the stind opcode family.
+            // NOTE: This method's sharing for the stind opcode family.
             //   IL2C can recognize target type implicitly.
             //   Because IL2C can type inference at evaluation stack, so don't need stind's opcode attribute.
 

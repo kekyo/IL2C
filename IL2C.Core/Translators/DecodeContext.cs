@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+using Mono.Cecil.Cil;
+
 using IL2C.Metadata;
 
 namespace IL2C.Translators
@@ -94,6 +96,7 @@ namespace IL2C.Translators
 
         private int nextOffset = -1;
         private ICodeInformation currentCode;
+        private ICodeInformation prefixCode;
 
         private int decodingPathNumber = 0;
         private readonly Dictionary<int, StackSnapshot> stackSnapshortsAtOffset =
@@ -165,6 +168,7 @@ namespace IL2C.Translators
             if (stackSnapshortsAtOffset.TryGetValue(nextOffset, out var stackSnapshot))
             {
                 currentCode = null;
+                prefixCode = null;
                 return false;
             }
 
@@ -177,14 +181,20 @@ namespace IL2C.Translators
                     "End of method body reached: Method={0}",
                     this.Method.FriendlyName);
             }
-            currentCode = codeInformation;
 
+            if (!object.ReferenceEquals(currentCode, prefixCode))
+            {
+                prefixCode = null;
+            }
+
+            currentCode = codeInformation;
             nextOffset = codeInformation.Offset + codeInformation.Size;
 
             return true;
         }
 
         public ICodeInformation CurrentCode => currentCode;
+        public ICodeInformation PrefixCode => prefixCode;
 
         public int CalculateByRelativeOffset(int offsetValue)
         {
@@ -206,6 +216,19 @@ namespace IL2C.Translators
             }
 
             nextOffset = newOffset;
+        }
+
+        public void SetPrefixCode()
+        {
+            if ((prefixCode != null) || (currentCode.OpCode.OpCodeType != OpCodeType.Prefix))
+            {
+                throw new InvalidProgramSequenceException(
+                    "Invalid prefix: Location={0}, Previous={1}, Current={2}",
+                    this.CurrentCode.RawLocation,
+                    prefixCode.OpCode,
+                    currentCode.OpCode);
+            }
+            prefixCode = currentCode;
         }
         #endregion
 
@@ -336,6 +359,7 @@ namespace IL2C.Translators
 
                 // Start next path.
                 decodingPathNumber++;
+                prefixCode = null;
                 nextOffset = beforeBranchStackSnapshot.Offset;
 
                 // Retreive stack informations.
@@ -354,6 +378,7 @@ namespace IL2C.Translators
             }
 
             nextOffset = -1;
+            prefixCode = null;
             return false;
         }
         #endregion

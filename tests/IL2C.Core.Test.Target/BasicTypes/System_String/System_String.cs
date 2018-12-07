@@ -23,7 +23,7 @@ namespace IL2C.BasicTypes
     [TestCase(true, "IndexOutOfRange", "ABC", 3)]
     public sealed class System_String
     {
-        // MEMO: ToString and Equals are written by IL.
+        // NOTE: ToString and Equals are written by IL.
         //   Because they are compiled with callvirt opcode from Roslyn.
 
         [MethodImpl(MethodImplOptions.ForwardRef)]

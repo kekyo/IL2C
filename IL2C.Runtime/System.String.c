@@ -362,7 +362,7 @@ wchar_t System_String_get_Chars(System_String* this__, int32_t index)
     il2c_assert(this__->string_body__ != NULL);
 
     // TODO: Improvement
-    if ((index < 0) || (index >= il2c_wcslen(this__->string_body__)))
+    if ((index < 0) || (index >= (int32_t)il2c_wcslen(this__->string_body__)))
     {
         il2c_throw_indexoutofrangeexception__();
     }
@@ -415,7 +415,7 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
     il2c_assert(lhs->string_body__ != NULL);
     il2c_assert(rhs->string_body__ != NULL);
 
-    return wcscmp(lhs->string_body__, rhs->string_body__) == 0;
+    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) == 0;
 }
 
 bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
@@ -427,7 +427,7 @@ bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
     il2c_assert(lhs->string_body__ != NULL);
     il2c_assert(rhs->string_body__ != NULL);
 
-    return wcscmp(lhs->string_body__, rhs->string_body__) != 0;
+    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) != 0;
 }
 
 /////////////////////////////////////////////////
@@ -441,5 +441,5 @@ System_String_VTABLE_DECL__ System_String_VTABLE__ = {
     (System_String* (*)(void*))System_String_ToString,
 };
 
-IL2C_RUNTIME_TYPE_BEGIN(System_String, "System.String", IL2C_TYPE_VARIABLE, System_Object, NULL, 0)
+IL2C_RUNTIME_TYPE_BEGIN(System_String, "System.String", IL2C_TYPE_VARIABLE, 0, System_Object, NULL, 0)
 IL2C_RUNTIME_TYPE_END();

@@ -99,16 +99,23 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
     (offsetof(typeName, vptr_##interfaceTypeName##__) - offsetof(typeName, vptr0__))
 #define il2c_adjusted_reference(pRawReference) \
     ((void*)((uint8_t*)(pRawReference) - (**(const intptr_t**)(pRawReference))))
-#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
-    ((pReference != NULL) ? \
-        ((typeName*)(((uint8_t*)(pInterface)) - \
-         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
-        NULL)
+
+//#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
+//    ((pReference != NULL) ? \
+//        ((typeName*)(((uint8_t*)(pInterface)) - \
+//         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
+//        NULL)
+
+#define il2c_cast_to_interface__(interfaceTypeName, offset, pReference) \
+    ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset)))
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
     ((pReference != NULL) ? \
-        ((interfaceTypeName*)(((uint8_t*)(pReference)) + \
-         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
+        il2c_cast_to_interface__(interfaceTypeName, il2c_adjustor_offset(typeName, interfaceTypeName), (pReference)) : \
         NULL)
+
+// Complex but cost effective cast operator. We can use only boxed value.
+#define il2c_cast_from_boxed_to_interface(interfaceTypeName, size, interfaceIndex, pReference) \
+    il2c_cast_to_interface__(interfaceTypeName, sizeof(System_ValueType) + (size) + (interfaceIndex) * sizeof(void*), (pReference))
 
 ///////////////////////////////////////////////////////
 // Garbage collector related declarations
@@ -159,6 +166,10 @@ typedef void* untyped_ptr;
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations
+
+// It made identical type expression for boxed value type.
+#define il2c_boxedtype(valueTypeName) \
+    System_ValueType
 
 extern System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType);
@@ -248,26 +259,30 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 extern double il2c_fmod(double lhs, double rhs);
 extern void il2c_break();
 
+extern void il2c_throw_nullreferenceexception__();
 extern void il2c_throw_invalidcastexception__();
 
 ///////////////////////////////////////////////////////
 // Generator macro for runtime type information.
 
-#define IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, baseType, vptr0, markTarget, interfaceCount) \
+#define IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, size, baseType, vptr0, markTarget, interfaceCount) \
 const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
     (uintptr_t)(typeNameString), \
     flags, \
-    sizeof(typeName), \
+    size, \
     (uintptr_t)baseType, \
     (uintptr_t)vptr0, \
     (uintptr_t)markTarget, \
     interfaceCount,
 
-#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, baseTypeName, markTarget, interfaceCount) \
-    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, il2c_typeof(baseTypeName), il2c_vptrof(typeName), markTarget, interfaceCount)
+#define IL2C_RUNTIME_TYPE_BEGIN(typeName, typeNameString, flags, size, baseTypeName, markTarget, interfaceCount) \
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, flags, size, il2c_typeof(baseTypeName), il2c_vptrof(typeName), markTarget, interfaceCount)
+
+#define IL2C_RUNTIME_TYPE_ABSTRACT_BEGIN(typeName, typeNameString, size, baseTypeName, markTarget, interfaceCount) \
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_REFERENCE, size, il2c_typeof(baseTypeName), NULL, markTarget, interfaceCount)
 
 #define IL2C_RUNTIME_TYPE_INTERFACE_BEGIN(typeName, typeNameString, interfaceCount) \
-    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_INTERFACE, NULL, NULL, 0, interfaceCount)
+    IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_INTERFACE, 0, NULL, NULL, 0, interfaceCount)
 
 #define IL2C_RUNTIME_TYPE_MARK_TARGET(typeName, fieldName) \
     offsetof(typeName, fieldName),

@@ -60,5 +60,5 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Int32);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Int32);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Int32, "System.Int32", IL2C_TYPE_INTEGER, System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(System_Int32, "System.Int32", IL2C_TYPE_INTEGER, sizeof(System_Int32), System_ValueType, 0, 0)
 IL2C_RUNTIME_TYPE_END();

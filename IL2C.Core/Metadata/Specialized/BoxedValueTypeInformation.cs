@@ -2,16 +2,16 @@
 
 namespace IL2C.Metadata.Specialized
 {
-    // This is pseudo referenced-type null value used by ldnull opcode.
-    // It's explained the 'intptr_t' by the C compiler macro named 'untyped_ptr'.
-    // Because the ldnull opcode pushes 'null' value for the anonymous objref type 'O'.
-    internal sealed class UntypedReferenceTypeInformation
+    // This is pseudo boxed value-type used by box opcode.
+    // It's explained the 'System.ValueType' by the C compiler macro named 'il2c_boxedtype(T)'.
+    internal sealed class BoxedValueTypeInformation
         : ITypeInformation
     {
-        public static readonly ITypeInformation UntypedReferenceType = new UntypedReferenceTypeInformation();
+        private readonly ITypeInformation boxedType;
 
-        private UntypedReferenceTypeInformation()
+        public BoxedValueTypeInformation(ITypeInformation boxedType)
         {
+            this.boxedType = boxedType;
         }
 
         public string MetadataTypeName => "Type";
@@ -25,11 +25,11 @@ namespace IL2C.Metadata.Specialized
 
         public bool IsAbstract => false;
         public bool IsStatic => false;
-        public bool IsSealed => false;
+        public bool IsSealed => true;
 
         public bool IsValueType => false;
-        public bool IsReferenceType => false;
-        public bool IsClass => false;
+        public bool IsReferenceType => true;
+        public bool IsClass => true;
         public bool IsInterface => false;
         public bool IsEnum => false;
         public bool IsArray => false;
@@ -70,15 +70,15 @@ namespace IL2C.Metadata.Specialized
         public bool IsCharType => false;
         public bool IsStringType => false;
 
-        public bool IsUntypedReferenceType => true;
-        public bool IsBoxedType => false;
+        public bool IsUntypedReferenceType => false;
+        public bool IsBoxedType => true;
 
         public int InternalStaticSizeOfValue => 0;
         public object InternalStaticEmptyValue => null;
 
-        public ITypeInformation BaseType => null;
-        public ITypeInformation ElementType => throw new NotImplementedException();
-        public ITypeInformation[] InterfaceTypes => throw new NotImplementedException();
+        public ITypeInformation BaseType => boxedType.BaseType;
+        public ITypeInformation ElementType => boxedType;
+        public ITypeInformation[] InterfaceTypes => boxedType.InterfaceTypes;
         public ITypeInformation[] NestedTypes => throw new NotImplementedException();
 
         public IFieldInformation[] Fields => throw new NotImplementedException();
@@ -90,11 +90,11 @@ namespace IL2C.Metadata.Specialized
         public IMethodInformation[] OverrideBaseMethods => throw new NotImplementedException();
 
         public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false) =>
-            "untyped_ptr" + ((symbolName != null) ? (" " + symbolName) : string.Empty);
+            string.Format("{0}{1}", this.CLanguageTypeName, (symbolName != null) ? (" " + symbolName) : string.Empty);
 
-        public string CLanguageTypeName => "untyped_ptr";
+        public string CLanguageTypeName => string.Format("il2c_boxedtype({0})*", boxedType.MangledName);
         public string CLanguageThisTypeName => throw new NotImplementedException();
-        public string CLanguageStaticSizeOfExpression => "sizeof(untyped_ptr)";
+        public string CLanguageStaticSizeOfExpression => string.Format("sizeof({0})", this.CLanguageTypeName);
 
         public string MemberTypeName => throw new NotImplementedException();
         public IModuleInformation DeclaringModule => throw new NotImplementedException();
@@ -104,10 +104,10 @@ namespace IL2C.Metadata.Specialized
         public bool IsCLanguageLinkageScope => false;
         public bool IsCLanguageFileScope => false;
 
-        public string UniqueName => "untyped_ptr";
-        public string Name => "untyped_ptr";
-        public string FriendlyName => "untyped_ptr";
-        public string MangledName => "untyped_ptr";
+        public string UniqueName => string.Format("boxedtype<{0}>", boxedType.MangledName);
+        public string Name => this.UniqueName;
+        public string FriendlyName => this.UniqueName;
+        public string MangledName => this.UniqueName;
 
         public IMetadataContext Context => throw new NotImplementedException();
 
@@ -127,15 +127,11 @@ namespace IL2C.Metadata.Specialized
         }
 
         public int CalculateInterfaceIndex(ITypeInformation interfaceType) =>
-            throw new NotImplementedException();
+            boxedType.CalculateInterfaceIndex(interfaceType);
 
         public bool IsAssignableFrom(ITypeInformation rhs)
         {
-            // untyped type <-- Class
-            // untyped type <-- Interface
-            // untyped type <-- ByReference (special case: this direction is valid, but reverse direction is invalid)
-            // untyped type <-- Pointer
-            return rhs.IsClass || rhs.IsInterface || rhs.IsByReference || rhs.IsPointer;
+            return rhs.Equals(boxedType);
         }
 
         public ITypeInformation MakeByReference() =>

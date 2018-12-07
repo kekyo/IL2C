@@ -415,7 +415,7 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
     il2c_assert(lhs->string_body__ != NULL);
     il2c_assert(rhs->string_body__ != NULL);
 
-    return wcscmp(lhs->string_body__, rhs->string_body__) == 0;
+    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) == 0;
 }
 
 bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
@@ -427,7 +427,7 @@ bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
     il2c_assert(lhs->string_body__ != NULL);
     il2c_assert(rhs->string_body__ != NULL);
 
-    return wcscmp(lhs->string_body__, rhs->string_body__) != 0;
+    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) != 0;
 }
 
 /////////////////////////////////////////////////

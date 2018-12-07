@@ -400,17 +400,17 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 
 // +----------------------+
 // | IL2C_REF_HEADER      |
-// +----------------------+ <-- pBoxed        ---------------------------
-// | vptr0__              | <-- pVTable0        | System_ValueType    ^
-// +----------------------+                   -----------             |
-// |        :             |                     ^                     | bodySize
-// | (value data)         | Copy from pValue    | type->bodySize      |
-// |        :             |                     v                     v
-// +----------------------+                   ---------------------------
-// | vptr_IFoo__          |                     | (optional implemented interface vptr)
-// +----------------------+                   ---------------------------
-// | vptr_IBar__          |                     | (optional implemented interface vptr)
-// +----------------------+                   ---------------------------
+// +----------------------+ <-- pBoxed        -----------------------------------------------
+// | vptr0__              | <-- pVTable0        | System_ValueType                         ^
+// +----------------------+                   -----------                                  |
+// |        :             |                     ^                                          | bodySize
+// | (value data)         | Copy from pValue    | type->bodySize                           |
+// |        :             |                     v                                          |
+// +----------------------+                   ---------------------------                  |
+// | vptr_IFoo__          |                     | (optional implemented interface vptr)    |
+// +----------------------+                   ---------------------------                  |
+// | vptr_IBar__          |                     | (optional implemented interface vptr)    v
+// +----------------------+                   -----------------------------------------------
 
 System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType)
@@ -613,7 +613,7 @@ void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget)
 }
 
 static void il2c_do_throw__(
-    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t value)
+    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t filterNumber)
 {
     il2c_assert(ex != NULL);
     il2c_assert(pTargetFrame != NULL);
@@ -626,7 +626,7 @@ static void il2c_do_throw__(
     g_pBeginFrame__ = pTargetFrame->pFrame;
 
     // Transision to target handler.
-    il2c_longjmp((void*)pTargetFrame->saved, value);
+    il2c_longjmp((void*)pTargetFrame->saved, filterNumber);
 }
 
 static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame)
@@ -642,10 +642,10 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
         il2c_assert(pFrame->filter != NULL);
         il2c_assert(pFrame->pFrame != NULL);
 
-        int16_t result = pFrame->filter(ex);
+        int16_t filterNumber = pFrame->filter(ex);
 
         // Found finally block
-        if (result == IL2C_FILTER_FINALLY)
+        if (filterNumber == IL2C_FILTER_FINALLY)
         {
             // Memoize finally frame
             if (pFinallyFrame == NULL)
@@ -653,7 +653,7 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
                 pFinallyFrame = pFrame;
             }
         }
-        else if (result != IL2C_FILTER_NOMATCH)
+        else if (filterNumber != IL2C_FILTER_NOMATCH)
         {
             // Already found finally block
             if (pFinallyFrame != NULL)
@@ -665,7 +665,7 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
             {
                 // NOTE: This place is the first-chance.
                 // Send to catch
-                il2c_do_throw__(ex, pFrame, result);
+                il2c_do_throw__(ex, pFrame, filterNumber);
             }
         }
 
@@ -733,7 +733,7 @@ void il2c_rethrow()
 #ifdef IL2C_USE_SIGNAL
 static void il2c_SIGSEGV_handler(int sig)
 {
-    // MEMO 1:
+    // NOTE 1:
     //   Run in windows, this handler called from SEH filter context from "_seh_filter_exe()".
     //   The SEH __try - __except() block contains at "__scrt_common_main_seh(),"
     //   the callgraph is:
@@ -744,7 +744,7 @@ static void il2c_SIGSEGV_handler(int sig)
     //   We can use the longjmp() and unwinding without any stack corruption.
     //   https://gist.github.com/kekyo/cc9bace942b8c2aa2484431e047d267d
 
-    // MEMO 2:
+    // NOTE 2:
     //   This handler allocate the NullReferenceException and finally unwind using the longjmp(),
     //   it's dangerous for some situations.
     //   For example, we'll call the "malloc()" function and if it causes SEGV (invalid pointer access) at inside malloc

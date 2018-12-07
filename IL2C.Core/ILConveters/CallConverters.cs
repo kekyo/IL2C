@@ -12,8 +12,73 @@ namespace IL2C.ILConverters
 {
     internal static class CallConverterUtilities
     {
+        private static (ITypeInformation type, ILocalVariableInformation variable, string format) GetArg0ParameterInformation(
+            DecodeContext decodeContext,
+            ref IMethodInformation method,
+            IParameterInformation parameter0,
+            ILocalVariableInformation arg0,
+            ref ITypeInformation arg0ValueType,
+            ref ILocalVariableInformation requiredBoxingAtArg0PointerVariable,
+            ref ILocalVariableInformation requiredCastingAtArg0PointerVariable,
+            ref bool isVirtualCall)
+        {
+            // Required boxing at the arg0
+            if (arg0ValueType != null)
+            {
+                if (!arg0.TargetType.IsByReference)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Cannot apply constrained prefix, arg0 isn't byref: Location={0}, Arg0Type={1}",
+                        decodeContext.CurrentCode.RawLocation,
+                        arg0.TargetType.FriendlyName);
+                }
+
+                // VERY DIRTY: The arg0 (managed pointer) uses below.
+                requiredBoxingAtArg0PointerVariable = arg0;
+
+                // VERY DIRTY: Make the boxing expression below,
+                //   it's reserving for the boxed value symbol at the evaluation stack.
+                var arg0BoxedSymbol = decodeContext.PushStack(
+                    new BoxedValueTypeInformation(arg0ValueType));
+                decodeContext.PopStack();
+
+                return (parameter0.TargetType, arg0BoxedSymbol, "{0}");
+            }
+            // If it's virtual method
+            else if (isVirtualCall)
+            {
+                // Invoke interface method with the inline boxed-type instance.
+                //   ex: ((IFoo)foo).Bar(...)
+                //   If not inlined (ex: bound to local variable), arg0 doesn't box type. Next to the else block.
+                if (method.DeclaringType.IsInterface && arg0.TargetType.IsBoxedType)
+                {
+                    // VERY DIRTY: The arg0 (boxed value) uses below.
+                    requiredCastingAtArg0PointerVariable = arg0;
+                    arg0ValueType = arg0.TargetType;
+
+                    // VERY DIRTY: Make the implicitly cast expression below,
+                    //   it's reserving for the casted value symbol at the evaluation stack.
+                    var arg0CastedSymbol = decodeContext.PushStack(method.DeclaringType);
+                    decodeContext.PopStack();
+
+                    return (parameter0.TargetType, arg0CastedSymbol, "il2c_adjusted_reference({0})");
+                }
+                else
+                {
+                    // Include adjust offset expression
+                    return (parameter0.TargetType, arg0, "il2c_adjusted_reference({0})");
+                }
+            }
+            else
+            {
+                return (parameter0.TargetType, arg0, "{0}");
+            }
+        }
+
         public static Func<IExtractContext, string[]> Apply(
-            IMethodInformation method, DecodeContext decodeContext, bool isVirtualCall)
+            IMethodInformation method,
+            DecodeContext decodeContext,
+            bool isVirtualCall)
         {
             // ECMA-335 I.12.4.1.4: Virtual calling convention
 
@@ -22,7 +87,7 @@ namespace IL2C.ILConverters
 
             // Constrained prefix applied, drop virtual call and hack the boxing for arg0 if required.
             //   (See ConstrainedConverter.)
-            ITypeInformation requiredBoxingAtArg0ValueType = null;
+            ITypeInformation arg0ValueType = null;
             var prefixCode = decodeContext.PrefixCode;
             if (prefixCode?.OpCode == OpCodes.Constrained)
             {
@@ -45,7 +110,7 @@ namespace IL2C.ILConverters
 
                     // '...and thisType implements method then'
                     var implementationMethod = allDeclaredMethods.First(
-                        m => MetadataUtilities.VirtualMethodSignatureComparer.Equals(m, method));
+                        dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, method));
 
                     // Drop virtual call and turn to the direct call
                     isVirtualCall = false;
@@ -57,7 +122,7 @@ namespace IL2C.ILConverters
                         // 'ptr is dereferenced, boxed, and passed as the ‘this’ pointer to the callvirt of method'
 
                         // VERY DIRTY: The constrained type uses below.
-                        requiredBoxingAtArg0ValueType = constrainedType;
+                        arg0ValueType = constrainedType;
                     }
                 }
             }
@@ -66,6 +131,7 @@ namespace IL2C.ILConverters
             // Step 2:
 
             ILocalVariableInformation requiredBoxingAtArg0PointerVariable = null;
+            ILocalVariableInformation requiredCastingAtArg0PointerVariable = null;
 
             // Construct parameters with expressions.
             var pairParameters = method.Parameters.
@@ -73,66 +139,14 @@ namespace IL2C.ILConverters
                 Select(parameter =>
                 {
                     var arg = decodeContext.PopStack();
-
-                    // Arg0
-                    if (parameter.Index == 0)
-                    {
-                        // Required boxing at the arg0
-                        if (requiredBoxingAtArg0ValueType != null)
-                        {
-                            if (!arg.TargetType.IsByReference)
-                            {
-                                throw new InvalidProgramSequenceException(
-                                    "Cannot apply constrained prefix, arg0 isn't byref: Location={0}, Arg0Type={1}",
-                                    decodeContext.CurrentCode.RawLocation,
-                                    arg.TargetType.FriendlyName);
-                            }
-
-                            // VERY DIRTY: The arg0 (managed pointer) uses below.
-                            requiredBoxingAtArg0PointerVariable = arg;
-
-                            // VERY DIRTY: Make the boxing expression below,
-                            //   it's reserving for the boxed value symbol at the evaluation stack.
-                            var arg0BoxedSymbol = decodeContext.PushStack(
-                                new BoxedValueTypeInformation(requiredBoxingAtArg0ValueType));
-                            decodeContext.PopStack();
-
-                            return new
-                            {
-                                Type = parameter.TargetType,
-                                Variable = arg0BoxedSymbol,
-                                Format = "{0}"
-                            };
-                        }
-                        // Include adjust offset expression if it's virtual method
-                        else if (isVirtualCall)
-                        {
-                            return new
-                            {
-                                Type = parameter.TargetType,
-                                Variable = arg,
-                                Format = "il2c_adjusted_reference({0})"
-                            };
-                        }
-                        else
-                        {
-                            return new
-                            {
-                                Type = parameter.TargetType,
-                                Variable = arg,
-                                Format = "{0}"
-                            };
-                        }
-                    }
-                    else
-                    {
-                        return new
-                        {
-                            Type = parameter.TargetType,
-                            Variable = arg,
-                            Format = "{0}"
-                        };
-                    }
+                    return (parameter.Index == 0) ?
+                        GetArg0ParameterInformation(
+                            decodeContext, ref method, parameter, arg,
+                            ref arg0ValueType,
+                            ref requiredBoxingAtArg0PointerVariable,
+                            ref requiredCastingAtArg0PointerVariable,
+                            ref isVirtualCall) :
+                        (type: parameter.TargetType, variable: arg, format: "{0}");
                 }).
                 Reverse().
                 ToArray();
@@ -151,11 +165,11 @@ namespace IL2C.ILConverters
                     "System.Runtime.CompilerServices.RuntimeHelpers.InitializeArray"))
                 {
                     Debug.Assert(pairParameters.Length == 2);
-                    Debug.Assert(pairParameters[1].Variable.HintInformation is string);
+                    Debug.Assert(pairParameters[1].variable.HintInformation is string);
 
                     decodeContext.PrepareContext.RegisterDeclaredValuesHintType(
-                        (string)pairParameters[1].Variable.HintInformation,
-                        pairParameters[0].Variable.TargetType);
+                        (string)pairParameters[1].variable.HintInformation,
+                        pairParameters[0].variable.TargetType);
                 }
 
                 result = null;
@@ -173,9 +187,9 @@ namespace IL2C.ILConverters
 
                 var parameters = pairParameters.Select(parameter =>
                     new Utilities.RightExpressionGivenParameter(
-                        parameter.Type,
-                        parameter.Variable,
-                        string.Format(parameter.Format, extractContext.GetSymbolName(parameter.Variable)))).
+                        parameter.type,
+                        parameter.variable,
+                        string.Format(parameter.format, extractContext.GetSymbolName(parameter.variable)))).
                     ToArray();
 
                 var parameterString = Utilities.GetGivenParameterDeclaration(
@@ -194,7 +208,7 @@ namespace IL2C.ILConverters
                     callExpression = string.Format(
                         "{0}{1}->vptr0__->{2}({3})",
                         receiveResultExpression,
-                        extractContext.GetSymbolName(pairParameters[0].Variable),
+                        extractContext.GetSymbolName(pairParameters[0].variable),
                         method.GetCLanguageDeclarationName(overloadIndex),
                         parameterString);
                 }
@@ -207,18 +221,32 @@ namespace IL2C.ILConverters
                         parameterString);
                 }
 
-                // If requires boxed arg0
-                if (requiredBoxingAtArg0ValueType != null)
+                // If requires boxing expression
+                if (requiredBoxingAtArg0PointerVariable != null)
                 {
-                    Debug.Assert(requiredBoxingAtArg0PointerVariable != null);
+                    Debug.Assert(arg0ValueType != null);
 
                     // Emit call expression with boxing expression.
                     return new[] {
                         string.Format(
                             "{0} = il2c_box({1}, {2})",
-                            extractContext.GetSymbolName(pairParameters[0].Variable),
+                            extractContext.GetSymbolName(pairParameters[0].variable),
                             extractContext.GetSymbolName(requiredBoxingAtArg0PointerVariable),
-                            requiredBoxingAtArg0ValueType.MangledName),
+                            arg0ValueType.MangledName),
+                        callExpression };
+                }
+                // If requires casting expression
+                else if (requiredCastingAtArg0PointerVariable != null)
+                {
+                    // Emit call expression with casting expression.
+                    return new[] {
+                        string.Format(
+                            "{0} = il2c_cast_from_boxed_to_interface({1}, {2}, {3}, {4})",
+                            extractContext.GetSymbolName(pairParameters[0].variable),
+                            method.DeclaringType.MangledName,
+                            arg0ValueType.ElementType.CLanguageStaticSizeOfExpression,
+                            arg0ValueType.InterfaceTypes.Select((t, i) => (t, i)).First().i,
+                            extractContext.GetSymbolName(requiredCastingAtArg0PointerVariable)),
                         callExpression };
                 }
                 else

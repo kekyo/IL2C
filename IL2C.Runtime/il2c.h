@@ -107,11 +107,13 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 //        NULL)
 
 #define il2c_cast_to_interface__(interfaceTypeName, offset, pReference) \
-    ((pReference != NULL) ? \
-        ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset))) : \
-        NULL)
+    ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset)))
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
-    il2c_cast_to_interface__(interfaceTypeName, il2c_adjustor_offset(typeName, interfaceTypeName), (pReference))
+    ((pReference != NULL) ? \
+        il2c_cast_to_interface__(interfaceTypeName, il2c_adjustor_offset(typeName, interfaceTypeName), (pReference)) : \
+        NULL)
+
+// Complex but cost effective cast operator. We can use only boxed value.
 #define il2c_cast_from_boxed_to_interface(interfaceTypeName, size, interfaceIndex, pReference) \
     il2c_cast_to_interface__(interfaceTypeName, sizeof(System_ValueType) + (size) + (interfaceIndex) * sizeof(void*), (pReference))
 

@@ -36,7 +36,7 @@ namespace IL2C.Writers
                 if (method.IsVirtual)
                 {
                     tw.WriteLine(
-                        "{0}* pValue =  // unbox without copy because it's truly objref",
+                        "{0}* pUnboxedValue__ =  // unbox without copy because it's truly objref",
                         declaredType.CLanguageTypeName);
 
                     using (var __ = tw.Shift())
@@ -47,7 +47,7 @@ namespace IL2C.Writers
                     }
 
                     tw.WriteLine(
-                        "return {0}(pValue{1});",
+                        "return {0}(pUnboxedValue__{1});",
                         method.CLanguageFunctionName,
                         string.Concat(method.Parameters.
                             Skip(1).
@@ -60,7 +60,7 @@ namespace IL2C.Writers
 
                     // It requires unboxing WITH COPY.
                     tw.WriteLine(
-                        "{0} value =  // unbox with copy because it will be from interface reference",
+                        "{0} unboxedValue__ =  // unbox with copy because it will be from interface reference",
                         declaredType.CLanguageTypeName);
 
                     using (var __ = tw.Shift())
@@ -71,7 +71,7 @@ namespace IL2C.Writers
                     }
 
                     tw.WriteLine(
-                        "return {0}(&value{1});",
+                        "return {0}(&unboxedValue__{1});",
                         method.CLanguageFunctionName,
                         string.Concat(method.Parameters.
                             Skip(1).

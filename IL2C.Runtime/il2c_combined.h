@@ -33,6 +33,7 @@
 #include "System.NullReferenceException.c"
 #include "System.InvalidCastException.c"
 #include "System.IndexOutOfRangeException.c"
+#include "System.GC.c"
 
 #include "System.Console.c"
 

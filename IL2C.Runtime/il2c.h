@@ -163,6 +163,7 @@ typedef void* untyped_ptr;
 #include <System.NullReferenceException.h>
 #include <System.InvalidCastException.h>
 #include <System.IndexOutOfRangeException.h>
+#include <System.GC.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

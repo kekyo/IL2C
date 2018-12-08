@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace IL2C.RuntimeSystems
@@ -144,6 +145,12 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public struct ObjRefInsideValueTypeType
+    {
+        public string Value;
+        public ObjRefInsideValueTypeType(string value) => this.Value = value;
+    }
+
     [Description("Value types are specialized types at the .NET type system. Because the type inherited from the System.ValueType (objref type), all method has the managed pointer at the arg0 and these instances will box and apply the pseudo vptrs. These tests are verified the IL2C can handle value types.")]
     [TestCase("123", "CallInstanceMethod", 123, IncludeTypes = new[] { typeof(ValueType1) })]
     [TestCase("123", "CallInstanceMethodDirectly", 123, IncludeTypes = new[] { typeof(ValueType2), typeof(IValueTypeAccessor1) })]
@@ -163,6 +170,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(123, "ValueTypeUpdate2", 123, 456, IncludeTypes = new[] { typeof(ValueTypeUpdateType2), typeof(IValueTypeUpdateType2) })]
     [TestCase(123, "ValueTypeUpdate2ExplicitlyBoxed", 123, 456, IncludeTypes = new[] { typeof(ValueTypeUpdateType2), typeof(IValueTypeUpdateType2) })]
     [TestCase(456, "ValueTypeUpdate3", 123, IncludeTypes = new[] { typeof(ValueTypeUpdateType3) })]
+    [TestCase("ABCDEF", new[] { "ObjRefInsideValueType", "ConcatString" }, IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
     public sealed class ValueTypes
     {
         public static string CallInstanceMethod(int value)
@@ -284,5 +292,8 @@ namespace IL2C.RuntimeSystems
             var _ = v.ToString();
             return v.Value;
         }
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string ObjRefInsideValueType();
     }
 }

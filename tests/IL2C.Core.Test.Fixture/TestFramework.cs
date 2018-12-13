@@ -115,6 +115,12 @@ namespace IL2C
         {
             Assert.IsTrue(caseInfo.Method.IsPublic && caseInfo.Method.IsStatic);
 
+            // HACK: Override identical method information because NUnit VS adapter
+            //   double click handler causes pointing to the dynamic test case generator method
+            //   and we don't need looking for it.
+            var test = NUnit.Framework.Internal.TestExecutionContext.CurrentContext.CurrentTest as TestMethod;
+            test?.SetMethod(caseInfo.Method.DeclaringType.FullName, caseInfo.Method.Name);
+
             // Split current thread context.
             await Task.Yield();
 
@@ -176,6 +182,8 @@ namespace IL2C
 
             var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
             await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj");
+
+            TestContext.AddTestAttachment(vcxprojTemplatePath, "Generated VC++ project");
 
             var launchTemplatePath = Path.Combine(translatedPath, ".vscode", "launch.json");
             await TestUtilities.CopyResourceToTextFileAsync(launchTemplatePath, "launch.json");

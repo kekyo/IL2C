@@ -30,8 +30,9 @@ namespace IL2C
             TestFramework.ExecuteTestAsync(caseInfo);
 
         public static readonly TestCaseInformation[] _ValueTypes = TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ValueTypes>();
-        [Test]
-        public static Task ValueTypes([ValueSource(nameof(_ValueTypes))] TestCaseInformation caseInfo) =>
+        [DynamicTest(typeof(IL2C.RuntimeSystems.ValueTypes))]
+        //[AAATestAttribute("_ValueTypes")]
+        public static Task ValueTypes(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
         public static readonly TestCaseInformation[] _ExceptionHandling =

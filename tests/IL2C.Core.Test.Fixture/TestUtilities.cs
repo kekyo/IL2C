@@ -80,31 +80,37 @@ namespace IL2C
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());
 
-        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes)
+        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes) =>
+            TraverseTypes(typeof(T), includeBaseTypes);
+
+        private static IEnumerable<Type> TraverseTypes(Type targetType, bool includeBaseTypes)
         {
             return includeBaseTypes ?
-                typeof(T).Traverse(type => type.BaseType) :
-                new[] { typeof(T) };
+                targetType.Traverse(type => type.BaseType) :
+                new[] { targetType };
         }
 
-        public static TestCaseInformation[] GetTestCaseInformations<T>()
+        public static TestCaseInformation[] GetTestCaseInformations<T>() =>
+            GetTestCaseInformations(typeof(T));
+
+        public static TestCaseInformation[] GetTestCaseInformations(Type targetType)
         {
-            var categoryName = typeof(T).
+            var categoryName = targetType.
                 Namespace.Split('.').Last();
-            var id = typeof(T).
+            var id = targetType.
                 GetCustomAttribute<TestIdAttribute>()?.Id ??
-                typeof(T).Name;
+                targetType.Name;
 
             var caseInfos =
-                (from testCase in typeof(T).GetCustomAttributes<TestCaseAttribute>(true)
-                 let method = typeof(T).GetMethod(
+                (from testCase in targetType.GetCustomAttributes<TestCaseAttribute>(true)
+                 let method = targetType.GetMethod(
                      testCase.MethodName,
                      BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)    // Static method only for test entry
                  where method != null
                  let additionalMethods =
                     testCase.AdditionalMethodNames.
                     SelectMany(methodName =>
-                        TraverseTypes<T>(testCase.IncludeBaseTypes).
+                        TraverseTypes(targetType, testCase.IncludeBaseTypes).
                         SelectMany(type => type.GetMembers(
                             BindingFlags.Public | BindingFlags.NonPublic |
                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly).  // Both instance or static method
@@ -118,7 +124,7 @@ namespace IL2C
                  let totalAdditionalMethods =
                     // If contains instance method in set of additional methods (test case is implicitly required the instance), add the constructor.
                     (additionalMethods.Any(m => !m.IsStatic) ?
-                        new[] { (MethodBase)typeof(T).GetConstructor(Type.EmptyTypes) } :
+                        new[] { (MethodBase)targetType.GetConstructor(Type.EmptyTypes) } :
                         new MethodBase[0]).
                     Concat(additionalMethods).
                     ToArray()

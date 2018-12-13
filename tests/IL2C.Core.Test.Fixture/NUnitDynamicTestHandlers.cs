@@ -23,6 +23,29 @@ namespace IL2C
 
         public override string MethodName { get; }
 
+        private new void PopulateTestNode(NUnit.Framework.Interfaces.TNode thisNode, bool recursive)
+        {
+            thisNode.AddAttribute("id", this.Id.ToString());
+            thisNode.AddAttribute("name", this.Name);
+            thisNode.AddAttribute("fullname", this.FullName);
+            thisNode.AddAttribute("methodname", this.MethodName);
+            thisNode.AddAttribute("classname", this.ClassName);
+            thisNode.AddAttribute("runstate", this.RunState.ToString());
+
+            if (Properties.Keys.Count > 0)
+                Properties.AddToXml(thisNode, recursive);
+        }
+
+        public override NUnit.Framework.Interfaces.TNode AddToXml(NUnit.Framework.Interfaces.TNode parentNode, bool recursive)
+        {
+            var thisNode = parentNode.AddElement(XmlElementName);
+
+            this.PopulateTestNode(thisNode, recursive);
+            thisNode.AddAttribute("seed", this.Seed.ToString());
+
+            return thisNode;
+        }
+
         public override string ToString()
         {
             return string.Format("{0}.{1}", this.ClassName, this.MethodName);
@@ -69,7 +92,7 @@ namespace IL2C
             var name = string.Format(
                 "{0}({1})",
                 testCase.Name,
-                string.Join(",", testCase.Arguments.Select(Utilities.GetCLanguageExpression)));
+                string.Join(",", testCase.Arguments.Select(Utilities.GetCSharpLanguageExpression)));
             testMethod.Name = name;
             testMethod.FullName = string.Format(
                 "{0}.{1}.{2}",

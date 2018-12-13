@@ -115,6 +115,19 @@ namespace IL2C
         {
             Assert.IsTrue(caseInfo.Method.IsPublic && caseInfo.Method.IsStatic);
 
+            // TODO:
+            var path = Path.GetFullPath(Path.Combine(
+                caseInfo.Method.DeclaringType.Assembly.Location,
+                "..", "..", "..", "..", "..",
+                "IL2C.Core.Test.Target",
+                caseInfo.CategoryName,
+                caseInfo.Id,
+                caseInfo.Id + ".cs"));
+            if (File.Exists(path))
+            {
+                TestContext.AddTestAttachment(path, "Test case");
+            }
+
             // Split current thread context.
             await Task.Yield();
 

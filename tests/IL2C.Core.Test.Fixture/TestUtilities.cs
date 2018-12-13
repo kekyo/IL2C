@@ -61,12 +61,13 @@ namespace IL2C
         }
 
         public static TestCaseInformation CreateTestCaseInformation(
-            string categoryName, string id, string name, string description,
+            string categoryName, string id, string name, string uniqueName, string description,
             MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
             new TestCaseInformation(
                 categoryName,
                 id,
                 name,
+                uniqueName,
                 description,
                 ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
                 caseAttribute.Assert,
@@ -129,17 +130,9 @@ namespace IL2C
                     Concat(additionalMethods).
                     ToArray()
                  group new { testCase, method, AdditionalMethods = totalAdditionalMethods } by method.Name).
-                 SelectMany(g =>
-                 {
-                     var a = g.ToArray();
-                     return (a.Length == 1) ?
-                        a.Select(entry => CreateTestCaseInformation(
-                            categoryName, id, entry.method.Name, entry.method.DeclaringType.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty,
-                            entry.method, entry.AdditionalMethods, entry.testCase)) :
-                        a.Select((entry, index) => CreateTestCaseInformation(
-                            categoryName, id, entry.method.Name + "_" + index, entry.method.DeclaringType.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty,
-                            entry.method, entry.AdditionalMethods, entry.testCase));
-                 }).
+                 SelectMany(g => g.Select((entry, index) => CreateTestCaseInformation(
+                        categoryName, id, entry.method.Name, entry.method.Name + "_" + index, entry.method.DeclaringType.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty,
+                        entry.method, entry.AdditionalMethods, entry.testCase))).
                  OrderBy(caseInfo => caseInfo.Name).
                  ToArray();
             return caseInfos;

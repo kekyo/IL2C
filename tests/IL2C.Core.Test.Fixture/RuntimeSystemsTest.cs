@@ -1,62 +1,48 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using NUnit.Framework;
 
 namespace IL2C
 {
-    [TestFixture]
     [Parallelizable(ParallelScope.All)]
     public sealed class RuntimeSystemsTest
     {
-        public static readonly TestCaseInformation[] _EnumTypes = TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.EnumTypes>();
-        [Test]
-        public static Task EnumTypes([ValueSource(nameof(_EnumTypes))] TestCaseInformation caseInfo) =>
+        [DynamicTest(typeof(IL2C.RuntimeSystems.EnumTypes))]
+        public static Task EnumTypes(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
-        public static readonly TestCaseInformation[] _DelegateTypes =
-            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.DelegateTypes>().
-            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.MulticastDelegateTypes>()).
-            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.DelegateTypesWithVirtual1>()).
-            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.DelegateTypesWithVirtual2>()).
-            ToArray();
-        [Test]
-        public static Task DelegateTypes([ValueSource(nameof(_DelegateTypes))] TestCaseInformation caseInfo) =>
+        [DynamicTest(
+            typeof(IL2C.RuntimeSystems.DelegateTypes),
+            typeof(IL2C.RuntimeSystems.MulticastDelegateTypes),
+            typeof(IL2C.RuntimeSystems.DelegateTypesWithVirtual1),
+            typeof(IL2C.RuntimeSystems.DelegateTypesWithVirtual2))]
+        public static Task DelegateTypes(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
-        public static readonly TestCaseInformation[] _ArrayTypes = TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ArrayTypes>();
-        [Test]
-        public static Task ArrayTypes([ValueSource(nameof(_ArrayTypes))] TestCaseInformation caseInfo) =>
+        [DynamicTest(typeof(IL2C.RuntimeSystems.ArrayTypes))]
+        public static Task ArrayTypes(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
-        public static readonly TestCaseInformation[] _ValueTypes = TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ValueTypes>();
         [DynamicTest(typeof(IL2C.RuntimeSystems.ValueTypes))]
-        //[AAATestAttribute("_ValueTypes")]
         public static Task ValueTypes(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
-        public static readonly TestCaseInformation[] _ExceptionHandling =
-            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ExceptionHandling>();
-        [Test]
-        public static Task ExceptionHandling([ValueSource(nameof(_ExceptionHandling))] TestCaseInformation caseInfo) =>
+        [DynamicTest(typeof(IL2C.RuntimeSystems.ExceptionHandling))]
+        public static Task ExceptionHandling(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
-        public static readonly TestCaseInformation[] _ExceptionThrownByCLI =
-            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.InvalidCastExceptions>().
-            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.ArrayIndexOutOfRangeExceptions>()).
-            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.NullReferenceExceptions>()).
-            ToArray();
-        [Test]
-        public static Task ExceptionThrownByCLI([ValueSource(nameof(_ExceptionThrownByCLI))] TestCaseInformation caseInfo) =>
+        [DynamicTest(
+            typeof(IL2C.RuntimeSystems.InvalidCastExceptions),
+            typeof(IL2C.RuntimeSystems.ArrayIndexOutOfRangeExceptions),
+            typeof(IL2C.RuntimeSystems.NullReferenceExceptions))]
+        public static Task ExceptionThrownByCLI(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
 
-        public static readonly TestCaseInformation[] _TypeRelations =
-            TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeInheritance>().
-            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeImplements>()).
-            Concat(TestUtilities.GetTestCaseInformations<IL2C.RuntimeSystems.TypeInheritanceAndImplements>()).
-            ToArray();
-        [Test]
-        public static Task TypeRelations([ValueSource(nameof(_TypeRelations))] TestCaseInformation caseInfo) =>
+        [DynamicTest(
+            typeof(IL2C.RuntimeSystems.TypeInheritance),
+            typeof(IL2C.RuntimeSystems.TypeImplements),
+            typeof(IL2C.RuntimeSystems.TypeInheritanceAndImplements))]
+        public static Task TypeRelations(TestCaseInformation caseInfo) =>
             TestFramework.ExecuteTestAsync(caseInfo);
     }
 }

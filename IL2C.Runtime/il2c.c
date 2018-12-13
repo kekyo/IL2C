@@ -632,7 +632,6 @@ static void il2c_do_throw__(
 static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame)
 {
     il2c_assert(ex != NULL);
-    il2c_assert(pTargetFrame != NULL);
 
     IL2C_EXCEPTION_FRAME* pFrame = pTargetFrame;
     IL2C_EXCEPTION_FRAME* pFinallyFrame = NULL;
@@ -691,7 +690,9 @@ void il2c_throw__(System_Exception* ex)
     // If this state is inside for caught block, skip current frame.
     // (Throwing new exception instance)
     IL2C_EXCEPTION_FRAME* pFrame =
-        (g_pTopUnwindTarget__->ex != NULL) ? g_pTopUnwindTarget__->pNext : g_pTopUnwindTarget__;
+        (g_pTopUnwindTarget__ != NULL) ?
+            ((g_pTopUnwindTarget__->ex != NULL) ? g_pTopUnwindTarget__->pNext : g_pTopUnwindTarget__) :
+        NULL;
 
     il2c_throw_internal__(ex, pFrame);
 }

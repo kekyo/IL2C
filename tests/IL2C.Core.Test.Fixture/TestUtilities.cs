@@ -60,6 +60,17 @@ namespace IL2C
             }
         }
 
+        public static IReadOnlyDictionary<string, IReadOnlyDictionary<Type, TestCaseInformation[]>> ExtractTestCasesFromCoreTestTarget()
+        {
+            return
+                typeof(TestCaseAttribute).Assembly.GetTypes().
+                Where(type => type.IsPublic && type.IsClass && !type.IsAbstract && type.IsDefined(typeof(TestCaseAttribute))).
+                GroupBy(type => type.Namespace).
+                ToDictionary(
+                    g => g.Key,
+                    g => (IReadOnlyDictionary<Type, TestCaseInformation[]>)g.ToDictionary(type => type, TestUtilities.GetTestCaseInformations));
+        }
+
         public static TestCaseInformation CreateTestCaseInformation(
             string categoryName, string id, string name, string uniqueName, string description,
             MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
@@ -81,18 +92,12 @@ namespace IL2C
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());
 
-        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes) =>
-            TraverseTypes(typeof(T), includeBaseTypes);
-
         private static IEnumerable<Type> TraverseTypes(Type targetType, bool includeBaseTypes)
         {
             return includeBaseTypes ?
                 targetType.Traverse(type => type.BaseType) :
                 new[] { targetType };
         }
-
-        public static TestCaseInformation[] GetTestCaseInformations<T>() =>
-            GetTestCaseInformations(typeof(T));
 
         public static TestCaseInformation[] GetTestCaseInformations(Type targetType)
         {

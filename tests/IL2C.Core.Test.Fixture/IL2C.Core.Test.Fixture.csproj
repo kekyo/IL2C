@@ -25,12 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="BasicTypesTest.cs" />
-    <Compile Remove="Generators.cs" />
-    <Compile Remove="ILConvertersTest.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Templates\launch.json" />
     <None Remove="Templates\make.bat" />
     <None Remove="Templates\test_void.c" />
@@ -39,20 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="ILConvertersTest.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Templates\launch.json" />
     <EmbeddedResource Include="Templates\make.bat" />
     <EmbeddedResource Include="Templates\test_void.c" />
     <EmbeddedResource Include="Templates\test.c" />
     <EmbeddedResource Include="Templates\test.vcxproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="BasicTypesTest.cs" />
-    <None Include="Generators.cs" />
   </ItemGroup>
 
   <ItemGroup>

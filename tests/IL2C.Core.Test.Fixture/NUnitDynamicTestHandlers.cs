@@ -52,26 +52,47 @@ namespace IL2C
         }
     }
 
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class DynamicTestAttribute
-        : NUnit.Framework.NUnitAttribute, NUnit.Framework.Interfaces.ITestBuilder, NUnit.Framework.Interfaces.IImplyFixture
+    // HACK: Depends NUnit 3.11.0 internals
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class CoreTestTargetAttribute
+        : NUnit.Framework.NUnitAttribute, NUnit.Framework.Interfaces.IFixtureBuilder2, NUnit.Framework.Interfaces.ITestData
     {
+        private static readonly NUnit.Framework.Interfaces.IMethodInfo executeMethod =
+            new NUnit.Framework.Internal.MethodWrapper(typeof(TestFramework), "ExecuteTestAsync");
+        private static readonly object[] emptyArgs = new object[0];
+
         private readonly NUnit.Framework.Internal.Randomizer _randomizer =
             NUnit.Framework.Internal.Randomizer.CreateRandomizer();
 
-        public DynamicTestAttribute(params Type[] targetTypes)
+        public CoreTestTargetAttribute(NUnit.Framework.ParallelScope parallelScope = NUnit.Framework.ParallelScope.All)
         {
-            this.TargetTypes = targetTypes;
+            this.ParallelScope = parallelScope;
+
+            this.Properties = new NUnit.Framework.Internal.PropertyBag();
+            AddProperty(this.Properties, NUnit.Framework.Internal.PropertyNames.ParallelScope, parallelScope);
         }
 
-        public Type[] TargetTypes { get; }
+        private static void AddProperty(NUnit.Framework.Interfaces.IPropertyBag propertyBag, string name, object value)
+        {
+            propertyBag.Add(name, value);
+        }
+
+        public string TestName => null;
+
+        public NUnit.Framework.Interfaces.RunState RunState => NUnit.Framework.Interfaces.RunState.Runnable;
+
+        public object[] Arguments => emptyArgs;
+
+        public NUnit.Framework.Interfaces.IPropertyBag Properties { get; }
+
+        public NUnit.Framework.ParallelScope ParallelScope { get; }
 
         private NUnit.Framework.Internal.TestMethod BuildTestMethod(
-            NUnit.Framework.Interfaces.IMethodInfo method,
             NUnit.Framework.Internal.Test parentSuite,
             TestCaseInformation testCase)
         {
-            var testMethod = new TestMethod(method, parentSuite, testCase.Method.DeclaringType.FullName, testCase.Method.Name)
+            var testMethod = new TestMethod(
+                executeMethod, parentSuite, testCase.Method.DeclaringType.FullName, testCase.Method.Name)
             {
                 Seed = _randomizer.Next()
             };
@@ -103,16 +124,46 @@ namespace IL2C
             return testMethod;
         }
 
-        public IEnumerable<NUnit.Framework.Internal.TestMethod> BuildFrom(
-            NUnit.Framework.Interfaces.IMethodInfo method,
-            NUnit.Framework.Internal.Test suite)
+        private IEnumerable<NUnit.Framework.Internal.TestSuite> BuildFrom(
+            NUnit.Framework.Interfaces.ITypeInfo typeInfo,
+            Func<MethodInfo, bool> filter)
         {
-            var testCases = this.TargetTypes.
-                SelectMany(TestUtilities.GetTestCaseInformations).
-                Select(testCase => this.BuildTestMethod(method, suite, testCase)).
-                ToArray();
+            return
+                TestUtilities.ExtractTestCasesFromCoreTestTarget().
+                Select(byCategory =>
+                {
+                    var rootSuite = new NUnit.Framework.Internal.TestSuite(byCategory.Key);
+                    AddProperty(rootSuite.Properties, NUnit.Framework.Internal.PropertyNames.ParallelScope, this.ParallelScope);
+                    foreach (var byId in byCategory.Value)
+                    {
+                        var subSuite = new NUnit.Framework.Internal.TestSuite(byId.Key);
+                        AddProperty(subSuite.Properties, NUnit.Framework.Internal.PropertyNames.ParallelScope, this.ParallelScope);
+                        foreach (var testCase in byId.Value.
+                            Where(testCase => filter(testCase.Method)))
+                        {
+                            var test = this.BuildTestMethod(
+                                subSuite,
+                                testCase);
+                            AddProperty(test.Properties, NUnit.Framework.Internal.PropertyNames.ParallelScope, this.ParallelScope);
+                            subSuite.Add(test);
+                        }
+                        rootSuite.Add(subSuite);
+                    }
+                    return rootSuite;
+                });
+        }
 
-            return testCases;
+        public IEnumerable<NUnit.Framework.Internal.TestSuite> BuildFrom(
+            NUnit.Framework.Interfaces.ITypeInfo typeInfo)
+        {
+            return this.BuildFrom(typeInfo, _ => true);
+        }
+
+        public IEnumerable<NUnit.Framework.Internal.TestSuite> BuildFrom(
+            NUnit.Framework.Interfaces.ITypeInfo typeInfo,
+            NUnit.Framework.Interfaces.IPreFilter filter)
+        {
+            return this.BuildFrom(typeInfo, method => filter.IsMatch(method.DeclaringType, method));
         }
     }
 }

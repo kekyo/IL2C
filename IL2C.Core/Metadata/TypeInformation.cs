@@ -64,6 +64,8 @@ namespace IL2C.Metadata
         bool IsUntypedReferenceType { get; }
         bool IsBoxedType { get; }
 
+        bool IsRequiredTraverse { get; }
+
         int InternalStaticSizeOfValue { get; }
         object InternalStaticEmptyValue { get; }
 
@@ -263,6 +265,12 @@ namespace IL2C.Metadata
 
         public bool IsUntypedReferenceType => false;
         public bool IsBoxedType => false;
+
+        public bool IsRequiredTraverse =>
+            (this.Member.IsValueType &&
+             !this.Member.IsPrimitive && !this.Member.IsPointer && !this.IsByReference && !this.IsEnum &&
+             this.Fields.Any(f => f.FieldType.IsRequiredTraverse)) ||
+            this.IsReferenceType;
 
         private static int InternalGetStaticSizeOfValue(ITypeInformation type) =>
             // Recently, the bool type is usually defined by 1byte space type.

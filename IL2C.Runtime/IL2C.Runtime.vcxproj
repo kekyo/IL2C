@@ -39,6 +39,7 @@
     <ClCompile Include="System.MulticastDelegate.c" />
     <ClCompile Include="System.NullReferenceException.c" />
     <ClCompile Include="System.Object.c" />
+    <ClCompile Include="System.RuntimeFieldHandle.c" />
     <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c" />
     <ClCompile Include="System.SByte.c" />
     <ClCompile Include="System.Single.c" />

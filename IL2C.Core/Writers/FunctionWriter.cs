@@ -1,10 +1,10 @@
 ﻿using System.Linq;
+using System.Diagnostics;
 
 using Mono.Cecil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
-using System.Diagnostics;
 
 namespace IL2C.Writers
 {
@@ -93,9 +93,7 @@ namespace IL2C.Writers
                 ToArray();
             var valueEntries = locals.
                 Concat(preparedMethod.Stacks).
-                Where(v =>
-                    v.TargetType.IsValueType &&
-                    !v.TargetType.IsPrimitive).  // Only value type
+                Where(v => v.TargetType.IsValueType && v.TargetType.IsRequiredTraverse).
                 ToArray();
             if ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1))
             {
@@ -105,7 +103,7 @@ namespace IL2C.Writers
                 tw.SplitLine();
 
                 tw.WriteLine(
-                    "typedef volatile struct {0}_EXECUTION_FRAME__",
+                    "typedef struct {0}_EXECUTION_FRAME_DECL",
                     preparedMethod.Method.CLanguageFunctionName);
                 tw.WriteLine("{");
 
@@ -235,8 +233,7 @@ namespace IL2C.Writers
                         //   Because these variables push value at first usage.
                         //   But the value type may contains objref field,
                         //   so we have to initialize for value type.
-                        if (stack.TargetType.IsValueType && !stack.TargetType.IsPrimitive &&
-                            stack.TargetType.Fields.Any(f => f.FieldType.IsReferenceType))
+                        if (stack.TargetType.IsRequiredTraverse)
                         {
                             tw.WriteLine(
                                 "memset(&{0}, 0, sizeof {0});",
@@ -623,19 +620,19 @@ namespace IL2C.Writers
                     if (method.ReturnType.IsReferenceType)
                     {
                         tw.WriteLine(
-                            "struct {0}_EXECUTION_FRAME__",
+                            "volatile struct {0}_EXECUTION_FRAME_DECL",
                             method.CLanguageFunctionName);
                         tw.WriteLine("{");
                         using (var __ = tw.Shift())
                         {
-                            tw.WriteLine("uint8_t objRefCount__;");
-                            tw.WriteLine("uint8_t objRefRefCount__;");
                             tw.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
+                            tw.WriteLine("uint16_t objRefCount__;");
+                            tw.WriteLine("uint16_t valueCount__;");
                             tw.WriteLine(
                                 "{0} result;",
                                 method.ReturnType.CLanguageTypeName);
                         }
-                        tw.WriteLine("} frame__ = { 1, 0 };");
+                        tw.WriteLine("} frame__ = { NULL, 1, 0 };");
                         tw.WriteLine("il2c_link_execution_frame(&frame__);");
                     }
                     else
@@ -658,7 +655,7 @@ namespace IL2C.Writers
                 using (var __ = tw.Shift())
                 {
                     tw.WriteLine(
-                        "IL2C_METHOD_TABLE_DECL* pMethodtbl = &{0}->methodtbl__[index];",
+                        "IL2C_METHOD_TABLE* pMethodtbl = &{0}->methodtbl__[index];",
                         thisName);
 
                     if (method.ReturnType.IsVoidType)

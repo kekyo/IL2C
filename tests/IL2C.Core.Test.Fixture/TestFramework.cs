@@ -82,6 +82,7 @@ namespace IL2C
                 (type.IsBooleanType) ? "%s" :
                 (type.IsCharType) ? "'%c'" :
                 (type.IsStringType) ? "\\\"%s\\\"" :
+                (type.IsEnum) ? GetCLanguagePrintFormatFromType(type.ElementType) :
                 "%s";
         }
 

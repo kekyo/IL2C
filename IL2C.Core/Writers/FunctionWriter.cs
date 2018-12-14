@@ -85,6 +85,69 @@ namespace IL2C.Writers
                 }
             }
 
+            // Write exception filters:
+            var objRefEntries = locals.
+                Concat(preparedMethod.Stacks).
+                Where(v => v.TargetType.IsReferenceType).  // Only objref
+                ToArray();
+            var valueEntries = locals.
+                Concat(preparedMethod.Stacks).
+                Where(v =>
+                    v.TargetType.IsValueType &&
+                    !v.TargetType.IsPrimitive).  // Only value type
+                ToArray();
+            if ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1))
+            {
+                tw.SplitLine();
+                tw.WriteLine("//-------------------");
+                tw.WriteLine("// [3-7] Declare execution frame:");
+                tw.SplitLine();
+
+                tw.WriteLine(
+                    "typedef volatile struct {0}_EXECUTION_FRAME__",
+                    preparedMethod.Method.CLanguageFunctionName);
+                tw.WriteLine("{");
+
+                using (var _ = tw.Shift())
+                {
+                    tw.WriteLine("const IL2C_EXECUTION_FRAME* pNext__;");
+                    tw.WriteLine("const uint16_t objRefCount__;");
+                    tw.WriteLine("const uint16_t valueCount__;");
+
+                    if (objRefEntries.Length >= 1)
+                    {
+                        tw.WriteLine("//-------------------- objref");
+                        foreach (var objRefEntry in objRefEntries)
+                        {
+                            tw.WriteLine(
+                                "{0} {1};",
+                                objRefEntry.TargetType.CLanguageTypeName,
+                                extractContext.GetSymbolName(objRefEntry));
+                        }
+                    }
+
+                    if (valueEntries.Length >= 1)
+                    {
+                        tw.WriteLine("//-------------------- value type");
+                        foreach (var valueEntry in valueEntries)
+                        {
+                            var name = extractContext.GetSymbolName(valueEntry);
+                            tw.WriteLine(
+                                "const IL2C_RUNTIME_TYPE {0}_type__;",
+                                name);
+                            tw.WriteLine(
+                                "const {0}* {1}_value_ptr__;",
+                                valueEntry.TargetType.CLanguageTypeName,
+                                name);
+                        }
+                    }
+                }
+
+                tw.WriteLine(
+                    "}} {0}_EXECUTION_FRAME__;",
+                    preparedMethod.Method.CLanguageFunctionName);
+            }
+
             // Start function:
             tw.SplitLine();
             tw.WriteLine("//-------------------");
@@ -107,7 +170,7 @@ namespace IL2C.Writers
                 if (localDefinitions.Length >= 1)
                 {
                     tw.WriteLine("//-------------------");
-                    tw.WriteLine("// [3-3] Local variables (not objref):");
+                    tw.WriteLine("// [3-3] Local variables (!objref):");
                     tw.SplitLine();
 
                     foreach (var local in localDefinitions)
@@ -132,7 +195,7 @@ namespace IL2C.Writers
                 if (stackDefinitions.Length >= 1)
                 {
                     tw.WriteLine("//-------------------");
-                    tw.WriteLine("// [3-4] Evaluation stacks (not objref):");
+                    tw.WriteLine("// [3-4] Evaluation stacks (!objref):");
                     tw.SplitLine();
 
                     foreach (var stack in stackDefinitions)
@@ -146,41 +209,41 @@ namespace IL2C.Writers
                     tw.SplitLine();
                 }
 
-                var objRefEntries = locals.
-                    Concat(preparedMethod.Stacks).
-                    Where(v => v.TargetType.IsReferenceType).  // Only objref
-                    ToArray();
-                if (objRefEntries.Length >= 1)
+                if ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1))
                 {
                     tw.WriteLine("//-------------------");
                     tw.WriteLine("// [3-5] Setup execution frame:");
                     tw.SplitLine();
 
-                    tw.WriteLine(
-                        "struct {0}_EXECUTION_FRAME__",
-                        preparedMethod.Method.CLanguageFunctionName);
-                    tw.WriteLine("{");
-
-                    using (var __ = tw.Shift())
-                    {
-                        tw.WriteLine("uint8_t objRefCount__;");
-                        tw.WriteLine("uint8_t objRefRefCount__;");
-                        tw.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
-
-                        foreach (var objRefEntry in objRefEntries)
-                        {
-                            tw.WriteLine(
-                                "{0} {1};",
-                                objRefEntry.TargetType.CLanguageTypeName,
-                                extractContext.GetSymbolName(objRefEntry));
-                        }
-                    }
-
                     // Important NULL assigner (p = NULL):
                     //   Because these variables are pointer (of object reference 'O' type).
                     //   So GC will traverse these variables just setup the stack frame.
-                    // TODO: https://github.com/kekyo/IL2C/issues/12
-                    tw.WriteLine("}} frame__ = {{ {0}, 0 }};", objRefEntries.Length);
+                    tw.WriteLine(
+                        "{0}_EXECUTION_FRAME__ frame__ =",
+                        preparedMethod.Method.CLanguageFunctionName);
+                    using (var __ = tw.Shift())
+                    {
+                        tw.WriteLine(
+                            "{{ NULL, {0}, {1}, {2} }};",
+                            objRefEntries.Length,
+                            valueEntries.Length,
+                            string.Join(
+                                ", ",
+                                objRefEntries.Select(___ => "NULL").
+                                Concat(valueEntries.
+                                    Select(valueEntry =>
+                                        string.Format(
+                                            "il2c_typeof({0}), NULL",
+                                            valueEntry.TargetType.MangledName)))));
+                    }
+
+                    foreach (var valueEntry in valueEntries)
+                    {
+                        tw.WriteLine(
+                            "frame__.{0}_value_ptr__ = &{0};",
+                            extractContext.GetSymbolName(valueEntry));
+                    }
+
                     tw.WriteLine("il2c_link_execution_frame(&frame__);");
                     tw.SplitLine();
                 }

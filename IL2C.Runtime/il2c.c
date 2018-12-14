@@ -9,13 +9,19 @@
 #define GCMARK_LIVE ((interlock_t)0)
 #define GCMARK_CONST ((interlock_t)2)
 
+typedef volatile struct IL2C_VALUE_DESCRIPTOR
+{
+    const IL2C_RUNTIME_TYPE type_value;
+    const void* ptr_value;
+} IL2C_VALUE_DESCRIPTOR;
+
 typedef volatile struct IL2C_EXECUTION_FRAME
 {
-    uint8_t objRefCount__;
-    uint8_t objRefRefCount__;
     IL2C_EXECUTION_FRAME* pNext__;
-    void* pReferences__[1];
-    // void** ppReferences__[];
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    void* pReferences__[1];     // objRefCount__
+    // IL2C_VALUE_DESCRIPTOR valueDescriptors__[];  // valueCount__
 } IL2C_EXECUTION_FRAME;
 
 // TODO: Become store to thread local storage
@@ -259,7 +265,7 @@ void il2c_step2_mark_gcmark__()
     while (pCurrentFrame != NULL)
     {
         // Traverse current frame.
-        uint8_t index;
+        uint16_t index;
         for (index = 0; index < pCurrentFrame->objRefCount__; index++)
         {
             // This variable isn't assigned.

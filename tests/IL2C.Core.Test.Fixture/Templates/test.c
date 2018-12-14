@@ -39,11 +39,11 @@ int main()
 
     struct /* IL2C_EXECUTION_FRAME */
     {
-        uint8_t objRefCount__;
-        uint8_t objRefRefCount__;
-        IL2C_EXECUTION_FRAME* pNext__;
+        const IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
         {frames}
-    } frame__ = { {frameCount}, 0 };
+    } frame__ = { NULL, {frameCount}, 0 };
 
     il2c_link_execution_frame(&frame__);
 

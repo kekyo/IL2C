@@ -4,6 +4,7 @@ using Mono.Cecil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
+using System.Diagnostics;
 
 namespace IL2C.Writers
 {
@@ -175,6 +176,8 @@ namespace IL2C.Writers
 
                     foreach (var local in localDefinitions)
                     {
+                        var name = extractContext.GetSymbolName(local);
+
                         // HACK: The local variables mark to "volatile."
                         //   Because the gcc misread these variables calculated statically (or maybe assigned to the registers)
                         //   at compile time with optimization.
@@ -183,7 +186,25 @@ namespace IL2C.Writers
                             "{0}{1} {2};",
                             (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
                             local.TargetType.CLanguageTypeName,
-                            extractContext.GetSymbolName(local));
+                            name);
+
+                        // We have to initialize the local variables.
+                        if (local.TargetType.IsPrimitive ||
+                            local.TargetType.IsPointer ||
+                            local.TargetType.IsByReference)
+                        {
+                            tw.WriteLine(
+                                "{0} = {1};",
+                                name,
+                                Utilities.GetCLanguageExpression(local.TargetType.InternalStaticEmptyValue));
+                        }
+                        else
+                        {
+                            Debug.Assert(local.TargetType.IsValueType);
+                            tw.WriteLine(
+                                "memset(&{0}, 0, sizeof {0});",
+                                name);
+                        }
                     }
 
                     tw.SplitLine();
@@ -200,10 +221,24 @@ namespace IL2C.Writers
 
                     foreach (var stack in stackDefinitions)
                     {
+                        var name = extractContext.GetSymbolName(stack);
+
                         tw.WriteLine(
                             "{0} {1};",
                             stack.TargetType.CLanguageTypeName,
-                            extractContext.GetSymbolName(stack));
+                            name);
+
+                        // Note: We often don't have to initalize the evaluation stack variables.
+                        //   Because these variables push value at first usage.
+                        //   But the value type may contains objref field,
+                        //   so we have to initialize for value type.
+                        if (stack.TargetType.IsValueType && !stack.TargetType.IsPrimitive &&
+                            stack.TargetType.Fields.Any(f => f.FieldType.IsReferenceType))
+                        {
+                            tw.WriteLine(
+                                "memset(&{0}, 0, sizeof {0});",
+                                name);
+                        }
                     }
 
                     tw.SplitLine();

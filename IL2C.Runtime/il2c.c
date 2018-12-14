@@ -165,7 +165,7 @@ typedef void(*IL2C_MARK_HANDLER)(void* pReference);
 //   (at x86/x64 cause, another platform may cause)
 #define TRY_GET_HEADER(pHeader, pReference) \
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference); \
-    if (pHeader->gcMark != GCMARK_NOMARK)
+    if (pHeader->gcMark == GCMARK_NOMARK)
 
 static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
 {
@@ -218,11 +218,9 @@ static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
             void* pAdjustedReferenceInner = il2c_adjusted_reference(*ppReferenceInner);
             TRY_GET_HEADER(pHeaderInner, pAdjustedReferenceInner)
             {
-                continue;
+                // Use mark offset from type information.
+                il2c_default_mark_handler_internal__(pAdjustedReferenceInner);
             }
-
-            // Use mark offset from type information.
-            il2c_default_mark_handler_internal__(pAdjustedReferenceInner);
         }
     }
 }
@@ -234,10 +232,8 @@ void il2c_default_mark_handler__(void* pReference)
     void* pAdjustedReference = il2c_adjusted_reference(pReference);
     TRY_GET_HEADER(pHeader, pAdjustedReference)
     {
-        return;
+        il2c_default_mark_handler_internal__(pAdjustedReference);
     }
-
-    il2c_default_mark_handler_internal__(pAdjustedReference);
 }
 
 /////////////////////////////////////////////////////////////
@@ -278,11 +274,9 @@ void il2c_step2_mark_gcmark__()
             void* pAdjustedReference = il2c_adjusted_reference(pReference);
             TRY_GET_HEADER(pHeader, pAdjustedReference)
             {
-                continue;
+                // Mark for this objref.
+                il2c_default_mark_handler_internal__(pAdjustedReference);
             }
-
-            // Mark for this objref.
-            il2c_default_mark_handler_internal__(pAdjustedReference);
         }
 
         pCurrentFrame = pCurrentFrame->pNext__;

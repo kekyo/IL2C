@@ -182,11 +182,6 @@ namespace IL2C.Writers
                         //   Because the gcc misread these variables calculated statically (or maybe assigned to the registers)
                         //   at compile time with optimization.
                         //   It will cause the strange results for exception handling (with sjlj.)
-                        tw.WriteLine(
-                            "{0}{1} {2};",
-                            (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
-                            local.TargetType.CLanguageTypeName,
-                            name);
 
                         // We have to initialize the local variables.
                         if (local.TargetType.IsPrimitive ||
@@ -194,13 +189,21 @@ namespace IL2C.Writers
                             local.TargetType.IsByReference)
                         {
                             tw.WriteLine(
-                                "{0} = {1};",
+                                "{0}{1} {2} = {3};",
+                                (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
+                                local.TargetType.CLanguageTypeName,
                                 name,
                                 Utilities.GetCLanguageExpression(local.TargetType.InternalStaticEmptyValue));
                         }
                         else
                         {
                             Debug.Assert(local.TargetType.IsValueType);
+
+                            tw.WriteLine(
+                                "{0}{1} {2};",
+                                (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
+                                local.TargetType.CLanguageTypeName,
+                                name);
                             tw.WriteLine(
                                 "memset(&{0}, 0, sizeof {0});",
                                 name);
@@ -450,8 +453,8 @@ namespace IL2C.Writers
                         {
                             // Dirty hack:
                             //   Write unlink execution frame code if cause exiting method.
-                            if (sourceCode.StartsWith("return")
-                                && (objRefEntries.Length >= 1))
+                            if (sourceCode.StartsWith("return") &&
+                                ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1)))
                             {
                                 tw.WriteLine(
                                     "il2c_unlink_execution_frame(&frame__);");

@@ -48,5 +48,5 @@ System_Exception_VTABLE_DECL__ System_Exception_VTABLE__ = {
 };
 
 IL2C_RUNTIME_TYPE_BEGIN(System_Exception, "System.Exception", IL2C_TYPE_REFERENCE, sizeof(System_Exception), System_Object, 1, 0)
-    IL2C_RUNTIME_TYPE_MARK_TARGET(System_Exception, message__)
+    IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(System_Exception, message__)
 IL2C_RUNTIME_TYPE_END();

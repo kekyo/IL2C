@@ -300,7 +300,10 @@ namespace IL2C.Writers
             // Aggregate mark target fields (except the enum type and the delegate type)
             var markTargetFields =
                 declaredFields.
-                Where(field => field.FieldType.IsReferenceType).
+                Where(field =>
+                    field.FieldType.IsReferenceType ||
+                    (field.FieldType.IsValueType && !field.FieldType.IsPrimitive &&
+                    field.FieldType.Fields.Length >= 1)).
                 ToArray();
 
             // ex: IL2C_RUNTIME_TYPE_BEGIN(Foo_Bar, "Foo.Bar", IL2C_TYPE_REFERENCE, sizeof(Foo_Bar), System_Object, 0, 0)
@@ -323,9 +326,10 @@ namespace IL2C.Writers
                 // Mark target offsets.
                 foreach (var field in markTargetFields)
                 {
-                    // ex: IL2C_RUNTIME_TYPE_MARK_TARGET(System_Exception, message__)
+                    // ex: IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(System_Exception, message__)
                     tw.WriteLine(
-                        "IL2C_RUNTIME_TYPE_MARK_TARGET({0}, {1})",
+                        "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_{0}({1}, {2})",
+                        field.FieldType.IsReferenceType ? "REFERENCE" : "VALUE",
                         declaredType.MangledName,
                         field.Name);
                 }

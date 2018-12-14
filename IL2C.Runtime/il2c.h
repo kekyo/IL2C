@@ -285,7 +285,12 @@ const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
 #define IL2C_RUNTIME_TYPE_INTERFACE_BEGIN(typeName, typeNameString, interfaceCount) \
     IL2C_RUNTIME_TYPE_BEGIN__(typeName, typeNameString, IL2C_TYPE_INTERFACE, 0, NULL, NULL, 0, interfaceCount)
 
-#define IL2C_RUNTIME_TYPE_MARK_TARGET(typeName, fieldName) \
+#define IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(typeName, fieldName) \
+    0, \
+    offsetof(typeName, fieldName),
+
+#define IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE(typeName, fieldName) \
+    (uintptr_t)il2c_typeof(typeName), \
     offsetof(typeName, fieldName),
 
 #define IL2C_RUNTIME_TYPE_INTERFACE(typeName, interfaceTypeName) \

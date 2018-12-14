@@ -321,8 +321,9 @@ void il2c_step2_mark_gcmark__()
             (IL2C_VALUE_DESCRIPTOR*)&pCurrentFrame->pReferences__[pCurrentFrame->objRefCount__];
         for (index = 0; index < pCurrentFrame->valueCount__; index++, pValueDesc++)
         {
-            il2c_assert(pValueDesc->type_value != NULL);
             il2c_assert(pValueDesc->ptr_value != NULL);
+            il2c_assert(pValueDesc->type_value != NULL);
+            il2c_assert((pValueDesc->type_value->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
             // Mark for this value.
             il2c_mark_handler_for_value_type__((void*)pValueDesc->ptr_value, pValueDesc->type_value);

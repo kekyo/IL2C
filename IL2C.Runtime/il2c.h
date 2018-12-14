@@ -37,15 +37,15 @@ extern void il2c_shutdown();
 
 typedef long interlock_t;
 
-typedef volatile struct IL2C_EXECUTION_FRAME IL2C_EXECUTION_FRAME;
-typedef volatile struct IL2C_EXCEPTION_FRAME IL2C_EXCEPTION_FRAME;
-typedef volatile struct IL2C_REF_HEADER IL2C_REF_HEADER;
+typedef volatile struct IL2C_EXECUTION_FRAME_DECL IL2C_EXECUTION_FRAME;
+typedef volatile struct IL2C_EXCEPTION_FRAME_DECL IL2C_EXCEPTION_FRAME;
+typedef volatile struct IL2C_REF_HEADER_DECL IL2C_REF_HEADER;
 
 typedef const struct IL2C_RUNTIME_TYPE_DECL* IL2C_RUNTIME_TYPE;
 
 typedef int16_t (*IL2C_EXCEPTION_FILTER)(/* System_Exception* */ void* ex);
 
-struct IL2C_EXCEPTION_FRAME
+struct IL2C_EXCEPTION_FRAME_DECL
 {
     IL2C_EXCEPTION_FRAME* pNext;
     IL2C_EXECUTION_FRAME* pFrame;
@@ -54,12 +54,12 @@ struct IL2C_EXCEPTION_FRAME
     IL2C_JUMP_BUFFER saved;
 };
 
-typedef volatile struct IL2C_REF_HEADER
+struct IL2C_REF_HEADER_DECL
 {
     IL2C_REF_HEADER* pNext;
     IL2C_RUNTIME_TYPE type;
     interlock_t gcMark;
-} IL2C_REF_HEADER;
+};
 
 ///////////////////////////////////////////////////////
 // Runtime type information related declarations

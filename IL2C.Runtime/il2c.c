@@ -9,13 +9,13 @@
 #define GCMARK_LIVE ((interlock_t)0)
 #define GCMARK_CONST ((interlock_t)2)
 
-typedef volatile struct IL2C_VALUE_DESCRIPTOR
+typedef const struct IL2C_VALUE_DESCRIPTOR_DECL
 {
     const IL2C_RUNTIME_TYPE type_value;
     const void* ptr_value;
 } IL2C_VALUE_DESCRIPTOR;
 
-typedef volatile struct IL2C_EXECUTION_FRAME
+typedef volatile struct IL2C_EXECUTION_FRAME_DECL
 {
     IL2C_EXECUTION_FRAME* pNext__;
     const uint16_t objRefCount__;
@@ -167,7 +167,9 @@ typedef void(*IL2C_MARK_HANDLER)(void* pReference);
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference); \
     if (pHeader->gcMark == GCMARK_NOMARK)
 
-static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
+static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const uint8_t offset);
+
+static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
 {
     il2c_assert(pAdjustedReference != NULL);
 
@@ -181,7 +183,7 @@ static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
     }
 
     il2c_assert(pHeader->type != NULL);
-    DEBUG_WRITE("il2c_step2_mark_gcmark_recursive__", pHeader->type->pTypeName);
+    DEBUG_WRITE("il2c_mark_handler_for_objref__", pHeader->type->pTypeName);
 
     // This type has the custom mark handler.
     // Because it's variable type, can't fix pointer offsets.
@@ -196,30 +198,65 @@ static void il2c_default_mark_handler_internal__(void* pAdjustedReference)
     // This type doesn't have the custom mark handler, traverser works just now.
     else
     {
-        // Traverse variables recursivity.
-        const uintptr_t* pMarkOffset = (const uintptr_t*)(pHeader->type + 1);
-        uintptr_t index;
-        for (index = 0;
-            index < pHeader->type->markTarget;
-            index++, pMarkOffset++)
-        {
-            // NOTE: If this type is value type, we have to shift additional offset for System_ValueType (just vptr0).
-            // TODO: value type with custom interfaces
-            void** ppReferenceInner =
-                (void**)(((uint8_t*)pAdjustedReference) + *pMarkOffset +
-                (pHeader->type->flags & IL2C_TYPE_VALUE ? sizeof(System_ValueType) : 0));
+        // NOTE: If this type is (boxed) value type,
+        //   we have to shift additional offset for System_ValueType (maybe only vptr0).
+        const uint8_t offset = (pHeader->type->flags & IL2C_TYPE_VALUE) ?
+            sizeof(System_ValueType) :
+            0;
 
-            // This variable isn't assigned.
-            if (*ppReferenceInner == NULL)
+        // Traverse recursivity.
+        il2c_mark_handler_recursive__(pAdjustedReference, pHeader->type, offset);
+    }
+}
+
+static void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType)
+{
+    il2c_assert(pValue != NULL);
+    il2c_assert(valueType != NULL);
+    il2c_assert((valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
+
+    DEBUG_WRITE("il2c_mark_handler_for_value_type__", valueType->pTypeName);
+
+    // Traverse recursivity.
+    il2c_mark_handler_recursive__(pValue, valueType, 0);
+}
+
+static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const uint8_t offset)
+{
+    il2c_assert(p != NULL);
+    il2c_assert(type != NULL);
+
+    // Traverse type fields recursivity.
+    IL2C_MARK_TARGET* pMarkTarget = (IL2C_MARK_TARGET*)(type + 1);
+    uintptr_t index;
+    for (index = 0;
+        index < type->markTarget;
+        index++, pMarkTarget++)
+    {
+        void* pField = *(void**)(((uint8_t*)p) + pMarkTarget->offset + offset);
+
+        // Is this entry value type?
+        if (pMarkTarget->valueType != NULL)
+        {
+            il2c_assert((pMarkTarget->valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
+
+            // Mark for this value.
+            il2c_mark_handler_for_value_type__(pField, pMarkTarget->valueType);
+        }
+        // This entry is objref.
+        else
+        {
+            // This field isn't assigned.
+            if (pField == NULL)
             {
                 continue;
             }
 
-            void* pAdjustedReferenceInner = il2c_adjusted_reference(*ppReferenceInner);
+            void* pAdjustedReferenceInner = il2c_adjusted_reference(pField);
             TRY_GET_HEADER(pHeaderInner, pAdjustedReferenceInner)
             {
                 // Use mark offset from type information.
-                il2c_default_mark_handler_internal__(pAdjustedReferenceInner);
+                il2c_mark_handler_for_objref__(pAdjustedReferenceInner);
             }
         }
     }
@@ -232,7 +269,7 @@ void il2c_default_mark_handler__(void* pReference)
     void* pAdjustedReference = il2c_adjusted_reference(pReference);
     TRY_GET_HEADER(pHeader, pAdjustedReference)
     {
-        il2c_default_mark_handler_internal__(pAdjustedReference);
+        il2c_mark_handler_for_objref__(pAdjustedReference);
     }
 }
 
@@ -260,25 +297,38 @@ void il2c_step2_mark_gcmark__()
     IL2C_EXECUTION_FRAME* pCurrentFrame = g_pBeginFrame__;
     while (pCurrentFrame != NULL)
     {
-        // Traverse current frame.
+        // Traverse objrefs at the current frame.
         uint16_t index;
-        for (index = 0; index < pCurrentFrame->objRefCount__; index++)
+        void** ppReference = (void**)&pCurrentFrame->pReferences__[0];
+        for (index = 0; index < pCurrentFrame->objRefCount__; index++, ppReference++)
         {
             // This variable isn't assigned.
-            void* pReference = pCurrentFrame->pReferences__[index];
-            if (pReference == NULL)
+            if (*ppReference == NULL)
             {
                 continue;
             }
 
-            void* pAdjustedReference = il2c_adjusted_reference(pReference);
+            void* pAdjustedReference = il2c_adjusted_reference(*ppReference);
             TRY_GET_HEADER(pHeader, pAdjustedReference)
             {
                 // Mark for this objref.
-                il2c_default_mark_handler_internal__(pAdjustedReference);
+                il2c_mark_handler_for_objref__(pAdjustedReference);
             }
         }
 
+        // Traverse value types at the current frame.
+        IL2C_VALUE_DESCRIPTOR* pValueDesc =
+            (IL2C_VALUE_DESCRIPTOR*)&pCurrentFrame->pReferences__[pCurrentFrame->objRefCount__];
+        for (index = 0; index < pCurrentFrame->valueCount__; index++, pValueDesc++)
+        {
+            il2c_assert(pValueDesc->type_value != NULL);
+            il2c_assert(pValueDesc->ptr_value != NULL);
+
+            // Mark for this value.
+            il2c_mark_handler_for_value_type__((void*)pValueDesc->ptr_value, pValueDesc->type_value);
+        }
+
+        // Next frame
         pCurrentFrame = pCurrentFrame->pNext__;
     }
 }

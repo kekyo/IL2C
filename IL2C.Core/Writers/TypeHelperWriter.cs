@@ -326,12 +326,23 @@ namespace IL2C.Writers
                 // Mark target offsets.
                 foreach (var field in markTargetFields)
                 {
-                    // ex: IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(System_Exception, message__)
-                    tw.WriteLine(
-                        "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_{0}({1}, {2})",
-                        field.FieldType.IsReferenceType ? "REFERENCE" : "VALUE",
-                        declaredType.MangledName,
-                        field.Name);
+                    if (field.FieldType.IsReferenceType)
+                    {
+                        // ex: IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(System_Exception, message__)
+                        tw.WriteLine(
+                            "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE({0}, {1})",
+                            declaredType.MangledName,
+                            field.Name);
+                    }
+                    else
+                    {
+                        // ex: IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE(System_Exception, System_Int32 , result__)
+                        tw.WriteLine(
+                            "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE({0}, {1}, {2})",
+                            declaredType.MangledName,
+                            field.FieldType.MangledName,
+                            field.Name);
+                    }
                 }
 
                 // Write implemented interfaces (IL2C_IMPLEMENTED_INTERFACE)

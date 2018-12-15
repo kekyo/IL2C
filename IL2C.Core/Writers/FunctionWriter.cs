@@ -258,18 +258,29 @@ namespace IL2C.Writers
                         preparedMethod.Method.CLanguageFunctionName);
                     using (var __ = tw.Shift())
                     {
-                        tw.WriteLine(
-                            "{{ NULL, {0}, {1}, {2} }};",
-                            objRefEntries.Length,
-                            valueEntries.Length,
-                            string.Join(
-                                ", ",
-                                objRefEntries.Select(___ => "NULL").
-                                Concat(valueEntries.
-                                    Select(valueEntry =>
-                                        string.Format(
-                                            "il2c_typeof({0}), NULL",
-                                            valueEntry.TargetType.MangledName)))));
+                        if (valueEntries.Length >= 1)
+                        {
+                            tw.WriteLine(
+                                "{{ NULL, {0}, {1}, {2} }};",
+                                objRefEntries.Length,
+                                valueEntries.Length,
+                                string.Join(
+                                    ", ",
+                                    objRefEntries.Select(___ => "NULL").
+                                    Concat(valueEntries.
+                                        Select(valueEntry =>
+                                            string.Format(
+                                                "il2c_typeof({0}), NULL",
+                                                valueEntry.TargetType.MangledName)))));
+                        }
+                        else
+                        {
+                            // Make short initializer expression if value type not included,
+                            // maybe C compiler makes better code.
+                            tw.WriteLine(
+                                "{{ NULL, {0} }};",
+                                objRefEntries.Length);
+                        }
                     }
 
                     foreach (var valueEntry in valueEntries)

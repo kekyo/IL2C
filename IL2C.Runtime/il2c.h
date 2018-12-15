@@ -289,8 +289,8 @@ const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
     0, \
     offsetof(typeName, fieldName),
 
-#define IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE(typeName, fieldName) \
-    (uintptr_t)il2c_typeof(typeName), \
+#define IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE(typeName, fieldTypeName, fieldName) \
+    (uintptr_t)il2c_typeof(fieldTypeName), \
     offsetof(typeName, fieldName),
 
 #define IL2C_RUNTIME_TYPE_INTERFACE(typeName, interfaceTypeName) \

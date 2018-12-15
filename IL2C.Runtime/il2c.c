@@ -233,7 +233,7 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
         index < type->markTarget;
         index++, pMarkTarget++)
     {
-        void* pField = *(void**)(((uint8_t*)p) + pMarkTarget->offset + offset);
+        void** ppField = (void**)(((uint8_t*)p) + pMarkTarget->offset + offset);
 
         // Is this entry value type?
         if (pMarkTarget->valueType != NULL)
@@ -241,18 +241,18 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             il2c_assert((pMarkTarget->valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
             // Mark for this value.
-            il2c_mark_handler_for_value_type__(pField, pMarkTarget->valueType);
+            il2c_mark_handler_for_value_type__(ppField, pMarkTarget->valueType);
         }
         // This entry is objref.
         else
         {
             // This field isn't assigned.
-            if (pField == NULL)
+            if (*ppField == NULL)
             {
                 continue;
             }
 
-            void* pAdjustedReferenceInner = il2c_adjusted_reference(pField);
+            void* pAdjustedReferenceInner = il2c_adjusted_reference(*ppField);
             TRY_GET_HEADER(pHeaderInner, pAdjustedReferenceInner)
             {
                 // Use mark offset from type information.

@@ -18,11 +18,13 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include <wchar.h>
 #include <float.h>
 #include <assert.h>
 
 #define il2c_assert assert
+#define il2c_memset memset
 #define il2c_setjmp setjmp
 #define IL2C_JUMP_BUFFER jmp_buf
 

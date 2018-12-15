@@ -203,7 +203,7 @@ namespace IL2C.Writers
                                 local.TargetType.CLanguageTypeName,
                                 name);
                             tw.WriteLine(
-                                "memset(&{0}, 0, sizeof {0});",
+                                "il2c_memset(&{0}, 0, sizeof {0});",
                                 name);
                         }
                     }
@@ -236,7 +236,7 @@ namespace IL2C.Writers
                         if (stack.TargetType.IsRequiredTraverse)
                         {
                             tw.WriteLine(
-                                "memset(&{0}, 0, sizeof {0});",
+                                "il2c_memset(&{0}, 0, sizeof {0});",
                                 name);
                         }
                     }

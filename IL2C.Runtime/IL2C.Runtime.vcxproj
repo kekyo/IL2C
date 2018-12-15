@@ -39,7 +39,6 @@
     <ClCompile Include="System.MulticastDelegate.c" />
     <ClCompile Include="System.NullReferenceException.c" />
     <ClCompile Include="System.Object.c" />
-    <ClCompile Include="System.RuntimeFieldHandle.c" />
     <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c" />
     <ClCompile Include="System.SByte.c" />
     <ClCompile Include="System.Single.c" />
@@ -83,7 +82,6 @@
     <ClInclude Include="System.UInt64.h" />
     <ClInclude Include="System.UIntPtr.h" />
     <ClInclude Include="System.ValueType.h" />
-    <None Include="il2c_combined.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -203,7 +203,9 @@ namespace IL2C
             }
         }
 
-        public static async Task<string> CompileAndRunAsync(
+        public static async Task<string> DriveGccAsync(
+            Func<string, string, string, string, Task<string>> executeAsync,
+            string scriptTemplateName,
             bool optimize, string sourcePath, params string[] includePaths)
         {
             // Download requirements for gcc (single)
@@ -220,6 +222,12 @@ namespace IL2C
                             {
                                 DownloadGccRequirementsAsync(gccBasePath + ".tmp").Wait();
                                 Directory.Move(gccBasePath + ".tmp", gccBasePath);
+
+                                CompileAsync(
+                                    "make_libil2c.bat",
+                                    optimize,
+                                    Path.GetFullPath(Path.Combine(gccBasePath, "..", "dummy.c")),
+                                    includePaths).Wait();
                             }
                         }
                         finally
@@ -233,7 +241,8 @@ namespace IL2C
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
-            var includePath = Path.GetFullPath(Path.Combine(basePath, "..", "..", "..", "..", "..", "..", "..", "..", "IL2C.Runtime"));
+            var includePath = Path.GetFullPath(Path.Combine(gccBasePath, "..", "..", "..", "..", "..", "..", "IL2C.Runtime"));
+            var libPath = Path.GetFullPath(Path.Combine(gccBasePath, ".."));
             var optimizeFlag = optimize ? "-Ofast -flto" : "-O0";
             var disableObjDump = optimize ? "rem " : string.Empty;
 
@@ -247,17 +256,24 @@ namespace IL2C
             var gccPath = Path.Combine(gccBinPath, "gcc.exe");
 
             // TODO: turn to cmake based.
-            var scriptPath = Path.Combine(basePath, "make.bat");
+            var scriptPath = Path.Combine(basePath, scriptTemplateName);
             await TestUtilities.CopyResourceToTextFileAsync(
-                scriptPath, "make.bat",
+                scriptPath, scriptTemplateName,
                 new Dictionary<string, object>
                 {
                     { "gccBinPath", gccBinPath },
                     { "includePath", includePath },
+                    { "libPath", libPath },
                     { "optimizeFlag", optimizeFlag },
                     { "disableObjDump", disableObjDump }
                 });
 
+            return await executeAsync(basePath, gccBinPath, scriptPath, executablePath);
+        }
+
+        private static async Task<string> CompileAndRunAsync(
+            string basePath, string gccBinPath, string scriptPath, string executablePath)
+        {
             var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {
                 var (exitCode, log) = await ExecuteAsync(
@@ -283,6 +299,36 @@ namespace IL2C
             });
 
             return testLog;
+        }
+
+        public static Task<string> CompileAndRunAsync(
+            bool optimize, string sourcePath, params string[] includePaths)
+        {
+            return DriveGccAsync(CompileAndRunAsync, "make.bat", optimize, sourcePath, includePaths);
+        }
+
+        private static async Task<string> CompileAsync(
+            string basePath, string gccBinPath, string scriptPath, string executablePath)
+        {
+            var (compileExitCode, compileLog) = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
+            {
+                var (exitCode, log) = await ExecuteAsync(
+                    basePath, new[] { gccBinPath }, scriptPath);
+                if ((exitCode != 0) || !string.IsNullOrWhiteSpace(log)
+                    || !File.Exists(executablePath))
+                {
+                    throw new Exception("gcc [ExitCode=" + exitCode + "]: " + log);
+                }
+                return (exitCode, log);
+            });
+
+            return compileLog;
+        }
+
+        public static Task<string> CompileAsync(
+            string scriptTemplateName, bool optimize, string sourcePath, params string[] includePaths)
+        {
+            return DriveGccAsync(CompileAsync, scriptTemplateName, optimize, sourcePath, includePaths);
         }
     }
 }

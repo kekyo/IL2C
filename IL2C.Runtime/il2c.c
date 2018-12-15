@@ -85,8 +85,6 @@ void* il2c_get_uninitialized_object_internal__(
         {
             break;
         }
-
-        il2c_iyield();
     }
 
     return pReference;

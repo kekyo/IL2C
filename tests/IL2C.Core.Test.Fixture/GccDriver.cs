@@ -40,7 +40,8 @@ namespace IL2C
             //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dev.tar.lzma",
             //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma",
             mingwBaseUrl + "/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
-            "https://cmake.org/files/v3.12/cmake-3.12.3-win32-x86.zip",
+            //"https://cmake.org/files/v3.12/cmake-3.12.3-win32-x86.zip",
+            "https://github.com/kekyo/IL2C/releases/download/cmake-3.12.3/cmake-3.12.3-win32-x86.zip",
         };
 
         private static readonly string gccBasePath = Path.GetFullPath(Path.Combine(

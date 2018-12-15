@@ -314,8 +314,7 @@ namespace IL2C
             {
                 var (exitCode, log) = await ExecuteAsync(
                     basePath, new[] { gccBinPath }, scriptPath);
-                if ((exitCode != 0) || !string.IsNullOrWhiteSpace(log)
-                    || !File.Exists(executablePath))
+                if ((exitCode != 0) || !string.IsNullOrWhiteSpace(log))
                 {
                     throw new Exception("gcc [ExitCode=" + exitCode + "]: " + log);
                 }

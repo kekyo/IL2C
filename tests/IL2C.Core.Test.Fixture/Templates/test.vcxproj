@@ -36,10 +36,11 @@
     </PropertyGroup>
     <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Debug'">
         <UseDebugLibraries>true</UseDebugLibraries>
+        <WholeProgramOptimization>false</WholeProgramOptimization>
     </PropertyGroup>
     <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Release'">
         <UseDebugLibraries>false</UseDebugLibraries>
-        <WholeProgramOptimization>false</WholeProgramOptimization>
+        <WholeProgramOptimization>true</WholeProgramOptimization>
     </PropertyGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />

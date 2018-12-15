@@ -82,6 +82,7 @@ namespace IL2C
                 (type.IsBooleanType) ? "%s" :
                 (type.IsCharType) ? "'%c'" :
                 (type.IsStringType) ? "\\\"%s\\\"" :
+                (type.IsEnum) ? GetCLanguagePrintFormatFromType(type.ElementType) :
                 "%s";
         }
 
@@ -114,6 +115,19 @@ namespace IL2C
         public static async Task ExecuteTestAsync(TestCaseInformation caseInfo)
         {
             Assert.IsTrue(caseInfo.Method.IsPublic && caseInfo.Method.IsStatic);
+
+            // TODO:
+            var path = Path.GetFullPath(Path.Combine(
+                caseInfo.Method.DeclaringType.Assembly.Location,
+                "..", "..", "..", "..", "..",
+                "IL2C.Core.Test.Target",
+                caseInfo.CategoryName,
+                caseInfo.Id,
+                caseInfo.Id + ".cs"));
+            if (File.Exists(path))
+            {
+                TestContext.AddTestAttachment(path, "Test case");
+            }
 
             // Split current thread context.
             await Task.Yield();
@@ -172,10 +186,12 @@ namespace IL2C
                     Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
                     caseInfo.CategoryName,
                     caseInfo.Id,
-                    caseInfo.Name));
+                    caseInfo.UniqueName));
 
             var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
             await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj");
+
+            TestContext.AddTestAttachment(vcxprojTemplatePath, "Generated VC++ project");
 
             var launchTemplatePath = Path.Combine(translatedPath, ".vscode", "launch.json");
             await TestUtilities.CopyResourceToTextFileAsync(launchTemplatePath, "launch.json");

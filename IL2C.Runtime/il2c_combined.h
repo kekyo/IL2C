@@ -28,11 +28,13 @@
 #include "System.Enum.c"
 #include "System.Delegate.c"
 #include "System.MulticastDelegate.c"
+#include "System.RuntimeFieldHandle.c"
 #include "System.Runtime.CompilerServices.RuntimeHelpers.c"
 #include "System.Exception.c"
 #include "System.NullReferenceException.c"
 #include "System.InvalidCastException.c"
 #include "System.IndexOutOfRangeException.c"
+#include "System.GC.c"
 
 #include "System.Console.c"
 

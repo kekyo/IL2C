@@ -257,7 +257,13 @@ extern void WriteLineToError(const wchar_t* pMessage);
 ///////////////////////////////////////////////////
 // Internal runtime definitions
 
-typedef const struct
+typedef const struct IL2C_MARK_TARGET_DECL
+{
+    const IL2C_RUNTIME_TYPE valueType;
+    const uintptr_t offset;
+} IL2C_MARK_TARGET;
+
+typedef const struct IL2C_IMPLEMENTED_INTERFACE_DECL
 {
     const IL2C_RUNTIME_TYPE type;
     const void* vptr0;
@@ -272,7 +278,7 @@ struct IL2C_RUNTIME_TYPE_DECL
     const void* vptr0;
     const uintptr_t markTarget;     // mark target count / custom mark handler (only variable type)
     const uintptr_t interfaceCount;
-    //const void* markTargets[markTarget];
+    //IL2C_MARK_TARGET markTargets[markTarget];
     //IL2C_IMPLEMENTED_INTERFACE interfaces[interfaceCount];
 };
 

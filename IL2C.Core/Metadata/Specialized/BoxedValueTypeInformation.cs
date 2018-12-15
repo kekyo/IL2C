@@ -73,6 +73,8 @@ namespace IL2C.Metadata.Specialized
         public bool IsUntypedReferenceType => false;
         public bool IsBoxedType => true;
 
+        public bool IsRequiredTraverse => false;
+
         public int InternalStaticSizeOfValue => 0;
         public object InternalStaticEmptyValue => null;
 

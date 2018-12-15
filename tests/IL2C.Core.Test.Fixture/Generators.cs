@@ -61,10 +61,8 @@ namespace IL2C
                 ToArray();
 
             var ilConverterTests =
-                typeof(ILConvertersTest).
-                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
-                Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
-                SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
+                TestUtilities.ExtractTestCasesFromCoreTestTarget()["IL2C.ILConverters"].
+                SelectMany(entry => entry.Value).
                 GroupBy(testCase => testCase.Id).
                 ToDictionary(g => g.Key, g => g.Count(), StringComparer.InvariantCultureIgnoreCase);
 
@@ -147,12 +145,8 @@ namespace IL2C
             ToArray();
 
             var runtimeTypesTests =
-                typeof(BasicTypesTest).
-                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
-                Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
-                SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
-                GroupBy(testCase => testCase.Method.DeclaringType.Name).
-                ToDictionary(g => g.Key, g => new { Name = g.Key, Count = g.Count() });
+                TestUtilities.ExtractTestCasesFromCoreTestTarget()["IL2C.BasicTypes"].
+                ToDictionary(entry => entry.Key.Name, entry => new { Name = entry.Key.Name, Count = entry.Value.Count() });
 
             var path = Path.Combine(generatedDocumentBasePath, "supported-basic-types.md");
 
@@ -197,10 +191,8 @@ namespace IL2C
         public static async Task DumpSupportedRuntimeSystems()
         {
             var typeSystemsTests =
-                typeof(RuntimeSystemsTest).
-                GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).
-                Where(field => field.IsInitOnly && (field.FieldType == typeof(TestCaseInformation[]))).
-                SelectMany(field => (TestCaseInformation[])field.GetValue(null)).
+                TestUtilities.ExtractTestCasesFromCoreTestTarget()["IL2C.RuntimeSystems"].
+                SelectMany(entry => entry.Value).
                 GroupBy(testCase => testCase.Id).
                 ToDictionary(
                     g => g.Key,
@@ -229,7 +221,7 @@ namespace IL2C
                 await tw.WriteLineAsync("Feature | Test | Descrition");
                 await tw.WriteLineAsync("|:---|:---|:---|");
 
-                foreach (var typeSystemTest in typeSystemsTests)
+                foreach (var typeSystemTest in typeSystemsTests.OrderBy(entry => entry.Key))
                 {
                     await tw.WriteLineAsync(
                         string.Format("| {0} | [Test [{1}]](tests/IL2C.Core.Test.Target/RuntimeSystems/{0}) | {2} |",

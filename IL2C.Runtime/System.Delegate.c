@@ -41,7 +41,7 @@ bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj)
     return il2c_memcmp(
         this__->methodtbl__,
         rhs->methodtbl__,
-        this__->count__ * sizeof(IL2C_METHOD_TABLE_DECL)) == 0;
+        this__->count__ * sizeof(IL2C_METHOD_TABLE)) == 0;
 }
 
 System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
@@ -86,14 +86,14 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
 
     uintptr_t count = a->count__ + b->count__;
     uintptr_t size = sizeof(System_Delegate) +
-        (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
+        (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
     System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size);
     dlg->vptr0__ = &System_Delegate_VTABLE__;
     
     dlg->count__ = count;
-    IL2C_METHOD_TABLE_DECL* pMethodtbl = dlg->methodtbl__;
-    il2c_memcpy(&pMethodtbl[0], &a->methodtbl__[0], a->count__ * sizeof(IL2C_METHOD_TABLE_DECL));
-    il2c_memcpy(&pMethodtbl[a->count__], &b->methodtbl__[0], b->count__ * sizeof(IL2C_METHOD_TABLE_DECL));
+    struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
+    il2c_memcpy(&pMethodtbl[0], &a->methodtbl__[0], a->count__ * sizeof(IL2C_METHOD_TABLE));
+    il2c_memcpy(&pMethodtbl[a->count__], &b->methodtbl__[0], b->count__ * sizeof(IL2C_METHOD_TABLE));
 
     return dlg;
 }
@@ -133,14 +133,14 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
     }
 
     // Last --> First
-    IL2C_METHOD_TABLE_DECL* pMethodtblValue = &value->methodtbl__[0];
+    IL2C_METHOD_TABLE* pMethodtblValue = &value->methodtbl__[0];
     intptr_t index;
     for (index = (intptr_t)(source->count__ - value->count__); index >= 0; index--)
     {
-        IL2C_METHOD_TABLE_DECL* pMethodtblSource = &source->methodtbl__[index];
+        IL2C_METHOD_TABLE* pMethodtblSource = &source->methodtbl__[index];
 
         // Equals
-        if (il2c_memcmp(pMethodtblValue, pMethodtblSource, value->count__ * sizeof(IL2C_METHOD_TABLE_DECL)) == 0)
+        if (il2c_memcmp(pMethodtblValue, pMethodtblSource, value->count__ * sizeof(IL2C_METHOD_TABLE)) == 0)
         {
             // Exactly match: result's gonna be empty
             if (source->count__ <= value->count__)
@@ -150,14 +150,15 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
 
             uintptr_t count = source->count__ - value->count__;
             uintptr_t size = sizeof(System_Delegate) +
-                (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE_DECL);
+                (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
             System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size);
             dlg->vptr0__ = &System_Delegate_VTABLE__;
 
             dlg->count__ = count;
-            IL2C_METHOD_TABLE_DECL* pMethodtbl = dlg->methodtbl__;
-            il2c_memcpy(&pMethodtbl[0], &source->methodtbl__[0], index * sizeof(IL2C_METHOD_TABLE_DECL));
-            il2c_memcpy(&pMethodtbl[index], &source->methodtbl__[index + value->count__], (count - index) * sizeof(IL2C_METHOD_TABLE_DECL));
+
+            struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
+            il2c_memcpy(&pMethodtbl[0], &source->methodtbl__[0], index * sizeof(IL2C_METHOD_TABLE));
+            il2c_memcpy(&pMethodtbl[index], &source->methodtbl__[index + value->count__], (count - index) * sizeof(IL2C_METHOD_TABLE));
 
             return dlg;
         }
@@ -180,8 +181,10 @@ System_Delegate* il2c_new_delegate__(
     dlg->vptr0__ = &System_Delegate_VTABLE__;
     
     dlg->count__ = 1;
-    dlg->methodtbl__[0].target = object;
-    dlg->methodtbl__[0].methodPtr = method;
+
+    struct IL2C_METHOD_TABLE_DECL* pMethodTbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
+    pMethodTbl->target = object;
+    pMethodTbl->methodPtr = method;
 
     return dlg;
 }

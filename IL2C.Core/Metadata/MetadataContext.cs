@@ -54,6 +54,7 @@ namespace IL2C.Metadata
                 { "System.Enum", new HashSet<string> { "ToString", "GetHashCode", "Equals" } },
                 { "System.Delegate", new HashSet<string> { "GetHashCode", "Equals", "Combine", "Remove", "_target", "_methodPtr" } },
                 { "System.MulticastDelegate", new HashSet<string> { "GetHashCode", "Equals", "_target", "_methodPtr" } },
+                { "System.RuntimeFieldHandle", new HashSet<string> { "GetHashCode", "Equals" } },
             };
         private static readonly HashSet<string> derivedFromMulticastDelegateValidTargetMethods =
             new HashSet<string> { ".ctor", "Invoke" };
@@ -240,6 +241,28 @@ namespace IL2C.Metadata
                         validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
                     {
                         return new TypeInformation(typeReference, module, filterList);
+                    }
+
+                    // Special filter for the enum type.
+                    if (typeReference.IsValueType && !typeReference.IsPrimitive && !typeReference.IsPointer)
+                    {
+                        var typeDefinition = typeReference.Resolve();
+                        if (typeDefinition.IsEnum)
+                        {
+                            return new TypeInformation(typeReference, module, m =>
+                            {
+                                var f = m as FieldReference;
+                                if (f != null)
+                                {
+                                    var fr = f.Resolve();
+                                    return fr.IsPublic && fr.IsStatic && fr.IsLiteral;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            });
+                        }
                     }
 
                     // Special filter for the delegate type.

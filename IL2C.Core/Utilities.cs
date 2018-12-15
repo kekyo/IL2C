@@ -426,6 +426,21 @@ namespace IL2C
         }
         #endregion
 
+        public static string GetCSharpLanguageExpression(object value)
+        {
+            if (value == null) return "null";
+            if (value is bool) return (bool)value ? "true" : "false";
+            if (value is string) return string.Format("\"{0}\"", value);
+            if (value is char) return string.Format("'{0}'", value);
+            if (value is Array) return string.Format(
+                "{0}[{1}]",
+                value.GetType().GetElementType().Name,
+                string.Join(
+                    ", ",
+                    ((IEnumerable)value).RuntimeCast<object>().Select(GetCSharpLanguageExpression)));
+            return value.ToString();
+        }
+
         public static Array ResourceDataToSpecificArray(byte[] values, Type elementType)
         {
             if (elementType == typeof(byte))

@@ -60,13 +60,25 @@ namespace IL2C
             }
         }
 
+        public static IReadOnlyDictionary<string, IReadOnlyDictionary<Type, TestCaseInformation[]>> ExtractTestCasesFromCoreTestTarget()
+        {
+            return
+                typeof(TestCaseAttribute).Assembly.GetTypes().
+                Where(type => type.IsPublic && type.IsClass && !type.IsAbstract && type.IsDefined(typeof(TestCaseAttribute))).
+                GroupBy(type => type.Namespace).
+                ToDictionary(
+                    g => g.Key,
+                    g => (IReadOnlyDictionary<Type, TestCaseInformation[]>)g.ToDictionary(type => type, TestUtilities.GetTestCaseInformations));
+        }
+
         public static TestCaseInformation CreateTestCaseInformation(
-            string categoryName, string id, string name, string description,
+            string categoryName, string id, string name, string uniqueName, string description,
             MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
             new TestCaseInformation(
                 categoryName,
                 id,
                 name,
+                uniqueName,
                 description,
                 ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
                 caseAttribute.Assert,
@@ -80,31 +92,31 @@ namespace IL2C
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());
 
-        private static IEnumerable<Type> TraverseTypes<T>(bool includeBaseTypes)
+        private static IEnumerable<Type> TraverseTypes(Type targetType, bool includeBaseTypes)
         {
             return includeBaseTypes ?
-                typeof(T).Traverse(type => type.BaseType) :
-                new[] { typeof(T) };
+                targetType.Traverse(type => type.BaseType) :
+                new[] { targetType };
         }
 
-        public static TestCaseInformation[] GetTestCaseInformations<T>()
+        public static TestCaseInformation[] GetTestCaseInformations(Type targetType)
         {
-            var categoryName = typeof(T).
+            var categoryName = targetType.
                 Namespace.Split('.').Last();
-            var id = typeof(T).
+            var id = targetType.
                 GetCustomAttribute<TestIdAttribute>()?.Id ??
-                typeof(T).Name;
+                targetType.Name;
 
             var caseInfos =
-                (from testCase in typeof(T).GetCustomAttributes<TestCaseAttribute>(true)
-                 let method = typeof(T).GetMethod(
+                (from testCase in targetType.GetCustomAttributes<TestCaseAttribute>(true)
+                 let method = targetType.GetMethod(
                      testCase.MethodName,
                      BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)    // Static method only for test entry
                  where method != null
                  let additionalMethods =
                     testCase.AdditionalMethodNames.
                     SelectMany(methodName =>
-                        TraverseTypes<T>(testCase.IncludeBaseTypes).
+                        TraverseTypes(targetType, testCase.IncludeBaseTypes).
                         SelectMany(type => type.GetMembers(
                             BindingFlags.Public | BindingFlags.NonPublic |
                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly).  // Both instance or static method
@@ -118,22 +130,14 @@ namespace IL2C
                  let totalAdditionalMethods =
                     // If contains instance method in set of additional methods (test case is implicitly required the instance), add the constructor.
                     (additionalMethods.Any(m => !m.IsStatic) ?
-                        new[] { (MethodBase)typeof(T).GetConstructor(Type.EmptyTypes) } :
+                        new[] { (MethodBase)targetType.GetConstructor(Type.EmptyTypes) } :
                         new MethodBase[0]).
                     Concat(additionalMethods).
                     ToArray()
                  group new { testCase, method, AdditionalMethods = totalAdditionalMethods } by method.Name).
-                 SelectMany(g =>
-                 {
-                     var a = g.ToArray();
-                     return (a.Length == 1) ?
-                        a.Select(entry => CreateTestCaseInformation(
-                            categoryName, id, entry.method.Name, entry.method.DeclaringType.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty,
-                            entry.method, entry.AdditionalMethods, entry.testCase)) :
-                        a.Select((entry, index) => CreateTestCaseInformation(
-                            categoryName, id, entry.method.Name + "_" + index, entry.method.DeclaringType.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty,
-                            entry.method, entry.AdditionalMethods, entry.testCase));
-                 }).
+                 SelectMany(g => g.Select((entry, index) => CreateTestCaseInformation(
+                        categoryName, id, entry.method.Name, entry.method.Name + "_" + index, entry.method.DeclaringType.GetCustomAttribute<DescriptionAttribute>()?.Description ?? string.Empty,
+                        entry.method, entry.AdditionalMethods, entry.testCase))).
                  OrderBy(caseInfo => caseInfo.Name).
                  ToArray();
             return caseInfos;

@@ -41,11 +41,11 @@ void HelloWorld_Main()
 
     struct /* IL2C_EXECUTION_FRAME */
     {
-        uint8_t objRefCount__;
-        uint8_t objRefRefCount__;
         IL2C_EXECUTION_FRAME* pNext__;
+        uint16_t objRefCount__;
+        uint16_t valueCount__;
         System_String* stack0_0__;
-    } frame__ = { 1, 0 };
+    } frame__ = { NULL, 1, 0 };
     il2c_link_execution_frame(&frame__);
 
     //-------------------
@@ -102,7 +102,7 @@ IL2C_CONST_STRING(string0__, L"ABC");
 bool IL2C_BasicTypes_System_String_IsValueType()
 {
     //-------------------
-    // [3-4] Evaluation stacks (not objref):
+    // [3-4] Evaluation stacks (!objref):
 
     int32_t stack0_2__;
 
@@ -111,12 +111,12 @@ bool IL2C_BasicTypes_System_String_IsValueType()
 
     struct /* IL2C_EXECUTION_FRAME */
     {
-        uint8_t objRefCount__;
-        uint8_t objRefRefCount__;
         IL2C_EXECUTION_FRAME* pNext__;
+        uint16_t objRefCount__;
+        uint16_t valueCount__;
         System_String* stack0_0__;
         System_ValueType* stack0_1__;
-    } frame__ = { 2, 0 };
+    } frame__ = { NULL, 2, 0 };
     il2c_link_execution_frame(&frame__);
 
     //-------------------
@@ -175,12 +175,12 @@ static const int32_t declaredValue0__[] =
 int32_t IL2C_RuntimeSystems_ArrayTypes_FromInt32Resource(int32_t index)
 {
     //-------------------
-    // [3-3] Local variables (not objref):
+    // [3-3] Local variables (!objref):
 
     int32_t local1__;
 
     //-------------------
-    // [3-4] Evaluation stacks (not objref):
+    // [3-4] Evaluation stacks (!objref):
 
     int32_t stack0_0__;
     int32_t stack1_1__;
@@ -191,13 +191,13 @@ int32_t IL2C_RuntimeSystems_ArrayTypes_FromInt32Resource(int32_t index)
 
     struct /* IL2C_EXECUTION_FRAME */
     {
-        uint8_t objRefCount__;
-        uint8_t objRefRefCount__;
         IL2C_EXECUTION_FRAME* pNext__;
+        uint16_t objRefCount__;
+        uint16_t valueCount__;
         il2c_arraytype(System_Int32)* local0__;
         il2c_arraytype(System_Int32)* stack0_1__;
         il2c_arraytype(System_Int32)* stack1_0__;
-    } frame__ = { 3, 0 };
+    } frame__ = { NULL, 3, 0 };
     il2c_link_execution_frame(&frame__);
 
     //-------------------
@@ -298,16 +298,16 @@ bool IL2C_RuntimeSystems_NullReferenceExceptions_NullReference(System_Object* v)
 
     struct /* IL2C_EXECUTION_FRAME */
     {
-        uint8_t objRefCount__;
-        uint8_t objRefRefCount__;
         IL2C_EXECUTION_FRAME* pNext__;
+        uint16_t objRefCount__;
+        uint16_t valueCount__;
         System_String* local0__;
         System_NullReferenceException* local1__;
         System_NullReferenceException* stack0_0__;
         System_Object* stack0_1__;
         System_String* stack0_2__;
         System_String* stack1_0__;
-    } frame__ = { 6, 0 };
+    } frame__ = { NULL, 6, 0 };
     il2c_link_execution_frame(&frame__);
 
     //-------------------
@@ -461,9 +461,9 @@ bool IL2C_RuntimeSystems_ExceptionHandling_RaiseCaughtAndRethrowOutsideLocal()
 
     struct /* IL2C_EXECUTION_FRAME */
     {
-        uint8_t objRefCount__;
-        uint8_t objRefRefCount__;
         IL2C_EXECUTION_FRAME* pNext__;
+        uint16_t objRefCount__;
+        uint16_t valueCount__;
         System_Exception* local0__;
         System_Exception* local1__;
         System_Exception* local2__;
@@ -473,7 +473,7 @@ bool IL2C_RuntimeSystems_ExceptionHandling_RaiseCaughtAndRethrowOutsideLocal()
         System_Exception* local6__;
         System_Exception* stack0_0__;
         System_Exception* stack1_0__;
-    } frame__ = { 9, 0 };
+    } frame__ = { NULL, 9, 0 };
     il2c_link_execution_frame(&frame__);
 
     //-------------------

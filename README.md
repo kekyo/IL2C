@@ -39,11 +39,11 @@ void HelloWorld_Main()
 {
     struct
     {
-        uint8_t objRefCount__;
-        uint8_t objRefRefCount__;
-        IL2C_EXECUTION_FRAME* pNext__;
+        const IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
         System_String* stack0_0__;
-    } frame__ = { 1, 0 };
+    } frame__ = { NULL, 1, 0 };
     il2c_link_execution_frame(&frame__);
 
     frame__.stack0_0__ = string0__;

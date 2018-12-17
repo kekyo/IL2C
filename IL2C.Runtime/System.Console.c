@@ -15,7 +15,7 @@ void System_Console_Write_9(System_String* value)
     il2c_fputws(value->string_body__, stdout);
 }
 
-void System_Console_WriteLine()
+void System_Console_WriteLine(void)
 {
     il2c_putws(L"");
 }
@@ -23,7 +23,7 @@ void System_Console_WriteLine()
 void System_Console_WriteLine_6(int32_t value)
 {
     wchar_t buf[20];
-    il2c_itow(value, buf, 10);
+    il2c_itow(value, buf, 19);
     il2c_putws(buf);
 }
 
@@ -39,7 +39,7 @@ void System_Console_WriteLine_10(System_String* value)
 // TODO: limitation
 #define MAX_READLINE 128
 
-System_String* System_Console_ReadLine()
+System_String* System_Console_ReadLine(void)
 {
     wchar_t buffer[MAX_READLINE];
 

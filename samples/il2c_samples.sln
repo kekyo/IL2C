@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Runtime", "AzureSphere\IL2C.Runtime\IL2C.Runtime.vcxproj", "{4A3BF87A-C826-450F-93BF-09313917964A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A3BF87A-C826-450F-93BF-09313917964A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4A3BF87A-C826-450F-93BF-09313917964A}.Debug|ARM.Build.0 = Debug|ARM
+		{4A3BF87A-C826-450F-93BF-09313917964A}.Release|ARM.ActiveCfg = Release|ARM
+		{4A3BF87A-C826-450F-93BF-09313917964A}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9740773E-54CB-4E5F-8CEB-566F3CCB8E28}
+	EndGlobalSection
+EndGlobal

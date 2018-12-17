@@ -246,10 +246,10 @@ int32_t System_String_GetHashCode(System_String* this__)
         {
             break;
         }
-        value = (value << 16) ^ ~ch;
+        value = (value << 16) ^ ((~(int16_t)ch) & 0xffff);
         p++;
     }
-    return value;
+    return (int32_t)value;
 }
 
 System_String* System_String_Concat_3(System_String* str0, System_String* str1)

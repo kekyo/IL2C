@@ -16,7 +16,7 @@ int32_t System_Char_GetHashCode(wchar_t* this__)
 {
     il2c_assert(this__ != NULL);
 
-    return *this__;
+    return (int32_t)*this__;
 }
 
 bool System_Char_Equals(wchar_t* this__, wchar_t obj)

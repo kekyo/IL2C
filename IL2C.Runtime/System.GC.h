@@ -14,7 +14,7 @@ extern "C" {
 
 IL2C_DECLARE_RUNTIME_TYPE(System_GC);
 
-extern /* static */ void System_GC_Collect();
+extern /* static */ void System_GC_Collect(void);
 
 #ifdef __cplusplus
 }

@@ -23,11 +23,12 @@ typedef long interlock_t;
 #include <intrin.h>
 #include <windows.h>
 #include <stdio.h>
+#include <errno.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -83,7 +84,7 @@ typedef long interlock_t;
 #include <intrin.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -139,7 +140,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <wdm.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -188,18 +189,19 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #endif
 
 ///////////////////////////////////////////////////
-// Another standard C platform (included gcc)
+// MinGW gcc (Win32)
 
-#if !defined(_MSC_VER)
+#if defined(__GNUC__) && defined(_WIN32)
 
 #include <x86intrin.h>
 #include <stdio.h>
+#include <errno.h>
 #include <wchar.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -229,7 +231,65 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_longjmp longjmp
 
 // Support basic console features
-#define il2c_putws _putws
+#define il2c_putws(p) fputws(p, stdout)
+#define il2c_fputws fputws
+#define il2c_fgetws fgetws
+
+#define DEBUG_WRITE(step, message)
+
+#endif
+
+///////////////////////////////////////////////////
+// Another standard C platform (gcc)
+
+#if defined(__GNUC__) && !defined(_WIN32)
+
+#if defined(__x86_64__) || defined(__i386__)
+#include <x86intrin.h>
+#elif defined(__ARM_NEON__)
+#include <arm_neon.h>
+#elif defined(__IWMMXT__)
+#include <mmintrin.h>
+#endif
+
+#include <stdio.h>
+#include <errno.h>
+#include <wchar.h>
+#define IL2C_USE_SIGNAL
+#include <signal.h>
+
+// Compatibility symbols (required platform depended functions)
+static inline wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%d", b); return b; }
+static inline wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lu", b); return b; }
+static inline wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lld", b); return b; }
+static inline wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%llu", b); return b; }
+#define il2c_snwprintf swprintf
+#define il2c_wcstol wcstol
+#define il2c_wcstoul wcstoul
+#define il2c_wcstoll wcstoll
+#define il2c_wcstoull wcstoull
+#define il2c_wcstof wcstof
+#define il2c_wcstod wcstod
+#define il2c_wcscmp wcscmp
+#define il2c_wcsicmp wcscasecmp
+#define il2c_wcslen wcslen
+#define il2c_memcpy memcpy
+#define il2c_memset memset
+#define il2c_memcmp memcmp
+#define il2c_initialize_heap()
+#define il2c_check_heap()
+#define il2c_shutdown_heap()
+#define il2c_malloc malloc
+#define il2c_free free
+#define il2c_ixchg(pDest, newValue) __sync_lock_test_and_set((interlock_t*)(pDest), (interlock_t)(newValue))
+#define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
+#define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
+#define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
+
+#define il2c_longjmp longjmp
+
+// Support basic console features
+#define il2c_putws(p) fputws(p, stdout)
 #define il2c_fputws fputws
 #define il2c_fgetws fgetws
 
@@ -340,9 +400,9 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, ui
 
 extern void il2c_default_mark_handler__(void* pReference);
 
-extern void il2c_step1_clear_gcmark__();
-extern void il2c_step2_mark_gcmark__();
-extern void il2c_step3_sweep_garbage__();
+extern void il2c_step1_clear_gcmark__(void);
+extern void il2c_step2_mark_gcmark__(void);
+extern void il2c_step3_sweep_garbage__(void);
 
 #ifdef __cplusplus
 }

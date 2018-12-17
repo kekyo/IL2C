@@ -9,7 +9,7 @@ System_String* System_Int32_ToString(int32_t* this__)
 
     wchar_t buffer[14];
     
-    il2c_itow(*this__, buffer, 10);
+    il2c_itow(*this__, buffer, 13);
     return il2c_new_string(buffer);
 }
 

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="il2c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Array.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Boolean.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Byte.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Char.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Console.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Delegate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Double.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Enum.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Exception.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.GC.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Int16.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Int32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Int64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.IntPtr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.IndexOutOfRangeException.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.InvalidCastException.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.MulticastDelegate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.NullReferenceException.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Object.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.SByte.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Single.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.String.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.Type.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.UInt16.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.UInt32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.UInt64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.UIntPtr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System.ValueType.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="debugbreak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="il2c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="il2c_private.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Boolean.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Byte.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Char.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Delegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Double.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Enum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.GC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Int16.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Int32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Int64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.IntPtr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.IndexOutOfRangeException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.InvalidCastException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.MulticastDelegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.NullReferenceException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.RuntimeFieldHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Runtime.CompilerServices.RuntimeHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.SByte.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Single.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.Type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.UInt16.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.UInt32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.UInt64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.UIntPtr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System.ValueType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

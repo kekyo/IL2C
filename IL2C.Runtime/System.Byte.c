@@ -7,7 +7,7 @@ System_String* System_Byte_ToString(uint8_t* this__)
 {
     wchar_t buffer[5];
 
-    il2c_itow(*this__, buffer, 10);
+    il2c_itow(*this__, buffer, 4);
     return il2c_new_string(buffer);
 }
 

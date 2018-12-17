@@ -35,7 +35,7 @@ extern int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimensio
 /////////////////////////////////////////////////
 // Array special functions
 
-extern void il2c_throw_indexoutofrangeexception__();
+extern void il2c_throw_indexoutofrangeexception__(void);
 
 // It made identical type expression for array type.
 #define il2c_arraytype(elementTypeName) \
@@ -58,7 +58,7 @@ static inline void* il2c_array_item__(
         il2c_throw_indexoutofrangeexception__();
     }
 
-    return il2c_array_item0ptr__(array) + elementSize * index;
+    return il2c_array_item0ptr__(array) + ((intptr_t)elementSize) * index;
 }
 #define il2c_array_item(array, elementTypeName, index) \
     (*(elementTypeName*)il2c_array_item__(array, sizeof(elementTypeName), index))

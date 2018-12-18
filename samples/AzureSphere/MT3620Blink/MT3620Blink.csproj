@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IL2C.Interop, Version=0.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IL2C.Interop.0.4.2\lib\net45\IL2C.Interop.dll</HintPath>
+    <Reference Include="IL2C.Interop, Version=0.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IL2C.Interop.0.4.3\lib\net45\IL2C.Interop.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,6 +52,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>D:\PROJECT\IL2C\IL2C\bin\Debug\net45\IL2C.exe --debug --read-symbols MT3620Blink.dll ..\..\..\Mt3620App\Generated</PostBuildEvent>
+    <PostBuildEvent>D:\PROJECT\IL2C\IL2C\bin\Debug\net45\IL2C.exe --debug-full --read-symbols MT3620Blink.dll ..\..\..\Mt3620App\Generated</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -557,14 +557,12 @@ namespace IL2C.Writers
 
         private static void InternalConvertFromInternalCallFunction(
             CodeTextWriter tw,
-            IMethodInformation method,
-            NativeMethodAttribute nativeImport,
-            PInvokeInfo pinvokeInfo)
+            IMethodInformation method)
         {
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine(
                 "// [6] {0}: {1}",
-                (pinvokeInfo != null) ? "P/Invoke" : "InternalCall",
+                (method.PInvokeInformation != null) ? "P/Invoke" : "InternalCall",
                 method.FriendlyName);
             tw.SplitLine();
 
@@ -578,8 +576,8 @@ namespace IL2C.Writers
                     method.Parameters.
                         Select(parameter => parameter.GetMarshaledInExpression()));
                 var entryPointName =
-                    pinvokeInfo?.EntryPoint ??
-                    nativeImport?.EntryPoint ??
+                    method.PInvokeInformation?.EntryPoint ??
+                    method.NativeMethod?.EntryPoint ??
                     method.Name;
 
                 if (method.ReturnType.IsVoidType)
@@ -808,9 +806,7 @@ namespace IL2C.Writers
                 // InternalCall or DllImport
                 InternalConvertFromInternalCallFunction(
                     tw,
-                    method,
-                    method.NativeMethod,
-                    method.PInvokeInformation);
+                    method);
                 return;
             }
 

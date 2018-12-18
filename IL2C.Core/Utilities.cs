@@ -544,15 +544,10 @@ namespace IL2C
                 return string.Format("{0}->string_body__", parameter.ParameterName);
             }
 
-            if (parameter.TargetType.IsEnum)
-            {
-                return string.Format(
-                    "({0}){1}",
-                    parameter.TargetType.Name,      // Simple enum type name for use P/Invoke.
-                    parameter.ParameterName);
-            }
-
-            return parameter.ParameterName;
+            return string.Format(
+                "({0}){1}",
+                parameter.TargetType.CLanguageNativeTypeName,
+                parameter.ParameterName);
         }
 
         public struct RightExpressionGivenParameter

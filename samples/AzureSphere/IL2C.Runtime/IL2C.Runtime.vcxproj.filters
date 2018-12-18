@@ -15,195 +15,195 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="il2c.c">
+    <ClCompile Include="../../../IL2C.Runtime/il2c.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Array.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Array.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Boolean.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Boolean.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Byte.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Byte.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Char.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Char.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Console.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Console.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Delegate.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Delegate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Double.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Double.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Enum.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Enum.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Exception.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Exception.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.GC.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.GC.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Int16.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Int16.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Int32.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Int32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Int64.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Int64.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.IntPtr.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.IntPtr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.IndexOutOfRangeException.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.IndexOutOfRangeException.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.InvalidCastException.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.InvalidCastException.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.MulticastDelegate.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.MulticastDelegate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.NullReferenceException.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.NullReferenceException.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Object.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Object.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.SByte.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.SByte.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Single.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Single.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.String.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.String.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.Type.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.Type.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.UInt16.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.UInt16.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.UInt32.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.UInt32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.UInt64.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.UInt64.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.UIntPtr.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.UIntPtr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="System.ValueType.c">
+    <ClCompile Include="../../../IL2C.Runtime/System.ValueType.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="debugbreak.h">
+    <ClInclude Include="../../../IL2C.Runtime/debugbreak.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="il2c.h">
+    <ClInclude Include="../../../IL2C.Runtime/il2c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="il2c_private.h">
+    <ClInclude Include="../../../IL2C.Runtime/il2c_private.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Array.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Boolean.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Boolean.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Byte.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Byte.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Char.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Char.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Console.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Delegate.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Delegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Double.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Double.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Enum.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Exception.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.GC.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.GC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Int16.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Int16.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Int32.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Int32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Int64.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Int64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.IntPtr.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.IntPtr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.IndexOutOfRangeException.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.IndexOutOfRangeException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.InvalidCastException.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.InvalidCastException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.MulticastDelegate.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.MulticastDelegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.NullReferenceException.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.NullReferenceException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Object.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.RuntimeFieldHandle.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.RuntimeFieldHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Runtime.CompilerServices.RuntimeHelpers.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.SByte.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.SByte.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Single.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Single.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.String.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.Type.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.Type.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.UInt16.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.UInt16.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.UInt32.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.UInt32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.UInt64.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.UInt64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.UIntPtr.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.UIntPtr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="System.ValueType.h">
+    <ClInclude Include="../../../IL2C.Runtime/System.ValueType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

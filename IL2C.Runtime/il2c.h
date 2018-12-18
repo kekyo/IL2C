@@ -180,6 +180,9 @@ typedef void* untyped_ptr;
 #include <System.IndexOutOfRangeException.h>
 #include <System.GC.h>
 
+// TODO: will remove after implemented packaging strategy.
+#include <System.Console.h>
+
 ///////////////////////////////////////////////////////
 // Boxing related declarations
 

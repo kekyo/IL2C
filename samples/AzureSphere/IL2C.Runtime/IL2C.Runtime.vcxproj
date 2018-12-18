@@ -110,11 +110,13 @@
     <ClCompile>
       <AdditionalIncludeDirectories>.;../../../IL2C.Runtime</AdditionalIncludeDirectories>
       <AdditionalOptions>-Werror=implicit-function-declaration -Wno-unused-value %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">__AZURE_SPHERE__;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Release'">
       <LinkTimeOptimization>true</LinkTimeOptimization>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">__AZURE_SPHERE__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

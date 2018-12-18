@@ -50,6 +50,8 @@ typedef long interlock_t;
 #define il2c_shutdown_heap() _CrtDumpMemoryLeaks()
 #define il2c_malloc malloc
 #define il2c_free free
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
@@ -58,8 +60,8 @@ typedef long interlock_t;
 #define il2c_longjmp longjmp
 
 // Support basic console features
-#define il2c_putws _putws
-#define il2c_fputws fputws
+#define il2c_wwriteline _putws
+#define il2c_wwrite(p) fputws(p, stdout)
 #define il2c_fgetws fgetws
 
 #ifdef _DEBUG
@@ -107,6 +109,8 @@ typedef long interlock_t;
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
@@ -118,8 +122,8 @@ extern void il2c_free(void* p);
 extern void WriteLineToError(const wchar_t* pMessage);
 
 // Support basic console features
-//#define il2c_putws _putws
-//#define il2c_fputws fputws
+//#define il2c_wwriteline _putws
+//#define il2c_wwrite fputws
 //#define il2c_fgetws fgetws
 
 #if defined(_DEBUG)
@@ -162,6 +166,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_shutdown_heap()
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
@@ -170,8 +176,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_longjmp longjmp
 
 // Support basic console features
-//#define il2c_putws _putws
-//#define il2c_fputws fputws
+//#define il2c_wwriteline _putws
+//#define il2c_wwrite fputws
 //#define il2c_fgetws fgetws
 
 #ifdef DBG
@@ -223,6 +229,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_shutdown_heap()
 #define il2c_malloc malloc
 #define il2c_free free
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) __sync_lock_test_and_set((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
@@ -231,8 +239,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_longjmp longjmp
 
 // Support basic console features
-#define il2c_putws(p) fputws(p, stdout)
-#define il2c_fputws fputws
+#define il2c_wwriteline(p) fputws(p, stdout)    // TODO:
+#define il2c_wwrite(p) fputws(p, stdout)
 #define il2c_fgetws fgetws
 
 #define DEBUG_WRITE(step, message)
@@ -253,10 +261,16 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <wchar.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
+
+#if defined(__AZURE_SPHERE__)
+#include <applibs/log.h>
+#endif
 
 // Compatibility symbols (required platform depended functions)
 static inline wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%d", b); return b; }
@@ -281,6 +295,8 @@ static inline wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l) { swprintf
 #define il2c_shutdown_heap()
 #define il2c_malloc malloc
 #define il2c_free free
+#define il2c_mcalloc il2c_malloc
+#define il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) __sync_lock_test_and_set((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
@@ -288,12 +304,52 @@ static inline wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l) { swprintf
 
 #define il2c_longjmp longjmp
 
-// Support basic console features
-#define il2c_putws(p) fputws(p, stdout)
-#define il2c_fputws fputws
+#if defined(__AZURE_SPHERE__)
+#define il2c_write Log_Debug
+static inline void il2c_writeline(const char* p) {
+    size_t l = strlen(p);
+    char* d = il2c_mcalloc(l + 2);
+    il2c_memcpy(d, p, l);
+    d[l] = '\n';
+    d[l + 1] = '\0';
+    il2c_write(d);
+    il2c_mcfree(d);
+}
+static inline void il2c_wwrite(const wchar_t* p) {
+    size_t l = il2c_wcslen(p);
+    char* d = il2c_mcalloc(l + 1);
+    size_t i;
+    for (i = 0; i < l; i++) d[i] = (char)(p[i]);
+    d[i] = '\0';
+    il2c_write(d);
+    il2c_mcfree(d);
+}
+static inline void il2c_wwriteline(const wchar_t* p) {
+    size_t l = il2c_wcslen(p);
+    char* d = il2c_mcalloc(l + 2);
+    size_t i;
+    for (i = 0; i < l; i++) d[i] = (char)(p[i]);
+    d[i++] = '\n';
+    d[i] = '\0';
+    il2c_write(d);
+    il2c_mcfree(d);
+}
 #define il2c_fgetws fgetws
-
+#if defined(_DEBUG)
+#define DEBUG_WRITE(step, message) { \
+    il2c_write(step); \
+    il2c_write(": "); \
+    il2c_writeline(message); }
+#else
 #define DEBUG_WRITE(step, message)
+#endif
+#else
+// Support basic console features
+#define il2c_wwrite(p) fputws(p, stdout)
+//#define il2c_wwrite fputws
+#define il2c_fgetws fgetws
+#define DEBUG_WRITE(step, message)
+#endif
 
 #endif
 

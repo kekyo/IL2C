@@ -1,0 +1,17 @@
+{
+  "SchemaVersion": 1,
+  "Name" : "Mt3620App",
+  "ComponentId" : "1c0810d7-c429-4b23-9a05-3e4e62199d1a",
+  "EntryPoint": "/bin/app",
+  "CmdArgs": [],
+  "Capabilities": {
+    "AllowedConnections": [],
+    "AllowedTcpServerPorts": [],
+    "AllowedUdpServerPorts": [],
+    "Gpio": [],
+    "Uart": [],
+    "WifiConfig": false,
+    "NetworkConfig": false,
+    "SystemTime": false
+  }
+}

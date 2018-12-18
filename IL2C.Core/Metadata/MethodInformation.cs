@@ -370,12 +370,14 @@ namespace IL2C.Metadata
         {
             get
             {
-                var parametersString = string.Join(
-                    ", ",
-                    this.Parameters.Select(parameter => string.Format(
-                        "{0} {1}",
-                        parameter.TargetType.CLanguageTypeName,
-                        parameter.ParameterName)));
+                var parametersString = (this.Parameters.Length >= 1) ?
+                    string.Join(
+                        ", ",
+                        this.Parameters.Select(parameter => string.Format(
+                            "{0} {1}",
+                            parameter.TargetType.CLanguageTypeName,
+                            parameter.ParameterName))) :
+                    "void";
 
                 var returnTypeName =
                     this.ReturnType.CLanguageTypeName;
@@ -411,12 +413,14 @@ namespace IL2C.Metadata
             //   non virtual : int32_t (*DoThat)(System_String* this__)
             //   virtual     : int32_t (*DoThat)(void* this__)
 
-            var parametersString = string.Join(
-                ", ",
-                this.Parameters.Select((parameter, index) => string.Format(
-                    "{0}{1}",
-                    (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
-                    (overloadIndex == -1) ? string.Empty : (" " + parameter.ParameterName))));
+            var parametersString = (this.Parameters.Length >= 1) ?
+                string.Join(
+                    ", ",
+                    this.Parameters.Select((parameter, index) => string.Format(
+                        "{0}{1}",
+                        (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
+                        (overloadIndex == -1) ? string.Empty : (" " + parameter.ParameterName)))) :
+                "void";
 
             var returnTypeName = this.ReturnType.CLanguageTypeName;
             var name = this.GetCLanguageDeclarationName(overloadIndex);

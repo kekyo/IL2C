@@ -273,10 +273,10 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #endif
 
 // Compatibility symbols (required platform depended functions)
-static inline wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%d", b); return b; }
-static inline wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lu", b); return b; }
-static inline wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lld", b); return b; }
-static inline wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%llu", b); return b; }
+static inline wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%d", v); return b; }
+static inline wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lu", v); return b; }
+static inline wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lld", v); return b; }
+static inline wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%llu", v); return b; }
 #define il2c_snwprintf swprintf
 #define il2c_wcstol wcstol
 #define il2c_wcstoul wcstoul

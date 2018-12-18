@@ -555,13 +555,17 @@ namespace IL2C.Writers
             tw.SplitLine();
         }
 
-        private static void InternalConvertFromPInvokeFunction(
+        private static void InternalConvertFromInternalCallFunction(
             CodeTextWriter tw,
             IMethodInformation method,
+            FunctionImportAttribute functionImport,
             PInvokeInfo pinvokeInfo)
         {
             tw.WriteLine("///////////////////////////////////////");
-            tw.WriteLine("// [6] P/Invoke: {0}", method.FriendlyName);
+            tw.WriteLine(
+                "// [6] {0}: {1}",
+                (pinvokeInfo != null) ? "P/Invoke" : "InternalCall",
+                method.FriendlyName);
             tw.SplitLine();
 
             tw.WriteLine(method.CLanguageFunctionPrototype);
@@ -573,14 +577,18 @@ namespace IL2C.Writers
                     ", ",
                     method.Parameters.
                         Select(parameter => parameter.GetMarshaledInExpression()));
+                var entryPointName =
+                    pinvokeInfo?.EntryPoint ??
+                    functionImport?.EntryPoint ??
+                    method.Name;
 
                 if (method.ReturnType.IsVoidType)
                 {
-                    tw.WriteLine("{0}({1});", pinvokeInfo.EntryPoint, arguments);
+                    tw.WriteLine("{0}({1});", entryPointName, arguments);
                 }
                 else
                 {
-                    tw.WriteLine("return {0}({1});", pinvokeInfo.EntryPoint, arguments);
+                    tw.WriteLine("return {0}({1});", entryPointName, arguments);
                 }
             }
 
@@ -776,17 +784,6 @@ namespace IL2C.Writers
             // internalcall or DllImport
             if (method.IsExtern)
             {
-                // DllImport
-                var pinvokeInfo = method.PInvokeInfo;
-                if (pinvokeInfo != null)
-                {
-                    InternalConvertFromPInvokeFunction(
-                        tw,
-                        method,
-                        pinvokeInfo);
-                    return;
-                }
-
                 // Specialize delegate type methods:
                 if (method.DeclaringType.IsDelegate && !method.DeclaringType.IsAbstract)
                 {
@@ -808,9 +805,13 @@ namespace IL2C.Writers
                     }
                 }
 
-                throw new InvalidProgramSequenceException(
-                    "Unknown internallcall method declaration. Name={0}",
-                    method.FriendlyName);
+                // InternalCall or DllImport
+                InternalConvertFromInternalCallFunction(
+                    tw,
+                    method,
+                    method.FunctionImport,
+                    method.PInvokeInformation);
+                return;
             }
 
             if (!preparedFunctions.Functions.TryGetValue(method, out var preparedMethod))

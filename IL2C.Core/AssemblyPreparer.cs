@@ -185,18 +185,29 @@ namespace IL2C
             {
                 Debug.Assert(!method.HasBody);
 
-                var pinvokeInfo = method.PInvokeInfo;
-                if (pinvokeInfo != null)
+                if (method.FunctionImport != null)
                 {
-                    // TODO: Switch DllImport.Value include direction to library direction.
-                    if (string.IsNullOrWhiteSpace(pinvokeInfo.Module.Name))
+                    if (string.IsNullOrWhiteSpace(method.FunctionImport.IncludeFileName))
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Not given FunctionImport attribute argument. Name={0}",
+                            method.FriendlyName);
+                    }
+
+                    // TODO: register library name.
+                    prepareContext.RegisterImportIncludeFile(method.FunctionImport.IncludeFileName);
+                }
+                else if (method.PInvokeInformation != null)
+                {
+                    if (string.IsNullOrWhiteSpace(method.PInvokeInformation.Module.Name))
                     {
                         throw new InvalidProgramSequenceException(
                             "Not given DllImport attribute argument. Name={0}",
                             method.FriendlyName);
                     }
 
-                    prepareContext.RegisterPrivateIncludeFile(pinvokeInfo.Module.Name);
+                    // TODO: register library name.
+                    //prepareContext.RegisterPrivateIncludeFile(method.PInvokeInformation.Module.Name);
                 }
 
                 // Construct dummy information.

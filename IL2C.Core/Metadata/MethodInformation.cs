@@ -49,7 +49,8 @@ namespace IL2C.Metadata
         string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full);
         IParameterInformation[] GetParameters(ITypeInformation thisType);
 
-        PInvokeInfo PInvokeInfo { get; }
+        PInvokeInfo PInvokeInformation { get; }
+        FunctionImportAttribute FunctionImport { get; }
 
         string CLanguageFunctionName { get; }
         string CLanguageFunctionPrototype { get; }
@@ -353,8 +354,15 @@ namespace IL2C.Metadata
                 ToArray();
         }
 
-        public PInvokeInfo PInvokeInfo =>
+        public PInvokeInfo PInvokeInformation =>
             this.Definition.PInvokeInfo;
+        public FunctionImportAttribute FunctionImport =>
+            this.Definition.CustomAttributes.
+            Where(ca => ca.AttributeType.FullName == "IL2C.FunctionImportAttribute").
+            Select(ca => new FunctionImportAttribute(
+                ca.ConstructorArguments[0].Value,
+                ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+            FirstOrDefault();
 
         public override bool IsCLanguagePublicScope =>
             this.Definition.IsPublic;

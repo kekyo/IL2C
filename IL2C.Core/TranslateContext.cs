@@ -15,6 +15,7 @@ namespace IL2C
         #region  Fields
         private readonly HashSet<string> includes = new HashSet<string>();
         private readonly HashSet<string> privateIncludes = new HashSet<string>();
+        private readonly HashSet<string> importIncludes = new HashSet<string>();
         private readonly Dictionary<string, IFieldInformation> staticFields =
             new Dictionary<string, IFieldInformation>();
         private readonly Dictionary<string, string> constStrings =
@@ -46,21 +47,23 @@ namespace IL2C
         public IAssemblyInformation Assembly { get; }
 
         #region IPrepareContext
-        private void RegisterIncludeFile(string includeFileName)
-        {
+        private void RegisterIncludeFile(string includeFileName) =>
             includes.Add(includeFileName);
-        }
 
         void IPrepareContext.RegisterIncludeFile(string includeFileName) =>
             this.RegisterIncludeFile(includeFileName);
 
-        private void RegisterPrivateIncludeFile(string includeFileName)
-        {
+        private void RegisterPrivateIncludeFile(string includeFileName) =>
             privateIncludes.Add(includeFileName);
-        }
 
         void IPrepareContext.RegisterPrivateIncludeFile(string includeFileName) =>
             this.RegisterPrivateIncludeFile(includeFileName);
+
+        private void RegisterImportIncludeFile(string includeFileName) =>
+            importIncludes.Add(includeFileName);
+
+        void IPrepareContext.RegisterImportIncludeFile(string includeFileName) =>
+            this.RegisterImportIncludeFile(includeFileName);
 
         private void RegisterType(ITypeInformation type)
         {
@@ -140,9 +143,10 @@ namespace IL2C
         #region IExtractContext
         IEnumerable<string> IExtractContext.EnumerateRequiredIncludeFileNames() =>
             includes;
-
         IEnumerable<string> IExtractContext.EnumerateRequiredPrivateIncludeFileNames() =>
             privateIncludes;
+        IEnumerable<string> IExtractContext.EnumerateRequiredImportIncludeFileNames() =>
+            importIncludes;
 
         string IExtractContext.GetExceptionNestedFrameIndexName()
         {

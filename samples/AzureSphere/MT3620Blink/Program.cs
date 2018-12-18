@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,10 @@ namespace MT3620Blink
         {
             while (true)
             {
-                Console.WriteLine("Hello Azure Sphere with C#!");
+                for (var index = 0; index < 10000; index++)
+                {
+                    Console.WriteLine("Hello Azure Sphere with C#! " + index);
+                }
             }
         }
     }

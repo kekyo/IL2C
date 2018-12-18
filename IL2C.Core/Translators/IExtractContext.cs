@@ -36,6 +36,7 @@ namespace IL2C.Translators
 
         IEnumerable<string> EnumerateRequiredIncludeFileNames();
         IEnumerable<string> EnumerateRequiredPrivateIncludeFileNames();
+        IEnumerable<string> EnumerateRequiredImportIncludeFileNames();
         IEnumerable<IFieldInformation> ExtractStaticFields();
         IEnumerable<(string symbolName, string value)> ExtractConstStrings();
         IEnumerable<DeclaredValuesInformation> ExtractDeclaredValues();

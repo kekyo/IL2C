@@ -225,8 +225,8 @@ bool System_String_Equals_1(System_String* this__, System_Object* obj)
     il2c_assert(this__ != NULL);
     il2c_assert(this__->string_body__ != NULL);
 
-    // TODO: castclass
-    return System_String_Equals(this__, (System_String*)obj);
+    System_String* pString = il2c_castclass(obj, System_String);
+    return System_String_Equals(this__, pString);
 }
 
 int32_t System_String_GetHashCode(System_String* this__)
@@ -277,10 +277,22 @@ System_String* System_String_Concat_4(System_Object* arg0, System_Object* arg1)
     il2c_assert(arg0 != NULL);
     il2c_assert(arg1 != NULL);
 
-    System_String* str0 = arg0->vptr0__->ToString(arg0);
-    System_String* str1 = arg1->vptr0__->ToString(arg1);
+    struct
+    {
+        const IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
+        System_String* str0;
+        System_String* str1;
+    } frame__ = { NULL, 2 };
+    il2c_link_execution_frame(&frame__);
 
-    return System_String_Concat_3(str0, str1);
+    frame__.str0 = arg0->vptr0__->ToString(arg0);
+    frame__.str1 = arg1->vptr0__->ToString(arg1);
+
+    frame__.str0 = System_String_Concat_3(frame__.str0, frame__.str1);
+    il2c_unlink_execution_frame(&frame__);
+    return frame__.str0;
 }
 
 System_String* System_String_Concat_5(System_String* str0, System_String* str1, System_String* str2)

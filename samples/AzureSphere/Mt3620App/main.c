@@ -1,8 +1,5 @@
 ﻿#include <MT3620Blink.h>
 
-/// <summary>
-///     Main entry point for this sample.
-/// </summary>
 int main(int argc, char *argv[])
 {
     // Setup il2c runtime

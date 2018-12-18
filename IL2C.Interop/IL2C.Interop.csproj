@@ -1,13 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net20;net40;netstandard2.0;netcoreapp2.0</TargetFrameworks>
 
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <AssemblyName>IL2C.Core</AssemblyName>
+    <AssemblyName>IL2C.Interop</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>
     <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
     <Product>IL2C</Product>
@@ -23,16 +23,6 @@
     <PackageTags>il2c;il;translate;transpile;convert;c;c++;assembly;multi-platform</PackageTags>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\IL2C.Interop\IL2C.Interop.csproj" />
-  </ItemGroup>
 
 </Project>

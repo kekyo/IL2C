@@ -36,6 +36,9 @@ static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 void* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
 {
+    // TODO: always collect
+    il2c_collect();
+
     // +----------------------+ <-- pHeader
     // | IL2C_REF_HEADER      |
     // +----------------------+ <-- pReference   -------

@@ -4,14 +4,14 @@ using System.Collections;
 namespace IL2C
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
-    public sealed class FunctionImportAttribute : Attribute
+    public sealed class NativeMethodAttribute : Attribute
     {
-        public FunctionImportAttribute(string includeFileName)
+        public NativeMethodAttribute(string includeFileName)
         {
             this.IncludeFileName = includeFileName;
         }
 
-        internal FunctionImportAttribute(object arg0, IDictionary props)
+        internal NativeMethodAttribute(object arg0, IDictionary props)
         {
             this.IncludeFileName = (string)arg0;
             this.LibraryFileName = (string)props["LibraryFileName"];

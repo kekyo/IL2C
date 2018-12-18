@@ -143,5 +143,7 @@ namespace IL2C.Metadata.Specialized
 
         public Type ResolveToRuntimeType() =>
             throw new NotImplementedException();
+
+        public NativeTypeAttribute NativeType => null;
     }
 }

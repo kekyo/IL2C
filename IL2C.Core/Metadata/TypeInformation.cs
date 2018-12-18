@@ -96,6 +96,8 @@ namespace IL2C.Metadata
         ITypeInformation MakeArray();
 
         Type ResolveToRuntimeType();
+
+        NativeTypeAttribute NativeType { get; }
     }
 
     internal class TypeInformation
@@ -664,6 +666,14 @@ namespace IL2C.Metadata
 
             return typeof(object).Assembly.GetType(this.FriendlyName);
         }
+
+        public NativeTypeAttribute NativeType =>
+            ((TypeDefinition)this.Definition).CustomAttributes.
+            Where(ca => ca.AttributeType.FullName == "IL2C.NativeTypeAttribute").
+            Select(ca => new NativeTypeAttribute(
+                ca.ConstructorArguments[0].Value,
+                ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+            FirstOrDefault();
 
         protected override TypeReference OnResolve(TypeReference member)
         {

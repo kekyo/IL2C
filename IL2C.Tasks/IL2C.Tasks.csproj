@@ -47,6 +47,7 @@
     <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../IL2C.Interop/IL2C.Interop.csproj" />
     <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" />
   </ItemGroup>
 

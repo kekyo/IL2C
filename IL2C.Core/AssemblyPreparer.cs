@@ -185,9 +185,9 @@ namespace IL2C
             {
                 Debug.Assert(!method.HasBody);
 
-                if (method.FunctionImport != null)
+                if (method.NativeMethod != null)
                 {
-                    if (string.IsNullOrWhiteSpace(method.FunctionImport.IncludeFileName))
+                    if (string.IsNullOrWhiteSpace(method.NativeMethod.IncludeFileName))
                     {
                         throw new InvalidProgramSequenceException(
                             "Not given FunctionImport attribute argument. Name={0}",
@@ -195,7 +195,18 @@ namespace IL2C
                     }
 
                     // TODO: register library name.
-                    prepareContext.RegisterImportIncludeFile(method.FunctionImport.IncludeFileName);
+                    prepareContext.RegisterImportIncludeFile(method.NativeMethod.IncludeFileName);
+                    if (method.ReturnType.NativeType != null)
+                    {
+                        prepareContext.RegisterImportIncludeFile(method.ReturnType.NativeType.IncludeFileName);
+                    }
+                    foreach (var parameter in method.Parameters)
+                    {
+                        if (parameter.TargetType.NativeType != null)
+                        {
+                            prepareContext.RegisterImportIncludeFile(parameter.TargetType.NativeType.IncludeFileName);
+                        }
+                    }
                 }
                 else if (method.PInvokeInformation != null)
                 {

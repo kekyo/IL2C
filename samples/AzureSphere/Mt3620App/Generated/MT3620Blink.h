@@ -6,6 +6,7 @@
 #include <il2c.h>
 
 #include <MT3620Blink.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

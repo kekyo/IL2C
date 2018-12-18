@@ -10,7 +10,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     public sealed class Interoperability
     {
-        [FunctionImport("windows.h", EntryPoint = "OutputDebugStringW", CharSet = CharSet.Unicode)]
+        [NativeMethod("windows.h", EntryPoint = "OutputDebugStringW", CharSet = CharSet.Unicode)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void OutputDebugString(string message);
 

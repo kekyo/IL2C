@@ -50,7 +50,7 @@ namespace IL2C.Metadata
         IParameterInformation[] GetParameters(ITypeInformation thisType);
 
         PInvokeInfo PInvokeInformation { get; }
-        FunctionImportAttribute FunctionImport { get; }
+        NativeMethodAttribute NativeMethod { get; }
 
         string CLanguageFunctionName { get; }
         string CLanguageFunctionPrototype { get; }
@@ -356,10 +356,10 @@ namespace IL2C.Metadata
 
         public PInvokeInfo PInvokeInformation =>
             this.Definition.PInvokeInfo;
-        public FunctionImportAttribute FunctionImport =>
+        public NativeMethodAttribute NativeMethod =>
             this.Definition.CustomAttributes.
-            Where(ca => ca.AttributeType.FullName == "IL2C.FunctionImportAttribute").
-            Select(ca => new FunctionImportAttribute(
+            Where(ca => ca.AttributeType.FullName == "IL2C.NativeMethodAttribute").
+            Select(ca => new NativeMethodAttribute(
                 ca.ConstructorArguments[0].Value,
                 ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
             FirstOrDefault();

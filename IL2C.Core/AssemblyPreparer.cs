@@ -254,13 +254,21 @@ namespace IL2C
             // Lookup type references.
             foreach (var type in allTypes)
             {
+                // Register used type.
                 prepareContext.RegisterType(type);
             }
 
             // Lookup fields.
             foreach (var field in allTypes.SelectMany(type => type.Fields))
             {
+                // Register field type.
                 prepareContext.RegisterType(field.FieldType);
+
+                // Register include file from the native value.
+                if (field.NativeValue != null)
+                {
+                    prepareContext.RegisterImportIncludeFile(field.NativeValue.IncludeFileName);
+                }
             }
 
             // Construct result.

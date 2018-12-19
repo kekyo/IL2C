@@ -196,9 +196,19 @@ namespace IL2C
                 foreach (var field in type.Fields.
                     Where(field => field.IsStatic))
                 {
-                    twSource.WriteLine(
-                        "{0};",
-                        field.GetCLanguageStaticPrototype(true));
+                    if (field.NativeValue != null)
+                    {
+                        twSource.WriteLine(
+                            "#define {0} {1}",
+                            field.MangledName,
+                            field.CLanguageNativeSymbolName);
+                    }
+                    else
+                    {
+                        twSource.WriteLine(
+                            "{0};",
+                            field.GetCLanguageStaticPrototype(true));
+                    }
                 }
                 twSource.SplitLine();
             }

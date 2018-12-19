@@ -8,7 +8,7 @@
     "AllowedConnections": [],
     "AllowedTcpServerPorts": [],
     "AllowedUdpServerPorts": [],
-    "Gpio": [],
+    "Gpio": [ 8, 9, 10, 12 ],
     "Uart": [],
     "WifiConfig": false,
     "NetworkConfig": false,

@@ -589,7 +589,7 @@ namespace IL2C.Writers
                     method.Parameters.Select(GetMarshaledInExpression));
                 var entryPointName =
                     method.PInvokeInformation?.EntryPoint ??
-                    method.NativeMethod?.EntryPoint ??
+                    method.NativeMethod?.SymbolName ??
                     method.Name;
 
                 if (method.ReturnType.IsVoidType)

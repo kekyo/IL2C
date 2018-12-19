@@ -1,4 +1,5 @@
-﻿#include <time.h>
+﻿#include <applibs/gpio.h>
+#include <time.h>
 #include "MT3620Blink.h"
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,8 @@ extern "C" {
 // [2-1] Types:
 
 typedef struct timespec MT3620Blink_timespec;
+typedef GPIO_OutputMode_Type MT3620Blink_GPIO_OutputMode_Type;
+typedef GPIO_Value_Type MT3620Blink_GPIO_Value_Type;
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.timespec
@@ -29,6 +32,30 @@ typedef System_ValueType_VTABLE_DECL__ MT3620Blink_timespec_VTABLE_DECL__;
 
 // [1-4] Runtime type information
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_timespec);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.GPIO_OutputMode_Type
+
+// [1-2-1] Enum VTable layout (Same as System.Enum)
+typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_OutputMode_Type_VTABLE_DECL__;
+
+// [1-5-1] VTable (Same as System.Enum)
+#define MT3620Blink_GPIO_OutputMode_Type_VTABLE__ System_Enum_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_OutputMode_Type);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.GPIO_Value_Type
+
+// [1-2-1] Enum VTable layout (Same as System.Enum)
+typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_Value_Type_VTABLE_DECL__;
+
+// [1-5-1] VTable (Same as System.Enum)
+#define MT3620Blink_GPIO_Value_Type_VTABLE__ System_Enum_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_Value_Type);
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-2] Public static fields:
@@ -47,6 +74,8 @@ extern /* static */ int32_t MT3620Blink_Program_Main(void);
 //////////////////////////////////////////////////////////////////////////////////
 // [9-3] Declare static fields:
 
+int32_t System_Int32_MT3620Blink_Program__MT3620_RDB_LED1_RED;
+
 //////////////////////////////////////////////////////////////////////////////////
 // [9-4] Type: MT3620Blink.timespec
 
@@ -60,7 +89,39 @@ IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_timespec, "MT3620Blink.timespec", IL2C_TYPE_
 IL2C_RUNTIME_TYPE_END();
 
 //////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.GPIO_OutputMode_Type
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.Enum)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_GPIO_OutputMode_Type, "MT3620Blink.GPIO_OutputMode_Type", IL2C_TYPE_INTEGER, sizeof(MT3620Blink_GPIO_OutputMode_Type), System_Enum, 0, 0)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.GPIO_Value_Type
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.Enum)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_GPIO_Value_Type, "MT3620Blink.GPIO_Value_Type", IL2C_TYPE_INTEGER, sizeof(MT3620Blink_GPIO_Value_Type), System_Enum, 0, 0)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
 // [9-4] Type: MT3620Blink.Program
+
+///////////////////////////////////////
+// [6] InternalCall: MT3620Blink.Program.GPIO_OpenAsOutput(System.Int32 gpioId, MT3620Blink.GPIO_OutputMode_Type outputMode, MT3620Blink.GPIO_Value_Type initialValue)
+
+int32_t MT3620Blink_Program_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue)
+{
+    return GPIO_OpenAsOutput(gpioId, outputMode, initialValue);
+}
 
 ///////////////////////////////////////
 // [6] InternalCall: MT3620Blink.Program.nanosleep(MT3620Blink.timespec& time, MT3620Blink.timespec& dummy)
@@ -94,25 +155,27 @@ int32_t MT3620Blink_Program_Main(void)
     //-------------------
     // [3-3] Local variables (!objref):
 
+    int32_t fd = 0;
     MT3620Blink_timespec sleepTime;
     il2c_memset(&sleepTime, 0, sizeof sleepTime);
     MT3620Blink_timespec dummy;
     il2c_memset(&dummy, 0, sizeof dummy);
-    MT3620Blink_timespec local2__;
-    il2c_memset(&local2__, 0, sizeof local2__);
+    MT3620Blink_timespec local3__;
+    il2c_memset(&local3__, 0, sizeof local3__);
     int32_t index = 0;
-    bool local4__ = false;
     bool local5__ = false;
+    bool local6__ = false;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
-    MT3620Blink_timespec* stack0_0__;
-    MT3620Blink_timespec stack0_1__;
-    int32_t stack0_2__;
+    int32_t stack0_0__;
+    MT3620Blink_timespec* stack0_1__;
+    MT3620Blink_timespec stack0_2__;
     bool stack0_3__;
     int32_t stack1_0__;
     MT3620Blink_timespec* stack1_2__;
+    int32_t stack2_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
@@ -123,94 +186,105 @@ int32_t MT3620Blink_Program_Main(void)
 
     //-------------------
     // [3-6] IL body:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(27): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(47): */
 
     /* IL_0000: nop  */
-    /* IL_0001: ldloca.s local2__ */
-    stack0_0__ = &local2__;
-    /* IL_0003: initobj MT3620Blink.timespec */
-    il2c_memset(stack0_0__, 0x00, sizeof(MT3620Blink_timespec));
-    /* IL_0009: ldloca.s local2__ */
-    stack0_0__ = &local2__;
-    /* IL_000b: ldc.i4.1  */
+    /* IL_0001: ldsfld MT3620Blink.Program.MT3620_RDB_LED1_RED */
+    stack0_0__ = System_Int32_MT3620Blink_Program__MT3620_RDB_LED1_RED;
+    /* IL_0006: ldc.i4.0  */
+    stack1_0__ = 0;
+    /* IL_0007: ldc.i4.0  */
+    stack2_0__ = 0;
+    /* IL_0008: call MT3620Blink.Program.GPIO_OpenAsOutput */
+    stack0_0__ = MT3620Blink_Program_GPIO_OpenAsOutput(stack0_0__, (MT3620Blink_GPIO_OutputMode_Type)stack1_0__, (MT3620Blink_GPIO_Value_Type)stack2_0__);
+    /* IL_000d: stloc.0  */
+    fd = stack0_0__;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(53): */
+    /* IL_000e: ldloca.s local3__ */
+    stack0_1__ = &local3__;
+    /* IL_0010: initobj MT3620Blink.timespec */
+    il2c_memset(stack0_1__, 0x00, sizeof(MT3620Blink_timespec));
+    /* IL_0016: ldloca.s local3__ */
+    stack0_1__ = &local3__;
+    /* IL_0018: ldc.i4.1  */
     stack1_0__ = 1;
-    /* IL_000c: stfld MT3620Blink.timespec.tv_sec */
-    stack0_0__->tv_sec = stack1_0__;
-    /* IL_0011: ldloc.2  */
-    stack0_1__ = local2__;
-    /* IL_0012: stloc.0  */
-    sleepTime = stack0_1__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(29): */
-    /* IL_0013: ldloca.s dummy */
-    stack0_0__ = &dummy;
-    /* IL_0015: initobj MT3620Blink.timespec */
-    il2c_memset(stack0_0__, 0x00, sizeof(MT3620Blink_timespec));
-    /* IL_001b: br.s IL_0057 */
-    goto IL_0057;
-IL_001d:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(32): */
-    /* IL_001d: nop  */
-    /* IL_001e: ldc.i4.0  */
-    stack0_2__ = 0;
-    /* IL_001f: stloc.3  */
-    index = stack0_2__;
-    /* IL_0020: br.s IL_0048 */
-    goto IL_0048;
-IL_0022:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(34): */
-    /* IL_0022: nop  */
-    /* IL_0023: ldstr "Hello Azure Sphere with C#! " */
+    /* IL_0019: stfld MT3620Blink.timespec.tv_sec */
+    stack0_1__->tv_sec = stack1_0__;
+    /* IL_001e: ldloc.3  */
+    stack0_2__ = local3__;
+    /* IL_001f: stloc.1  */
+    sleepTime = stack0_2__;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(54): */
+    /* IL_0020: ldloca.s dummy */
+    stack0_1__ = &dummy;
+    /* IL_0022: initobj MT3620Blink.timespec */
+    il2c_memset(stack0_1__, 0x00, sizeof(MT3620Blink_timespec));
+    /* IL_0028: br.s IL_0069 */
+    goto IL_0069;
+IL_002a:
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(57): */
+    /* IL_002a: nop  */
+    /* IL_002b: ldc.i4.0  */
+    stack0_0__ = 0;
+    /* IL_002c: stloc.s index */
+    index = stack0_0__;
+    /* IL_002e: br.s IL_0059 */
+    goto IL_0059;
+IL_0030:
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(59): */
+    /* IL_0030: nop  */
+    /* IL_0031: ldstr "Hello Azure Sphere with C#! " */
     frame__.stack0_4__ = string0__;
-    /* IL_0028: ldloc.3  */
+    /* IL_0036: ldloc.s index */
     stack1_0__ = index;
-    /* IL_0029: box System.Int32 */
+    /* IL_0038: box System.Int32 */
     frame__.stack1_1__ = il2c_box(&stack1_0__, System_Int32);
-    /* IL_002e: call System.String.Concat */
+    /* IL_003d: call System.String.Concat */
     frame__.stack0_4__ = System_String_Concat_4((System_Object*)frame__.stack0_4__, (System_Object*)frame__.stack1_1__);
-    /* IL_0033: call System.Console.WriteLine */
+    /* IL_0042: call System.Console.WriteLine */
     System_Console_WriteLine_10(frame__.stack0_4__);
-    /* IL_0038: nop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(36): */
-    /* IL_0039: ldloca.s sleepTime */
-    stack0_0__ = &sleepTime;
-    /* IL_003b: ldloca.s dummy */
+    /* IL_0047: nop  */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(61): */
+    /* IL_0048: ldloca.s sleepTime */
+    stack0_1__ = &sleepTime;
+    /* IL_004a: ldloca.s dummy */
     stack1_2__ = &dummy;
-    /* IL_003d: call MT3620Blink.Program.nanosleep */
-    MT3620Blink_Program_nanosleep(stack0_0__, stack1_2__);
-    /* IL_0042: nop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(37): */
-    /* IL_0043: nop  */
-    /* IL_0044: ldloc.3  */
-    stack0_2__ = index;
-    /* IL_0045: ldc.i4.1  */
+    /* IL_004c: call MT3620Blink.Program.nanosleep */
+    MT3620Blink_Program_nanosleep(stack0_1__, stack1_2__);
+    /* IL_0051: nop  */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(62): */
+    /* IL_0052: nop  */
+    /* IL_0053: ldloc.s index */
+    stack0_0__ = index;
+    /* IL_0055: ldc.i4.1  */
     stack1_0__ = 1;
-    /* IL_0046: add  */
-    stack0_2__ = stack0_2__ + stack1_0__;
-    /* IL_0047: stloc.3  */
-    index = stack0_2__;
-IL_0048:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(33): */
-    /* IL_0048: ldloc.3  */
-    stack0_2__ = index;
-    /* IL_0049: ldc.i4 10000 */
+    /* IL_0056: add  */
+    stack0_0__ = stack0_0__ + stack1_0__;
+    /* IL_0057: stloc.s index */
+    index = stack0_0__;
+IL_0059:
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(58): */
+    /* IL_0059: ldloc.s index */
+    stack0_0__ = index;
+    /* IL_005b: ldc.i4 10000 */
     stack1_0__ = 10000;
-    /* IL_004e: clt  */
-    stack0_2__ = ((int32_t)stack0_2__ < (int32_t)stack1_0__) ? 1 : 0;
-    /* IL_0050: stloc.s local4__ */
-    local4__ = (stack0_2__) ? true : false;
-    /* IL_0052: ldloc.s local4__ */
-    stack0_3__ = local4__;
-    /* IL_0054: brtrue.s IL_0022 */
-    if (stack0_3__) goto IL_0022;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(38): */
-    /* IL_0056: nop  */
-IL_0057:
-    /* IL_0057: ldc.i4.1  */
-    stack0_2__ = 1;
-    /* IL_0058: stloc.s local5__ */
-    local5__ = (stack0_2__) ? true : false;
-    /* IL_005a: br.s IL_001d */
-    goto IL_001d;
+    /* IL_0060: clt  */
+    stack0_0__ = ((int32_t)stack0_0__ < (int32_t)stack1_0__) ? 1 : 0;
+    /* IL_0062: stloc.s local5__ */
+    local5__ = (stack0_0__) ? true : false;
+    /* IL_0064: ldloc.s local5__ */
+    stack0_3__ = local5__;
+    /* IL_0066: brtrue.s IL_0030 */
+    if (stack0_3__) goto IL_0030;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(63): */
+    /* IL_0068: nop  */
+IL_0069:
+    /* IL_0069: ldc.i4.1  */
+    stack0_0__ = 1;
+    /* IL_006a: stloc.s local6__ */
+    local6__ = (stack0_0__) ? true : false;
+    /* IL_006c: br.s IL_002a */
+    goto IL_002a;
 }
 
 //////////////////////

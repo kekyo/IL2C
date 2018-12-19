@@ -1,6 +1,6 @@
 @echo off
 
-set VERSION=0.4.3
+set VERSION=0.4.4
 
 if exist artifacts (
     ren artifacts artifacts_

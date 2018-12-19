@@ -36,6 +36,9 @@ static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 void* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
 {
+    // TODO: always collect
+    il2c_collect();
+
     // +----------------------+ <-- pHeader
     // | IL2C_REF_HEADER      |
     // +----------------------+ <-- pReference   -------
@@ -85,8 +88,6 @@ void* il2c_get_uninitialized_object_internal__(
         {
             break;
         }
-
-        il2c_iyield();
     }
 
     return pReference;
@@ -276,7 +277,7 @@ void il2c_default_mark_handler__(void* pReference)
 /////////////////////////////////////////////////////////////
 // GC process
 
-void il2c_step1_clear_gcmark__()
+void il2c_step1_clear_gcmark__(void)
 {
     // Clear header marks.
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
@@ -291,7 +292,7 @@ void il2c_step1_clear_gcmark__()
     }
 }
 
-void il2c_step2_mark_gcmark__()
+void il2c_step2_mark_gcmark__(void)
 {
     // Mark headers.
     IL2C_EXECUTION_FRAME* pCurrentFrame = g_pBeginFrame__;
@@ -334,7 +335,7 @@ void il2c_step2_mark_gcmark__()
     }
 }
 
-void il2c_step3_sweep_garbage__()
+void il2c_step3_sweep_garbage__(void)
 {
     // Sweep garbage if gcmark isn't marked.
     IL2C_REF_HEADER** ppUnlinkTarget = &g_pBeginHeader__;
@@ -362,7 +363,7 @@ void il2c_step3_sweep_garbage__()
     }
 }
 
-void il2c_collect()
+void il2c_collect(void)
 {
     il2c_check_heap();
     il2c_step1_clear_gcmark__();
@@ -748,7 +749,7 @@ void il2c_throw__(System_Exception* ex)
     il2c_throw_internal__(ex, pFrame);
 }
 
-void il2c_rethrow()
+void il2c_rethrow(void)
 {
     il2c_assert(g_pTopUnwindTarget__ != NULL);
     il2c_assert(g_pTopUnwindTarget__->pNext != NULL);   // Will cause unhandled exception
@@ -824,7 +825,7 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 /////////////////////////////////////////////////////////////
 // IL2C runtime initialzer / shutdown
 
-void il2c_initialize()
+void il2c_initialize(void)
 {
     il2c_initialize_heap();
 
@@ -837,7 +838,7 @@ void il2c_initialize()
 #endif
 }
 
-void il2c_shutdown()
+void il2c_shutdown(void)
 {
     il2c_assert(g_pTopUnwindTarget__ == NULL);
 
@@ -858,14 +859,14 @@ double il2c_fmod(double lhs, double rhs)
     return fmod(lhs, rhs);
 }
 
-void il2c_break()
+void il2c_break(void)
 {
     debug_break();
 }
 
 IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
 
-void il2c_throw_nullreferenceexception__()
+void il2c_throw_nullreferenceexception__(void)
 {
     // TODO: can turn to static allocate for NullReferenceException?
     System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
@@ -878,7 +879,7 @@ void il2c_throw_nullreferenceexception__()
 //   .NET 4 castclass message format: "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
 IL2C_CONST_STRING(il2c_invalid_cast_message, L"Specified cast is not valid.");
 
-void il2c_throw_invalidcastexception__()
+void il2c_throw_invalidcastexception__(void)
 {
     System_InvalidCastException* ex = il2c_get_uninitialized_object(System_InvalidCastException);
     System_InvalidCastException__ctor_1(ex, il2c_invalid_cast_message);

@@ -23,11 +23,12 @@ typedef long interlock_t;
 #include <intrin.h>
 #include <windows.h>
 #include <stdio.h>
+#include <errno.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -49,17 +50,18 @@ typedef long interlock_t;
 #define il2c_shutdown_heap() _CrtDumpMemoryLeaks()
 #define il2c_malloc malloc
 #define il2c_free free
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
-#define il2c_iyield() Sleep(0)
 
 #define il2c_longjmp longjmp
 
 // Support basic console features
-#define il2c_putws _putws
-#define il2c_fputws fputws
+#define il2c_wwriteline _putws
+#define il2c_wwrite(p) fputws(p, stdout)
 #define il2c_fgetws fgetws
 
 #ifdef _DEBUG
@@ -84,7 +86,7 @@ typedef long interlock_t;
 #include <intrin.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -107,20 +109,21 @@ typedef long interlock_t;
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
-#define il2c_iyield()
 
 #define il2c_longjmp longjmp
 
 extern void WriteLineToError(const wchar_t* pMessage);
 
 // Support basic console features
-//#define il2c_putws _putws
-//#define il2c_fputws fputws
+//#define il2c_wwriteline _putws
+//#define il2c_wwrite fputws
 //#define il2c_fgetws fgetws
 
 #if defined(_DEBUG)
@@ -141,7 +144,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <wdm.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -163,17 +166,18 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_shutdown_heap()
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
-#define il2c_iyield()
 
 #define il2c_longjmp longjmp
 
 // Support basic console features
-//#define il2c_putws _putws
-//#define il2c_fputws fputws
+//#define il2c_wwriteline _putws
+//#define il2c_wwrite fputws
 //#define il2c_fgetws fgetws
 
 #ifdef DBG
@@ -191,18 +195,19 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #endif
 
 ///////////////////////////////////////////////////
-// Another standard C platform (included gcc)
+// MinGW gcc (Win32)
 
-#if !defined(_MSC_VER)
+#if defined(__GNUC__) && defined(_WIN32)
 
 #include <x86intrin.h>
 #include <stdio.h>
+#include <errno.h>
 #include <wchar.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow _itow
+#define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
@@ -224,6 +229,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_shutdown_heap()
 #define il2c_malloc malloc
 #define il2c_free free
+#define il2c_mcalloc il2c_malloc
+#define Il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) __sync_lock_test_and_set((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
@@ -231,21 +238,118 @@ extern void WriteLineToError(const wchar_t* pMessage);
 
 #define il2c_longjmp longjmp
 
-#if defined(_POSIX_PRIORITY_SCHEDULING)
-#include <sched.h>
-#define il2c_iyield() sched_yield()
-#elif defined(_WIN32)
-#define il2c_iyield() Sleep(0)
-#else
-#define il2c_iyield()
-#endif
-
 // Support basic console features
-#define il2c_putws _putws
-#define il2c_fputws fputws
+#define il2c_wwriteline(p) fputws(p, stdout)    // TODO:
+#define il2c_wwrite(p) fputws(p, stdout)
 #define il2c_fgetws fgetws
 
 #define DEBUG_WRITE(step, message)
+
+#endif
+
+///////////////////////////////////////////////////
+// Another standard C platform (gcc)
+
+#if defined(__GNUC__) && !defined(_WIN32)
+
+#if defined(__x86_64__) || defined(__i386__)
+#include <x86intrin.h>
+#elif defined(__ARM_NEON__)
+#include <arm_neon.h>
+#elif defined(__IWMMXT__)
+#include <mmintrin.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <wchar.h>
+#define IL2C_USE_SIGNAL
+#include <signal.h>
+
+#if defined(__AZURE_SPHERE__)
+#include <applibs/log.h>
+#endif
+
+// Compatibility symbols (required platform depended functions)
+static inline wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%d", v); return b; }
+static inline wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lu", v); return b; }
+static inline wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%lld", v); return b; }
+static inline wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l) { swprintf(b, l, L"%llu", v); return b; }
+#define il2c_snwprintf swprintf
+#define il2c_wcstol wcstol
+#define il2c_wcstoul wcstoul
+#define il2c_wcstoll wcstoll
+#define il2c_wcstoull wcstoull
+#define il2c_wcstof wcstof
+#define il2c_wcstod wcstod
+#define il2c_wcscmp wcscmp
+#define il2c_wcsicmp wcscasecmp
+#define il2c_wcslen wcslen
+#define il2c_memcpy memcpy
+#define il2c_memset memset
+#define il2c_memcmp memcmp
+#define il2c_initialize_heap()
+#define il2c_check_heap()
+#define il2c_shutdown_heap()
+#define il2c_malloc malloc
+#define il2c_free free
+#define il2c_mcalloc il2c_malloc
+#define il2c_mcfree il2c_free
+#define il2c_ixchg(pDest, newValue) __sync_lock_test_and_set((interlock_t*)(pDest), (interlock_t)(newValue))
+#define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
+#define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
+#define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
+
+#define il2c_longjmp longjmp
+
+#if defined(__AZURE_SPHERE__)
+#define il2c_write Log_Debug
+static inline void il2c_writeline(const char* p) {
+    size_t l = strlen(p);
+    char* d = il2c_mcalloc(l + 2);
+    il2c_memcpy(d, p, l);
+    d[l] = '\n';
+    d[l + 1] = '\0';
+    il2c_write(d);
+    il2c_mcfree(d);
+}
+static inline void il2c_wwrite(const wchar_t* p) {
+    size_t l = il2c_wcslen(p);
+    char* d = il2c_mcalloc(l + 1);
+    size_t i;
+    for (i = 0; i < l; i++) d[i] = (char)(p[i]);
+    d[i] = '\0';
+    il2c_write(d);
+    il2c_mcfree(d);
+}
+static inline void il2c_wwriteline(const wchar_t* p) {
+    size_t l = il2c_wcslen(p);
+    char* d = il2c_mcalloc(l + 2);
+    size_t i;
+    for (i = 0; i < l; i++) d[i] = (char)(p[i]);
+    d[i++] = '\n';
+    d[i] = '\0';
+    il2c_write(d);
+    il2c_mcfree(d);
+}
+#define il2c_fgetws fgetws
+#if defined(_DEBUG)
+#define DEBUG_WRITE(step, message) { \
+    il2c_write(step); \
+    il2c_write(": "); \
+    il2c_writeline(message); }
+#else
+#define DEBUG_WRITE(step, message)
+#endif
+#else
+// Support basic console features
+#define il2c_wwrite(p) fputws(p, stdout)
+//#define il2c_wwrite fputws
+#define il2c_fgetws fgetws
+#define DEBUG_WRITE(step, message)
+#endif
 
 #endif
 
@@ -352,9 +456,9 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, ui
 
 extern void il2c_default_mark_handler__(void* pReference);
 
-extern void il2c_step1_clear_gcmark__();
-extern void il2c_step2_mark_gcmark__();
-extern void il2c_step3_sweep_garbage__();
+extern void il2c_step1_clear_gcmark__(void);
+extern void il2c_step2_mark_gcmark__(void);
+extern void il2c_step3_sweep_garbage__(void);
 
 #ifdef __cplusplus
 }

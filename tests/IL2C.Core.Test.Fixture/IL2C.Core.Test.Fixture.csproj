@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Remove="Templates\launch.json" />
     <None Remove="Templates\make.bat" />
+    <None Remove="Templates\make_libil2c.bat" />
     <None Remove="Templates\test_void.c" />
     <None Remove="Templates\test.c" />
     <None Remove="Templates\test.vcxproj" />
@@ -35,6 +36,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Templates\launch.json" />
     <EmbeddedResource Include="Templates\make.bat" />
+    <EmbeddedResource Include="Templates\make_libil2c.bat" />
     <EmbeddedResource Include="Templates\test_void.c" />
     <EmbeddedResource Include="Templates\test.c" />
     <EmbeddedResource Include="Templates\test.vcxproj" />
@@ -54,6 +56,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\IL2C.Core\IL2C.Core.csproj" />
     <ProjectReference Include="..\IL2C.Core.Test.Target\IL2C.Core.Test.Target.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="make_libil2c.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

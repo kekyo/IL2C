@@ -65,7 +65,7 @@ System_Array* il2c_new_array__(
     il2c_assert(elementSize >= 1);
 
     // -1 is "uint8_t Item[1]"
-    uintptr_t size = (uintptr_t)sizeof(System_Array) + length * elementSize;
+    uintptr_t size = (uintptr_t)sizeof(System_Array) + ((uintptr_t)length) * elementSize;
     
     System_Array* arr = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_Array), size);

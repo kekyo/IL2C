@@ -82,7 +82,7 @@ namespace IL2C.Metadata
         IMethodInformation[] NewSlotMethods { get; }
         IMethodInformation[] OverrideBaseMethods { get; }
 
-        string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false);
+        string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false);
 
         string CLanguageTypeName { get; }
         string CLanguageThisTypeName { get; }
@@ -96,6 +96,9 @@ namespace IL2C.Metadata
         ITypeInformation MakeArray();
 
         Type ResolveToRuntimeType();
+
+        NativeTypeAttribute NativeType { get; }
+        string CLanguageNativeTypeName { get; }
     }
 
     internal class TypeInformation
@@ -428,7 +431,7 @@ namespace IL2C.Metadata
         public override bool IsCLanguageFileScope =>
             (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
 
-        public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false)
+        public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false)
         {
             var sn = (symbolName != null) ? (" " + symbolName) : string.Empty;
 
@@ -436,7 +439,7 @@ namespace IL2C.Metadata
             {
                 return string.Format(
                     "{0}*{1}",
-                    this.ElementType.CLanguageTypeName,
+                    this.ElementType.GetCLanguageTypeName(null, false, nativeType),
                     sn);
             }
 
@@ -446,7 +449,7 @@ namespace IL2C.Metadata
                 {
                     return string.Format(
                         "{0}{1}[]",
-                        this.ElementType.GetCLanguageTypeName(null, true),
+                        this.ElementType.GetCLanguageTypeName(null, true, nativeType),
                         sn);
                 }
                 else
@@ -524,8 +527,10 @@ namespace IL2C.Metadata
             }
             else
             {
-                typeName = this.MangledName;
-                if (!this.IsValueType)
+                typeName = nativeType ?
+                    (this.NativeType?.SymbolName ?? this.Name) :
+                    this.MangledName;
+                if (this.IsReferenceType)
                 {
                     typeName += "*";
                 }
@@ -664,6 +669,17 @@ namespace IL2C.Metadata
 
             return typeof(object).Assembly.GetType(this.FriendlyName);
         }
+
+        public NativeTypeAttribute NativeType =>
+            (this.Definition as TypeDefinition)?.CustomAttributes.
+                Where(ca => ca.AttributeType.FullName == "IL2C.NativeTypeAttribute").
+                Select(ca => new NativeTypeAttribute(
+                    ca.ConstructorArguments[0].Value,
+                    ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+                FirstOrDefault();
+
+        public string CLanguageNativeTypeName =>
+            this.GetCLanguageTypeName(null, true, true);
 
         protected override TypeReference OnResolve(TypeReference member)
         {

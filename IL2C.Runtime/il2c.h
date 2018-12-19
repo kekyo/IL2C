@@ -10,27 +10,42 @@ extern "C" {
 #if defined(_MSC_VER)
 #include <intrin.h>
 #include <setjmp.h> // TODO:
-#else
+
+#elif defined(__GNUC__)
+
+#if defined(__x86_64__) || defined(__i386__)
 #include <x86intrin.h>
+#elif defined(__ARM_NEON__)
+#include <arm_neon.h>
+#elif defined(__IWMMXT__)
+#include <arm_neon.h>
+#endif
+
 #include <setjmp.h>
+#else
+
+#include <setjmp.h>
+
 #endif
 
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include <wchar.h>
 #include <float.h>
 #include <assert.h>
 
 #define il2c_assert assert
+#define il2c_memset memset
 #define il2c_setjmp setjmp
 #define IL2C_JUMP_BUFFER jmp_buf
 
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime
 
-extern void il2c_initialize();
-extern void il2c_shutdown();
+extern void il2c_initialize(void);
+extern void il2c_shutdown(void);
 
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
@@ -100,11 +115,11 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 #define il2c_adjusted_reference(pRawReference) \
     ((void*)((uint8_t*)(pRawReference) - (**(const intptr_t**)(pRawReference))))
 
-//#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
-//    ((pReference != NULL) ? \
-//        ((typeName*)(((uint8_t*)(pInterface)) - \
-//         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
-//        NULL)
+/*#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
+    ((pReference != NULL) ? \
+        ((typeName*)(((uint8_t*)(pInterface)) - \
+         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
+        NULL) */
 
 #define il2c_cast_to_interface__(interfaceTypeName, offset, pReference) \
     ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset)))
@@ -120,7 +135,7 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 ///////////////////////////////////////////////////////
 // Garbage collector related declarations
 
-extern void il2c_collect();
+extern void il2c_collect(void);
 
 extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type);
 #define il2c_get_uninitialized_object(typeName) \
@@ -165,6 +180,9 @@ typedef void* untyped_ptr;
 #include <System.IndexOutOfRangeException.h>
 #include <System.GC.h>
 
+// TODO: will remove after implemented packaging strategy.
+#include <System.Console.h>
+
 ///////////////////////////////////////////////////////
 // Boxing related declarations
 
@@ -195,7 +213,7 @@ extern void il2c_throw__(System_Exception* ex);
 #define il2c_throw(ex) \
     il2c_throw__((System_Exception*)ex)
 
-extern void il2c_rethrow();
+extern void il2c_rethrow(void);
 extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter);
 extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 
@@ -258,10 +276,10 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 // Another special runtime helper functions
 
 extern double il2c_fmod(double lhs, double rhs);
-extern void il2c_break();
+extern void il2c_break(void);
 
-extern void il2c_throw_nullreferenceexception__();
-extern void il2c_throw_invalidcastexception__();
+extern void il2c_throw_nullreferenceexception__(void);
+extern void il2c_throw_invalidcastexception__(void);
 
 ///////////////////////////////////////////////////////
 // Generator macro for runtime type information.

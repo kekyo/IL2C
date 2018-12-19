@@ -1,9 +1,20 @@
 @echo off
 
-set VERSION=0.3.3
+set VERSION=0.4.4
 
-rmdir /s /q artifacts
+if exist artifacts (
+    ren artifacts artifacts_
+    rmdir /s /q artifacts_
+)
 mkdir artifacts
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Interop
+echo.
+
+dotnet pack --configuration Release --include-symbols -p:VersionPrefix=%VERSION% IL2C.Interop\IL2C.Interop.csproj
+copy IL2C.Interop\bin\Release\IL2C.Interop.%VERSION%.symbols.nupkg artifacts\IL2C.Interop.%VERSION%.nupkg
 
 echo.
 echo ///////////////////////////////////////////////

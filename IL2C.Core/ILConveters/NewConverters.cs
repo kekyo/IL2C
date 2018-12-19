@@ -30,7 +30,7 @@ namespace IL2C.ILConverters
             return extractContext =>
             {
                 return new[] { string.Format(
-                    "memset({0}, 0x00, {1})",
+                    "il2c_memset({0}, 0x00, {1})",
                     extractContext.GetSymbolName(si),
                     type.CLanguageStaticSizeOfExpression) };
             };
@@ -138,7 +138,7 @@ namespace IL2C.ILConverters
                         var typeName = type.CLanguageTypeName;
                         return new[] {
                             string.Format(
-                                "memset(&{0}, 0x00, {1})",
+                                "il2c_memset(&{0}, 0x00, {1})",
                                 extractContext.GetSymbolName(thisSymbol),
                                 type.CLanguageStaticSizeOfExpression),
                             (overloadIndex >= 1) ?
@@ -157,7 +157,7 @@ namespace IL2C.ILConverters
                     {
                         // ValueType's default constructor not declared.
                         return new[] { string.Format(
-                            "memset(&{0}, 0x00, {1})",
+                            "il2c_memset(&{0}, 0x00, {1})",
                             extractContext.GetSymbolName(thisSymbol),
                             type.CLanguageStaticSizeOfExpression) };
                     }

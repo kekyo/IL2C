@@ -1,4 +1,5 @@
 ﻿using Mono.Cecil;
+using System.Linq;
 
 namespace IL2C.Metadata
 {
@@ -15,6 +16,9 @@ namespace IL2C.Metadata
         object DeclaredValue { get; }
 
         string GetCLanguageStaticPrototype(bool requireInitializerExpression);
+
+        NativeValueAttribute NativeValue { get; }
+        string CLanguageNativeSymbolName { get; }
     }
 
     internal sealed class FieldInformation
@@ -31,6 +35,9 @@ namespace IL2C.Metadata
         public override string MemberTypeName => this.IsStatic
             ? "Static field"
             : "Field";
+
+        public override string UniqueName =>
+            string.Format("{0}.{1}", this.Member.DeclaringType.FullName, this.Member.Name);
 
         public bool IsPublic => this.Definition.IsPublic;
         public bool IsFamily => this.Definition.IsFamily;
@@ -65,6 +72,17 @@ namespace IL2C.Metadata
         public override bool IsCLanguagePublicScope => this.Definition.IsPublic;
         public override bool IsCLanguageLinkageScope => !this.Definition.IsPublic && !this.Definition.IsPrivate;
         public override bool IsCLanguageFileScope => this.Definition.IsPrivate;
+
+        public NativeValueAttribute NativeValue =>
+            this.Definition.CustomAttributes.
+            Where(ca => ca.AttributeType.FullName == "IL2C.NativeValueAttribute").
+            Select(ca => new NativeValueAttribute(
+                ca.ConstructorArguments[0].Value,
+                ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+            FirstOrDefault();
+
+        public string CLanguageNativeSymbolName =>
+            this.NativeValue?.SymbolName ?? this.Name;
 
         protected override FieldDefinition OnResolve(FieldReference member)
         {

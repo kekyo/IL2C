@@ -1,7 +1,14 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IL2C Test: {testName}
 
-#include <il2c_combined.h>
+#if defined(_MSC_VER) && defined(_WIN32)
+
+#define _CRT_SECURE_NO_WARNINGS 1
+#define _CRTDBG_MAP_ALLOC 1
+#include <crtdbg.h>
+
+#endif
+
 #include "test.h"
 
 {body}

@@ -36,10 +36,11 @@
     </PropertyGroup>
     <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Debug'">
         <UseDebugLibraries>true</UseDebugLibraries>
+        <WholeProgramOptimization>false</WholeProgramOptimization>
     </PropertyGroup>
     <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Release'">
         <UseDebugLibraries>false</UseDebugLibraries>
-        <WholeProgramOptimization>false</WholeProgramOptimization>
+        <WholeProgramOptimization>true</WholeProgramOptimization>
     </PropertyGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -84,6 +85,7 @@
             <MapExports>true</MapExports>
             <OptimizeReferences>true</OptimizeReferences>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
+            <AdditionalDependencies>..\..\..\..\..\..\..\..\IL2C.Runtime\bin\$(Platform)\$(Configuration)\IL2C.Runtime.lib;%(AdditionalDependencies)</AdditionalDependencies>
         </Link>
         <Link Condition="'$(Configuration)'=='Debug'">
         </Link>

@@ -49,7 +49,8 @@ namespace IL2C.Metadata
         string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full);
         IParameterInformation[] GetParameters(ITypeInformation thisType);
 
-        PInvokeInfo PInvokeInfo { get; }
+        PInvokeInfo PInvokeInformation { get; }
+        NativeMethodAttribute NativeMethod { get; }
 
         string CLanguageFunctionName { get; }
         string CLanguageFunctionPrototype { get; }
@@ -353,8 +354,15 @@ namespace IL2C.Metadata
                 ToArray();
         }
 
-        public PInvokeInfo PInvokeInfo =>
+        public PInvokeInfo PInvokeInformation =>
             this.Definition.PInvokeInfo;
+        public NativeMethodAttribute NativeMethod =>
+            this.Definition.CustomAttributes.
+            Where(ca => ca.AttributeType.FullName == "IL2C.NativeMethodAttribute").
+            Select(ca => new NativeMethodAttribute(
+                ca.ConstructorArguments[0].Value,
+                ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+            FirstOrDefault();
 
         public override bool IsCLanguagePublicScope =>
             this.Definition.IsPublic;
@@ -370,12 +378,14 @@ namespace IL2C.Metadata
         {
             get
             {
-                var parametersString = string.Join(
-                    ", ",
-                    this.Parameters.Select(parameter => string.Format(
-                        "{0} {1}",
-                        parameter.TargetType.CLanguageTypeName,
-                        parameter.ParameterName)));
+                var parametersString = (this.Parameters.Length >= 1) ?
+                    string.Join(
+                        ", ",
+                        this.Parameters.Select(parameter => string.Format(
+                            "{0} {1}",
+                            parameter.TargetType.CLanguageTypeName,
+                            parameter.ParameterName))) :
+                    "void";
 
                 var returnTypeName =
                     this.ReturnType.CLanguageTypeName;
@@ -411,12 +421,14 @@ namespace IL2C.Metadata
             //   non virtual : int32_t (*DoThat)(System_String* this__)
             //   virtual     : int32_t (*DoThat)(void* this__)
 
-            var parametersString = string.Join(
-                ", ",
-                this.Parameters.Select((parameter, index) => string.Format(
-                    "{0}{1}",
-                    (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
-                    (overloadIndex == -1) ? string.Empty : (" " + parameter.ParameterName))));
+            var parametersString = (this.Parameters.Length >= 1) ?
+                string.Join(
+                    ", ",
+                    this.Parameters.Select((parameter, index) => string.Format(
+                        "{0}{1}",
+                        (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
+                        (overloadIndex == -1) ? string.Empty : (" " + parameter.ParameterName)))) :
+                "void";
 
             var returnTypeName = this.ReturnType.CLanguageTypeName;
             var name = this.GetCLanguageDeclarationName(overloadIndex);

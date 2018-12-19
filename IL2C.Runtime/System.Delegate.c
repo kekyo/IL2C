@@ -157,8 +157,8 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
             dlg->count__ = count;
 
             struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
-            il2c_memcpy(&pMethodtbl[0], &source->methodtbl__[0], index * sizeof(IL2C_METHOD_TABLE));
-            il2c_memcpy(&pMethodtbl[index], &source->methodtbl__[index + value->count__], (count - index) * sizeof(IL2C_METHOD_TABLE));
+            il2c_memcpy(&pMethodtbl[0], &source->methodtbl__[0], ((size_t)index) * sizeof(IL2C_METHOD_TABLE));
+            il2c_memcpy(&pMethodtbl[index], &source->methodtbl__[((uintptr_t)index) + value->count__], ((size_t)count - (size_t)index) * sizeof(IL2C_METHOD_TABLE));
 
             return dlg;
         }

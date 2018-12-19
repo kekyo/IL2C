@@ -185,18 +185,40 @@ namespace IL2C
             {
                 Debug.Assert(!method.HasBody);
 
-                var pinvokeInfo = method.PInvokeInfo;
-                if (pinvokeInfo != null)
+                if (method.NativeMethod != null)
                 {
-                    // TODO: Switch DllImport.Value include direction to library direction.
-                    if (string.IsNullOrWhiteSpace(pinvokeInfo.Module.Name))
+                    if (string.IsNullOrWhiteSpace(method.NativeMethod.IncludeFileName))
+                    {
+                        throw new InvalidProgramSequenceException(
+                            "Not given FunctionImport attribute argument. Name={0}",
+                            method.FriendlyName);
+                    }
+
+                    // TODO: register library name.
+                    prepareContext.RegisterImportIncludeFile(method.NativeMethod.IncludeFileName);
+                    if (method.ReturnType.NativeType != null)
+                    {
+                        prepareContext.RegisterImportIncludeFile(method.ReturnType.NativeType.IncludeFileName);
+                    }
+                    foreach (var parameter in method.Parameters)
+                    {
+                        if (parameter.TargetType.NativeType != null)
+                        {
+                            prepareContext.RegisterImportIncludeFile(parameter.TargetType.NativeType.IncludeFileName);
+                        }
+                    }
+                }
+                else if (method.PInvokeInformation != null)
+                {
+                    if (string.IsNullOrWhiteSpace(method.PInvokeInformation.Module.Name))
                     {
                         throw new InvalidProgramSequenceException(
                             "Not given DllImport attribute argument. Name={0}",
                             method.FriendlyName);
                     }
 
-                    prepareContext.RegisterPrivateIncludeFile(pinvokeInfo.Module.Name);
+                    // TODO: register library name.
+                    //prepareContext.RegisterPrivateIncludeFile(method.PInvokeInformation.Module.Name);
                 }
 
                 // Construct dummy information.
@@ -232,13 +254,21 @@ namespace IL2C
             // Lookup type references.
             foreach (var type in allTypes)
             {
+                // Register used type.
                 prepareContext.RegisterType(type);
             }
 
             // Lookup fields.
             foreach (var field in allTypes.SelectMany(type => type.Fields))
             {
+                // Register field type.
                 prepareContext.RegisterType(field.FieldType);
+
+                // Register include file from the native value.
+                if (field.NativeValue != null)
+                {
+                    prepareContext.RegisterImportIncludeFile(field.NativeValue.IncludeFileName);
+                }
             }
 
             // Construct result.

@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////
 // System.GC
 
-void System_GC_Collect()
+void System_GC_Collect(void)
 {
     il2c_collect();
 }

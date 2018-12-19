@@ -135,7 +135,9 @@ namespace IL2C
             ///////////////////////////////////////////////
 
             // Step 1-1: Create translation context.
-            var translateContext = new TranslateContext(caseInfo.Method.DeclaringType.Assembly.Location, false);
+            var translateContext = new TranslateContext(
+                caseInfo.Method.DeclaringType.Assembly.Location,
+                true);
 
             // Step 1-2: Prepare target methods.
             var targetTypes = new HashSet<string>(
@@ -176,7 +178,7 @@ namespace IL2C
 
             var body = CodeTextWriter.Create(new StringWriter(), "    ");
             AssemblyWriter.InternalWriteSourceCode(
-                body, translateContext, prepared, DebugInformationOptions.Full, false);
+                body, translateContext, prepared, DebugInformationOptions.CommentOnly, false);
             body.Flush();
 
             // Step 1-5: Write Visual C++ project file and Visual Studio Code launch config from template.

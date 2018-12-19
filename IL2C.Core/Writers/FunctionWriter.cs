@@ -203,7 +203,7 @@ namespace IL2C.Writers
                                 local.TargetType.CLanguageTypeName,
                                 name);
                             tw.WriteLine(
-                                "memset(&{0}, 0, sizeof {0});",
+                                "il2c_memset(&{0}, 0, sizeof {0});",
                                 name);
                         }
                     }
@@ -236,7 +236,7 @@ namespace IL2C.Writers
                         if (stack.TargetType.IsRequiredTraverse)
                         {
                             tw.WriteLine(
-                                "memset(&{0}, 0, sizeof {0});",
+                                "il2c_memset(&{0}, 0, sizeof {0});",
                                 name);
                         }
                     }
@@ -555,13 +555,28 @@ namespace IL2C.Writers
             tw.SplitLine();
         }
 
-        private static void InternalConvertFromPInvokeFunction(
+        private static string GetMarshaledInExpression(IParameterInformation parameter)
+        {
+            // TODO: UTF8 conversion
+            // TODO: Apply MarshalAsAttribute
+
+            if (parameter.TargetType.IsStringType)
+            {
+                return string.Format("{0}->string_body__", parameter.ParameterName);
+            }
+
+            return parameter.ParameterName;
+        }
+
+        private static void InternalConvertFromInternalCallFunction(
             CodeTextWriter tw,
-            IMethodInformation method,
-            PInvokeInfo pinvokeInfo)
+            IMethodInformation method)
         {
             tw.WriteLine("///////////////////////////////////////");
-            tw.WriteLine("// [6] P/Invoke: {0}", method.FriendlyName);
+            tw.WriteLine(
+                "// [6] {0}: {1}",
+                (method.PInvokeInformation != null) ? "P/Invoke" : "InternalCall",
+                method.FriendlyName);
             tw.SplitLine();
 
             tw.WriteLine(method.CLanguageFunctionPrototype);
@@ -571,16 +586,19 @@ namespace IL2C.Writers
             {
                 var arguments = string.Join(
                     ", ",
-                    method.Parameters.
-                        Select(parameter => parameter.GetMarshaledInExpression()));
+                    method.Parameters.Select(GetMarshaledInExpression));
+                var entryPointName =
+                    method.PInvokeInformation?.EntryPoint ??
+                    method.NativeMethod?.SymbolName ??
+                    method.Name;
 
                 if (method.ReturnType.IsVoidType)
                 {
-                    tw.WriteLine("{0}({1});", pinvokeInfo.EntryPoint, arguments);
+                    tw.WriteLine("{0}({1});", entryPointName, arguments);
                 }
                 else
                 {
-                    tw.WriteLine("return {0}({1});", pinvokeInfo.EntryPoint, arguments);
+                    tw.WriteLine("return {0}({1});", entryPointName, arguments);
                 }
             }
 
@@ -776,17 +794,6 @@ namespace IL2C.Writers
             // internalcall or DllImport
             if (method.IsExtern)
             {
-                // DllImport
-                var pinvokeInfo = method.PInvokeInfo;
-                if (pinvokeInfo != null)
-                {
-                    InternalConvertFromPInvokeFunction(
-                        tw,
-                        method,
-                        pinvokeInfo);
-                    return;
-                }
-
                 // Specialize delegate type methods:
                 if (method.DeclaringType.IsDelegate && !method.DeclaringType.IsAbstract)
                 {
@@ -808,9 +815,11 @@ namespace IL2C.Writers
                     }
                 }
 
-                throw new InvalidProgramSequenceException(
-                    "Unknown internallcall method declaration. Name={0}",
-                    method.FriendlyName);
+                // InternalCall or DllImport
+                InternalConvertFromInternalCallFunction(
+                    tw,
+                    method);
+                return;
             }
 
             if (!preparedFunctions.Functions.TryGetValue(method, out var preparedMethod))

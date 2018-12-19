@@ -31,14 +31,15 @@ namespace IL2C
             twHeader.WriteLine("#pragma once");
             twHeader.SplitLine();
             twHeader.WriteLine("#include <il2c.h>");
+            twHeader.SplitLine();
 
             if (includeAssemblyHeader)
             {
-                twHeader.SplitLine();
                 foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
                 {
                     twHeader.WriteLine("#include <{0}>", fileName);
                 }
+                twHeader.SplitLine();
             }
 
             // All types exclude privates
@@ -50,7 +51,6 @@ namespace IL2C
                 method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
                     prepared.Functions.ContainsKey(method));
 
-            twHeader.SplitLine();
             twHeader.WriteLine("#endif");
             twHeader.SplitLine();
         }
@@ -152,16 +152,22 @@ namespace IL2C
         {
             IExtractContextHost extractContext = translateContext;
 
+            foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
+            {
+                twSource.WriteLine("#include \"{0}\"", fileName);
+            }
+
+            foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
+            {
+                twSource.WriteLine("#include <{0}>", fileName);
+            }
+
             if (includeAssemblyHeader)
             {
-                foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
-                {
-                    twSource.WriteLine("#include \"{0}\"", fileName);
-                }
-
                 twSource.WriteLine("#include \"{0}.h\"", extractContext.Assembly.Name);
-                twSource.SplitLine();
             }
+
+            twSource.SplitLine();
 
             WriteConstStrings(twSource, translateContext);
             WriteDeclaredValues(twSource, translateContext);
@@ -190,9 +196,19 @@ namespace IL2C
                 foreach (var field in type.Fields.
                     Where(field => field.IsStatic))
                 {
-                    twSource.WriteLine(
-                        "{0};",
-                        field.GetCLanguageStaticPrototype(true));
+                    if (field.NativeValue != null)
+                    {
+                        twSource.WriteLine(
+                            "#define {0} {1}",
+                            field.MangledName,
+                            field.CLanguageNativeSymbolName);
+                    }
+                    else
+                    {
+                        twSource.WriteLine(
+                            "{0};",
+                            field.GetCLanguageStaticPrototype(true));
+                    }
                 }
                 twSource.SplitLine();
             }

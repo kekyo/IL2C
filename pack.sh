@@ -1,9 +1,17 @@
 #!/bin/sh
 
-VERSION=0.3.3
+VERSION=0.4.5
 
 rm -rf artifacts
 mkdir artifacts
+
+echo ""
+echo "///////////////////////////////////////////////"
+echo "// Build IL2C.Interop"
+echo ""
+
+dotnet pack --configuration Release --include-symbols -p:VersionPrefix=${VERSION} IL2C.Interop/IL2C.Interop.csproj
+cp IL2C.Interop/bin/Release/IL2C.Interop.${VERSION}.symbols.nupkg artifacts/IL2C.Interop.${VERSION}.nupkg
 
 echo ""
 echo "///////////////////////////////////////////////"

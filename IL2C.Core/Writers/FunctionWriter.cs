@@ -555,6 +555,19 @@ namespace IL2C.Writers
             tw.SplitLine();
         }
 
+        private static string GetMarshaledInExpression(IParameterInformation parameter)
+        {
+            // TODO: UTF8 conversion
+            // TODO: Apply MarshalAsAttribute
+
+            if (parameter.TargetType.IsStringType)
+            {
+                return string.Format("{0}->string_body__", parameter.ParameterName);
+            }
+
+            return parameter.ParameterName;
+        }
+
         private static void InternalConvertFromInternalCallFunction(
             CodeTextWriter tw,
             IMethodInformation method)
@@ -573,8 +586,7 @@ namespace IL2C.Writers
             {
                 var arguments = string.Join(
                     ", ",
-                    method.Parameters.
-                        Select(parameter => parameter.GetMarshaledInExpression()));
+                    method.Parameters.Select(GetMarshaledInExpression));
                 var entryPointName =
                     method.PInvokeInformation?.EntryPoint ??
                     method.NativeMethod?.EntryPoint ??

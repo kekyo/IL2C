@@ -537,19 +537,6 @@ namespace IL2C
             return temp.ToArray(elementType);
         }
 
-        public static string GetMarshaledInExpression(this IParameterInformation parameter)
-        {
-            if (parameter.TargetType.IsStringType)
-            {
-                return string.Format("{0}->string_body__", parameter.ParameterName);
-            }
-
-            return string.Format(
-                "({0}){1}",
-                parameter.TargetType.CLanguageNativeTypeName,
-                parameter.ParameterName);
-        }
-
         public struct RightExpressionGivenParameter
         {
             public readonly ITypeInformation TargetType;

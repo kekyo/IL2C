@@ -27,9 +27,17 @@ namespace IL2C.Writers
             foreach (var type in types.
                 Where(type => predictType(type)))
             {
+                // If it applied native type attribute.
+                if (type.NativeType != null)
+                {
+                    tw.WriteLine(
+                        "typedef {0} {1};",
+                        type.CLanguageNativeTypeName,
+                        type.MangledName);
+                }
                 // Unfortunately the enum type at C language has not the underlying type.
-                // IL2C emits the enum types using not C language syntax.
-                if (type.IsEnum)
+                // IL2C emits the enum types don't use C language syntax.
+                else if (type.IsEnum)
                 {
                     tw.WriteLine(
                         "typedef {0} {1};",

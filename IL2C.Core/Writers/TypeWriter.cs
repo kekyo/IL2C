@@ -118,8 +118,12 @@ namespace IL2C.Writers
                 tw.SplitLine();
             }
 
+            // The NativeTypeAttribute doesn't write the layout structure because it aliased from the native C language type.
+            if (declaredType.NativeType != null)
+            {
+            }
             // Delegate types doesn't write the layout structure because it's same as System.MulticastDelegate.
-            if (declaredType.IsDelegate)
+            else if (declaredType.IsDelegate)
             {
             }
             // Write a enum:

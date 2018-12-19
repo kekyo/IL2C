@@ -16,20 +16,13 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // [2-1] Types:
 
-typedef struct MT3620Blink_timespec MT3620Blink_timespec;
+typedef struct timespec MT3620Blink_timespec;
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.timespec
 
 // [1-2-1] Struct VTable layout (Same as System.ValueType)
 typedef System_ValueType_VTABLE_DECL__ MT3620Blink_timespec_VTABLE_DECL__;
-
-// [1-1-2] Struct layout
-struct MT3620Blink_timespec
-{
-    int32_t tv_sec;
-    int32_t tv_nsec;
-};
 
 // [1-5-1] VTable (Same as System.ValueType)
 #define MT3620Blink_timespec_VTABLE__ System_ValueType_VTABLE__
@@ -74,7 +67,7 @@ IL2C_RUNTIME_TYPE_END();
 
 void MT3620Blink_Program_nanosleep(MT3620Blink_timespec* time, MT3620Blink_timespec* dummy)
 {
-    nanosleep((struct timespec*)time, (struct timespec*)dummy);
+    nanosleep(time, dummy);
 }
 
 ///////////////////////////////////////
@@ -130,7 +123,7 @@ int32_t MT3620Blink_Program_Main(void)
 
     //-------------------
     // [3-6] IL body:
-#line 27 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(27): */
 
     /* IL_0000: nop  */
     /* IL_0001: ldloca.s local2__ */
@@ -147,7 +140,7 @@ int32_t MT3620Blink_Program_Main(void)
     stack0_1__ = local2__;
     /* IL_0012: stloc.0  */
     sleepTime = stack0_1__;
-#line 29 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(29): */
     /* IL_0013: ldloca.s dummy */
     stack0_0__ = &dummy;
     /* IL_0015: initobj MT3620Blink.timespec */
@@ -155,7 +148,7 @@ int32_t MT3620Blink_Program_Main(void)
     /* IL_001b: br.s IL_0057 */
     goto IL_0057;
 IL_001d:
-#line 32 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(32): */
     /* IL_001d: nop  */
     /* IL_001e: ldc.i4.0  */
     stack0_2__ = 0;
@@ -164,7 +157,7 @@ IL_001d:
     /* IL_0020: br.s IL_0048 */
     goto IL_0048;
 IL_0022:
-#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(34): */
     /* IL_0022: nop  */
     /* IL_0023: ldstr "Hello Azure Sphere with C#! " */
     frame__.stack0_4__ = string0__;
@@ -177,7 +170,7 @@ IL_0022:
     /* IL_0033: call System.Console.WriteLine */
     System_Console_WriteLine_10(frame__.stack0_4__);
     /* IL_0038: nop  */
-#line 36 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(36): */
     /* IL_0039: ldloca.s sleepTime */
     stack0_0__ = &sleepTime;
     /* IL_003b: ldloca.s dummy */
@@ -185,7 +178,7 @@ IL_0022:
     /* IL_003d: call MT3620Blink.Program.nanosleep */
     MT3620Blink_Program_nanosleep(stack0_0__, stack1_2__);
     /* IL_0042: nop  */
-#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(37): */
     /* IL_0043: nop  */
     /* IL_0044: ldloc.3  */
     stack0_2__ = index;
@@ -196,7 +189,7 @@ IL_0022:
     /* IL_0047: stloc.3  */
     index = stack0_2__;
 IL_0048:
-#line 33 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(33): */
     /* IL_0048: ldloc.3  */
     stack0_2__ = index;
     /* IL_0049: ldc.i4 10000 */
@@ -209,7 +202,7 @@ IL_0048:
     stack0_3__ = local4__;
     /* IL_0054: brtrue.s IL_0022 */
     if (stack0_3__) goto IL_0022;
-#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(38): */
     /* IL_0056: nop  */
 IL_0057:
     /* IL_0057: ldc.i4.1  */

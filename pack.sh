@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=0.4.5
+VERSION=0.4.6
 
 rm -rf artifacts
 mkdir artifacts

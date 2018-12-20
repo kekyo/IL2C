@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IL2C
+namespace System.Runtime.InteropServices
 {
-    public enum CharSet
+    public enum NativeCharSet
     {
         Unicode,
         UTF8

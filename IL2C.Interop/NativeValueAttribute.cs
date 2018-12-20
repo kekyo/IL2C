@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace IL2C
+namespace System.Runtime.InteropServices
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple=false, Inherited=false)]
     public sealed class NativeValueAttribute : NativeAttribute

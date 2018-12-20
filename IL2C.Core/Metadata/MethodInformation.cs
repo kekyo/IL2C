@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -358,7 +359,7 @@ namespace IL2C.Metadata
             this.Definition.PInvokeInfo;
         public NativeMethodAttribute NativeMethod =>
             this.Definition.CustomAttributes.
-            Where(ca => ca.AttributeType.FullName == "IL2C.NativeMethodAttribute").
+            Where(ca => ca.AttributeType.FullName == typeof(NativeMethodAttribute).FullName).
             Select(ca => new NativeMethodAttribute(
                 ca.ConstructorArguments[0].Value,
                 ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).

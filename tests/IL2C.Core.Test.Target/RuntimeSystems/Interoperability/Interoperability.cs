@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace IL2C.RuntimeSystems
 {
@@ -10,7 +11,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     public sealed class Interoperability
     {
-        [NativeMethod("windows.h", SymbolName = "OutputDebugStringW", CharSet = CharSet.Unicode)]
+        [NativeMethod("windows.h", SymbolName = "OutputDebugStringW", CharSet = NativeCharSet.Unicode)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void OutputDebugString(string message);
 

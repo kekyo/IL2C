@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace IL2C
+namespace System.Runtime.InteropServices
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
     public sealed class NativeMethodAttribute : NativeAttribute
@@ -16,10 +16,10 @@ namespace IL2C
         {
             this.LibraryFileName = (string)props["LibraryFileName"];
             var charSet = props["CharSet"];
-            if (charSet is CharSet) this.CharSet = (CharSet)charSet;
+            if (charSet is NativeCharSet) this.CharSet = (NativeCharSet)charSet;
         }
 
         public string LibraryFileName { get; set; }
-        public CharSet CharSet { get; set; }
+        public NativeCharSet CharSet { get; set; }
     }
 }

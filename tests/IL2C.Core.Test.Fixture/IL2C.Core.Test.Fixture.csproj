@@ -1,67 +1,67 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>net462</TargetFramework>
 
-    <OutputType>Library</OutputType>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <AssemblyName>IL2C.Core.Test.Fixture</AssemblyName>
-    <RootNamespace>IL2C</RootNamespace>
-    <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-    <VersionPrefix>0.3.1</VersionPrefix>
-    <Product>IL2C</Product>
-    <Trademark>IL2C</Trademark>
-    <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
-    <Description>A translator implementation of .NET intermediate language to C language.</Description>
-    <Company>Kouji Matsui (@kozy_kekyo)</Company>
-    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-    <LangVersion>7.1</LangVersion>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
+        <OutputType>Library</OutputType>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <AssemblyName>IL2C.Core.Test.Fixture</AssemblyName>
+        <RootNamespace>IL2C</RootNamespace>
+        <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
+        <VersionPrefix>0.3.1</VersionPrefix>
+        <Product>IL2C</Product>
+        <Trademark>IL2C</Trademark>
+        <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
+        <Description>A translator implementation of .NET intermediate language to C language.</Description>
+        <Company>Kouji Matsui (@kozy_kekyo)</Company>
+        <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+        <LangVersion>7.1</LangVersion>
+        <DebugType>full</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Templates\launch.json" />
-    <None Remove="Templates\make.bat" />
-    <None Remove="Templates\make_libil2c.bat" />
-    <None Remove="Templates\test_void.c" />
-    <None Remove="Templates\test.c" />
-    <None Remove="Templates\test.vcxproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Templates\launch.json" />
+        <None Remove="Templates\make.bat" />
+        <None Remove="Templates\make_libil2c.bat" />
+        <None Remove="Templates\test_void.c" />
+        <None Remove="Templates\test.c" />
+        <None Remove="Templates\test.vcxproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Templates\launch.json" />
-    <EmbeddedResource Include="Templates\make.bat" />
-    <EmbeddedResource Include="Templates\make_libil2c.bat" />
-    <EmbeddedResource Include="Templates\test_void.c" />
-    <EmbeddedResource Include="Templates\test.c" />
-    <EmbeddedResource Include="Templates\test.vcxproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Templates\launch.json" />
+        <EmbeddedResource Include="Templates\make.bat" />
+        <EmbeddedResource Include="Templates\make_libil2c.bat" />
+        <EmbeddedResource Include="Templates\test_void.c" />
+        <EmbeddedResource Include="Templates\test.c" />
+        <EmbeddedResource Include="Templates\test.vcxproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="NUnit" Version="3.11.0" />
-    <packagereference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.1" />
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+        <PackageReference Include="NUnit" Version="3.11.0" />
+        <packagereference Include="NUnit3TestAdapter" Version="3.10.0" />
+        <PackageReference Include="Mono.Cecil" Version="0.10.1" />
+        <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4" />
+        <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\IL2C.Core\IL2C.Core.csproj" />
-    <ProjectReference Include="..\IL2C.Core.Test.Target\IL2C.Core.Test.Target.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\IL2C.Core\IL2C.Core.csproj" />
+        <ProjectReference Include="..\IL2C.Core.Test.Target\IL2C.Core.Test.Target.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="make_libil2c.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="make_libil2c.bat">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>

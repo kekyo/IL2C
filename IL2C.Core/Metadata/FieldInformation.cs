@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace IL2C.Metadata
 {
@@ -75,7 +76,7 @@ namespace IL2C.Metadata
 
         public NativeValueAttribute NativeValue =>
             this.Definition.CustomAttributes.
-            Where(ca => ca.AttributeType.FullName == "IL2C.NativeValueAttribute").
+            Where(ca => ca.AttributeType.FullName == typeof(NativeValueAttribute).FullName).
             Select(ca => new NativeValueAttribute(
                 ca.ConstructorArguments[0].Value,
                 ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).

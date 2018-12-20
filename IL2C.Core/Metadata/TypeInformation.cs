@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
@@ -402,8 +403,9 @@ namespace IL2C.Metadata
                 var definition = this.Definition as TypeDefinition;
                 if (definition != null)
                 {
-                    return definition.IsPublic || definition.IsNestedPublic
-                        || definition.IsNestedFamily || definition.IsNestedFamilyOrAssembly;
+                    return definition.IsPublic ||
+                        definition.IsNestedPublic ||
+                        definition.IsNestedFamilyOrAssembly;
                 }
                 else
                 {
@@ -419,7 +421,9 @@ namespace IL2C.Metadata
                 var definition = this.Definition as TypeDefinition;
                 if (definition != null)
                 {
-                    return definition.IsNotPublic || definition.IsNestedAssembly;
+                    return
+                        definition.IsNotPublic ||
+                        definition.IsNestedAssembly;
                 }
                 else
                 {
@@ -672,7 +676,7 @@ namespace IL2C.Metadata
 
         public NativeTypeAttribute NativeType =>
             (this.Definition as TypeDefinition)?.CustomAttributes.
-                Where(ca => ca.AttributeType.FullName == "IL2C.NativeTypeAttribute").
+                Where(ca => ca.AttributeType.FullName == typeof(NativeTypeAttribute).FullName).
                 Select(ca => new NativeTypeAttribute(
                     ca.ConstructorArguments[0].Value,
                     ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).

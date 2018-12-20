@@ -8,11 +8,9 @@ namespace MT3620Blink
 {
     public static class Program
     {
-        private static void sleep(int msec)
+        private static void sleep(int nsec)
         {
-            var sec = msec / 1000;
-            var nsec = (msec % 1000) * 1_000_000;
-            var sleepTime = new timespec { tv_sec = sec, tv_nsec = nsec };
+            var sleepTime = new timespec { tv_nsec = nsec };
             var dummy = new timespec();
 
             Interops.nanosleep(ref sleepTime, ref dummy);
@@ -29,19 +27,26 @@ namespace MT3620Blink
                 Interops.MT3620_RDB_BUTTON_A);
 
             var flag = false;
-            var blinkIntervals = new[] { 125, 250, 500 };
+            var blinkIntervals = new[] { 125_000_000, 250_000_000, 500_000_000 };
             var blinkIntervalIndex = 0;
+            var lastButtonValue = GPIO_Value_Type.GPIO_Value_High;
 
             while (true)
             {
-                Interops.GPIO_SetValue(ledFd, flag ? GPIO_Value_Type.GPIO_Value_High : GPIO_Value_Type.GPIO_Value_Low);
+                Interops.GPIO_SetValue(
+                    ledFd,
+                    flag ? GPIO_Value_Type.GPIO_Value_High : GPIO_Value_Type.GPIO_Value_Low);
                 flag = !flag;
 
                 Interops.GPIO_GetValue(buttonFd, out var buttonValue);
-                if (buttonValue == GPIO_Value_Type.GPIO_Value_Low)
+                if (buttonValue != lastButtonValue)
                 {
-                    blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
+                    if (buttonValue == GPIO_Value_Type.GPIO_Value_Low)
+                    {
+                        blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
+                    }
                 }
+                lastButtonValue = buttonValue;
 
                 sleep(blinkIntervals[blinkIntervalIndex]);
             }

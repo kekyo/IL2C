@@ -8,9 +8,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 // [12-1] Declared values:
 
-// .<PrivateImplementationDetails>.7734D3D3C99BF9D6C0978B1C7DC80C0763B95E35
+// .<PrivateImplementationDetails>.C55E5D2E10ACF1F04C09C95EC16BC769B727C58F
 static const int32_t declaredValue0__[] =
-    { 125, 250, 500 };
+    { 125000000, 250000000, 500000000 };
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:
@@ -286,31 +286,28 @@ IL2C_RUNTIME_TYPE_END();
 // [9-4] Type: MT3620Blink.Program
 
 ///////////////////////////////////////
-// [3] MT3620Blink.Program.sleep(System.Int32 msec)
+// [3] MT3620Blink.Program.sleep(System.Int32 nsec)
 
 //-------------------
 // [3-2] Function body:
 
-void MT3620Blink_Program_sleep(int32_t msec)
+void MT3620Blink_Program_sleep(int32_t nsec)
 {
     //-------------------
     // [3-3] Local variables (!objref):
 
-    int32_t sec = 0;
-    int32_t nsec = 0;
     MT3620Blink_timespec sleepTime;
     il2c_memset(&sleepTime, 0, sizeof sleepTime);
     MT3620Blink_timespec dummy;
     il2c_memset(&dummy, 0, sizeof dummy);
-    MT3620Blink_timespec local4__;
-    il2c_memset(&local4__, 0, sizeof local4__);
+    MT3620Blink_timespec local2__;
+    il2c_memset(&local2__, 0, sizeof local2__);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
-    int32_t stack0_0__;
-    MT3620Blink_timespec* stack0_1__;
-    MT3620Blink_timespec stack0_2__;
+    MT3620Blink_timespec* stack0_0__;
+    MT3620Blink_timespec stack0_1__;
     int32_t stack1_0__;
     MT3620Blink_timespec* stack1_1__;
 
@@ -319,63 +316,35 @@ void MT3620Blink_Program_sleep(int32_t msec)
 /* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(12): */
 
     /* IL_0000: nop  */
-    /* IL_0001: ldarg.0  */
-    stack0_0__ = msec;
-    /* IL_0002: ldc.i4 1000 */
-    stack1_0__ = 1000;
-    /* IL_0007: div  */
-    stack0_0__ = stack0_0__ / stack1_0__;
-    /* IL_0008: stloc.0  */
-    sec = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(14): */
-    /* IL_0009: ldarg.0  */
-    stack0_0__ = msec;
-    /* IL_000a: ldc.i4 1000 */
-    stack1_0__ = 1000;
-    /* IL_000f: rem  */
-    stack0_0__ = stack0_0__ % stack1_0__;
-    /* IL_0010: ldc.i4 1000000 */
-    stack1_0__ = 1000000;
-    /* IL_0015: mul  */
-    stack0_0__ = stack0_0__ * stack1_0__;
-    /* IL_0016: stloc.1  */
-    nsec = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(15): */
-    /* IL_0017: ldloca.s local4__ */
-    stack0_1__ = &local4__;
-    /* IL_0019: initobj MT3620Blink.timespec */
-    il2c_memset(stack0_1__, 0x00, sizeof(MT3620Blink_timespec));
-    /* IL_001f: ldloca.s local4__ */
-    stack0_1__ = &local4__;
-    /* IL_0021: ldloc.0  */
-    stack1_0__ = sec;
-    /* IL_0022: stfld MT3620Blink.timespec.tv_sec */
-    stack0_1__->tv_sec = stack1_0__;
-    /* IL_0027: ldloca.s local4__ */
-    stack0_1__ = &local4__;
-    /* IL_0029: ldloc.1  */
+    /* IL_0001: ldloca.s local2__ */
+    stack0_0__ = &local2__;
+    /* IL_0003: initobj MT3620Blink.timespec */
+    il2c_memset(stack0_0__, 0x00, sizeof(MT3620Blink_timespec));
+    /* IL_0009: ldloca.s local2__ */
+    stack0_0__ = &local2__;
+    /* IL_000b: ldarg.0  */
     stack1_0__ = nsec;
-    /* IL_002a: stfld MT3620Blink.timespec.tv_nsec */
-    stack0_1__->tv_nsec = stack1_0__;
-    /* IL_002f: ldloc.s local4__ */
-    stack0_2__ = local4__;
-    /* IL_0031: stloc.2  */
-    sleepTime = stack0_2__;
+    /* IL_000c: stfld MT3620Blink.timespec.tv_nsec */
+    stack0_0__->tv_nsec = stack1_0__;
+    /* IL_0011: ldloc.2  */
+    stack0_1__ = local2__;
+    /* IL_0012: stloc.0  */
+    sleepTime = stack0_1__;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(14): */
+    /* IL_0013: ldloca.s dummy */
+    stack0_0__ = &dummy;
+    /* IL_0015: initobj MT3620Blink.timespec */
+    il2c_memset(stack0_0__, 0x00, sizeof(MT3620Blink_timespec));
 /* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(16): */
-    /* IL_0032: ldloca.s dummy */
-    stack0_1__ = &dummy;
-    /* IL_0034: initobj MT3620Blink.timespec */
-    il2c_memset(stack0_1__, 0x00, sizeof(MT3620Blink_timespec));
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(18): */
-    /* IL_003a: ldloca.s sleepTime */
-    stack0_1__ = &sleepTime;
-    /* IL_003c: ldloca.s dummy */
+    /* IL_001b: ldloca.s sleepTime */
+    stack0_0__ = &sleepTime;
+    /* IL_001d: ldloca.s dummy */
     stack1_1__ = &dummy;
-    /* IL_003e: call MT3620Blink.Interops.nanosleep */
-    MT3620Blink_Interops_nanosleep(stack0_1__, stack1_1__);
-    /* IL_0043: nop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(19): */
-    /* IL_0044: ret  */
+    /* IL_001f: call MT3620Blink.Interops.nanosleep */
+    MT3620Blink_Interops_nanosleep(stack0_0__, stack1_1__);
+    /* IL_0024: nop  */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(17): */
+    /* IL_0025: ret  */
     return;
 }
 
@@ -408,10 +377,13 @@ int32_t MT3620Blink_Program_Main(void)
     int32_t buttonFd = 0;
     bool flag = false;
     int32_t blinkIntervalIndex = 0;
+    MT3620Blink_GPIO_Value_Type lastButtonValue;
+    il2c_memset(&lastButtonValue, 0, sizeof lastButtonValue);
     MT3620Blink_GPIO_Value_Type buttonValue;
     il2c_memset(&buttonValue, 0, sizeof buttonValue);
-    bool local6__ = false;
     bool local7__ = false;
+    bool local8__ = false;
+    bool local9__ = false;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
@@ -422,7 +394,8 @@ int32_t MT3620Blink_Program_Main(void)
     int32_t stack1_0__;
     bool stack1_2__;
     MT3620Blink_GPIO_Value_Type* stack1_3__;
-    uintptr_t stack1_4__;
+    MT3620Blink_GPIO_Value_Type stack1_4__;
+    uintptr_t stack1_5__;
     int32_t stack2_0__;
     System_RuntimeFieldHandle stack2_1__;
 
@@ -435,7 +408,7 @@ int32_t MT3620Blink_Program_Main(void)
 
     //-------------------
     // [3-6] IL body:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(22): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(20): */
 
     /* IL_0000: nop  */
     /* IL_0001: ldsfld MT3620Blink.Interops.MT3620_RDB_LED1_RED */
@@ -448,128 +421,158 @@ int32_t MT3620Blink_Program_Main(void)
     stack0_0__ = MT3620Blink_Interops_GPIO_OpenAsOutput(stack0_0__, (MT3620Blink_GPIO_OutputMode_Type)stack1_0__, (MT3620Blink_GPIO_Value_Type)stack2_0__);
     /* IL_000d: stloc.0  */
     ledFd = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(28): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(26): */
     /* IL_000e: ldsfld MT3620Blink.Interops.MT3620_RDB_BUTTON_A */
     stack0_0__ = MT3620Blink_Interops_MT3620_RDB_BUTTON_A;
     /* IL_0013: call MT3620Blink.Interops.GPIO_OpenAsInput */
     stack0_0__ = MT3620Blink_Interops_GPIO_OpenAsInput(stack0_0__);
     /* IL_0018: stloc.1  */
     buttonFd = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(31): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(29): */
     /* IL_0019: ldc.i4.0  */
     stack0_0__ = 0;
     /* IL_001a: stloc.2  */
     flag = (stack0_0__) ? true : false;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(32): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(30): */
     /* IL_001b: ldc.i4.3  */
     stack0_0__ = 3;
     /* IL_001c: newarr System.Int32 */
     frame__.stack0_1__ = il2c_new_array(System_Int32, stack0_0__);
     /* IL_0021: dup  */
     frame__.stack1_1__ = frame__.stack0_1__;
-    /* IL_0022: ldtoken .<PrivateImplementationDetails>.7734D3D3C99BF9D6C0978B1C7DC80C0763B95E35 */
+    /* IL_0022: ldtoken .<PrivateImplementationDetails>.C55E5D2E10ACF1F04C09C95EC16BC769B727C58F */
     stack2_1__.size__ = sizeof(declaredValue0__);
     stack2_1__.field__ = declaredValue0__;
     /* IL_0027: call System.Runtime.CompilerServices.RuntimeHelpers.InitializeArray */
     System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray((System_Array*)frame__.stack1_1__, stack2_1__);
     /* IL_002c: stloc.3  */
     frame__.blinkIntervals = frame__.stack0_1__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(33): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(31): */
     /* IL_002d: ldc.i4.0  */
     stack0_0__ = 0;
     /* IL_002e: stloc.s blinkIntervalIndex */
     blinkIntervalIndex = stack0_0__;
-    /* IL_0030: br.s IL_0071 */
-    goto IL_0071;
-IL_0032:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(36): */
-    /* IL_0032: nop  */
-    /* IL_0033: ldloc.0  */
-    stack0_0__ = ledFd;
-    /* IL_0034: ldloc.2  */
-    stack1_2__ = flag;
-    /* IL_0035: brtrue.s IL_003a */
-    if (stack1_2__) goto IL_003a;
-    /* IL_0037: ldc.i4.0  */
-    stack1_0__ = 0;
-    /* IL_0038: br.s IL_003b */
-    goto IL_003b;
-IL_003a:
-    /* IL_003a: ldc.i4.1  */
-    stack1_0__ = 1;
-IL_003b:
-    /* IL_003b: call MT3620Blink.Interops.GPIO_SetValue */
-    stack0_0__ = MT3620Blink_Interops_GPIO_SetValue(stack0_0__, (MT3620Blink_GPIO_Value_Type)stack1_0__);
-    /* IL_0040: pop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(38): */
-    /* IL_0041: ldloc.2  */
-    stack0_2__ = flag;
-    /* IL_0042: ldc.i4.0  */
-    stack1_0__ = 0;
-    /* IL_0043: ceq  */
-    stack0_0__ = ((int32_t)stack0_2__ == (int32_t)stack1_0__) ? 1 : 0;
-    /* IL_0045: stloc.2  */
-    flag = (stack0_0__) ? true : false;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(40): */
-    /* IL_0046: ldloc.1  */
-    stack0_0__ = buttonFd;
-    /* IL_0047: ldloca.s buttonValue */
-    stack1_3__ = &buttonValue;
-    /* IL_0049: call MT3620Blink.Interops.GPIO_GetValue */
-    stack0_0__ = MT3620Blink_Interops_GPIO_GetValue(stack0_0__, stack1_3__);
-    /* IL_004e: pop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(41): */
-    /* IL_004f: ldloc.s buttonValue */
-    stack0_3__ = buttonValue;
-    /* IL_0051: ldc.i4.0  */
-    stack1_0__ = 0;
-    /* IL_0052: ceq  */
-    stack0_0__ = ((int32_t)stack0_3__ == (int32_t)stack1_0__) ? 1 : 0;
-    /* IL_0054: stloc.s local6__ */
-    local6__ = (stack0_0__) ? true : false;
-    /* IL_0056: ldloc.s local6__ */
-    stack0_2__ = local6__;
-    /* IL_0058: brfalse.s IL_0066 */
-    if (!(stack0_2__)) goto IL_0066;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(42): */
-    /* IL_005a: nop  */
-    /* IL_005b: ldloc.s blinkIntervalIndex */
-    stack0_0__ = blinkIntervalIndex;
-    /* IL_005d: ldc.i4.1  */
-    stack1_0__ = 1;
-    /* IL_005e: add  */
-    stack0_0__ = stack0_0__ + stack1_0__;
-    /* IL_005f: ldloc.3  */
-    frame__.stack1_1__ = frame__.blinkIntervals;
-    /* IL_0060: ldlen  */
-    stack1_4__ = (uintptr_t)frame__.stack1_1__->Length;
-    /* IL_0061: conv.i4  */
-    stack1_0__ = (int32_t)stack1_4__;
-    /* IL_0062: rem  */
-    stack0_0__ = stack0_0__ % stack1_0__;
-    /* IL_0063: stloc.s blinkIntervalIndex */
-    blinkIntervalIndex = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(44): */
-    /* IL_0065: nop  */
-IL_0066:
-    /* IL_0066: ldloc.3  */
-    frame__.stack0_1__ = frame__.blinkIntervals;
-    /* IL_0067: ldloc.s blinkIntervalIndex */
-    stack1_0__ = blinkIntervalIndex;
-    /* IL_0069: ldelem.i4  */
-    stack0_0__ = il2c_array_item(frame__.stack0_1__, int32_t, stack1_0__);
-    /* IL_006a: call MT3620Blink.Program.sleep */
-    MT3620Blink_Program_sleep(stack0_0__);
-    /* IL_006f: nop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(47): */
-    /* IL_0070: nop  */
-IL_0071:
-    /* IL_0071: ldc.i4.1  */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(32): */
+    /* IL_0030: ldc.i4.1  */
     stack0_0__ = 1;
-    /* IL_0072: stloc.s local7__ */
+    /* IL_0031: stloc.s lastButtonValue */
+    lastButtonValue = (MT3620Blink_GPIO_Value_Type)stack0_0__;
+    /* IL_0033: br.s IL_0089 */
+    goto IL_0089;
+IL_0035:
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(35): */
+    /* IL_0035: nop  */
+    /* IL_0036: ldloc.0  */
+    stack0_0__ = ledFd;
+    /* IL_0037: ldloc.2  */
+    stack1_2__ = flag;
+    /* IL_0038: brtrue.s IL_003d */
+    if (stack1_2__) goto IL_003d;
+    /* IL_003a: ldc.i4.0  */
+    stack1_0__ = 0;
+    /* IL_003b: br.s IL_003e */
+    goto IL_003e;
+IL_003d:
+    /* IL_003d: ldc.i4.1  */
+    stack1_0__ = 1;
+IL_003e:
+    /* IL_003e: call MT3620Blink.Interops.GPIO_SetValue */
+    stack0_0__ = MT3620Blink_Interops_GPIO_SetValue(stack0_0__, (MT3620Blink_GPIO_Value_Type)stack1_0__);
+    /* IL_0043: pop  */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(39): */
+    /* IL_0044: ldloc.2  */
+    stack0_2__ = flag;
+    /* IL_0045: ldc.i4.0  */
+    stack1_0__ = 0;
+    /* IL_0046: ceq  */
+    stack0_0__ = ((int32_t)stack0_2__ == (int32_t)stack1_0__) ? 1 : 0;
+    /* IL_0048: stloc.2  */
+    flag = (stack0_0__) ? true : false;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(41): */
+    /* IL_0049: ldloc.1  */
+    stack0_0__ = buttonFd;
+    /* IL_004a: ldloca.s buttonValue */
+    stack1_3__ = &buttonValue;
+    /* IL_004c: call MT3620Blink.Interops.GPIO_GetValue */
+    stack0_0__ = MT3620Blink_Interops_GPIO_GetValue(stack0_0__, stack1_3__);
+    /* IL_0051: pop  */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(42): */
+    /* IL_0052: ldloc.s buttonValue */
+    stack0_3__ = buttonValue;
+    /* IL_0054: ldloc.s lastButtonValue */
+    stack1_4__ = lastButtonValue;
+    /* IL_0056: ceq  */
+    stack0_0__ = ((int32_t)stack0_3__ == (int32_t)stack1_4__) ? 1 : 0;
+    /* IL_0058: ldc.i4.0  */
+    stack1_0__ = 0;
+    /* IL_0059: ceq  */
+    stack0_0__ = ((int32_t)stack0_0__ == (int32_t)stack1_0__) ? 1 : 0;
+    /* IL_005b: stloc.s local7__ */
     local7__ = (stack0_0__) ? true : false;
-    /* IL_0074: br.s IL_0032 */
-    goto IL_0032;
+    /* IL_005d: ldloc.s local7__ */
+    stack0_2__ = local7__;
+    /* IL_005f: brfalse.s IL_007a */
+    if (!(stack0_2__)) goto IL_007a;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(43): */
+    /* IL_0061: nop  */
+    /* IL_0062: ldloc.s buttonValue */
+    stack0_3__ = buttonValue;
+    /* IL_0064: ldc.i4.0  */
+    stack1_0__ = 0;
+    /* IL_0065: ceq  */
+    stack0_0__ = ((int32_t)stack0_3__ == (int32_t)stack1_0__) ? 1 : 0;
+    /* IL_0067: stloc.s local8__ */
+    local8__ = (stack0_0__) ? true : false;
+    /* IL_0069: ldloc.s local8__ */
+    stack0_2__ = local8__;
+    /* IL_006b: brfalse.s IL_0079 */
+    if (!(stack0_2__)) goto IL_0079;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(45): */
+    /* IL_006d: nop  */
+    /* IL_006e: ldloc.s blinkIntervalIndex */
+    stack0_0__ = blinkIntervalIndex;
+    /* IL_0070: ldc.i4.1  */
+    stack1_0__ = 1;
+    /* IL_0071: add  */
+    stack0_0__ = stack0_0__ + stack1_0__;
+    /* IL_0072: ldloc.3  */
+    frame__.stack1_1__ = frame__.blinkIntervals;
+    /* IL_0073: ldlen  */
+    stack1_5__ = (uintptr_t)frame__.stack1_1__->Length;
+    /* IL_0074: conv.i4  */
+    stack1_0__ = (int32_t)stack1_5__;
+    /* IL_0075: rem  */
+    stack0_0__ = stack0_0__ % stack1_0__;
+    /* IL_0076: stloc.s blinkIntervalIndex */
+    blinkIntervalIndex = stack0_0__;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(47): */
+    /* IL_0078: nop  */
+IL_0079:
+    /* IL_0079: nop  */
+IL_007a:
+    /* IL_007a: ldloc.s buttonValue */
+    stack0_3__ = buttonValue;
+    /* IL_007c: stloc.s lastButtonValue */
+    lastButtonValue = stack0_3__;
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(51): */
+    /* IL_007e: ldloc.3  */
+    frame__.stack0_1__ = frame__.blinkIntervals;
+    /* IL_007f: ldloc.s blinkIntervalIndex */
+    stack1_0__ = blinkIntervalIndex;
+    /* IL_0081: ldelem.i4  */
+    stack0_0__ = il2c_array_item(frame__.stack0_1__, int32_t, stack1_0__);
+    /* IL_0082: call MT3620Blink.Program.sleep */
+    MT3620Blink_Program_sleep(stack0_0__);
+    /* IL_0087: nop  */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(52): */
+    /* IL_0088: nop  */
+IL_0089:
+    /* IL_0089: ldc.i4.1  */
+    stack0_0__ = 1;
+    /* IL_008a: stloc.s local9__ */
+    local9__ = (stack0_0__) ? true : false;
+    /* IL_008c: br.s IL_0035 */
+    goto IL_0035;
 }
 
 //////////////////////

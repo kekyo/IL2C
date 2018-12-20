@@ -1,6 +1,7 @@
 ﻿#include <mt3620_rdb.h>
-#include <applibs/gpio.h>
+#include <sys/epoll.h>
 #include <time.h>
+#include <applibs/gpio.h>
 #include "MT3620Blink.h"
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,9 @@ extern "C" {
 typedef struct timespec MT3620Blink_timespec;
 typedef GPIO_OutputMode_Type MT3620Blink_GPIO_OutputMode_Type;
 typedef GPIO_Value_Type MT3620Blink_GPIO_Value_Type;
+typedef epoll_data_t MT3620Blink_epoll_data_t;
+typedef struct epoll_event MT3620Blink_epoll_event;
+typedef struct MT3620Blink_Interops MT3620Blink_Interops;
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.timespec
@@ -58,15 +62,62 @@ typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_Value_Type_VTABLE_DECL__;
 // [1-4] Runtime type information
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_Value_Type);
 
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.epoll_data_t
+
+// [1-2-1] Struct VTable layout (Same as System.ValueType)
+typedef System_ValueType_VTABLE_DECL__ MT3620Blink_epoll_data_t_VTABLE_DECL__;
+
+// [1-5-1] VTable (Same as System.ValueType)
+#define MT3620Blink_epoll_data_t_VTABLE__ System_ValueType_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_epoll_data_t);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.epoll_event
+
+// [1-2-1] Struct VTable layout (Same as System.ValueType)
+typedef System_ValueType_VTABLE_DECL__ MT3620Blink_epoll_event_VTABLE_DECL__;
+
+// [1-5-1] VTable (Same as System.ValueType)
+#define MT3620Blink_epoll_event_VTABLE__ System_ValueType_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_epoll_event);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.Interops
+
+// [1-2-1] Class VTable layout (Same as System.Object)
+typedef System_Object_VTABLE_DECL__ MT3620Blink_Interops_VTABLE_DECL__;
+
+// [1-1-2] Class layout
+struct MT3620Blink_Interops
+{
+    MT3620Blink_Interops_VTABLE_DECL__* vptr0__;
+};
+
+// [1-5-1] VTable (Same as System.Object)
+#define MT3620Blink_Interops_VTABLE__ System_Object_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Interops);
+
 //////////////////////////////////////////////////////////////////////////////////
 // [2-2] Public static fields:
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods:
 
-// [2-4] Member methods: MT3620Blink.Program
+// [2-4] Member methods: MT3620Blink.Interops
 
-extern /* static */ int32_t MT3620Blink_Program_Main(void);
+extern /* static */ void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* time, MT3620Blink_timespec* dummy);
+extern /* static */ int32_t MT3620Blink_Interops_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue);
+extern /* static */ int32_t MT3620Blink_Interops_GPIO_SetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type value);
+extern /* static */ int32_t MT3620Blink_Interops_epoll_create1(int32_t flags);
+extern /* static */ int32_t MT3620Blink_Interops_epoll_ctl(int32_t epollfd, int32_t op, int32_t fd, MT3620Blink_epoll_event* ev);
+extern /* static */ int32_t MT3620Blink_Interops_epoll_wait(int32_t epollfd, MT3620Blink_epoll_event* ev, int32_t maxevents, int32_t timeout);
 
 #ifdef __cplusplus
 }
@@ -75,7 +126,9 @@ extern /* static */ int32_t MT3620Blink_Program_Main(void);
 //////////////////////////////////////////////////////////////////////////////////
 // [9-3] Declare static fields:
 
-#define MT3620Blink_Program_MT3620_RDB_LED1_RED MT3620_RDB_LED1_RED
+#define MT3620Blink_Interops_MT3620_RDB_LED1_RED MT3620_RDB_LED1_RED
+#define MT3620Blink_Interops_EPOLL_CTL_ADD EPOLL_CTL_ADD
+#define MT3620Blink_Interops_EPOLLIN EPOLLIN
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-4] Type: MT3620Blink.timespec
@@ -114,31 +167,92 @@ IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_GPIO_Value_Type, "MT3620Blink.GPIO_Value_Typ
 IL2C_RUNTIME_TYPE_END();
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9-4] Type: MT3620Blink.Program
+// [9-4] Type: MT3620Blink.epoll_data_t
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.ValueType)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_epoll_data_t, "MT3620Blink.epoll_data_t", IL2C_TYPE_VALUE, sizeof(MT3620Blink_epoll_data_t), System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.epoll_event
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.ValueType)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_epoll_event, "MT3620Blink.epoll_event", IL2C_TYPE_VALUE, sizeof(MT3620Blink_epoll_event), System_ValueType, 1, 0)
+    IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE(MT3620Blink_epoll_event, MT3620Blink_epoll_data_t, data)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.Interops
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Program.GPIO_OpenAsOutput(System.Int32 gpioId, MT3620Blink.GPIO_OutputMode_Type outputMode, MT3620Blink.GPIO_Value_Type initialValue)
+// [6] InternalCall: MT3620Blink.Interops.nanosleep(MT3620Blink.timespec& time, MT3620Blink.timespec& dummy)
 
-int32_t MT3620Blink_Program_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue)
+void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* time, MT3620Blink_timespec* dummy)
+{
+    nanosleep(time, dummy);
+}
+
+///////////////////////////////////////
+// [6] InternalCall: MT3620Blink.Interops.GPIO_OpenAsOutput(System.Int32 gpioId, MT3620Blink.GPIO_OutputMode_Type outputMode, MT3620Blink.GPIO_Value_Type initialValue)
+
+int32_t MT3620Blink_Interops_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue)
 {
     return GPIO_OpenAsOutput(gpioId, outputMode, initialValue);
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Program.GPIO_SetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type value)
+// [6] InternalCall: MT3620Blink.Interops.GPIO_SetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type value)
 
-int32_t MT3620Blink_Program_GPIO_SetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type value)
+int32_t MT3620Blink_Interops_GPIO_SetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type value)
 {
     return GPIO_SetValue(gpioFd, value);
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Program.nanosleep(MT3620Blink.timespec& time, MT3620Blink.timespec& dummy)
+// [6] InternalCall: MT3620Blink.Interops.epoll_create1(System.Int32 flags)
 
-void MT3620Blink_Program_nanosleep(MT3620Blink_timespec* time, MT3620Blink_timespec* dummy)
+int32_t MT3620Blink_Interops_epoll_create1(int32_t flags)
 {
-    nanosleep(time, dummy);
+    return epoll_create1(flags);
 }
+
+///////////////////////////////////////
+// [6] InternalCall: MT3620Blink.Interops.epoll_ctl(System.Int32 epollfd, System.Int32 op, System.Int32 fd, MT3620Blink.epoll_event& ev)
+
+int32_t MT3620Blink_Interops_epoll_ctl(int32_t epollfd, int32_t op, int32_t fd, MT3620Blink_epoll_event* ev)
+{
+    return epoll_ctl(epollfd, op, fd, ev);
+}
+
+///////////////////////////////////////
+// [6] InternalCall: MT3620Blink.Interops.epoll_wait(System.Int32 epollfd, MT3620Blink.epoll_event& ev, System.Int32 maxevents, System.Int32 timeout)
+
+int32_t MT3620Blink_Interops_epoll_wait(int32_t epollfd, MT3620Blink_epoll_event* ev, int32_t maxevents, int32_t timeout)
+{
+    return epoll_wait(epollfd, ev, maxevents, timeout);
+}
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.Object)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Interops, "MT3620Blink.Interops", IL2C_TYPE_REFERENCE, sizeof(MT3620Blink_Interops), System_Object, 0, 0)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.Program
 
 ///////////////////////////////////////
 // [3] MT3620Blink.Program.Main()
@@ -197,25 +311,25 @@ int32_t MT3620Blink_Program_Main(void)
 
     //-------------------
     // [3-6] IL body:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(54): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(16): */
 
     /* IL_0000: nop  */
-    /* IL_0001: ldsfld MT3620Blink.Program.MT3620_RDB_LED1_RED */
-    stack0_0__ = MT3620Blink_Program_MT3620_RDB_LED1_RED;
+    /* IL_0001: ldsfld MT3620Blink.Interops.MT3620_RDB_LED1_RED */
+    stack0_0__ = MT3620Blink_Interops_MT3620_RDB_LED1_RED;
     /* IL_0006: ldc.i4.0  */
     stack1_0__ = 0;
     /* IL_0007: ldc.i4.1  */
     stack2_0__ = 1;
-    /* IL_0008: call MT3620Blink.Program.GPIO_OpenAsOutput */
-    stack0_0__ = MT3620Blink_Program_GPIO_OpenAsOutput(stack0_0__, (MT3620Blink_GPIO_OutputMode_Type)stack1_0__, (MT3620Blink_GPIO_Value_Type)stack2_0__);
+    /* IL_0008: call MT3620Blink.Interops.GPIO_OpenAsOutput */
+    stack0_0__ = MT3620Blink_Interops_GPIO_OpenAsOutput(stack0_0__, (MT3620Blink_GPIO_OutputMode_Type)stack1_0__, (MT3620Blink_GPIO_Value_Type)stack2_0__);
     /* IL_000d: stloc.0  */
     fd = stack0_0__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(60): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(22): */
     /* IL_000e: ldc.i4.0  */
     stack0_0__ = 0;
     /* IL_000f: stloc.1  */
     flag = (stack0_0__) ? true : false;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(61): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(23): */
     /* IL_0010: ldloca.s local4__ */
     stack0_1__ = &local4__;
     /* IL_0012: initobj MT3620Blink.timespec */
@@ -230,7 +344,7 @@ int32_t MT3620Blink_Program_Main(void)
     stack0_2__ = local4__;
     /* IL_0022: stloc.2  */
     sleepTime = stack0_2__;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(62): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(24): */
     /* IL_0023: ldloca.s dummy */
     stack0_1__ = &dummy;
     /* IL_0025: initobj MT3620Blink.timespec */
@@ -238,7 +352,7 @@ int32_t MT3620Blink_Program_Main(void)
     /* IL_002b: br.s IL_007f */
     goto IL_007f;
 IL_002d:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(65): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(27): */
     /* IL_002d: nop  */
     /* IL_002e: ldc.i4.0  */
     stack0_0__ = 0;
@@ -247,7 +361,7 @@ IL_002d:
     /* IL_0031: br.s IL_006f */
     goto IL_006f;
 IL_0033:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(67): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(29): */
     /* IL_0033: nop  */
     /* IL_0034: ldloc.0  */
     stack0_0__ = fd;
@@ -263,10 +377,10 @@ IL_003b:
     /* IL_003b: ldc.i4.1  */
     stack1_0__ = 1;
 IL_003c:
-    /* IL_003c: call MT3620Blink.Program.GPIO_SetValue */
-    stack0_0__ = MT3620Blink_Program_GPIO_SetValue(stack0_0__, (MT3620Blink_GPIO_Value_Type)stack1_0__);
+    /* IL_003c: call MT3620Blink.Interops.GPIO_SetValue */
+    stack0_0__ = MT3620Blink_Interops_GPIO_SetValue(stack0_0__, (MT3620Blink_GPIO_Value_Type)stack1_0__);
     /* IL_0041: pop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(69): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(31): */
     /* IL_0042: ldloc.1  */
     stack0_3__ = flag;
     /* IL_0043: ldc.i4.0  */
@@ -275,7 +389,7 @@ IL_003c:
     stack0_0__ = ((int32_t)stack0_3__ == (int32_t)stack1_0__) ? 1 : 0;
     /* IL_0046: stloc.1  */
     flag = (stack0_0__) ? true : false;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(71): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(33): */
     /* IL_0047: ldstr "Hello Azure Sphere with C#! " */
     frame__.stack0_4__ = string0__;
     /* IL_004c: ldloc.s index */
@@ -287,15 +401,15 @@ IL_003c:
     /* IL_0058: call System.Console.WriteLine */
     System_Console_WriteLine_10(frame__.stack0_4__);
     /* IL_005d: nop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(73): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(35): */
     /* IL_005e: ldloca.s sleepTime */
     stack0_1__ = &sleepTime;
     /* IL_0060: ldloca.s dummy */
     stack1_3__ = &dummy;
-    /* IL_0062: call MT3620Blink.Program.nanosleep */
-    MT3620Blink_Program_nanosleep(stack0_1__, stack1_3__);
+    /* IL_0062: call MT3620Blink.Interops.nanosleep */
+    MT3620Blink_Interops_nanosleep(stack0_1__, stack1_3__);
     /* IL_0067: nop  */
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(74): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(36): */
     /* IL_0068: nop  */
     /* IL_0069: ldloc.s index */
     stack0_0__ = index;
@@ -306,7 +420,7 @@ IL_003c:
     /* IL_006d: stloc.s index */
     index = stack0_0__;
 IL_006f:
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(66): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(28): */
     /* IL_006f: ldloc.s index */
     stack0_0__ = index;
     /* IL_0071: ldc.i4 10000 */
@@ -319,7 +433,7 @@ IL_006f:
     stack0_3__ = local6__;
     /* IL_007c: brtrue.s IL_0033 */
     if (stack0_3__) goto IL_0033;
-/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(75): */
+/* D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs(37): */
     /* IL_007e: nop  */
 IL_007f:
     /* IL_007f: ldc.i4.1  */

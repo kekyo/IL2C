@@ -23,9 +23,12 @@ namespace IL2C.Writers
             tw.WriteLine("// [2-1] Types:");
             tw.SplitLine();
 
+            var predictTypes = types.
+                Where(type => predictType(type)).
+                ToArray();
+
             // Output prototypes.
-            foreach (var type in types.
-                Where(type => predictType(type)))
+            foreach (var type in predictTypes)
             {
                 // If it applied native type attribute.
                 if (type.NativeType != null)
@@ -61,8 +64,7 @@ namespace IL2C.Writers
             tw.SplitLine();
 
             // Output value type and object reference type.
-            foreach (var type in types.
-                Where(predictType))
+            foreach (var type in predictTypes)
             {
                 TypeWriter.InternalConvertType(
                     tw,
@@ -74,7 +76,7 @@ namespace IL2C.Writers
             tw.WriteLine("// [2-2] Public static fields:");
             tw.SplitLine();
 
-            foreach (var type in types.
+            foreach (var type in predictTypes.
                 Where(type => !type.IsEnum))
             {
                 foreach (var field in type.Fields
@@ -92,7 +94,7 @@ namespace IL2C.Writers
             tw.WriteLine("// [2-3] Methods:");
             tw.SplitLine();
 
-            foreach (var type in types.
+            foreach (var type in predictTypes.
                 Where(type => !type.IsEnum))
             {
                 var methods = type.DeclaredMethods.

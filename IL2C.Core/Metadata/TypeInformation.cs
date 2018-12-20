@@ -402,8 +402,9 @@ namespace IL2C.Metadata
                 var definition = this.Definition as TypeDefinition;
                 if (definition != null)
                 {
-                    return definition.IsPublic || definition.IsNestedPublic
-                        || definition.IsNestedFamily || definition.IsNestedFamilyOrAssembly;
+                    return definition.IsPublic ||
+                        definition.IsNestedPublic ||
+                        definition.IsNestedFamilyOrAssembly;
                 }
                 else
                 {
@@ -419,7 +420,9 @@ namespace IL2C.Metadata
                 var definition = this.Definition as TypeDefinition;
                 if (definition != null)
                 {
-                    return definition.IsNotPublic || definition.IsNestedAssembly;
+                    return
+                        definition.IsNotPublic ||
+                        definition.IsNestedAssembly;
                 }
                 else
                 {

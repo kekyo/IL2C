@@ -11,9 +11,7 @@ namespace MT3620Blink
         private static void sleep(int nsec)
         {
             var sleepTime = new timespec { tv_nsec = nsec };
-            var dummy = new timespec();
-
-            Interops.nanosleep(ref sleepTime, ref dummy);
+            Interops.nanosleep(ref sleepTime, out var dummy);
         }
 
         public static int Main()

@@ -1,5 +1,6 @@
 ﻿using Mono.Cecil;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace IL2C.Metadata
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace IL2C
+namespace System.Runtime.InteropServices
 {
     public abstract class NativeAttribute : Attribute
     {

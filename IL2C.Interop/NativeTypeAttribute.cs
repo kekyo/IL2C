@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace IL2C
+namespace System.Runtime.InteropServices
 {
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Delegate, AllowMultiple=false, Inherited=false)]
     public sealed class NativeTypeAttribute : NativeAttribute

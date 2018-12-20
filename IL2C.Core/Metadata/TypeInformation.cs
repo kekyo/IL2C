@@ -676,7 +676,7 @@ namespace IL2C.Metadata
 
         public NativeTypeAttribute NativeType =>
             (this.Definition as TypeDefinition)?.CustomAttributes.
-                Where(ca => ca.AttributeType.FullName == "IL2C.NativeTypeAttribute").
+                Where(ca => ca.AttributeType.FullName == typeof(NativeTypeAttribute).FullName).
                 Select(ca => new NativeTypeAttribute(
                     ca.ConstructorArguments[0].Value,
                     ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).

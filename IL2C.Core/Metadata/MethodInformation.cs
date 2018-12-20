@@ -359,7 +359,7 @@ namespace IL2C.Metadata
             this.Definition.PInvokeInfo;
         public NativeMethodAttribute NativeMethod =>
             this.Definition.CustomAttributes.
-            Where(ca => ca.AttributeType.FullName == "IL2C.NativeMethodAttribute").
+            Where(ca => ca.AttributeType.FullName == typeof(NativeMethodAttribute).FullName).
             Select(ca => new NativeMethodAttribute(
                 ca.ConstructorArguments[0].Value,
                 ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).

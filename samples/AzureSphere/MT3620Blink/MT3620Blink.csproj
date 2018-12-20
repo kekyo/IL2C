@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IL2C.Interop" Version="0.4.6" />
+    <PackageReference Include="IL2C.Interop" Version="0.4.9" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

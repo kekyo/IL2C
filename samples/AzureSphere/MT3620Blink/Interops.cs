@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-
-using IL2C;
 
 namespace MT3620Blink
 {
@@ -50,6 +49,13 @@ namespace MT3620Blink
     internal static class Interops
     {
         //////////////////////////////////////////////////////////////////////
+        // descriptor
+
+        [NativeMethod("unistd.h")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int close(int fd);
+
+        //////////////////////////////////////////////////////////////////////
         // timer
 
         [NativeMethod("time.h")]
@@ -70,6 +76,17 @@ namespace MT3620Blink
         [NativeMethod("applibs/gpio.h")]
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern int GPIO_SetValue(int gpioFd, GPIO_Value_Type value);
+
+        [NativeValue("mt3620_rdb.h")]
+        public static readonly int MT3620_RDB_BUTTON_A;
+
+        [NativeMethod("applibs/gpio.h")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GPIO_OpenAsInput(int gpioId);
+
+        [NativeMethod("applibs/gpio.h")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int GPIO_GetValue(int gpioFd, out GPIO_Value_Type value);
 
         //////////////////////////////////////////////////////////////////////
         // epoll

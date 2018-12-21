@@ -69,9 +69,14 @@ namespace IL2C.Metadata
                 initializer);
         }
 
-        public override bool IsCLanguagePublicScope => this.Definition.IsPublic;
-        public override bool IsCLanguageLinkageScope => !this.Definition.IsPublic && !this.Definition.IsPrivate;
-        public override bool IsCLanguageFileScope => this.Definition.IsPrivate;
+        public override bool IsCLanguagePublicScope =>
+            this.DeclaringType.IsCLanguagePublicScope &&
+            this.Definition.IsPublic;
+        public override bool IsCLanguageLinkageScope =>
+            this.DeclaringType.IsCLanguageLinkageScope &&
+            (this.Definition.IsPublic || !this.Definition.IsPrivate);
+        public override bool IsCLanguageFileScope =>
+            this.Definition.IsPrivate;
 
         public NativeValueAttribute NativeValue =>
             this.Definition.CustomAttributes.

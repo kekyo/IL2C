@@ -52,7 +52,7 @@
   <ImportGroup Label="ExtensionTargets" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalOptions>-fdata-sections -ffunction-sections -Werror=implicit-function-declaration -Wno-unused-but-set-variable %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-fdata-sections -ffunction-sections -Wno-unused-variable -Wno-return-type -Wno-discarded-qualifiers -Werror=implicit-function-declaration -Wno-unused-but-set-variable %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SysRootIncludePath);$(ProjectDir)..\..\..\IL2C.Runtime;.;Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

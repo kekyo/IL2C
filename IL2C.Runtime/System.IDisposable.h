@@ -16,7 +16,8 @@ typedef struct System_IDisposable System_IDisposable;
 
 typedef const struct
 {
-    void (*Dispose)(void);
+    intptr_t offset__; // Adjustor offset
+    void (*Dispose)(void* this__);
 } System_IDisposable_VTABLE_DECL__;
 
 struct System_IDisposable

@@ -81,6 +81,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{4a3bf87a-c826-450f-93bf-09313917964a}</ProjectGuid>
     <Keyword>AzureSphere</Keyword>
+    <TargetName>libil2c</TargetName>
     <RootNamespace>IL2C.Runtime</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
@@ -119,9 +120,6 @@
     <ClCompile Condition="'$(Configuration)'=='Release'">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">__AZURE_SPHERE__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Lib>
-      <OutputFile>$(OutDir)libil2c$(TargetExt)</OutputFile>
-    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

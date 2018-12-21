@@ -72,55 +72,73 @@ namespace IL2C.Writers
             }
             tw.SplitLine();
 
-            tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            tw.WriteLine("// [2-2] Public static fields:");
-            tw.SplitLine();
-
-            foreach (var type in predictTypes.
-                Where(type => !type.IsEnum))
+            var typesExcludeEnums = predictTypes.
+                Where(type => !type.IsEnum).
+                ToArray();
+            if (typesExcludeEnums.Any(t => t.Fields.
+                Any(field => field.IsStatic && predictField(field))))
             {
-                foreach (var field in type.Fields
-                    .Where(field => field.IsPublic && field.IsStatic && predictField(field)))
-                {
-                    tw.WriteLine(
-                        "extern {0};",
-                        field.GetCLanguageStaticPrototype(false));
-                }
-
+                tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                tw.WriteLine("// [2-2] Static fields:");
                 tw.SplitLine();
+
+                foreach (var type in typesExcludeEnums)
+                {
+                    foreach (var field in type.Fields.
+                        Where(field => field.IsStatic && predictField(field)))
+                    {
+                        if (field.NativeValue != null)
+                        {
+                            tw.WriteLine(
+                                "#define {0} {1}",
+                                field.MangledUniqueName,
+                                field.CLanguageNativeSymbolName);
+                        }
+                        else
+                        {
+                            tw.WriteLine(
+                            "extern {0};",
+                            field.GetCLanguageStaticPrototype(false));
+                        }
+                    }
+
+                    tw.SplitLine();
+                }
             }
 
-            tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            tw.WriteLine("// [2-3] Methods:");
-            tw.SplitLine();
-
-            foreach (var type in predictTypes.
-                Where(type => !type.IsEnum))
+            if (typesExcludeEnums.Length >= 1)
             {
-                var methods = type.DeclaredMethods.
-                    Where(predictMethod).
-                    ToArray();
+                tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                tw.WriteLine("// [2-3] Methods:");
+                tw.SplitLine();
 
-                if (methods.Length >= 1)
+                foreach (var type in typesExcludeEnums)
                 {
-                    tw.WriteLine(
-                        "// [2-4] Member methods: {0}",
-                        type.FriendlyName);
-                    tw.SplitLine();
+                    var methods = type.DeclaredMethods.
+                        Where(predictMethod).
+                        ToArray();
 
-                    foreach (var method in type.DeclaredMethods.
-                        Where(predictMethod))
+                    if (methods.Length >= 1)
                     {
                         tw.WriteLine(
-                            "extern {0}{1};",
-                            method.IsStatic ?
-                                "/* static */ " :
-                                method.IsVirtual ?
-                                    (method.IsReuseSlot ? "/* override */ " : "/* virtual */ ") :
-                                    string.Empty,
-                            method.CLanguageFunctionPrototype);
+                            "// [2-4] Member methods: {0}",
+                            type.FriendlyName);
+                        tw.SplitLine();
+
+                        foreach (var method in type.DeclaredMethods.
+                            Where(predictMethod))
+                        {
+                            tw.WriteLine(
+                                "extern {0}{1};",
+                                method.IsStatic ?
+                                    "/* static */ " :
+                                    method.IsVirtual ?
+                                        (method.IsReuseSlot ? "/* override */ " : "/* virtual */ ") :
+                                        string.Empty,
+                                method.CLanguageFunctionPrototype);
+                        }
+                        tw.SplitLine();
                     }
-                    tw.SplitLine();
                 }
             }
 

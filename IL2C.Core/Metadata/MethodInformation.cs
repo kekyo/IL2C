@@ -369,9 +369,11 @@ namespace IL2C.Metadata
             FirstOrDefault();
 
         public override bool IsCLanguagePublicScope =>
+            this.DeclaringType.IsCLanguagePublicScope &&
             this.Definition.IsPublic;
         public override bool IsCLanguageLinkageScope =>
-            !this.Definition.IsPublic && !this.Definition.IsPrivate;
+            this.DeclaringType.IsCLanguageLinkageScope &&
+            (this.Definition.IsPublic || !this.Definition.IsPrivate);
         public override bool IsCLanguageFileScope =>
             this.Definition.IsPrivate;
 
@@ -405,13 +407,10 @@ namespace IL2C.Metadata
         public string CLanguageFunctionTypePrototype =>
             this.GetCLanguageFunctionPrototype(-1);
 
-        public string GetCLanguageDeclarationName(int overloadIndex)
-        {
-            return
-                (overloadIndex == 0) ? this.Name :
-                (overloadIndex == -1) ? string.Empty :
-                string.Format("{0}_{1}", this.Name, overloadIndex);
-        }
+        public string GetCLanguageDeclarationName(int overloadIndex) =>
+            (overloadIndex == 0) ? this.Name :
+            (overloadIndex == -1) ? string.Empty :
+            string.Format("{0}_{1}", this.Name, overloadIndex);
 
         public string GetCLanguageFunctionPrototype(int overloadIndex)
         {

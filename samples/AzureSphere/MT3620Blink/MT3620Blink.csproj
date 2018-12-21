@@ -34,6 +34,6 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="D:\PROJECT\IL2C\IL2C\bin\Debug\net45\IL2C.exe -g $(OutDir)MT3620Blink.dll ..\Mt3620App\Generated" />
+        <Exec Command="D:\PROJECT\IL2C\IL2C\bin\Debug\net45\IL2C.exe -g1 $(OutDir)MT3620Blink.dll ..\Mt3620App\Generated" />
     </Target>
 </Project>

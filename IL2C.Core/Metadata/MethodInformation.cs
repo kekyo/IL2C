@@ -222,7 +222,7 @@ namespace IL2C.Metadata
                             (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
                             this.MetadataContext.GetOrAddType(eh.CatchType),
                             eh.HandlerStart.Offset,
-                            eh.HandlerEnd.Offset)).
+                            eh.HandlerEnd?.Offset ?? this.Definition.Body.Instructions.Last().Offset)). // HACK: The handler end offset sometimes doesn't produce at the last sequence.
                         ToArray())).
                     ToArray();
 

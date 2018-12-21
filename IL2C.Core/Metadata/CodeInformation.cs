@@ -6,7 +6,7 @@ using Mono.Cecil.Cil;
 
 namespace IL2C.Metadata
 {
-    public struct DebugInformation
+    public sealed class DebugInformation
     {
         public readonly string Path;
         public readonly int Line;

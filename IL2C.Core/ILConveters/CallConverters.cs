@@ -232,7 +232,7 @@ namespace IL2C.ILConverters
                             "{0} = il2c_box({1}, {2})",
                             extractContext.GetSymbolName(pairParameters[0].variable),
                             extractContext.GetSymbolName(requiredBoxingAtArg0PointerVariable),
-                            arg0ValueType.MangledName),
+                            arg0ValueType.MangledUniqueName),
                         callExpression };
                 }
                 // If requires casting expression
@@ -243,7 +243,7 @@ namespace IL2C.ILConverters
                         string.Format(
                             "{0} = il2c_cast_from_boxed_to_interface({1}, {2}, {3}, {4})",
                             extractContext.GetSymbolName(pairParameters[0].variable),
-                            method.DeclaringType.MangledName,
+                            method.DeclaringType.MangledUniqueName,
                             arg0ValueType.ElementType.CLanguageStaticSizeOfExpression,
                             arg0ValueType.CalculateInterfaceIndex(method.DeclaringType),
                             extractContext.GetSymbolName(requiredCastingAtArg0PointerVariable)),

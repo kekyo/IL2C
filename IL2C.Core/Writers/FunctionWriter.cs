@@ -97,7 +97,7 @@ namespace IL2C.Writers
                                 Select(valueEntry =>
                                     string.Format(
                                         "il2c_typeof({0}), NULL",
-                                        valueEntry.TargetType.MangledName)))));
+                                        valueEntry.TargetType.MangledUniqueName)))));
                 }
                 else
                 {
@@ -158,7 +158,7 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "if (il2c_isinst__(ex, il2c_typeof({0}))) return {1};",
-                                catchHandler.CatchType.MangledName,
+                                catchHandler.CatchType.MangledUniqueName,
                                 catchHandlerIndex + 1);
                         }
                     }
@@ -397,7 +397,7 @@ namespace IL2C.Writers
                                         nestedIndexName,
                                         catchHandlerIndex + 1,
                                         extractContext.GetSymbolName(preparedMethod.CatchVariables[catchHandler.CatchStart]),
-                                        catchHandler.CatchType.MangledName);
+                                        catchHandler.CatchType.MangledUniqueName);
                                     break;
                                 case ExceptionCatchHandlerTypes.Finally:
                                     // Reached finally block:
@@ -521,6 +521,11 @@ namespace IL2C.Writers
                                 sourceCode);
                         }
                     }
+
+                    // If last opcode is 'endfinally' and not emitted 'ret',
+                    // can't finished for exceptionHandlerController.
+                    // We can check and force update the TryFinish method for this situation.
+                    exceptionHandlerController.TryFinish();
 
                     if (!exceptionHandlerController.IsFinished)
                     {

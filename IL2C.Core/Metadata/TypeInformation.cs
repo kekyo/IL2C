@@ -356,14 +356,12 @@ namespace IL2C.Metadata
             Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
             ToArray();
 
-        private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods()
-        {
-            return ((ITypeInformation)this).
+        private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods() =>
+            ((ITypeInformation)this).
                 Traverse(type => type.BaseType).
                 Reverse().
                 SelectMany(type => type.DeclaredMethods.CalculateOverloadMethods().SelectMany(entry => entry.Value)).
                 CalculateVirtualMethods();
-        }
 
         public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods =>
             this.EnumerateCalculatedVirtualMethods().
@@ -460,7 +458,7 @@ namespace IL2C.Metadata
                 {
                     return string.Format(
                         "il2c_arraytype({0})*{1}",
-                        this.ElementType.MangledName,
+                        this.ElementType.MangledUniqueName,
                         sn);
                 }
             }
@@ -533,7 +531,7 @@ namespace IL2C.Metadata
             {
                 typeName = nativeType ?
                     (this.NativeType?.SymbolName ?? this.Name) :
-                    this.MangledName;
+                    this.MangledUniqueName;
                 if (this.IsReferenceType)
                 {
                     typeName += "*";
@@ -558,7 +556,7 @@ namespace IL2C.Metadata
                 // The class type contains surely one or more vptrs.
                 if (this.IsClass || (this.Fields.Length >= 1))
                 {
-                    return string.Format("sizeof({0})", this.MangledName);
+                    return string.Format("sizeof({0})", this.MangledUniqueName);
                 }
                 else if (this.IsInterface)
                 {
@@ -571,16 +569,14 @@ namespace IL2C.Metadata
             }
         }
 
-        public int CalculateInterfaceIndex(ITypeInformation interfaceType)
-        {
-            return ((ITypeInformation)this).
+        public int CalculateInterfaceIndex(ITypeInformation interfaceType) =>
+            ((ITypeInformation)this).
                 Traverse(type => type.BaseType).
                 SelectMany(type => type.InterfaceTypes).
                 Distinct(). // Important operator sequence: distinct --> reverse
                 Reverse().  // Because all interface types overrided by derived class type,
                 Select((t, i) => new { t, i }).
                 FirstOrDefault(entry => entry.t.Equals(interfaceType))?.i ?? -1;
-        }
 
         public bool IsAssignableFrom(ITypeInformation rhs)
         {
@@ -646,15 +642,11 @@ namespace IL2C.Metadata
             return false;
         }
 
-        public ITypeInformation MakeByReference()
-        {
-            return this.MetadataContext.GetOrAddType(this.Definition.MakeByReferenceType());
-        }
+        public ITypeInformation MakeByReference() =>
+            this.MetadataContext.GetOrAddType(this.Definition.MakeByReferenceType());
 
-        public ITypeInformation MakeArray()
-        {
-            return this.MetadataContext.GetOrAddType(this.Definition.MakeArrayType());
-        }
+        public ITypeInformation MakeArray() =>
+            this.MetadataContext.GetOrAddType(this.Definition.MakeArrayType());
 
         public Type ResolveToRuntimeType()
         {

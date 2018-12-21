@@ -70,8 +70,8 @@ namespace IL2C.Writers
 
                 tw.WriteLine(
                     "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",
-                    declaredType.BaseType.MangledName,
-                    declaredType.MangledName);
+                    declaredType.BaseType.MangledUniqueName,
+                    declaredType.MangledUniqueName);
                 tw.SplitLine();
             }
             // Require new vtable layout.
@@ -114,7 +114,7 @@ namespace IL2C.Writers
 
                 tw.WriteLine(
                     "}} {0}_VTABLE_DECL__;",
-                    declaredType.MangledName);
+                    declaredType.MangledUniqueName);
                 tw.SplitLine();
             }
 
@@ -141,7 +141,7 @@ namespace IL2C.Writers
                     tw.WriteLine(
                         "static const {0} {1}_{2} = {3};",
                         declaredType.CLanguageTypeName,
-                        declaredType.MangledName,
+                        declaredType.MangledUniqueName,
                         field.Name,
                         Utilities.GetCLanguageExpression(field.DeclaredValue));
                 }
@@ -156,7 +156,7 @@ namespace IL2C.Writers
 
                 tw.WriteLine(
                     "struct {0}",
-                    declaredType.MangledName);
+                    declaredType.MangledUniqueName);
                 tw.WriteLine("{");
 
                 using (var _ = tw.Shift())
@@ -186,10 +186,10 @@ namespace IL2C.Writers
                                 {
                                     Name = string.Format(
                                         "vptr_{0}__",
-                                        interfaceType.MangledName),
+                                        interfaceType.MangledUniqueName),
                                     TypeName = string.Format(
                                         "{0}_VTABLE_DECL__*",
-                                        interfaceType.MangledName),
+                                        interfaceType.MangledUniqueName),
                                     Required = true
                                 });
 
@@ -198,7 +198,7 @@ namespace IL2C.Writers
                                 Where(field => !field.IsStatic).
                                 Select(field => new
                                 {
-                                    field.Name,
+                                    Name = field.MangledName,
                                     TypeName = field.FieldType.CLanguageTypeName,
                                     // This field's public or at the declared type.
                                     // If not it, we have to declare the field but symbol name will be hide.
@@ -217,7 +217,7 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "{0}_VTABLE_DECL__* vptr0__;",
-                            declaredType.MangledName);
+                            declaredType.MangledUniqueName);
                     }
 
                     if (fields.Length >= 1)
@@ -261,8 +261,8 @@ namespace IL2C.Writers
                         declaredType.BaseType.FriendlyName);
                     tw.WriteLine(
                         "#define {0}_VTABLE__ {1}_VTABLE__",
-                        declaredType.MangledName,
-                        declaredType.BaseType.MangledName);
+                        declaredType.MangledUniqueName,
+                        declaredType.BaseType.MangledUniqueName);
                 }
                 // Require new vtable
                 else
@@ -272,7 +272,7 @@ namespace IL2C.Writers
                         declaredType.BaseType.FriendlyName);
                     tw.WriteLine(
                         "extern {0}_VTABLE_DECL__ {0}_VTABLE__;",
-                        declaredType.MangledName);
+                        declaredType.MangledUniqueName);
                 }
                 tw.SplitLine();
             }
@@ -281,7 +281,7 @@ namespace IL2C.Writers
                 "// [1-4] Runtime type information");
             tw.WriteLine(
                 "IL2C_DECLARE_RUNTIME_TYPE({0});",
-                declaredType.MangledName);
+                declaredType.MangledUniqueName);
             tw.SplitLine();
         }
     }

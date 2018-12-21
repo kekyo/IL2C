@@ -116,7 +116,7 @@ namespace IL2C.ILConverters
                         string.Format(
                             "{0} = il2c_new_delegate({1}, {2})",
                             extractContext.GetSymbolName(thisSymbol),
-                            type.MangledName,
+                            type.MangledUniqueName,
                             parameterString)
                     };
                 };
@@ -170,7 +170,7 @@ namespace IL2C.ILConverters
                         string.Format(
                             "{0} = il2c_get_uninitialized_object({1})",
                             extractContext.GetSymbolName(thisSymbol),
-                            type.MangledName)
+                            type.MangledUniqueName)
                     };
 
                     var callCtor = new[]
@@ -178,12 +178,12 @@ namespace IL2C.ILConverters
                         (overloadIndex >= 1) ?
                             string.Format(
                                 "{0}__ctor_{1}({2})",
-                                type.MangledName,
+                                type.MangledUniqueName,
                                 overloadIndex,
                                 parameterString) :
                             string.Format(
                                 "{0}__ctor({1})",
-                                type.MangledName,
+                                type.MangledUniqueName,
                                 parameterString)
                     };
 
@@ -216,7 +216,7 @@ namespace IL2C.ILConverters
             return extractContext => new[] { string.Format(
                 "{0} = il2c_new_array({1}, {2})",
                 extractContext.GetSymbolName(symbol),
-                elementType.MangledName,
+                elementType.MangledUniqueName,
                 extractContext.GetSymbolName(siCount)) };
         }
     }

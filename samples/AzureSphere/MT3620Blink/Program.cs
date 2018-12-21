@@ -16,37 +16,39 @@ namespace MT3620Blink
 
         public static int Main()
         {
-            var ledFd = Interops.GPIO_OpenAsOutput(
-                Interops.MT3620_RDB_LED1_RED,
-                GPIO_OutputMode_Type.GPIO_OutputMode_PushPull,
-                GPIO_Value_Type.GPIO_Value_High);
-
-            var buttonFd = Interops.GPIO_OpenAsInput(
-                Interops.MT3620_RDB_BUTTON_A);
-
-            var flag = false;
-            var blinkIntervals = new[] { 125_000_000, 250_000_000, 500_000_000 };
-            var blinkIntervalIndex = 0;
-            var lastButtonValue = GPIO_Value_Type.GPIO_Value_High;
-
-            while (true)
+            using (var led = new Descriptor(
+                Interops.GPIO_OpenAsOutput(
+                    Interops.MT3620_RDB_LED1_RED,
+                    GPIO_OutputMode_Type.GPIO_OutputMode_PushPull,
+                    GPIO_Value_Type.GPIO_Value_High)))
             {
-                Interops.GPIO_SetValue(
-                    ledFd,
-                    flag ? GPIO_Value_Type.GPIO_Value_High : GPIO_Value_Type.GPIO_Value_Low);
-                flag = !flag;
+                var buttonFd = Interops.GPIO_OpenAsInput(
+                    Interops.MT3620_RDB_BUTTON_A);
 
-                Interops.GPIO_GetValue(buttonFd, out var buttonValue);
-                if (buttonValue != lastButtonValue)
+                var flag = false;
+                var blinkIntervals = new[] { 125_000_000, 250_000_000, 500_000_000 };
+                var blinkIntervalIndex = 0;
+                var lastButtonValue = GPIO_Value_Type.GPIO_Value_High;
+
+                while (true)
                 {
-                    if (buttonValue == GPIO_Value_Type.GPIO_Value_Low)
-                    {
-                        blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
-                    }
-                }
-                lastButtonValue = buttonValue;
+                    Interops.GPIO_SetValue(
+                        led.Identity,
+                        flag ? GPIO_Value_Type.GPIO_Value_High : GPIO_Value_Type.GPIO_Value_Low);
+                    flag = !flag;
 
-                sleep(blinkIntervals[blinkIntervalIndex]);
+                    Interops.GPIO_GetValue(buttonFd, out var buttonValue);
+                    if (buttonValue != lastButtonValue)
+                    {
+                        if (buttonValue == GPIO_Value_Type.GPIO_Value_Low)
+                        {
+                            blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
+                        }
+                    }
+                    lastButtonValue = buttonValue;
+
+                    sleep(blinkIntervals[blinkIntervalIndex]);
+                }
             }
         }
     }

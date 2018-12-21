@@ -23,8 +23,7 @@ namespace IL2C.Metadata
     }
 
     internal sealed class FieldInformation
-        : MemberInformation<FieldReference, FieldDefinition>
-        , IFieldInformation
+        : MemberInformation<FieldReference, FieldDefinition>, IFieldInformation
     {
         public FieldInformation(FieldReference field, ModuleInformation module)
             : base(field, module)
@@ -66,7 +65,7 @@ namespace IL2C.Metadata
             return string.Format(
                 "{0} {1}{2}",
                 this.FieldType.CLanguageTypeName,
-                this.MangledName,
+                this.MangledUniqueName,
                 initializer);
         }
 

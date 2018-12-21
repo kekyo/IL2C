@@ -36,7 +36,7 @@ namespace IL2C.Writers
                     tw.WriteLine(
                         "typedef {0} {1};",
                         type.CLanguageNativeTypeName,
-                        type.MangledName);
+                        type.MangledUniqueName);
                 }
                 // Unfortunately the enum type at C language has not the underlying type.
                 // IL2C emits the enum types don't use C language syntax.
@@ -45,20 +45,20 @@ namespace IL2C.Writers
                     tw.WriteLine(
                         "typedef {0} {1};",
                         type.ElementType.CLanguageTypeName,
-                        type.MangledName);
+                        type.MangledUniqueName);
                 }
                 // The delegate derived types are same as System.MulticastDelegate.
                 else if (type.IsDelegate)
                 {
                     tw.WriteLine(
                         "typedef System_MulticastDelegate {0};",
-                        type.MangledName);
+                        type.MangledUniqueName);
                 }
                 else
                 {
                     tw.WriteLine(
                         "typedef struct {0} {0};",
-                        type.MangledName);
+                        type.MangledUniqueName);
                 }
             }
             tw.SplitLine();

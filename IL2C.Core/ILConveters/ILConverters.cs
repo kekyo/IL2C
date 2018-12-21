@@ -271,7 +271,7 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(symbol),
                     check ? "il2c_castclass" : "il2c_isinst",
                     extractContext.GetSymbolName(si),
-                    operand.MangledName) };
+                    operand.MangledUniqueName) };
             };
         }
     }
@@ -317,7 +317,7 @@ namespace IL2C.ILConverters
                 return new[] { string.Format(
                     "{0} = il2c_sizeof({1})",
                     extractContext.GetSymbolName(symbol),
-                    operand.MangledName) };
+                    operand.MangledUniqueName) };
             };
         }
     }

@@ -203,7 +203,7 @@ namespace IL2C.Writers
                     "// [7-10-2] VTable");
                 tw.WriteLine(
                     "{0}_VTABLE_DECL__ {0}_VTABLE__ = {{",
-                    declaredType.MangledName);
+                    declaredType.MangledUniqueName);
 
                 using (var _ = tw.Shift())
                 {
@@ -257,8 +257,8 @@ namespace IL2C.Writers
                     interfaceType.FriendlyName);
                 tw.WriteLine(
                     "{0}_VTABLE_DECL__ {1}_{0}_VTABLE__ = {{",
-                    interfaceType.MangledName,
-                    declaredType.MangledName);
+                    interfaceType.MangledUniqueName,
+                    declaredType.MangledUniqueName);
 
                 using (var _ = tw.Shift())
                 {
@@ -276,8 +276,8 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "il2c_adjustor_offset({0}, {1}),",
-                            declaredType.MangledName,
-                            interfaceType.MangledName);
+                            declaredType.MangledUniqueName,
+                            interfaceType.MangledUniqueName);
                     }
 
                     foreach (var entry in implementationMethods)
@@ -309,7 +309,7 @@ namespace IL2C.Writers
             // ex: IL2C_RUNTIME_TYPE_BEGIN(Foo_Bar, "Foo.Bar", IL2C_TYPE_REFERENCE, sizeof(Foo_Bar), System_Object, 0, 0)
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})",
-                declaredType.MangledName,
+                declaredType.MangledUniqueName,
                 declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
                 declaredType.IsEnum ?      // Type attribute flags
                     (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
@@ -317,7 +317,7 @@ namespace IL2C.Writers
                     declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
                     "IL2C_TYPE_VALUE",
                 declaredType.CLanguageStaticSizeOfExpression,
-                declaredType.BaseType.MangledName,
+                declaredType.BaseType.MangledUniqueName,
                 declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
                 interfaceTypes.Length);
 
@@ -331,7 +331,7 @@ namespace IL2C.Writers
                         // ex: IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(System_Exception, message__)
                         tw.WriteLine(
                             "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE({0}, {1})",
-                            declaredType.MangledName,
+                            declaredType.MangledUniqueName,
                             field.Name);
                     }
                     else
@@ -339,8 +339,8 @@ namespace IL2C.Writers
                         // ex: IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE(System_Exception, System_Int32 , result__)
                         tw.WriteLine(
                             "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE({0}, {1}, {2})",
-                            declaredType.MangledName,
-                            field.FieldType.MangledName,
+                            declaredType.MangledUniqueName,
+                            field.FieldType.MangledUniqueName,
                             field.Name);
                     }
                 }
@@ -351,8 +351,8 @@ namespace IL2C.Writers
                     // ex: IL2C_RUNTIME_TYPE_INTERFACE(Foo, System_IDisposable)
                     tw.WriteLine(
                         "IL2C_RUNTIME_TYPE_INTERFACE({0}, {1})",
-                        declaredType.MangledName,
-                        interfaceType.MangledName);
+                        declaredType.MangledUniqueName,
+                        interfaceType.MangledUniqueName);
                 }
             }
 
@@ -377,7 +377,7 @@ namespace IL2C.Writers
             var interfaceTypes = declaredType.InterfaceTypes;
             tw.WriteLine(
                 "IL2C_RUNTIME_TYPE_INTERFACE_BEGIN({0}, \"{1}\", {2})",
-                declaredType.MangledName,
+                declaredType.MangledUniqueName,
                 declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
                 interfaceTypes.Length);
 
@@ -390,8 +390,8 @@ namespace IL2C.Writers
                     // ex: IL2C_RUNTIME_TYPE_INTERFACE(Foo, System_IDisposable)
                     tw.WriteLine(
                         "IL2C_RUNTIME_TYPE_INTERFACE({0}, {1})",
-                        declaredType.MangledName,
-                        interfaceType.MangledName);
+                        declaredType.MangledUniqueName,
+                        interfaceType.MangledUniqueName);
                 }
             }
 

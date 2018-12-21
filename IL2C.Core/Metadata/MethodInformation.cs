@@ -106,7 +106,7 @@ namespace IL2C.Metadata
         public override string FriendlyName =>
             this.GetFriendlyName(FriendlyNameTypes.ArgumentTypes | FriendlyNameTypes.ArgumentNames);
 
-        public override string MangledName =>
+        public override string MangledUniqueName =>
             this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
 
         public bool IsPublic =>
@@ -219,10 +219,13 @@ namespace IL2C.Metadata
                         // Ordered by handler type: catch --> finally
                         g.OrderBy(eh => GetExceptionHandlerTypePriority(eh.HandlerType)).
                             Select(eh => new ExceptionCatchHandler(
-                            (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
-                            this.MetadataContext.GetOrAddType(eh.CatchType),
-                            eh.HandlerStart.Offset,
-                            eh.HandlerEnd?.Offset ?? this.Definition.Body.Instructions.Last().Offset)). // HACK: The handler end offset sometimes doesn't produce at the last sequence.
+                                (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
+                                this.MetadataContext.GetOrAddType(eh.CatchType),
+                                eh.HandlerStart.Offset,
+                                // HACK: The handler end offset sometimes doesn't produce at the last sequence.
+                                eh.HandlerEnd?.Offset ??
+                                    (this.Definition.Body.Instructions.Last().Offset +
+                                    this.Definition.Body.Instructions.Last().OpCode.Size))).
                         ToArray())).
                     ToArray();
 

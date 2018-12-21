@@ -95,7 +95,7 @@ namespace IL2C.Metadata.Specialized
         public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false) =>
             string.Format("{0}{1}", this.CLanguageTypeName, (symbolName != null) ? (" " + symbolName) : string.Empty);
 
-        public string CLanguageTypeName => string.Format("il2c_boxedtype({0})*", boxedType.MangledName);
+        public string CLanguageTypeName => string.Format("il2c_boxedtype({0})*", boxedType.MangledUniqueName);
         public string CLanguageThisTypeName => throw new NotImplementedException();
         public string CLanguageStaticSizeOfExpression => string.Format("sizeof({0})", this.CLanguageTypeName);
 
@@ -107,10 +107,14 @@ namespace IL2C.Metadata.Specialized
         public bool IsCLanguageLinkageScope => false;
         public bool IsCLanguageFileScope => false;
 
-        public string UniqueName => string.Format("boxedtype<{0}>", boxedType.MangledName);
+        public string UniqueName => string.Format("boxedtype<{0}>", boxedType.MangledUniqueName);
         public string Name => this.UniqueName;
         public string FriendlyName => this.UniqueName;
-        public string MangledName => this.UniqueName;
+
+        public string MangledUniqueName =>
+            Utilities.GetMangledName(this.UniqueName);
+        public string MangledName =>
+            Utilities.GetMangledName(this.Name);
 
         public IMetadataContext Context => throw new NotImplementedException();
 

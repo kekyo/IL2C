@@ -200,7 +200,7 @@ namespace IL2C
                     {
                         twSource.WriteLine(
                             "#define {0} {1}",
-                            field.MangledName,
+                            field.MangledUniqueName,
                             field.CLanguageNativeSymbolName);
                     }
                     else

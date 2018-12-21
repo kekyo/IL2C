@@ -1073,7 +1073,7 @@ int32_t MT3620Blink_Program_Main(void)
         frame__.stack0_1__ = frame__.led;
         /* IL_009d: callvirt System.IDisposable.Dispose */
 #line 33 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
-        frame__.stack0_1__->vptr0__->Dispose(il2c_cast_to_interface(System_IDisposable, MT3620Blink_Descriptor, il2c_adjusted_reference(frame__.stack0_1__)));
+        MT3620Blink_Descriptor_Dispose(il2c_adjusted_reference(frame__.stack0_1__));
         /* IL_00a2: nop  */
     IL_00a3:
         /* IL_00a3: endfinally  */

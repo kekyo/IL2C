@@ -55,7 +55,8 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(si),
                     labelName) };
             }
-            else if (si.TargetType.IsNumericPrimitive)
+            else if (si.TargetType.IsNumericPrimitive ||
+                si.TargetType.IsEnum)
             {
                 return extractContext => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -90,7 +91,8 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(si),
                     labelName) };
             }
-            else if (si.TargetType.IsNumericPrimitive)
+            else if (si.TargetType.IsNumericPrimitive ||
+                si.TargetType.IsEnum)
             {
                 return extractContext => new[] { string.Format(
                     "if ({0} == 0) goto {1}",
@@ -125,7 +127,8 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(si),
                     labelName) };
             }
-            else if (si.TargetType.IsNumericPrimitive)
+            else if (si.TargetType.IsNumericPrimitive ||
+                si.TargetType.IsEnum)
             {
                 return extractContext => new[] { string.Format(
                     "if ({0} != 0) goto {1}",
@@ -160,7 +163,8 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(si),
                     labelName) };
             }
-            else if (si.TargetType.IsNumericPrimitive)
+            else if (si.TargetType.IsNumericPrimitive ||
+                si.TargetType.IsEnum)
             {
                 return extractContext => new[] { string.Format(
                     "if ({0} != 0) goto {1}",

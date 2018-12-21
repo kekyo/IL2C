@@ -30,6 +30,7 @@
         <ClCompile Include="System.Enum.c" />
         <ClCompile Include="System.Exception.c" />
         <ClCompile Include="System.GC.c" />
+        <ClCompile Include="System.IDisposable.c" />
         <ClCompile Include="System.Int16.c" />
         <ClCompile Include="System.Int32.c" />
         <ClCompile Include="System.Int64.c" />
@@ -62,6 +63,7 @@
         <ClInclude Include="System.Enum.h" />
         <ClInclude Include="System.Exception.h" />
         <ClInclude Include="System.GC.h" />
+        <ClInclude Include="System.IDisposable.h" />
         <ClInclude Include="System.Int16.h" />
         <ClInclude Include="System.Int32.h" />
         <ClInclude Include="System.Int64.h" />

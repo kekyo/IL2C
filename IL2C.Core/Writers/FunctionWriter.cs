@@ -229,7 +229,7 @@ namespace IL2C.Writers
             }
 
             // Make readable debugging comment, it was splitting and reducing same informations.
-            var debugInformationWriter =
+            var debugInformationController =
                 new DebugInformationWriteController(
                     preparedMethod.Method,
                     debugInformationOption);
@@ -245,7 +245,7 @@ namespace IL2C.Writers
             {
                 if (!preparedMethod.Method.IsStatic)
                 {
-                    debugInformationWriter.WriteInformationBeforeCode(tw);
+                    debugInformationController.WriteInformationBeforeCode(tw);
                     tw.WriteLine("il2c_assert(this__ != NULL);");
                     tw.SplitLine();
                 }
@@ -273,7 +273,7 @@ namespace IL2C.Writers
                             local.TargetType.IsPointer ||
                             local.TargetType.IsByReference)
                         {
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "{0}{1} {2} = {3};",
                                 (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
@@ -285,14 +285,14 @@ namespace IL2C.Writers
                         {
                             Debug.Assert(local.TargetType.IsValueType);
 
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "{0}{1} {2};",
                                 (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
                                 local.TargetType.CLanguageTypeName,
                                 name);
 
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "il2c_memset(&{0}, 0x00, sizeof {0});",
                                 name);
@@ -315,7 +315,7 @@ namespace IL2C.Writers
                     {
                         var name = extractContext.GetSymbolName(stack);
 
-                        debugInformationWriter.WriteInformationBeforeCode(tw);
+                        debugInformationController.WriteInformationBeforeCode(tw);
                         tw.WriteLine(
                             "{0} {1};",
                             stack.TargetType.CLanguageTypeName,
@@ -327,7 +327,7 @@ namespace IL2C.Writers
                         //   so we have to initialize for value type.
                         if (stack.TargetType.IsRequiredTraverse)
                         {
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "il2c_memset(&{0}, 0, sizeof {0});",
                                 name);
@@ -370,17 +370,17 @@ namespace IL2C.Writers
                                 preparedMethod.Method.CLanguageFunctionName,
                                 handlerIndex);
 
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("il2c_try({0}, {1})", nestedIndexName, filterName);
 
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("{");
                             tw.Shift();
                         },
                         (handler, handlerIndex, nestedIndex) =>
                         {
                             // Reached try end block:
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.Shift(-1);
                             tw.WriteLine("}");
                         },
@@ -391,7 +391,7 @@ namespace IL2C.Writers
                             {
                                 case ExceptionCatchHandlerTypes.Catch:
                                     // Reached catch block:
-                                    debugInformationWriter.WriteInformationBeforeCode(tw);
+                                    debugInformationController.WriteInformationBeforeCode(tw);
                                     tw.WriteLine(
                                         "il2c_catch({0}, {1}, {2})  // catch ({3})",
                                         nestedIndexName,
@@ -401,18 +401,18 @@ namespace IL2C.Writers
                                     break;
                                 case ExceptionCatchHandlerTypes.Finally:
                                     // Reached finally block:
-                                    debugInformationWriter.WriteInformationBeforeCode(tw);
+                                    debugInformationController.WriteInformationBeforeCode(tw);
                                     tw.WriteLine("il2c_finally({0})", nestedIndexName);
                                     break;
                             }
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("{");
                             tw.Shift();
                         },
                         (handler, handlerIndex, nestedIndex, catchHandler, catchHandlerIndex) =>
                         {
                             // Reached catch end block:
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.Shift(-1);
                             tw.WriteLine("}");
                         },
@@ -437,10 +437,10 @@ namespace IL2C.Writers
                                 ToArray();
                             if (bindEntries.Length >= 1)
                             {
-                                debugInformationWriter.WriteInformationBeforeCode(tw);
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine("il2c_leave_to({0})", nestedIndexName);
 
-                                debugInformationWriter.WriteInformationBeforeCode(tw);
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine("{");
 
                                 using (var ___ = tw.Shift())
@@ -452,7 +452,7 @@ namespace IL2C.Writers
                                         {
                                             var labelName = preparedMethod.LabelNames[bind.targetOffset];
 
-                                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                                            debugInformationController.WriteInformationBeforeCode(tw);
                                             tw.WriteLine(
                                                 "il2c_leave_bind({0}, {1}, {2});",
                                                 nestedIndexName,
@@ -461,7 +461,7 @@ namespace IL2C.Writers
                                         }
                                         else
                                         {
-                                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                                            debugInformationController.WriteInformationBeforeCode(tw);
                                             tw.WriteLine(
                                                 "il2c_leave_through({0}, {1}, {2});",
                                                 nestedIndexName, bind.continuationIndex, parentNestedIndexName);
@@ -469,12 +469,12 @@ namespace IL2C.Writers
                                     }
                                 }
 
-                                debugInformationWriter.WriteInformationBeforeCode(tw);
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine("}");
                             }
 
                             // Reached end of entire try block.
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("il2c_end_try({0});", nestedIndexName);
 
                             extractContext.SetNestedExceptionFrameIndexName(parentNestedIndexName);
@@ -483,7 +483,7 @@ namespace IL2C.Writers
                     // Traverse code fragments.
                     foreach (var ci in codeStream)
                     {
-                        debugInformationWriter.SetNextCode(ci);
+                        debugInformationController.SetNextCode(ci);
 
                         // 1: Update the exception handler controller.
                         //    (Will write exception related sentences.)
@@ -499,7 +499,7 @@ namespace IL2C.Writers
                         }
 
                         // 3: Write source code comment.
-                        debugInformationWriter.WriteCodeComment(tw);
+                        debugInformationController.WriteCodeComment(tw);
 
                         // 4: Generate source code fragments and write.
                         var sourceCodes = preparedMethod.Generators[ci.Offset](extractContext);
@@ -510,12 +510,12 @@ namespace IL2C.Writers
                             if (sourceCode.StartsWith("return") &&
                                 ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1)))
                             {
-                                debugInformationWriter.WriteInformationBeforeCode(tw);
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine(
                                     "il2c_unlink_execution_frame(&frame__);");
                             }
 
-                            debugInformationWriter.WriteInformationBeforeCode(tw);
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "{0};",
                                 sourceCode);
@@ -535,7 +535,7 @@ namespace IL2C.Writers
                 }
             }
 
-            debugInformationWriter.WriteInformationBeforeCode(tw);
+            debugInformationController.WriteInformationBeforeCode(tw);
             tw.WriteLine("}");
             tw.SplitLine();
         }

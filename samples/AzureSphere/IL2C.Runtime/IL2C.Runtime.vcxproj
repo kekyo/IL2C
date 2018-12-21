@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -22,6 +22,7 @@
     <ClCompile Include="../../../IL2C.Runtime/System.Enum.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Exception.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.GC.c" />
+    <ClCompile Include="../../../IL2C.Runtime/System.IDisposable.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Int16.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Int32.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Int64.c" />
@@ -54,6 +55,7 @@
     <ClInclude Include="../../../IL2C.Runtime/System.Enum.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Exception.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.GC.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.IDisposable.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Int16.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Int32.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Int64.h" />

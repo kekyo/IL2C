@@ -182,6 +182,7 @@ typedef void* untyped_ptr;
 
 // TODO: will remove after implemented packaging strategy.
 #include <System.Console.h>
+#include <System.IDisposable.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

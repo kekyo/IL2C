@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace MT3620Blink
@@ -35,7 +36,7 @@ namespace MT3620Blink
     [NativeType("sys/epoll.h")]
     internal struct epoll_data_t
     {
-        //void* ptr;
+        public IntPtr ptr;
         public int fd;
         //uint32_t u32;
         //uint64_t u64;
@@ -44,7 +45,7 @@ namespace MT3620Blink
     [NativeType("sys/epoll.h", SymbolName = "struct epoll_event")]
     internal struct epoll_event
     {
-        public uint events;
+        public int events;
         public epoll_data_t data;
     }
 

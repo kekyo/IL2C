@@ -401,6 +401,12 @@ struct IL2C_RUNTIME_TYPE_DECL
 //    //const void* markTargets[markTarget];
 //};
 
+// TODO: Support finalizer
+#define GCMARK_NOMARK ((interlock_t)1)
+#define GCMARK_LIVE ((interlock_t)0)
+#define GCMARK_CONST ((interlock_t)2)
+#define GCMARK_FIXED ((interlock_t)3)   // For GCHandle
+
 #define il2c_get_header__(pReference) \
     ((IL2C_REF_HEADER*)(((uint8_t*)(pReference)) - sizeof(IL2C_REF_HEADER)))
 

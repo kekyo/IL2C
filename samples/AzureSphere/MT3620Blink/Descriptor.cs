@@ -2,7 +2,7 @@
 
 namespace MT3620Blink
 {
-    internal sealed class Descriptor : IDisposable
+    internal abstract class Descriptor : IDisposable
     {
         public Descriptor(int fd)
         {
@@ -18,6 +18,6 @@ namespace MT3620Blink
             }
         }
 
-        public int Identity { get; private set; }
+        protected internal int Identity { get; private set; }
     }
 }

@@ -4,11 +4,6 @@
 
 /////////////////////////////////////////////////////////////
 
-// TODO: Support finalizer
-#define GCMARK_NOMARK ((interlock_t)1)
-#define GCMARK_LIVE ((interlock_t)0)
-#define GCMARK_CONST ((interlock_t)2)
-
 typedef const struct IL2C_VALUE_DESCRIPTOR_DECL
 {
     const IL2C_RUNTIME_TYPE type_value;

@@ -16,39 +16,38 @@ namespace MT3620Blink
 
         public static int Main()
         {
-            using (var led = new Descriptor(
-                Interops.GPIO_OpenAsOutput(
+            using (var epoll = new Application())
+            {
+                using (var led = new GpioOutput(
                     Interops.MT3620_RDB_LED1_RED,
                     GPIO_OutputMode_Type.GPIO_OutputMode_PushPull,
-                    GPIO_Value_Type.GPIO_Value_High)))
-            {
-                using (var button = new Descriptor(
-                    Interops.GPIO_OpenAsInput(
-                        Interops.MT3620_RDB_BUTTON_A)))
+                    true))
                 {
-                    var flag = false;
-                    var blinkIntervals = new[] { 125_000_000, 250_000_000, 500_000_000 };
-                    var blinkIntervalIndex = 0;
-                    var lastButtonValue = GPIO_Value_Type.GPIO_Value_High;
-
-                    while (true)
+                    using (var button = new GpioInput(
+                        Interops.MT3620_RDB_BUTTON_A))
                     {
-                        Interops.GPIO_SetValue(
-                            led.Identity,
-                            flag ? GPIO_Value_Type.GPIO_Value_High : GPIO_Value_Type.GPIO_Value_Low);
-                        flag = !flag;
+                        var flag = false;
+                        var blinkIntervals = new[] { 125_000_000, 250_000_000, 500_000_000 };
+                        var blinkIntervalIndex = 0;
+                        var lastButtonValue = true;
 
-                        Interops.GPIO_GetValue(button.Identity, out var buttonValue);
-                        if (buttonValue != lastButtonValue)
+                        while (true)
                         {
-                            if (buttonValue == GPIO_Value_Type.GPIO_Value_Low)
-                            {
-                                blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
-                            }
-                        }
-                        lastButtonValue = buttonValue;
+                            led.SetValue(flag);
+                            flag = !flag;
 
-                        sleep(blinkIntervals[blinkIntervalIndex]);
+                            var buttonValue = button.Value;
+                            if (buttonValue != lastButtonValue)
+                            {
+                                if (!buttonValue)
+                                {
+                                    blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
+                                }
+                            }
+                            lastButtonValue = buttonValue;
+
+                            sleep(blinkIntervals[blinkIntervalIndex]);
+                        }
                     }
                 }
             }

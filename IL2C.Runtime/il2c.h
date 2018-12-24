@@ -179,6 +179,8 @@ typedef void* untyped_ptr;
 #include <System.InvalidCastException.h>
 #include <System.IndexOutOfRangeException.h>
 #include <System.GC.h>
+#include <System.Runtime.InteropServices.GCHandleType.h>
+#include <System.Runtime.InteropServices.GCHandle.h>
 
 // TODO: will remove after implemented packaging strategy.
 #include <System.Console.h>

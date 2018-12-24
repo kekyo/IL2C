@@ -22,7 +22,9 @@ namespace IL2C.ILConverters
             ref ILocalVariableInformation requiredCastingAtArg0PointerVariable,
             ref bool isVirtualCall)
         {
-            Debug.Assert(method.IsStatic || (parameter0.TargetType.Equals(method.DeclaringType)));
+            Debug.Assert(method.IsStatic ||
+                parameter0.TargetType.Equals(method.DeclaringType) ||
+                (parameter0.TargetType.IsByReference && parameter0.TargetType.ElementType.Equals(method.DeclaringType)));
 
             // Required boxing at the arg0
             if (arg0ValueType != null)
@@ -68,6 +70,7 @@ namespace IL2C.ILConverters
                 // Invoke interface method with the class-type instance and
                 // IL2C detected here for can cast statically.
                 else if (method.DeclaringType.IsInterface &&
+                    arg0.TargetType.IsClass &&
                     method.DeclaringType.IsAssignableFrom(arg0.TargetType))
                 {
                     // All declared methods from derived to base types.
@@ -77,7 +80,7 @@ namespace IL2C.ILConverters
                     var implementationMethod = allDeclaredMethods.First(
                         dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, m));
 
-                    Debug.Assert(arg0.TargetType.Equals(implementationMethod.DeclaringType));
+                    Debug.Assert(implementationMethod.DeclaringType.IsAssignableFrom(arg0.TargetType));
 
                     // Drop virtual call and turn to the direct call
                     isVirtualCall = false;

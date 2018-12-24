@@ -628,7 +628,7 @@ namespace IL2C.Writers
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine(
                 "// [6] {0}: {1}",
-                (method.PInvokeInformation != null) ? "P/Invoke" : "InternalCall",
+                (method.PInvokeInformation != null) ? "P/Invoke" : "IL2C/Invoke",
                 method.FriendlyName);
             tw.SplitLine();
 
@@ -645,9 +645,21 @@ namespace IL2C.Writers
                     method.NativeMethod?.SymbolName ??
                     method.Name;
 
+                // P/Invoke linkage doesn't verify the C header declarations.
+                // It will lookp up by the library symbol name.
+                if (method.PInvokeInformation != null)
+                {
+                    tw.WriteLine(
+                        "extern {0};",
+                        method.CLanguageFunctionPrototype);
+                }
+
                 if (method.ReturnType.IsVoidType)
                 {
-                    tw.WriteLine("{0}({1});", entryPointName, arguments);
+                    tw.WriteLine(
+                        "{0}({1});",
+                        entryPointName,
+                        arguments);
                 }
                 else
                 {
@@ -662,26 +674,27 @@ namespace IL2C.Writers
         private static void InternalConvertFromDelegateInvoker(
             CodeTextWriter tw,
             IExtractContext extractContext,
-            IMethodInformation method)
+            IMethodInformation invokeMethod)
         {
-            if (method.Parameters.Length == 0)
+            if (invokeMethod.Parameters.Length == 0)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid delegate invoker. Name={0}",
-                    method.FriendlyName);
+                    invokeMethod.FriendlyName);
             }
 
             tw.WriteLine("///////////////////////////////////////");
-            tw.WriteLine("// [11-2] Delegate invoker: {0}", method.FriendlyName);
+            tw.WriteLine("// [11-2] Delegate invoker: {0}", invokeMethod.FriendlyName);
             tw.SplitLine();
 
             // DIRTY:
             //   Cause undefined symbol error at C compilation if "System.Delegate" type on the mscorlib assembly
             //   contains the fields with different symbol name.
 
-            var thisName = method.Parameters[0].ParameterName;
+            var thisName = invokeMethod.Parameters[0].ParameterName;
+            var delegateParameters = invokeMethod.Parameters.Skip(1).ToArray();
 
-            tw.WriteLine(method.CLanguageFunctionPrototype);
+            tw.WriteLine(invokeMethod.CLanguageFunctionPrototype);
             tw.WriteLine("{");
 
             using (var _ = tw.Shift())
@@ -697,13 +710,13 @@ namespace IL2C.Writers
                     thisName);
                 tw.SplitLine();
 
-                if (!method.ReturnType.IsVoidType)
+                if (!invokeMethod.ReturnType.IsVoidType)
                 {
-                    if (method.ReturnType.IsReferenceType)
+                    if (invokeMethod.ReturnType.IsReferenceType)
                     {
                         tw.WriteLine(
                             "volatile struct {0}_EXECUTION_FRAME_DECL",
-                            method.CLanguageFunctionName);
+                            invokeMethod.CLanguageFunctionName);
                         tw.WriteLine("{");
                         using (var __ = tw.Shift())
                         {
@@ -712,7 +725,7 @@ namespace IL2C.Writers
                             tw.WriteLine("uint16_t valueCount__;");
                             tw.WriteLine(
                                 "{0} result;",
-                                method.ReturnType.CLanguageTypeName);
+                                invokeMethod.ReturnType.CLanguageTypeName);
                         }
                         tw.WriteLine("} frame__ = { NULL, 1, 0 };");
                         tw.WriteLine("il2c_link_execution_frame(&frame__);");
@@ -721,7 +734,7 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "{0} result;",
-                            method.ReturnType.CLanguageTypeName);
+                            invokeMethod.ReturnType.CLanguageTypeName);
                     }
                 }
 
@@ -740,18 +753,16 @@ namespace IL2C.Writers
                         "IL2C_METHOD_TABLE* pMethodtbl = &{0}->methodtbl__[index];",
                         thisName);
 
-                    if (method.ReturnType.IsVoidType)
+                    if (invokeMethod.ReturnType.IsVoidType)
                     {
                         tw.WriteLine("if (pMethodtbl->target != NULL)");
                         using (var ___ = tw.Shift())
                         {
                             tw.WriteLine(
                                 "((void (*)(System_Object*{0}))(pMethodtbl->methodPtr))(pMethodtbl->target{1});",
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.ParameterName))));
                         }
                         tw.WriteLine("else");
@@ -759,11 +770,11 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "((void (*)({0}))(pMethodtbl->methodPtr))({1});",
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
-                                    Select(p => p.TargetType.CLanguageTypeName)),
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
+                                (delegateParameters.Length >= 1) ?
+                                    string.Join(", ", delegateParameters.
+                                        Select(p => p.TargetType.CLanguageTypeName)) :
+                                        "void",
+                                string.Join(", ", delegateParameters.
                                     Select(p => p.ParameterName)));
                         }
                     }
@@ -774,13 +785,11 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "{0}result = (({1} (*)(System_Object*{2}))(pMethodtbl->methodPtr))(pMethodtbl->target{3});",
-                                method.ReturnType.IsReferenceType ? "frame__." : string.Empty,
-                                method.ReturnType.CLanguageTypeName,
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                invokeMethod.ReturnType.IsReferenceType ? "frame__." : string.Empty,
+                                invokeMethod.ReturnType.CLanguageTypeName,
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.ParameterName))));
                         }
                         tw.WriteLine("else");
@@ -788,13 +797,13 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "{0}result = (({1} (*)({2}))(pMethodtbl->methodPtr))({3});",
-                                method.ReturnType.IsReferenceType ? "frame__." : string.Empty,
-                                method.ReturnType.CLanguageTypeName,
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
-                                    Select(p => p.TargetType.CLanguageTypeName)),
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
+                                invokeMethod.ReturnType.IsReferenceType ? "frame__." : string.Empty,
+                                invokeMethod.ReturnType.CLanguageTypeName,
+                                (delegateParameters.Length >= 1) ?
+                                    string.Join(", ", delegateParameters.
+                                        Select(p => p.TargetType.CLanguageTypeName)) :
+                                        "void",
+                                string.Join(", ", delegateParameters.
                                     Select(p => p.ParameterName)));
                         }
                     }
@@ -805,9 +814,9 @@ namespace IL2C.Writers
                 tw.WriteLine("while (index < this__->count__);");
                 tw.SplitLine();
 
-                if (!method.ReturnType.IsVoidType)
+                if (!invokeMethod.ReturnType.IsVoidType)
                 {
-                    if (method.ReturnType.IsReferenceType)
+                    if (invokeMethod.ReturnType.IsReferenceType)
                     {
                         tw.WriteLine("il2c_unlink_execution_frame(&frame__);");
                         tw.WriteLine("return frame__.result;");

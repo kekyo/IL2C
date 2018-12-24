@@ -63,16 +63,7 @@ namespace IL2C.Writers
             // If virtual method collection doesn't contain newslot method at this declared type:
             if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
-                tw.WriteLine(
-                    "// [1-2-1] {0} VTable layout (Same as {1})",
-                    declaredType.MemberTypeName,
-                    declaredType.BaseType.FriendlyName);
-
-                tw.WriteLine(
-                    "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",
-                    declaredType.BaseType.MangledUniqueName,
-                    declaredType.MangledUniqueName);
-                tw.SplitLine();
+                // (The typedef alias contains into prototype definitions.)
             }
             // Require new vtable layout.
             else
@@ -91,11 +82,9 @@ namespace IL2C.Writers
                         declaredType.BaseType.FriendlyName);
                 }
 
-                // Important: The vtable structure definition marked for "const",
-                //    because these vtables place into the ".rdata" section or same location.
-                //    Many small system have very tiny space for RAM (writable memory),
-                //    IL2C has to efficient memory space, vtable can place into ROM location.
-                tw.WriteLine("typedef const struct");
+                tw.WriteLine(
+                    "struct {0}_VTABLE_DECL___",
+                    declaredType.MangledUniqueName);
                 tw.WriteLine("{");
                 using (var _ = tw.Shift())
                 {
@@ -112,9 +101,7 @@ namespace IL2C.Writers
                     }
                 }
 
-                tw.WriteLine(
-                    "}} {0}_VTABLE_DECL__;",
-                    declaredType.MangledUniqueName);
+                tw.WriteLine("};");
                 tw.SplitLine();
             }
 

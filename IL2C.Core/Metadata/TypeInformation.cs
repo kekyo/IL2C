@@ -105,6 +105,10 @@ namespace IL2C.Metadata
     internal class TypeInformation
         : MemberInformation<TypeReference, TypeReference>, ITypeInformation
     {
+        private static readonly ITypeInformation[] emptyTypes = new ITypeInformation[0];
+        private static readonly IFieldInformation[] emptyFields = new IFieldInformation[0];
+        private static readonly IMethodInformation[] emptyMethods = new IMethodInformation[0];
+
         private readonly Func<MemberReference, bool> memberFilter;
 
         public TypeInformation(TypeReference type, ModuleInformation module)
@@ -317,34 +321,63 @@ namespace IL2C.Metadata
                 this.MetadataContext.ArrayType :
                 this.MetadataContext.GetOrAddType(
                     (this.Definition as TypeDefinition)?.BaseType);
-        public ITypeInformation ElementType =>
-            this.MetadataContext.GetOrAddType(
-                (this.Member.IsArray || this.Member.IsByReference || this.Member.IsPointer) ?
-                    this.Member.GetElementType() :
-                    this.IsEnum ?
-                        ((TypeDefinition)this.Definition).GetEnumUnderlyingType() :
-                        null);
-        public ITypeInformation[] InterfaceTypes =>
-            this.MetadataContext.GetOrAddTypes(
-                (this.Definition as TypeDefinition)?.
-                    Interfaces.
-                    Select(interfaceImpl => interfaceImpl.InterfaceType).
-                    Where(type => memberFilter(type)));
-        public ITypeInformation[] NestedTypes =>
-            this.MetadataContext.GetOrAddTypes(
-                (this.Definition as TypeDefinition)?.
-                    NestedTypes.
-                    Where(type => memberFilter(type)));
-        public IFieldInformation[] Fields =>
-            this.MetadataContext.GetOrAddFields(
-                (this.Definition as TypeDefinition)?.
-                    Fields.
-                    Where(field => memberFilter(field)));
-        public IMethodInformation[] DeclaredMethods =>
-            this.MetadataContext.GetOrAddMethods(
-                (this.Definition as TypeDefinition)?.
-                    Methods.
-                    Where(type => memberFilter(type)));
+        public ITypeInformation ElementType
+        {
+            get
+            {
+                var definition =
+                    (this.Member.IsArray || this.Member.IsByReference || this.Member.IsPointer) ?
+                        this.Member.GetElementType() :
+                        this.IsEnum ?
+                            ((TypeDefinition)this.Definition).GetEnumUnderlyingType() :
+                            null;
+                return (definition != null) ?
+                    this.MetadataContext.GetOrAddType(definition) :
+                    null;
+            }
+        }
+        public ITypeInformation[] InterfaceTypes
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                return (definition != null) ?
+                    this.MetadataContext.GetOrAddTypes(definition.Interfaces.
+                        Select(interfaceImpl => interfaceImpl.InterfaceType).
+                        Where(type => memberFilter(type))) :
+                    emptyTypes;
+            }
+        }
+        public ITypeInformation[] NestedTypes
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                return (definition != null) ?
+                    this.MetadataContext.GetOrAddTypes(definition.NestedTypes.Where(type => memberFilter(type))) :
+                    emptyTypes;
+            }
+        }
+        public IFieldInformation[] Fields
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                return (definition != null) ?
+                    this.MetadataContext.GetOrAddFields(definition.Fields.Where(field => memberFilter(field))) :
+                    emptyFields;
+            }
+        }
+        public IMethodInformation[] DeclaredMethods
+        {
+            get
+            {
+                var definition = this.Definition as TypeDefinition;
+                return (definition != null) ?
+                    this.MetadataContext.GetOrAddMethods(definition.Methods.Where(type => memberFilter(type))) :
+                    emptyMethods;
+            }
+        }
         public IMethodInformation[] AllInheritedDeclaredMethods =>
             ((ITypeInformation)this).
             Traverse(type => type.BaseType).
@@ -421,7 +454,8 @@ namespace IL2C.Metadata
                 {
                     return
                         definition.IsNotPublic ||
-                        definition.IsNestedAssembly;
+                        definition.IsNestedAssembly ||
+                        definition.IsNestedFamilyAndAssembly;
                 }
                 else
                 {

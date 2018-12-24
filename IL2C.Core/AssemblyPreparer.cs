@@ -75,12 +75,12 @@ namespace IL2C
                         list.Select((variable, index) => new LocalVariableInformation(
                             method,
                             variable.Index,
-                            string.Format("{0}{1}", g.Key.UnsafeRawSymbolName, index),
+                            string.Format("{0}{1}", g.Key.UnsafeCLanguageSymbolName, index),
                             variable.TargetType)) :
                         new[] { new LocalVariableInformation(
                             method,
                             list[0].Index,
-                            string.Format("{0}", g.Key.UnsafeRawSymbolName),
+                            string.Format("{0}", g.Key.UnsafeCLanguageSymbolName),
                             list[0].TargetType) };
                 }).
                 OrderBy(e => e.Index).
@@ -246,7 +246,7 @@ namespace IL2C
             IPrepareContext prepareContext = translateContext;
 
             var allTypes = translateContext.Assembly.Modules.
-                SelectMany(module => module.Types).
+                SelectMany(module => module.Types.Concat(module.Types.SelectMany(type => type.NestedTypes))).
                 Where(predictType).
                 Distinct().
                 ToArray();

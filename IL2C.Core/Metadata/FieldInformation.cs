@@ -71,11 +71,12 @@ namespace IL2C.Metadata
 
         public override bool IsCLanguagePublicScope =>
             this.DeclaringType.IsCLanguagePublicScope &&
-            this.Definition.IsPublic;
+            (this.Definition.IsPublic || this.Definition.IsFamilyOrAssembly);
         public override bool IsCLanguageLinkageScope =>
             this.DeclaringType.IsCLanguageLinkageScope &&
-            (this.Definition.IsPublic || !this.Definition.IsPrivate);
+            (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);
         public override bool IsCLanguageFileScope =>
+            this.DeclaringType.IsCLanguageFileScope ||
             this.Definition.IsPrivate;
 
         public NativeValueAttribute NativeValue =>

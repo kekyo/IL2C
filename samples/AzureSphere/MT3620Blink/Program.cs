@@ -26,31 +26,36 @@ namespace MT3620Blink
                     using (var button = new GpioInput(
                         Interops.MT3620_RDB_BUTTON_A))
                     {
-                        var flag = false;
-                        var blinkIntervals = new[] { 125_000_000, 250_000_000, 500_000_000 };
-                        var blinkIntervalIndex = 0;
-                        var lastButtonValue = true;
-
-                        while (true)
+                        using (var timer = new Timer(125_000_000L))
                         {
-                            led.SetValue(flag);
-                            flag = !flag;
+                            var flag = false;
 
-                            var buttonValue = button.Value;
-                            if (buttonValue != lastButtonValue)
-                            {
-                                if (!buttonValue)
+                            epoll.RegisterDescriptor(
+                                timer,
+                                () =>
+                                {
+                                    led.SetValue(flag);
+                                    flag = !flag;
+                                });
+
+                            var blinkIntervals = new[] { 125_000_000L, 250_000_000L, 500_000_000L };
+                            var blinkIntervalIndex = 0;
+
+                            epoll.RegisterDescriptor(
+                                button,
+                                () =>
                                 {
                                     blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
-                                }
-                            }
-                            lastButtonValue = buttonValue;
+                                    timer.SetInterval(blinkIntervals[blinkIntervalIndex]);
+                                });
 
-                            sleep(blinkIntervals[blinkIntervalIndex]);
+                            epoll.Run();
                         }
                     }
                 }
             }
+
+            return 0;
         }
     }
 }

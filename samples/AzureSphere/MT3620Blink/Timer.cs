@@ -12,11 +12,18 @@ namespace MT3620Blink
         public Timer(long nsec)
             : base(Interops.timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK))
         {
-            var tm = new timespec {
-                tv_sec = (int)(nsec / 1_000_000_000),
-                tv_nsec = (int)(nsec % 1_000_000_000)
+            this.SetInterval(nsec);
+        }
+
+        public void SetInterval(long nsec)
+        {
+            var tm = new timespec
+            {
+                tv_sec = (int)(nsec / 1_000_000_000L),
+                tv_nsec = (int)(nsec % 1_000_000_000L)
             };
-            var newValue = new itimerspec {
+            var newValue = new itimerspec
+            {
                 it_value = tm,
                 it_interval = tm
             };

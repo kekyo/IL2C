@@ -23,9 +23,14 @@ namespace IL2C.Writers
             tw.WriteLine("// [2-1] Types:");
             tw.SplitLine();
 
-            var predictTypes = types.
-                Where(type => predictType(type)).
-                ToArray();
+            tw.WriteLine("////////////////////////////////////////////////////////////");
+            tw.WriteLine("// [2-1-1] .NET types:");
+            tw.SplitLine();
+
+            // Sorted by the type assignable compatibility.
+            // Because these types are maybe depending another (but same as the assembly) type.
+            var predictTypes = TypeDependency.OrderBy(
+                types.Where(type => predictType(type)));
 
             // Output prototypes.
             foreach (var type in predictTypes)
@@ -61,6 +66,36 @@ namespace IL2C.Writers
                         type.MangledUniqueName);
                 }
             }
+            tw.SplitLine();
+
+            tw.WriteLine("////////////////////////////////////////////////////////////");
+            tw.WriteLine("// [2-1-2] VTable types:");
+            tw.SplitLine();
+
+            // Output vtable type prototypes.
+            foreach (var type in predictTypes)
+            {
+                // If virtual method collection doesn't contain newslot method at this declared type:
+                if (!type.NewSlotMethods.Any(method => method.DeclaringType.Equals(type)))
+                {
+                    tw.WriteLine(
+                        "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",
+                        type.BaseType.MangledUniqueName,
+                        type.MangledUniqueName);
+                }
+                // Require new vtable layout.
+                else
+                {
+                    // Important: The vtable structure definition marked for "const",
+                    //    because these vtables place into the ".rdata" section or same location.
+                    //    Many small system have very tiny space for RAM (writable memory),
+                    //    IL2C has to efficient memory space, vtable can place into ROM location.
+                    tw.WriteLine(
+                        "typedef const struct {0}_VTABLE_DECL___ {0}_VTABLE_DECL__;",
+                        type.MangledUniqueName);
+                }
+            }
+
             tw.SplitLine();
 
             // Output value type and object reference type.
@@ -125,8 +160,7 @@ namespace IL2C.Writers
                             type.FriendlyName);
                         tw.SplitLine();
 
-                        foreach (var method in type.DeclaredMethods.
-                            Where(predictMethod))
+                        foreach (var method in methods)
                         {
                             tw.WriteLine(
                                 "extern {0}{1};",

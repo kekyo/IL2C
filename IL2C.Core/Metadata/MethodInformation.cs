@@ -191,6 +191,12 @@ namespace IL2C.Metadata
         {
             get
             {
+                var body = this.Definition.Body;
+                if (body == null)
+                {
+                    return null;
+                }
+
                 // It gathers sequence point informations.
                 // It will use writing the line preprocessor directive.
                 var paths = new Dictionary<string, string>();
@@ -210,7 +216,7 @@ namespace IL2C.Metadata
                     ToDictionary(g => g.Key, g => g.sps);
 
                 var exceptionHandlers =
-                    this.Definition.Body.ExceptionHandlers.
+                    body.ExceptionHandlers.
                     GroupBy(eh => (tryStart: eh.TryStart.Offset, tryEnd: eh.TryEnd.Offset)).
                     OrderBy(g => g.Key.tryStart).
                     ThenByDescending(g => g.Key.tryEnd).
@@ -224,8 +230,8 @@ namespace IL2C.Metadata
                                 eh.HandlerStart.Offset,
                                 // HACK: The handler end offset sometimes doesn't produce at the last sequence.
                                 eh.HandlerEnd?.Offset ??
-                                    (this.Definition.Body.Instructions.Last().Offset +
-                                    this.Definition.Body.Instructions.Last().OpCode.Size))).
+                                    (body.Instructions.Last().Offset +
+                                    body.Instructions.Last().OpCode.Size))).
                         ToArray())).
                     ToArray();
 
@@ -272,7 +278,7 @@ namespace IL2C.Metadata
                     return operand;
                 }
 
-                foreach (var inst in this.Definition.Body.Instructions.
+                foreach (var inst in body.Instructions.
                     OrderBy(instruction => instruction.Offset).
                     Select(instruction => new CodeInformation(
                         this,
@@ -370,11 +376,12 @@ namespace IL2C.Metadata
 
         public override bool IsCLanguagePublicScope =>
             this.DeclaringType.IsCLanguagePublicScope &&
-            this.Definition.IsPublic;
+            (this.Definition.IsPublic || this.Definition.IsFamilyOrAssembly);
         public override bool IsCLanguageLinkageScope =>
             this.DeclaringType.IsCLanguageLinkageScope &&
-            (this.Definition.IsPublic || !this.Definition.IsPrivate);
+            (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);
         public override bool IsCLanguageFileScope =>
+            this.DeclaringType.IsCLanguageFileScope ||
             this.Definition.IsPrivate;
 
         public string CLanguageFunctionName =>

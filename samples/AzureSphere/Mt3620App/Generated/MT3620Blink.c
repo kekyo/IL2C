@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 // [12-1] Declared values:
 
-// .<PrivateImplementationDetails>.C55E5D2E10ACF1F04C09C95EC16BC769B727C58F
-static const int32_t declaredValue0__[] =
-    { 125000000, 250000000, 500000000 };
+// .<PrivateImplementationDetails>.E902362F9BEE92BBA97ECE5B88B94AF4A8D3201D
+static const int64_t declaredValue0__[] =
+    { 125000000LL, 250000000LL, 500000000LL };
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:
@@ -23,57 +23,75 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////////
 // [2-1] Types:
 
-typedef System_MulticastDelegate MT3620Blink_DescriptorCallbackDelegate;
-typedef struct MT3620Blink_Application MT3620Blink_Application;
-typedef struct MT3620Blink_Descriptor MT3620Blink_Descriptor;
-typedef struct MT3620Blink_GpioInput MT3620Blink_GpioInput;
-typedef struct MT3620Blink_GpioOutput MT3620Blink_GpioOutput;
-typedef struct timespec MT3620Blink_timespec;
-typedef struct itimerspec MT3620Blink_itimerspec;
-typedef GPIO_OutputMode_Type MT3620Blink_GPIO_OutputMode_Type;
-typedef GPIO_Value_Type MT3620Blink_GPIO_Value_Type;
+////////////////////////////////////////////////////////////
+// [2-1-1] .NET types:
+
 typedef epoll_data_t MT3620Blink_epoll_data_t;
 typedef struct epoll_event MT3620Blink_epoll_event;
-typedef struct MT3620Blink_Interops MT3620Blink_Interops;
+typedef GPIO_OutputMode_Type MT3620Blink_GPIO_OutputMode_Type;
+typedef struct MT3620Blink_Descriptor MT3620Blink_Descriptor;
+typedef struct MT3620Blink_GpioOutput MT3620Blink_GpioOutput;
+typedef struct MT3620Blink_Program___c__DisplayClass1_0 MT3620Blink_Program___c__DisplayClass1_0;
+typedef struct MT3620Blink_GpioInput MT3620Blink_GpioInput;
+typedef System_MulticastDelegate MT3620Blink_DescriptorCallbackDelegate;
+typedef struct MT3620Blink_Application MT3620Blink_Application;
+typedef struct timespec MT3620Blink_timespec;
+typedef struct itimerspec MT3620Blink_itimerspec;
 typedef struct MT3620Blink_Timer MT3620Blink_Timer;
+typedef struct MT3620Blink_Program___c__DisplayClass1_1 MT3620Blink_Program___c__DisplayClass1_1;
+typedef struct MT3620Blink_Program___c__DisplayClass1_2 MT3620Blink_Program___c__DisplayClass1_2;
+typedef GPIO_Value_Type MT3620Blink_GPIO_Value_Type;
+typedef struct MT3620Blink_Interops MT3620Blink_Interops;
 
 ////////////////////////////////////////////////////////////
-// [1] MT3620Blink.DescriptorCallbackDelegate
+// [2-1-2] VTable types:
 
-// [1-2-1] Delegate VTable layout (Same as System.MulticastDelegate)
+typedef System_ValueType_VTABLE_DECL__ MT3620Blink_epoll_data_t_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ MT3620Blink_epoll_event_VTABLE_DECL__;
+typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_OutputMode_Type_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ MT3620Blink_Descriptor_VTABLE_DECL__;
+typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_GpioOutput_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ MT3620Blink_Program___c__DisplayClass1_0_VTABLE_DECL__;
+typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_GpioInput_VTABLE_DECL__;
 typedef System_MulticastDelegate_VTABLE_DECL__ MT3620Blink_DescriptorCallbackDelegate_VTABLE_DECL__;
-
-// [1-5-1] VTable (Same as System.MulticastDelegate)
-#define MT3620Blink_DescriptorCallbackDelegate_VTABLE__ System_MulticastDelegate_VTABLE__
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_DescriptorCallbackDelegate);
+typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Application_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ MT3620Blink_timespec_VTABLE_DECL__;
+typedef System_ValueType_VTABLE_DECL__ MT3620Blink_itimerspec_VTABLE_DECL__;
+typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Timer_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ MT3620Blink_Program___c__DisplayClass1_1_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ MT3620Blink_Program___c__DisplayClass1_2_VTABLE_DECL__;
+typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_Value_Type_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ MT3620Blink_Interops_VTABLE_DECL__;
 
 ////////////////////////////////////////////////////////////
-// [1] MT3620Blink.Application
+// [1] MT3620Blink.epoll_data_t
 
-// [1-2-1] Class VTable layout (Same as MT3620Blink.Descriptor)
-typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Application_VTABLE_DECL__;
-
-// [1-1-2] Class layout
-struct MT3620Blink_Application
-{
-    MT3620Blink_Application_VTABLE_DECL__* vptr0__;
-    System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
-    int32_t baseField1__;
-};
-
-// [1-5-1] VTable (Same as MT3620Blink.Descriptor)
-#define MT3620Blink_Application_VTABLE__ MT3620Blink_Descriptor_VTABLE__
+// [1-5-1] VTable (Same as System.ValueType)
+#define MT3620Blink_epoll_data_t_VTABLE__ System_ValueType_VTABLE__
 
 // [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Application);
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_epoll_data_t);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.epoll_event
+
+// [1-5-1] VTable (Same as System.ValueType)
+#define MT3620Blink_epoll_event_VTABLE__ System_ValueType_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_epoll_event);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.GPIO_OutputMode_Type
+
+// [1-5-1] VTable (Same as System.Enum)
+#define MT3620Blink_GPIO_OutputMode_Type_VTABLE__ System_Enum_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_OutputMode_Type);
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Descriptor
-
-// [1-2-1] Class VTable layout (Same as System.Object)
-typedef System_Object_VTABLE_DECL__ MT3620Blink_Descriptor_VTABLE_DECL__;
 
 // [1-1-2] Class layout
 struct MT3620Blink_Descriptor
@@ -90,30 +108,7 @@ struct MT3620Blink_Descriptor
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Descriptor);
 
 ////////////////////////////////////////////////////////////
-// [1] MT3620Blink.GpioInput
-
-// [1-2-1] Class VTable layout (Same as MT3620Blink.Descriptor)
-typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_GpioInput_VTABLE_DECL__;
-
-// [1-1-2] Class layout
-struct MT3620Blink_GpioInput
-{
-    MT3620Blink_GpioInput_VTABLE_DECL__* vptr0__;
-    System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
-    int32_t baseField1__;
-};
-
-// [1-5-1] VTable (Same as MT3620Blink.Descriptor)
-#define MT3620Blink_GpioInput_VTABLE__ MT3620Blink_Descriptor_VTABLE__
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GpioInput);
-
-////////////////////////////////////////////////////////////
 // [1] MT3620Blink.GpioOutput
-
-// [1-2-1] Class VTable layout (Same as MT3620Blink.Descriptor)
-typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_GpioOutput_VTABLE_DECL__;
 
 // [1-1-2] Class layout
 struct MT3620Blink_GpioOutput
@@ -130,10 +125,66 @@ struct MT3620Blink_GpioOutput
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GpioOutput);
 
 ////////////////////////////////////////////////////////////
-// [1] MT3620Blink.timespec
+// [1] MT3620Blink.Program.<>c__DisplayClass1_0
 
-// [1-2-1] Struct VTable layout (Same as System.ValueType)
-typedef System_ValueType_VTABLE_DECL__ MT3620Blink_timespec_VTABLE_DECL__;
+// [1-1-2] Class layout
+struct MT3620Blink_Program___c__DisplayClass1_0
+{
+    MT3620Blink_Program___c__DisplayClass1_0_VTABLE_DECL__* vptr0__;
+    MT3620Blink_GpioOutput* led;
+};
+
+// [1-5-1] VTable (Same as System.Object)
+#define MT3620Blink_Program___c__DisplayClass1_0_VTABLE__ System_Object_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program___c__DisplayClass1_0);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.GpioInput
+
+// [1-1-2] Class layout
+struct MT3620Blink_GpioInput
+{
+    MT3620Blink_GpioInput_VTABLE_DECL__* vptr0__;
+    System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
+    int32_t baseField1__;
+};
+
+// [1-5-1] VTable (Same as MT3620Blink.Descriptor)
+#define MT3620Blink_GpioInput_VTABLE__ MT3620Blink_Descriptor_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GpioInput);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.DescriptorCallbackDelegate
+
+// [1-5-1] VTable (Same as System.MulticastDelegate)
+#define MT3620Blink_DescriptorCallbackDelegate_VTABLE__ System_MulticastDelegate_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_DescriptorCallbackDelegate);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.Application
+
+// [1-1-2] Class layout
+struct MT3620Blink_Application
+{
+    MT3620Blink_Application_VTABLE_DECL__* vptr0__;
+    System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
+    int32_t baseField1__;
+};
+
+// [1-5-1] VTable (Same as MT3620Blink.Descriptor)
+#define MT3620Blink_Application_VTABLE__ MT3620Blink_Descriptor_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Application);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.timespec
 
 // [1-5-1] VTable (Same as System.ValueType)
 #define MT3620Blink_timespec_VTABLE__ System_ValueType_VTABLE__
@@ -144,9 +195,6 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_timespec);
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.itimerspec
 
-// [1-2-1] Struct VTable layout (Same as System.ValueType)
-typedef System_ValueType_VTABLE_DECL__ MT3620Blink_itimerspec_VTABLE_DECL__;
-
 // [1-5-1] VTable (Same as System.ValueType)
 #define MT3620Blink_itimerspec_VTABLE__ System_ValueType_VTABLE__
 
@@ -154,76 +202,7 @@ typedef System_ValueType_VTABLE_DECL__ MT3620Blink_itimerspec_VTABLE_DECL__;
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_itimerspec);
 
 ////////////////////////////////////////////////////////////
-// [1] MT3620Blink.GPIO_OutputMode_Type
-
-// [1-2-1] Enum VTable layout (Same as System.Enum)
-typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_OutputMode_Type_VTABLE_DECL__;
-
-// [1-5-1] VTable (Same as System.Enum)
-#define MT3620Blink_GPIO_OutputMode_Type_VTABLE__ System_Enum_VTABLE__
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_OutputMode_Type);
-
-////////////////////////////////////////////////////////////
-// [1] MT3620Blink.GPIO_Value_Type
-
-// [1-2-1] Enum VTable layout (Same as System.Enum)
-typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_Value_Type_VTABLE_DECL__;
-
-// [1-5-1] VTable (Same as System.Enum)
-#define MT3620Blink_GPIO_Value_Type_VTABLE__ System_Enum_VTABLE__
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_Value_Type);
-
-////////////////////////////////////////////////////////////
-// [1] MT3620Blink.epoll_data_t
-
-// [1-2-1] Struct VTable layout (Same as System.ValueType)
-typedef System_ValueType_VTABLE_DECL__ MT3620Blink_epoll_data_t_VTABLE_DECL__;
-
-// [1-5-1] VTable (Same as System.ValueType)
-#define MT3620Blink_epoll_data_t_VTABLE__ System_ValueType_VTABLE__
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_epoll_data_t);
-
-////////////////////////////////////////////////////////////
-// [1] MT3620Blink.epoll_event
-
-// [1-2-1] Struct VTable layout (Same as System.ValueType)
-typedef System_ValueType_VTABLE_DECL__ MT3620Blink_epoll_event_VTABLE_DECL__;
-
-// [1-5-1] VTable (Same as System.ValueType)
-#define MT3620Blink_epoll_event_VTABLE__ System_ValueType_VTABLE__
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_epoll_event);
-
-////////////////////////////////////////////////////////////
-// [1] MT3620Blink.Interops
-
-// [1-2-1] Class VTable layout (Same as System.Object)
-typedef System_Object_VTABLE_DECL__ MT3620Blink_Interops_VTABLE_DECL__;
-
-// [1-1-2] Class layout
-struct MT3620Blink_Interops
-{
-    MT3620Blink_Interops_VTABLE_DECL__* vptr0__;
-};
-
-// [1-5-1] VTable (Same as System.Object)
-#define MT3620Blink_Interops_VTABLE__ System_Object_VTABLE__
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Interops);
-
-////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Timer
-
-// [1-2-1] Class VTable layout (Same as MT3620Blink.Descriptor)
-typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Timer_VTABLE_DECL__;
 
 // [1-1-2] Class layout
 struct MT3620Blink_Timer
@@ -239,19 +218,100 @@ struct MT3620Blink_Timer
 // [1-4] Runtime type information
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Timer);
 
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.Program.<>c__DisplayClass1_1
+
+// [1-1-2] Class layout
+struct MT3620Blink_Program___c__DisplayClass1_1
+{
+    MT3620Blink_Program___c__DisplayClass1_1_VTABLE_DECL__* vptr0__;
+    MT3620Blink_Timer* timer;
+    MT3620Blink_Program___c__DisplayClass1_0* CS___8__locals1;
+};
+
+// [1-5-1] VTable (Same as System.Object)
+#define MT3620Blink_Program___c__DisplayClass1_1_VTABLE__ System_Object_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program___c__DisplayClass1_1);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.Program.<>c__DisplayClass1_2
+
+// [1-1-2] Class layout
+struct MT3620Blink_Program___c__DisplayClass1_2
+{
+    MT3620Blink_Program___c__DisplayClass1_2_VTABLE_DECL__* vptr0__;
+    bool flag;
+    int32_t blinkIntervalIndex;
+    il2c_arraytype(System_Int64)* blinkIntervals;
+    MT3620Blink_Program___c__DisplayClass1_1* CS___8__locals2;
+};
+
+// [1-5-1] VTable (Same as System.Object)
+#define MT3620Blink_Program___c__DisplayClass1_2_VTABLE__ System_Object_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program___c__DisplayClass1_2);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.GPIO_Value_Type
+
+// [1-5-1] VTable (Same as System.Enum)
+#define MT3620Blink_GPIO_Value_Type_VTABLE__ System_Enum_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_Value_Type);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.Interops
+
+// [1-1-2] Class layout
+struct MT3620Blink_Interops
+{
+    MT3620Blink_Interops_VTABLE_DECL__* vptr0__;
+};
+
+// [1-5-1] VTable (Same as System.Object)
+#define MT3620Blink_Interops_VTABLE__ System_Object_VTABLE__
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Interops);
+
 //////////////////////////////////////////////////////////////////////////////////
 // [2-2] Static fields:
+
+#define MT3620Blink_Timer_CLOCK_MONOTONIC CLOCK_MONOTONIC
+#define MT3620Blink_Timer_TFD_NONBLOCK TFD_NONBLOCK
 
 #define MT3620Blink_Interops_MT3620_RDB_LED1_RED MT3620_RDB_LED1_RED
 #define MT3620Blink_Interops_MT3620_RDB_BUTTON_A MT3620_RDB_BUTTON_A
 #define MT3620Blink_Interops_EPOLL_CTL_ADD EPOLL_CTL_ADD
 #define MT3620Blink_Interops_EPOLLIN EPOLLIN
 
-#define MT3620Blink_Timer_CLOCK_MONOTONIC CLOCK_MONOTONIC
-#define MT3620Blink_Timer_TFD_NONBLOCK TFD_NONBLOCK
-
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods:
+
+// [2-4] Member methods: MT3620Blink.Descriptor
+
+extern void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* this__, int32_t fd);
+extern void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__);
+extern int32_t MT3620Blink_Descriptor_get_Identity(MT3620Blink_Descriptor* this__);
+extern void MT3620Blink_Descriptor_set_Identity(MT3620Blink_Descriptor* this__, int32_t value);
+
+// [2-4] Member methods: MT3620Blink.GpioOutput
+
+extern void MT3620Blink_GpioOutput__ctor(MT3620Blink_GpioOutput* this__, int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type type, bool initialValue);
+extern void MT3620Blink_GpioOutput_SetValue(MT3620Blink_GpioOutput* this__, bool value);
+
+// [2-4] Member methods: MT3620Blink.Program.<>c__DisplayClass1_0
+
+extern void MT3620Blink_Program___c__DisplayClass1_0__ctor(MT3620Blink_Program___c__DisplayClass1_0* this__);
+
+// [2-4] Member methods: MT3620Blink.GpioInput
+
+extern void MT3620Blink_GpioInput__ctor(MT3620Blink_GpioInput* this__, int32_t gpioId);
+extern bool MT3620Blink_GpioInput_get_Value(MT3620Blink_GpioInput* this__);
 
 // [2-4] Member methods: MT3620Blink.DescriptorCallbackDelegate
 
@@ -263,22 +323,20 @@ extern void MT3620Blink_Application__ctor(MT3620Blink_Application* this__);
 extern void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_Descriptor* target, MT3620Blink_DescriptorCallbackDelegate* callback);
 extern void MT3620Blink_Application_Run(MT3620Blink_Application* this__);
 
-// [2-4] Member methods: MT3620Blink.Descriptor
+// [2-4] Member methods: MT3620Blink.Timer
 
-extern void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* this__, int32_t fd);
-extern void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__);
-extern int32_t MT3620Blink_Descriptor_get_Identity(MT3620Blink_Descriptor* this__);
-extern void MT3620Blink_Descriptor_set_Identity(MT3620Blink_Descriptor* this__, int32_t value);
+extern void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__, int64_t nsec);
+extern void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec);
 
-// [2-4] Member methods: MT3620Blink.GpioInput
+// [2-4] Member methods: MT3620Blink.Program.<>c__DisplayClass1_1
 
-extern void MT3620Blink_GpioInput__ctor(MT3620Blink_GpioInput* this__, int32_t gpioId);
-extern bool MT3620Blink_GpioInput_get_Value(MT3620Blink_GpioInput* this__);
+extern void MT3620Blink_Program___c__DisplayClass1_1__ctor(MT3620Blink_Program___c__DisplayClass1_1* this__);
 
-// [2-4] Member methods: MT3620Blink.GpioOutput
+// [2-4] Member methods: MT3620Blink.Program.<>c__DisplayClass1_2
 
-extern void MT3620Blink_GpioOutput__ctor(MT3620Blink_GpioOutput* this__, int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type type, bool initialValue);
-extern void MT3620Blink_GpioOutput_SetValue(MT3620Blink_GpioOutput* this__, bool value);
+extern void MT3620Blink_Program___c__DisplayClass1_2__ctor(MT3620Blink_Program___c__DisplayClass1_2* this__);
+extern void MT3620Blink_Program___c__DisplayClass1_2__Main_b__0(MT3620Blink_Program___c__DisplayClass1_2* this__);
+extern void MT3620Blink_Program___c__DisplayClass1_2__Main_b__1(MT3620Blink_Program___c__DisplayClass1_2* this__);
 
 // [2-4] Member methods: MT3620Blink.Interops
 
@@ -293,10 +351,6 @@ extern /* static */ int32_t MT3620Blink_Interops_GPIO_GetValue(int32_t gpioFd, M
 extern /* static */ int32_t MT3620Blink_Interops_epoll_create1(int32_t flags);
 extern /* static */ int32_t MT3620Blink_Interops_epoll_ctl(int32_t epollfd, int32_t op, int32_t fd, MT3620Blink_epoll_event* ev);
 extern /* static */ int32_t MT3620Blink_Interops_epoll_wait(int32_t epollfd, MT3620Blink_epoll_event* ev, int32_t maxevents, int32_t timeout);
-
-// [2-4] Member methods: MT3620Blink.Timer
-
-extern void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__, int64_t nsec);
 
 #ifdef __cplusplus
 }
@@ -324,7 +378,7 @@ void MT3620Blink_DescriptorCallbackDelegate_Invoke(MT3620Blink_DescriptorCallbac
         if (pMethodtbl->target != NULL)
             ((void (*)(System_Object*))(pMethodtbl->methodPtr))(pMethodtbl->target);
         else
-            ((void (*)())(pMethodtbl->methodPtr))();
+            ((void (*)(void))(pMethodtbl->methodPtr))();
         index++;
     }
     while (index < this__->count__);
@@ -438,8 +492,9 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     MT3620Blink_epoll_event stack0_3__;
     int32_t stack0_5__;
     int32_t stack1_0__;
-    MT3620Blink_epoll_data_t* stack1_1__;
-    MT3620Blink_epoll_data_t stack1_2__;
+    uint32_t stack1_1__;
+    MT3620Blink_epoll_data_t* stack1_2__;
+    MT3620Blink_epoll_data_t stack1_3__;
     System_Runtime_InteropServices_GCHandle* stack2_0__;
     intptr_t stack2_1__;
     int32_t stack2_3__;
@@ -471,27 +526,27 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     /* IL_0011: ldloca.s local2__               : Application.cs(18) */
     stack0_2__ = &local2__;
     /* IL_0013: ldsfld MT3620Blink.Interops.EPOLLIN : Application.cs(18) */
-    stack1_0__ = MT3620Blink_Interops_EPOLLIN;
+    stack1_1__ = MT3620Blink_Interops_EPOLLIN;
     /* IL_0018: stfld MT3620Blink.epoll_event.events : Application.cs(18) */
-    stack0_2__->events = stack1_0__;
+    stack0_2__->events = stack1_1__;
     /* IL_001d: ldloca.s local2__               : Application.cs(18) */
     stack0_2__ = &local2__;
     /* IL_001f: ldloca.s local3__               : Application.cs(18) */
-    stack1_1__ = &local3__;
+    stack1_2__ = &local3__;
     /* IL_0021: initobj MT3620Blink.epoll_data_t : Application.cs(18) */
-    il2c_memset(stack1_1__, 0x00, sizeof(MT3620Blink_epoll_data_t));
+    il2c_memset(stack1_2__, 0x00, sizeof(MT3620Blink_epoll_data_t));
     /* IL_0027: ldloca.s local3__               : Application.cs(18) */
-    stack1_1__ = &local3__;
+    stack1_2__ = &local3__;
     /* IL_0029: ldloca.s handle                 : Application.cs(18) */
     stack2_0__ = &handle;
     /* IL_002b: call System.Runtime.InteropServices.GCHandle.AddrOfPinnedObject : Application.cs(18) */
     stack2_1__ = System_Runtime_InteropServices_GCHandle_AddrOfPinnedObject(stack2_0__);
     /* IL_0030: stfld MT3620Blink.epoll_data_t.ptr : Application.cs(18) */
-    stack1_1__->ptr = stack2_1__;
+    stack1_2__->ptr = stack2_1__;
     /* IL_0035: ldloc.3                         : Application.cs(18) */
-    stack1_2__ = local3__;
+    stack1_3__ = local3__;
     /* IL_0036: stfld MT3620Blink.epoll_event.data : Application.cs(18) */
-    stack0_2__->data = stack1_2__;
+    stack0_2__->data = stack1_3__;
     /* IL_003b: ldloc.2                         : Application.cs(18) */
     stack0_3__ = local2__;
     /* IL_003c: stloc.1                         : Application.cs(18) */
@@ -1295,7 +1350,7 @@ IL2C_RUNTIME_TYPE_END();
 // [9-4] Type: MT3620Blink.Interops
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.close(System.Int32 fd)
+// [6] IL2C/Invoke: MT3620Blink.Interops.close(System.Int32 fd)
 
 int32_t MT3620Blink_Interops_close(int32_t fd)
 {
@@ -1303,7 +1358,7 @@ int32_t MT3620Blink_Interops_close(int32_t fd)
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.nanosleep(MT3620Blink.timespec& req, MT3620Blink.timespec& rem)
+// [6] IL2C/Invoke: MT3620Blink.Interops.nanosleep(MT3620Blink.timespec& req, MT3620Blink.timespec& rem)
 
 void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* req, MT3620Blink_timespec* rem)
 {
@@ -1311,7 +1366,7 @@ void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* req, MT3620Blink_times
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.timerfd_create(System.Int32 clockid, System.Int32 flags)
+// [6] IL2C/Invoke: MT3620Blink.Interops.timerfd_create(System.Int32 clockid, System.Int32 flags)
 
 int32_t MT3620Blink_Interops_timerfd_create(int32_t clockid, int32_t flags)
 {
@@ -1319,7 +1374,7 @@ int32_t MT3620Blink_Interops_timerfd_create(int32_t clockid, int32_t flags)
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.timerfd_settime(System.Int32 fd, System.Int32 flags, MT3620Blink.itimerspec& new_value, MT3620Blink.itimerspec& old_value)
+// [6] IL2C/Invoke: MT3620Blink.Interops.timerfd_settime(System.Int32 fd, System.Int32 flags, MT3620Blink.itimerspec& new_value, MT3620Blink.itimerspec& old_value)
 
 int32_t MT3620Blink_Interops_timerfd_settime(int32_t fd, int32_t flags, MT3620Blink_itimerspec* new_value, MT3620Blink_itimerspec* old_value)
 {
@@ -1327,7 +1382,7 @@ int32_t MT3620Blink_Interops_timerfd_settime(int32_t fd, int32_t flags, MT3620Bl
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.GPIO_OpenAsOutput(System.Int32 gpioId, MT3620Blink.GPIO_OutputMode_Type outputMode, MT3620Blink.GPIO_Value_Type initialValue)
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_OpenAsOutput(System.Int32 gpioId, MT3620Blink.GPIO_OutputMode_Type outputMode, MT3620Blink.GPIO_Value_Type initialValue)
 
 int32_t MT3620Blink_Interops_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue)
 {
@@ -1335,7 +1390,7 @@ int32_t MT3620Blink_Interops_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.GPIO_SetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type value)
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_SetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type value)
 
 int32_t MT3620Blink_Interops_GPIO_SetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type value)
 {
@@ -1343,7 +1398,7 @@ int32_t MT3620Blink_Interops_GPIO_SetValue(int32_t gpioFd, MT3620Blink_GPIO_Valu
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.GPIO_OpenAsInput(System.Int32 gpioId)
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_OpenAsInput(System.Int32 gpioId)
 
 int32_t MT3620Blink_Interops_GPIO_OpenAsInput(int32_t gpioId)
 {
@@ -1351,7 +1406,7 @@ int32_t MT3620Blink_Interops_GPIO_OpenAsInput(int32_t gpioId)
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.GPIO_GetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type& value)
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_GetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type& value)
 
 int32_t MT3620Blink_Interops_GPIO_GetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type* value)
 {
@@ -1359,7 +1414,7 @@ int32_t MT3620Blink_Interops_GPIO_GetValue(int32_t gpioFd, MT3620Blink_GPIO_Valu
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.epoll_create1(System.Int32 flags)
+// [6] IL2C/Invoke: MT3620Blink.Interops.epoll_create1(System.Int32 flags)
 
 int32_t MT3620Blink_Interops_epoll_create1(int32_t flags)
 {
@@ -1367,7 +1422,7 @@ int32_t MT3620Blink_Interops_epoll_create1(int32_t flags)
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.epoll_ctl(System.Int32 epollfd, System.Int32 op, System.Int32 fd, MT3620Blink.epoll_event& ev)
+// [6] IL2C/Invoke: MT3620Blink.Interops.epoll_ctl(System.Int32 epollfd, System.Int32 op, System.Int32 fd, MT3620Blink.epoll_event& ev)
 
 int32_t MT3620Blink_Interops_epoll_ctl(int32_t epollfd, int32_t op, int32_t fd, MT3620Blink_epoll_event* ev)
 {
@@ -1375,7 +1430,7 @@ int32_t MT3620Blink_Interops_epoll_ctl(int32_t epollfd, int32_t op, int32_t fd, 
 }
 
 ///////////////////////////////////////
-// [6] InternalCall: MT3620Blink.Interops.epoll_wait(System.Int32 epollfd, MT3620Blink.epoll_event& ev, System.Int32 maxevents, System.Int32 timeout)
+// [6] IL2C/Invoke: MT3620Blink.Interops.epoll_wait(System.Int32 epollfd, MT3620Blink.epoll_event& ev, System.Int32 maxevents, System.Int32 timeout)
 
 int32_t MT3620Blink_Interops_epoll_wait(int32_t epollfd, MT3620Blink_epoll_event* ev, int32_t maxevents, int32_t timeout)
 {
@@ -1473,6 +1528,12 @@ static int16_t MT3620Blink_Program_Main_ExceptionFilter2__(System_Exception* ex)
     return IL2C_FILTER_FINALLY;  // Not matched (will go to finally)
 }
 
+static int16_t MT3620Blink_Program_Main_ExceptionFilter3__(System_Exception* ex)
+{
+    il2c_assert(ex != NULL);
+    return IL2C_FILTER_FINALLY;  // Not matched (will go to finally)
+}
+
 //-------------------
 // [3-7] Declare execution frame:
 
@@ -1483,14 +1544,27 @@ typedef struct MT3620Blink_Program_Main_EXECUTION_FRAME_DECL
     const uint16_t valueCount__;
     //-------------------- objref
     MT3620Blink_Application* epoll;
-    MT3620Blink_GpioOutput* led;
+    MT3620Blink_Program___c__DisplayClass1_0* CS___8__locals0;
     MT3620Blink_GpioInput* button;
-    il2c_arraytype(System_Int32)* blinkIntervals;
+    MT3620Blink_Program___c__DisplayClass1_1* CS___8__locals1;
+    MT3620Blink_Program___c__DisplayClass1_2* CS___8__locals2;
     MT3620Blink_Application* stack0_0__;
-    MT3620Blink_GpioOutput* stack0_2__;
+    MT3620Blink_Program___c__DisplayClass1_0* stack0_1__;
     MT3620Blink_GpioInput* stack0_3__;
-    il2c_arraytype(System_Int32)* stack0_4__;
-    il2c_arraytype(System_Int32)* stack1_1__;
+    MT3620Blink_Program___c__DisplayClass1_1* stack0_4__;
+    MT3620Blink_Program___c__DisplayClass1_2* stack0_5__;
+    MT3620Blink_GpioOutput* stack0_6__;
+    MT3620Blink_Timer* stack0_7__;
+    MT3620Blink_GpioOutput* stack1_1__;
+    MT3620Blink_Program___c__DisplayClass1_0* stack1_2__;
+    MT3620Blink_Timer* stack1_4__;
+    MT3620Blink_Program___c__DisplayClass1_1* stack1_5__;
+    MT3620Blink_Program___c__DisplayClass1_2* stack1_6__;
+    il2c_arraytype(System_Int64)* stack1_7__;
+    MT3620Blink_GpioInput* stack1_8__;
+    MT3620Blink_Program___c__DisplayClass1_2* stack2_1__;
+    MT3620Blink_DescriptorCallbackDelegate* stack2_2__;
+    il2c_arraytype(System_Int64)* stack2_3__;
 } MT3620Blink_Program_Main_EXECUTION_FRAME__;
 
 //-------------------
@@ -1501,30 +1575,24 @@ int32_t MT3620Blink_Program_Main(void)
     //-------------------
     // [3-3] Local variables (!objref):
 
-    volatile bool flag = false;
-    volatile int32_t blinkIntervalIndex = 0;
-    volatile bool lastButtonValue = false;
-    volatile bool buttonValue = false;
-    volatile bool local8__ = false;
-    volatile bool local9__ = false;
-    volatile bool local10__ = false;
+    volatile int32_t local5__ = 0;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
-    int32_t stack0_1__;
-    bool stack0_5__;
+    int32_t stack0_2__;
     int32_t stack1_0__;
-    bool stack1_2__;
-    uintptr_t stack1_3__;
+    int64_t stack1_3__;
     int32_t stack2_0__;
-    System_RuntimeFieldHandle stack2_1__;
+    int32_t stack3_0__;
+    intptr_t stack3_1__;
+    System_RuntimeFieldHandle stack3_2__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
     MT3620Blink_Program_Main_EXECUTION_FRAME__ frame__ =
-        { NULL, 9 };
+        { NULL, 22 };
     il2c_link_execution_frame(&frame__);
 
     //-------------------
@@ -1539,202 +1607,261 @@ int32_t MT3620Blink_Program_Main(void)
     il2c_try(nest0, MT3620Blink_Program_Main_ExceptionFilter0__)
     {
         /* IL_0007: nop                             : Program.cs(20) */
-        /* IL_0008: ldsfld MT3620Blink.Interops.MT3620_RDB_LED1_RED */
-        stack0_1__ = MT3620Blink_Interops_MT3620_RDB_LED1_RED;
-        /* IL_000d: ldc.i4.0                        : Program.cs(21) */
-        stack1_0__ = 0;
-        /* IL_000e: ldc.i4.1                        : Program.cs(21) */
-        stack2_0__ = 1;
-        /* IL_000f: newobj MT3620Blink.GpioOutput..ctor : Program.cs(21) */
-        frame__.stack0_2__ = il2c_get_uninitialized_object(MT3620Blink_GpioOutput);
-        MT3620Blink_GpioOutput__ctor(frame__.stack0_2__, stack0_1__, (MT3620Blink_GPIO_OutputMode_Type)stack1_0__, (stack2_0__) ? true : false);
-        /* IL_0014: stloc.1                         : Program.cs(21) */
-        frame__.led = frame__.stack0_2__;
+        /* IL_0008: newobj MT3620Blink.Program.<>c__DisplayClass1_0..ctor */
+        frame__.stack0_1__ = il2c_get_uninitialized_object(MT3620Blink_Program___c__DisplayClass1_0);
+        MT3620Blink_Program___c__DisplayClass1_0__ctor(frame__.stack0_1__);
+        /* IL_000d: stloc.1                         : Program.cs(20) */
+        frame__.CS___8__locals0 = frame__.stack0_1__;
+        /* IL_000e: ldloc.1                         : Program.cs(21) */
+        frame__.stack0_1__ = frame__.CS___8__locals0;
+        /* IL_000f: ldsfld MT3620Blink.Interops.MT3620_RDB_LED1_RED : Program.cs(21) */
+        stack1_0__ = MT3620Blink_Interops_MT3620_RDB_LED1_RED;
+        /* IL_0014: ldc.i4.0                        : Program.cs(21) */
+        stack2_0__ = 0;
+        /* IL_0015: ldc.i4.1                        : Program.cs(21) */
+        stack3_0__ = 1;
+        /* IL_0016: newobj MT3620Blink.GpioOutput..ctor : Program.cs(21) */
+        frame__.stack1_1__ = il2c_get_uninitialized_object(MT3620Blink_GpioOutput);
+        MT3620Blink_GpioOutput__ctor(frame__.stack1_1__, stack1_0__, (MT3620Blink_GPIO_OutputMode_Type)stack2_0__, (stack3_0__) ? true : false);
+        /* IL_001b: stfld MT3620Blink.Program.<>c__DisplayClass1_0.led : Program.cs(21) */
+        frame__.stack0_1__->led = frame__.stack1_1__;
         il2c_try(nest1, MT3620Blink_Program_Main_ExceptionFilter1__)
         {
-            /* IL_0015: nop                             : Program.cs(25) */
-            /* IL_0016: ldsfld MT3620Blink.Interops.MT3620_RDB_BUTTON_A */
-            stack0_1__ = MT3620Blink_Interops_MT3620_RDB_BUTTON_A;
-            /* IL_001b: newobj MT3620Blink.GpioInput..ctor : Program.cs(26) */
+            /* IL_0020: nop                             : Program.cs(25) */
+            /* IL_0021: ldsfld MT3620Blink.Interops.MT3620_RDB_BUTTON_A */
+            stack0_2__ = MT3620Blink_Interops_MT3620_RDB_BUTTON_A;
+            /* IL_0026: newobj MT3620Blink.GpioInput..ctor : Program.cs(26) */
             frame__.stack0_3__ = il2c_get_uninitialized_object(MT3620Blink_GpioInput);
-            MT3620Blink_GpioInput__ctor(frame__.stack0_3__, stack0_1__);
-            /* IL_0020: stloc.2                         : Program.cs(26) */
+            MT3620Blink_GpioInput__ctor(frame__.stack0_3__, stack0_2__);
+            /* IL_002b: stloc.2                         : Program.cs(26) */
             frame__.button = frame__.stack0_3__;
             il2c_try(nest2, MT3620Blink_Program_Main_ExceptionFilter2__)
             {
-                /* IL_0021: nop                             : Program.cs(28) */
-                /* IL_0022: ldc.i4.0  */
-                stack0_1__ = 0;
-                /* IL_0023: stloc.3                         : Program.cs(29) */
-                flag = (stack0_1__) ? true : false;
-                /* IL_0024: ldc.i4.3                        : Program.cs(30) */
-                stack0_1__ = 3;
-                /* IL_0025: newarr System.Int32             : Program.cs(30) */
-                frame__.stack0_4__ = il2c_new_array(System_Int32, stack0_1__);
-                /* IL_002a: dup                             : Program.cs(30) */
-                frame__.stack1_1__ = frame__.stack0_4__;
-                /* IL_002b: ldtoken .<PrivateImplementationDetails>.C55E5D2E10ACF1F04C09C95EC16BC769B727C58F : Program.cs(30) */
-                stack2_1__.size__ = sizeof(declaredValue0__);
-                stack2_1__.field__ = declaredValue0__;
-                /* IL_0030: call System.Runtime.CompilerServices.RuntimeHelpers.InitializeArray : Program.cs(30) */
-                System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray((System_Array*)frame__.stack1_1__, stack2_1__);
-                /* IL_0035: stloc.s blinkIntervals          : Program.cs(30) */
-                frame__.blinkIntervals = frame__.stack0_4__;
-                /* IL_0037: ldc.i4.0                        : Program.cs(31) */
-                stack0_1__ = 0;
-                /* IL_0038: stloc.s blinkIntervalIndex      : Program.cs(31) */
-                blinkIntervalIndex = stack0_1__;
-                /* IL_003a: ldc.i4.1                        : Program.cs(32) */
-                stack0_1__ = 1;
-                /* IL_003b: stloc.s lastButtonValue         : Program.cs(32) */
-                lastButtonValue = (stack0_1__) ? true : false;
-                /* IL_003d: br.s IL_008e                    : Program.cs(32) */
-                goto IL_008e;
-            IL_003f:
-                /* IL_003f: nop                             : Program.cs(35) */
-                /* IL_0040: ldloc.1  */
-                frame__.stack0_2__ = frame__.led;
-                /* IL_0041: ldloc.3                         : Program.cs(36) */
-                stack1_2__ = flag;
-                /* IL_0042: callvirt MT3620Blink.GpioOutput.SetValue : Program.cs(36) */
-                MT3620Blink_GpioOutput_SetValue(il2c_adjusted_reference(frame__.stack0_2__), stack1_2__);
-                /* IL_0047: nop                             : Program.cs(36) */
-                /* IL_0048: ldloc.3  */
-                stack0_5__ = flag;
-                /* IL_0049: ldc.i4.0                        : Program.cs(37) */
-                stack1_0__ = 0;
-                /* IL_004a: ceq                             : Program.cs(37) */
-                stack0_1__ = ((int32_t)stack0_5__ == (int32_t)stack1_0__) ? 1 : 0;
-                /* IL_004c: stloc.3                         : Program.cs(37) */
-                flag = (stack0_1__) ? true : false;
-                /* IL_004d: ldloc.2                         : Program.cs(39) */
-                frame__.stack0_3__ = frame__.button;
-                /* IL_004e: callvirt MT3620Blink.GpioInput.get_Value : Program.cs(39) */
-                stack0_5__ = MT3620Blink_GpioInput_get_Value(il2c_adjusted_reference(frame__.stack0_3__));
-                /* IL_0053: stloc.s buttonValue             : Program.cs(39) */
-                buttonValue = stack0_5__;
-                /* IL_0055: ldloc.s buttonValue             : Program.cs(40) */
-                stack0_5__ = buttonValue;
-                /* IL_0057: ldloc.s lastButtonValue         : Program.cs(40) */
-                stack1_2__ = lastButtonValue;
-                /* IL_0059: ceq                             : Program.cs(40) */
-                stack0_1__ = ((int32_t)stack0_5__ == (int32_t)stack1_2__) ? 1 : 0;
-                /* IL_005b: ldc.i4.0                        : Program.cs(40) */
-                stack1_0__ = 0;
-                /* IL_005c: ceq                             : Program.cs(40) */
-                stack0_1__ = ((int32_t)stack0_1__ == (int32_t)stack1_0__) ? 1 : 0;
-                /* IL_005e: stloc.s local8__                : Program.cs(40) */
-                local8__ = (stack0_1__) ? true : false;
-                /* IL_0060: ldloc.s local8__                : Program.cs(40) */
-                stack0_5__ = local8__;
-                /* IL_0062: brfalse.s IL_007e               : Program.cs(40) */
-                if (!(stack0_5__)) goto IL_007e;
-                /* IL_0064: nop                             : Program.cs(41) */
-                /* IL_0065: ldloc.s buttonValue */
-                stack0_5__ = buttonValue;
-                /* IL_0067: ldc.i4.0                        : Program.cs(42) */
-                stack1_0__ = 0;
-                /* IL_0068: ceq                             : Program.cs(42) */
-                stack0_1__ = ((int32_t)stack0_5__ == (int32_t)stack1_0__) ? 1 : 0;
-                /* IL_006a: stloc.s local9__                : Program.cs(42) */
-                local9__ = (stack0_1__) ? true : false;
-                /* IL_006c: ldloc.s local9__                : Program.cs(42) */
-                stack0_5__ = local9__;
-                /* IL_006e: brfalse.s IL_007d               : Program.cs(42) */
-                if (!(stack0_5__)) goto IL_007d;
-                /* IL_0070: nop                             : Program.cs(43) */
-                /* IL_0071: ldloc.s blinkIntervalIndex */
-                stack0_1__ = blinkIntervalIndex;
-                /* IL_0073: ldc.i4.1                        : Program.cs(44) */
-                stack1_0__ = 1;
-                /* IL_0074: add                             : Program.cs(44) */
-                stack0_1__ = stack0_1__ + stack1_0__;
-                /* IL_0075: ldloc.s blinkIntervals          : Program.cs(44) */
-                frame__.stack1_1__ = frame__.blinkIntervals;
-                /* IL_0077: ldlen                           : Program.cs(44) */
-                stack1_3__ = (uintptr_t)frame__.stack1_1__->Length;
-                /* IL_0078: conv.i4                         : Program.cs(44) */
-                stack1_0__ = (int32_t)stack1_3__;
-                /* IL_0079: rem                             : Program.cs(44) */
-                stack0_1__ = stack0_1__ % stack1_0__;
-                /* IL_007a: stloc.s blinkIntervalIndex      : Program.cs(44) */
-                blinkIntervalIndex = stack0_1__;
-                /* IL_007c: nop                             : Program.cs(45) */
-            IL_007d:
-                /* IL_007d: nop  */
-            IL_007e:
-                /* IL_007e: ldloc.s buttonValue */
-                stack0_5__ = buttonValue;
-                /* IL_0080: stloc.s lastButtonValue         : Program.cs(47) */
-                lastButtonValue = stack0_5__;
-                /* IL_0082: ldloc.s blinkIntervals          : Program.cs(49) */
-                frame__.stack0_4__ = frame__.blinkIntervals;
-                /* IL_0084: ldloc.s blinkIntervalIndex      : Program.cs(49) */
-                stack1_0__ = blinkIntervalIndex;
-                /* IL_0086: ldelem.i4                       : Program.cs(49) */
-                stack0_1__ = il2c_array_item(frame__.stack0_4__, int32_t, stack1_0__);
-                /* IL_0087: call MT3620Blink.Program.sleep  : Program.cs(49) */
-                MT3620Blink_Program_sleep(stack0_1__);
-                /* IL_008c: nop                             : Program.cs(49) */
-                /* IL_008d: nop  */
-            IL_008e:
-                /* IL_008e: ldc.i4.1  */
-                stack0_1__ = 1;
-                /* IL_008f: stloc.s local10__               : Program.cs(34) */
-                local10__ = (stack0_1__) ? true : false;
-                /* IL_0091: br.s IL_003f                    : Program.cs(34) */
-                goto IL_003f;
+                /* IL_002c: nop                             : Program.cs(28) */
+                /* IL_002d: newobj MT3620Blink.Program.<>c__DisplayClass1_1..ctor */
+                frame__.stack0_4__ = il2c_get_uninitialized_object(MT3620Blink_Program___c__DisplayClass1_1);
+                MT3620Blink_Program___c__DisplayClass1_1__ctor(frame__.stack0_4__);
+                /* IL_0032: stloc.3                         : Program.cs(28) */
+                frame__.CS___8__locals1 = frame__.stack0_4__;
+                /* IL_0033: ldloc.3                         : Program.cs(28) */
+                frame__.stack0_4__ = frame__.CS___8__locals1;
+                /* IL_0034: ldloc.1                         : Program.cs(28) */
+                frame__.stack1_2__ = frame__.CS___8__locals0;
+                /* IL_0035: stfld MT3620Blink.Program.<>c__DisplayClass1_1.CS$<>8__locals1 : Program.cs(28) */
+                frame__.stack0_4__->CS___8__locals1 = frame__.stack1_2__;
+                /* IL_003a: ldloc.3                         : Program.cs(29) */
+                frame__.stack0_4__ = frame__.CS___8__locals1;
+                /* IL_003b: ldc.i4 125000000                : Program.cs(29) */
+                stack1_0__ = 125000000;
+                /* IL_0040: conv.i8                         : Program.cs(29) */
+                stack1_3__ = (int64_t)stack1_0__;
+                /* IL_0041: newobj MT3620Blink.Timer..ctor  : Program.cs(29) */
+                frame__.stack1_4__ = il2c_get_uninitialized_object(MT3620Blink_Timer);
+                MT3620Blink_Timer__ctor(frame__.stack1_4__, stack1_3__);
+                /* IL_0046: stfld MT3620Blink.Program.<>c__DisplayClass1_1.timer : Program.cs(29) */
+                frame__.stack0_4__->timer = frame__.stack1_4__;
+                il2c_try(nest3, MT3620Blink_Program_Main_ExceptionFilter3__)
+                {
+                    /* IL_004b: newobj MT3620Blink.Program.<>c__DisplayClass1_2..ctor : Program.cs(29) */
+                    frame__.stack0_5__ = il2c_get_uninitialized_object(MT3620Blink_Program___c__DisplayClass1_2);
+                    MT3620Blink_Program___c__DisplayClass1_2__ctor(frame__.stack0_5__);
+                    /* IL_0050: stloc.s CS$<>8__locals2         : Program.cs(29) */
+                    frame__.CS___8__locals2 = frame__.stack0_5__;
+                    /* IL_0052: ldloc.s CS$<>8__locals2         : Program.cs(29) */
+                    frame__.stack0_5__ = frame__.CS___8__locals2;
+                    /* IL_0054: ldloc.3                         : Program.cs(29) */
+                    frame__.stack1_5__ = frame__.CS___8__locals1;
+                    /* IL_0055: stfld MT3620Blink.Program.<>c__DisplayClass1_2.CS$<>8__locals2 : Program.cs(29) */
+                    frame__.stack0_5__->CS___8__locals2 = frame__.stack1_5__;
+                    /* IL_005a: nop                             : Program.cs(30) */
+                    /* IL_005b: ldloc.s CS$<>8__locals2 */
+                    frame__.stack0_5__ = frame__.CS___8__locals2;
+                    /* IL_005d: ldc.i4.0                        : Program.cs(31) */
+                    stack1_0__ = 0;
+                    /* IL_005e: stfld MT3620Blink.Program.<>c__DisplayClass1_2.flag : Program.cs(31) */
+                    frame__.stack0_5__->flag = (stack1_0__) ? true : false;
+                    /* IL_0063: ldloc.0                         : Program.cs(33) */
+                    frame__.stack0_0__ = frame__.epoll;
+                    /* IL_0064: ldloc.s CS$<>8__locals2         : Program.cs(33) */
+                    frame__.stack1_6__ = frame__.CS___8__locals2;
+                    /* IL_0066: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.CS$<>8__locals2 : Program.cs(33) */
+                    frame__.stack1_5__ = frame__.stack1_6__->CS___8__locals2;
+                    /* IL_006b: ldfld MT3620Blink.Program.<>c__DisplayClass1_1.timer : Program.cs(33) */
+                    frame__.stack1_4__ = frame__.stack1_5__->timer;
+                    /* IL_0070: ldloc.s CS$<>8__locals2         : Program.cs(33) */
+                    frame__.stack2_1__ = frame__.CS___8__locals2;
+                    /* IL_0072: ldftn MT3620Blink.Program.<>c__DisplayClass1_2.<Main>b__0 : Program.cs(33) */
+                    stack3_1__ = (intptr_t)MT3620Blink_Program___c__DisplayClass1_2__Main_b__0;
+                    /* IL_0078: newobj MT3620Blink.DescriptorCallbackDelegate..ctor : Program.cs(33) */
+                    frame__.stack2_2__ = il2c_new_delegate(MT3620Blink_DescriptorCallbackDelegate, (System_Object*)frame__.stack2_1__, stack3_1__);
+                    /* IL_007d: callvirt MT3620Blink.Application.RegisterDescriptor : Program.cs(33) */
+                    MT3620Blink_Application_RegisterDescriptor(il2c_adjusted_reference(frame__.stack0_0__), (MT3620Blink_Descriptor*)frame__.stack1_4__, frame__.stack2_2__);
+                    /* IL_0082: nop                             : Program.cs(33) */
+                    /* IL_0083: ldloc.s CS$<>8__locals2 */
+                    frame__.stack0_5__ = frame__.CS___8__locals2;
+                    /* IL_0085: ldc.i4.3                        : Program.cs(41) */
+                    stack1_0__ = 3;
+                    /* IL_0086: newarr System.Int64             : Program.cs(41) */
+                    frame__.stack1_7__ = il2c_new_array(System_Int64, stack1_0__);
+                    /* IL_008b: dup                             : Program.cs(41) */
+                    frame__.stack2_3__ = frame__.stack1_7__;
+                    /* IL_008c: ldtoken .<PrivateImplementationDetails>.E902362F9BEE92BBA97ECE5B88B94AF4A8D3201D : Program.cs(41) */
+                    stack3_2__.size__ = sizeof(declaredValue0__);
+                    stack3_2__.field__ = declaredValue0__;
+                    /* IL_0091: call System.Runtime.CompilerServices.RuntimeHelpers.InitializeArray : Program.cs(41) */
+                    System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray((System_Array*)frame__.stack2_3__, stack3_2__);
+                    /* IL_0096: stfld MT3620Blink.Program.<>c__DisplayClass1_2.blinkIntervals : Program.cs(41) */
+                    frame__.stack0_5__->blinkIntervals = frame__.stack1_7__;
+                    /* IL_009b: ldloc.s CS$<>8__locals2         : Program.cs(42) */
+                    frame__.stack0_5__ = frame__.CS___8__locals2;
+                    /* IL_009d: ldc.i4.0                        : Program.cs(42) */
+                    stack1_0__ = 0;
+                    /* IL_009e: stfld MT3620Blink.Program.<>c__DisplayClass1_2.blinkIntervalIndex : Program.cs(42) */
+                    frame__.stack0_5__->blinkIntervalIndex = stack1_0__;
+                    /* IL_00a3: ldloc.0                         : Program.cs(44) */
+                    frame__.stack0_0__ = frame__.epoll;
+                    /* IL_00a4: ldloc.2                         : Program.cs(44) */
+                    frame__.stack1_8__ = frame__.button;
+                    /* IL_00a5: ldloc.s CS$<>8__locals2         : Program.cs(44) */
+                    frame__.stack2_1__ = frame__.CS___8__locals2;
+                    /* IL_00a7: ldftn MT3620Blink.Program.<>c__DisplayClass1_2.<Main>b__1 : Program.cs(44) */
+                    stack3_1__ = (intptr_t)MT3620Blink_Program___c__DisplayClass1_2__Main_b__1;
+                    /* IL_00ad: newobj MT3620Blink.DescriptorCallbackDelegate..ctor : Program.cs(44) */
+                    frame__.stack2_2__ = il2c_new_delegate(MT3620Blink_DescriptorCallbackDelegate, (System_Object*)frame__.stack2_1__, stack3_1__);
+                    /* IL_00b2: callvirt MT3620Blink.Application.RegisterDescriptor : Program.cs(44) */
+                    MT3620Blink_Application_RegisterDescriptor(il2c_adjusted_reference(frame__.stack0_0__), (MT3620Blink_Descriptor*)frame__.stack1_8__, frame__.stack2_2__);
+                    /* IL_00b7: nop                             : Program.cs(44) */
+                    /* IL_00b8: ldloc.0  */
+                    frame__.stack0_0__ = frame__.epoll;
+                    /* IL_00b9: callvirt MT3620Blink.Application.Run : Program.cs(52) */
+                    MT3620Blink_Application_Run(il2c_adjusted_reference(frame__.stack0_0__));
+                    /* IL_00be: nop                             : Program.cs(52) */
+                    /* IL_00bf: nop  */
+                    /* IL_00c0: leave.s IL_00d7 */
+                    il2c_leave(nest3, 0);
+                }
+                il2c_finally(nest3)
+                {
+                    /* IL_00c2: ldloc.3                         : Program.cs(53) */
+                    frame__.stack0_4__ = frame__.CS___8__locals1;
+                    /* IL_00c3: ldfld MT3620Blink.Program.<>c__DisplayClass1_1.timer : Program.cs(53) */
+                    frame__.stack0_7__ = frame__.stack0_4__->timer;
+                    /* IL_00c8: brfalse.s IL_00d6               : Program.cs(53) */
+                    if (frame__.stack0_7__ == NULL) goto IL_00d6;
+                    /* IL_00ca: ldloc.3                         : Program.cs(53) */
+                    frame__.stack0_4__ = frame__.CS___8__locals1;
+                    /* IL_00cb: ldfld MT3620Blink.Program.<>c__DisplayClass1_1.timer : Program.cs(53) */
+                    frame__.stack0_7__ = frame__.stack0_4__->timer;
+                    /* IL_00d0: callvirt System.IDisposable.Dispose : Program.cs(53) */
+                    MT3620Blink_Descriptor_Dispose(il2c_adjusted_reference(frame__.stack0_7__));
+                    /* IL_00d5: nop                             : Program.cs(53) */
+                IL_00d6:
+                    /* IL_00d6: endfinally  */
+                    il2c_endfinally(nest3);
+                }
+                il2c_leave_to(nest3)
+                {
+                    il2c_leave_bind(nest3, 0, IL_00d7);
+                }
+                il2c_end_try(nest3);
+            IL_00d7:
+                /* IL_00d7: nop                             : Program.cs(54) */
+                /* IL_00d8: leave.s IL_00e5 */
+                il2c_leave(nest2, 1);
             }
             il2c_finally(nest2)
             {
-                /* IL_0093: ldloc.2                         : Program.cs(34) */
+                /* IL_00da: ldloc.2                         : Program.cs(54) */
                 frame__.stack0_3__ = frame__.button;
-                /* IL_0094: brfalse.s IL_009d               : Program.cs(34) */
-                if (frame__.stack0_3__ == NULL) goto IL_009d;
-                /* IL_0096: ldloc.2                         : Program.cs(34) */
+                /* IL_00db: brfalse.s IL_00e4               : Program.cs(54) */
+                if (frame__.stack0_3__ == NULL) goto IL_00e4;
+                /* IL_00dd: ldloc.2                         : Program.cs(54) */
                 frame__.stack0_3__ = frame__.button;
-                /* IL_0097: callvirt System.IDisposable.Dispose : Program.cs(34) */
+                /* IL_00de: callvirt System.IDisposable.Dispose : Program.cs(54) */
                 MT3620Blink_Descriptor_Dispose(il2c_adjusted_reference(frame__.stack0_3__));
-                /* IL_009c: nop                             : Program.cs(34) */
-            IL_009d:
-                /* IL_009d: endfinally  */
+                /* IL_00e3: nop                             : Program.cs(54) */
+            IL_00e4:
+                /* IL_00e4: endfinally  */
                 il2c_endfinally(nest2);
             }
+            il2c_leave_to(nest2)
+            {
+                il2c_leave_bind(nest2, 0, IL_00d7);
+                il2c_leave_bind(nest2, 1, IL_00e5);
+            }
             il2c_end_try(nest2);
+        IL_00e5:
+            /* IL_00e5: nop                             : Program.cs(55) */
+            /* IL_00e6: leave.s IL_00fd */
+            il2c_leave(nest1, 2);
         }
         il2c_finally(nest1)
         {
-            /* IL_009e: ldloc.1                         : Program.cs(34) */
-            frame__.stack0_2__ = frame__.led;
-            /* IL_009f: brfalse.s IL_00a8               : Program.cs(34) */
-            if (frame__.stack0_2__ == NULL) goto IL_00a8;
-            /* IL_00a1: ldloc.1                         : Program.cs(34) */
-            frame__.stack0_2__ = frame__.led;
-            /* IL_00a2: callvirt System.IDisposable.Dispose : Program.cs(34) */
-            MT3620Blink_Descriptor_Dispose(il2c_adjusted_reference(frame__.stack0_2__));
-            /* IL_00a7: nop                             : Program.cs(34) */
-        IL_00a8:
-            /* IL_00a8: endfinally  */
+            /* IL_00e8: ldloc.1                         : Program.cs(55) */
+            frame__.stack0_1__ = frame__.CS___8__locals0;
+            /* IL_00e9: ldfld MT3620Blink.Program.<>c__DisplayClass1_0.led : Program.cs(55) */
+            frame__.stack0_6__ = frame__.stack0_1__->led;
+            /* IL_00ee: brfalse.s IL_00fc               : Program.cs(55) */
+            if (frame__.stack0_6__ == NULL) goto IL_00fc;
+            /* IL_00f0: ldloc.1                         : Program.cs(55) */
+            frame__.stack0_1__ = frame__.CS___8__locals0;
+            /* IL_00f1: ldfld MT3620Blink.Program.<>c__DisplayClass1_0.led : Program.cs(55) */
+            frame__.stack0_6__ = frame__.stack0_1__->led;
+            /* IL_00f6: callvirt System.IDisposable.Dispose : Program.cs(55) */
+            MT3620Blink_Descriptor_Dispose(il2c_adjusted_reference(frame__.stack0_6__));
+            /* IL_00fb: nop                             : Program.cs(55) */
+        IL_00fc:
+            /* IL_00fc: endfinally  */
             il2c_endfinally(nest1);
         }
+        il2c_leave_to(nest1)
+        {
+            il2c_leave_bind(nest1, 0, IL_00d7);
+            il2c_leave_bind(nest1, 1, IL_00e5);
+            il2c_leave_bind(nest1, 2, IL_00fd);
+        }
         il2c_end_try(nest1);
+    IL_00fd:
+        /* IL_00fd: nop                             : Program.cs(56) */
+        /* IL_00fe: leave.s IL_010b */
+        il2c_leave(nest0, 3);
     }
     il2c_finally(nest0)
     {
-        /* IL_00a9: ldloc.0                         : Program.cs(34) */
+        /* IL_0100: ldloc.0                         : Program.cs(56) */
         frame__.stack0_0__ = frame__.epoll;
-        /* IL_00aa: brfalse.s IL_00b3               : Program.cs(34) */
-        if (frame__.stack0_0__ == NULL) goto IL_00b3;
-        /* IL_00ac: ldloc.0                         : Program.cs(34) */
+        /* IL_0101: brfalse.s IL_010a               : Program.cs(56) */
+        if (frame__.stack0_0__ == NULL) goto IL_010a;
+        /* IL_0103: ldloc.0                         : Program.cs(56) */
         frame__.stack0_0__ = frame__.epoll;
-        /* IL_00ad: callvirt System.IDisposable.Dispose : Program.cs(34) */
+        /* IL_0104: callvirt System.IDisposable.Dispose : Program.cs(56) */
         MT3620Blink_Descriptor_Dispose(il2c_adjusted_reference(frame__.stack0_0__));
-        /* IL_00b2: nop                             : Program.cs(34) */
-    IL_00b3:
-        /* IL_00b3: endfinally  */
+        /* IL_0109: nop                             : Program.cs(56) */
+    IL_010a:
+        /* IL_010a: endfinally  */
         il2c_endfinally(nest0);
     }
+    il2c_leave_to(nest0)
+    {
+        il2c_leave_bind(nest0, 0, IL_00d7);
+        il2c_leave_bind(nest0, 1, IL_00e5);
+        il2c_leave_bind(nest0, 2, IL_00fd);
+        il2c_leave_bind(nest0, 3, IL_010b);
+    }
     il2c_end_try(nest0);
+IL_010b:
+    /* IL_010b: ldc.i4.0                        : Program.cs(58) */
+    stack0_2__ = 0;
+    /* IL_010c: stloc.s local5__                : Program.cs(58) */
+    local5__ = stack0_2__;
+    /* IL_010e: br.s IL_0110                    : Program.cs(58) */
+    goto IL_0110;
+IL_0110:
+    /* IL_0110: ldloc.s local5__                : Program.cs(59) */
+    stack0_2__ = local5__;
+    /* IL_0112: ret                             : Program.cs(59) */
+    il2c_unlink_execution_frame(&frame__);
+    return stack0_2__;
 }
 
 //////////////////////
@@ -1772,34 +1899,11 @@ void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__, int64_t nsec)
     il2c_assert(this__ != NULL);
 
     //-------------------
-    // [3-3] Local variables (!objref):
-
-    MT3620Blink_timespec tm;
-    il2c_memset(&tm, 0x00, sizeof tm);
-    MT3620Blink_itimerspec newValue;
-    il2c_memset(&newValue, 0x00, sizeof newValue);
-    MT3620Blink_itimerspec dummy;
-    il2c_memset(&dummy, 0x00, sizeof dummy);
-    MT3620Blink_timespec local3__;
-    il2c_memset(&local3__, 0x00, sizeof local3__);
-    MT3620Blink_itimerspec local4__;
-    il2c_memset(&local4__, 0x00, sizeof local4__);
-
-    //-------------------
     // [3-4] Evaluation stacks (!objref):
 
-    MT3620Blink_timespec* stack0_1__;
-    MT3620Blink_timespec stack0_2__;
-    MT3620Blink_itimerspec* stack0_3__;
-    MT3620Blink_itimerspec stack0_4__;
-    int32_t stack0_5__;
     int32_t stack1_0__;
     int64_t stack1_1__;
-    MT3620Blink_timespec stack1_2__;
     int32_t stack2_0__;
-    int64_t stack2_1__;
-    MT3620Blink_itimerspec* stack2_2__;
-    MT3620Blink_itimerspec* stack3_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
@@ -1823,76 +1927,151 @@ void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__, int64_t nsec)
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
     /* IL_0015: nop                             : Timer.cs(13) */
     /* IL_0016: nop  */
-    /* IL_0017: ldloca.s local3__ */
-    stack0_1__ = &local3__;
-    /* IL_0019: initobj MT3620Blink.timespec    : Timer.cs(15) */
-    il2c_memset(stack0_1__, 0x00, sizeof(MT3620Blink_timespec));
-    /* IL_001f: ldloca.s local3__               : Timer.cs(15) */
-    stack0_1__ = &local3__;
-    /* IL_0021: ldarg.1                         : Timer.cs(15) */
-    stack1_1__ = nsec;
-    /* IL_0022: ldc.i4 1000000000               : Timer.cs(15) */
-    stack2_0__ = 1000000000;
-    /* IL_0027: conv.i8                         : Timer.cs(15) */
-    stack2_1__ = (int64_t)stack2_0__;
-    /* IL_0028: div                             : Timer.cs(15) */
-    stack1_1__ = stack1_1__ / stack2_1__;
-    /* IL_0029: conv.i4                         : Timer.cs(15) */
-    stack1_0__ = (int32_t)stack1_1__;
-    /* IL_002a: stfld MT3620Blink.timespec.tv_sec : Timer.cs(15) */
-    stack0_1__->tv_sec = stack1_0__;
-    /* IL_002f: ldloca.s local3__               : Timer.cs(15) */
-    stack0_1__ = &local3__;
-    /* IL_0031: ldarg.1                         : Timer.cs(15) */
-    stack1_1__ = nsec;
-    /* IL_0032: ldc.i4 1000000000               : Timer.cs(15) */
-    stack2_0__ = 1000000000;
-    /* IL_0037: conv.i8                         : Timer.cs(15) */
-    stack2_1__ = (int64_t)stack2_0__;
-    /* IL_0038: rem                             : Timer.cs(15) */
-    stack1_1__ = stack1_1__ % stack2_1__;
-    /* IL_0039: conv.i4                         : Timer.cs(15) */
-    stack1_0__ = (int32_t)stack1_1__;
-    /* IL_003a: stfld MT3620Blink.timespec.tv_nsec : Timer.cs(15) */
-    stack0_1__->tv_nsec = stack1_0__;
-    /* IL_003f: ldloc.3                         : Timer.cs(15) */
-    stack0_2__ = local3__;
-    /* IL_0040: stloc.0                         : Timer.cs(15) */
-    tm = stack0_2__;
-    /* IL_0041: ldloca.s local4__               : Timer.cs(19) */
-    stack0_3__ = &local4__;
-    /* IL_0043: initobj MT3620Blink.itimerspec  : Timer.cs(19) */
-    il2c_memset(stack0_3__, 0x00, sizeof(MT3620Blink_itimerspec));
-    /* IL_0049: ldloca.s local4__               : Timer.cs(19) */
-    stack0_3__ = &local4__;
-    /* IL_004b: ldloc.0                         : Timer.cs(19) */
-    stack1_2__ = tm;
-    /* IL_004c: stfld MT3620Blink.itimerspec.it_value : Timer.cs(19) */
-    stack0_3__->it_value = stack1_2__;
-    /* IL_0051: ldloca.s local4__               : Timer.cs(19) */
-    stack0_3__ = &local4__;
-    /* IL_0053: ldloc.0                         : Timer.cs(19) */
-    stack1_2__ = tm;
-    /* IL_0054: stfld MT3620Blink.itimerspec.it_interval : Timer.cs(19) */
-    stack0_3__->it_interval = stack1_2__;
-    /* IL_0059: ldloc.s local4__                : Timer.cs(19) */
-    stack0_4__ = local4__;
-    /* IL_005b: stloc.1                         : Timer.cs(19) */
-    newValue = stack0_4__;
-    /* IL_005c: ldarg.0                         : Timer.cs(24) */
+    /* IL_0017: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_005d: call MT3620Blink.Descriptor.get_Identity : Timer.cs(24) */
-    stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0062: ldc.i4.0                        : Timer.cs(24) */
-    stack1_0__ = 0;
-    /* IL_0063: ldloca.s newValue               : Timer.cs(24) */
+    /* IL_0018: ldarg.1                         : Timer.cs(15) */
+    stack1_1__ = nsec;
+    /* IL_0019: call MT3620Blink.Timer.SetInterval : Timer.cs(15) */
+    MT3620Blink_Timer_SetInterval(frame__.stack0_0__, stack1_1__);
+    /* IL_001e: nop                             : Timer.cs(15) */
+    /* IL_001f: ret  */
+    il2c_unlink_execution_frame(&frame__);
+    return;
+}
+
+///////////////////////////////////////
+// [3] MT3620Blink.Timer.SetInterval(MT3620Blink.Timer this__, System.Int64 nsec)
+
+//-------------------
+// [3-7] Declare execution frame:
+
+typedef struct MT3620Blink_Timer_SetInterval_EXECUTION_FRAME_DECL
+{
+    const IL2C_EXECUTION_FRAME* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    //-------------------- objref
+    MT3620Blink_Timer* stack0_4__;
+} MT3620Blink_Timer_SetInterval_EXECUTION_FRAME__;
+
+//-------------------
+// [3-2] Function body:
+
+void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
+{
+    il2c_assert(this__ != NULL);
+
+    //-------------------
+    // [3-3] Local variables (!objref):
+
+    MT3620Blink_timespec tm;
+    il2c_memset(&tm, 0x00, sizeof tm);
+    MT3620Blink_itimerspec newValue;
+    il2c_memset(&newValue, 0x00, sizeof newValue);
+    MT3620Blink_itimerspec dummy;
+    il2c_memset(&dummy, 0x00, sizeof dummy);
+    MT3620Blink_timespec local3__;
+    il2c_memset(&local3__, 0x00, sizeof local3__);
+    MT3620Blink_itimerspec local4__;
+    il2c_memset(&local4__, 0x00, sizeof local4__);
+
+    //-------------------
+    // [3-4] Evaluation stacks (!objref):
+
+    MT3620Blink_timespec* stack0_0__;
+    MT3620Blink_timespec stack0_1__;
+    MT3620Blink_itimerspec* stack0_2__;
+    MT3620Blink_itimerspec stack0_3__;
+    int32_t stack0_5__;
+    int64_t stack1_0__;
+    int32_t stack1_1__;
+    MT3620Blink_timespec stack1_2__;
+    int32_t stack2_0__;
+    int64_t stack2_1__;
+    MT3620Blink_itimerspec* stack2_2__;
+    MT3620Blink_itimerspec* stack3_0__;
+
+    //-------------------
+    // [3-5] Setup execution frame:
+
+    MT3620Blink_Timer_SetInterval_EXECUTION_FRAME__ frame__ =
+        { NULL, 1 };
+    il2c_link_execution_frame(&frame__);
+
+    //-------------------
+    // [3-6] IL body:
+
+    /* IL_0000: nop                             : Timer.cs(19) */
+    /* IL_0001: ldloca.s local3__ */
+    stack0_0__ = &local3__;
+    /* IL_0003: initobj MT3620Blink.timespec    : Timer.cs(20) */
+    il2c_memset(stack0_0__, 0x00, sizeof(MT3620Blink_timespec));
+    /* IL_0009: ldloca.s local3__               : Timer.cs(20) */
+    stack0_0__ = &local3__;
+    /* IL_000b: ldarg.1                         : Timer.cs(20) */
+    stack1_0__ = nsec;
+    /* IL_000c: ldc.i4 1000000000               : Timer.cs(20) */
+    stack2_0__ = 1000000000;
+    /* IL_0011: conv.i8                         : Timer.cs(20) */
+    stack2_1__ = (int64_t)stack2_0__;
+    /* IL_0012: div                             : Timer.cs(20) */
+    stack1_0__ = stack1_0__ / stack2_1__;
+    /* IL_0013: conv.i4                         : Timer.cs(20) */
+    stack1_1__ = (int32_t)stack1_0__;
+    /* IL_0014: stfld MT3620Blink.timespec.tv_sec : Timer.cs(20) */
+    stack0_0__->tv_sec = stack1_1__;
+    /* IL_0019: ldloca.s local3__               : Timer.cs(20) */
+    stack0_0__ = &local3__;
+    /* IL_001b: ldarg.1                         : Timer.cs(20) */
+    stack1_0__ = nsec;
+    /* IL_001c: ldc.i4 1000000000               : Timer.cs(20) */
+    stack2_0__ = 1000000000;
+    /* IL_0021: conv.i8                         : Timer.cs(20) */
+    stack2_1__ = (int64_t)stack2_0__;
+    /* IL_0022: rem                             : Timer.cs(20) */
+    stack1_0__ = stack1_0__ % stack2_1__;
+    /* IL_0023: conv.i4                         : Timer.cs(20) */
+    stack1_1__ = (int32_t)stack1_0__;
+    /* IL_0024: stfld MT3620Blink.timespec.tv_nsec : Timer.cs(20) */
+    stack0_0__->tv_nsec = stack1_1__;
+    /* IL_0029: ldloc.3                         : Timer.cs(20) */
+    stack0_1__ = local3__;
+    /* IL_002a: stloc.0                         : Timer.cs(20) */
+    tm = stack0_1__;
+    /* IL_002b: ldloca.s local4__               : Timer.cs(25) */
+    stack0_2__ = &local4__;
+    /* IL_002d: initobj MT3620Blink.itimerspec  : Timer.cs(25) */
+    il2c_memset(stack0_2__, 0x00, sizeof(MT3620Blink_itimerspec));
+    /* IL_0033: ldloca.s local4__               : Timer.cs(25) */
+    stack0_2__ = &local4__;
+    /* IL_0035: ldloc.0                         : Timer.cs(25) */
+    stack1_2__ = tm;
+    /* IL_0036: stfld MT3620Blink.itimerspec.it_value : Timer.cs(25) */
+    stack0_2__->it_value = stack1_2__;
+    /* IL_003b: ldloca.s local4__               : Timer.cs(25) */
+    stack0_2__ = &local4__;
+    /* IL_003d: ldloc.0                         : Timer.cs(25) */
+    stack1_2__ = tm;
+    /* IL_003e: stfld MT3620Blink.itimerspec.it_interval : Timer.cs(25) */
+    stack0_2__->it_interval = stack1_2__;
+    /* IL_0043: ldloc.s local4__                : Timer.cs(25) */
+    stack0_3__ = local4__;
+    /* IL_0045: stloc.1                         : Timer.cs(25) */
+    newValue = stack0_3__;
+    /* IL_0046: ldarg.0                         : Timer.cs(31) */
+    frame__.stack0_4__ = this__;
+    /* IL_0047: call MT3620Blink.Descriptor.get_Identity : Timer.cs(31) */
+    stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_4__);
+    /* IL_004c: ldc.i4.0                        : Timer.cs(31) */
+    stack1_1__ = 0;
+    /* IL_004d: ldloca.s newValue               : Timer.cs(31) */
     stack2_2__ = &newValue;
-    /* IL_0065: ldloca.s dummy                  : Timer.cs(24) */
+    /* IL_004f: ldloca.s dummy                  : Timer.cs(31) */
     stack3_0__ = &dummy;
-    /* IL_0067: call MT3620Blink.Interops.timerfd_settime : Timer.cs(24) */
-    stack0_5__ = MT3620Blink_Interops_timerfd_settime(stack0_5__, stack1_0__, stack2_2__, stack3_0__);
-    /* IL_006c: pop                             : Timer.cs(24) */
-    /* IL_006d: ret  */
+    /* IL_0051: call MT3620Blink.Interops.timerfd_settime : Timer.cs(31) */
+    stack0_5__ = MT3620Blink_Interops_timerfd_settime(stack0_5__, stack1_1__, stack2_2__, stack3_0__);
+    /* IL_0056: pop                             : Timer.cs(31) */
+    /* IL_0057: ret  */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -1911,4 +2090,340 @@ System_IDisposable_VTABLE_DECL__ MT3620Blink_Timer_System_IDisposable_VTABLE__ =
 // [7-8] Runtime type information
 IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Timer, "MT3620Blink.Timer", IL2C_TYPE_REFERENCE, sizeof(MT3620Blink_Timer), MT3620Blink_Descriptor, 0, 1)
     IL2C_RUNTIME_TYPE_INTERFACE(MT3620Blink_Timer, System_IDisposable)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.Program.<>c__DisplayClass1_0
+
+///////////////////////////////////////
+// [3] MT3620Blink.Program.<>c__DisplayClass1_0..ctor(MT3620Blink.Program.<>c__DisplayClass1_0 this__)
+
+//-------------------
+// [3-7] Declare execution frame:
+
+typedef struct MT3620Blink_Program___c__DisplayClass1_0__ctor_EXECUTION_FRAME_DECL
+{
+    const IL2C_EXECUTION_FRAME* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    //-------------------- objref
+    MT3620Blink_Program___c__DisplayClass1_0* stack0_0__;
+} MT3620Blink_Program___c__DisplayClass1_0__ctor_EXECUTION_FRAME__;
+
+//-------------------
+// [3-2] Function body:
+
+void MT3620Blink_Program___c__DisplayClass1_0__ctor(MT3620Blink_Program___c__DisplayClass1_0* this__)
+{
+    il2c_assert(this__ != NULL);
+
+    //-------------------
+    // [3-5] Setup execution frame:
+
+    MT3620Blink_Program___c__DisplayClass1_0__ctor_EXECUTION_FRAME__ frame__ =
+        { NULL, 1 };
+    il2c_link_execution_frame(&frame__);
+
+    //-------------------
+    // [3-6] IL body:
+
+    /* IL_0000: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_0001: call System.Object..ctor */
+    System_Object__ctor((System_Object*)frame__.stack0_0__);
+    /* IL_0006: nop  */
+    /* IL_0007: ret  */
+    il2c_unlink_execution_frame(&frame__);
+    return;
+}
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.Object)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Program___c__DisplayClass1_0, "MT3620Blink.Program.<>c__DisplayClass1_0", IL2C_TYPE_REFERENCE, sizeof(MT3620Blink_Program___c__DisplayClass1_0), System_Object, 1, 0)
+    IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(MT3620Blink_Program___c__DisplayClass1_0, led)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.Program.<>c__DisplayClass1_1
+
+///////////////////////////////////////
+// [3] MT3620Blink.Program.<>c__DisplayClass1_1..ctor(MT3620Blink.Program.<>c__DisplayClass1_1 this__)
+
+//-------------------
+// [3-7] Declare execution frame:
+
+typedef struct MT3620Blink_Program___c__DisplayClass1_1__ctor_EXECUTION_FRAME_DECL
+{
+    const IL2C_EXECUTION_FRAME* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    //-------------------- objref
+    MT3620Blink_Program___c__DisplayClass1_1* stack0_0__;
+} MT3620Blink_Program___c__DisplayClass1_1__ctor_EXECUTION_FRAME__;
+
+//-------------------
+// [3-2] Function body:
+
+void MT3620Blink_Program___c__DisplayClass1_1__ctor(MT3620Blink_Program___c__DisplayClass1_1* this__)
+{
+    il2c_assert(this__ != NULL);
+
+    //-------------------
+    // [3-5] Setup execution frame:
+
+    MT3620Blink_Program___c__DisplayClass1_1__ctor_EXECUTION_FRAME__ frame__ =
+        { NULL, 1 };
+    il2c_link_execution_frame(&frame__);
+
+    //-------------------
+    // [3-6] IL body:
+
+    /* IL_0000: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_0001: call System.Object..ctor */
+    System_Object__ctor((System_Object*)frame__.stack0_0__);
+    /* IL_0006: nop  */
+    /* IL_0007: ret  */
+    il2c_unlink_execution_frame(&frame__);
+    return;
+}
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.Object)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Program___c__DisplayClass1_1, "MT3620Blink.Program.<>c__DisplayClass1_1", IL2C_TYPE_REFERENCE, sizeof(MT3620Blink_Program___c__DisplayClass1_1), System_Object, 2, 0)
+    IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(MT3620Blink_Program___c__DisplayClass1_1, timer)
+    IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(MT3620Blink_Program___c__DisplayClass1_1, CS___8__locals1)
+IL2C_RUNTIME_TYPE_END();
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.Program.<>c__DisplayClass1_2
+
+///////////////////////////////////////
+// [3] MT3620Blink.Program.<>c__DisplayClass1_2..ctor(MT3620Blink.Program.<>c__DisplayClass1_2 this__)
+
+//-------------------
+// [3-7] Declare execution frame:
+
+typedef struct MT3620Blink_Program___c__DisplayClass1_2__ctor_EXECUTION_FRAME_DECL
+{
+    const IL2C_EXECUTION_FRAME* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    //-------------------- objref
+    MT3620Blink_Program___c__DisplayClass1_2* stack0_0__;
+} MT3620Blink_Program___c__DisplayClass1_2__ctor_EXECUTION_FRAME__;
+
+//-------------------
+// [3-2] Function body:
+
+void MT3620Blink_Program___c__DisplayClass1_2__ctor(MT3620Blink_Program___c__DisplayClass1_2* this__)
+{
+    il2c_assert(this__ != NULL);
+
+    //-------------------
+    // [3-5] Setup execution frame:
+
+    MT3620Blink_Program___c__DisplayClass1_2__ctor_EXECUTION_FRAME__ frame__ =
+        { NULL, 1 };
+    il2c_link_execution_frame(&frame__);
+
+    //-------------------
+    // [3-6] IL body:
+
+    /* IL_0000: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_0001: call System.Object..ctor */
+    System_Object__ctor((System_Object*)frame__.stack0_0__);
+    /* IL_0006: nop  */
+    /* IL_0007: ret  */
+    il2c_unlink_execution_frame(&frame__);
+    return;
+}
+
+///////////////////////////////////////
+// [3] MT3620Blink.Program.<>c__DisplayClass1_2.<Main>b__0(MT3620Blink.Program.<>c__DisplayClass1_2 this__)
+
+//-------------------
+// [3-7] Declare execution frame:
+
+typedef struct MT3620Blink_Program___c__DisplayClass1_2__Main_b__0_EXECUTION_FRAME_DECL
+{
+    const IL2C_EXECUTION_FRAME* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    //-------------------- objref
+    MT3620Blink_Program___c__DisplayClass1_2* stack0_0__;
+    MT3620Blink_Program___c__DisplayClass1_1* stack0_1__;
+    MT3620Blink_Program___c__DisplayClass1_0* stack0_2__;
+    MT3620Blink_GpioOutput* stack0_3__;
+    MT3620Blink_Program___c__DisplayClass1_2* stack1_0__;
+} MT3620Blink_Program___c__DisplayClass1_2__Main_b__0_EXECUTION_FRAME__;
+
+//-------------------
+// [3-2] Function body:
+
+void MT3620Blink_Program___c__DisplayClass1_2__Main_b__0(MT3620Blink_Program___c__DisplayClass1_2* this__)
+{
+    il2c_assert(this__ != NULL);
+
+    //-------------------
+    // [3-4] Evaluation stacks (!objref):
+
+    bool stack1_1__;
+    int32_t stack1_2__;
+    int32_t stack2_0__;
+
+    //-------------------
+    // [3-5] Setup execution frame:
+
+    MT3620Blink_Program___c__DisplayClass1_2__Main_b__0_EXECUTION_FRAME__ frame__ =
+        { NULL, 5 };
+    il2c_link_execution_frame(&frame__);
+
+    //-------------------
+    // [3-6] IL body:
+
+    /* IL_0000: nop                             : Program.cs(36) */
+    /* IL_0001: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_0002: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.CS$<>8__locals2 : Program.cs(37) */
+    frame__.stack0_1__ = frame__.stack0_0__->CS___8__locals2;
+    /* IL_0007: ldfld MT3620Blink.Program.<>c__DisplayClass1_1.CS$<>8__locals1 : Program.cs(37) */
+    frame__.stack0_2__ = frame__.stack0_1__->CS___8__locals1;
+    /* IL_000c: ldfld MT3620Blink.Program.<>c__DisplayClass1_0.led : Program.cs(37) */
+    frame__.stack0_3__ = frame__.stack0_2__->led;
+    /* IL_0011: ldarg.0                         : Program.cs(37) */
+    frame__.stack1_0__ = this__;
+    /* IL_0012: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.flag : Program.cs(37) */
+    stack1_1__ = frame__.stack1_0__->flag;
+    /* IL_0017: callvirt MT3620Blink.GpioOutput.SetValue : Program.cs(37) */
+    MT3620Blink_GpioOutput_SetValue(il2c_adjusted_reference(frame__.stack0_3__), stack1_1__);
+    /* IL_001c: nop                             : Program.cs(37) */
+    /* IL_001d: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_001e: ldarg.0                         : Program.cs(38) */
+    frame__.stack1_0__ = this__;
+    /* IL_001f: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.flag : Program.cs(38) */
+    stack1_1__ = frame__.stack1_0__->flag;
+    /* IL_0024: ldc.i4.0                        : Program.cs(38) */
+    stack2_0__ = 0;
+    /* IL_0025: ceq                             : Program.cs(38) */
+    stack1_2__ = ((int32_t)stack1_1__ == (int32_t)stack2_0__) ? 1 : 0;
+    /* IL_0027: stfld MT3620Blink.Program.<>c__DisplayClass1_2.flag : Program.cs(38) */
+    frame__.stack0_0__->flag = (stack1_2__) ? true : false;
+    /* IL_002c: ret                             : Program.cs(39) */
+    il2c_unlink_execution_frame(&frame__);
+    return;
+}
+
+///////////////////////////////////////
+// [3] MT3620Blink.Program.<>c__DisplayClass1_2.<Main>b__1(MT3620Blink.Program.<>c__DisplayClass1_2 this__)
+
+//-------------------
+// [3-7] Declare execution frame:
+
+typedef struct MT3620Blink_Program___c__DisplayClass1_2__Main_b__1_EXECUTION_FRAME_DECL
+{
+    const IL2C_EXECUTION_FRAME* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    //-------------------- objref
+    MT3620Blink_Program___c__DisplayClass1_2* stack0_0__;
+    MT3620Blink_Program___c__DisplayClass1_1* stack0_1__;
+    MT3620Blink_Timer* stack0_2__;
+    MT3620Blink_Program___c__DisplayClass1_2* stack1_0__;
+    il2c_arraytype(System_Int64)* stack1_2__;
+    MT3620Blink_Program___c__DisplayClass1_2* stack2_1__;
+    il2c_arraytype(System_Int64)* stack2_2__;
+} MT3620Blink_Program___c__DisplayClass1_2__Main_b__1_EXECUTION_FRAME__;
+
+//-------------------
+// [3-2] Function body:
+
+void MT3620Blink_Program___c__DisplayClass1_2__Main_b__1(MT3620Blink_Program___c__DisplayClass1_2* this__)
+{
+    il2c_assert(this__ != NULL);
+
+    //-------------------
+    // [3-4] Evaluation stacks (!objref):
+
+    int32_t stack1_1__;
+    int64_t stack1_3__;
+    int32_t stack2_0__;
+    uintptr_t stack2_3__;
+
+    //-------------------
+    // [3-5] Setup execution frame:
+
+    MT3620Blink_Program___c__DisplayClass1_2__Main_b__1_EXECUTION_FRAME__ frame__ =
+        { NULL, 7 };
+    il2c_link_execution_frame(&frame__);
+
+    //-------------------
+    // [3-6] IL body:
+
+    /* IL_0000: nop                             : Program.cs(47) */
+    /* IL_0001: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_0002: ldarg.0                         : Program.cs(48) */
+    frame__.stack1_0__ = this__;
+    /* IL_0003: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.blinkIntervalIndex : Program.cs(48) */
+    stack1_1__ = frame__.stack1_0__->blinkIntervalIndex;
+    /* IL_0008: ldc.i4.1                        : Program.cs(48) */
+    stack2_0__ = 1;
+    /* IL_0009: add                             : Program.cs(48) */
+    stack1_1__ = stack1_1__ + stack2_0__;
+    /* IL_000a: ldarg.0                         : Program.cs(48) */
+    frame__.stack2_1__ = this__;
+    /* IL_000b: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.blinkIntervals : Program.cs(48) */
+    frame__.stack2_2__ = frame__.stack2_1__->blinkIntervals;
+    /* IL_0010: ldlen                           : Program.cs(48) */
+    stack2_3__ = (uintptr_t)frame__.stack2_2__->Length;
+    /* IL_0011: conv.i4                         : Program.cs(48) */
+    stack2_0__ = (int32_t)stack2_3__;
+    /* IL_0012: rem                             : Program.cs(48) */
+    stack1_1__ = stack1_1__ % stack2_0__;
+    /* IL_0013: stfld MT3620Blink.Program.<>c__DisplayClass1_2.blinkIntervalIndex : Program.cs(48) */
+    frame__.stack0_0__->blinkIntervalIndex = stack1_1__;
+    /* IL_0018: ldarg.0                         : Program.cs(49) */
+    frame__.stack0_0__ = this__;
+    /* IL_0019: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.CS$<>8__locals2 : Program.cs(49) */
+    frame__.stack0_1__ = frame__.stack0_0__->CS___8__locals2;
+    /* IL_001e: ldfld MT3620Blink.Program.<>c__DisplayClass1_1.timer : Program.cs(49) */
+    frame__.stack0_2__ = frame__.stack0_1__->timer;
+    /* IL_0023: ldarg.0                         : Program.cs(49) */
+    frame__.stack1_0__ = this__;
+    /* IL_0024: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.blinkIntervals : Program.cs(49) */
+    frame__.stack1_2__ = frame__.stack1_0__->blinkIntervals;
+    /* IL_0029: ldarg.0                         : Program.cs(49) */
+    frame__.stack2_1__ = this__;
+    /* IL_002a: ldfld MT3620Blink.Program.<>c__DisplayClass1_2.blinkIntervalIndex : Program.cs(49) */
+    stack2_0__ = frame__.stack2_1__->blinkIntervalIndex;
+    /* IL_002f: ldelem.i8                       : Program.cs(49) */
+    stack1_3__ = il2c_array_item(frame__.stack1_2__, int64_t, stack2_0__);
+    /* IL_0030: callvirt MT3620Blink.Timer.SetInterval : Program.cs(49) */
+    MT3620Blink_Timer_SetInterval(il2c_adjusted_reference(frame__.stack0_2__), stack1_3__);
+    /* IL_0035: nop                             : Program.cs(49) */
+    /* IL_0036: ret  */
+    il2c_unlink_execution_frame(&frame__);
+    return;
+}
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.Object)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Program___c__DisplayClass1_2, "MT3620Blink.Program.<>c__DisplayClass1_2", IL2C_TYPE_REFERENCE, sizeof(MT3620Blink_Program___c__DisplayClass1_2), System_Object, 2, 0)
+    IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(MT3620Blink_Program___c__DisplayClass1_2, blinkIntervals)
+    IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(MT3620Blink_Program___c__DisplayClass1_2, CS___8__locals2)
 IL2C_RUNTIME_TYPE_END();

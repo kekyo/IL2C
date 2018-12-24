@@ -305,7 +305,7 @@ namespace IL2C
             }
             else
             {
-                return variable.UnsafeRawSymbolName;
+                return variable.UnsafeCLanguageSymbolName;
             }
         }
 

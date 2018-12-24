@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace IL2C.Metadata
 {
@@ -10,13 +11,13 @@ namespace IL2C.Metadata
         IMethodInformation DeclaredMethod { get; }
         object HintInformation { get; }
 
-        string UnsafeRawSymbolName { get; }
+        string UnsafeCLanguageSymbolName { get; }
     }
 
     internal abstract class VariableInformation
         : IVariableInformation, IOperandPrintable
     {
-        internal readonly string symbolName;
+        private readonly string symbolName;
 
         protected VariableInformation(
             IMethodInformation declaredMethod,
@@ -37,7 +38,8 @@ namespace IL2C.Metadata
         public IMethodInformation DeclaredMethod { get; }
         public object HintInformation { get; }
 
-        public string UnsafeRawSymbolName => symbolName;
+        public string UnsafeCLanguageSymbolName =>
+            Utilities.GetMangledName(symbolName);
 
         public bool Equals(IVariableInformation rhs)
         {
@@ -47,7 +49,7 @@ namespace IL2C.Metadata
             }
 
             return this.Index.Equals(rhs.Index) &&
-                symbolName.Equals(rhs.UnsafeRawSymbolName) &&
+                symbolName.Equals(rhs.UnsafeCLanguageSymbolName) &&
                 this.TargetType.Equals(rhs.TargetType) &&
                 this.DeclaredMethod.Equals(rhs.DeclaredMethod);
         }

@@ -33,6 +33,7 @@
     <ClCompile Include="../../../IL2C.Runtime/System.NullReferenceException.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Object.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.c" />
+    <ClCompile Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandle.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.SByte.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Single.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.String.c" />
@@ -67,6 +68,8 @@
     <ClInclude Include="../../../IL2C.Runtime/System.Object.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.RuntimeFieldHandle.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandleType.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandle.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.SByte.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Single.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.String.h" />

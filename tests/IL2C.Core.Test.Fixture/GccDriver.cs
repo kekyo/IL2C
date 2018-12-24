@@ -208,8 +208,9 @@ namespace IL2C
             if (!Directory.Exists(gccBasePath))
             {
                 await DownloadGccRequirementsAsync(gccBasePath + ".tmp");
-                Directory.Delete(gccBasePath, true);
+                Directory.Move(gccBasePath, gccBasePath + ".tmp2");
                 Directory.Move(gccBasePath + ".tmp", gccBasePath);
+                Directory.Delete(gccBasePath + ".tmp2", true);
             }
 
             var targetLibrary = Path.GetFullPath(Path.Combine(gccBasePath, "..", "libil2c.a"));

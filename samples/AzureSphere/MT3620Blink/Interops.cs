@@ -45,7 +45,7 @@ namespace MT3620Blink
     [NativeType("sys/epoll.h", SymbolName = "struct epoll_event")]
     internal struct epoll_event
     {
-        public int events;
+        public uint events;
         public epoll_data_t data;
     }
 
@@ -113,7 +113,7 @@ namespace MT3620Blink
         [NativeValue("sys/epoll.h")]
         public static readonly int EPOLL_CTL_ADD;
         [NativeValue("sys/epoll.h")]
-        public static readonly int EPOLLIN;
+        public static readonly uint EPOLLIN;
 
         [NativeMethod("sys/epoll.h")]
         [MethodImpl(MethodImplOptions.InternalCall)]

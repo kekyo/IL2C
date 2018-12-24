@@ -332,7 +332,7 @@ namespace IL2C.Writers
                         tw.WriteLine(
                             "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE({0}, {1})",
                             declaredType.MangledUniqueName,
-                            field.Name);
+                            field.MangledName);
                     }
                     else
                     {
@@ -341,7 +341,7 @@ namespace IL2C.Writers
                             "IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_VALUE({0}, {1}, {2})",
                             declaredType.MangledUniqueName,
                             field.FieldType.MangledUniqueName,
-                            field.Name);
+                            field.MangledName);
                     }
                 }
 

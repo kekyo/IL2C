@@ -336,15 +336,15 @@ namespace IL2C
             switch (caseInfo.Assert)
             {
                 case TestCaseAsserts.IgnoreValidateInvokeResult:
-                    try
-                    {
-                        rawResult = caseInfo.Method.Invoke(null, caseInfo.Arguments);
-                    }
-                    catch
-                    {
-                        // ignore.
-                        rawResult = null;
-                    }
+                    //try
+                    //{
+                    //    rawResult = caseInfo.Method.Invoke(null, caseInfo.Arguments);
+                    //}
+                    //catch
+                    //{
+                    //    // ignore.
+                    //    rawResult = null;
+                    //}
                     break;
                 case TestCaseAsserts.CauseBreak:
                     rawResult = null;

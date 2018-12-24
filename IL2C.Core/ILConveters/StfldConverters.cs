@@ -48,13 +48,6 @@ namespace IL2C.ILConverters
                     siReference.TargetType.FriendlyName);
             }
 
-            // HACK: NativePointer (C pointer) <-- NativePointer
-            string castOper =
-                ((field.FieldType.UniqueName == "System.Runtime.InteropServices.NativePointer") &&
-                (field.DeclaringType.NativeType != null)) ?
-                    "(void*)" :
-                    string.Empty;
-
             var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>
@@ -71,10 +64,9 @@ namespace IL2C.ILConverters
                 }
 
                 return new[] { string.Format(
-                    "{0}->{1} = {2}{3}",
+                    "{0}->{1} = {2}",
                     extractContext.GetSymbolName(siReference),
                     field.MangledName,
-                    castOper,
                     rightExpression) };
             };
         }

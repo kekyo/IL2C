@@ -213,7 +213,8 @@ namespace IL2C
                 twSource.SplitLine();
 
                 // All methods and constructor exclude type initializer
-                foreach (var method in type.DeclaredMethods)
+                foreach (var method in type.DeclaredMethods.
+                    Where(method => prepared.Functions.ContainsKey(method)))
                 {
                     FunctionWriter.InternalConvertFromMethod(
                         twSource,

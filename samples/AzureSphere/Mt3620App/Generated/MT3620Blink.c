@@ -545,7 +545,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     /* IL_0030: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(18) */
     stack2_2__ = System_Runtime_InteropServices_NativePointer_op_Implicit(stack2_1__);
     /* IL_0035: stfld MT3620Blink.epoll_data_t.ptr : Application.cs(18) */
-    stack1_2__->ptr = (void*)stack2_2__;
+    stack1_2__->ptr = stack2_2__;
     /* IL_003a: ldloc.3                         : Application.cs(18) */
     stack1_3__ = local3__;
     /* IL_003b: stfld MT3620Blink.epoll_event.data : Application.cs(18) */
@@ -678,7 +678,7 @@ IL_0003:
     /* IL_0026: ldfld MT3620Blink.epoll_event.data : Application.cs(39) */
     stack0_5__ = stack0_4__.data;
     /* IL_002b: ldfld MT3620Blink.epoll_data_t.ptr : Application.cs(39) */
-    stack0_6__ = (intptr_t)stack0_5__.ptr;
+    stack0_6__ = stack0_5__.ptr;
     /* IL_0030: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(39) */
     stack0_7__ = System_Runtime_InteropServices_NativePointer_op_Implicit_1(stack0_6__);
     /* IL_0035: call System.Runtime.InteropServices.GCHandle.FromIntPtr : Application.cs(39) */

@@ -523,7 +523,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     /* IL_0009: ldloca.s local2__               : Application.cs(18) */
     stack0_2__ = &local2__;
     /* IL_000b: initobj MT3620Blink.epoll_event : Application.cs(18) */
-    il2c_memset(stack0_2__, 0x00, sizeof(MT3620Blink_epoll_event));
+    il2c_memset(stack0_2__, 0x00, sizeof *stack0_2__);
     /* IL_0011: ldloca.s local2__               : Application.cs(18) */
     stack0_2__ = &local2__;
     /* IL_0013: ldsfld MT3620Blink.Interops.EPOLLIN : Application.cs(18) */
@@ -535,7 +535,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     /* IL_001f: ldloca.s local3__               : Application.cs(18) */
     stack1_2__ = &local3__;
     /* IL_0021: initobj MT3620Blink.epoll_data_t : Application.cs(18) */
-    il2c_memset(stack1_2__, 0x00, sizeof(MT3620Blink_epoll_data_t));
+    il2c_memset(stack1_2__, 0x00, sizeof *stack1_2__);
     /* IL_0027: ldloca.s local3__               : Application.cs(18) */
     stack1_2__ = &local3__;
     /* IL_0029: ldloca.s handle                 : Application.cs(18) */
@@ -545,7 +545,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     /* IL_0030: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(18) */
     stack2_2__ = System_Runtime_InteropServices_NativePointer_op_Implicit(stack2_1__);
     /* IL_0035: stfld MT3620Blink.epoll_data_t.ptr : Application.cs(18) */
-    stack1_2__->ptr = stack2_2__;
+    stack1_2__->ptr = (void*)stack2_2__;
     /* IL_003a: ldloc.3                         : Application.cs(18) */
     stack1_3__ = local3__;
     /* IL_003b: stfld MT3620Blink.epoll_event.data : Application.cs(18) */
@@ -645,7 +645,7 @@ IL_0003:
     /* IL_0004: ldloca.s ev */
     stack0_1__ = &ev;
     /* IL_0006: initobj MT3620Blink.epoll_event : Application.cs(34) */
-    il2c_memset(stack0_1__, 0x00, sizeof(MT3620Blink_epoll_event));
+    il2c_memset(stack0_1__, 0x00, sizeof *stack0_1__);
     /* IL_000c: ldarg.0                         : Application.cs(35) */
     frame__.stack0_2__ = this__;
     /* IL_000d: call MT3620Blink.Descriptor.get_Identity : Application.cs(35) */
@@ -678,9 +678,9 @@ IL_0003:
     /* IL_0026: ldfld MT3620Blink.epoll_event.data : Application.cs(39) */
     stack0_5__ = stack0_4__.data;
     /* IL_002b: ldfld MT3620Blink.epoll_data_t.ptr : Application.cs(39) */
-    stack0_6__ = stack0_5__.ptr;
+    stack0_6__ = (intptr_t)stack0_5__.ptr;
     /* IL_0030: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(39) */
-    stack0_7__ = System_Runtime_InteropServices_NativePointer_op_Implicit_2(stack0_6__);
+    stack0_7__ = System_Runtime_InteropServices_NativePointer_op_Implicit_1(stack0_6__);
     /* IL_0035: call System.Runtime.InteropServices.GCHandle.FromIntPtr : Application.cs(39) */
     stack0_8__ = System_Runtime_InteropServices_GCHandle_FromIntPtr(stack0_7__);
     /* IL_003a: stloc.3                         : Application.cs(39) */
@@ -1489,7 +1489,7 @@ void MT3620Blink_Program_sleep(int32_t nsec)
     /* IL_0001: ldloca.s local2__ */
     stack0_0__ = &local2__;
     /* IL_0003: initobj MT3620Blink.timespec    : Program.cs(13) */
-    il2c_memset(stack0_0__, 0x00, sizeof(MT3620Blink_timespec));
+    il2c_memset(stack0_0__, 0x00, sizeof *stack0_0__);
     /* IL_0009: ldloca.s local2__               : Program.cs(13) */
     stack0_0__ = &local2__;
     /* IL_000b: ldarg.0                         : Program.cs(13) */
@@ -2012,7 +2012,7 @@ void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
     /* IL_0001: ldloca.s local3__ */
     stack0_0__ = &local3__;
     /* IL_0003: initobj MT3620Blink.timespec    : Timer.cs(20) */
-    il2c_memset(stack0_0__, 0x00, sizeof(MT3620Blink_timespec));
+    il2c_memset(stack0_0__, 0x00, sizeof *stack0_0__);
     /* IL_0009: ldloca.s local3__               : Timer.cs(20) */
     stack0_0__ = &local3__;
     /* IL_000b: ldarg.1                         : Timer.cs(20) */
@@ -2048,7 +2048,7 @@ void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
     /* IL_002b: ldloca.s local4__               : Timer.cs(25) */
     stack0_2__ = &local4__;
     /* IL_002d: initobj MT3620Blink.itimerspec  : Timer.cs(25) */
-    il2c_memset(stack0_2__, 0x00, sizeof(MT3620Blink_itimerspec));
+    il2c_memset(stack0_2__, 0x00, sizeof *stack0_2__);
     /* IL_0033: ldloca.s local4__               : Timer.cs(25) */
     stack0_2__ = &local4__;
     /* IL_0035: ldloc.0                         : Timer.cs(25) */

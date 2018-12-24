@@ -29,10 +29,17 @@ namespace IL2C.ILConverters
 
             return extractContext =>
             {
+                // IL2C can't understand the native type size.
+                // So, the expression will make calculation at the C compiler.
+                var memsetExpression =
+                    (si.TargetType.ElementType.NativeType != null) ?
+                    "il2c_memset({0}, 0x00, sizeof *{0})" :
+                    "il2c_memset({0}, 0x00, {1})";
+
                 return new[] { string.Format(
-                    "il2c_memset({0}, 0x00, {1})",
+                    memsetExpression,
                     extractContext.GetSymbolName(si),
-                    type.CLanguageStaticSizeOfExpression) };
+                    si.TargetType.ElementType.CLanguageStaticSizeOfExpression) };
             };
         }
     }
@@ -132,13 +139,20 @@ namespace IL2C.ILConverters
                 // newobj opcode can handle value type with parameter applied constructor.
                 if (type.IsValueType)
                 {
+                    // IL2C can't understand the native type size.
+                    // So, the expression will make calculation at the C compiler.
+                    var memsetExpression =
+                        (type.NativeType != null) ?
+                        "il2c_memset(&{0}, 0x00, sizeof {0})" :
+                        "il2c_memset(&{0}, 0x00, {1})";
+
                     // If constructor's arguments greater than or equal 2 (this and others)
                     if (pairParameters.Count >= 2)
                     {
                         var typeName = type.CLanguageTypeName;
                         return new[] {
                             string.Format(
-                                "il2c_memset(&{0}, 0x00, {1})",
+                                memsetExpression,
                                 extractContext.GetSymbolName(thisSymbol),
                                 type.CLanguageStaticSizeOfExpression),
                             (overloadIndex >= 1) ?
@@ -157,9 +171,9 @@ namespace IL2C.ILConverters
                     {
                         // ValueType's default constructor not declared.
                         return new[] { string.Format(
-                            "il2c_memset(&{0}, 0x00, {1})",
+                            memsetExpression,
                             extractContext.GetSymbolName(thisSymbol),
-                            type.CLanguageStaticSizeOfExpression) };
+                            type.MangledUniqueName) };
                     }
                 }
                 // Object reference types.

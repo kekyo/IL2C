@@ -16,7 +16,7 @@ void System_Runtime_InteropServices_GCHandle_set_Target(System_Runtime_InteropSe
 
     if (value != NULL)
     {
-        IL2C_REF_HEADER* pHeader = il2c_get_header__(value);
+        IL2C_REF_HEADER* pHeader = il2c_get_header__(il2c_adjusted_reference(value));
         volatile interlock_t gcMark = pHeader->gcMark;
         if ((gcMark == GCMARK_NOMARK) || (gcMark == GCMARK_LIVE))
         {
@@ -63,7 +63,7 @@ intptr_t System_Runtime_InteropServices_GCHandle_AddrOfPinnedObject(System_Runti
 System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc(System_Object* value)
 {
     // intptr_t aliased
-    return (System_Runtime_InteropServices_GCHandle)value;
+    return (System_Runtime_InteropServices_GCHandle)il2c_adjusted_reference(value);
 }
 
 System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc_1(
@@ -73,7 +73,7 @@ System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_
         (type == System_Runtime_InteropServices_GCHandleType_Pinned));
 
     // intptr_t aliased
-    return (System_Runtime_InteropServices_GCHandle)value;
+    return (System_Runtime_InteropServices_GCHandle)il2c_adjusted_reference(value);
 }
 
 System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_FromIntPtr(intptr_t value)

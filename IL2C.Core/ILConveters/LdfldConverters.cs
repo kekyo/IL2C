@@ -64,30 +64,45 @@ namespace IL2C.ILConverters
                     decodeContext.CurrentCode.RawLocation,
                     siReference.TargetType.FriendlyName);
             }
-
             var codeInformation = decodeContext.CurrentCode;
 
             if (requestPointer)
             {
+                // HACK: NativePointer <-- NativePointer (C pointer)
+                string castOper =
+                    ((field.FieldType.UniqueName == "System.Runtime.InteropServices.NativePointer") &&
+                    (field.DeclaringType.NativeType != null)) ?
+                        "(intptr_t*)" :
+                        string.Empty;
+
                 var result = decodeContext.PushStack(field.FieldType.MakeByReference());
 
                 return extractContext =>
                 {
                     return new[] { string.Format(
-                    "{0} = &{1}",
+                    "{0} = {1}&{2}",
                     extractContext.GetSymbolName(result),
+                    castOper,
                     extractContext.GetSymbolName(siReference) + oper + field.MangledName) };
                 };
             }
             else
             {
+                // HACK: NativePointer <-- NativePointer (C pointer)
+                string castOper =
+                    ((field.FieldType.UniqueName == "System.Runtime.InteropServices.NativePointer") &&
+                    (field.DeclaringType.NativeType != null)) ?
+                        "(intptr_t)" :
+                        string.Empty;
+
                 var result = decodeContext.PushStack(field.FieldType);
 
                 return extractContext =>
                 {
                     return new[] { string.Format(
-                    "{0} = {1}",
+                    "{0} = {1}{2}",
                     extractContext.GetSymbolName(result),
+                    castOper,
                     extractContext.GetSymbolName(siReference) + oper + field.MangledName) };
                 };
             }

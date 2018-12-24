@@ -147,7 +147,7 @@ namespace IL2C
             try
             {
                 var fetchPath = Path.Combine(basePath, "fetch");
-                await Task.Run(() => Directory.CreateDirectory(fetchPath));
+                Directory.CreateDirectory(fetchPath);
 
                 try
                 {
@@ -207,10 +207,15 @@ namespace IL2C
         {
             if (!Directory.Exists(gccBasePath))
             {
+                if (Directory.Exists(gccBasePath + ".tmp"))
+                {
+                    Directory.Move(gccBasePath + ".tmp", gccBasePath + ".tmp2");
+                    Directory.Delete(gccBasePath + ".tmp2", true);
+                }
+
                 await DownloadGccRequirementsAsync(gccBasePath + ".tmp");
-                Directory.Move(gccBasePath, gccBasePath + ".tmp2");
+
                 Directory.Move(gccBasePath + ".tmp", gccBasePath);
-                Directory.Delete(gccBasePath + ".tmp2", true);
             }
 
             var targetLibrary = Path.GetFullPath(Path.Combine(gccBasePath, "..", "libil2c.a"));

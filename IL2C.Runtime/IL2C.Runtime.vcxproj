@@ -78,6 +78,7 @@
         <ClInclude Include="System.Runtime.CompilerServices.RuntimeHelpers.h" />
         <ClInclude Include="System.Runtime.InteropServices.GCHandle.h" />
         <ClInclude Include="System.Runtime.InteropServices.GCHandleType.h" />
+        <ClInclude Include="System.Runtime.InteropServices.NativePointer.h" />
         <ClInclude Include="System.SByte.h" />
         <ClInclude Include="System.Single.h" />
         <ClInclude Include="System.String.h" />

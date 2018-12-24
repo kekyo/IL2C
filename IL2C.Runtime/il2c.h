@@ -181,6 +181,7 @@ typedef void* untyped_ptr;
 #include <System.GC.h>
 #include <System.Runtime.InteropServices.GCHandleType.h>
 #include <System.Runtime.InteropServices.GCHandle.h>
+#include <System.Runtime.InteropServices.NativePointer.h>
 
 // TODO: will remove after implemented packaging strategy.
 #include <System.Console.h>

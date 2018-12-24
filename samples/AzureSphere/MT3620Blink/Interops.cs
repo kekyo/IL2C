@@ -36,7 +36,7 @@ namespace MT3620Blink
     [NativeType("sys/epoll.h")]
     internal struct epoll_data_t
     {
-        public IntPtr ptr;
+        public NativePointer ptr;
         public int fd;
         //uint32_t u32;
         //uint64_t u64;

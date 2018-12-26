@@ -110,6 +110,7 @@ namespace IL2C.Metadata.Specialized
         public string UniqueName => "untyped_ptr";
         public string Name => "untyped_ptr";
         public string FriendlyName => "untyped_ptr";
+        public string MangledUniqueName => "untyped_ptr";
         public string MangledName => "untyped_ptr";
 
         public IMetadataContext Context => throw new NotImplementedException();

@@ -8,6 +8,7 @@ using Mono.Cecil.Cil;
 using NUnit.Framework;
 
 using IL2C.ILConverters;
+using System.Runtime.InteropServices;
 
 namespace IL2C
 {
@@ -140,6 +141,9 @@ namespace IL2C
                 typeof(string),
                 typeof(IntPtr),
                 typeof(UIntPtr),
+                typeof(GC),
+                typeof(GCHandle),
+                typeof(RuntimeFieldHandle),
             }.
             OrderBy(type => type.FullName).
             ToArray();

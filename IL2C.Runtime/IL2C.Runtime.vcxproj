@@ -30,6 +30,7 @@
         <ClCompile Include="System.Enum.c" />
         <ClCompile Include="System.Exception.c" />
         <ClCompile Include="System.GC.c" />
+        <ClCompile Include="System.IDisposable.c" />
         <ClCompile Include="System.Int16.c" />
         <ClCompile Include="System.Int32.c" />
         <ClCompile Include="System.Int64.c" />
@@ -40,6 +41,7 @@
         <ClCompile Include="System.NullReferenceException.c" />
         <ClCompile Include="System.Object.c" />
         <ClCompile Include="System.Runtime.CompilerServices.RuntimeHelpers.c" />
+        <ClCompile Include="System.Runtime.InteropServices.GCHandle.c" />
         <ClCompile Include="System.SByte.c" />
         <ClCompile Include="System.Single.c" />
         <ClCompile Include="System.String.c" />
@@ -62,6 +64,7 @@
         <ClInclude Include="System.Enum.h" />
         <ClInclude Include="System.Exception.h" />
         <ClInclude Include="System.GC.h" />
+        <ClInclude Include="System.IDisposable.h" />
         <ClInclude Include="System.Int16.h" />
         <ClInclude Include="System.Int32.h" />
         <ClInclude Include="System.Int64.h" />
@@ -73,6 +76,9 @@
         <ClInclude Include="System.Object.h" />
         <ClInclude Include="System.RuntimeFieldHandle.h" />
         <ClInclude Include="System.Runtime.CompilerServices.RuntimeHelpers.h" />
+        <ClInclude Include="System.Runtime.InteropServices.GCHandle.h" />
+        <ClInclude Include="System.Runtime.InteropServices.GCHandleType.h" />
+        <ClInclude Include="System.Runtime.InteropServices.NativePointer.h" />
         <ClInclude Include="System.SByte.h" />
         <ClInclude Include="System.Single.h" />
         <ClInclude Include="System.String.h" />

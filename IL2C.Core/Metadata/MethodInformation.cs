@@ -26,6 +26,7 @@ namespace IL2C.Metadata
         bool IsPublic { get; }
         bool IsFamily { get; }
         bool IsFamilyOrAssembly { get; }
+        bool IsPrivate { get; }
 
         bool IsConstructor { get; }
         bool IsStatic { get; }
@@ -106,7 +107,7 @@ namespace IL2C.Metadata
         public override string FriendlyName =>
             this.GetFriendlyName(FriendlyNameTypes.ArgumentTypes | FriendlyNameTypes.ArgumentNames);
 
-        public override string MangledName =>
+        public override string MangledUniqueName =>
             this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
 
         public bool IsPublic =>
@@ -115,6 +116,8 @@ namespace IL2C.Metadata
             this.Definition.IsFamily;
         public bool IsFamilyOrAssembly =>
             this.Definition.IsFamilyOrAssembly;
+        public bool IsPrivate =>
+            this.Definition.IsPrivate;
 
         public bool IsConstructor =>
             this.Definition.IsConstructor;
@@ -191,6 +194,12 @@ namespace IL2C.Metadata
         {
             get
             {
+                var body = this.Definition.Body;
+                if (body == null)
+                {
+                    return null;
+                }
+
                 // It gathers sequence point informations.
                 // It will use writing the line preprocessor directive.
                 var paths = new Dictionary<string, string>();
@@ -210,7 +219,7 @@ namespace IL2C.Metadata
                     ToDictionary(g => g.Key, g => g.sps);
 
                 var exceptionHandlers =
-                    this.Definition.Body.ExceptionHandlers.
+                    body.ExceptionHandlers.
                     GroupBy(eh => (tryStart: eh.TryStart.Offset, tryEnd: eh.TryEnd.Offset)).
                     OrderBy(g => g.Key.tryStart).
                     ThenByDescending(g => g.Key.tryEnd).
@@ -219,10 +228,13 @@ namespace IL2C.Metadata
                         // Ordered by handler type: catch --> finally
                         g.OrderBy(eh => GetExceptionHandlerTypePriority(eh.HandlerType)).
                             Select(eh => new ExceptionCatchHandler(
-                            (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
-                            this.MetadataContext.GetOrAddType(eh.CatchType),
-                            eh.HandlerStart.Offset,
-                            eh.HandlerEnd.Offset)).
+                                (eh.HandlerType == ExceptionHandlerType.Catch) ? ExceptionCatchHandlerTypes.Catch : ExceptionCatchHandlerTypes.Finally,
+                                this.MetadataContext.GetOrAddType(eh.CatchType),
+                                eh.HandlerStart.Offset,
+                                // HACK: The handler end offset sometimes doesn't produce at the last sequence.
+                                eh.HandlerEnd?.Offset ??
+                                    (body.Instructions.Last().Offset +
+                                    body.Instructions.Last().OpCode.Size))).
                         ToArray())).
                     ToArray();
 
@@ -269,7 +281,7 @@ namespace IL2C.Metadata
                     return operand;
                 }
 
-                foreach (var inst in this.Definition.Body.Instructions.
+                foreach (var inst in body.Instructions.
                     OrderBy(instruction => instruction.Offset).
                     Select(instruction => new CodeInformation(
                         this,
@@ -366,10 +378,13 @@ namespace IL2C.Metadata
             FirstOrDefault();
 
         public override bool IsCLanguagePublicScope =>
-            this.Definition.IsPublic;
+            this.DeclaringType.IsCLanguagePublicScope &&
+            (this.Definition.IsPublic || this.IsFamily || this.Definition.IsFamilyOrAssembly);
         public override bool IsCLanguageLinkageScope =>
-            !this.Definition.IsPublic && !this.Definition.IsPrivate;
+            this.DeclaringType.IsCLanguageLinkageScope &&
+            (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);
         public override bool IsCLanguageFileScope =>
+            this.DeclaringType.IsCLanguageFileScope ||
             this.Definition.IsPrivate;
 
         public string CLanguageFunctionName =>
@@ -402,13 +417,10 @@ namespace IL2C.Metadata
         public string CLanguageFunctionTypePrototype =>
             this.GetCLanguageFunctionPrototype(-1);
 
-        public string GetCLanguageDeclarationName(int overloadIndex)
-        {
-            return
-                (overloadIndex == 0) ? this.Name :
-                (overloadIndex == -1) ? string.Empty :
-                string.Format("{0}_{1}", this.Name, overloadIndex);
-        }
+        public string GetCLanguageDeclarationName(int overloadIndex) =>
+            (overloadIndex == 0) ? this.Name :
+            (overloadIndex == -1) ? string.Empty :
+            string.Format("{0}_{1}", this.Name, overloadIndex);
 
         public string GetCLanguageFunctionPrototype(int overloadIndex)
         {

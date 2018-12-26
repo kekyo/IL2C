@@ -22,6 +22,7 @@
     <ClCompile Include="../../../IL2C.Runtime/System.Enum.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Exception.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.GC.c" />
+    <ClCompile Include="../../../IL2C.Runtime/System.IDisposable.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Int16.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Int32.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Int64.c" />
@@ -32,6 +33,7 @@
     <ClCompile Include="../../../IL2C.Runtime/System.NullReferenceException.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Object.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.c" />
+    <ClCompile Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandle.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.SByte.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Single.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.String.c" />
@@ -54,6 +56,7 @@
     <ClInclude Include="../../../IL2C.Runtime/System.Enum.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Exception.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.GC.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.IDisposable.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Int16.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Int32.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Int64.h" />
@@ -65,6 +68,9 @@
     <ClInclude Include="../../../IL2C.Runtime/System.Object.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.RuntimeFieldHandle.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandleType.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandle.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.NativePointer.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.SByte.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Single.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.String.h" />
@@ -79,6 +85,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{4a3bf87a-c826-450f-93bf-09313917964a}</ProjectGuid>
     <Keyword>AzureSphere</Keyword>
+    <TargetName>libil2c</TargetName>
     <RootNamespace>IL2C.Runtime</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
@@ -109,13 +116,12 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>.;../../../IL2C.Runtime</AdditionalIncludeDirectories>
-      <AdditionalOptions>-Werror=implicit-function-declaration -Wno-unused-value %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">__AZURE_SPHERE__;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-fdata-sections -ffunction-sections -Werror=implicit-function-declaration -Wno-unused-value %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">__AZURE_SPHERE__;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Release'">
-      <LinkTimeOptimization>true</LinkTimeOptimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">__AZURE_SPHERE__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>

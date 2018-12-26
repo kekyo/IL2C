@@ -113,7 +113,7 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 #define il2c_adjustor_offset(typeName, interfaceTypeName) \
     (offsetof(typeName, vptr_##interfaceTypeName##__) - offsetof(typeName, vptr0__))
 #define il2c_adjusted_reference(pRawReference) \
-    ((void*)((uint8_t*)(pRawReference) - (**(const intptr_t**)(pRawReference))))
+    ((void*)((intptr_t)(pRawReference) - (**(const intptr_t**)(pRawReference))))
 
 /*#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
     ((pReference != NULL) ? \
@@ -179,9 +179,13 @@ typedef void* untyped_ptr;
 #include <System.InvalidCastException.h>
 #include <System.IndexOutOfRangeException.h>
 #include <System.GC.h>
+#include <System.Runtime.InteropServices.GCHandleType.h>
+#include <System.Runtime.InteropServices.GCHandle.h>
+#include <System.Runtime.InteropServices.NativePointer.h>
 
 // TODO: will remove after implemented packaging strategy.
 #include <System.Console.h>
+#include <System.IDisposable.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

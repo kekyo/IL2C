@@ -336,15 +336,15 @@ namespace IL2C
             switch (caseInfo.Assert)
             {
                 case TestCaseAsserts.IgnoreValidateInvokeResult:
-                    try
-                    {
-                        rawResult = caseInfo.Method.Invoke(null, caseInfo.Arguments);
-                    }
-                    catch
-                    {
-                        // ignore.
-                        rawResult = null;
-                    }
+                    //try
+                    //{
+                    //    rawResult = caseInfo.Method.Invoke(null, caseInfo.Arguments);
+                    //}
+                    //catch
+                    //{
+                    //    // ignore.
+                    //    rawResult = null;
+                    //}
                     break;
                 case TestCaseAsserts.CauseBreak:
                     rawResult = null;
@@ -361,15 +361,10 @@ namespace IL2C
             string sanitized = null;
             try
             {
-                var il2cRuntimeSourcePaths = new[] {
-                    // Use combined runtime source. 5 times faster!
-                    Path.Combine(il2cRuntimePath, "il2c_combined.c")
-                };
-
 #if DEBUG
-                var executedResult = await GccDriver.CompileAndRunAsync(false, sourcePath, il2cRuntimePath);
+                var executedResult = await GccDriver.CompileAndRunAsync(false, sourcePath);
 #else
-                var executedResult = await GccDriver.CompileAndRunAsync(true, sourcePath, il2cRuntimePath);
+                var executedResult = await GccDriver.CompileAndRunAsync(true, sourcePath);
 #endif
 
                 sanitized = executedResult.Trim(' ', '\r', '\n');

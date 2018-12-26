@@ -4,7 +4,7 @@
         <IL2CTargetAssemblyPath Condition="'$(IL2CTargetAssemblyPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2CTargetAssemblyFileName)'))</IL2CTargetAssemblyPath>
         <IL2CAssemblyPaths>$(IL2CTargetAssemblyPath)</IL2CAssemblyPaths>
         <IL2COutputPath Condition="'$(IL2COutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','IL2C'))</IL2COutputPath>
-        <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">CommentOnly</IL2CDebugInformation>
+        <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
         <IL2CReadSymbols Condition="'$(IL2CReadSymbols)' == ''">true</IL2CReadSymbols>
         <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
         <CoreBuildDependsOn>

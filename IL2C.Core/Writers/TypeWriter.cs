@@ -63,16 +63,7 @@ namespace IL2C.Writers
             // If virtual method collection doesn't contain newslot method at this declared type:
             if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
-                tw.WriteLine(
-                    "// [1-2-1] {0} VTable layout (Same as {1})",
-                    declaredType.MemberTypeName,
-                    declaredType.BaseType.FriendlyName);
-
-                tw.WriteLine(
-                    "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",
-                    declaredType.BaseType.MangledName,
-                    declaredType.MangledName);
-                tw.SplitLine();
+                // (The typedef alias contains into prototype definitions.)
             }
             // Require new vtable layout.
             else
@@ -91,11 +82,9 @@ namespace IL2C.Writers
                         declaredType.BaseType.FriendlyName);
                 }
 
-                // Important: The vtable structure definition marked for "const",
-                //    because these vtables place into the ".rdata" section or same location.
-                //    Many small system have very tiny space for RAM (writable memory),
-                //    IL2C has to efficient memory space, vtable can place into ROM location.
-                tw.WriteLine("typedef const struct");
+                tw.WriteLine(
+                    "struct {0}_VTABLE_DECL___",
+                    declaredType.MangledUniqueName);
                 tw.WriteLine("{");
                 using (var _ = tw.Shift())
                 {
@@ -112,9 +101,7 @@ namespace IL2C.Writers
                     }
                 }
 
-                tw.WriteLine(
-                    "}} {0}_VTABLE_DECL__;",
-                    declaredType.MangledName);
+                tw.WriteLine("};");
                 tw.SplitLine();
             }
 
@@ -141,7 +128,7 @@ namespace IL2C.Writers
                     tw.WriteLine(
                         "static const {0} {1}_{2} = {3};",
                         declaredType.CLanguageTypeName,
-                        declaredType.MangledName,
+                        declaredType.MangledUniqueName,
                         field.Name,
                         Utilities.GetCLanguageExpression(field.DeclaredValue));
                 }
@@ -156,7 +143,7 @@ namespace IL2C.Writers
 
                 tw.WriteLine(
                     "struct {0}",
-                    declaredType.MangledName);
+                    declaredType.MangledUniqueName);
                 tw.WriteLine("{");
 
                 using (var _ = tw.Shift())
@@ -186,10 +173,10 @@ namespace IL2C.Writers
                                 {
                                     Name = string.Format(
                                         "vptr_{0}__",
-                                        interfaceType.MangledName),
+                                        interfaceType.MangledUniqueName),
                                     TypeName = string.Format(
                                         "{0}_VTABLE_DECL__*",
-                                        interfaceType.MangledName),
+                                        interfaceType.MangledUniqueName),
                                     Required = true
                                 });
 
@@ -198,11 +185,12 @@ namespace IL2C.Writers
                                 Where(field => !field.IsStatic).
                                 Select(field => new
                                 {
-                                    field.Name,
+                                    Name = field.MangledName,
                                     TypeName = field.FieldType.CLanguageTypeName,
                                     // This field's public or at the declared type.
                                     // If not it, we have to declare the field but symbol name will be hide.
-                                    Required = field.IsPublic || field.DeclaringType.Equals(declaredType)
+                                    // TODO: We have to calculate totally shadowing fields between base type to derived type.
+                                    Required = field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly || field.DeclaringType.Equals(declaredType)
                                 });
 
                             return vptrs.Concat(thisFields);
@@ -217,7 +205,7 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "{0}_VTABLE_DECL__* vptr0__;",
-                            declaredType.MangledName);
+                            declaredType.MangledUniqueName);
                     }
 
                     if (fields.Length >= 1)
@@ -261,18 +249,18 @@ namespace IL2C.Writers
                         declaredType.BaseType.FriendlyName);
                     tw.WriteLine(
                         "#define {0}_VTABLE__ {1}_VTABLE__",
-                        declaredType.MangledName,
-                        declaredType.BaseType.MangledName);
+                        declaredType.MangledUniqueName,
+                        declaredType.BaseType.MangledUniqueName);
                 }
                 // Require new vtable
-                else
+                else if (declaredType.CalculatedVirtualMethods.All(entry => !entry.method.IsAbstract))
                 {
                     tw.WriteLine(
                         "// [1-5-2] VTable (Derived from {0})",
                         declaredType.BaseType.FriendlyName);
                     tw.WriteLine(
                         "extern {0}_VTABLE_DECL__ {0}_VTABLE__;",
-                        declaredType.MangledName);
+                        declaredType.MangledUniqueName);
                 }
                 tw.SplitLine();
             }
@@ -281,7 +269,7 @@ namespace IL2C.Writers
                 "// [1-4] Runtime type information");
             tw.WriteLine(
                 "IL2C_DECLARE_RUNTIME_TYPE({0});",
-                declaredType.MangledName);
+                declaredType.MangledUniqueName);
             tw.SplitLine();
         }
     }

@@ -75,6 +75,23 @@ namespace IL2C.Writers
                     return true;
                 }
             }
+
+            public bool TryFinish(
+                Action<ExceptionHandler, int, int, ExceptionCatchHandler, int> catchEnd)
+            {
+                if ((catchHandlerIndex >= (this.Handler.CatchHandlers.Length - 1)) && inBlock)
+                {
+                    var catchHandler = this.Handler.CatchHandlers[catchHandlerIndex];
+                    catchEnd(this.Handler, this.HandlerIndex, this.NestedIndex, catchHandler, catchHandlerIndex);
+                    inBlock = false;
+                    catchHandlerIndex++;
+
+                    // Require emit end-try.
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         private readonly Queue<(ExceptionHandler handler, int handlerIndex)> queue;
@@ -104,7 +121,8 @@ namespace IL2C.Writers
             this.finished = finished;
         }
 
-        public bool IsFinished => (queue.Count == 0) && (stack.Count == 0);
+        public bool IsFinished =>
+            (queue.Count == 0) && (stack.Count == 0);
 
         public void Update(ICodeInformation code)
         {
@@ -137,6 +155,23 @@ namespace IL2C.Writers
 
                 break;
             }
+        }
+
+        public bool TryFinish()
+        {
+            if ((queue.Count == 0) && (stack.Count == 1))
+            {
+                var state = stack.Peek();
+                if (state.TryFinish(catchEnd))
+                {
+                    stack.Pop();
+                    var parent = (stack.Count >= 1) ? stack.Peek() : null;
+                    finished(state.Handler, state.HandlerIndex, state.NestedIndex, parent?.Handler, parent?.HandlerIndex ?? -1, parent?.NestedIndex ?? -1);
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

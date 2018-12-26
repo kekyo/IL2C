@@ -47,8 +47,8 @@ namespace IL2C
                 twHeader,
                 prepared.Types,
                 type => type.IsCLanguagePublicScope,
-                field => field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly,
-                method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
+                field => field.IsCLanguagePublicScope,
+                method => method.IsCLanguagePublicScope &&
                     prepared.Functions.ContainsKey(method));
 
             twHeader.WriteLine("#endif");
@@ -180,13 +180,13 @@ namespace IL2C
             PrototypeWriter.InternalConvertToPrototypes(
                 twSource,
                 prepared.Types,
-                type => !type.IsCLanguagePublicScope,
-                field => !(field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly),
-                method => (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
+                type => type.IsCLanguageLinkageScope || type.IsCLanguageFileScope,
+                field => field.IsCLanguageLinkageScope || field.IsCLanguageFileScope,    // TODO: scope calculation (related packaging)
+                method => (method.IsCLanguageLinkageScope || method.IsCLanguageFileScope) &&
                     prepared.Functions.ContainsKey(method));
 
             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// [9-3] Declare static fields:");
+            twSource.WriteLine("// [9-3] Static field instances:");
             twSource.SplitLine();
 
             foreach (var type in prepared.Types.
@@ -196,14 +196,7 @@ namespace IL2C
                 foreach (var field in type.Fields.
                     Where(field => field.IsStatic))
                 {
-                    if (field.NativeValue != null)
-                    {
-                        twSource.WriteLine(
-                            "#define {0} {1}",
-                            field.MangledName,
-                            field.CLanguageNativeSymbolName);
-                    }
-                    else
+                    if (field.NativeValue == null)
                     {
                         twSource.WriteLine(
                             "{0};",
@@ -220,7 +213,8 @@ namespace IL2C
                 twSource.SplitLine();
 
                 // All methods and constructor exclude type initializer
-                foreach (var method in type.DeclaredMethods)
+                foreach (var method in type.DeclaredMethods.
+                    Where(method => prepared.Functions.ContainsKey(method)))
                 {
                     FunctionWriter.InternalConvertFromMethod(
                         twSource,

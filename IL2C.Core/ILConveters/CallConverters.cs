@@ -22,6 +22,10 @@ namespace IL2C.ILConverters
             ref ILocalVariableInformation requiredCastingAtArg0PointerVariable,
             ref bool isVirtualCall)
         {
+            Debug.Assert(method.IsStatic ||
+                parameter0.TargetType.Equals(method.DeclaringType) ||
+                (parameter0.TargetType.IsByReference && parameter0.TargetType.ElementType.Equals(method.DeclaringType)));
+
             // Required boxing at the arg0
             if (arg0ValueType != null)
             {
@@ -62,6 +66,26 @@ namespace IL2C.ILConverters
                     decodeContext.PopStack();
 
                     return (parameter0.TargetType, arg0CastedSymbol, "il2c_adjusted_reference({0})");
+                }
+                // Invoke interface method with the class-type instance and
+                // IL2C detected here for can cast statically.
+                else if (method.DeclaringType.IsInterface &&
+                    arg0.TargetType.IsClass &&
+                    method.DeclaringType.IsAssignableFrom(arg0.TargetType))
+                {
+                    // All declared methods from derived to base types.
+                    var allDeclaredMethods = arg0.TargetType.AllInheritedDeclaredMethods;
+
+                    var m = method;
+                    var implementationMethod = allDeclaredMethods.First(
+                        dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, m));
+
+                    Debug.Assert(implementationMethod.DeclaringType.IsAssignableFrom(arg0.TargetType));
+
+                    // Drop virtual call and turn to the direct call
+                    isVirtualCall = false;
+                    method = implementationMethod;
+                    return (arg0.TargetType, arg0, "il2c_adjusted_reference({0})");
                 }
                 else
                 {
@@ -232,7 +256,7 @@ namespace IL2C.ILConverters
                             "{0} = il2c_box({1}, {2})",
                             extractContext.GetSymbolName(pairParameters[0].variable),
                             extractContext.GetSymbolName(requiredBoxingAtArg0PointerVariable),
-                            arg0ValueType.MangledName),
+                            arg0ValueType.MangledUniqueName),
                         callExpression };
                 }
                 // If requires casting expression
@@ -243,7 +267,7 @@ namespace IL2C.ILConverters
                         string.Format(
                             "{0} = il2c_cast_from_boxed_to_interface({1}, {2}, {3}, {4})",
                             extractContext.GetSymbolName(pairParameters[0].variable),
-                            method.DeclaringType.MangledName,
+                            method.DeclaringType.MangledUniqueName,
                             arg0ValueType.ElementType.CLanguageStaticSizeOfExpression,
                             arg0ValueType.CalculateInterfaceIndex(method.DeclaringType),
                             extractContext.GetSymbolName(requiredCastingAtArg0PointerVariable)),

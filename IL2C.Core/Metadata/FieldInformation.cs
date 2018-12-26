@@ -23,8 +23,7 @@ namespace IL2C.Metadata
     }
 
     internal sealed class FieldInformation
-        : MemberInformation<FieldReference, FieldDefinition>
-        , IFieldInformation
+        : MemberInformation<FieldReference, FieldDefinition>, IFieldInformation
     {
         public FieldInformation(FieldReference field, ModuleInformation module)
             : base(field, module)
@@ -66,13 +65,19 @@ namespace IL2C.Metadata
             return string.Format(
                 "{0} {1}{2}",
                 this.FieldType.CLanguageTypeName,
-                this.MangledName,
+                this.MangledUniqueName,
                 initializer);
         }
 
-        public override bool IsCLanguagePublicScope => this.Definition.IsPublic;
-        public override bool IsCLanguageLinkageScope => !this.Definition.IsPublic && !this.Definition.IsPrivate;
-        public override bool IsCLanguageFileScope => this.Definition.IsPrivate;
+        public override bool IsCLanguagePublicScope =>
+            this.DeclaringType.IsCLanguagePublicScope &&
+            (this.Definition.IsPublic || this.IsFamily || this.Definition.IsFamilyOrAssembly);
+        public override bool IsCLanguageLinkageScope =>
+            this.DeclaringType.IsCLanguageLinkageScope &&
+            (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);
+        public override bool IsCLanguageFileScope =>
+            this.DeclaringType.IsCLanguageFileScope ||
+            this.Definition.IsPrivate;
 
         public NativeValueAttribute NativeValue =>
             this.Definition.CustomAttributes.

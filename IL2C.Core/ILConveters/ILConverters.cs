@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 
 using Mono.Cecil.Cil;
 
 using IL2C.Metadata;
 using IL2C.Translators;
-using System.Diagnostics;
 
 namespace IL2C.ILConverters
 {
@@ -254,14 +254,30 @@ namespace IL2C.ILConverters
             // If this type can cast statically:
             if (operand.IsAssignableFrom(si.TargetType))
             {
-                return extractContext =>
+                // To interface type
+                if (operand.IsInterface)
                 {
-                    return new[] { string.Format(
+                    return extractContext =>
+                    {
+                        return new[] { string.Format(
+                        "{0} = il2c_cast_to_interface({1}, {2}, {3})",
+                        extractContext.GetSymbolName(symbol),
+                        operand.MangledUniqueName,
+                        si.TargetType.MangledUniqueName,
+                        extractContext.GetSymbolName(si)) };
+                    };
+                }
+                else
+                {
+                    return extractContext =>
+                    {
+                        return new[] { string.Format(
                         "{0} = ({1}){2}",
                         extractContext.GetSymbolName(symbol),
                         operand.CLanguageTypeName,
                         extractContext.GetSymbolName(si)) };
-                };
+                    };
+                }
             }
 
             return extractContext =>
@@ -271,7 +287,7 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(symbol),
                     check ? "il2c_castclass" : "il2c_isinst",
                     extractContext.GetSymbolName(si),
-                    operand.MangledName) };
+                    operand.MangledUniqueName) };
             };
         }
     }
@@ -317,7 +333,7 @@ namespace IL2C.ILConverters
                 return new[] { string.Format(
                     "{0} = il2c_sizeof({1})",
                     extractContext.GetSymbolName(symbol),
-                    operand.MangledName) };
+                    operand.MangledUniqueName) };
             };
         }
     }

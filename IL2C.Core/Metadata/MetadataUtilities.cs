@@ -20,7 +20,7 @@ namespace IL2C.Metadata
                 .ToArray();
             var namespaceName = declaringTypes.FirstOrDefault()
                 ?.Namespace
-                ??(member as TypeReference)?.Namespace;
+                ?? (member as TypeReference)?.Namespace;
 
             return string.Join(
                 ".",
@@ -29,6 +29,7 @@ namespace IL2C.Metadata
                     .Concat(new[] { member.Name }));
         }
 
+        #region MethodSignatureTypeComparer
         private sealed class MethodSignatureTypeComparerImpl
             : ICombinedComparer<ITypeInformation>
         {
@@ -38,6 +39,11 @@ namespace IL2C.Metadata
 
             public int Compare(ITypeInformation x, ITypeInformation y)
             {
+                if (x.Equals(y))
+                {
+                    return 0;
+                }
+
                 // Prioritize for narrowing base type.
                 var xr = x.IsAssignableFrom(y);
                 var yr = y.IsAssignableFrom(x);
@@ -50,10 +56,7 @@ namespace IL2C.Metadata
                 {
                     return 1;
                 }
-                if (xr && yr)
-                {
-                    return 0;
-                }
+                Debug.Assert(!(xr && yr));
 
                 if (!x.IsByReference && y.IsByReference)
                 {
@@ -134,7 +137,9 @@ namespace IL2C.Metadata
 
         public static readonly ICombinedComparer<ITypeInformation> MethodSignatureTypeComparer =
             new MethodSignatureTypeComparerImpl();
+        #endregion
 
+        #region MethodSignatureParameterComparer
         private sealed class MethodSignatureParameterComparerImpl
             : ICombinedComparer<IParameterInformation>
         {
@@ -169,7 +174,9 @@ namespace IL2C.Metadata
 
         public static readonly ICombinedComparer<IParameterInformation> MethodSignatureParameterComparer =
             new MethodSignatureParameterComparerImpl();
+        #endregion
 
+        #region MethodSignatureComparer
         private sealed class MethodSignatureComparerImpl
             : ICombinedComparer<IMethodInformation>
         {
@@ -240,6 +247,7 @@ namespace IL2C.Metadata
             new MethodSignatureComparerImpl(false);
         public static readonly ICombinedComparer<IMethodInformation> VirtualMethodSignatureComparer =
             new MethodSignatureComparerImpl(true);
+        #endregion
 
         public static IDictionary<string, IMethodInformation[]> CalculateOverloadMethods(
             this IEnumerable<IMethodInformation> methods)

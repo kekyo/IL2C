@@ -1,22 +1,77 @@
-﻿namespace MT3620Blink
+﻿using System;
+
+namespace MT3620Blink
 {
     public static class Program
     {
-        private sealed class LedTimer : Timer
+        private sealed class GpioBlinker : Timer
         {
-            private readonly GpioOutput led;
+            private readonly long[] blinkIntervals = new[] { 125_000_000L, 250_000_000L, 500_000_000L };
+            private readonly GpioOutput output;
             private bool flag;
+            private int blinkIntervalIndex;
 
-            public LedTimer(GpioOutput led, long nsec)
-                : base(nsec)
+            public GpioBlinker(int gpioId)
             {
-                this.led = led;
+                output = new GpioOutput(
+                    gpioId,
+                    GPIO_OutputMode_Type.GPIO_OutputMode_PushPull,
+                    true);
+                this.NextInterval();
+            }
+
+            public override void Dispose()
+            {
+                base.Dispose();
+                output.Dispose();
             }
 
             protected override void Raised()
             {
-                led.SetValue(flag);
+                output.SetValue(flag);
                 flag = !flag;
+            }
+
+            public void NextInterval()
+            {
+                this.SetInterval(blinkIntervals[blinkIntervalIndex]);
+
+                blinkIntervalIndex++;
+                blinkIntervalIndex %= 3;
+            }
+        }
+
+        private sealed class GpioPoller : Timer
+        {
+            private readonly GpioInput input;
+            private readonly GpioBlinker blinker;
+            private bool last;
+
+            public GpioPoller(int gpioId, GpioBlinker blinker)
+            {
+                input = new GpioInput(gpioId);
+                last = input.Value;
+                this.blinker = blinker;
+                this.SetInterval(100_000_000L);
+            }
+
+            public override void Dispose()
+            {
+                base.Dispose();
+                input.Dispose();
+            }
+
+            protected override void Raised()
+            {
+                var current = input.Value;
+                if (current != last)
+                {
+                    if (!current)
+                    {
+                        blinker.NextInterval();
+                    }
+                }
+                last = current;
             }
         }
 
@@ -24,31 +79,14 @@
         {
             using (var epoll = new Application())
             {
-                using (var led = new GpioOutput(
-                    Interops.MT3620_RDB_LED1_RED,
-                    GPIO_OutputMode_Type.GPIO_OutputMode_PushPull,
-                    true))
+                using (var ledBlinker = new GpioBlinker(Interops.MT3620_RDB_LED1_RED))
                 {
-                    using (var button = new GpioInput(
-                        Interops.MT3620_RDB_BUTTON_A))
+                    using (var buttonPoller = new GpioPoller(Interops.MT3620_RDB_BUTTON_A, ledBlinker))
                     {
-                        using (var ledTimer = new LedTimer(led, 125_000_000L))
-                        {
-                            epoll.RegisterDescriptor(ledTimer);
+                        epoll.RegisterDescriptor(ledBlinker);
+                        epoll.RegisterDescriptor(buttonPoller);
 
-                            //var blinkIntervals = new[] { 125_000_000L, 250_000_000L, 500_000_000L };
-                            //var blinkIntervalIndex = 0;
-
-                            //epoll.RegisterDescriptor(
-                            //    button,
-                            //    () =>
-                            //    {
-                            //        blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
-                            //        timer.SetInterval(blinkIntervals[blinkIntervalIndex]);
-                            //    });
-
-                            epoll.Run();
-                        }
+                        epoll.Run();
                     }
                 }
             }

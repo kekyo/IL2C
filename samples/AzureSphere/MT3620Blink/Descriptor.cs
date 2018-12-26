@@ -13,7 +13,7 @@ namespace MT3620Blink
             this.Identity = fd;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (this.Identity >= 0)
             {

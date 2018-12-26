@@ -25,6 +25,20 @@ namespace MT3620Blink
                 ref ev);
         }
 
+        public void UnregisterDescriptor(Descriptor target)
+        {
+            var handle = GCHandle.Alloc(target, GCHandleType.Pinned);
+            handle.Free();
+
+            var ev = new epoll_event();
+
+            Interops.epoll_ctl(
+                this.Identity,
+                Interops.EPOLL_CTL_DEL,
+                target.Identity,
+                ref ev);
+        }
+
         public void Run()
         {
             while (true)

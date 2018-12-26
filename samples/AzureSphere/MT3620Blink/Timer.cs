@@ -10,10 +10,9 @@ namespace MT3620Blink
         [NativeValue("time.h")]
         private static readonly int TFD_NONBLOCK;
 
-        protected Timer(long nsec)
+        protected Timer()
             : base(Interops.timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK))
         {
-            this.SetInterval(nsec);
         }
 
         public void SetInterval(long nsec)

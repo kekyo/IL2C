@@ -117,6 +117,8 @@ namespace MT3620Blink
         [NativeValue("sys/epoll.h")]
         public static readonly int EPOLL_CTL_ADD;
         [NativeValue("sys/epoll.h")]
+        public static readonly int EPOLL_CTL_DEL;
+        [NativeValue("sys/epoll.h")]
         public static readonly uint EPOLLIN;
 
         [NativeMethod("sys/epoll.h")]

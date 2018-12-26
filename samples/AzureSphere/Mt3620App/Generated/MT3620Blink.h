@@ -39,6 +39,7 @@ struct MT3620Blink_Descriptor_VTABLE_DECL___
     void (*Finalize)(void* this__);
     int32_t (*GetHashCode)(void* this__);
     System_String* (*ToString)(void* this__);
+    void (*Dispose)(void* this__);
     void (*OnRaised)(void* this__);
 };
 
@@ -94,7 +95,7 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program);
 // [2-4] Member methods: MT3620Blink.Descriptor
 
 extern void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* this__, int32_t fd);
-extern void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__);
+extern /* virtual */ void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__);
 extern int32_t MT3620Blink_Descriptor_get_Identity(MT3620Blink_Descriptor* this__);
 extern /* virtual */ void MT3620Blink_Descriptor_OnRaised(MT3620Blink_Descriptor* this__);
 
@@ -102,6 +103,7 @@ extern /* virtual */ void MT3620Blink_Descriptor_OnRaised(MT3620Blink_Descriptor
 
 extern void MT3620Blink_Application__ctor(MT3620Blink_Application* this__);
 extern void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_Descriptor* target);
+extern void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_Descriptor* target);
 extern void MT3620Blink_Application_Run(MT3620Blink_Application* this__);
 
 // [2-4] Member methods: MT3620Blink.Program

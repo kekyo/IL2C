@@ -436,6 +436,7 @@ namespace IL2C.Metadata
                 {
                     return definition.IsPublic ||
                         definition.IsNestedPublic ||
+                        definition.IsNestedFamily ||
                         definition.IsNestedFamilyOrAssembly;
                 }
                 else

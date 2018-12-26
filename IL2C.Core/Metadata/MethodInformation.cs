@@ -26,6 +26,7 @@ namespace IL2C.Metadata
         bool IsPublic { get; }
         bool IsFamily { get; }
         bool IsFamilyOrAssembly { get; }
+        bool IsPrivate { get; }
 
         bool IsConstructor { get; }
         bool IsStatic { get; }
@@ -115,6 +116,8 @@ namespace IL2C.Metadata
             this.Definition.IsFamily;
         public bool IsFamilyOrAssembly =>
             this.Definition.IsFamilyOrAssembly;
+        public bool IsPrivate =>
+            this.Definition.IsPrivate;
 
         public bool IsConstructor =>
             this.Definition.IsConstructor;
@@ -376,7 +379,7 @@ namespace IL2C.Metadata
 
         public override bool IsCLanguagePublicScope =>
             this.DeclaringType.IsCLanguagePublicScope &&
-            (this.Definition.IsPublic || this.Definition.IsFamilyOrAssembly);
+            (this.Definition.IsPublic || this.IsFamily || this.Definition.IsFamilyOrAssembly);
         public override bool IsCLanguageLinkageScope =>
             this.DeclaringType.IsCLanguageLinkageScope &&
             (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);

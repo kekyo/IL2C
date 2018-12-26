@@ -2,6 +2,12 @@
 
 namespace MT3620Blink
 {
+    public interface IEPollListener
+    {
+        int Identity { get; }
+        void OnRaised();
+    }
+
     public sealed class Application : Descriptor
     {
         public Application()
@@ -9,7 +15,7 @@ namespace MT3620Blink
         {
         }
 
-        public void RegisterDescriptor(Descriptor target)
+        public void RegisterDescriptor(IEPollListener target)
         {
             var handle = GCHandle.Alloc(target, GCHandleType.Pinned);
 
@@ -25,7 +31,7 @@ namespace MT3620Blink
                 ref ev);
         }
 
-        public void UnregisterDescriptor(Descriptor target)
+        public void UnregisterDescriptor(IEPollListener target)
         {
             var handle = GCHandle.Alloc(target, GCHandleType.Pinned);
             handle.Free();
@@ -53,7 +59,7 @@ namespace MT3620Blink
                 if (numEventsOccurred == 1)
                 {
                     var handle = GCHandle.FromIntPtr(ev.data.ptr);
-                    var target = (Descriptor)handle.Target;
+                    var target = (IEPollListener)handle.Target;
                     target.OnRaised();
                 }
             }

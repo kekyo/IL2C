@@ -201,6 +201,13 @@ namespace IL2C
                         rhsType.MangledUniqueName,
                         rhsExpression);
                 }
+                // object <-- IHoge
+                else if (lhsType.IsObjectType && rhsType.IsInterface)
+                {
+                    return string.Format(
+                        "il2c_adjusted_reference({0})",
+                        rhsExpression);
+                }
                 else
                 {
                     // Special case: System.Object <-- managed pointer

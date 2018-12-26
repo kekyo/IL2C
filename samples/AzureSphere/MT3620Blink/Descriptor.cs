@@ -22,9 +22,9 @@ namespace MT3620Blink
             }
         }
 
-        protected internal int Identity { get; private set; }
+        protected int Identity { get; private set; }
 
-        protected internal virtual void OnRaised()
+        protected virtual void OnRaised()
         {
         }
     }

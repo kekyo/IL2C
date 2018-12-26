@@ -189,7 +189,8 @@ namespace IL2C.Writers
                                     TypeName = field.FieldType.CLanguageTypeName,
                                     // This field's public or at the declared type.
                                     // If not it, we have to declare the field but symbol name will be hide.
-                                    Required = field.IsPublic || field.DeclaringType.Equals(declaredType)
+                                    // TODO: We have to calculate totally shadowing fields between base type to derived type.
+                                    Required = field.IsPublic || field.IsFamily || field.IsFamilyOrAssembly || field.DeclaringType.Equals(declaredType)
                                 });
 
                             return vptrs.Concat(thisFields);

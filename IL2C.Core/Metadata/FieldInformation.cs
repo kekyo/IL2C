@@ -71,7 +71,7 @@ namespace IL2C.Metadata
 
         public override bool IsCLanguagePublicScope =>
             this.DeclaringType.IsCLanguagePublicScope &&
-            (this.Definition.IsPublic || this.Definition.IsFamilyOrAssembly);
+            (this.Definition.IsPublic || this.IsFamily || this.Definition.IsFamilyOrAssembly);
         public override bool IsCLanguageLinkageScope =>
             this.DeclaringType.IsCLanguageLinkageScope &&
             (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);

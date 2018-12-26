@@ -162,13 +162,29 @@ namespace IL2C.Writers
 
                         foreach (var method in methods)
                         {
+                            var scope = method.IsPublic ?
+                                "public" :
+                                method.IsFamily ?
+                                "protected" :
+                                method.IsFamilyOrAssembly ?
+                                "protected internal" :
+                                method.IsPrivate ?
+                                "private" :
+                                "internal";
+                            var attribute1 = method.IsStatic ?
+                                "static" :
+                                method.IsVirtual ?
+                                (method.IsReuseSlot ? "override" : "virtual") :
+                                string.Empty;
+                            var attribute2 = method.IsSealed ?
+                                "sealed" :
+                                method.IsExtern ?
+                                "extern" :
+                                string.Empty;
+
                             tw.WriteLine(
-                                "extern {0}{1};",
-                                method.IsStatic ?
-                                    "/* static */ " :
-                                    method.IsVirtual ?
-                                        (method.IsReuseSlot ? "/* override */ " : "/* virtual */ ") :
-                                        string.Empty,
+                                "extern /* {0} */ {1};",
+                                string.Join(" ", new[] { scope, attribute1, attribute2 }.Where(a => !string.IsNullOrWhiteSpace(a))),
                                 method.CLanguageFunctionPrototype);
                         }
                         tw.SplitLine();

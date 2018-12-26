@@ -18,6 +18,7 @@ extern "C" {
 // [2-1-1] .NET types:
 
 typedef struct MT3620Blink_Descriptor MT3620Blink_Descriptor;
+typedef struct MT3620Blink_IEPollListener MT3620Blink_IEPollListener;
 typedef struct MT3620Blink_Application MT3620Blink_Application;
 typedef struct MT3620Blink_Program MT3620Blink_Program;
 
@@ -25,6 +26,7 @@ typedef struct MT3620Blink_Program MT3620Blink_Program;
 // [2-1-2] VTable types:
 
 typedef const struct MT3620Blink_Descriptor_VTABLE_DECL___ MT3620Blink_Descriptor_VTABLE_DECL__;
+typedef const struct MT3620Blink_IEPollListener_VTABLE_DECL___ MT3620Blink_IEPollListener_VTABLE_DECL__;
 typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Application_VTABLE_DECL__;
 typedef System_Object_VTABLE_DECL__ MT3620Blink_Program_VTABLE_DECL__;
 
@@ -56,6 +58,26 @@ extern MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Descriptor_VTABLE__;
 
 // [1-4] Runtime type information
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Descriptor);
+
+////////////////////////////////////////////////////////////
+// [1] MT3620Blink.IEPollListener
+
+// [1-2-2] Interface VTable layout
+struct MT3620Blink_IEPollListener_VTABLE_DECL___
+{
+    intptr_t offset__; // Adjustor offset
+    int32_t (*get_Identity)(void* this__);
+    void (*OnRaised)(void* this__);
+};
+
+// [1-1-2] Interface layout
+struct MT3620Blink_IEPollListener
+{
+    MT3620Blink_IEPollListener_VTABLE_DECL__* vptr0__;
+};
+
+// [1-4] Runtime type information
+IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_IEPollListener);
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Application
@@ -94,21 +116,21 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program);
 
 // [2-4] Member methods: MT3620Blink.Descriptor
 
-extern void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* this__, int32_t fd);
-extern /* virtual */ void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__);
-extern int32_t MT3620Blink_Descriptor_get_Identity(MT3620Blink_Descriptor* this__);
-extern /* virtual */ void MT3620Blink_Descriptor_OnRaised(MT3620Blink_Descriptor* this__);
+extern /* public */ void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* this__, int32_t fd);
+extern /* public virtual */ void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__);
+extern /* protected */ int32_t MT3620Blink_Descriptor_get_Identity(MT3620Blink_Descriptor* this__);
+extern /* protected virtual */ void MT3620Blink_Descriptor_OnRaised(MT3620Blink_Descriptor* this__);
 
 // [2-4] Member methods: MT3620Blink.Application
 
-extern void MT3620Blink_Application__ctor(MT3620Blink_Application* this__);
-extern void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_Descriptor* target);
-extern void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_Descriptor* target);
-extern void MT3620Blink_Application_Run(MT3620Blink_Application* this__);
+extern /* public sealed */ void MT3620Blink_Application__ctor(MT3620Blink_Application* this__);
+extern /* public sealed */ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_IEPollListener* target);
+extern /* public sealed */ void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_IEPollListener* target);
+extern /* public sealed */ void MT3620Blink_Application_Run(MT3620Blink_Application* this__);
 
 // [2-4] Member methods: MT3620Blink.Program
 
-extern /* static */ int32_t MT3620Blink_Program_Main(void);
+extern /* public static sealed */ int32_t MT3620Blink_Program_Main(void);
 
 #ifdef __cplusplus
 }

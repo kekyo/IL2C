@@ -12,11 +12,12 @@ System_Object* System_Runtime_InteropServices_GCHandle_get_Target(System_Runtime
 
 void System_Runtime_InteropServices_GCHandle_set_Target(System_Runtime_InteropServices_GCHandle* this__, System_Object* value)
 {
-    il2c_assert(this__ != NULL);
+    System_Runtime_InteropServices_GCHandle_Free(this__);
 
     if (value != NULL)
     {
-        IL2C_REF_HEADER* pHeader = il2c_get_header__(il2c_adjusted_reference(value));
+        // TODO: Force pinned.
+        IL2C_REF_HEADER* pHeader = il2c_get_header__(value);
         volatile interlock_t gcMark = pHeader->gcMark;
         if ((gcMark == GCMARK_NOMARK) || (gcMark == GCMARK_LIVE))
         {
@@ -46,40 +47,40 @@ void System_Runtime_InteropServices_GCHandle_Free(System_Runtime_InteropServices
     *this__ = 0;
 }
 
-intptr_t System_Runtime_InteropServices_GCHandle_ToIntPtr(System_Runtime_InteropServices_GCHandle* this__)
-{
-    il2c_assert(this__ != NULL);
-    return *this__;
-}
-
 intptr_t System_Runtime_InteropServices_GCHandle_AddrOfPinnedObject(System_Runtime_InteropServices_GCHandle* this__)
 {
     il2c_assert(this__ != NULL);
 
-    // Same as ToIntPtr because the IL2C's objref is always pinned native pointer.
-    return *this__;
+    // TODO: It has to reinterpret for required pointer. ex: System_String --> string_body__
+    return (intptr_t)*this__;
 }
 
 System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc(System_Object* value)
 {
     // intptr_t aliased
-    return (System_Runtime_InteropServices_GCHandle)il2c_adjusted_reference(value);
+    return (System_Runtime_InteropServices_GCHandle)value;
 }
 
 System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc_1(
     System_Object* value, System_Runtime_InteropServices_GCHandleType type)
 {
-    il2c_assert((type == System_Runtime_InteropServices_GCHandleType_Normal) ||
-        (type == System_Runtime_InteropServices_GCHandleType_Pinned));
+    if ((type == System_Runtime_InteropServices_GCHandleType_Normal) ||
+        (type == System_Runtime_InteropServices_GCHandleType_Pinned))
+    {
+        if (value != NULL)
+        {
+            IL2C_REF_HEADER* pHeader = il2c_get_header__(value);
+            volatile interlock_t gcMark = pHeader->gcMark;
+            if ((gcMark == GCMARK_NOMARK) || (gcMark == GCMARK_LIVE))
+            {
+                // Fixed this objref
+                pHeader->gcMark = GCMARK_FIXED;
+            }
+        }
+    }
 
     // intptr_t aliased
-    return (System_Runtime_InteropServices_GCHandle)il2c_adjusted_reference(value);
-}
-
-System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_FromIntPtr(intptr_t value)
-{
-    // intptr_t aliased
-    return value;
+    return (System_Runtime_InteropServices_GCHandle)value;
 }
 
 int32_t System_Runtime_InteropServices_GCHandle_GetHashCode(System_Runtime_InteropServices_GCHandle* this__)

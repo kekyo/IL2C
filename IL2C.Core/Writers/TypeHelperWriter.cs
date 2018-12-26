@@ -182,50 +182,54 @@ namespace IL2C.Writers
                 InternalConvertTrampolineVirtualFunction(tw, declaredType, method);
             }
 
-            var overrideMethods = declaredType.OverrideMethods;
-            var newSlotMethods = declaredType.NewSlotMethods;
-            var overrideBaseMethods = declaredType.OverrideBaseMethods;
-
-            // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-            if (!overrideMethods.Any() &&
-                !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+            // Write vtable excepts abstract types.
+            if (virtualMethods.All(entry => !entry.method.IsAbstract))
             {
-                tw.WriteLine(
-                    "// [7-10-1] VTable (Not defined, same as {0})",
-                    declaredType.BaseType.FriendlyName);
-                tw.SplitLine();
-            }
-            // Require new vtable.
-            else
-            {
-                // Write virtual methods
-                tw.WriteLine(
-                    "// [7-10-2] VTable");
-                tw.WriteLine(
-                    "{0}_VTABLE_DECL__ {0}_VTABLE__ = {{",
-                    declaredType.MangledUniqueName);
+                var overrideMethods = declaredType.OverrideMethods;
+                var newSlotMethods = declaredType.NewSlotMethods;
+                var overrideBaseMethods = declaredType.OverrideBaseMethods;
 
-                using (var _ = tw.Shift())
+                // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
+                if (!overrideMethods.Any() &&
+                    !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
                 {
-                    tw.WriteLine("0, // Adjustor offset");
-
-                    // Write only visible methods because virtual method collection contains the explicitly implementation methods.
-                    foreach (var (method, _) in virtualMethods.
-                        Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
-                    {
-                        // NOTE: Transfer trampoline virtual function if declared type is value type.
-                        //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
-                        //   The trampoline will unbox from objref to target value type.
-                        tw.WriteLine(
-                            "({0}){1}{2},",
-                            method.CLanguageFunctionTypePrototype,
-                            method.CLanguageFunctionName,
-                            trampolineVirtualMethods.Contains(method) ? "_Trampoline_VFunc__" : string.Empty);
-                    }
+                    tw.WriteLine(
+                        "// [7-10-1] VTable (Not defined, same as {0})",
+                        declaredType.BaseType.FriendlyName);
+                    tw.SplitLine();
                 }
+                // Require new vtable.
+                else
+                {
+                    // Write virtual methods
+                    tw.WriteLine(
+                        "// [7-10-2] VTable");
+                    tw.WriteLine(
+                        "{0}_VTABLE_DECL__ {0}_VTABLE__ = {{",
+                        declaredType.MangledUniqueName);
 
-                tw.WriteLine("};");
-                tw.SplitLine();
+                    using (var _ = tw.Shift())
+                    {
+                        tw.WriteLine("0, // Adjustor offset");
+
+                        // Write only visible methods because virtual method collection contains the explicitly implementation methods.
+                        foreach (var (method, _) in virtualMethods.
+                            Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
+                        {
+                            // NOTE: Transfer trampoline virtual function if declared type is value type.
+                            //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
+                            //   The trampoline will unbox from objref to target value type.
+                            tw.WriteLine(
+                                "({0}){1}{2},",
+                                method.CLanguageFunctionTypePrototype,
+                                method.CLanguageFunctionName,
+                                trampolineVirtualMethods.Contains(method) ? "_Trampoline_VFunc__" : string.Empty);
+                        }
+                    }
+
+                    tw.WriteLine("};");
+                    tw.SplitLine();
+                }
             }
 
             var declaredFields =
@@ -306,20 +310,35 @@ namespace IL2C.Writers
                     field.FieldType.Fields.Length >= 1)).
                 ToArray();
 
-            // ex: IL2C_RUNTIME_TYPE_BEGIN(Foo_Bar, "Foo.Bar", IL2C_TYPE_REFERENCE, sizeof(Foo_Bar), System_Object, 0, 0)
-            tw.WriteLine(
-                "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})",
-                declaredType.MangledUniqueName,
-                declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
-                declaredType.IsEnum ?      // Type attribute flags
-                    (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
-                    declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
-                    declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
-                    "IL2C_TYPE_VALUE",
-                declaredType.CLanguageStaticSizeOfExpression,
-                declaredType.BaseType.MangledUniqueName,
-                declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
-                interfaceTypes.Length);
+            if (virtualMethods.All(entry => !entry.method.IsAbstract))
+            {
+                // ex: IL2C_RUNTIME_TYPE_BEGIN(Foo_Bar, "Foo.Bar", IL2C_TYPE_REFERENCE, sizeof(Foo_Bar), System_Object, 0, 0)
+                tw.WriteLine(
+                    "IL2C_RUNTIME_TYPE_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})",
+                    declaredType.MangledUniqueName,
+                    declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
+                    declaredType.IsEnum ?      // Type attribute flags
+                        (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
+                        declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
+                        declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
+                        "IL2C_TYPE_VALUE",
+                    declaredType.CLanguageStaticSizeOfExpression,
+                    declaredType.BaseType.MangledUniqueName,
+                    declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
+                    interfaceTypes.Length);
+            }
+            else
+            {
+                // ex: IL2C_RUNTIME_TYPE_ABSTRACT_BEGIN(Foo_Bar, "Foo.Bar", sizeof(Foo_Bar), System_Object, 0, 0)
+                tw.WriteLine(
+                    "IL2C_RUNTIME_TYPE_ABSTRACT_BEGIN({0}, \"{1}\", {2}, {3}, {4}, {5})",
+                    declaredType.MangledUniqueName,
+                    declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
+                    declaredType.CLanguageStaticSizeOfExpression,
+                    declaredType.BaseType.MangledUniqueName,
+                    markTargetFields.Length.ToString(),
+                    interfaceTypes.Length);
+            }
 
             using (var _ = tw.Shift())
             {

@@ -1,15 +1,16 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace MT3620Blink
 {
-    internal sealed class Timer : Descriptor
+    internal abstract class Timer : Descriptor
     {
         [NativeValue("time.h")]
         private static readonly int CLOCK_MONOTONIC;
         [NativeValue("time.h")]
         private static readonly int TFD_NONBLOCK;
 
-        public Timer(long nsec)
+        protected Timer(long nsec)
             : base(Interops.timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK))
         {
             this.SetInterval(nsec);
@@ -30,5 +31,13 @@ namespace MT3620Blink
 
             Interops.timerfd_settime(this.Identity, 0, ref newValue, out var dummy);
         }
+
+        protected internal override sealed void OnRaised()
+        {
+            Interops.timerfd_read(this.Identity, out var timerData,(UIntPtr)(sizeof(ulong)));
+            Raised();
+        }
+
+        protected abstract void Raised();
     }
 }

@@ -29,8 +29,8 @@ namespace IL2C.Writers
 
             // Sorted by the type assignable compatibility.
             // Because these types are maybe depending another (but same as the assembly) type.
-            var predictTypes = TypeDependency.OrderBy(
-                types.Where(type => predictType(type)));
+            var allTypes = TypeDependency.OrderBy(types);
+            var predictTypes = allTypes.Where(type => predictType(type)).ToArray();
 
             // Output prototypes.
             foreach (var type in predictTypes)
@@ -107,7 +107,7 @@ namespace IL2C.Writers
             }
             tw.SplitLine();
 
-            var typesExcludeEnums = predictTypes.
+            var typesExcludeEnums = allTypes.
                 Where(type => !type.IsEnum).
                 ToArray();
             if (typesExcludeEnums.Any(t => t.Fields.

@@ -81,6 +81,10 @@ namespace MT3620Blink
             ref itimerspec new_value,
             out itimerspec old_value);
 
+        [NativeMethod("unistd.h", SymbolName = "read")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int timerfd_read(int fd, out ulong timerData, UIntPtr size);
+
         //////////////////////////////////////////////////////////////////////
         // gpio
 

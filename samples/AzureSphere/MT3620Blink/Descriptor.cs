@@ -2,10 +2,14 @@
 
 namespace MT3620Blink
 {
-    internal abstract class Descriptor : IDisposable
+    public abstract class Descriptor : IDisposable
     {
         public Descriptor(int fd)
         {
+            if (fd < 0)
+            {
+                throw new Exception("Invalid descriptor: " + fd);
+            }
             this.Identity = fd;
         }
 
@@ -19,5 +23,9 @@ namespace MT3620Blink
         }
 
         protected internal int Identity { get; private set; }
+
+        protected internal virtual void OnRaised()
+        {
+        }
     }
 }

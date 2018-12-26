@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MT3620Blink
+﻿namespace MT3620Blink
 {
     public static class Program
     {
-        private static void sleep(int nsec)
+        private sealed class LedTimer : Timer
         {
-            var sleepTime = new timespec { tv_nsec = nsec };
-            Interops.nanosleep(ref sleepTime, out var dummy);
+            private readonly GpioOutput led;
+            private bool flag;
+
+            public LedTimer(GpioOutput led, long nsec)
+                : base(nsec)
+            {
+                this.led = led;
+            }
+
+            protected override void Raised()
+            {
+                led.SetValue(flag);
+                flag = !flag;
+            }
         }
 
         public static int Main()
@@ -26,28 +32,20 @@ namespace MT3620Blink
                     using (var button = new GpioInput(
                         Interops.MT3620_RDB_BUTTON_A))
                     {
-                        using (var timer = new Timer(125_000_000L))
+                        using (var ledTimer = new LedTimer(led, 125_000_000L))
                         {
-                            var flag = false;
+                            epoll.RegisterDescriptor(ledTimer);
 
-                            epoll.RegisterDescriptor(
-                                timer,
-                                () =>
-                                {
-                                    led.SetValue(flag);
-                                    flag = !flag;
-                                });
+                            //var blinkIntervals = new[] { 125_000_000L, 250_000_000L, 500_000_000L };
+                            //var blinkIntervalIndex = 0;
 
-                            var blinkIntervals = new[] { 125_000_000L, 250_000_000L, 500_000_000L };
-                            var blinkIntervalIndex = 0;
-
-                            epoll.RegisterDescriptor(
-                                button,
-                                () =>
-                                {
-                                    blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
-                                    timer.SetInterval(blinkIntervals[blinkIntervalIndex]);
-                                });
+                            //epoll.RegisterDescriptor(
+                            //    button,
+                            //    () =>
+                            //    {
+                            //        blinkIntervalIndex = (blinkIntervalIndex + 1) % blinkIntervals.Length;
+                            //        timer.SetInterval(blinkIntervals[blinkIntervalIndex]);
+                            //    });
 
                             epoll.Run();
                         }

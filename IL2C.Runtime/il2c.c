@@ -95,7 +95,7 @@ static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
 
     // Setup interface vptrs.
     IL2C_IMPLEMENTED_INTERFACE* pInterface =
-        (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
+        (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(type + 1)) + type->markTarget);
     uintptr_t index;
     for (index = 0;
         index < type->interfaceCount;
@@ -395,7 +395,7 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE typ
         do
         {
             IL2C_IMPLEMENTED_INTERFACE* pInterface =
-                (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(currentType + 1)) + type->markTarget);
+                (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(currentType + 1)) + type->markTarget);
             uintptr_t index;
             for (index = 0;
                 index < currentType->interfaceCount;

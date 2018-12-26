@@ -252,7 +252,7 @@ namespace IL2C.Writers
                         declaredType.BaseType.MangledUniqueName);
                 }
                 // Require new vtable
-                else
+                else if (declaredType.CalculatedVirtualMethods.All(entry => !entry.method.IsAbstract))
                 {
                     tw.WriteLine(
                         "// [1-5-2] VTable (Derived from {0})",

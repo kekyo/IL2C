@@ -64,7 +64,7 @@ typedef long interlock_t;
 #define il2c_wwrite(p) fputws(p, stdout)
 #define il2c_fgetws fgetws
 
-#ifdef _DEBUG
+#if defined(IL2C_DEBUG_WRITE) && defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
     char buffer[256]; \
     strcpy(buffer, step); \
@@ -126,7 +126,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 //#define il2c_wwrite fputws
 //#define il2c_fgetws fgetws
 
-#if defined(_DEBUG)
+#if defined(IL2C_DEBUG_WRITE) && defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
     WriteLineToError(L## #message); }
 #else
@@ -180,7 +180,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 //#define il2c_wwrite fputws
 //#define il2c_fgetws fgetws
 
-#ifdef DBG
+#if defined(IL2C_DEBUG_WRITE) && defined(DBG)
 #define DEBUG_WRITE(step, message) { \
     char buffer[256]; \
     strcpy(buffer, step); \
@@ -335,7 +335,8 @@ static inline void il2c_wwriteline(const wchar_t* p) {
     il2c_mcfree(d);
 }
 #define il2c_fgetws fgetws
-#if defined(_DEBUG)
+
+#if defined(IL2C_DEBUG_WRITE) && defined(_DEBUG)
 #define DEBUG_WRITE(step, message) { \
     il2c_write(step); \
     il2c_write(": "); \

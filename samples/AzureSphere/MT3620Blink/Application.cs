@@ -2,22 +2,20 @@
 
 namespace MT3620Blink
 {
-    internal delegate void DescriptorCallbackDelegate();
-
-    internal sealed class Application : Descriptor
+    public sealed class Application : Descriptor
     {
         public Application()
             : base(Interops.epoll_create1(0))
         {
         }
 
-        public void RegisterDescriptor(Descriptor target, DescriptorCallbackDelegate callback)
+        public void RegisterDescriptor(Descriptor target)
         {
-            var handle = GCHandle.Alloc(callback, GCHandleType.Pinned);
+            var handle = GCHandle.Alloc(target, GCHandleType.Pinned);
 
             var ev = new epoll_event {
                 events = Interops.EPOLLIN,
-                data = new epoll_data_t { ptr = handle.AddrOfPinnedObject() }
+                data = new epoll_data_t { ptr = GCHandle.ToIntPtr(handle) }
             };
 
             Interops.epoll_ctl(
@@ -34,11 +32,15 @@ namespace MT3620Blink
                 var ev = new epoll_event();
                 var numEventsOccurred = Interops.epoll_wait(this.Identity, ref ev, 1, -1);
 
+                if (numEventsOccurred == -1)
+                {
+                    break;
+                }
                 if (numEventsOccurred == 1)
                 {
                     var handle = GCHandle.FromIntPtr(ev.data.ptr);
-                    var callback = (DescriptorCallbackDelegate)handle.Target;
-                    callback();
+                    var target = (Descriptor)handle.Target;
+                    target.OnRaised();
                 }
             }
         }

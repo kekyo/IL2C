@@ -20,7 +20,7 @@ namespace IL2C.Metadata
                 .ToArray();
             var namespaceName = declaringTypes.FirstOrDefault()
                 ?.Namespace
-                ??(member as TypeReference)?.Namespace;
+                ?? (member as TypeReference)?.Namespace;
 
             return string.Join(
                 ".",

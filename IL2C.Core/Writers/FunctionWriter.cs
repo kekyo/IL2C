@@ -70,7 +70,8 @@ namespace IL2C.Writers
             IExtractContextHost extractContext,
             PreparedMethodInformation preparedMethod,
             ILocalVariableInformation[] objRefEntries,
-            ILocalVariableInformation[] valueEntries)
+            ILocalVariableInformation[] valueEntries,
+            DebugInformationWriteController debugInformationController)
         {
             tw.WriteLine("//-------------------");
             tw.WriteLine("// [3-5] Setup execution frame:");
@@ -79,6 +80,7 @@ namespace IL2C.Writers
             // Important NULL assigner (p = NULL):
             //   Because these variables are pointer (of object reference 'O' type).
             //   So GC will traverse these variables just setup the stack frame.
+            debugInformationController.WriteInformationBeforeCode(tw);
             tw.WriteLine(
                 "{0}_EXECUTION_FRAME__ frame__ =",
                 preparedMethod.Method.CLanguageFunctionName);
@@ -111,11 +113,13 @@ namespace IL2C.Writers
 
             foreach (var valueEntry in valueEntries)
             {
+                debugInformationController.WriteInformationBeforeCode(tw);
                 tw.WriteLine(
                     "frame__.{0}_value_ptr__ = &{0};",
                     extractContext.GetSymbolName(valueEntry));
             }
 
+            debugInformationController.WriteInformationBeforeCode(tw);
             tw.WriteLine("il2c_link_execution_frame(&frame__);");
             tw.SplitLine();
         }
@@ -346,7 +350,8 @@ namespace IL2C.Writers
                         extractContext,
                         preparedMethod, 
                         objRefEntries,
-                        valueEntries);
+                        valueEntries,
+                        debugInformationController);
                 }
 
                 tw.WriteLine("//-------------------");

@@ -30,10 +30,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="IL2C.Interop" Version="0.4.12" />
+      <PackageReference Include="IL2C.Build" Version="0.4.21" />
     </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="D:\PROJECT\IL2C\IL2C\bin\Debug\net45\IL2C.exe -g $(OutDir)MT3620Blink.dll ..\Mt3620App\Generated" />
-    </Target>
 </Project>

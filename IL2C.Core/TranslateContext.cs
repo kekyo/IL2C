@@ -235,7 +235,7 @@ namespace IL2C
                 if (lhsType.IsBooleanType)
                 {
                     return string.Format(
-                        "({0}) ? true : false",
+                        "(bool){0}",
                         rhsExpression);
                 }
 
@@ -260,10 +260,17 @@ namespace IL2C
             else if (rhsType.IsBooleanType)
             {
                 // intValue = boolValue  (implicitly conversion)
-                if (lhsType.IsNumericPrimitive)
+                if (lhsType.IsInt32Type)
                 {
                     return string.Format(
-                        "({0}) ? 1 : 0",
+                        "(int){0}",
+                        rhsExpression);
+                }
+                else
+                {
+                    return string.Format(
+                        "({0})(int){1}",
+                        lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
             }

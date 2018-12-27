@@ -31,15 +31,14 @@ namespace MT3620Blink
             Interops.timerfd_settime(this.Identity, 0, ref newValue, out var dummy);
         }
 
-        protected override sealed void OnRaised()
+        int IEPollListener.Identity => this.Identity;
+
+        void IEPollListener.OnRaised()
         {
             Interops.timerfd_read(this.Identity, out var timerData,(UIntPtr)(sizeof(ulong)));
             Raised();
         }
 
         protected abstract void Raised();
-
-        int IEPollListener.Identity => this.Identity;
-        void IEPollListener.OnRaised() => this.OnRaised();
     }
 }

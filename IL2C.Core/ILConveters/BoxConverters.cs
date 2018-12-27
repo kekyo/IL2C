@@ -53,7 +53,7 @@ namespace IL2C.ILConverters
                         "{0} = il2c_box(&{1}, {2})",
                         extractContext.GetSymbolName(symbol),
                         extractContext.GetSymbolName(si),
-                        operand.MangledName) };
+                        operand.MangledUniqueName) };
                 };
             }
             else
@@ -64,8 +64,8 @@ namespace IL2C.ILConverters
                         "{0} = il2c_box2(&{1}, {2}, {3})",
                         extractContext.GetSymbolName(symbol),
                         extractContext.GetSymbolName(si),
-                        operand.MangledName,
-                        si.TargetType.MangledName) };
+                        operand.MangledUniqueName,
+                        si.TargetType.MangledUniqueName) };
                 };
             }
         }
@@ -97,7 +97,7 @@ namespace IL2C.ILConverters
                     "{0} = *il2c_unbox({1}, {2})",
                     extractContext.GetSymbolName(symbol),
                     extractContext.GetSymbolName(si),
-                    operand.MangledName) };
+                    operand.MangledUniqueName) };
             };
         }
     }

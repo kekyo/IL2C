@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using Mono.Cecil.Cil;
 
 namespace IL2C.Metadata
 {
-    public struct DebugInformation
+    public sealed class DebugInformation
     {
         public readonly string Path;
         public readonly int Line;
@@ -143,10 +144,8 @@ namespace IL2C.Metadata
             this.CatchEnd = catchEnd;
         }
 
-        public bool ContainsOffset(int offset)
-        {
-            return (offset >= this.CatchStart) && (offset < this.CatchEnd);
-        }
+        public bool ContainsOffset(int offset) =>
+            (offset >= this.CatchStart) && (offset < this.CatchEnd);
 
         public bool Equals(ExceptionCatchHandler other)
         {
@@ -162,28 +161,22 @@ namespace IL2C.Metadata
                 (this.CatchType?.Equals(other.CatchType) ?? (other.CatchType == null));
         }
 
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as ExceptionCatchHandler);
-        }
+        public override bool Equals(object obj) =>
+            this.Equals(obj as ExceptionCatchHandler);
 
-        public override int GetHashCode()
-        {
-            return this.CatchHandlerType.GetHashCode() ^
-                this.CatchType.GetHashCode() ^
+        public override int GetHashCode() =>
+            this.CatchHandlerType.GetHashCode() ^
+                (this.CatchType?.GetHashCode() ?? 0) ^
                 this.CatchStart.GetHashCode() ^
                 this.CatchEnd.GetHashCode();
-        }
 
-        public override string ToString()
-        {
-            return string.Format(
-                "{0}({1},{2}-{3})",
+        public override string ToString() =>
+            string.Format(
+                "{0}({1}{2}-{3})",
                 this.CatchHandlerType,
-                this.CatchType.MangledName,
+                (this.CatchType != null) ? (this.CatchType.MangledUniqueName + ",") : string.Empty,
                 this.CatchStart,
                 this.CatchEnd);
-        }
     }
 
     public sealed class ExceptionHandler : IEquatable<ExceptionHandler>
@@ -200,12 +193,9 @@ namespace IL2C.Metadata
             this.CatchHandlers = catchHandlers;
         }
 
-        public bool ContainsOffset(int offset)
-        {
-            return
-                ((offset >= this.TryStart) && (offset < this.TryEnd)) ||
-                this.CatchHandlers.Any(catchHandler => catchHandler.ContainsOffset(offset));
-        }
+        public bool ContainsOffset(int offset) =>
+            ((offset >= this.TryStart) && (offset < this.TryEnd)) ||
+            this.CatchHandlers.Any(catchHandler => catchHandler.ContainsOffset(offset));
 
         public bool Equals(ExceptionHandler other)
         {
@@ -220,28 +210,22 @@ namespace IL2C.Metadata
                 this.CatchHandlers.SequenceEqual(other.CatchHandlers);
         }
 
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as ExceptionHandler);
-        }
+        public override bool Equals(object obj) =>
+            this.Equals(obj as ExceptionHandler);
 
-        public override int GetHashCode()
-        {
-            return this.CatchHandlers.Aggregate(
+        public override int GetHashCode() =>
+            this.CatchHandlers.Aggregate(
                 this.TryStart.GetHashCode() ^ this.TryEnd.GetHashCode(),
                 (s, catchHander) => s ^ catchHander.GetHashCode());
-        }
 
-        public override string ToString()
-        {
-            return string.Format(
+        public override string ToString() =>
+            string.Format(
                 "Try({0}-{1}),{2}",
                 this.TryStart,
                 this.TryEnd,
                 string.Join(
                     ",",
                     this.CatchHandlers.AsEnumerable()));
-        }
     }
 
     public interface ICodeStream : IReadOnlyCollection<ICodeInformation>
@@ -255,25 +239,17 @@ namespace IL2C.Metadata
     internal sealed class CodeStream
         : SortedDictionary<int, ICodeInformation>, ICodeStream
     {
-        public CodeStream(ExceptionHandler[] exceptionHandlers)
-        {
+        public CodeStream(ExceptionHandler[] exceptionHandlers) =>
             this.ExceptionHandlers = exceptionHandlers;
-        }
 
-        public bool Contains(int offset)
-        {
-            return this.ContainsKey(offset);
-        }
+        public bool Contains(int offset) =>
+            this.ContainsKey(offset);
 
-        IEnumerator<ICodeInformation> IEnumerable<ICodeInformation>.GetEnumerator()
-        {
-            return this.Values.GetEnumerator();
-        }
+        IEnumerator<ICodeInformation> IEnumerable<ICodeInformation>.GetEnumerator() =>
+            this.Values.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.Values.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() =>
+            this.Values.GetEnumerator();
 
         public ExceptionHandler[] ExceptionHandlers { get; }
     }

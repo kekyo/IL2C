@@ -64,7 +64,6 @@ namespace IL2C.ILConverters
                     decodeContext.CurrentCode.RawLocation,
                     siReference.TargetType.FriendlyName);
             }
-
             var codeInformation = decodeContext.CurrentCode;
 
             if (requestPointer)
@@ -76,7 +75,7 @@ namespace IL2C.ILConverters
                     return new[] { string.Format(
                     "{0} = &{1}",
                     extractContext.GetSymbolName(result),
-                    extractContext.GetSymbolName(siReference) + oper + field.Name) };
+                    extractContext.GetSymbolName(siReference) + oper + field.MangledName) };
                 };
             }
             else
@@ -88,7 +87,7 @@ namespace IL2C.ILConverters
                     return new[] { string.Format(
                     "{0} = {1}",
                     extractContext.GetSymbolName(result),
-                    extractContext.GetSymbolName(siReference) + oper + field.Name) };
+                    extractContext.GetSymbolName(siReference) + oper + field.MangledName) };
                 };
             }
         }
@@ -111,7 +110,7 @@ namespace IL2C.ILConverters
             return extractContext => new [] { string.Format(
                 "{0} = {1}",
                 extractContext.GetSymbolName(symbol),
-                extractContext.GetRightExpression(targetType, field.FieldType, field.MangledName)) };
+                extractContext.GetRightExpression(targetType, field.FieldType, field.MangledUniqueName)) };
         }
     }
 

@@ -17,7 +17,6 @@
         <Description>A translator implementation of .NET intermediate language to C language.</Description>
         <Company>Kouji Matsui (@kozy_kekyo)</Company>
         <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-        <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
         <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
@@ -33,6 +32,7 @@
 
     <ItemGroup>
         <PackageReference Include="Mono.Cecil" Version="0.10.1" />
+        <PackageReference Include="Mono.Options" Version="5.3.0.1" />
     </ItemGroup>
 
     <ItemGroup>

@@ -17,7 +17,6 @@
         <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
         <RepositoryType>git</RepositoryType>
         <PackageId>IL2C.Build</PackageId>
-        <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
         <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>

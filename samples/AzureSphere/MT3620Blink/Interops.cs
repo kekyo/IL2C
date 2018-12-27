@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MT3620Blink
 {
@@ -13,6 +9,13 @@ namespace MT3620Blink
     {
         public int tv_sec;
         public int tv_nsec;
+    }
+
+    [NativeType("time.h", SymbolName = "struct itimerspec")]
+    internal struct itimerspec
+    {
+        public timespec it_interval;
+	    public timespec it_value;
     }
 
     [NativeType("applibs/gpio.h")]
@@ -33,7 +36,7 @@ namespace MT3620Blink
     [NativeType("sys/epoll.h")]
     internal struct epoll_data_t
     {
-        //void* ptr;
+        public NativePointer ptr;
         public int fd;
         //uint32_t u32;
         //uint64_t u64;
@@ -56,11 +59,31 @@ namespace MT3620Blink
         public static extern int close(int fd);
 
         //////////////////////////////////////////////////////////////////////
-        // timer
+        // time
 
         [NativeMethod("time.h")]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void nanosleep(ref timespec time, ref timespec dummy);
+        public static extern void nanosleep(
+            ref timespec req,
+            out timespec rem);
+
+        //////////////////////////////////////////////////////////////////////
+        // timer
+
+        [NativeMethod("sys/timerfd.h")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int timerfd_create(int clockid, int flags);
+
+        [NativeMethod("sys/timerfd.h")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int timerfd_settime(
+            int fd, int flags,
+            ref itimerspec new_value,
+            out itimerspec old_value);
+
+        [NativeMethod("unistd.h", SymbolName = "read")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern int timerfd_read(int fd, out ulong timerData, UIntPtr size);
 
         //////////////////////////////////////////////////////////////////////
         // gpio
@@ -94,7 +117,9 @@ namespace MT3620Blink
         [NativeValue("sys/epoll.h")]
         public static readonly int EPOLL_CTL_ADD;
         [NativeValue("sys/epoll.h")]
-        public static readonly int EPOLLIN;
+        public static readonly int EPOLL_CTL_DEL;
+        [NativeValue("sys/epoll.h")]
+        public static readonly uint EPOLLIN;
 
         [NativeMethod("sys/epoll.h")]
         [MethodImpl(MethodImplOptions.InternalCall)]

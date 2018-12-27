@@ -22,6 +22,8 @@ namespace IL2C.Metadata
         }
 
         public string ExtractSymbolName(string prefix = null) =>
-            string.IsNullOrWhiteSpace(prefix) ? symbolName : (prefix + symbolName);
+            string.IsNullOrWhiteSpace(prefix) ?
+                this.UnsafeCLanguageSymbolName :
+                (prefix + this.UnsafeCLanguageSymbolName);
     }
 }

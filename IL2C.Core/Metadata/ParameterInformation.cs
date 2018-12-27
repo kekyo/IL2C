@@ -30,7 +30,7 @@ namespace IL2C.Metadata
             this.customAttributes = customAttributes;
         }
 
-        public string ParameterName => symbolName;
+        public string ParameterName => this.UnsafeCLanguageSymbolName;
 
         public bool IsParamArray =>
             customAttributes.Any(attribute => attribute.AttributeType.FullName == "System.ParamArrayAttribute");

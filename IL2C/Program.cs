@@ -2,55 +2,58 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
 
+using Mono.Options;
+
 namespace IL2C
 {
 // warning CS0649: Field is never assigned to, and will always have its default value `null'
 #pragma warning disable 0649
 
-    internal struct IL2COption
-    {
-        [Option("Read symbols from same folder placed")]
-        public bool ReadSymbols;
-        [Option("Produce C++ files (apply extension *.cpp instead *.c, body will not changed)")]
-        public bool Cpp;
-        [Option("Emit debug informations (contains only comments)")]
-        public bool Debug;
-        [Option("Emit debug informations (contains line numbers)")]
-        public bool DebugFull;
-        [Required]
-        public string AssemblyPath;
-        [Required]
-        public string OutputPath;
-    }
-
     public static class Program
     {
         public static int Main(string[] args)
         {
-            var extractor = new CommandLineExtractor<IL2COption>();
             try
             {
-                var option = extractor.Extract(args);
+                var debugInformationOptions = DebugInformationOptions.None;
+                var readSymbols = true;
+                var cpp = false;
+                var help = false;
 
-                var debugInformationOptions = option.DebugFull
-                    ? DebugInformationOptions.Full
-                    : option.Debug
-                        ? DebugInformationOptions.CommentOnly
-                        : DebugInformationOptions.None;
+                var options = new OptionSet()
+                {
+                    { "g1|debug", "Emit debug informations (contains only comments)", v => debugInformationOptions = DebugInformationOptions.CommentOnly },
+                    { "g|g2|debug-full", "Emit debug informations (contains line numbers)", v => debugInformationOptions = DebugInformationOptions.Full },
+                    { "no-read-symbols", "NO read symbol files", _ => readSymbols = false },
+                    { "cpp", "Produce C++ files (apply extension *.cpp instead *.c, body will not changed)", _ => cpp = true },
+                    { "h|help", "Print this help", _ => help = true },
+                };
 
-                SimpleDriver.Translate(
-                    Console.Out,
-                    option.AssemblyPath,
-                    option.OutputPath,
-                    option.ReadSymbols,
-                    option.Cpp,
-                    debugInformationOptions);
+                var extra = options.Parse(args);
+                if (help || (extra.Count < 2))
+                {
+                    Console.Out.WriteLine("usage: il2c.exe [options] <assembly-path> <output-path>");
+                    options.WriteOptionDescriptions(Console.Out);
+                }
+                else
+                {
+                    var assemblyPath = extra[0];
+                    var outputPath = extra[1];
+
+                    SimpleDriver.Translate(
+                        Console.Out,
+                        assemblyPath,
+                        outputPath,
+                        readSymbols,
+                        cpp,
+                        debugInformationOptions);
+                }
 
                 return 0;
             }
-            catch (CommandLineArgumentException ex)
+            catch (OptionException ex)
             {
-                extractor.WriteUsages(Console.Error);
+                Console.Error.WriteLine(ex.Message);
                 return Marshal.GetHRForException(ex);
             }
             catch (Exception ex)

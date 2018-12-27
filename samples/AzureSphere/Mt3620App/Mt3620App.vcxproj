@@ -36,8 +36,6 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
   <ItemGroup>
     <ClCompile Include="Generated\MT3620Blink.c" />
     <ClCompile Include="main.c" />
@@ -54,13 +52,12 @@
   <ImportGroup Label="ExtensionTargets" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalOptions>-Werror=implicit-function-declaration -Wno-unused-but-set-variable %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(SysRootIncludePath);$(ProjectDir)..\..\..\IL2C.Runtime;.;Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">$(SysRootIncludePath);$(ProjectDir)..\..\..\IL2C.Runtime;.;Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-fdata-sections -ffunction-sections -Wno-unused-variable -Wno-return-type -Wno-discarded-qualifiers -Werror=implicit-function-declaration -Wno-unused-but-set-variable %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SysRootIncludePath);$(ProjectDir)..\..\..\IL2C.Runtime;.;Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <LibraryDependencies>applibs;pthread;gcc_s;c</LibraryDependencies>
-      <AdditionalOptions>-Wl,--no-undefined -nodefaultlibs %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Wl,--gc-sections -Wl,--no-undefined -nodefaultlibs %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
 </Project>

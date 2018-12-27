@@ -105,6 +105,9 @@
     <ClCompile Include="../../../IL2C.Runtime/System.ValueType.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="../../../IL2C.Runtime/System.IDisposable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="../../../IL2C.Runtime/debugbreak.h">
@@ -204,6 +207,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="../../../IL2C.Runtime/System.ValueType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../../IL2C.Runtime/System.IDisposable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

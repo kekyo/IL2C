@@ -37,7 +37,7 @@ namespace IL2C.ILConverters
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return extractContext => new[] { string.Format(
-                    "{1} = (({0}int32_t){2} {3} ({0}int32_t){4}) ? 1 : 0",
+                    "{1} = ({0}int32_t){2} {3} ({0}int32_t){4}",
                     isUnsigned ? "u" : string.Empty,
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
@@ -50,7 +50,7 @@ namespace IL2C.ILConverters
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return extractContext => new[] { string.Format(
-                    "{1} = (({0}int64_t){2} {3} ({0}int64_t){4}) ? 1 : 0",
+                    "{1} = ({0}int64_t){2} {3} ({0}int64_t){4}",
                     isUnsigned ? "u" : string.Empty,
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
@@ -63,7 +63,7 @@ namespace IL2C.ILConverters
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return extractContext => new[] { string.Format(
-                    "{1} = (({0}intptr_t){2} {3} ({0}intptr_t){4}) ? 1 : 0",
+                    "{1} = ({0}intptr_t){2} {3} ({0}intptr_t){4}",
                     isUnsigned ? "u" : string.Empty,
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),

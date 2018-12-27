@@ -12,6 +12,7 @@ namespace IL2C.Metadata
         string UniqueName { get; }
         string Name { get; }
         string FriendlyName { get; }
+        string MangledUniqueName { get; }
         string MangledName { get; }
 
         IMetadataContext Context { get; }
@@ -35,8 +36,10 @@ namespace IL2C.Metadata
         public abstract string Name { get; }
         public abstract string FriendlyName { get; }
 
-        public virtual string MangledName =>
+        public virtual string MangledUniqueName =>
             Utilities.GetMangledName(this.UniqueName);
+        public virtual string MangledName =>
+            Utilities.GetMangledName(this.Name);
 
         public string DebuggerDisplayString
         {

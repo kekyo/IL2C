@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using System.Diagnostics;
 
-using Mono.Cecil;
-
 using IL2C.Metadata;
 using IL2C.Translators;
 
@@ -10,6 +8,184 @@ namespace IL2C.Writers
 {
     internal static class FunctionWriter
     {
+        private static void InternalConvertExecutionFrame(
+            CodeTextWriter tw,
+            IExtractContextHost extractContext,
+            PreparedMethodInformation preparedMethod,
+            ILocalVariableInformation[] objRefEntries,
+            ILocalVariableInformation[] valueEntries)
+        {
+            tw.WriteLine("//-------------------");
+            tw.WriteLine("// [3-7] Declare execution frame:");
+            tw.SplitLine();
+
+            tw.WriteLine(
+                "typedef struct {0}_EXECUTION_FRAME_DECL",
+                preparedMethod.Method.CLanguageFunctionName);
+            tw.WriteLine("{");
+
+            using (var _ = tw.Shift())
+            {
+                tw.WriteLine("const IL2C_EXECUTION_FRAME* pNext__;");
+                tw.WriteLine("const uint16_t objRefCount__;");
+                tw.WriteLine("const uint16_t valueCount__;");
+
+                if (objRefEntries.Length >= 1)
+                {
+                    tw.WriteLine("//-------------------- objref");
+                    foreach (var objRefEntry in objRefEntries)
+                    {
+                        tw.WriteLine(
+                            "{0} {1};",
+                            objRefEntry.TargetType.CLanguageTypeName,
+                            extractContext.GetSymbolName(objRefEntry));
+                    }
+                }
+
+                if (valueEntries.Length >= 1)
+                {
+                    tw.WriteLine("//-------------------- value type");
+                    foreach (var valueEntry in valueEntries)
+                    {
+                        var name = extractContext.GetSymbolName(valueEntry);
+                        tw.WriteLine(
+                            "const IL2C_RUNTIME_TYPE {0}_type__;",
+                            name);
+                        tw.WriteLine(
+                            "const {0}* {1}_value_ptr__;",
+                            valueEntry.TargetType.CLanguageTypeName,
+                            name);
+                    }
+                }
+            }
+
+            tw.WriteLine(
+                "}} {0}_EXECUTION_FRAME__;",
+                preparedMethod.Method.CLanguageFunctionName);
+            tw.SplitLine();
+        }
+
+        private static void InternalConvertSetupExecutionFrame(
+            CodeTextWriter tw,
+            IExtractContextHost extractContext,
+            PreparedMethodInformation preparedMethod,
+            ILocalVariableInformation[] objRefEntries,
+            ILocalVariableInformation[] valueEntries,
+            DebugInformationWriteController debugInformationController)
+        {
+            tw.WriteLine("//-------------------");
+            tw.WriteLine("// [3-5] Setup execution frame:");
+            tw.SplitLine();
+
+            // Important NULL assigner (p = NULL):
+            //   Because these variables are pointer (of object reference 'O' type).
+            //   So GC will traverse these variables just setup the stack frame.
+            debugInformationController.WriteInformationBeforeCode(tw);
+            tw.WriteLine(
+                "{0}_EXECUTION_FRAME__ frame__ =",
+                preparedMethod.Method.CLanguageFunctionName);
+            using (var __ = tw.Shift())
+            {
+                if (valueEntries.Length >= 1)
+                {
+                    tw.WriteLine(
+                        "{{ NULL, {0}, {1}, {2} }};",
+                        objRefEntries.Length,
+                        valueEntries.Length,
+                        string.Join(
+                            ", ",
+                            objRefEntries.Select(___ => "NULL").
+                            Concat(valueEntries.
+                                Select(valueEntry =>
+                                    string.Format(
+                                        "il2c_typeof({0}), NULL",
+                                        valueEntry.TargetType.MangledUniqueName)))));
+                }
+                else
+                {
+                    // Make short initializer expression if value type not included,
+                    // maybe C compiler makes better code.
+                    tw.WriteLine(
+                        "{{ NULL, {0} }};",
+                        objRefEntries.Length);
+                }
+            }
+
+            foreach (var valueEntry in valueEntries)
+            {
+                debugInformationController.WriteInformationBeforeCode(tw);
+                tw.WriteLine(
+                    "frame__.{0}_value_ptr__ = &{0};",
+                    extractContext.GetSymbolName(valueEntry));
+            }
+
+            debugInformationController.WriteInformationBeforeCode(tw);
+            tw.WriteLine("il2c_link_execution_frame(&frame__);");
+            tw.SplitLine();
+        }
+
+        private static void InternalConvertExceptionFilter(
+            CodeTextWriter tw,
+            IExtractContextHost extractContext,
+            PreparedMethodInformation preparedMethod,
+            ICodeStream codeStream)
+        {
+            tw.WriteLine("//-------------------");
+            tw.WriteLine("// [3-1] Exception filters:");
+            tw.SplitLine();
+
+            for (var handlerIndex = 0;
+                handlerIndex < codeStream.ExceptionHandlers.Length;
+                handlerIndex++)
+            {
+                var handler = codeStream.ExceptionHandlers[handlerIndex];
+
+                var filterName = string.Format(
+                    "{0}_ExceptionFilter{1}__",
+                    preparedMethod.Method.CLanguageFunctionName,
+                    handlerIndex);
+                tw.WriteLine(
+                    "static int16_t {0}(System_Exception* ex)",
+                    filterName);
+                tw.WriteLine("{");
+
+                using (var _ = tw.Shift())
+                {
+                    tw.WriteLine("il2c_assert(ex != NULL);");
+
+                    for (var catchHandlerIndex = 0;
+                        catchHandlerIndex < handler.CatchHandlers.Length;
+                        catchHandlerIndex++)
+                    {
+                        var catchHandler = handler.CatchHandlers[catchHandlerIndex];
+                        if (catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Catch)
+                        {
+                            tw.WriteLine(
+                                "if (il2c_isinst__(ex, il2c_typeof({0}))) return {1};",
+                                catchHandler.CatchType.MangledUniqueName,
+                                catchHandlerIndex + 1);
+                        }
+                    }
+
+                    // Write finally block index if contains.
+                    var finallyHandler = handler.CatchHandlers.
+                        Select((catchHandler, index) => new { catchHandler, index }).
+                        FirstOrDefault(entry => entry.catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Finally);
+                    if (finallyHandler != null)
+                    {
+                        tw.WriteLine("return IL2C_FILTER_FINALLY;  // Not matched (will go to finally)");
+                    }
+                    else
+                    {
+                        tw.WriteLine("return IL2C_FILTER_NOMATCH;  // Not matched");
+                    }
+                }
+
+                tw.WriteLine("}");
+                tw.SplitLine();
+            }
+        }
+
         private static void InternalConvertFromFunction(
             CodeTextWriter tw,
             IExtractContextHost extractContext,
@@ -18,75 +194,14 @@ namespace IL2C.Writers
         {
             var locals = preparedMethod.Method.LocalVariables;
 
-            tw.SplitLine();
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine(
                 "// [3] {0}{1}",
                 preparedMethod.Method.IsVirtual ? "Virtual: " : string.Empty,
                 preparedMethod.Method.FriendlyName);
+            tw.SplitLine();
 
             var codeStream = preparedMethod.Method.CodeStream;
-
-            // Write exception filters:
-            if (codeStream.ExceptionHandlers.Length >= 1)
-            {
-                tw.SplitLine();
-                tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-1] Exception filters:");
-                tw.SplitLine();
-
-                for (var handlerIndex = 0;
-                    handlerIndex < codeStream.ExceptionHandlers.Length;
-                    handlerIndex++)
-                {
-                    var handler = codeStream.ExceptionHandlers[handlerIndex];
-
-                    var filterName = string.Format(
-                        "{0}_ExceptionFilter{1}__",
-                        preparedMethod.Method.CLanguageFunctionName,
-                        handlerIndex);
-                    tw.WriteLine(
-                        "static int16_t {0}(System_Exception* ex)",
-                        filterName);
-                    tw.WriteLine("{");
-
-                    using (var _ = tw.Shift())
-                    {
-                        tw.WriteLine("il2c_assert(ex != NULL);");
-
-                        for (var catchHandlerIndex = 0;
-                            catchHandlerIndex < handler.CatchHandlers.Length;
-                            catchHandlerIndex++)
-                        {
-                            var catchHandler = handler.CatchHandlers[catchHandlerIndex];
-                            if (catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Catch)
-                            {
-                                tw.WriteLine(
-                                    "if (il2c_isinst__(ex, il2c_typeof({0}))) return {1};",
-                                    catchHandler.CatchType.MangledName,
-                                    catchHandlerIndex + 1);
-                            }
-                        }
-
-                        // Write finally block index if contains.
-                        var finallyHandler = handler.CatchHandlers.
-                            Select((catchHandler, index) => new { catchHandler, index }).
-                            FirstOrDefault(entry => entry.catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Finally);
-                        if (finallyHandler != null)
-                        {
-                            tw.WriteLine("return IL2C_FILTER_FINALLY;  // Not matched (will go to finally)");
-                        }
-                        else
-                        {
-                            tw.WriteLine("return IL2C_FILTER_NOMATCH;  // Not matched");
-                        }
-                    }
-
-                    tw.WriteLine("}");
-                }
-            }
-
-            // Write exception filters:
             var objRefEntries = locals.
                 Concat(preparedMethod.Stacks).
                 Where(v => v.TargetType.IsReferenceType).  // Only objref
@@ -95,60 +210,35 @@ namespace IL2C.Writers
                 Concat(preparedMethod.Stacks).
                 Where(v => v.TargetType.IsValueType && v.TargetType.IsRequiredTraverse).
                 ToArray();
-            if ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1))
+
+            // Write declaring exception handlers
+            if (codeStream.ExceptionHandlers.Length >= 1)
             {
-                tw.SplitLine();
-                tw.WriteLine("//-------------------");
-                tw.WriteLine("// [3-7] Declare execution frame:");
-                tw.SplitLine();
-
-                tw.WriteLine(
-                    "typedef struct {0}_EXECUTION_FRAME_DECL",
-                    preparedMethod.Method.CLanguageFunctionName);
-                tw.WriteLine("{");
-
-                using (var _ = tw.Shift())
-                {
-                    tw.WriteLine("const IL2C_EXECUTION_FRAME* pNext__;");
-                    tw.WriteLine("const uint16_t objRefCount__;");
-                    tw.WriteLine("const uint16_t valueCount__;");
-
-                    if (objRefEntries.Length >= 1)
-                    {
-                        tw.WriteLine("//-------------------- objref");
-                        foreach (var objRefEntry in objRefEntries)
-                        {
-                            tw.WriteLine(
-                                "{0} {1};",
-                                objRefEntry.TargetType.CLanguageTypeName,
-                                extractContext.GetSymbolName(objRefEntry));
-                        }
-                    }
-
-                    if (valueEntries.Length >= 1)
-                    {
-                        tw.WriteLine("//-------------------- value type");
-                        foreach (var valueEntry in valueEntries)
-                        {
-                            var name = extractContext.GetSymbolName(valueEntry);
-                            tw.WriteLine(
-                                "const IL2C_RUNTIME_TYPE {0}_type__;",
-                                name);
-                            tw.WriteLine(
-                                "const {0}* {1}_value_ptr__;",
-                                valueEntry.TargetType.CLanguageTypeName,
-                                name);
-                        }
-                    }
-                }
-
-                tw.WriteLine(
-                    "}} {0}_EXECUTION_FRAME__;",
-                    preparedMethod.Method.CLanguageFunctionName);
+                InternalConvertExceptionFilter(
+                    tw,
+                    extractContext,
+                    preparedMethod,
+                    codeStream);
             }
 
+            // Write declaring execution frame
+            if ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1))
+            {
+                InternalConvertExecutionFrame(
+                    tw,
+                    extractContext,
+                    preparedMethod,
+                    objRefEntries,
+                    valueEntries);
+            }
+
+            // Make readable debugging comment, it was splitting and reducing same informations.
+            var debugInformationController =
+                new DebugInformationWriteController(
+                    preparedMethod.Method,
+                    debugInformationOption);
+
             // Start function:
-            tw.SplitLine();
             tw.WriteLine("//-------------------");
             tw.WriteLine("// [3-2] Function body:");
             tw.SplitLine();
@@ -159,6 +249,7 @@ namespace IL2C.Writers
             {
                 if (!preparedMethod.Method.IsStatic)
                 {
+                    debugInformationController.WriteInformationBeforeCode(tw);
                     tw.WriteLine("il2c_assert(this__ != NULL);");
                     tw.SplitLine();
                 }
@@ -186,6 +277,7 @@ namespace IL2C.Writers
                             local.TargetType.IsPointer ||
                             local.TargetType.IsByReference)
                         {
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "{0}{1} {2} = {3};",
                                 (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
@@ -197,13 +289,17 @@ namespace IL2C.Writers
                         {
                             Debug.Assert(local.TargetType.IsValueType);
 
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "{0}{1} {2};",
                                 (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
                                 local.TargetType.CLanguageTypeName,
                                 name);
+
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
-                                "il2c_memset(&{0}, 0, sizeof {0});",
+                                "il2c_memset({0}&{1}, 0x00, sizeof {1});",
+                                (codeStream.ExceptionHandlers.Length >= 1) ? "(void*)" : string.Empty,
                                 name);
                         }
                     }
@@ -224,6 +320,7 @@ namespace IL2C.Writers
                     {
                         var name = extractContext.GetSymbolName(stack);
 
+                        debugInformationController.WriteInformationBeforeCode(tw);
                         tw.WriteLine(
                             "{0} {1};",
                             stack.TargetType.CLanguageTypeName,
@@ -235,6 +332,7 @@ namespace IL2C.Writers
                         //   so we have to initialize for value type.
                         if (stack.TargetType.IsRequiredTraverse)
                         {
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "il2c_memset(&{0}, 0, sizeof {0});",
                                 name);
@@ -244,54 +342,16 @@ namespace IL2C.Writers
                     tw.SplitLine();
                 }
 
+                // Write doing setup execution frame
                 if ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1))
                 {
-                    tw.WriteLine("//-------------------");
-                    tw.WriteLine("// [3-5] Setup execution frame:");
-                    tw.SplitLine();
-
-                    // Important NULL assigner (p = NULL):
-                    //   Because these variables are pointer (of object reference 'O' type).
-                    //   So GC will traverse these variables just setup the stack frame.
-                    tw.WriteLine(
-                        "{0}_EXECUTION_FRAME__ frame__ =",
-                        preparedMethod.Method.CLanguageFunctionName);
-                    using (var __ = tw.Shift())
-                    {
-                        if (valueEntries.Length >= 1)
-                        {
-                            tw.WriteLine(
-                                "{{ NULL, {0}, {1}, {2} }};",
-                                objRefEntries.Length,
-                                valueEntries.Length,
-                                string.Join(
-                                    ", ",
-                                    objRefEntries.Select(___ => "NULL").
-                                    Concat(valueEntries.
-                                        Select(valueEntry =>
-                                            string.Format(
-                                                "il2c_typeof({0}), NULL",
-                                                valueEntry.TargetType.MangledName)))));
-                        }
-                        else
-                        {
-                            // Make short initializer expression if value type not included,
-                            // maybe C compiler makes better code.
-                            tw.WriteLine(
-                                "{{ NULL, {0} }};",
-                                objRefEntries.Length);
-                        }
-                    }
-
-                    foreach (var valueEntry in valueEntries)
-                    {
-                        tw.WriteLine(
-                            "frame__.{0}_value_ptr__ = &{0};",
-                            extractContext.GetSymbolName(valueEntry));
-                    }
-
-                    tw.WriteLine("il2c_link_execution_frame(&frame__);");
-                    tw.SplitLine();
+                    InternalConvertSetupExecutionFrame(
+                        tw,
+                        extractContext,
+                        preparedMethod, 
+                        objRefEntries,
+                        valueEntries,
+                        debugInformationController);
                 }
 
                 tw.WriteLine("//-------------------");
@@ -315,13 +375,18 @@ namespace IL2C.Writers
                                 "{0}_ExceptionFilter{1}__",
                                 preparedMethod.Method.CLanguageFunctionName,
                                 handlerIndex);
+
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("il2c_try({0}, {1})", nestedIndexName, filterName);
+
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("{");
                             tw.Shift();
                         },
                         (handler, handlerIndex, nestedIndex) =>
                         {
                             // Reached try end block:
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.Shift(-1);
                             tw.WriteLine("}");
                         },
@@ -332,24 +397,28 @@ namespace IL2C.Writers
                             {
                                 case ExceptionCatchHandlerTypes.Catch:
                                     // Reached catch block:
+                                    debugInformationController.WriteInformationBeforeCode(tw);
                                     tw.WriteLine(
                                         "il2c_catch({0}, {1}, {2})  // catch ({3})",
                                         nestedIndexName,
                                         catchHandlerIndex + 1,
                                         extractContext.GetSymbolName(preparedMethod.CatchVariables[catchHandler.CatchStart]),
-                                        catchHandler.CatchType.MangledName);
+                                        catchHandler.CatchType.MangledUniqueName);
                                     break;
                                 case ExceptionCatchHandlerTypes.Finally:
                                     // Reached finally block:
+                                    debugInformationController.WriteInformationBeforeCode(tw);
                                     tw.WriteLine("il2c_finally({0})", nestedIndexName);
                                     break;
                             }
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("{");
                             tw.Shift();
                         },
                         (handler, handlerIndex, nestedIndex, catchHandler, catchHandlerIndex) =>
                         {
                             // Reached catch end block:
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.Shift(-1);
                             tw.WriteLine("}");
                         },
@@ -374,8 +443,12 @@ namespace IL2C.Writers
                                 ToArray();
                             if (bindEntries.Length >= 1)
                             {
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine("il2c_leave_to({0})", nestedIndexName);
+
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine("{");
+
                                 using (var ___ = tw.Shift())
                                 {
                                     foreach (var bind in bindEntries)
@@ -384,6 +457,8 @@ namespace IL2C.Writers
                                             codeStream.ExceptionHandlers[parentNestedIndex].ContainsOffset(bind.targetOffset))
                                         {
                                             var labelName = preparedMethod.LabelNames[bind.targetOffset];
+
+                                            debugInformationController.WriteInformationBeforeCode(tw);
                                             tw.WriteLine(
                                                 "il2c_leave_bind({0}, {1}, {2});",
                                                 nestedIndexName,
@@ -392,25 +467,30 @@ namespace IL2C.Writers
                                         }
                                         else
                                         {
+                                            debugInformationController.WriteInformationBeforeCode(tw);
                                             tw.WriteLine(
                                                 "il2c_leave_through({0}, {1}, {2});",
                                                 nestedIndexName, bind.continuationIndex, parentNestedIndexName);
                                         }
                                     }
                                 }
+
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine("}");
                             }
 
                             // Reached end of entire try block.
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine("il2c_end_try({0});", nestedIndexName);
 
                             extractContext.SetNestedExceptionFrameIndexName(parentNestedIndexName);
                         });
 
                     // Traverse code fragments.
-                    var canWriteSequencePoint = true;
                     foreach (var ci in codeStream)
                     {
+                        debugInformationController.SetNextCode(ci);
+
                         // 1: Update the exception handler controller.
                         //    (Will write exception related sentences.)
                         exceptionHandlerController.Update(ci);
@@ -424,57 +504,34 @@ namespace IL2C.Writers
                             }
                         }
 
-                        // 3: Write the line preprocessor directive if available.
-                        if (canWriteSequencePoint && ci.Debug.Any())
-                        {
-                            var sp = ci.Debug.First();
-                            switch (debugInformationOption)
-                            {
-                                case DebugInformationOptions.Full:
-                                    tw.Parent.WriteLine(
-                                        "#line {0} \"{1}\"",
-                                        sp.Line,
-                                        sp.Path.Replace("\\", "\\\\"));
-                                    break;
-                                case DebugInformationOptions.CommentOnly:
-                                    tw.Parent.WriteLine(
-                                        "/* {0}({1}): */",
-                                        sp.Path.Replace("\\", "\\\\"),
-                                        sp.Line);
-                                    break;
-                            }
-
-                            canWriteSequencePoint = false;
-                        }
+                        // 3: Write source code comment.
+                        debugInformationController.WriteCodeComment(tw);
 
                         // 4: Generate source code fragments and write.
-                        if (debugInformationOption != DebugInformationOptions.None)
-                        {
-                            // Write debugging information.
-                            tw.WriteLine(
-                                "/* {0} */",
-                                ci);
-                        }
-
                         var sourceCodes = preparedMethod.Generators[ci.Offset](extractContext);
                         foreach (var sourceCode in sourceCodes)
                         {
-                            // Dirty hack:
+                            // DIRTY HACK:
                             //   Write unlink execution frame code if cause exiting method.
                             if (sourceCode.StartsWith("return") &&
                                 ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1)))
                             {
+                                debugInformationController.WriteInformationBeforeCode(tw);
                                 tw.WriteLine(
                                     "il2c_unlink_execution_frame(&frame__);");
                             }
 
+                            debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "{0};",
                                 sourceCode);
-
-                            canWriteSequencePoint = true;
                         }
                     }
+
+                    // If last opcode is 'endfinally' and not emitted 'ret',
+                    // can't finished for exceptionHandlerController.
+                    // We can check and force update the TryFinish method for this situation.
+                    exceptionHandlerController.TryFinish();
 
                     if (!exceptionHandlerController.IsFinished)
                     {
@@ -489,6 +546,7 @@ namespace IL2C.Writers
                 }
             }
 
+            debugInformationController.WriteInformationBeforeCode(tw);
             tw.WriteLine("}");
             tw.SplitLine();
         }
@@ -575,7 +633,7 @@ namespace IL2C.Writers
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine(
                 "// [6] {0}: {1}",
-                (method.PInvokeInformation != null) ? "P/Invoke" : "InternalCall",
+                (method.PInvokeInformation != null) ? "P/Invoke" : "IL2C/Invoke",
                 method.FriendlyName);
             tw.SplitLine();
 
@@ -592,9 +650,21 @@ namespace IL2C.Writers
                     method.NativeMethod?.SymbolName ??
                     method.Name;
 
+                // P/Invoke linkage doesn't verify the C header declarations.
+                // It will lookp up by the library symbol name.
+                if (method.PInvokeInformation != null)
+                {
+                    tw.WriteLine(
+                        "extern {0};",
+                        method.CLanguageFunctionPrototype);
+                }
+
                 if (method.ReturnType.IsVoidType)
                 {
-                    tw.WriteLine("{0}({1});", entryPointName, arguments);
+                    tw.WriteLine(
+                        "{0}({1});",
+                        entryPointName,
+                        arguments);
                 }
                 else
                 {
@@ -609,26 +679,27 @@ namespace IL2C.Writers
         private static void InternalConvertFromDelegateInvoker(
             CodeTextWriter tw,
             IExtractContext extractContext,
-            IMethodInformation method)
+            IMethodInformation invokeMethod)
         {
-            if (method.Parameters.Length == 0)
+            if (invokeMethod.Parameters.Length == 0)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid delegate invoker. Name={0}",
-                    method.FriendlyName);
+                    invokeMethod.FriendlyName);
             }
 
             tw.WriteLine("///////////////////////////////////////");
-            tw.WriteLine("// [11-2] Delegate invoker: {0}", method.FriendlyName);
+            tw.WriteLine("// [11-2] Delegate invoker: {0}", invokeMethod.FriendlyName);
             tw.SplitLine();
 
             // DIRTY:
             //   Cause undefined symbol error at C compilation if "System.Delegate" type on the mscorlib assembly
             //   contains the fields with different symbol name.
 
-            var thisName = method.Parameters[0].ParameterName;
+            var thisName = invokeMethod.Parameters[0].ParameterName;
+            var delegateParameters = invokeMethod.Parameters.Skip(1).ToArray();
 
-            tw.WriteLine(method.CLanguageFunctionPrototype);
+            tw.WriteLine(invokeMethod.CLanguageFunctionPrototype);
             tw.WriteLine("{");
 
             using (var _ = tw.Shift())
@@ -644,13 +715,13 @@ namespace IL2C.Writers
                     thisName);
                 tw.SplitLine();
 
-                if (!method.ReturnType.IsVoidType)
+                if (!invokeMethod.ReturnType.IsVoidType)
                 {
-                    if (method.ReturnType.IsReferenceType)
+                    if (invokeMethod.ReturnType.IsReferenceType)
                     {
                         tw.WriteLine(
                             "volatile struct {0}_EXECUTION_FRAME_DECL",
-                            method.CLanguageFunctionName);
+                            invokeMethod.CLanguageFunctionName);
                         tw.WriteLine("{");
                         using (var __ = tw.Shift())
                         {
@@ -659,7 +730,7 @@ namespace IL2C.Writers
                             tw.WriteLine("uint16_t valueCount__;");
                             tw.WriteLine(
                                 "{0} result;",
-                                method.ReturnType.CLanguageTypeName);
+                                invokeMethod.ReturnType.CLanguageTypeName);
                         }
                         tw.WriteLine("} frame__ = { NULL, 1, 0 };");
                         tw.WriteLine("il2c_link_execution_frame(&frame__);");
@@ -668,7 +739,7 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "{0} result;",
-                            method.ReturnType.CLanguageTypeName);
+                            invokeMethod.ReturnType.CLanguageTypeName);
                     }
                 }
 
@@ -687,18 +758,16 @@ namespace IL2C.Writers
                         "IL2C_METHOD_TABLE* pMethodtbl = &{0}->methodtbl__[index];",
                         thisName);
 
-                    if (method.ReturnType.IsVoidType)
+                    if (invokeMethod.ReturnType.IsVoidType)
                     {
                         tw.WriteLine("if (pMethodtbl->target != NULL)");
                         using (var ___ = tw.Shift())
                         {
                             tw.WriteLine(
                                 "((void (*)(System_Object*{0}))(pMethodtbl->methodPtr))(pMethodtbl->target{1});",
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.ParameterName))));
                         }
                         tw.WriteLine("else");
@@ -706,11 +775,11 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "((void (*)({0}))(pMethodtbl->methodPtr))({1});",
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
-                                    Select(p => p.TargetType.CLanguageTypeName)),
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
+                                (delegateParameters.Length >= 1) ?
+                                    string.Join(", ", delegateParameters.
+                                        Select(p => p.TargetType.CLanguageTypeName)) :
+                                        "void",
+                                string.Join(", ", delegateParameters.
                                     Select(p => p.ParameterName)));
                         }
                     }
@@ -721,13 +790,11 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "{0}result = (({1} (*)(System_Object*{2}))(pMethodtbl->methodPtr))(pMethodtbl->target{3});",
-                                method.ReturnType.IsReferenceType ? "frame__." : string.Empty,
-                                method.ReturnType.CLanguageTypeName,
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                invokeMethod.ReturnType.IsReferenceType ? "frame__." : string.Empty,
+                                invokeMethod.ReturnType.CLanguageTypeName,
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.TargetType.CLanguageTypeName))),
-                                string.Join(string.Empty, method.Parameters.
-                                    Skip(1).
+                                string.Join(string.Empty, delegateParameters.
                                     Select(p => string.Format(", {0}", p.ParameterName))));
                         }
                         tw.WriteLine("else");
@@ -735,13 +802,13 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "{0}result = (({1} (*)({2}))(pMethodtbl->methodPtr))({3});",
-                                method.ReturnType.IsReferenceType ? "frame__." : string.Empty,
-                                method.ReturnType.CLanguageTypeName,
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
-                                    Select(p => p.TargetType.CLanguageTypeName)),
-                                string.Join(", ", method.Parameters.
-                                    Skip(1).
+                                invokeMethod.ReturnType.IsReferenceType ? "frame__." : string.Empty,
+                                invokeMethod.ReturnType.CLanguageTypeName,
+                                (delegateParameters.Length >= 1) ?
+                                    string.Join(", ", delegateParameters.
+                                        Select(p => p.TargetType.CLanguageTypeName)) :
+                                        "void",
+                                string.Join(", ", delegateParameters.
                                     Select(p => p.ParameterName)));
                         }
                     }
@@ -752,9 +819,9 @@ namespace IL2C.Writers
                 tw.WriteLine("while (index < this__->count__);");
                 tw.SplitLine();
 
-                if (!method.ReturnType.IsVoidType)
+                if (!invokeMethod.ReturnType.IsVoidType)
                 {
-                    if (method.ReturnType.IsReferenceType)
+                    if (invokeMethod.ReturnType.IsReferenceType)
                     {
                         tw.WriteLine("il2c_unlink_execution_frame(&frame__);");
                         tw.WriteLine("return frame__.result;");

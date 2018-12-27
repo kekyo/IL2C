@@ -147,7 +147,7 @@ namespace IL2C
             try
             {
                 var fetchPath = Path.Combine(basePath, "fetch");
-                await Task.Run(() => Directory.CreateDirectory(fetchPath));
+                Directory.CreateDirectory(fetchPath);
 
                 try
                 {
@@ -203,40 +203,40 @@ namespace IL2C
             }
         }
 
+        public static async Task SetupRequirementsAsync(bool optimize, params string[] includePaths)
+        {
+            if (!Directory.Exists(gccBasePath))
+            {
+                if (Directory.Exists(gccBasePath + ".tmp"))
+                {
+                    Directory.Move(gccBasePath + ".tmp", gccBasePath + ".tmp2");
+                    Directory.Delete(gccBasePath + ".tmp2", true);
+                }
+
+                await DownloadGccRequirementsAsync(gccBasePath + ".tmp");
+
+                Directory.Move(gccBasePath + ".tmp", gccBasePath);
+            }
+
+            var targetLibrary = Path.GetFullPath(Path.Combine(gccBasePath, "..", "libil2c.a"));
+            if (File.Exists(targetLibrary))
+            {
+                File.Delete(targetLibrary);
+            }
+
+            await CompileAsync(
+                "make_libil2c.bat",
+                optimize,
+                Path.GetFullPath(Path.Combine(gccBasePath, "..", "dummy.c")),
+                includePaths);
+        }
+
         public static async Task<string> DriveGccAsync(
             Func<string, string, string, string, Task<string>> executeAsync,
             string scriptTemplateName,
             bool optimize, string sourcePath, params string[] includePaths)
         {
-            // Download requirements for gcc (single)
-            if (!Directory.Exists(gccBasePath))
-            {
-                await Task.Run(() =>
-                {
-                    using (var m = new Mutex(false, typeof(GccDriver).FullName))
-                    {
-                        m.WaitOne();
-                        try
-                        {
-                            if (!Directory.Exists(gccBasePath))
-                            {
-                                DownloadGccRequirementsAsync(gccBasePath + ".tmp").Wait();
-                                Directory.Move(gccBasePath + ".tmp", gccBasePath);
-
-                                CompileAsync(
-                                    "make_libil2c.bat",
-                                    optimize,
-                                    Path.GetFullPath(Path.Combine(gccBasePath, "..", "dummy.c")),
-                                    includePaths).Wait();
-                            }
-                        }
-                        finally
-                        {
-                            m.ReleaseMutex();
-                        }
-                    }
-                });
-            }
+            Debug.Assert(Directory.Exists(gccBasePath));
 
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");

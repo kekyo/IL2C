@@ -46,7 +46,7 @@ namespace IL2C
             split = true;
         }
 
-        public void WriteLine(string message)
+        private void InternalWriteLine(string indent, string message)
         {
             if (split)
             {
@@ -56,7 +56,7 @@ namespace IL2C
             this.Parent.WriteLine(indent + message);
         }
 
-        public void WriteLine(string format, params object[] args)
+        private void InternalWriteLine(string indent, string format, object[] args)
         {
             if (split)
             {
@@ -64,6 +64,26 @@ namespace IL2C
                 split = false;
             }
             this.Parent.WriteLine(indent + format, args);
+        }
+
+        public void WriteLine(string message)
+        {
+            this.InternalWriteLine(indent, message);
+        }
+
+        public void WriteLine(string format, params object[] args)
+        {
+            this.InternalWriteLine(indent, format, args);
+        }
+
+        public void WriteLineIgnoreIndent(string message)
+        {
+            this.InternalWriteLine(string.Empty, message);
+        }
+
+        public void WriteLineIgnoreIndent(string format, params object[] args)
+        {
+            this.InternalWriteLine(string.Empty, format, args);
         }
 
         public void Flush()

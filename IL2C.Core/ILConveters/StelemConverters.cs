@@ -45,7 +45,7 @@ namespace IL2C.ILConverters
             return extractContext => new[] {
                 string.Format("il2c_array_item({0}, {1}, {2}) = {3}",
                     extractContext.GetSymbolName(siArray),
-                    siArray.TargetType.ElementType.MangledName,
+                    siArray.TargetType.ElementType.MangledUniqueName,
                     extractContext.GetSymbolName(siIndex),
                     extractContext.GetSymbolName(siValue)) };
         }

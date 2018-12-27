@@ -4,11 +4,6 @@
 
 /////////////////////////////////////////////////////////////
 
-// TODO: Support finalizer
-#define GCMARK_NOMARK ((interlock_t)1)
-#define GCMARK_LIVE ((interlock_t)0)
-#define GCMARK_CONST ((interlock_t)2)
-
 typedef const struct IL2C_VALUE_DESCRIPTOR_DECL
 {
     const IL2C_RUNTIME_TYPE type_value;
@@ -100,7 +95,7 @@ static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
 
     // Setup interface vptrs.
     IL2C_IMPLEMENTED_INTERFACE* pInterface =
-        (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(type + 1)) + type->markTarget);
+        (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(type + 1)) + type->markTarget);
     uintptr_t index;
     for (index = 0;
         index < type->interfaceCount;
@@ -400,7 +395,7 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE typ
         do
         {
             IL2C_IMPLEMENTED_INTERFACE* pInterface =
-                (IL2C_IMPLEMENTED_INTERFACE*)(((const uintptr_t*)(currentType + 1)) + type->markTarget);
+                (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(currentType + 1)) + currentType->markTarget);
             uintptr_t index;
             for (index = 0;
                 index < currentType->interfaceCount;
@@ -411,7 +406,7 @@ void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE typ
                 if (pInterface->type == type)
                 {
                     uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
-                    return *((void**)(((uint8_t*)pAdjustedReference) + offset));
+                    return (void*)(((uint8_t*)pAdjustedReference) + offset);
                 }
             }
 

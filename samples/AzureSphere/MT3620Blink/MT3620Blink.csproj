@@ -1,38 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>net46</TargetFramework>
 
-    <OutputType>Library</OutputType>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <AssemblyName>MT3620Blink</AssemblyName>
-    <RootNamespace>MT3620Blink</RootNamespace>
-    <AssemblyTitle>IL2C Demonstration for the Azure Sphere SDK</AssemblyTitle>
-    <Product>IL2C</Product>
-    <Trademark>IL2C</Trademark>
-    <Copyright>Copyright (c) 2018 Kouji Matsui</Copyright>
-    <Description>A translator implementation of .NET intermediate language to C language.</Description>
-    <Company>Kouji Matsui (@kozy_kekyo)</Company>
-    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-    <PackageTags>il2c;il;translate;transpile;convert;c;c++;assembly;multi-platform</PackageTags>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <NoWarn>1701;1702;0649</NoWarn>
+        <OutputType>Library</OutputType>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <AssemblyName>MT3620Blink</AssemblyName>
+        <RootNamespace>MT3620Blink</RootNamespace>
+        <AssemblyTitle>IL2C Demonstration for the Azure Sphere SDK</AssemblyTitle>
+        <Product>IL2C</Product>
+        <Trademark>IL2C</Trademark>
+        <Copyright>Copyright (c) 2018 Kouji Matsui</Copyright>
+        <Description>A translator implementation of .NET intermediate language to C language.</Description>
+        <Company>Kouji Matsui (@kozy_kekyo)</Company>
+        <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+        <PackageTags>il2c;il;translate;transpile;convert;c;c++;assembly;multi-platform</PackageTags>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <NoWarn>1701;1702;0649</NoWarn>
 
-    <IL2COutputPath>$(ProjectDir)../MT3620App/Generated</IL2COutputPath>
-  </PropertyGroup>
+        <IL2COutputPath>$(ProjectDir)../MT3620App/Generated</IL2COutputPath>
+        <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="IL2C.Interop" Version="0.4.9" />
-  </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="D:\PROJECT\IL2C\IL2C\bin\Debug\net45\IL2C.exe --debug --read-symbols $(OutDir)MT3620Blink.dll ..\Mt3620App\Generated" />
-  </Target>
+    <ItemGroup>
+      <PackageReference Include="IL2C.Build" Version="0.4.22" />
+    </ItemGroup>
 </Project>

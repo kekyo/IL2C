@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 112 / 219
+* Number of opcode implementations: 121 / 219
 * Number of opcode tests: 615 [63 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -10,25 +10,25 @@ OpCode | Binary | Implement | Test | ILConverter
 | [add.ovf.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.add_ovf_un) | 0xd7 |  |  |  |
 | [and](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.and) | 0x5f | Implemented | [Test [5]](tests/IL2C.Core.Test.Target/ILConverters/And) | IL2C.ILConverters.AndConverter |
 | [arglist](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.arglist) | 0xfe00 |  |  |  |
-| [beq](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.beq) | 0x3b |  |  |  |
+| [beq](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.beq) | 0x3b | Implemented |  | IL2C.ILConverters.BeqConverter |
 | [beq.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.beq_s) | 0x2e | Implemented |  | IL2C.ILConverters.Beq_sConverter |
-| [bge](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge) | 0x3c |  |  |  |
-| [bge.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge_s) | 0x2f |  |  |  |
+| [bge](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge) | 0x3c | Implemented |  | IL2C.ILConverters.BgeConverter |
+| [bge.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge_s) | 0x2f | Implemented |  | IL2C.ILConverters.Bge_sConverter |
 | [bge.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge_un) | 0x41 |  |  |  |
 | [bge.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge_un_s) | 0x34 |  |  |  |
-| [bgt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt) | 0x3d |  |  |  |
-| [bgt.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_s) | 0x30 |  |  |  |
+| [bgt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt) | 0x3d | Implemented |  | IL2C.ILConverters.BgtConverter |
+| [bgt.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_s) | 0x30 | Implemented |  | IL2C.ILConverters.Bgt_sConverter |
 | [bgt.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_un) | 0x42 |  |  |  |
 | [bgt.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_un_s) | 0x35 |  |  |  |
-| [ble](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble) | 0x3e |  |  |  |
-| [ble.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble_s) | 0x31 |  |  |  |
+| [ble](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble) | 0x3e | Implemented |  | IL2C.ILConverters.BleConverter |
+| [ble.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble_s) | 0x31 | Implemented |  | IL2C.ILConverters.Ble_sConverter |
 | [ble.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble_un) | 0x43 |  |  |  |
 | [ble.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble_un_s) | 0x36 |  |  |  |
-| [blt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.blt) | 0x3f |  |  |  |
+| [blt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.blt) | 0x3f | Implemented |  | IL2C.ILConverters.BltConverter |
 | [blt.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.blt_s) | 0x32 | Implemented |  | IL2C.ILConverters.Blt_sConverter |
 | [blt.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.blt_un) | 0x44 |  |  |  |
 | [blt.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.blt_un_s) | 0x37 |  |  |  |
-| [bne.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bne_un) | 0x40 |  |  |  |
+| [bne.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bne_un) | 0x40 | Implemented |  | IL2C.ILConverters.Bne_UnConverter |
 | [bne.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bne_un_s) | 0x33 | Implemented |  | IL2C.ILConverters.Bne_Un_sConverter |
 | [box](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.box) | 0x8c | Implemented | [Test [78]](tests/IL2C.Core.Test.Target/ILConverters/Box) | IL2C.ILConverters.BoxConverter |
 | [br](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.br) | 0x38 | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Br) | IL2C.ILConverters.BrConverter |

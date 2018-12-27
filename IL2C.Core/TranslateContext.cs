@@ -187,7 +187,7 @@ namespace IL2C
                 {
                     return string.Format(
                         "il2c_cast_from_boxed_to_interface({0}, {1}, {2}, {3})",
-                        lhsType.MangledName,
+                        lhsType.MangledUniqueName,
                         rhsType.ElementType.CLanguageStaticSizeOfExpression,
                         rhsType.CalculateInterfaceIndex(lhsType),
                         rhsExpression);
@@ -197,8 +197,15 @@ namespace IL2C
                 {
                     return string.Format(
                         "il2c_cast_to_interface({0}, {1}, {2})",
-                        lhsType.MangledName,
-                        rhsType.MangledName,
+                        lhsType.MangledUniqueName,
+                        rhsType.MangledUniqueName,
+                        rhsExpression);
+                }
+                // object <-- IHoge
+                else if (lhsType.IsObjectType && rhsType.IsInterface)
+                {
+                    return string.Format(
+                        "il2c_adjusted_reference({0})",
                         rhsExpression);
                 }
                 else
@@ -228,7 +235,7 @@ namespace IL2C
                 if (lhsType.IsBooleanType)
                 {
                     return string.Format(
-                        "({0}) ? true : false",
+                        "(bool){0}",
                         rhsExpression);
                 }
 
@@ -253,10 +260,17 @@ namespace IL2C
             else if (rhsType.IsBooleanType)
             {
                 // intValue = boolValue  (implicitly conversion)
-                if (lhsType.IsNumericPrimitive)
+                if (lhsType.IsInt32Type)
                 {
                     return string.Format(
-                        "({0}) ? 1 : 0",
+                        "(int){0}",
+                        rhsExpression);
+                }
+                else
+                {
+                    return string.Format(
+                        "({0})(int){1}",
+                        lhsType.CLanguageTypeName,
                         rhsExpression);
                 }
             }
@@ -305,7 +319,7 @@ namespace IL2C
             }
             else
             {
-                return variable.UnsafeRawSymbolName;
+                return variable.UnsafeCLanguageSymbolName;
             }
         }
 

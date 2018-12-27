@@ -35,7 +35,7 @@ namespace IL2C.ILConverters
             if (si0.TargetType.IsInt32StackFriendlyType &&
                 si1.TargetType.IsInt32StackFriendlyType)
             {
-                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.BooleanType);
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return extractContext => new[] { string.Format(
                     "{1} = ({0}int32_t){2} {3} ({0}int32_t){4}",
                     isUnsigned ? "u" : string.Empty,
@@ -48,7 +48,7 @@ namespace IL2C.ILConverters
             if (si0.TargetType.IsInt64StackFriendlyType ||
                 si1.TargetType.IsInt64StackFriendlyType)
             {
-                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.BooleanType);
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return extractContext => new[] { string.Format(
                     "{1} = ({0}int64_t){2} {3} ({0}int64_t){4}",
                     isUnsigned ? "u" : string.Empty,
@@ -61,7 +61,7 @@ namespace IL2C.ILConverters
             if ((si0.TargetType.IsIntPtrStackFriendlyType || !si0.TargetType.IsValueType || si0.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType) &&
                 (si1.TargetType.IsIntPtrStackFriendlyType || !si1.TargetType.IsValueType || si1.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType))
             {
-                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.BooleanType);
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
                 return extractContext => new[] { string.Format(
                     "{1} = ({0}intptr_t){2} {3} ({0}intptr_t){4}",
                     isUnsigned ? "u" : string.Empty,

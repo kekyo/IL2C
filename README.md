@@ -58,7 +58,8 @@ void HelloWorld_Main()
 ## How to beginning
 
 The IL2C current status is experimental. Contributions are welcome but there's nothing the official guide documents.
-This is first step for use the IL2C:
+
+This is first step for use the IL2C: ["Try writing code using both the Azure Sphere Development Kit and C#" (My blog)](https://www.kekyo.net/2019/01/04/6917), or these steps:
 
 1. Open the il2c.sln by Visual Studio 2017. Your environment requires enabling the C#, VC++ and NUnit3 vsix addin.
 2. Build with "Debug - AnyCPU" configuration.

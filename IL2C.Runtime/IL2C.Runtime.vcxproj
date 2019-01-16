@@ -45,6 +45,7 @@
         <ClCompile Include="System.SByte.c" />
         <ClCompile Include="System.Single.c" />
         <ClCompile Include="System.String.c" />
+        <ClCompile Include="System.Threading.Interlocked.c" />
         <ClCompile Include="System.Type.c" />
         <ClCompile Include="System.UInt16.c" />
         <ClCompile Include="System.UInt32.c" />
@@ -82,6 +83,7 @@
         <ClInclude Include="System.SByte.h" />
         <ClInclude Include="System.Single.h" />
         <ClInclude Include="System.String.h" />
+        <ClInclude Include="System.Threading.Interlocked.h" />
         <ClInclude Include="System.Type.h" />
         <ClInclude Include="System.UInt16.h" />
         <ClInclude Include="System.UInt32.h" />

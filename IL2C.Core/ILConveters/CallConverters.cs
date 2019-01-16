@@ -82,7 +82,7 @@ namespace IL2C.ILConverters
 
                     Debug.Assert(implementationMethod.DeclaringType.IsAssignableFrom(arg0.TargetType));
 
-                    // Drop virtual call and turn to the direct call
+                    // Drop virtual call and turn to the direct call (devirtualize)
                     isVirtualCall = false;
                     method = implementationMethod;
                     return (arg0.TargetType, arg0, "il2c_adjusted_reference({0})");
@@ -136,7 +136,7 @@ namespace IL2C.ILConverters
                     var implementationMethod = allDeclaredMethods.First(
                         dm => MetadataUtilities.VirtualMethodSignatureComparer.Equals(dm, method));
 
-                    // Drop virtual call and turn to the direct call
+                    // Drop virtual call and turn to the direct call (devirtualize)
                     isVirtualCall = false;
                     method = implementationMethod;
 
@@ -176,11 +176,45 @@ namespace IL2C.ILConverters
                 ToArray();
 
             //////////////////////////////////////////////////////////
-            // Step 3:
+            // Step 3: Fixing special cases
 
             var codeInformation = decodeContext.CurrentCode;
-
             ILocalVariableInformation result;
+
+            // TODO: HACK: IL2C can't handle the generic types/methods in this version.
+            //   Roslyn will generate implementation for the event member with using for
+            //   "System.Threading.Interlocked.CompareExchange<T>(...)" method.
+            //   It's special resolver for event member.
+            if ((method.UniqueName == "T System.Threading.Interlocked::CompareExchange(T&,T,T)") &&
+                pairParameters[1].variable.TargetType.IsDelegate)
+            {
+                result = decodeContext.PushStack(pairParameters[1].variable.TargetType);
+
+                return extractContext =>
+                {
+                    var parameters = pairParameters.Select(parameter =>
+                        new Utilities.RightExpressionGivenParameter(
+                            parameter.variable.TargetType,
+                            parameter.variable,
+                            string.Format(parameter.format, extractContext.GetSymbolName(parameter.variable)))).
+                        ToArray();
+
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        parameters,
+                        extractContext,
+                        codeInformation);
+
+                    return new[]
+                    {
+                        string.Format(
+                            "{0} = ({1})System_Threading_Interlocked_CompareExchange_6({2})",
+                            extractContext.GetSymbolName(result),
+                            pairParameters[1].variable.TargetType.CLanguageTypeName,
+                            parameterString)
+                    };
+                };
+            }
+
             if (method.ReturnType.IsVoidType)
             {
                 // HACK: If we will call the RuntimeHelpers.InitializeArray, we can memoize array type hint.

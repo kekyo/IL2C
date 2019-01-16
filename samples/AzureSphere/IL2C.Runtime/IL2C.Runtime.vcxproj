@@ -37,6 +37,7 @@
     <ClCompile Include="../../../IL2C.Runtime/System.SByte.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Single.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.String.c" />
+    <ClCompile Include="../../../IL2C.Runtime/System.Threading.Interlocked.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.Type.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.UInt16.c" />
     <ClCompile Include="../../../IL2C.Runtime/System.UInt32.c" />
@@ -74,6 +75,7 @@
     <ClInclude Include="../../../IL2C.Runtime/System.SByte.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Single.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.String.h" />
+    <ClInclude Include="../../../IL2C.Runtime/System.Threading.Interlocked.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.Type.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.UInt16.h" />
     <ClInclude Include="../../../IL2C.Runtime/System.UInt32.h" />

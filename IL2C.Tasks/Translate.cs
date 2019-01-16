@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Build.Framework;
 
 namespace IL2C
@@ -44,21 +45,20 @@ namespace IL2C
                 ? DebugInformationOptions.CommentOnly
                 : (DebugInformationOptions) Enum.Parse(typeof(DebugInformationOptions), this.DebugInformation);
 
-            var tw = new LogWriter(message =>
+            var logw = new LogWriter(message =>
                 this.Log.LogMessage(
                     MessageImportance.High,
                     "{0}", message));
 
-            foreach (var assemblyPath in this.AssemblyPaths)
-            {
-                SimpleDriver.Translate(
-                    tw,
-                    assemblyPath.ItemSpec.Trim(),
-                    outputPath,
-                    this.ReadSymbols,
-                    this.EnableCpp,
-                    debugInformation);
-            }
+            SimpleDriver.TranslateAll(
+                logw,
+                outputPath,
+                this.ReadSymbols,
+                this.EnableCpp,
+                debugInformation,
+                this.AssemblyPaths.
+                    Select(path => path.ItemSpec.Trim()).
+                    ToArray());
 
             return true;
         }

@@ -2,7 +2,7 @@
     "profiles": {
         "IL2C": {
             "commandName": "Project",
-            "commandLineArgs": "-g $(ProjectDir)..\\samples\\AzureSphere\\MT3620Blink\\bin\\Debug\\net46\\MT3620Blink.dll Generated"
+            "commandLineArgs": "-g Generated $(ProjectDir)..\\samples\\AzureSphere\\MT3620Blink\\bin\\Debug\\net46\\MT3620Blink.dll"
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 using Mono.Options;
@@ -32,21 +32,21 @@ namespace IL2C
                 var extra = options.Parse(args);
                 if (help || (extra.Count < 2))
                 {
-                    Console.Out.WriteLine("usage: il2c.exe [options] <assembly-path> <output-path>");
+                    Console.Out.WriteLine("usage: il2c.exe [options] <output_path> <assembly_path>");
                     options.WriteOptionDescriptions(Console.Out);
                 }
                 else
                 {
-                    var assemblyPath = extra[0];
-                    var outputPath = extra[1];
+                    var outputPath = extra[0];
+                    var assemblyPaths = extra.Skip(1);
 
-                    SimpleDriver.Translate(
+                    SimpleDriver.TranslateAll(
                         Console.Out,
-                        assemblyPath,
                         outputPath,
                         readSymbols,
                         cpp,
-                        debugInformationOptions);
+                        debugInformationOptions,
+                        assemblyPaths);
                 }
 
                 return 0;

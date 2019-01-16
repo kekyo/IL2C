@@ -14,19 +14,19 @@ namespace IL2C.Metadata
 
         public static string GetFriendlyName(this MemberReference member)
         {
-            var declaringTypes = member.DeclaringType
-                .Traverse(current => current.DeclaringType)
-                .Reverse()
-                .ToArray();
+            var declaringTypes = member.DeclaringType.
+                Traverse(current => current.DeclaringType).
+                Reverse().
+                ToArray();
             var namespaceName = declaringTypes.FirstOrDefault()
                 ?.Namespace
                 ?? (member as TypeReference)?.Namespace;
 
             return string.Join(
                 ".",
-                new[] { namespaceName }
-                    .Concat(declaringTypes.Select(type => type.Name))
-                    .Concat(new[] { member.Name }));
+                new[] { namespaceName }.
+                    Concat(declaringTypes.Select(type => type.Name)).
+                    Concat(new[] { member.Name }));
         }
 
         #region MethodSignatureTypeComparer

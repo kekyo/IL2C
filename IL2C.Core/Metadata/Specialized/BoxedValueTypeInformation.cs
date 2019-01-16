@@ -17,6 +17,8 @@ namespace IL2C.Metadata.Specialized
 
         public string MetadataTypeName => "Type";
 
+        public string ScopeName => string.Empty;
+
         public bool IsValidDefinition => false;
 
         public bool IsPublic => false;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace IL2C
 {
-    public sealed class CodeTextWriter
+    public class CodeTextWriter : IDisposable
     {
         private readonly string oneIndent;
         private int indentCount = 0;
@@ -17,6 +17,11 @@ namespace IL2C
         {
             this.Parent = tw;
             this.oneIndent = indent;
+        }
+
+        public virtual void Dispose()
+        {
+            this.Parent.Dispose();
         }
 
         public TextWriter Parent { get; }

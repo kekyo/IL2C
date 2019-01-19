@@ -51,11 +51,11 @@ namespace IL2C
             return sb.ToString();
         }
 
-        public static string GetScopedPath(IEnumerable<string> scopeNames) =>
-            Path.Combine(scopeNames.SelectMany(sn => sn.Split('.')).ToArray());
+        public static string GetCLanguageScopedPath(IEnumerable<string> scopeNames) =>
+            string.Join("/", scopeNames.SelectMany(sn => sn.Split('.')));
 
-        public static string GetScopedPath(params string[] scopeNames) =>
-            GetScopedPath((IEnumerable<string>)scopeNames);
+        public static string GetCLanguageScopedPath(params string[] scopeNames) =>
+            GetCLanguageScopedPath((IEnumerable<string>)scopeNames);
 
         public static string GetCLanguageTypeName(
             Type type, string symbolName = null, bool cArrayExpression = false)

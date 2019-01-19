@@ -40,9 +40,9 @@ namespace IL2C.ILConverters
                 // Store into RuntimeFieldHandle structure.
                 return extractContext => new[] {
                     string.Format(
-                        "{0}.size__ = sizeof({1})",
+                        "{0}.size__ = {1}",
                         extractContext.GetSymbolName(symbol),
-                        declaredValueName),
+                        resourceData.Length),
                     string.Format(
                         "{0}.field__ = {1}",
                         extractContext.GetSymbolName(symbol),

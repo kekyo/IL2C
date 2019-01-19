@@ -9,9 +9,7 @@
 
 #endif
 
-#include "test.h"
-
-{body}
+#include "IL2C.Core.Test.Target.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Main
@@ -20,8 +18,6 @@
 
 int main()
 {
-    il2c_initialize();
-
 #if defined(_MSC_VER) && defined(_WIN32)
     _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
     _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
@@ -33,6 +29,8 @@ int main()
     _crtBreakAlloc = -1;
 #endif
 #endif
+
+    il2c_initialize();
 
     ////////////////////////
     // Argument and expected values.

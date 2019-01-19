@@ -99,7 +99,10 @@ namespace IL2C
         {
             if (!constStrings.TryGetValue(value, out var symbolName))
             {
-                symbolName = string.Format("string{0}__", constStrings.Count);
+                symbolName = string.Format(
+                    "{0}_string{1}__",
+                    this.Assembly.MangledName,
+                    constStrings.Count);
                 constStrings.Add(value, symbolName);
             }
 
@@ -113,7 +116,12 @@ namespace IL2C
         {
             if (!declaredValues.TryGetValue(resourceData, out var entry))
             {
-                entry = (string.Format("declaredValue{0}__", declaredValues.Count), new HashSet<IFieldInformation>());
+                entry =
+                    (string.Format(
+                        "{0}_declaredValue{1}__",
+                        this.Assembly.MangledName,
+                        declaredValues.Count),
+                    new HashSet<IFieldInformation>());
                 declaredValues.Add(resourceData, entry);
             }
 

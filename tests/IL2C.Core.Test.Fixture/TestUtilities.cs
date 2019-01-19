@@ -11,6 +11,8 @@ namespace IL2C
 {
     internal static class TestUtilities
     {
+        private static readonly Encoding utf8 = new UTF8Encoding(false);
+
         #region Test case related
         private static object ConvertToArgumentType(object value, Type argumentType)
         {
@@ -60,16 +62,13 @@ namespace IL2C
             }
         }
 
-        public static IReadOnlyDictionary<string, IReadOnlyDictionary<Type, TestCaseInformation[]>> ExtractTestCasesFromCoreTestTarget()
-        {
-            return
-                typeof(TestCaseAttribute).Assembly.GetTypes().
-                Where(type => type.IsPublic && type.IsClass && !type.IsAbstract && type.IsDefined(typeof(TestCaseAttribute))).
-                GroupBy(type => type.Namespace).
-                ToDictionary(
-                    g => g.Key,
-                    g => (IReadOnlyDictionary<Type, TestCaseInformation[]>)g.ToDictionary(type => type, TestUtilities.GetTestCaseInformations));
-        }
+        public static IReadOnlyDictionary<string, IReadOnlyDictionary<Type, TestCaseInformation[]>> ExtractTestCasesFromCoreTestTarget() =>
+            typeof(TestCaseAttribute).Assembly.GetTypes().
+            Where(type => type.IsPublic && type.IsClass && !type.IsAbstract && type.IsDefined(typeof(TestCaseAttribute))).
+            GroupBy(type => type.Namespace).
+            ToDictionary(
+                g => g.Key,
+                g => (IReadOnlyDictionary<Type, TestCaseInformation[]>)g.ToDictionary(type => type, TestUtilities.GetTestCaseInformations));
 
         public static TestCaseInformation CreateTestCaseInformation(
             string categoryName, string id, string name, string uniqueName, string description,
@@ -92,12 +91,10 @@ namespace IL2C
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
                     ToArray());
 
-        private static IEnumerable<Type> TraverseTypes(Type targetType, bool includeBaseTypes)
-        {
-            return includeBaseTypes ?
+        private static IEnumerable<Type> TraverseTypes(Type targetType, bool includeBaseTypes) =>
+            includeBaseTypes ?
                 targetType.Traverse(type => type.BaseType) :
                 new[] { targetType };
-        }
 
         public static TestCaseInformation[] GetTestCaseInformations(Type targetType)
         {
@@ -145,16 +142,13 @@ namespace IL2C
         #endregion
 
         #region IO related
-        private static bool IsStrangeProblemException(Exception ex)
-        {
-            return
-                ex.Message.Contains("not a valid application") ||
-                ex.Message.Contains("it is being used by another process") ||
-                ex.Message.Contains("system cannot find the file specified") ||
-                ex.Message.Contains("file or directory is corrupted and unreadable") ||
-                ex.Message.Contains("Permission denied") ||
-                ex.Message.Contains("ExitCode=-1073741819");
-        }
+        private static bool IsStrangeProblemException(Exception ex) =>
+            ex.Message.Contains("not a valid application") ||
+            ex.Message.Contains("it is being used by another process") ||
+            ex.Message.Contains("system cannot find the file specified") ||
+            ex.Message.Contains("file or directory is corrupted and unreadable") ||
+            ex.Message.Contains("Permission denied") ||
+            ex.Message.Contains("ExitCode=-1073741819");
 
         // HACK: If use offloading Task rarely causes strange problems, it's workaround by retry. ¯\_(ツ)_/¯
         public static async Task<T> RetryIfStrangeProblemAsync<T>(Func<T> func, int count = 16)
@@ -204,9 +198,8 @@ namespace IL2C
             }
         }
 
-        public static Task<Stream> CreateStreamAsync(string path)
-        {
-            return RetryIfStrangeProblemAsync(() =>
+        public static Task<Stream> CreateStreamAsync(string path) =>
+            RetryIfStrangeProblemAsync(() =>
             {
                 var basePath = Path.GetDirectoryName(path);
                 while (!Directory.Exists(basePath))
@@ -221,7 +214,6 @@ namespace IL2C
                 }
                 return (Stream)new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true);
             });
-        }
 
         public static async Task WriteTextFileAsync(
             TextWriter tw, TextReader from, IReadOnlyDictionary<string, object> replaceValues)
@@ -257,41 +249,42 @@ namespace IL2C
         {
             using (var fs = await CreateStreamAsync(path))
             {
-                var tw = new StreamWriter(fs);
+                var tw = new StreamWriter(fs, utf8);
                 await WriteTextFileAsync(tw, tr, replaceValues);
                 fs.Close();
             }
         }
 
         public static Task WriteTextFileAsync(
-            string path, string text, IReadOnlyDictionary<string, object> replaceValues)
-        {
-            return WriteTextFileAsync(path, new StringReader(text), replaceValues);
-        }
+            string path, string text, IReadOnlyDictionary<string, object> replaceValues) =>
+            WriteTextFileAsync(path, new StringReader(text), replaceValues);
 
         private static readonly Dictionary<string, object> empty = new Dictionary<string, object>();
 
         public static Task WriteTextFileAsync(
-            string path, TextReader tr)
-        {
-            return WriteTextFileAsync(path, tr, empty);
-        }
+            string path, TextReader tr) =>
+            WriteTextFileAsync(path, tr, empty);
 
         public static Task WriteTextFileAsync(
-            string path, string text)
-        {
-            return WriteTextFileAsync(path, text, empty);
-        }
+            string path, string text) =>
+            WriteTextFileAsync(path, text, empty);
 
-        public static async Task CopyResourceToStreamAsync(Stream targetStream, string resourceName)
+        public static async Task CopyResourceToStreamAsync(
+            Stream targetStream, string resourceName, IReadOnlyDictionary<string, object> replaceValues)
         {
             using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
                 "IL2C.Templates." + resourceName))
             {
-                await ts.CopyToAsync(targetStream);
-                await targetStream.FlushAsync();
+                var tr = new StreamReader(ts, utf8, true);
+                var tw = new StreamWriter(targetStream, utf8);
+                await WriteTextFileAsync(tw, tr, replaceValues);
+                await tw.FlushAsync();
             }
         }
+
+        public static Task CopyResourceToStreamAsync(
+            Stream targetStream, string resourceName) =>
+            CopyResourceToStreamAsync(targetStream, resourceName, empty);
 
         public static async Task CopyResourceToTextFileAsync(
             string path, string resourceName, IReadOnlyDictionary<string, object> replaceValues)
@@ -299,16 +292,14 @@ namespace IL2C
             using (var ts = typeof(TestFramework).Assembly.GetManifestResourceStream(
                 "IL2C.Templates." + resourceName))
             {
-                var tr = new StreamReader(ts);
+                var tr = new StreamReader(ts, utf8, true);
                 await WriteTextFileAsync(path, tr, replaceValues);
             }
         }
 
         public static Task CopyResourceToTextFileAsync(
-            string path, string resourceName)
-        {
-            return CopyResourceToTextFileAsync(path, resourceName, empty);
-        }
+            string path, string resourceName) =>
+            CopyResourceToTextFileAsync(path, resourceName, empty);
         #endregion
     }
 }

@@ -24,13 +24,13 @@ namespace IL2C
 
         public CodeTextWriter CreateTextWriter(string fileName, string ext)
         {
-            var scopedPath = Utilities.GetScopedPath(scopeNames);
-            var path = Path.GetFullPath(Path.Combine(basePath, scopedPath, fileName + ext));
-            var tw = this.OnCreateTextWriter(path);
+            var scopedPath = Path.Combine(scopeNames.Reverse().ToArray());
+            var path = Path.Combine(basePath, scopedPath, fileName + ext);
+            var tw = this.OnCreateTextWriter(Path.GetFullPath(path));
 
             logw.Write("IL2C: Writing: \"{0}\" ...", path);
 
-            return new InternalCodeTextWriter(logw, tw, indent);
+            return new InternalCodeTextWriter(logw, path, tw, indent);
         }
 
         public CodeTextWriter CreateSourceCodeWriter(string fileName)
@@ -61,21 +61,24 @@ namespace IL2C
             return new StreamWriter(fs, Encoding.UTF8);
         }
 
-        public IDisposable EnterScope(string scopeName)
+        public IDisposable EnterScope(string scopeName, bool splitScope = true)
         {
-            scopeNames.Push(scopeName);
+            scopeNames.Push(splitScope ? Utilities.GetCLanguageScopedPath(scopeName) : scopeName);
             return new ScopeDisposer(this);
         }
 
-        private sealed class InternalCodeTextWriter : CodeTextWriter
+        internal sealed class InternalCodeTextWriter : CodeTextWriter
         {
             private TextWriter logw;
 
-            public InternalCodeTextWriter(TextWriter logw, TextWriter tw, string indent)
+            public InternalCodeTextWriter(TextWriter logw, string path, TextWriter tw, string indent)
                 : base(tw, indent)
             {
+                this.Path = path;
                 this.logw = logw;
             }
+
+            public string Path { get; }
 
             public override void Dispose()
             {

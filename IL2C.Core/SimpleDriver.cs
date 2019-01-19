@@ -19,10 +19,17 @@ namespace IL2C
 
             logw.WriteLine(" done.");
 
-            AssemblyWriter.WriteSourceCode(
-                storage, translateContext, preparedFunctions, debugInformationOptions);
-            AssemblyWriter.WriteHeader(
-                storage, translateContext, preparedFunctions);
+            using (var _ = storage.EnterScope("include"))
+            {
+                AssemblyWriter.WriteHeader(
+                    storage, translateContext, preparedFunctions);
+            }
+
+            using (var _ = storage.EnterScope("src"))
+            {
+                AssemblyWriter.WriteSourceCode(
+                    storage, translateContext, preparedFunctions, debugInformationOptions);
+            }
         }
 
         public static void TranslateAll(

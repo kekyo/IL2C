@@ -19,8 +19,8 @@
         </ProjectConfiguration>
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="test.c" />
-        <ClInclude Include="test.h" />
+        <ClCompile Include="**/*.c" />
+        <ClInclude Include="**/*.h" />
     </ItemGroup>
     <PropertyGroup Label="Globals">
         <VCProjectVersion>15.0</VCProjectVersion>

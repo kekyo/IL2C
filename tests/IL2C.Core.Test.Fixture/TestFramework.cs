@@ -171,25 +171,28 @@ namespace IL2C
                 .ToArray();
 
             // Step 1-4: Translate caseInfo.Method bodies.
-            var header = CodeTextWriter.Create(new StringWriter(), "    ");
-            AssemblyWriter.InternalWriteHeader(
-                header, translateContext, prepared, false);
-            header.Flush();
-
-            var body = CodeTextWriter.Create(new StringWriter(), "    ");
-            AssemblyWriter.InternalWriteSourceCode(
-                body, translateContext, prepared, DebugInformationOptions.CommentOnly, false);
-            body.Flush();
-
-            // Step 1-5: Write Visual C++ project file and Visual Studio Code launch config from template.
-            //     Note: It's only debugging purpose. The test doesn't use.
-            var translatedPath = Path.GetFullPath(
+            var translatedPath =
                 Path.Combine(
                     Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
                     caseInfo.CategoryName,
                     caseInfo.Id,
-                    caseInfo.UniqueName));
+                    caseInfo.UniqueName);
 
+            var logw = new StringWriter();
+            var storage = new CodeTextStorage(logw, translatedPath, false, "    ");
+
+            AssemblyWriter.WriteHeader(
+                storage,
+                translateContext,
+                prepared);
+            var sourceFiles = AssemblyWriter.WriteSourceCode(
+                storage,
+                translateContext,
+                prepared,
+                DebugInformationOptions.CommentOnly);
+
+            // Step 1-4: Write Visual C++ project file and Visual Studio Code launch config from template.
+            //     Note: It's only debugging purpose. The test doesn't use.
             var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
             await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj");
 
@@ -285,7 +288,6 @@ namespace IL2C
             {
                 { "testName", targetMethod.FriendlyName},
                 { "type", targetMethod.ReturnType.CLanguageTypeName},
-                { "body", body.Parent.ToString() },
                 { "constants", string.Join(" ", constants.
                     Select(entry => string.Format("{0} {1} = {2};",
                         (entry.ExpressionType != null) ? Utilities.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
@@ -323,11 +325,8 @@ namespace IL2C
             };
 
             var sourcePath = Path.Combine(translatedPath, "test.c");
-            var headerPath = Path.Combine(translatedPath, "test.h");
 
-            await Task.WhenAll(
-                TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues),
-                TestUtilities.WriteTextFileAsync(headerPath, header.Parent.ToString()));
+            await TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues);
 
             ///////////////////////////////////////////////
             // Step 2: Test and verify result by real IL code at this runtime.
@@ -362,9 +361,15 @@ namespace IL2C
             try
             {
 #if DEBUG
-                var executedResult = await GccDriver.CompileAndRunAsync(false, sourcePath);
+                var executedResult = await GccDriver.CompileAndRunAsync(
+                    false,
+                    sourceFiles.Concat(new[] { sourcePath }).ToArray(),
+                    new string[0]);
 #else
-                var executedResult = await GccDriver.CompileAndRunAsync(true, sourcePath);
+                var executedResult = await GccDriver.CompileAndRunAsync(
+                    true,
+                    sourceFiles.Concat(new[] { sourcePath }).ToArray(),
+                    new string[0]);
 #endif
 
                 sanitized = executedResult.Trim(' ', '\r', '\n');

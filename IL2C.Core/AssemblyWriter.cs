@@ -18,300 +18,75 @@ namespace IL2C
 
     public static class AssemblyWriter
     {
-        internal static void InternalWriteHeader(
-            CodeTextWriter twHeader,
-            TranslateContext translateContext,
-            PreparedInformations prepared,
-            bool includeAssemblyHeader)
+        private enum MemberScopes
         {
-            IExtractContext extractContext = translateContext;
-
-            var assemblyName = Utilities.GetMangledName(extractContext.Assembly.FriendlyName);
-
-            twHeader.WriteLine("#ifndef __{0}_H__", assemblyName);
-            twHeader.WriteLine("#define __{0}_H__", assemblyName);
-            twHeader.SplitLine();
-            twHeader.WriteLine("#pragma once");
-            twHeader.SplitLine();
-            twHeader.WriteLine("#include <il2c.h>");
-            twHeader.SplitLine();
-
-            if (includeAssemblyHeader)
-            {
-                foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
-                {
-                    twHeader.WriteLine("#include <{0}>", fileName);
-                }
-                twHeader.SplitLine();
-            }
-
-            twHeader.WriteLine("#ifdef __cplusplus");
-            twHeader.WriteLine("extern \"C\" {");
-            twHeader.WriteLine("#endif");
-            twHeader.SplitLine();
-
-            // All types exclude privates
-            PrototypeWriter.ConvertToPrototypes(
-                twHeader,
-                prepared.Types,
-                type => type.IsCLanguagePublicScope,
-                field => field.IsCLanguagePublicScope,
-                method => method.IsCLanguagePublicScope &&
-                    prepared.Functions.ContainsKey(method));
-
-            twHeader.WriteLine("#ifdef __cplusplus");
-            twHeader.WriteLine("}");
-            twHeader.WriteLine("#endif");
-            twHeader.SplitLine();
-
-            twHeader.WriteLine("#endif");
-            twHeader.SplitLine();
-        }
-
-        public static void WriteHeader(
-            CodeTextWriter twHeader,
-            TranslateContext translateContext,
-            PreparedInformations prepared)
-        {
-            InternalWriteHeader(
-                twHeader, translateContext, prepared, true);
-        }
-
-        internal static void InternalWriteSourceCode(
-            CodeTextWriter twSource,
-            TranslateContext translateContext,
-            PreparedInformations prepared,
-            DebugInformationOptions debugInformationOption,
-            bool includeAssemblyHeader)
-        {
-            IExtractContextHost extractContext = translateContext;
-
-            foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
-            {
-                twSource.WriteLine("#include \"{0}\"", fileName);
-            }
-
-            foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
-            {
-                twSource.WriteLine("#include <{0}>", fileName);
-            }
-
-            if (includeAssemblyHeader)
-            {
-                twSource.WriteLine("#include \"{0}.h\"", extractContext.Assembly.Name);
-            }
-
-            twSource.SplitLine();
-
-            twSource.WriteLine("#ifdef __cplusplus");
-            twSource.WriteLine("extern \"C\" {");
-            twSource.WriteLine("#endif");
-            twSource.SplitLine();
-
-            WriteConstStrings(twSource, translateContext);
-            WriteDeclaredValues(twSource, translateContext);
-
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// [9-2] File scope prototypes:");
-            twSource.SplitLine();
-
-            // All types exclude publics and internals (for file scope prototypes)
-            PrototypeWriter.ConvertToPrototypes(
-                twSource,
-                prepared.Types,
-                type => type.IsCLanguageLinkageScope || type.IsCLanguageFileScope,
-                field => field.IsCLanguageLinkageScope || field.IsCLanguageFileScope,    // TODO: scope calculation (related packaging)
-                method => (method.IsCLanguageLinkageScope || method.IsCLanguageFileScope) &&
-                    prepared.Functions.ContainsKey(method));
-
-            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            twSource.WriteLine("// [9-3] Static field instances:");
-            twSource.SplitLine();
-
-            foreach (var type in prepared.Types.
-                Where(type => !type.IsEnum))
-            {
-                // All static fields
-                foreach (var field in type.Fields.
-                    Where(field => field.IsStatic))
-                {
-                    if (field.NativeValue == null)
-                    {
-                        twSource.WriteLine(
-                            "{0};",
-                            field.GetCLanguageStaticPrototype(true));
-                    }
-                }
-                twSource.SplitLine();
-            }
-
-            foreach (var type in prepared.Types)
-            {
-                twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                twSource.WriteLine("// [9-4] Type: {0}", type.FriendlyName);
-                twSource.SplitLine();
-
-                // All methods and constructor exclude type initializer
-                foreach (var method in type.DeclaredMethods.
-                    Where(method => prepared.Functions.ContainsKey(method)))
-                {
-                    FunctionWriter.InternalConvertFromMethod(
-                        twSource,
-                        extractContext,
-                        prepared,
-                        method,
-                        debugInformationOption);
-                }
-
-                if (type.IsClass || type.IsValueType)
-                {
-                    TypeHelperWriter.InternalConvertTypeHelper(
-                        twSource,
-                        type);
-                }
-                else if (type.IsInterface)
-                {
-                    TypeHelperWriter.InternalConvertTypeHelperForInterface(
-                        twSource,
-                        type);
-                }
-            }
-
-            twSource.SplitLine();
-
-            twSource.WriteLine("#ifdef __cplusplus");
-            twSource.WriteLine("}");
-            twSource.WriteLine("#endif");
-            twSource.SplitLine();
-        }
-
-        public static void WriteSourceCode(
-            CodeTextWriter twSource,
-            TranslateContext translateContext,
-            PreparedInformations prepared,
-            DebugInformationOptions debugInformationOption = DebugInformationOptions.Full)
-        {
-            InternalWriteSourceCode(
-                twSource, translateContext, prepared, debugInformationOption, true);
-        }
-
-        ///////////////////////////////////////////////////////////////
-
-        private static void WriteConstStrings(
-            CodeTextWriter twSource,
-            TranslateContext translateContext)
-        {
-            IExtractContext extractContext = translateContext;
-
-            var constStrings = extractContext.
-                ExtractConstStrings().
-                ToArray();
-
-            if (constStrings.Length >= 1)
-            {
-                twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                twSource.WriteLine("// [9-1] Const strings:");
-                twSource.SplitLine();
-
-                foreach (var (symbolName, value) in extractContext.ExtractConstStrings())
-                {
-                    var expr = Utilities.GetCLanguageExpression(value);
-                    twSource.WriteLine(
-                        "IL2C_CONST_STRING({0}, {1});",
-                        symbolName,
-                        expr);
-                }
-
-                twSource.SplitLine();
-            }
-        }
-
-        private static void WriteDeclaredValues(
-            CodeTextWriter twSource,
-            TranslateContext translateContext)
-        {
-            IExtractContext extractContext = translateContext;
-
-            var declaredValues = extractContext.
-                ExtractDeclaredValues().
-                ToArray();
-
-            if (declaredValues.Length >= 1)
-            {
-                twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                twSource.WriteLine("// [12-1] Declared values:");
-
-                foreach (var information in extractContext.ExtractDeclaredValues())
-                {
-                    twSource.SplitLine();
-                    foreach (var declaredFields in information.DeclaredFields)
-                    {
-                        twSource.WriteLine(
-                            "// {0}",
-                            declaredFields.FriendlyName);
-                    }
-
-                    var targetType = (information.HintTypes.Length == 1) ?
-                        information.HintTypes[0] :
-                        extractContext.MetadataContext.ByteType.MakeArray();
-                    Debug.Assert(targetType.IsArray);
-
-                    var elementType = targetType.ElementType.ResolveToRuntimeType();
-                    var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
-
-                    var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
-                    var expr = Utilities.GetCLanguageExpression(values);
-                    twSource.WriteLine(
-                        "static const {0} =",
-                        lhs);
-                    using (var _ = twSource.Shift())
-                    {
-                        twSource.WriteLine(
-                            "{0};",
-                            expr);
-                    }
-                }
-
-                twSource.SplitLine();
-            }
+            File,
+            Linkage,
+            Public
         }
 
         private static void InternalWriteHeader(
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
-            bool includeAssemblyHeader)
+            MemberScopes scope)
         {
             IExtractContext extractContext = translateContext;
-            var assemblyName = translateContext.Assembly.MangledName;
+            var assemblyName = translateContext.Assembly.Name;
+
+            var fieldPredict = (scope == MemberScopes.Public) ?
+                new Func<IFieldInformation, bool>(field => field.IsCLanguagePublicScope) :
+                new Func<IFieldInformation, bool>(field => field.IsCLanguageLinkageScope);
+            var methodPredict = (scope == MemberScopes.Public) ?
+                new Func<IMethodInformation, bool>(method => method.IsCLanguagePublicScope && prepared.Functions.ContainsKey(method)) :
+                new Func<IMethodInformation, bool>(method => method.IsCLanguageLinkageScope && prepared.Functions.ContainsKey(method));
 
             foreach (var g in prepared.Types.GroupBy(type => type.ScopeName))
             {
                 using (var _ = storage.EnterScope(g.Key))
                 {
-                    foreach (var type in g.
-                        Where(type => type.IsCLanguagePublicScope || type.IsCLanguageLinkageScope))
+                    var typeExpr = (scope == MemberScopes.Public) ?
+                        g.Where(type => type.IsCLanguagePublicScope) :
+                        g.Where(type => type.IsCLanguageLinkageScope);
+                    foreach (var type in typeExpr)
                     {
                         using (var twHeader = storage.CreateHeaderWriter(type.Name))
                         {
+                            var assemblyMangledName = Utilities.GetMangledName(assemblyName);
                             var scopeName = Utilities.GetMangledName(type.ScopeName);
 
-                            twHeader.WriteLine("#ifndef __{0}_{1}_{2}_H__", assemblyName, scopeName, type.MangledName);
-                            twHeader.WriteLine("#define __{0}_{1}_{2}_H__", assemblyName, scopeName, type.MangledName);
+                            twHeader.WriteLine("#ifndef __{0}_{1}_{2}_H__", assemblyMangledName, scopeName, type.MangledName);
+                            twHeader.WriteLine("#define __{0}_{1}_{2}_H__", assemblyMangledName, scopeName, type.MangledName);
                             twHeader.SplitLine();
                             twHeader.WriteLine("#pragma once");
                             twHeader.SplitLine();
-                            twHeader.WriteLine("#include <il2c.h>");
+                            twHeader.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
                             twHeader.SplitLine();
 
-                            if (includeAssemblyHeader)
+                            twHeader.WriteLine("#include <{0}.h>", assemblyName);
+                            if (scope != MemberScopes.Public)
                             {
-                                foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
-                                {
-                                    twHeader.WriteLine("#include <{0}>", fileName);
-                                }
-                                twHeader.SplitLine();
+                                twHeader.WriteLine("#include <{0}_internal.h>", assemblyName);
                             }
+                            twHeader.SplitLine();
+
+                            foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
+                            {
+                                twHeader.WriteLine("#include <{0}>", fileName);
+                            }
+                            twHeader.SplitLine();
+
+                            foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
+                            {
+                                twHeader.WriteLine("#include \"{0}\"", fileName);
+                            }
+                            twHeader.SplitLine();
+
+                            foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
+                            {
+                                twHeader.WriteLine("#include <{0}>", fileName);
+                            }
+                            twHeader.SplitLine();
 
                             twHeader.WriteLine("#ifdef __cplusplus");
                             twHeader.WriteLine("extern \"C\" {");
@@ -322,9 +97,8 @@ namespace IL2C
                             PrototypeWriter.ConvertToPrototype(
                                 twHeader,
                                 type,
-                                field => field.IsCLanguagePublicScope,
-                                method => method.IsCLanguagePublicScope &&
-                                    prepared.Functions.ContainsKey(method));
+                                fieldPredict,
+                                methodPredict);
 
                             twHeader.WriteLine("#ifdef __cplusplus");
                             twHeader.WriteLine("}");
@@ -344,36 +118,189 @@ namespace IL2C
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
-            string fileName,
-            Func<ITypeInformation, bool> predict,
-            Func<ITypeInformation, string> prefixName)
+            string assemblyName,
+            MemberScopes scope)
         {
-            // Write assembly level common public header.
-            using (var twHeader = storage.CreateHeaderWriter(fileName))
+            IExtractContext extractContext = translateContext;
+
+            var an = (scope == MemberScopes.Public) ? assemblyName : (assemblyName + "_internal");
+
+            using (var twHeader = storage.CreateHeaderWriter(an))
             {
-                twHeader.WriteLine("#ifndef __{0}_H__", fileName);
-                twHeader.WriteLine("#define __{0}_H__", fileName);
+                var assemblyMangledName = Utilities.GetMangledName(an);
+
+                twHeader.WriteLine("#ifndef __{0}_H__", assemblyMangledName);
+                twHeader.WriteLine("#define __{0}_H__", assemblyMangledName);
                 twHeader.SplitLine();
                 twHeader.WriteLine("#pragma once");
                 twHeader.SplitLine();
+                twHeader.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                twHeader.SplitLine();
+                twHeader.WriteLine("#include <il2c.h>");
+                twHeader.SplitLine();
 
-                foreach (var type in prepared.Types.Where(predict))
+                var expr = (scope == MemberScopes.Public) ?
+                    prepared.Types.Where(type => type.IsCLanguagePublicScope) :
+                    prepared.Types.Where(type => type.IsCLanguageLinkageScope);
+
+                foreach (var type in expr)
                 {
                     twHeader.WriteLine(
-                        "#include <{0}/{1}.h>",
-                        prefixName(type),
+                        "#include \"{0}/{1}/{2}.h\"",
+                        assemblyName,
+                        Utilities.GetCLanguageScopedPath(type.ScopeName),
                         type.Name);
                 }
 
                 twHeader.SplitLine();
 
-                // TODO:split headers
-                WriteConstStrings(twHeader, translateContext);
-                WriteDeclaredValues(twHeader, translateContext);
+                if (scope != MemberScopes.Public)
+                {
+                    var constStrings = extractContext.
+                        ExtractConstStrings().
+                        ToArray();
+
+                    if (constStrings.Length >= 1)
+                    {
+                        twHeader.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                        twHeader.WriteLine("// [9-1-1] Const strings:");
+                        twHeader.SplitLine();
+
+                        foreach (var (symbolName, _) in extractContext.ExtractConstStrings())
+                        {
+                            twHeader.WriteLine(
+                                "System_String* const {0};",
+                                symbolName);
+                        }
+
+                        twHeader.SplitLine();
+                    }
+
+                    var declaredValues = extractContext.
+                        ExtractDeclaredValues().
+                        ToArray();
+
+                    if (declaredValues.Length >= 1)
+                    {
+                        twHeader.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                        twHeader.WriteLine("// [12-1-1] Declared values:");
+                        twHeader.SplitLine();
+
+                        foreach (var information in extractContext.ExtractDeclaredValues())
+                        {
+                            foreach (var declaredFields in information.DeclaredFields)
+                            {
+                                twHeader.WriteLine(
+                                    "// {0}",
+                                    declaredFields.FriendlyName);
+                            }
+
+                            var targetType = (information.HintTypes.Length == 1) ?
+                                information.HintTypes[0] :
+                                extractContext.MetadataContext.ByteType.MakeArray();
+                            Debug.Assert(targetType.IsArray);
+
+                            var elementType = targetType.ElementType.ResolveToRuntimeType();
+                            var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
+
+                            var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
+                            twHeader.WriteLine(
+                                "extern const {0};",
+                                lhs);
+                        }
+
+                        twHeader.SplitLine();
+                    }
+                }
 
                 twHeader.WriteLine("#endif");
-                twHeader.SplitLine();
                 twHeader.Flush();
+            }
+        }
+
+        private static string InternalWriteCommonSource(
+            CodeTextStorage storage,
+            TranslateContext translateContext,
+            PreparedInformations prepared,
+            string assemblyName)
+        {
+            IExtractContext extractContext = translateContext;
+
+            using (var twSource = storage.CreateSourceCodeWriter(assemblyName + "_internal"))
+            {
+                var assemblyMangledName = Utilities.GetMangledName(assemblyName);
+
+                twSource.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                twSource.SplitLine();
+
+                twSource.WriteLine("#include <{0}.h>", assemblyName);
+                twSource.WriteLine("#include <{0}_internal.h>", assemblyName);
+                twSource.SplitLine();
+
+                var constStrings = extractContext.
+                    ExtractConstStrings().
+                    ToArray();
+                if (constStrings.Length >= 1)
+                {
+                    twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    twSource.WriteLine("// [9-1-2] Const strings:");
+                    twSource.SplitLine();
+
+                    foreach (var (symbolName, value) in extractContext.ExtractConstStrings())
+                    {
+                        twSource.WriteLine(
+                            "IL2C_CONST_STRING({0}, {1});",
+                            symbolName,
+                            Utilities.GetCLanguageExpression(value));
+                    }
+
+                    twSource.SplitLine();
+                }
+
+                var declaredValues = extractContext.
+                    ExtractDeclaredValues().
+                    ToArray();
+                if (declaredValues.Length >= 1)
+                {
+                    twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    twSource.WriteLine("// [12-1-2] Declared values:");
+                    twSource.SplitLine();
+
+                    foreach (var information in extractContext.ExtractDeclaredValues())
+                    {
+                        foreach (var declaredFields in information.DeclaredFields)
+                        {
+                            twSource.WriteLine(
+                                "// {0}",
+                                declaredFields.FriendlyName);
+                        }
+
+                        var targetType = (information.HintTypes.Length == 1) ?
+                            information.HintTypes[0] :
+                            extractContext.MetadataContext.ByteType.MakeArray();
+                        Debug.Assert(targetType.IsArray);
+
+                        var elementType = targetType.ElementType.ResolveToRuntimeType();
+                        var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
+
+                        var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
+                        twSource.WriteLine(
+                            "const {0} =",
+                            lhs);
+                        using (var _ = twSource.Shift())
+                        {
+                            twSource.WriteLine(
+                                "{0};",
+                                Utilities.GetCLanguageExpression(values));
+                        }
+                    }
+
+                    twSource.SplitLine();
+                }
+
+                twSource.Flush();
+
+                return ((CodeTextStorage.InternalCodeTextWriter)twSource).Path;
             }
         }
 
@@ -382,44 +309,41 @@ namespace IL2C
             TranslateContext translateContext,
             PreparedInformations prepared)
         {
-            var assemblyFileName = translateContext.Assembly.Name;
+            var assemblyName = translateContext.Assembly.Name;
 
             // Write assembly level common public header.
             InternalWriteCommonHeader(
                 storage,
                 translateContext,
                 prepared,
-                assemblyFileName,
-                type => type.IsCLanguagePublicScope,
-                type => assemblyFileName + "/" + Utilities.GetScopedPath(type.ScopeName));
+                assemblyName,
+                MemberScopes.Public);
 
-            using (var _ = storage.EnterScope(assemblyFileName))
+            using (var _ = storage.EnterScope(assemblyName, false))
             {
-                // Write assembly level common internal header.
-                InternalWriteCommonHeader(
+                // Write public headers.
+                InternalWriteHeader(
                     storage,
                     translateContext,
                     prepared,
-                    assemblyFileName + "_internal",
-                    type => type.IsCLanguageLinkageScope,
-                    type => Utilities.GetScopedPath(type.ScopeName));
-
-                InternalWriteHeader(storage, translateContext, prepared, true);
+                    MemberScopes.Public);
             }
         }
 
-        private static void InternalWriteSourceCode(
+        private static string[] InternalWriteSourceCode(
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
-            DebugInformationOptions debugInformationOption,
-            bool includeAssemblyHeader)
+            DebugInformationOptions debugInformationOption)
         {
             IExtractContextHost extractContext = translateContext;
+            var assemblyName = extractContext.Assembly.Name;
 
             var typesByDeclaring = prepared.Types.
                 GroupBy(type => type.DeclaringType ?? type).
                 ToDictionary(g => g.Key, g => g.OrderBy(type => type.UniqueName).ToArray());
+
+            var sourceFiles = new List<string>();
 
             foreach (var targetType in prepared.Types.
                 Where(type => type.DeclaringType == null))
@@ -428,22 +352,10 @@ namespace IL2C
                 {
                     using (var twSource = storage.CreateSourceCodeWriter(targetType.Name))
                     {
-                        foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
-                        {
-                            twSource.WriteLine("#include \"{0}\"", fileName);
-                        }
-
-                        foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
-                        {
-                            twSource.WriteLine("#include <{0}>", fileName);
-                        }
-
-                        if (includeAssemblyHeader)
-                        {
-                            twSource.WriteLine("#include <{0}.h>", extractContext.Assembly.Name);
-                            twSource.WriteLine("#include <{0}/{0}_internal.h>", extractContext.Assembly.Name);
-                        }
-
+                        twSource.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                        twSource.SplitLine();
+                        twSource.WriteLine("#include <{0}.h>", assemblyName);
+                        twSource.WriteLine("#include <{0}_internal.h>", assemblyName);
                         twSource.SplitLine();
 
                         twSource.WriteLine("#ifdef __cplusplus");
@@ -457,13 +369,15 @@ namespace IL2C
                             twSource.WriteLine("// [9-2] File scope prototypes:");
                             twSource.SplitLine();
 
-                            // All types exclude publics and internals (for file scope prototypes)
-                            PrototypeWriter.ConvertToPrototype(
-                                twSource,
-                                type,
-                                field => field.IsCLanguageLinkageScope || field.IsCLanguageFileScope,    // TODO: scope calculation (related packaging)
-                                method => (method.IsCLanguageLinkageScope || method.IsCLanguageFileScope) &&
-                                    prepared.Functions.ContainsKey(method));
+                            // Embeds all types exclude publics and internals (for file scope prototypes)
+                            if (type.IsCLanguageFileScope)
+                            {
+                                PrototypeWriter.ConvertToPrototype(
+                                    twSource,
+                                    type,
+                                    field => field.IsCLanguageFileScope,
+                                    method => method.IsCLanguageFileScope && prepared.Functions.ContainsKey(method));
+                            }
 
                             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
                             twSource.WriteLine("// [9-3] Static field instances:");
@@ -523,28 +437,60 @@ namespace IL2C
                         twSource.SplitLine();
 
                         twSource.Flush();
+
+                        sourceFiles.Add(((CodeTextStorage.InternalCodeTextWriter)twSource).Path);
                     }
                 }
             }
+
+            return sourceFiles.ToArray();
         }
 
-        public static void WriteSourceCode(
+        public static string[] WriteSourceCode(
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
             DebugInformationOptions debugInformationOption)
         {
-            var assemblyFileName = translateContext.Assembly.Name;
+            var sourceFilePaths = new List<string>();
 
-            using (var _ = storage.EnterScope(assemblyFileName))
-            {
-                InternalWriteSourceCode(
+            var assemblyName = translateContext.Assembly.Name;
+
+            // Write assembly level common internal header.
+            InternalWriteCommonHeader(
+                storage,
+                translateContext,
+                prepared,
+                assemblyName,
+                MemberScopes.Linkage);
+
+            // Write assembly level common internal source code.
+            sourceFilePaths.Add(
+                InternalWriteCommonSource(
                     storage,
                     translateContext,
                     prepared,
-                    debugInformationOption,
-                    true);
+                    assemblyName));
+
+            using (var _ = storage.EnterScope(assemblyName, false))
+            {
+                // Write internal headers.
+                InternalWriteHeader(
+                    storage,
+                    translateContext,
+                    prepared,
+                    MemberScopes.Linkage);
+
+                // Write source codes.
+                sourceFilePaths.AddRange(
+                    InternalWriteSourceCode(
+                        storage,
+                        translateContext,
+                        prepared,
+                        debugInformationOption));
             }
+
+            return sourceFilePaths.ToArray();
         }
     }
 }

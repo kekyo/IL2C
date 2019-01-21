@@ -6,7 +6,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace IL2C
@@ -244,7 +243,7 @@ namespace IL2C
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePaths.Last()) + ".exe");
             var includePath = Path.GetFullPath(Path.Combine(gccBasePath, "..", "..", "..", "..", "..", "..", "IL2C.Runtime"));
             var libPath = Path.GetFullPath(Path.Combine(gccBasePath, ".."));
-            var optimizeFlag = optimize ? "-Ofast -flto" : "-O0";
+            var optimizeFlag = optimize ? "-Ofast -ffloat-store" : "-O0 -ffloat-store";
             var disableObjDump = optimize ? "rem " : string.Empty;
 
             if (!Directory.Exists(outPath))

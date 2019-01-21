@@ -53,11 +53,18 @@ namespace IL2C
         private static string GetCLanguageCompareExpression(
             ITypeInformation type, string expectedSymbolName, string actualSymbolName)
         {
-            return type.IsStringType ?
-                string.Format(
-                    "((il2c_c_str({0}) == NULL) && (il2c_c_str({1}) == NULL)) || \r\n        ((il2c_c_str({0}) != NULL) && (il2c_c_str({1}) != NULL) && (wcscmp(il2c_c_str({0}), il2c_c_str({1})) == 0))",
-                    expectedSymbolName,
-                    actualSymbolName) :
+            return
+                type.IsStringType ?
+                    string.Format(
+                        "((il2c_c_str({0}) == NULL) && (il2c_c_str({1}) == NULL)) || \r\n        ((il2c_c_str({0}) != NULL) && (il2c_c_str({1}) != NULL) && (wcscmp(il2c_c_str({0}), il2c_c_str({1})) == 0))",
+                        expectedSymbolName,
+                        actualSymbolName) :
+                // HACK: gcc4 causes difference larger than DBL_EPSILON at float32 div float64 calculation.
+                (type.IsDoubleType || type.IsSingleType) ?
+                    string.Format(
+                        "fabs({0} - {1}) < FLT_EPSILON",
+                        expectedSymbolName,
+                        actualSymbolName) :
                 string.Format(
                     "{0} == {1}",
                     expectedSymbolName,
@@ -171,34 +178,27 @@ namespace IL2C
                 .ToArray();
 
             // Step 1-4: Translate caseInfo.Method bodies.
-            var header = CodeTextWriter.Create(new StringWriter(), "    ");
-            AssemblyWriter.InternalWriteHeader(
-                header, translateContext, prepared, false);
-            header.Flush();
-
-            var body = CodeTextWriter.Create(new StringWriter(), "    ");
-            AssemblyWriter.InternalWriteSourceCode(
-                body, translateContext, prepared, DebugInformationOptions.CommentOnly, false);
-            body.Flush();
-
-            // Step 1-5: Write Visual C++ project file and Visual Studio Code launch config from template.
-            //     Note: It's only debugging purpose. The test doesn't use.
-            var translatedPath = Path.GetFullPath(
+            var translatedPath =
                 Path.Combine(
                     Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
                     caseInfo.CategoryName,
                     caseInfo.Id,
-                    caseInfo.UniqueName));
+                    caseInfo.UniqueName);
 
-            var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
-            await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj");
+            var logw = new StringWriter();
+            var storage = new CodeTextStorage(logw, translatedPath, false, "    ");
 
-            TestContext.AddTestAttachment(vcxprojTemplatePath, "Generated VC++ project");
+            AssemblyWriter.WriteHeader(
+                storage,
+                translateContext,
+                prepared);
+            var sourceFiles = AssemblyWriter.WriteSourceCode(
+                storage,
+                translateContext,
+                prepared,
+                DebugInformationOptions.CommentOnly);
 
-            var launchTemplatePath = Path.Combine(translatedPath, ".vscode", "launch.json");
-            await TestUtilities.CopyResourceToTextFileAsync(launchTemplatePath, "launch.json");
-
-            // Step 1-6: Write source code into a file from template.
+            // Step 1-5: Write source code into a file from template.
             var expectedType = targetMethod.ReturnType;
 
             var sourceCodeStream = new MemoryStream();
@@ -285,7 +285,6 @@ namespace IL2C
             {
                 { "testName", targetMethod.FriendlyName},
                 { "type", targetMethod.ReturnType.CLanguageTypeName},
-                { "body", body.Parent.ToString() },
                 { "constants", string.Join(" ", constants.
                     Select(entry => string.Format("{0} {1} = {2};",
                         (entry.ExpressionType != null) ? Utilities.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
@@ -320,14 +319,21 @@ namespace IL2C
                 { "format", GetCLanguagePrintFormatFromType(targetMethod.ReturnType)},
                 { "expectedExpression", GetCLanguagePrintArgumentExpression(expectedType, expectedSymbolName)},
                 { "actualExpression", GetCLanguagePrintArgumentExpression(expectedType, actualSymbolName)},
+                { "sourcePath", translateContext.Assembly.Name + "_bundle.c" }
             };
 
-            var sourcePath = Path.Combine(translatedPath, "test.c");
-            var headerPath = Path.Combine(translatedPath, "test.h");
+            // Step 1-6: Write Visual C++ project file and Visual Studio Code launch config from template.
+            //     Note: It's only debugging purpose. The test doesn't use.
+            var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
+            await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj", replaceValues);
 
-            await Task.WhenAll(
-                TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues),
-                TestUtilities.WriteTextFileAsync(headerPath, header.Parent.ToString()));
+            TestContext.AddTestAttachment(vcxprojTemplatePath, "Generated VC++ project");
+
+            var launchTemplatePath = Path.Combine(translatedPath, ".vscode", "launch.json");
+            await TestUtilities.CopyResourceToTextFileAsync(launchTemplatePath, "launch.json", replaceValues);
+
+            var sourcePath = Path.Combine(translatedPath, "test.c");
+            await TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues);
 
             ///////////////////////////////////////////////
             // Step 2: Test and verify result by real IL code at this runtime.
@@ -362,9 +368,15 @@ namespace IL2C
             try
             {
 #if DEBUG
-                var executedResult = await GccDriver.CompileAndRunAsync(false, sourcePath);
+                var executedResult = await GccDriver.CompileAndRunAsync(
+                    false,
+                    sourcePath,
+                    new string[0]);
 #else
-                var executedResult = await GccDriver.CompileAndRunAsync(true, sourcePath);
+                var executedResult = await GccDriver.CompileAndRunAsync(
+                    true,
+                    sourcePath,
+                    new string[0]);
 #endif
 
                 sanitized = executedResult.Trim(' ', '\r', '\n');

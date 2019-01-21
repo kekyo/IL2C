@@ -37,11 +37,12 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="Generated\MT3620Blink.c" />
     <ClCompile Include="main.c" />
-    <UpToDateCheckInput Include="app_manifest.json" />
-    <ClInclude Include="Generated\MT3620Blink.h" />
+    <ClCompile Include="src\**\*.c" />
+    <ClInclude Include="src\**\*.h" />
+    <ClInclude Include="include\**\*.h" />
     <ClInclude Include="mt3620_rdb.h" />
+    <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IL2C.Runtime\IL2C.Runtime.vcxproj">
@@ -53,7 +54,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalOptions>-fdata-sections -ffunction-sections -Wno-unused-variable -Wno-return-type -Wno-discarded-qualifiers -Werror=implicit-function-declaration -Wno-unused-but-set-variable %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(SysRootIncludePath);$(ProjectDir)..\..\..\IL2C.Runtime;.;Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SysRootIncludePath);$(ProjectDir)..\..\..\IL2C.Runtime;.;include;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <LibraryDependencies>applibs;pthread;gcc_s;c</LibraryDependencies>

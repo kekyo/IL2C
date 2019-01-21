@@ -20,7 +20,9 @@
     </ItemGroup>
     <ItemGroup>
         <ClCompile Include="test.c" />
-        <ClInclude Include="test.h" />
+        <ClInclude Include="IL2C.Core.Test.Target_internal.c" />
+        <ClInclude Include="IL2C.Core.Test.Target/**/*.c" />
+        <ClInclude Include="IL2C.Core.Test.Target/**/*.h" />
     </ItemGroup>
     <PropertyGroup Label="Globals">
         <VCProjectVersion>15.0</VCProjectVersion>

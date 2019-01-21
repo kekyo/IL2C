@@ -37,12 +37,15 @@ namespace IL2C.ILConverters
                     decodeContext.PrepareContext.MetadataContext.RuntimeFieldHandle,
                     declaredValueName);
 
+                // Register referenced field type (at the file scope).
+                decodeContext.PrepareContext.RegisterType(field.FieldType, decodeContext.Method);
+
                 // Store into RuntimeFieldHandle structure.
                 return extractContext => new[] {
                     string.Format(
-                        "{0}.size__ = sizeof({1})",
+                        "{0}.size__ = {1}",
                         extractContext.GetSymbolName(symbol),
-                        declaredValueName),
+                        resourceData.Length),
                     string.Format(
                         "{0}.field__ = {1}",
                         extractContext.GetSymbolName(symbol),

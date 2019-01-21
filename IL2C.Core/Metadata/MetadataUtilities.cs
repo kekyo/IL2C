@@ -7,6 +7,13 @@ using Mono.Cecil;
 
 namespace IL2C.Metadata
 {
+    internal enum MemberScopes
+    {
+        File,
+        Linkage,
+        Public
+    }
+
     internal static class MetadataUtilities
     {
         public static string GetLabelName(int offset) =>
@@ -14,19 +21,65 @@ namespace IL2C.Metadata
 
         public static string GetFriendlyName(this MemberReference member)
         {
-            var declaringTypes = member.DeclaringType
-                .Traverse(current => current.DeclaringType)
-                .Reverse()
-                .ToArray();
+            var declaringTypes = member.DeclaringType.
+                Traverse(current => current.DeclaringType).
+                Reverse().
+                ToArray();
             var namespaceName = declaringTypes.FirstOrDefault()
                 ?.Namespace
                 ?? (member as TypeReference)?.Namespace;
 
             return string.Join(
                 ".",
-                new[] { namespaceName }
-                    .Concat(declaringTypes.Select(type => type.Name))
-                    .Concat(new[] { member.Name }));
+                new[] { namespaceName }.
+                    Concat(declaringTypes.Select(type => type.Name)).
+                    Concat(new[] { member.Name }));
+        }
+
+        public static ITypeInformation UnwrapCoveredType(this ITypeInformation type)
+        {
+            if (type.IsByReference || type.IsPointer)
+            {
+                return type.ElementType;
+            }
+            if (type.IsArray)
+            {
+                return type.ElementType.UnwrapCoveredType();
+            }
+            return type;
+        }
+
+        public static bool IsScoped(this IMemberInformation member, MemberScopes scope)
+        {
+            switch (scope)
+            {
+                case MemberScopes.Public:
+                    return member.IsCLanguagePublicScope;
+                case MemberScopes.Linkage:
+                    return member.IsCLanguageLinkageScope;
+                case MemberScopes.File:
+                    return member.IsCLanguageFileScope;
+            }
+            Debug.Assert(false);
+            return false;
+        }
+
+        public static MemberScopes GetScope(this IMemberInformation member)
+        {
+            if (member.IsCLanguagePublicScope)
+            {
+                return MemberScopes.Public;
+            }
+            if (member.IsCLanguageLinkageScope)
+            {
+                return MemberScopes.Linkage;
+            }
+            if (member.IsCLanguageFileScope)
+            {
+                return MemberScopes.File;
+            }
+            Debug.Assert(false);
+            return MemberScopes.File;
         }
 
         #region MethodSignatureTypeComparer

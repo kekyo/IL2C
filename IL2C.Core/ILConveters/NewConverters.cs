@@ -27,6 +27,9 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
+            // Register target type (at the file scope).
+            decodeContext.PrepareContext.RegisterType(type, decodeContext.Method);
+
             return extractContext =>
             {
                 // IL2C can't understand the native type size.
@@ -90,6 +93,9 @@ namespace IL2C.ILConverters
             Debug.Assert(thisSymbol != null);
 
             var codeInformation = decodeContext.CurrentCode;
+
+            // Register target constructor declaring type (at the file scope).
+            decodeContext.PrepareContext.RegisterType(type, decodeContext.Method);
 
             // Specialized the delegate type:
             //   We can use for instantiate the delegate instance with "il2c_new_delegate()."

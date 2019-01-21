@@ -51,6 +51,12 @@ namespace IL2C
             return sb.ToString();
         }
 
+        public static string GetCLanguageScopedPath(IEnumerable<string> scopeNames) =>
+            string.Join("/", scopeNames.SelectMany(sn => sn.Split('.')));
+
+        public static string GetCLanguageScopedPath(params string[] scopeNames) =>
+            GetCLanguageScopedPath((IEnumerable<string>)scopeNames);
+
         public static string GetCLanguageTypeName(
             Type type, string symbolName = null, bool cArrayExpression = false)
         {
@@ -537,6 +543,7 @@ namespace IL2C
             return temp.ToArray(elementType);
         }
 
+        #region GetGivenParameterDeclaration
         public struct RightExpressionGivenParameter
         {
             public readonly ITypeInformation TargetType;
@@ -582,6 +589,7 @@ namespace IL2C
                 return rightExpression;
             }));
         }
+        #endregion
 
         #region Linq
         public static IEnumerable<T> RuntimeCast<T>(this IEnumerable enumerable)
@@ -675,10 +683,8 @@ namespace IL2C
         }
         #endregion
 
-        public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U))
-        {
-            return dict.TryGetValue(key, out var value) ? value : defaultValue;
-        }
+        public static U UnsafeGetValue<T, U>(this IReadOnlyDictionary<T, U> dict, T key, U defaultValue = default(U)) =>
+            dict.TryGetValue(key, out var value) ? value : defaultValue;
 
         public static U GetOrAdd<T, U>(this Dictionary<T, U> dict, T key, U value)
         {
@@ -691,6 +697,7 @@ namespace IL2C
             return v;
         }
 
+        #region LooseTypeKindComparer
         private sealed class LooseTypeKindComparerImpl
             : IEqualityComparer<object>
         {
@@ -743,5 +750,6 @@ namespace IL2C
         }
 
         public static readonly IEqualityComparer<object> LooseTypeKindComparer = new LooseTypeKindComparerImpl();
+        #endregion
     }
 }

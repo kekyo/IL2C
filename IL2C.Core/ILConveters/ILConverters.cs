@@ -44,8 +44,6 @@ namespace IL2C.ILConverters
             var si = decodeContext.PopStack();
             var returnType = decodeContext.Method.ReturnType;
 
-            decodeContext.PrepareContext.RegisterType(returnType);
-
             var codeInformation = decodeContext.CurrentCode;
 
             return extractContext =>

@@ -1,0 +1,102 @@
+﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+
+#include <MT3620Blink.h>
+#include <MT3620Blink_internal.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-2] File scope prototypes:
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-3] Static field instances:
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-4] Type: MT3620Blink.Interops
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.close(System.Int32 fd)
+
+int32_t MT3620Blink_Interops_close(int32_t fd)
+{
+    return close(fd);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.nanosleep(MT3620Blink.timespec& time, MT3620Blink.timespec& dummy)
+
+void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* time, MT3620Blink_timespec* dummy)
+{
+    nanosleep(time, dummy);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_OpenAsOutput(System.Int32 gpioId, MT3620Blink.GPIO_OutputMode_Type outputMode, MT3620Blink.GPIO_Value_Type initialValue)
+
+int32_t MT3620Blink_Interops_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue)
+{
+    return GPIO_OpenAsOutput(gpioId, outputMode, initialValue);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_SetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type value)
+
+int32_t MT3620Blink_Interops_GPIO_SetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type value)
+{
+    return GPIO_SetValue(gpioFd, value);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_OpenAsInput(System.Int32 gpioId)
+
+int32_t MT3620Blink_Interops_GPIO_OpenAsInput(int32_t gpioId)
+{
+    return GPIO_OpenAsInput(gpioId);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_GetValue(System.Int32 gpioFd, MT3620Blink.GPIO_Value_Type& value)
+
+int32_t MT3620Blink_Interops_GPIO_GetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type* value)
+{
+    return GPIO_GetValue(gpioFd, value);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.epoll_create1(System.Int32 flags)
+
+int32_t MT3620Blink_Interops_epoll_create1(int32_t flags)
+{
+    return epoll_create1(flags);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.epoll_ctl(System.Int32 epollfd, System.Int32 op, System.Int32 fd, MT3620Blink.epoll_event& ev)
+
+int32_t MT3620Blink_Interops_epoll_ctl(int32_t epollfd, int32_t op, int32_t fd, MT3620Blink_epoll_event* ev)
+{
+    return epoll_ctl(epollfd, op, fd, ev);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.epoll_wait(System.Int32 epollfd, MT3620Blink.epoll_event& ev, System.Int32 maxevents, System.Int32 timeout)
+
+int32_t MT3620Blink_Interops_epoll_wait(int32_t epollfd, MT3620Blink_epoll_event* ev, int32_t maxevents, int32_t timeout)
+{
+    return epoll_wait(epollfd, ev, maxevents, timeout);
+}
+
+//////////////////////
+// [7] Runtime helpers:
+
+// [7-10-1] VTable (Not defined, same as System.Object)
+
+// [7-8] Runtime type information
+IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Interops, "MT3620Blink.Interops", IL2C_TYPE_REFERENCE, sizeof(MT3620Blink_Interops), System_Object, 0, 0)
+IL2C_RUNTIME_TYPE_END();
+
+#ifdef __cplusplus
+}
+#endif

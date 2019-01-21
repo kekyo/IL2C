@@ -36,6 +36,9 @@ namespace IL2C.ILConverters
             var symbol = decodeContext.PushStack(
                 new BoxedValueTypeInformation(si.TargetType));
 
+            // Register target type (at the file scope).
+            decodeContext.PrepareContext.RegisterType(operand, decodeContext.Method);
+
             // NOTE: The IL2C strict type infers the evaluation stack.
             //   The unbox operator is handling by the pointer.
             //   So, we have to simulate implicitly conversion from little size value to large size value.

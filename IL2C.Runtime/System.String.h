@@ -64,7 +64,7 @@ typedef const struct
 #define IL2C_CONST_STRING(name, string_body) \
     static IL2C_CONST_STRING_DECL name##_CONST_STRING__ = { \
         NULL, il2c_typeof(System_String), /* GCMARK_CONST */ 2, &System_String_VTABLE__, string_body }; \
-    static System_String* const name = ((System_String*)&(name##_CONST_STRING__.vptr0__))
+    System_String* const name = ((System_String*)&(name##_CONST_STRING__.vptr0__))
 
 #ifdef __cplusplus
 }

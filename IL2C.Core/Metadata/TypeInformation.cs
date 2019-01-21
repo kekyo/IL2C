@@ -11,6 +11,8 @@ namespace IL2C.Metadata
 {
     public interface ITypeInformation : IMemberInformation
     {
+        string ScopeName { get; }
+
         bool IsPublic { get; }
         bool IsNestedPublic { get; }
         bool IsNestedFamily { get; }
@@ -132,6 +134,13 @@ namespace IL2C.Metadata
         }
 
         public override string MetadataTypeName => "Type";
+
+        public string ScopeName =>
+            string.Join(".", this.FriendlyName.
+                Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).
+                Reverse().
+                Skip(1).
+                Reverse());
 
         public override string MemberTypeName =>
             this.IsEnum ?

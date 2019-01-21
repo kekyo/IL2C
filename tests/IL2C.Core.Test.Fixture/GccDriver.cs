@@ -44,9 +44,6 @@ namespace IL2C
             "https://github.com/kekyo/IL2C/releases/download/cmake-3.12.3/cmake-3.12.3-win32-x86.zip",
         };
 
-        private static readonly string gccBasePath = Path.GetFullPath(Path.Combine(
-            Path.GetDirectoryName(typeof(GccDriver).Assembly.Location), "gcc"));
-
         private static async Task<(int, string)> ExecuteAsync(
             string workingPath, string[] searchPaths, string executablePath, params object[] args)
         {
@@ -142,7 +139,7 @@ namespace IL2C
             });
         }
 
-        private static async Task DownloadGccRequirementsAsync(string basePath)
+        public static async Task DownloadGccRequirementsAsync(string basePath)
         {
             try
             {
@@ -203,45 +200,17 @@ namespace IL2C
             }
         }
 
-        public static async Task SetupRequirementsAsync(bool optimize, params string[] includePaths)
-        {
-            if (!Directory.Exists(gccBasePath))
-            {
-                if (Directory.Exists(gccBasePath + ".tmp"))
-                {
-                    Directory.Move(gccBasePath + ".tmp", gccBasePath + ".tmp2");
-                    Directory.Delete(gccBasePath + ".tmp2", true);
-                }
-
-                await DownloadGccRequirementsAsync(gccBasePath + ".tmp");
-
-                Directory.Move(gccBasePath + ".tmp", gccBasePath);
-            }
-
-            var targetLibrary = Path.GetFullPath(Path.Combine(gccBasePath, "..", "libil2c.a"));
-            if (File.Exists(targetLibrary))
-            {
-                File.Delete(targetLibrary);
-            }
-
-            await CompileAsync(
-                "make_libil2c.bat",
-                optimize,
-                Path.GetFullPath(Path.Combine(gccBasePath, "..", "dummy.c")),
-                includePaths);
-        }
-
         public static async Task<string> DriveGccAsync(
+            string gccBasePath,
             Func<string, string, string, string, Task<string>> executeAsync,
             string scriptTemplateName,
-            bool optimize, string sourcePath, string[] includePaths)
+            bool optimize, string sourcePath, string includePath)
         {
             Debug.Assert(Directory.Exists(gccBasePath));
 
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
-            var includePath = Path.GetFullPath(Path.Combine(gccBasePath, "..", "..", "..", "..", "..", "..", "IL2C.Runtime"));
             var libPath = Path.GetFullPath(Path.Combine(gccBasePath, ".."));
             var optimizeFlag = optimize ? "-Ofast -ffloat-store" : "-O0 -ffloat-store";
             var disableObjDump = optimize ? "rem " : string.Empty;
@@ -303,9 +272,9 @@ namespace IL2C
         }
 
         public static Task<string> CompileAndRunAsync(
-            bool optimize, string sourcePath, string[] includePaths)
+            string gccBasePath, bool optimize, string sourcePath, string includePath)
         {
-            return DriveGccAsync(CompileAndRunAsync, "make.bat", optimize, sourcePath, includePaths);
+            return DriveGccAsync(gccBasePath, CompileAndRunAsync, "make.bat", optimize, sourcePath, includePath);
         }
 
         private static async Task<string> CompileAsync(
@@ -326,9 +295,9 @@ namespace IL2C
         }
 
         public static Task<string> CompileAsync(
-            string scriptTemplateName, bool optimize, string sourcePath, string[] includePaths)
+            string gccBasePath, string scriptTemplateName, bool optimize, string sourcePath, string includePath)
         {
-            return DriveGccAsync(CompileAsync, scriptTemplateName, optimize, sourcePath, includePaths);
+            return DriveGccAsync(gccBasePath, CompileAsync, scriptTemplateName, optimize, sourcePath, includePath);
         }
     }
 }

@@ -13,9 +13,9 @@ namespace IL2C
         public static Task OneTimeSetUpAsync()
         {
 #if DEBUG
-            return GccDriver.SetupRequirementsAsync(false);
+            return TestFramework.SetupRequirementsAsync(false);
 #else
-            return GccDriver.SetupRequirementsAsync(true);
+            return TestFramework.SetupRequirementsAsync(true);
 #endif
         }
     }

@@ -13,6 +13,11 @@ namespace IL2C
     public static class TestFramework
     {
         #region Test infrastructures
+        private static readonly string gccBasePath =
+            Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(typeof(GccDriver).Assembly.Location), "gcc4"));
+
         private static readonly string il2cRuntimePath =
             Path.GetFullPath(
                 Path.Combine(
@@ -369,14 +374,16 @@ namespace IL2C
             {
 #if DEBUG
                 var executedResult = await GccDriver.CompileAndRunAsync(
+                    gccBasePath,
                     false,
                     sourcePath,
-                    new string[0]);
+                    Path.Combine(il2cRuntimePath, "include"));
 #else
                 var executedResult = await GccDriver.CompileAndRunAsync(
+                    gccBasePath,
                     true,
                     sourcePath,
-                    new string[0]);
+                    Path.Combine(il2cRuntimePath, "include"));
 #endif
 
                 sanitized = executedResult.Trim(' ', '\r', '\n');
@@ -396,6 +403,35 @@ namespace IL2C
             // Step 4: Verify result.
 
             Assert.AreEqual("Success", sanitized);
+        }
+
+        public static async Task SetupRequirementsAsync(bool optimize, params string[] includePaths)
+        {
+            if (!Directory.Exists(gccBasePath))
+            {
+                if (Directory.Exists(gccBasePath + ".tmp"))
+                {
+                    Directory.Move(gccBasePath + ".tmp", gccBasePath + ".tmp2");
+                    Directory.Delete(gccBasePath + ".tmp2", true);
+                }
+
+                await GccDriver.DownloadGccRequirementsAsync(gccBasePath + ".tmp");
+
+                Directory.Move(gccBasePath + ".tmp", gccBasePath);
+            }
+
+            var targetLibrary = Path.GetFullPath(Path.Combine(gccBasePath, "..", "libil2c.a"));
+            if (File.Exists(targetLibrary))
+            {
+                File.Delete(targetLibrary);
+            }
+
+            await GccDriver.CompileAsync(
+                gccBasePath,
+                "make_libil2c.bat",
+                optimize,
+                Path.GetFullPath(Path.Combine(gccBasePath, "..", "dummy.c")),
+                Path.Combine(il2cRuntimePath, "include"));
         }
     }
 }

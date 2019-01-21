@@ -6,9 +6,9 @@ if exist out (
     rmdir /s /q out.tmp
 )
 mkdir out
-for %%c in ({includePath}\*.c) do (
+for /r {includePath}\..\src %%c in (*.c) do (
     rem echo Compile: %%~nc.c
-    gcc.exe -I {includePath} -save-temps=obj {optimizeFlag} -g -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias -o out\%%~nc.o -c %%c
+    gcc.exe -I {includePath}\..\src -I {includePath} -save-temps=obj {optimizeFlag} -g -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias -o out\%%~nc.o -c %%c
     if !errorlevel! neq 0 exit /b
 )
 rem echo Archive: libil2c.a

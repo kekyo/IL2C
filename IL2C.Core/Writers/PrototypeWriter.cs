@@ -168,7 +168,7 @@ namespace IL2C.Writers
         {
             // Sorted by the type assignable compatibility.
             // Because these types are maybe depending another (but same as the assembly) type.
-            var allTypes = TypeDependency.OrderBy(types);
+            var allTypes = types.OrderByDependant();
             var predictTypes = allTypes.Where(type => predictType(type)).ToArray();
 
             // Output prototypes.

@@ -14,9 +14,9 @@
 #include <sys/timerfd.h>
 #include <applibs/gpio.h>
 
+#include "MT3620Blink/MT3620Blink/Descriptor.h"
 #include "MT3620Blink/MT3620Blink/IEPollListener.h"
 #include "MT3620Blink/MT3620Blink/Application.h"
-#include "MT3620Blink/MT3620Blink/Descriptor.h"
 #include "MT3620Blink/MT3620Blink/Program.h"
 
 #endif

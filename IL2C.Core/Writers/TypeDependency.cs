@@ -74,7 +74,7 @@ namespace IL2C.Writers
             }
         }
 
-        public static ITypeInformation[] OrderBy(IEnumerable<ITypeInformation> types)
+        public static ITypeInformation[] OrderByDependant(this IEnumerable<ITypeInformation> types)
         {
             var context = new Context();
             var list = new LinkedList<ITypeInformation>();

@@ -14,16 +14,16 @@
 #include <sys/timerfd.h>
 #include <applibs/gpio.h>
 
+#include "MT3620Blink/MT3620Blink/GPIO_OutputMode_Type.h"
 #include "MT3620Blink/MT3620Blink/GpioInput.h"
 #include "MT3620Blink/MT3620Blink/GpioOutput.h"
 #include "MT3620Blink/MT3620Blink/timespec.h"
 #include "MT3620Blink/MT3620Blink/itimerspec.h"
-#include "MT3620Blink/MT3620Blink/GPIO_OutputMode_Type.h"
+#include "MT3620Blink/MT3620Blink/Timer.h"
 #include "MT3620Blink/MT3620Blink/GPIO_Value_Type.h"
 #include "MT3620Blink/MT3620Blink/epoll_data_t.h"
 #include "MT3620Blink/MT3620Blink/epoll_event.h"
 #include "MT3620Blink/MT3620Blink/Interops.h"
-#include "MT3620Blink/MT3620Blink/Timer.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-1-1] Const strings:

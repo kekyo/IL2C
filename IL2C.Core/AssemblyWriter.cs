@@ -26,10 +26,12 @@ namespace IL2C
         {
             foreach (var assembly in extractContext.EnumerateRegisteredTypes().
                 Where(entry => entry.Key == scope).
-                SelectMany(entry => entry.Value.Select(type => type.DeclaringModule.DeclaringAssembly)).
-                Where(assembly => !assembly.Equals(translateContext.Assembly)).
+                SelectMany(entry => entry.Value).
                 Distinct().
-                OrderBy(assembly => assembly.Name))
+                OrderByDependant().
+                Select(type => type.DeclaringModule.DeclaringAssembly).
+                Where(assembly => !assembly.Equals(translateContext.Assembly)).
+                Distinct())
             {
                 tw.WriteLine("#include <{0}.h>", assembly.Name);
             }
@@ -43,6 +45,8 @@ namespace IL2C
             ITypeInformation declaringType)
         {
             foreach (var assembly in extractContext.EnumerateRegisteredTypesByDeclaringType(declaringType).
+                Distinct().
+                OrderByDependant().
                 Select(type => type.DeclaringModule.DeclaringAssembly).
                 Where(assembly => !assembly.Equals(translateContext.Assembly)).
                 Distinct().
@@ -93,7 +97,7 @@ namespace IL2C
                     prepared.Types.Where(type => type.IsCLanguagePublicScope) :
                     prepared.Types.Where(type => type.IsCLanguageLinkageScope);
 
-                foreach (var type in expr)
+                foreach (var type in expr.OrderByDependant())
                 {
                     twHeader.WriteLine(
                         "#include \"{0}/{1}/{2}.h\"",
@@ -364,7 +368,7 @@ namespace IL2C
 
             var typesByDeclaring = prepared.Types.
                 GroupBy(type => type.DeclaringType ?? type).
-                ToDictionary(g => g.Key, g => g.OrderBy(type => type.UniqueName).ToArray());
+                ToDictionary(g => g.Key, g => g.OrderByDependant());
 
             var sourceFiles = new List<string>();
 
@@ -393,6 +397,7 @@ namespace IL2C
                         twSource.WriteLine("#endif");
                         twSource.SplitLine();
 
+                        // TODO: invalid sequence for multiple nested types.
                         foreach (var type in typesByDeclaring[targetType])
                         {
                             twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");

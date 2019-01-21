@@ -53,11 +53,18 @@ namespace IL2C
         private static string GetCLanguageCompareExpression(
             ITypeInformation type, string expectedSymbolName, string actualSymbolName)
         {
-            return type.IsStringType ?
-                string.Format(
-                    "((il2c_c_str({0}) == NULL) && (il2c_c_str({1}) == NULL)) || \r\n        ((il2c_c_str({0}) != NULL) && (il2c_c_str({1}) != NULL) && (wcscmp(il2c_c_str({0}), il2c_c_str({1})) == 0))",
-                    expectedSymbolName,
-                    actualSymbolName) :
+            return
+                type.IsStringType ?
+                    string.Format(
+                        "((il2c_c_str({0}) == NULL) && (il2c_c_str({1}) == NULL)) || \r\n        ((il2c_c_str({0}) != NULL) && (il2c_c_str({1}) != NULL) && (wcscmp(il2c_c_str({0}), il2c_c_str({1})) == 0))",
+                        expectedSymbolName,
+                        actualSymbolName) :
+                // HACK: gcc4 causes difference larger than DBL_EPSILON at float32 div float64 calculation.
+                (type.IsDoubleType || type.IsSingleType) ?
+                    string.Format(
+                        "fabs({0} - {1}) < FLT_EPSILON",
+                        expectedSymbolName,
+                        actualSymbolName) :
                 string.Format(
                     "{0} == {1}",
                     expectedSymbolName,

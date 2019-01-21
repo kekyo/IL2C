@@ -19,79 +19,8 @@
         </ProjectConfiguration>
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="il2c.c" />
-        <ClCompile Include="System/Array.c" />
-        <ClCompile Include="System/Boolean.c" />
-        <ClCompile Include="System/Byte.c" />
-        <ClCompile Include="System/Char.c" />
-        <ClCompile Include="System/Console.c" />
-        <ClCompile Include="System/Delegate.c" />
-        <ClCompile Include="System/Double.c" />
-        <ClCompile Include="System/Enum.c" />
-        <ClCompile Include="System/Exception.c" />
-        <ClCompile Include="System/GC.c" />
-        <ClCompile Include="System/IDisposable.c" />
-        <ClCompile Include="System/Int16.c" />
-        <ClCompile Include="System/Int32.c" />
-        <ClCompile Include="System/Int64.c" />
-        <ClCompile Include="System/IntPtr.c" />
-        <ClCompile Include="System/IndexOutOfRangeException.c" />
-        <ClCompile Include="System/InvalidCastException.c" />
-        <ClCompile Include="System/MulticastDelegate.c" />
-        <ClCompile Include="System/NullReferenceException.c" />
-        <ClCompile Include="System/Object.c" />
-        <ClCompile Include="System/Runtime/CompilerServices/RuntimeHelpers.c" />
-        <ClCompile Include="System/Runtime/InteropServices/GCHandle.c" />
-        <ClCompile Include="System/SByte.c" />
-        <ClCompile Include="System/Single.c" />
-        <ClCompile Include="System/String.c" />
-        <ClCompile Include="System/Threading/Interlocked.c" />
-        <ClCompile Include="System/Type.c" />
-        <ClCompile Include="System/UInt16.c" />
-        <ClCompile Include="System/UInt32.c" />
-        <ClCompile Include="System/UInt64.c" />
-        <ClCompile Include="System/UIntPtr.c" />
-        <ClCompile Include="System/ValueType.c" />
-        <ClInclude Include="debugbreak.h" />
-        <ClInclude Include="il2c.h" />
-        <ClInclude Include="mscorlib.h" />
-        <ClInclude Include="System.Runtime.h" />
-        <ClInclude Include="il2c_private.h" />
-        <ClInclude Include="System/Array.h" />
-        <ClInclude Include="System/Boolean.h" />
-        <ClInclude Include="System/Byte.h" />
-        <ClInclude Include="System/Char.h" />
-        <ClInclude Include="System/Console.h" />
-        <ClInclude Include="System/Delegate.h" />
-        <ClInclude Include="System/Double.h" />
-        <ClInclude Include="System/Enum.h" />
-        <ClInclude Include="System/Exception.h" />
-        <ClInclude Include="System/GC.h" />
-        <ClInclude Include="System/IDisposable.h" />
-        <ClInclude Include="System/Int16.h" />
-        <ClInclude Include="System/Int32.h" />
-        <ClInclude Include="System/Int64.h" />
-        <ClInclude Include="System/IntPtr.h" />
-        <ClInclude Include="System/IndexOutOfRangeException.h" />
-        <ClInclude Include="System/InvalidCastException.h" />
-        <ClInclude Include="System/MulticastDelegate.h" />
-        <ClInclude Include="System/NullReferenceException.h" />
-        <ClInclude Include="System/Object.h" />
-        <ClInclude Include="System/RuntimeFieldHandle.h" />
-        <ClInclude Include="System/Runtime/CompilerServices/RuntimeHelpers.h" />
-        <ClInclude Include="System/Runtime/InteropServices/GCHandle.h" />
-        <ClInclude Include="System/Runtime/InteropServices/GCHandleType.h" />
-        <ClInclude Include="System/Runtime/InteropServices/NativePointer.h" />
-        <ClInclude Include="System/SByte.h" />
-        <ClInclude Include="System/Single.h" />
-        <ClInclude Include="System/String.h" />
-        <ClInclude Include="System/Threading/Interlocked.h" />
-        <ClInclude Include="System/Type.h" />
-        <ClInclude Include="System/UInt16.h" />
-        <ClInclude Include="System/UInt32.h" />
-        <ClInclude Include="System/UInt64.h" />
-        <ClInclude Include="System/UIntPtr.h" />
-        <ClInclude Include="System/ValueType.h" />
+        <ClCompile Include="src/**/*.c" />
+        <ClInclude Include="include/**/*.h" />
     </ItemGroup>
     <PropertyGroup Label="Globals">
         <VCProjectVersion>15.0</VCProjectVersion>
@@ -125,7 +54,7 @@
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <FunctionLevelLinking>true</FunctionLevelLinking>
             <CreateHotpatchableImage>false</CreateHotpatchableImage>
-            <AdditionalIncludeDirectories>.;..\..\..\..\..\..\..\..\IL2C.Runtime</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include</AdditionalIncludeDirectories>
             <DisableSpecificWarnings>4100</DisableSpecificWarnings>
             <ExceptionHandling>false</ExceptionHandling>
             <AssemblerOutput>All</AssemblerOutput>

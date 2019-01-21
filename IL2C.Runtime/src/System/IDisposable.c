@@ -1,15 +1,11 @@
 #include "il2c_private.h"
-#include "GC.h"
+#include <System/IDisposable.h>
 
 /////////////////////////////////////////////////////////////
-// System.GC
-
-void System_GC_Collect(void)
-{
-    il2c_collect();
-}
+// System.IDisposable
 
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_RUNTIME_TYPE_STATIC(System_GC, "System.GC", System_Object);
+IL2C_RUNTIME_TYPE_INTERFACE_BEGIN(System_IDisposable, "System.IDisposable", 0)
+IL2C_RUNTIME_TYPE_END();

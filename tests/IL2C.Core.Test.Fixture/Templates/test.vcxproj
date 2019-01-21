@@ -19,7 +19,8 @@
         </ProjectConfiguration>
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="**/*.c" />
+        <ClCompile Include="{sourcePath}" />
+        <ClCompile Include="test.c" />
         <ClInclude Include="**/*.h" />
     </ItemGroup>
     <PropertyGroup Label="Globals">

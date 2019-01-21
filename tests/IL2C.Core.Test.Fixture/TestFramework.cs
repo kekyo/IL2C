@@ -198,17 +198,7 @@ namespace IL2C
                 prepared,
                 DebugInformationOptions.CommentOnly);
 
-            // Step 1-4: Write Visual C++ project file and Visual Studio Code launch config from template.
-            //     Note: It's only debugging purpose. The test doesn't use.
-            var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
-            await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj");
-
-            TestContext.AddTestAttachment(vcxprojTemplatePath, "Generated VC++ project");
-
-            var launchTemplatePath = Path.Combine(translatedPath, ".vscode", "launch.json");
-            await TestUtilities.CopyResourceToTextFileAsync(launchTemplatePath, "launch.json");
-
-            // Step 1-6: Write source code into a file from template.
+            // Step 1-5: Write source code into a file from template.
             var expectedType = targetMethod.ReturnType;
 
             var sourceCodeStream = new MemoryStream();
@@ -329,10 +319,20 @@ namespace IL2C
                 { "format", GetCLanguagePrintFormatFromType(targetMethod.ReturnType)},
                 { "expectedExpression", GetCLanguagePrintArgumentExpression(expectedType, expectedSymbolName)},
                 { "actualExpression", GetCLanguagePrintArgumentExpression(expectedType, actualSymbolName)},
+                { "sourcePath", translateContext.Assembly.Name + "_bundle.c" }
             };
 
-            var sourcePath = Path.Combine(translatedPath, "test.c");
+            // Step 1-6: Write Visual C++ project file and Visual Studio Code launch config from template.
+            //     Note: It's only debugging purpose. The test doesn't use.
+            var vcxprojTemplatePath = Path.Combine(translatedPath, "test.vcxproj");
+            await TestUtilities.CopyResourceToTextFileAsync(vcxprojTemplatePath, "test.vcxproj", replaceValues);
 
+            TestContext.AddTestAttachment(vcxprojTemplatePath, "Generated VC++ project");
+
+            var launchTemplatePath = Path.Combine(translatedPath, ".vscode", "launch.json");
+            await TestUtilities.CopyResourceToTextFileAsync(launchTemplatePath, "launch.json", replaceValues);
+
+            var sourcePath = Path.Combine(translatedPath, "test.c");
             await TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues);
 
             ///////////////////////////////////////////////
@@ -370,12 +370,12 @@ namespace IL2C
 #if DEBUG
                 var executedResult = await GccDriver.CompileAndRunAsync(
                     false,
-                    sourceFiles.Concat(new[] { sourcePath }).ToArray(),
+                    caseInfo.,
                     new string[0]);
 #else
                 var executedResult = await GccDriver.CompileAndRunAsync(
                     true,
-                    sourceFiles.Concat(new[] { sourcePath }).ToArray(),
+                    sourcePath,
                     new string[0]);
 #endif
 

@@ -25,95 +25,6 @@ namespace IL2C
             Public
         }
 
-        private static void InternalWriteHeader(
-            CodeTextStorage storage,
-            TranslateContext translateContext,
-            PreparedInformations prepared,
-            MemberScopes scope)
-        {
-            IExtractContext extractContext = translateContext;
-            var assemblyName = translateContext.Assembly.Name;
-
-            var fieldPredict = (scope == MemberScopes.Public) ?
-                new Func<IFieldInformation, bool>(field => field.IsCLanguagePublicScope) :
-                new Func<IFieldInformation, bool>(field => field.IsCLanguageLinkageScope);
-            var methodPredict = (scope == MemberScopes.Public) ?
-                new Func<IMethodInformation, bool>(method => method.IsCLanguagePublicScope && prepared.Functions.ContainsKey(method)) :
-                new Func<IMethodInformation, bool>(method => method.IsCLanguageLinkageScope && prepared.Functions.ContainsKey(method));
-
-            foreach (var g in prepared.Types.GroupBy(type => type.ScopeName))
-            {
-                using (var _ = storage.EnterScope(g.Key))
-                {
-                    var typeExpr = (scope == MemberScopes.Public) ?
-                        g.Where(type => type.IsCLanguagePublicScope) :
-                        g.Where(type => type.IsCLanguageLinkageScope);
-                    foreach (var type in typeExpr)
-                    {
-                        using (var twHeader = storage.CreateHeaderWriter(type.Name))
-                        {
-                            var assemblyMangledName = Utilities.GetMangledName(assemblyName);
-                            var scopeName = Utilities.GetMangledName(type.ScopeName);
-
-                            twHeader.WriteLine("#ifndef __{0}_{1}_{2}_H__", assemblyMangledName, scopeName, type.MangledName);
-                            twHeader.WriteLine("#define __{0}_{1}_{2}_H__", assemblyMangledName, scopeName, type.MangledName);
-                            twHeader.SplitLine();
-                            twHeader.WriteLine("#pragma once");
-                            twHeader.SplitLine();
-                            twHeader.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
-                            twHeader.SplitLine();
-
-                            twHeader.WriteLine("#include <{0}.h>", assemblyName);
-                            if (scope != MemberScopes.Public)
-                            {
-                                twHeader.WriteLine("#include <{0}_internal.h>", assemblyName);
-                            }
-                            twHeader.SplitLine();
-
-                            foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
-                            {
-                                twHeader.WriteLine("#include <{0}>", fileName);
-                            }
-                            twHeader.SplitLine();
-
-                            foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
-                            {
-                                twHeader.WriteLine("#include \"{0}\"", fileName);
-                            }
-                            twHeader.SplitLine();
-
-                            foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
-                            {
-                                twHeader.WriteLine("#include <{0}>", fileName);
-                            }
-                            twHeader.SplitLine();
-
-                            twHeader.WriteLine("#ifdef __cplusplus");
-                            twHeader.WriteLine("extern \"C\" {");
-                            twHeader.WriteLine("#endif");
-                            twHeader.SplitLine();
-
-                            // All types exclude privates
-                            PrototypeWriter.ConvertToPrototype(
-                                twHeader,
-                                type,
-                                fieldPredict,
-                                methodPredict);
-
-                            twHeader.WriteLine("#ifdef __cplusplus");
-                            twHeader.WriteLine("}");
-                            twHeader.WriteLine("#endif");
-                            twHeader.SplitLine();
-
-                            twHeader.WriteLine("#endif");
-                            twHeader.SplitLine();
-                            twHeader.Flush();
-                        }
-                    }
-                }
-            }
-        }
-
         private static void InternalWriteCommonHeader(
             CodeTextStorage storage,
             TranslateContext translateContext,
@@ -218,6 +129,123 @@ namespace IL2C
             }
         }
 
+        private static void InternalWriteHeader(
+            CodeTextStorage storage,
+            TranslateContext translateContext,
+            PreparedInformations prepared,
+            MemberScopes scope)
+        {
+            IExtractContext extractContext = translateContext;
+            var assemblyName = translateContext.Assembly.Name;
+
+            var fieldPredict = (scope == MemberScopes.Public) ?
+                new Func<IFieldInformation, bool>(field => field.IsCLanguagePublicScope) :
+                new Func<IFieldInformation, bool>(field => field.IsCLanguageLinkageScope);
+            var methodPredict = (scope == MemberScopes.Public) ?
+                new Func<IMethodInformation, bool>(method => method.IsCLanguagePublicScope && prepared.Functions.ContainsKey(method)) :
+                new Func<IMethodInformation, bool>(method => method.IsCLanguageLinkageScope && prepared.Functions.ContainsKey(method));
+
+            foreach (var g in prepared.Types.GroupBy(type => type.ScopeName))
+            {
+                using (var _ = storage.EnterScope(g.Key))
+                {
+                    var typeExpr = (scope == MemberScopes.Public) ?
+                        g.Where(type => type.IsCLanguagePublicScope) :
+                        g.Where(type => type.IsCLanguageLinkageScope);
+                    foreach (var type in typeExpr)
+                    {
+                        using (var twHeader = storage.CreateHeaderWriter(type.Name))
+                        {
+                            var assemblyMangledName = Utilities.GetMangledName(assemblyName);
+                            var scopeName = Utilities.GetMangledName(type.ScopeName);
+
+                            twHeader.WriteLine("#ifndef __{0}_{1}_{2}_H__", assemblyMangledName, scopeName, type.MangledName);
+                            twHeader.WriteLine("#define __{0}_{1}_{2}_H__", assemblyMangledName, scopeName, type.MangledName);
+                            twHeader.SplitLine();
+                            twHeader.WriteLine("#pragma once");
+                            twHeader.SplitLine();
+                            twHeader.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                            twHeader.SplitLine();
+
+                            twHeader.WriteLine("#include <{0}.h>", assemblyName);
+                            if (scope != MemberScopes.Public)
+                            {
+                                twHeader.WriteLine("#include <{0}_internal.h>", assemblyName);
+                            }
+                            twHeader.SplitLine();
+
+                            foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
+                            {
+                                twHeader.WriteLine("#include <{0}>", fileName);
+                            }
+                            twHeader.SplitLine();
+
+                            foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
+                            {
+                                twHeader.WriteLine("#include \"{0}\"", fileName);
+                            }
+                            twHeader.SplitLine();
+
+                            foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
+                            {
+                                twHeader.WriteLine("#include <{0}>", fileName);
+                            }
+                            twHeader.SplitLine();
+
+                            twHeader.WriteLine("#ifdef __cplusplus");
+                            twHeader.WriteLine("extern \"C\" {");
+                            twHeader.WriteLine("#endif");
+                            twHeader.SplitLine();
+
+                            // All types exclude privates
+                            PrototypeWriter.ConvertToPrototype(
+                                twHeader,
+                                type,
+                                fieldPredict,
+                                methodPredict);
+
+                            twHeader.WriteLine("#ifdef __cplusplus");
+                            twHeader.WriteLine("}");
+                            twHeader.WriteLine("#endif");
+                            twHeader.SplitLine();
+
+                            twHeader.WriteLine("#endif");
+                            twHeader.SplitLine();
+                            twHeader.Flush();
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void WriteHeader(
+            CodeTextStorage storage,
+            TranslateContext translateContext,
+            PreparedInformations prepared)
+        {
+            var assemblyName = translateContext.Assembly.Name;
+
+            // Write assembly level common public header.
+            InternalWriteCommonHeader(
+                storage,
+                translateContext,
+                prepared,
+                assemblyName,
+                MemberScopes.Public);
+
+            using (var _ = storage.EnterScope(assemblyName, false))
+            {
+                // Write public headers.
+                InternalWriteHeader(
+                    storage,
+                    translateContext,
+                    prepared,
+                    MemberScopes.Public);
+            }
+        }
+
+        ///////////////////////////////////////////////////////
+
         private static string InternalWriteCommonSource(
             CodeTextStorage storage,
             TranslateContext translateContext,
@@ -301,32 +329,6 @@ namespace IL2C
                 twSource.Flush();
 
                 return ((CodeTextStorage.InternalCodeTextWriter)twSource).Path;
-            }
-        }
-
-        public static void WriteHeader(
-            CodeTextStorage storage,
-            TranslateContext translateContext,
-            PreparedInformations prepared)
-        {
-            var assemblyName = translateContext.Assembly.Name;
-
-            // Write assembly level common public header.
-            InternalWriteCommonHeader(
-                storage,
-                translateContext,
-                prepared,
-                assemblyName,
-                MemberScopes.Public);
-
-            using (var _ = storage.EnterScope(assemblyName, false))
-            {
-                // Write public headers.
-                InternalWriteHeader(
-                    storage,
-                    translateContext,
-                    prepared,
-                    MemberScopes.Public);
             }
         }
 
@@ -446,6 +448,39 @@ namespace IL2C
             return sourceFiles.ToArray();
         }
 
+        private static void InternalWriteBundlerSourceCode(
+            CodeTextStorage storage,
+            PreparedInformations prepared,
+            string assemblyName)
+        {
+            using (var twSource = storage.CreateSourceCodeWriter(assemblyName + "_bundle"))
+            {
+                var assemblyMangledName = Utilities.GetMangledName(assemblyName);
+
+                twSource.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                twSource.SplitLine();
+                twSource.WriteLine("// This is the bundler source code for {0},", assemblyName);
+                twSource.WriteLine("// you can use it if you wanna compile only one source file.");
+                twSource.SplitLine();
+
+                twSource.WriteLine(
+                    "#include \"{0}_internal.c\"",
+                    assemblyName);
+
+                foreach (var type in prepared.Types)
+                {
+                    twSource.WriteLine(
+                        "#include \"{0}/{1}/{2}.c\"",
+                        assemblyName,
+                        Utilities.GetCLanguageScopedPath(type.ScopeName),
+                        type.Name);
+                }
+
+                twSource.SplitLine();
+                twSource.Flush();
+            }
+        }
+
         public static string[] WriteSourceCode(
             CodeTextStorage storage,
             TranslateContext translateContext,
@@ -471,6 +506,12 @@ namespace IL2C
                     translateContext,
                     prepared,
                     assemblyName));
+
+            // Write source code bundler.
+            InternalWriteBundlerSourceCode(
+                storage,
+                prepared,
+                assemblyName);
 
             using (var _ = storage.EnterScope(assemblyName, false))
             {

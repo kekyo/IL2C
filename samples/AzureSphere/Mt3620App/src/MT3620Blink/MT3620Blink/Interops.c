@@ -25,11 +25,35 @@ int32_t MT3620Blink_Interops_close(int32_t fd)
 }
 
 ///////////////////////////////////////
-// [6] IL2C/Invoke: MT3620Blink.Interops.nanosleep(MT3620Blink.timespec& time, MT3620Blink.timespec& dummy)
+// [6] IL2C/Invoke: MT3620Blink.Interops.nanosleep(MT3620Blink.timespec& req, MT3620Blink.timespec& rem)
 
-void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* time, MT3620Blink_timespec* dummy)
+void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* req, MT3620Blink_timespec* rem)
 {
-    nanosleep(time, dummy);
+    nanosleep(req, rem);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.timerfd_create(System.Int32 clockid, System.Int32 flags)
+
+int32_t MT3620Blink_Interops_timerfd_create(int32_t clockid, int32_t flags)
+{
+    return timerfd_create(clockid, flags);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.timerfd_settime(System.Int32 fd, System.Int32 flags, MT3620Blink.itimerspec& new_value, MT3620Blink.itimerspec& old_value)
+
+int32_t MT3620Blink_Interops_timerfd_settime(int32_t fd, int32_t flags, MT3620Blink_itimerspec* new_value, MT3620Blink_itimerspec* old_value)
+{
+    return timerfd_settime(fd, flags, new_value, old_value);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.timerfd_read(System.Int32 fd, System.UInt64& timerData, System.UIntPtr size)
+
+int32_t MT3620Blink_Interops_timerfd_read(int32_t fd, uint64_t* timerData, uintptr_t size)
+{
+    return read(fd, timerData, size);
 }
 
 ///////////////////////////////////////

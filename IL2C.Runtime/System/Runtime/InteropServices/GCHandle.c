@@ -1,5 +1,5 @@
 #include "il2c_private.h"
-#include "System.Runtime.InteropServices.GCHandle.h"
+#include "GCHandle.h"
 
 /////////////////////////////////////////////////////////////
 // System.Runtime.InteropServices.GCHandle

@@ -33,19 +33,13 @@ namespace IL2C.Metadata
         public IModuleInformation[] Modules =>
             this.MetadataContext.GetOrAddModules(assembly.Modules);
 
-        public bool Equals(IAssemblyInformation other)
-        {
-            return this.UniqueName.Equals(other.UniqueName);
-        }
+        public bool Equals(IAssemblyInformation other) =>
+            this.UniqueName.Equals(other.UniqueName);
 
-        public override bool Equals(object obj)
-        {
-            return this.Equals(obj as IAssemblyInformation);
-        }
+        public override bool Equals(object obj) =>
+            this.Equals(obj as IAssemblyInformation);
 
-        public override int GetHashCode()
-        {
-            return this.UniqueName.GetHashCode();
-        }
+        public override int GetHashCode() =>
+            this.UniqueName.GetHashCode();
     }
 }

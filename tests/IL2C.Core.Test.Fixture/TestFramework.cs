@@ -370,7 +370,7 @@ namespace IL2C
 #if DEBUG
                 var executedResult = await GccDriver.CompileAndRunAsync(
                     false,
-                    caseInfo.,
+                    sourcePath,
                     new string[0]);
 #else
                 var executedResult = await GccDriver.CompileAndRunAsync(

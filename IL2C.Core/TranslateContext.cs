@@ -13,8 +13,10 @@ namespace IL2C
         : IPrepareContext, IExtractContextHost
     {
         #region  Fields
-        private readonly HashSet<string> includes = new HashSet<string>();
-        private readonly HashSet<string> privateIncludes = new HashSet<string>();
+        private readonly Dictionary<MemberScopes, HashSet<ITypeInformation>> registeredTypes =
+            new Dictionary<MemberScopes, HashSet<ITypeInformation>>();
+        private readonly Dictionary<ITypeInformation, HashSet<ITypeInformation>> registeredTypesByDeclaringType =
+            new Dictionary<ITypeInformation, HashSet<ITypeInformation>>();
         private readonly HashSet<string> importIncludes = new HashSet<string>();
         private readonly Dictionary<string, IFieldInformation> staticFields =
             new Dictionary<string, IFieldInformation>();
@@ -47,55 +49,49 @@ namespace IL2C
         public IAssemblyInformation Assembly { get; }
 
         #region IPrepareContext
-        private void RegisterIncludeFile(string includeFileName) =>
-            includes.Add(includeFileName);
-
-        void IPrepareContext.RegisterIncludeFile(string includeFileName) =>
-            this.RegisterIncludeFile(includeFileName);
-
-        private void RegisterPrivateIncludeFile(string includeFileName) =>
-            privateIncludes.Add(includeFileName);
-
-        void IPrepareContext.RegisterPrivateIncludeFile(string includeFileName) =>
-            this.RegisterPrivateIncludeFile(includeFileName);
-
-        private void RegisterImportIncludeFile(string includeFileName) =>
+        void IPrepareContext.RegisterImportIncludeFile(string includeFileName) =>
             importIncludes.Add(includeFileName);
 
-        void IPrepareContext.RegisterImportIncludeFile(string includeFileName) =>
-            this.RegisterImportIncludeFile(includeFileName);
-
-        private void RegisterType(ITypeInformation type)
+        void IPrepareContext.RegisterType(ITypeInformation type, MemberScopes scope)
         {
-            if (type.IsByReference || type.IsPointer)
+            if (!registeredTypes.TryGetValue(scope, out var set))
             {
-                var dereferencedType = type.ElementType;
-                this.RegisterType(dereferencedType);
+                set = new HashSet<ITypeInformation>();
+                registeredTypes.Add(scope, set);
             }
-            else
-            {
-                var assembly = type.DeclaringModule.DeclaringAssembly;
-                if (!assembly.Equals(this.MetadataContext.ObjectType.DeclaringModule.DeclaringAssembly))
-                {
-                    this.RegisterIncludeFile(assembly.CLanguageIncludeFileName);
-                }
-            }
+            set.Add(type);
         }
 
-        void IPrepareContext.RegisterType(ITypeInformation type) =>
-            this.RegisterType(type);
+        void IPrepareContext.RegisterType(ITypeInformation type, IMethodInformation declaringMethod)
+        {
+            // Assembly internal types (ex: ArrayInitializer constants) will be null value.
+            if (type == null)
+            {
+                // Ignore.
+                return;
+            }
 
-        private void RegisterStaticField(IFieldInformation staticField)
+            // Aggregates by declaring type instead declaring method.
+            // Because the IL2C will write source files separating by the types.
+            // "EnumerateRegisteredTypesByDeclaringType" method enumerates by each types.
+            var declaringType = declaringMethod.DeclaringType;
+
+            if (!registeredTypesByDeclaringType.TryGetValue(declaringType, out var set))
+            {
+                set = new HashSet<ITypeInformation>();
+                registeredTypesByDeclaringType.Add(declaringType, set);
+            }
+            set.Add(type);
+        }
+
+        void IPrepareContext.RegisterStaticField(IFieldInformation staticField)
         {
             Debug.Assert(staticField.IsStatic);
 
             staticFields.Add(staticField.UniqueName, staticField);
         }
 
-        void IPrepareContext.RegisterStaticField(IFieldInformation staticField) =>
-            this.RegisterStaticField(staticField);
-
-        private string RegisterConstString(string value)
+        string IPrepareContext.RegisterConstString(string value)
         {
             if (!constStrings.TryGetValue(value, out var symbolName))
             {
@@ -109,10 +105,7 @@ namespace IL2C
             return symbolName;
         }
 
-        string IPrepareContext.RegisterConstString(string value) =>
-            this.RegisterConstString(value);
-
-        private string RegisterDeclaredValue(IFieldInformation declaredField, byte[] resourceData)
+        string IPrepareContext.RegisterDeclaredValues(IFieldInformation declaredField, byte[] resourceData)
         {
             if (!declaredValues.TryGetValue(resourceData, out var entry))
             {
@@ -130,10 +123,7 @@ namespace IL2C
             return entry.symbolName;
         }
 
-        string IPrepareContext.RegisterDeclaredValues(IFieldInformation declaredField, byte[] resourceData) =>
-            this.RegisterDeclaredValue(declaredField, resourceData);
-
-        private void RegisterDeclaredValuesHintType(string symbolName, ITypeInformation type)
+        void IPrepareContext.RegisterDeclaredValuesHintType(string symbolName, ITypeInformation type)
         {
             if (!declaredValueHintTypes.TryGetValue(symbolName, out var types))
             {
@@ -143,16 +133,18 @@ namespace IL2C
 
             types.Add(type);
         }
-
-        void IPrepareContext.RegisterDeclaredValuesHintType(string symbolName, ITypeInformation type) =>
-            this.RegisterDeclaredValuesHintType(symbolName, type);
         #endregion
 
         #region IExtractContext
-        IEnumerable<string> IExtractContext.EnumerateRequiredIncludeFileNames() =>
-            includes;
-        IEnumerable<string> IExtractContext.EnumerateRequiredPrivateIncludeFileNames() =>
-            privateIncludes;
+        IReadOnlyDictionary<MemberScopes, IEnumerable<ITypeInformation>> IExtractContext.EnumerateRegisteredTypes() =>
+            registeredTypes.ToDictionary(entry => entry.Key, entry => entry.Value.AsEnumerable());
+
+        IEnumerable<ITypeInformation> IExtractContext.EnumerateRegisteredTypesByDeclaringType(ITypeInformation declaringType)
+        {
+            registeredTypesByDeclaringType.TryGetValue(declaringType, out var list);
+            return list ?? Enumerable.Empty<ITypeInformation>();
+        }
+
         IEnumerable<string> IExtractContext.EnumerateRequiredImportIncludeFileNames() =>
             importIncludes;
 
@@ -348,29 +340,26 @@ namespace IL2C
         IEnumerable<(string symbolName, string value)> IExtractContext.ExtractConstStrings() =>
             constStrings.Select(kv => (kv.Value, kv.Key));
 
-        IEnumerable<DeclaredValuesInformation> IExtractContext.ExtractDeclaredValues()
-        {
-            return declaredValues.
-                Select(kv =>
+        IEnumerable<DeclaredValuesInformation> IExtractContext.ExtractDeclaredValues() =>
+            declaredValues.Select(kv =>
+            {
+                if (!declaredValueHintTypes.TryGetValue(kv.Value.symbolName, out var hintTypes))
                 {
-                    if (!declaredValueHintTypes.TryGetValue(kv.Value.symbolName, out var hintTypes))
-                    {
-                        return new DeclaredValuesInformation(
-                            kv.Value.symbolName,
-                            kv.Value.fields.ToArray(),
-                            new ITypeInformation[0],
-                            kv.Key);
-                    }
-                    else
-                    {
-                        return new DeclaredValuesInformation(
-                            kv.Value.symbolName,
-                            kv.Value.fields.ToArray(),
-                            hintTypes.ToArray(),
-                            kv.Key);
-                    }
-                });
-        }
+                    return new DeclaredValuesInformation(
+                        kv.Value.symbolName,
+                        kv.Value.fields.ToArray(),
+                        new ITypeInformation[0],
+                        kv.Key);
+                }
+                else
+                {
+                    return new DeclaredValuesInformation(
+                        kv.Value.symbolName,
+                        kv.Value.fields.ToArray(),
+                        hintTypes.ToArray(),
+                        kv.Key);
+                }
+            });
 
         private sealed class LocalVariablePrefixDisposer : IDisposable
         {

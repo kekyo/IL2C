@@ -17,6 +17,9 @@ namespace IL2C.ILConverters
         {
             var symbol = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
+            // Register callee method declaring type (at the file scope).
+            decodeContext.PrepareContext.RegisterType(operand.DeclaringType, decodeContext.Method);
+
             return extractContext => new[] { string.Format(
                 "{0} = (intptr_t){1}",
                 extractContext.GetSymbolName(symbol),
@@ -29,39 +32,42 @@ namespace IL2C.ILConverters
         public override OpCode OpCode => OpCodes.Ldvirtftn;
 
         public override Func<IExtractContext, string[]> Apply(
-            IMethodInformation operand, DecodeContext decodeContext)
+            IMethodInformation method, DecodeContext decodeContext)
         {
             // ECMA-335 III.4.18: ldvirtfn - load a virtual method pointer
 
-            if (operand.IsStatic)
+            if (method.IsStatic)
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid method token (static): Location={0}, Method={1}",
                     decodeContext.CurrentCode.RawLocation,
-                    operand.FriendlyName);
+                    method.FriendlyName);
             }
 
             var si = decodeContext.PopStack();
-            if (!operand.DeclaringType.IsAssignableFrom(si.TargetType))
+            if (!method.DeclaringType.IsAssignableFrom(si.TargetType))
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid method token (not a member): Location={0}, Method={1}",
                     decodeContext.CurrentCode.RawLocation,
-                    operand.FriendlyName);
+                    method.FriendlyName);
             }
 
             var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.IntPtrType);
 
-            if (operand.IsVirtual && !operand.IsSealed)
+            // Register callee method declaring type (at the file scope).
+            decodeContext.PrepareContext.RegisterType(method.DeclaringType, decodeContext.Method);
+
+            if (method.IsVirtual && !method.IsSealed)
             {
                 // TODO: interface member vptr
                 var virtualMethods =
-                    operand.DeclaringType.CalculatedVirtualMethods;
-                var (method, overloadIndex) =
-                    virtualMethods.First(entry => entry.method.Equals(operand));
+                    method.DeclaringType.CalculatedVirtualMethods;
+                var (m, overloadIndex) =
+                    virtualMethods.First(entry => entry.method.Equals(method));
 
-                var vptrName = method.GetCLanguageDeclarationName(overloadIndex);
+                var vptrName = m.GetCLanguageDeclarationName(overloadIndex);
 
                 return extractContext => new[] { string.Format(
                     "{0} = (intptr_t){1}->vptr0__->{2}",
@@ -74,7 +80,7 @@ namespace IL2C.ILConverters
                 return extractContext => new[] { string.Format(
                     "{0} = (intptr_t){1}",
                     extractContext.GetSymbolName(symbol),
-                    operand.CLanguageFunctionName) };
+                    method.CLanguageFunctionName) };
             }
         }
     }

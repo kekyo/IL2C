@@ -18,11 +18,39 @@ namespace IL2C
 
     public static class AssemblyWriter
     {
-        private enum MemberScopes
+        private static void InternalWriteAssemblyReferences(
+            CodeTextWriter tw,
+            TranslateContext translateContext,
+            IExtractContext extractContext,
+            MemberScopes scope)
         {
-            File,
-            Linkage,
-            Public
+            foreach (var assembly in extractContext.EnumerateRegisteredTypes().
+                Where(entry => entry.Key == scope).
+                SelectMany(entry => entry.Value.Select(type => type.DeclaringModule.DeclaringAssembly)).
+                Where(assembly => !assembly.Equals(translateContext.Assembly)).
+                Distinct().
+                OrderBy(assembly => assembly.Name))
+            {
+                tw.WriteLine("#include <{0}.h>", assembly.Name);
+            }
+            tw.SplitLine();
+        }
+
+        private static void InternalWriteAssemblyReferences(
+            CodeTextWriter tw,
+            TranslateContext translateContext,
+            IExtractContext extractContext,
+            ITypeInformation declaringType)
+        {
+            foreach (var assembly in extractContext.EnumerateRegisteredTypesByDeclaringType(declaringType).
+                Select(type => type.DeclaringModule.DeclaringAssembly).
+                Where(assembly => !assembly.Equals(translateContext.Assembly)).
+                Distinct().
+                OrderBy(assembly => assembly.Name))
+            {
+                tw.WriteLine("#include <{0}.h>", assembly.Name);
+            }
+            tw.SplitLine();
         }
 
         private static void InternalWriteCommonHeader(
@@ -47,7 +75,18 @@ namespace IL2C
                 twHeader.SplitLine();
                 twHeader.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
                 twHeader.SplitLine();
-                twHeader.WriteLine("#include <il2c.h>");
+
+                // Write assembly references.
+                InternalWriteAssemblyReferences(
+                    twHeader,
+                    translateContext,
+                    extractContext,
+                    scope);
+
+                foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
+                {
+                    twHeader.WriteLine("#include <{0}>", fileName);
+                }
                 twHeader.SplitLine();
 
                 var expr = (scope == MemberScopes.Public) ?
@@ -171,24 +210,6 @@ namespace IL2C
                             if (scope != MemberScopes.Public)
                             {
                                 twHeader.WriteLine("#include <{0}_internal.h>", assemblyName);
-                            }
-                            twHeader.SplitLine();
-
-                            foreach (var fileName in extractContext.EnumerateRequiredIncludeFileNames())
-                            {
-                                twHeader.WriteLine("#include <{0}>", fileName);
-                            }
-                            twHeader.SplitLine();
-
-                            foreach (var fileName in extractContext.EnumerateRequiredPrivateIncludeFileNames())
-                            {
-                                twHeader.WriteLine("#include \"{0}\"", fileName);
-                            }
-                            twHeader.SplitLine();
-
-                            foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
-                            {
-                                twHeader.WriteLine("#include <{0}>", fileName);
                             }
                             twHeader.SplitLine();
 
@@ -359,6 +380,13 @@ namespace IL2C
                         twSource.WriteLine("#include <{0}.h>", assemblyName);
                         twSource.WriteLine("#include <{0}_internal.h>", assemblyName);
                         twSource.SplitLine();
+
+                        // Write assembly references at the file scope.
+                        InternalWriteAssemblyReferences(
+                            twSource,
+                            translateContext,
+                            extractContext,
+                            targetType);
 
                         twSource.WriteLine("#ifdef __cplusplus");
                         twSource.WriteLine("extern \"C\" {");

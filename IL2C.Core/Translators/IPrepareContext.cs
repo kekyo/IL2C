@@ -9,10 +9,9 @@ namespace IL2C.Translators
         IMetadataContext MetadataContext { get; }
         IAssemblyInformation Assembly { get; }
 
-        void RegisterIncludeFile(string includeFileName);
-        void RegisterPrivateIncludeFile(string includeFileName);
         void RegisterImportIncludeFile(string includeFileName);
-        void RegisterType(ITypeInformation type);
+        void RegisterType(ITypeInformation type, MemberScopes scope);
+        void RegisterType(ITypeInformation type, IMethodInformation declaringMethod);
         void RegisterStaticField(IFieldInformation staticField);
         string RegisterConstString(string value);
         string RegisterDeclaredValues(IFieldInformation declaredField, byte[] resourceData);

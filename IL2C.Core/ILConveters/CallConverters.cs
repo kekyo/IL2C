@@ -106,6 +106,8 @@ namespace IL2C.ILConverters
         {
             // ECMA-335 I.12.4.1.4: Virtual calling convention
 
+            // This method is too complex because it will try devirtualizing.
+
             //////////////////////////////////////////////////////////
             // Step 1:
 
@@ -186,7 +188,7 @@ namespace IL2C.ILConverters
             //   "System.Threading.Interlocked.CompareExchange<T>(...)" method.
             //   It's special resolver for event member.
             if ((method.UniqueName == "T System.Threading.Interlocked::CompareExchange(T&,T,T)") &&
-                pairParameters[1].variable.TargetType.IsDelegate)
+                pairParameters[1].variable.TargetType.IsReferenceType)
             {
                 result = decodeContext.PushStack(pairParameters[1].variable.TargetType);
 
@@ -236,6 +238,9 @@ namespace IL2C.ILConverters
             {
                 result = decodeContext.PushStack(method.ReturnType);
             }
+
+            // Register callee method declaring type (at the file scope).
+            decodeContext.PrepareContext.RegisterType(method.DeclaringType, decodeContext.Method);
 
             return extractContext =>
             {

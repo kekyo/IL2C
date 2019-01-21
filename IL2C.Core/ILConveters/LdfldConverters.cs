@@ -64,7 +64,11 @@ namespace IL2C.ILConverters
                     decodeContext.CurrentCode.RawLocation,
                     siReference.TargetType.FriendlyName);
             }
+
             var codeInformation = decodeContext.CurrentCode;
+
+            // Register referenced field type (at the file scope).
+            decodeContext.PrepareContext.RegisterType(field.FieldType, decodeContext.Method);
 
             if (requestPointer)
             {

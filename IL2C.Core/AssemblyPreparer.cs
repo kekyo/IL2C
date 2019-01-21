@@ -95,7 +95,7 @@ namespace IL2C
 
             foreach (var local in localVariables)
             {
-                prepareContext.RegisterType(local.TargetType);
+                prepareContext.RegisterType(local.TargetType, method);
             }
 
             //////////////////////////////////////////////////////////////////////////////
@@ -157,10 +157,11 @@ namespace IL2C
             var returnType = method.ReturnType;
             var parameters = method.Parameters;
 
-            prepareContext.RegisterType(returnType);
+            var signatureScope = method.GetScope();
+            prepareContext.RegisterType(returnType, signatureScope);
             foreach (var parameter in parameters)
             {
-                prepareContext.RegisterType(parameter.TargetType);
+                prepareContext.RegisterType(parameter.TargetType, signatureScope);
             }
 
             // Pure abstract method (ignored.)
@@ -255,14 +256,25 @@ namespace IL2C
             foreach (var type in allTypes)
             {
                 // Register used type.
-                prepareContext.RegisterType(type);
+                var declaringScope = type.GetScope();
+                prepareContext.RegisterType(type, declaringScope);
+
+                if (type.BaseType != null)
+                {
+                    prepareContext.RegisterType(type.BaseType, declaringScope);
+                }
+
+                foreach (var interfaceType in type.InterfaceTypes)
+                {
+                    prepareContext.RegisterType(type.BaseType, declaringScope);
+                }
             }
 
             // Lookup fields.
             foreach (var field in allTypes.SelectMany(type => type.Fields))
             {
                 // Register field type.
-                prepareContext.RegisterType(field.FieldType);
+                prepareContext.RegisterType(field.FieldType, field.GetScope());
 
                 // Register include file from the native value.
                 if (field.NativeValue != null)

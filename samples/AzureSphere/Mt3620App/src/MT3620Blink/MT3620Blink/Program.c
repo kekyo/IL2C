@@ -3,6 +3,8 @@
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
 
+#include <mscorlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

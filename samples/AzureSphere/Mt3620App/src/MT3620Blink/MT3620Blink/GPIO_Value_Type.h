@@ -8,14 +8,6 @@
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
 
-#include <MT3620Blink.h>
-
-#include <mt3620_rdb.h>
-#include <sys/epoll.h>
-#include <unistd.h>
-#include <time.h>
-#include <applibs/gpio.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

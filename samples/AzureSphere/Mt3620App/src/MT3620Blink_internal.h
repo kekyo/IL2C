@@ -5,7 +5,13 @@
 
 // This is MT3620Blink native code translated by IL2C, do not edit.
 
-#include <il2c.h>
+#include <mscorlib.h>
+
+#include <mt3620_rdb.h>
+#include <sys/epoll.h>
+#include <unistd.h>
+#include <time.h>
+#include <applibs/gpio.h>
 
 #include "MT3620Blink/MT3620Blink/timespec.h"
 #include "MT3620Blink/MT3620Blink/GPIO_OutputMode_Type.h"

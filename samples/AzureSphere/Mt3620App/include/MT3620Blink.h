@@ -14,6 +14,19 @@
 #include <sys/timerfd.h>
 #include <applibs/gpio.h>
 
+///////////////////////////////////////////////////////////////////////////
+// Type pre definitions:
+
+#include "MT3620Blink/MT3620Blink/Descriptor.h"
+#include "MT3620Blink/MT3620Blink/IEPollListener.h"
+#include "MT3620Blink/MT3620Blink/Application.h"
+#include "MT3620Blink/MT3620Blink/Program.h"
+
+///////////////////////////////////////////////////////////////////////////
+// Type body definitions:
+
+#define MT3620Blink_DECL_TYPE_BODY__ 1
+
 #include "MT3620Blink/MT3620Blink/Descriptor.h"
 #include "MT3620Blink/MT3620Blink/IEPollListener.h"
 #include "MT3620Blink/MT3620Blink/Application.h"

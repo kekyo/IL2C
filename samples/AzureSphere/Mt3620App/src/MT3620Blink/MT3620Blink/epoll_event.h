@@ -1,9 +1,4 @@
-﻿#ifndef __MT3620Blink_MT3620Blink_epoll_event_H__
-#define __MT3620Blink_MT3620Blink_epoll_event_H__
-
-#pragma once
-
-// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
@@ -11,6 +6,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+///////////////////////////////////////////////////////////////////////////
+// Type pre definitions:
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-1] Types:
@@ -25,6 +23,11 @@ typedef struct epoll_event MT3620Blink_epoll_event;
 
 typedef System_ValueType_VTABLE_DECL__ MT3620Blink_epoll_event_VTABLE_DECL__;
 
+///////////////////////////////////////////////////////////////////////////
+// Type body definitions:
+
+#ifdef MT3620Blink_internal_DECL_TYPE_BODY__
+
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.epoll_event
 
@@ -37,8 +40,8 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_epoll_event);
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods:
 
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+}
 #endif

@@ -1,15 +1,13 @@
-﻿#ifndef __MT3620Blink_MT3620Blink_Descriptor_H__
-#define __MT3620Blink_MT3620Blink_Descriptor_H__
-
-#pragma once
-
-// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+///////////////////////////////////////////////////////////////////////////
+// Type pre definitions:
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-1] Types:
@@ -23,6 +21,11 @@ typedef struct MT3620Blink_Descriptor MT3620Blink_Descriptor;
 // [2-1-2] VTable types:
 
 typedef const struct MT3620Blink_Descriptor_VTABLE_DECL___ MT3620Blink_Descriptor_VTABLE_DECL__;
+
+///////////////////////////////////////////////////////////////////////////
+// Type body definitions:
+
+#ifdef MT3620Blink_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Descriptor
@@ -61,8 +64,8 @@ extern /* public */ void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* th
 extern /* public virtual */ void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__);
 extern /* protected */ int32_t MT3620Blink_Descriptor_get_Identity(MT3620Blink_Descriptor* this__);
 
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+}
 #endif

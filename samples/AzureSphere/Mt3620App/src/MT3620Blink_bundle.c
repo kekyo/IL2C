@@ -18,5 +18,3 @@
 #include "MT3620Blink/MT3620Blink/Interops.c"
 #include "MT3620Blink/MT3620Blink/Program.c"
 #include "MT3620Blink/MT3620Blink/Timer.c"
-#include "MT3620Blink/MT3620Blink/Program/GpioBlinker.c"
-#include "MT3620Blink/MT3620Blink/Program/GpioPoller.c"

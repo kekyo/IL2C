@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace IL2C.Writers
 {
     internal static class TypeWriter
     {
-        public static void InternalConvertType(
+        public static void WriteTypeDefinitions(
             CodeTextWriter tw,
             ITypeInformation declaredType)
         {
@@ -271,6 +272,89 @@ namespace IL2C.Writers
                 "IL2C_DECLARE_RUNTIME_TYPE({0});",
                 declaredType.MangledUniqueName);
             tw.SplitLine();
+        }
+
+        public static void WriteMemberDefinitions(
+            CodeTextWriter tw,
+            ITypeInformation declaredType,
+            Func<IFieldInformation, bool> predictField,
+            Func<IMethodInformation, bool> predictMethod)
+        {
+            if (!declaredType.IsEnum)
+            {
+                var staticFields = declaredType.Fields.
+                    Where(field => field.IsStatic && predictField(field)).
+                    ToArray();
+                if (staticFields.Length >= 1)
+                {
+                    tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    tw.WriteLine("// [2-2] Static fields:");
+                    tw.SplitLine();
+
+                    foreach (var field in staticFields)
+                    {
+                        if (field.NativeValue != null)
+                        {
+                            tw.WriteLine(
+                                "#define {0} {1}",
+                                field.MangledUniqueName,
+                                field.CLanguageNativeSymbolName);
+                        }
+                        else
+                        {
+                            tw.WriteLine(
+                            "extern {0};",
+                            field.GetCLanguageStaticPrototype(false));
+                        }
+                    }
+
+                    tw.SplitLine();
+                }
+
+                tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                tw.WriteLine("// [2-3] Methods:");
+                tw.SplitLine();
+
+                var methods = declaredType.DeclaredMethods.
+                    Where(predictMethod).
+                    ToArray();
+                if (methods.Length >= 1)
+                {
+                    tw.WriteLine(
+                        "// [2-4] Member methods: {0}",
+                        declaredType.FriendlyName);
+                    tw.SplitLine();
+
+                    foreach (var method in methods)
+                    {
+                        var scope = method.IsPublic ?
+                            "public" :
+                            method.IsFamily ?
+                            "protected" :
+                            method.IsFamilyOrAssembly ?
+                            "protected internal" :
+                            method.IsPrivate ?
+                            "private" :
+                            "internal";
+                        var attribute1 = method.IsStatic ?
+                            "static" :
+                            method.IsVirtual ?
+                            (method.IsReuseSlot ? "override" : "virtual") :
+                            string.Empty;
+                        var attribute2 = method.IsSealed ?
+                            "sealed" :
+                            method.IsExtern ?
+                            "extern" :
+                            string.Empty;
+
+                        tw.WriteLine(
+                            "extern /* {0} */ {1};",
+                            string.Join(" ", new[] { scope, attribute1, attribute2 }.Where(a => !string.IsNullOrWhiteSpace(a))),
+                            method.CLanguageFunctionPrototype);
+                    }
+                    tw.SplitLine();
+                }
+            }
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿#ifndef __MT3620Blink_MT3620Blink_GpioInput_H__
-#define __MT3620Blink_MT3620Blink_GpioInput_H__
-
-#pragma once
-
-// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
@@ -11,6 +6,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+///////////////////////////////////////////////////////////////////////////
+// Type pre definitions:
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-1] Types:
@@ -24,6 +22,11 @@ typedef struct MT3620Blink_GpioInput MT3620Blink_GpioInput;
 // [2-1-2] VTable types:
 
 typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_GpioInput_VTABLE_DECL__;
+
+///////////////////////////////////////////////////////////////////////////
+// Type body definitions:
+
+#ifdef MT3620Blink_internal_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.GpioInput
@@ -50,8 +53,8 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GpioInput);
 extern /* public sealed */ void MT3620Blink_GpioInput__ctor(MT3620Blink_GpioInput* this__, int32_t gpioId);
 extern /* public sealed */ bool MT3620Blink_GpioInput_get_Value(MT3620Blink_GpioInput* this__);
 
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+}
 #endif

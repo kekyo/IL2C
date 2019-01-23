@@ -10,8 +10,8 @@ namespace IL2C.Writers
     {
         private sealed class Context
         {
-            private readonly Dictionary<ITypeInformation, ITypeInformation[]> dependTypeCache =
-                new Dictionary<ITypeInformation, ITypeInformation[]>();
+            private readonly Dictionary<ITypeInformation, HashSet<ITypeInformation>> dependTypeCache =
+                new Dictionary<ITypeInformation, HashSet<ITypeInformation>>();
             private readonly Dictionary<(ITypeInformation, ITypeInformation), bool> isDependCache =
                 new Dictionary<(ITypeInformation, ITypeInformation), bool>();
 
@@ -19,27 +19,17 @@ namespace IL2C.Writers
             {
             }
 
-            private static ITypeInformation UnwrapElementType(ITypeInformation type)
-            {
-                if (type.IsByReference || type.IsPointer)
-                {
-                    return type.ElementType;
-                }
-                else if (type.IsArray)
-                {
-                    return UnwrapElementType(type.ElementType);
-                }
-                else
-                {
-                    return type;
-                }
-            }
-
-            private ITypeInformation[] GetDependentTypes(ITypeInformation type)
+            private ISet<ITypeInformation> GetDependentTypes(ITypeInformation type)
             {
                 if (!dependTypeCache.TryGetValue(type, out var results))
                 {
-                    results = new[] { type }.
+                    results = new HashSet<ITypeInformation>();
+                    dependTypeCache.Add(type, results);
+
+                    foreach (var t in
+                        new[] { type, type.BaseType }.
+                        Concat(type.InterfaceTypes).
+                        Concat(type.NestedTypes).
                         Concat(type.Fields.
                             Select(field => field.FieldType)).
                         Concat(type.DeclaredMethods.
@@ -50,11 +40,12 @@ namespace IL2C.Writers
                             SelectMany(method => method.CodeStream?.Select(ci => ci.Operand).
                                 OfType<ITypeInformation>() ??
                                 Enumerable.Empty<ITypeInformation>())).
-                        Select(UnwrapElementType).
-                        Distinct().
-                        Where(t => t.DeclaringModule.Equals(type.DeclaringModule)).
-                        ToArray();
-                    dependTypeCache.Add(type, results);
+                        Where(t => t != null).
+                        Select(MetadataUtilities.UnwrapCoveredType).
+                        Distinct())
+                    {
+                        results.Add(t);
+                    }
                 }
 
                 return results;
@@ -66,7 +57,7 @@ namespace IL2C.Writers
                 {
                     var fromTypes = GetDependentTypes(from);
 
-                    result = fromTypes.Any(fromType => to.IsAssignableFrom(fromType));
+                    result = fromTypes.Contains(to);
                     isDependCache.Add((to, from), result);
                 }
 
@@ -78,7 +69,9 @@ namespace IL2C.Writers
         {
             var context = new Context();
             var list = new LinkedList<ITypeInformation>();
-            foreach (var type in types)
+            foreach (var type in types.
+                Select(MetadataUtilities.UnwrapCoveredType).
+                Distinct())
             {
                 var phase = 1;
                 var node = list.Last;

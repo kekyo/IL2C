@@ -1,9 +1,4 @@
-﻿#ifndef __MT3620Blink_MT3620Blink_Interops_H__
-#define __MT3620Blink_MT3620Blink_Interops_H__
-
-#pragma once
-
-// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
@@ -11,6 +6,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+///////////////////////////////////////////////////////////////////////////
+// Type pre definitions:
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-1] Types:
@@ -24,6 +22,11 @@ typedef struct MT3620Blink_Interops MT3620Blink_Interops;
 // [2-1-2] VTable types:
 
 typedef System_Object_VTABLE_DECL__ MT3620Blink_Interops_VTABLE_DECL__;
+
+///////////////////////////////////////////////////////////////////////////
+// Type body definitions:
+
+#ifdef MT3620Blink_internal_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Interops
@@ -67,8 +70,8 @@ extern /* public static sealed */ int32_t MT3620Blink_Interops_epoll_create1(int
 extern /* public static sealed */ int32_t MT3620Blink_Interops_epoll_ctl(int32_t epollfd, int32_t op, int32_t fd, MT3620Blink_epoll_event* ev);
 extern /* public static sealed */ int32_t MT3620Blink_Interops_epoll_wait(int32_t epollfd, MT3620Blink_epoll_event* ev, int32_t maxevents, int32_t timeout);
 
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+}
 #endif

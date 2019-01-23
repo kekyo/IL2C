@@ -1,15 +1,13 @@
-﻿#ifndef __MT3620Blink_MT3620Blink_Application_H__
-#define __MT3620Blink_MT3620Blink_Application_H__
-
-#pragma once
-
-// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+///////////////////////////////////////////////////////////////////////////
+// Type pre definitions:
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-1] Types:
@@ -23,6 +21,11 @@ typedef struct MT3620Blink_Application MT3620Blink_Application;
 // [2-1-2] VTable types:
 
 typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Application_VTABLE_DECL__;
+
+///////////////////////////////////////////////////////////////////////////
+// Type body definitions:
+
+#ifdef MT3620Blink_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Application
@@ -51,8 +54,8 @@ extern /* public sealed */ void MT3620Blink_Application_RegisterDescriptor(MT362
 extern /* public sealed */ void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_IEPollListener* target);
 extern /* public sealed */ void MT3620Blink_Application_Run(MT3620Blink_Application* this__);
 
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+}
 #endif

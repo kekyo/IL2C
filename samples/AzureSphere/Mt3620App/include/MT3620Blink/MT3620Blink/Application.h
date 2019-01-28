@@ -1,4 +1,4 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [14-1] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 
@@ -7,15 +7,12 @@ extern "C" {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////
-// Type pre definitions:
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
+// [14-2] Type pre definitions:
 
 ////////////////////////////////////////////////////////////
 // [2-1-1] .NET types:
 
-typedef struct MT3620Blink_Application MT3620Blink_Application;
+/* public sealed class */ typedef struct MT3620Blink_Application MT3620Blink_Application;
 
 ////////////////////////////////////////////////////////////
 // [2-1-2] VTable types:
@@ -23,7 +20,7 @@ typedef struct MT3620Blink_Application MT3620Blink_Application;
 typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Application_VTABLE_DECL__;
 
 ///////////////////////////////////////////////////////////////////////////
-// Type body definitions:
+// [14-3] Type body definitions:
 
 #ifdef MT3620Blink_DECL_TYPE_BODY__
 
@@ -31,7 +28,7 @@ typedef MT3620Blink_Descriptor_VTABLE_DECL__ MT3620Blink_Application_VTABLE_DECL
 // [1] MT3620Blink.Application
 
 // [1-1-2] Class layout
-struct MT3620Blink_Application
+/* public sealed class */ struct MT3620Blink_Application
 {
     MT3620Blink_Application_VTABLE_DECL__* vptr0__;
     System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
@@ -45,9 +42,7 @@ struct MT3620Blink_Application
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Application);
 
 //////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
-
-// [2-4] Member methods: MT3620Blink.Application
+// [2-3] Methods: MT3620Blink.Application
 
 extern /* public sealed */ void MT3620Blink_Application__ctor(MT3620Blink_Application* this__);
 extern /* public sealed */ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__, MT3620Blink_IEPollListener* target);

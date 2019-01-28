@@ -1,48 +1,11 @@
-﻿#ifndef __MT3620Blink_internal_H__
+﻿// [13-1] This is MT3620Blink native code translated by IL2C, do not edit.
+
+#ifndef __MT3620Blink_internal_H__
 #define __MT3620Blink_internal_H__
 
 #pragma once
 
-// This is MT3620Blink native code translated by IL2C, do not edit.
-
-#include <mscorlib.h>
-
-#include <mt3620_rdb.h>
-#include <sys/epoll.h>
-#include <time.h>
-#include <unistd.h>
-#include <sys/timerfd.h>
-#include <applibs/gpio.h>
-
-///////////////////////////////////////////////////////////////////////////
-// Type pre definitions:
-
-#include "MT3620Blink/MT3620Blink/GPIO_OutputMode_Type.h"
-#include "MT3620Blink/MT3620Blink/GpioInput.h"
-#include "MT3620Blink/MT3620Blink/GpioOutput.h"
-#include "MT3620Blink/MT3620Blink/timespec.h"
-#include "MT3620Blink/MT3620Blink/itimerspec.h"
-#include "MT3620Blink/MT3620Blink/Timer.h"
-#include "MT3620Blink/MT3620Blink/GPIO_Value_Type.h"
-#include "MT3620Blink/MT3620Blink/epoll_data_t.h"
-#include "MT3620Blink/MT3620Blink/epoll_event.h"
-#include "MT3620Blink/MT3620Blink/Interops.h"
-
-///////////////////////////////////////////////////////////////////////////
-// Type body definitions:
-
-#define MT3620Blink_internal_DECL_TYPE_BODY__ 1
-
-#include "MT3620Blink/MT3620Blink/GPIO_OutputMode_Type.h"
-#include "MT3620Blink/MT3620Blink/GpioInput.h"
-#include "MT3620Blink/MT3620Blink/GpioOutput.h"
-#include "MT3620Blink/MT3620Blink/timespec.h"
-#include "MT3620Blink/MT3620Blink/itimerspec.h"
-#include "MT3620Blink/MT3620Blink/Timer.h"
-#include "MT3620Blink/MT3620Blink/GPIO_Value_Type.h"
-#include "MT3620Blink/MT3620Blink/epoll_data_t.h"
-#include "MT3620Blink/MT3620Blink/epoll_event.h"
-#include "MT3620Blink/MT3620Blink/Interops.h"
+#include <MT3620Blink.h>
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-1-1] Const strings:

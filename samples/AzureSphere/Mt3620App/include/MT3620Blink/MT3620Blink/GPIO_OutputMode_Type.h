@@ -1,22 +1,18 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [14-1] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
-#include <MT3620Blink_internal.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////
-// Type pre definitions:
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
+// [14-2] Type pre definitions:
 
 ////////////////////////////////////////////////////////////
 // [2-1-1] .NET types:
 
-typedef GPIO_OutputMode_Type MT3620Blink_GPIO_OutputMode_Type;
+/* native type */ typedef GPIO_OutputMode_Type MT3620Blink_GPIO_OutputMode_Type;
 
 ////////////////////////////////////////////////////////////
 // [2-1-2] VTable types:
@@ -24,9 +20,9 @@ typedef GPIO_OutputMode_Type MT3620Blink_GPIO_OutputMode_Type;
 typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_OutputMode_Type_VTABLE_DECL__;
 
 ///////////////////////////////////////////////////////////////////////////
-// Type body definitions:
+// [14-3] Type body definitions:
 
-#ifdef MT3620Blink_internal_DECL_TYPE_BODY__
+#ifdef MT3620Blink_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.GPIO_OutputMode_Type

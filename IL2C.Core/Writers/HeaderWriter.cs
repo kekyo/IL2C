@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -9,228 +10,232 @@ namespace IL2C.Writers
 {
     internal static class HeaderWriter
     {
-        public static void WriteTypePreDefinitions(
-            CodeTextWriter tw,
-            ITypeInformation type)
+        private static void InternalWriteTypePreDefinitions(
+            CodeTextWriter twHeader,
+            ITypeInformation targetType,
+            IReadOnlyDictionary<ITypeInformation, ITypeInformation[]> typesByDeclaring)
         {
-            tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-            tw.WriteLine("// [2-1] Types:");
-            tw.SplitLine();
+            if (typesByDeclaring.TryGetValue(targetType, out var types))
+            {
+                if (types.Length >= 1)
+                {
+                    twHeader.WriteLine("////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [2-1-1] .NET types:");
+                    twHeader.SplitLine();
 
-            tw.WriteLine("////////////////////////////////////////////////////////////");
-            tw.WriteLine("// [2-1-1] .NET types:");
-            tw.SplitLine();
+                    foreach (var type in types)
+                    {
+                        // The nested types have to declare before outer types.
+                        if (!type.Equals(targetType))
+                        {
+                            InternalWriteTypePreDefinitions(
+                                twHeader,
+                                type,
+                                typesByDeclaring);
+                        }
 
-            // If it applied native type attribute.
-            if (type.NativeType != null)
-            {
-                tw.WriteLine(
-                    "typedef {0} {1};",
-                    type.CLanguageNativeTypeName,
-                    type.MangledUniqueName);
-            }
-            // Unfortunately the enum type at C language has not the underlying type.
-            // IL2C emits the enum types don't use C language syntax.
-            else if (type.IsEnum)
-            {
-                tw.WriteLine(
-                    "typedef {0} {1};",
-                    type.ElementType.CLanguageTypeName,
-                    type.MangledUniqueName);
-            }
-            // The delegate derived types are same as System.MulticastDelegate.
-            else if (type.IsDelegate)
-            {
-                tw.WriteLine(
-                    "typedef System_MulticastDelegate {0};",
-                    type.MangledUniqueName);
-            }
-            else
-            {
-                tw.WriteLine(
-                    "typedef struct {0} {0};",
-                    type.MangledUniqueName);
-            }
-            tw.SplitLine();
+                        // If it applied native type attribute.
+                        if (type.NativeType != null)
+                        {
+                            twHeader.WriteLine(
+                                "/* native type */ typedef {0} {1};",
+                                type.CLanguageNativeTypeName,
+                                type.MangledUniqueName);
+                        }
+                        // Unfortunately the enum type at C language has not the underlying type.
+                        // IL2C emits the enum types don't use C language syntax.
+                        else if (type.IsEnum)
+                        {
+                            twHeader.WriteLine(
+                                "/* {0} */ typedef {1} {2};",
+                                type.AttributeDescription,
+                                type.ElementType.CLanguageTypeName,
+                                type.MangledUniqueName);
+                        }
+                        // The delegate derived types are same as System.MulticastDelegate.
+                        else if (type.IsDelegate)
+                        {
+                            twHeader.WriteLine(
+                                "/* {0} */ typedef System_MulticastDelegate {1};",
+                                type.AttributeDescription,
+                                type.MangledUniqueName);
+                        }
+                        else
+                        {
+                            twHeader.WriteLine(
+                                "/* {0} */ typedef struct {1} {1};",
+                                type.AttributeDescription,
+                                type.MangledUniqueName);
+                        }
+                    }
 
-            tw.WriteLine("////////////////////////////////////////////////////////////");
-            tw.WriteLine("// [2-1-2] VTable types:");
-            tw.SplitLine();
-
-            // If virtual method collection doesn't contain newslot method at this declared type:
-            if (!type.NewSlotMethods.Any(method => method.DeclaringType.Equals(type)))
-            {
-                tw.WriteLine(
-                    "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",
-                    type.BaseType.MangledUniqueName,
-                    type.MangledUniqueName);
+                    twHeader.SplitLine();
+                }
             }
-            // Require new vtable layout.
-            else
-            {
-                // Important: The vtable structure definition marked for "const",
-                //    because these vtables place into the ".rdata" section or same location.
-                //    Many small system have very tiny space for RAM (writable memory),
-                //    IL2C has to efficient memory space, vtable can place into ROM location.
-                tw.WriteLine(
-                    "typedef const struct {0}_VTABLE_DECL___ {0}_VTABLE_DECL__;",
-                    type.MangledUniqueName);
-            }
-
-            tw.SplitLine();
         }
 
-        private static void InternalWriteAssemblyReferences(
-            CodeTextWriter tw,
-            TranslateContext translateContext,
-            IExtractContext extractContext,
-            MemberScopes scope)
+        private static void InternalWriteVTableTypePreDefinitions(
+            CodeTextWriter twHeader,
+            ITypeInformation targetType,
+            IReadOnlyDictionary<ITypeInformation, ITypeInformation[]> typesByDeclaring)
         {
-            foreach (var assembly in extractContext.EnumerateRegisteredTypes().
-                Where(entry => entry.Key == scope).
-                SelectMany(entry => entry.Value).
-                Distinct().
-                OrderByDependant().
-                Select(type => type.DeclaringModule.DeclaringAssembly).
-                Where(assembly => !assembly.Equals(translateContext.Assembly)).
-                Distinct())
+            if (typesByDeclaring.TryGetValue(targetType, out var types))
             {
-                tw.WriteLine("#include <{0}.h>", assembly.Name);
+                if (types.Length >= 1)
+                {
+                    twHeader.WriteLine("////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [2-1-2] VTable types:");
+                    twHeader.SplitLine();
+
+                    foreach (var type in types)
+                    {
+                        // The nested types have to declare before outer types.
+                        if (!type.Equals(targetType))
+                        {
+                            InternalWriteVTableTypePreDefinitions(
+                                twHeader,
+                                type,
+                                typesByDeclaring);
+                        }
+
+                        // If virtual method collection doesn't contain newslot method at this declared type:
+                        if (!type.NewSlotMethods.Any(method => method.DeclaringType.Equals(type)))
+                        {
+                            twHeader.WriteLine(
+                                "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",
+                                type.BaseType.MangledUniqueName,
+                                type.MangledUniqueName);
+                        }
+                        // Require new vtable layout.
+                        else
+                        {
+                            // Important: The vtable structure definition marked for "const",
+                            //    because these vtables place into the ".rdata" section or same location.
+                            //    Many small system have very tiny space for RAM (writable memory),
+                            //    IL2C has to efficient memory space, vtable can place into ROM location.
+                            twHeader.WriteLine(
+                                "typedef const struct {0}_VTABLE_DECL___ {0}_VTABLE_DECL__;",
+                                type.MangledUniqueName);
+                        }
+                    }
+
+                    twHeader.SplitLine();
+                }
             }
-            tw.SplitLine();
+        }
+
+        public static void WriteTypePreDefinitions(
+            CodeTextWriter twHeader,
+            ITypeInformation targetType,
+            IReadOnlyDictionary<ITypeInformation, ITypeInformation[]> typesByDeclaring)
+        {
+            InternalWriteTypePreDefinitions(twHeader, targetType, typesByDeclaring);
+            InternalWriteVTableTypePreDefinitions(twHeader, targetType, typesByDeclaring);
         }
 
         public static void WriteCommonHeader(
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
-            string assemblyName,
-            MemberScopes scope)
+            string assemblyName)
         {
             IExtractContext extractContext = translateContext;
+            var assemblyMangledName = Utilities.GetMangledName(assemblyName);
 
-            var annotatedAssemblyName = (scope == MemberScopes.Public) ?
-                assemblyName :
-                (assemblyName + "_internal");
-            var annotatedAssemblyMangledName = Utilities.GetMangledName(annotatedAssemblyName);
-
-            using (var twHeader = storage.CreateHeaderWriter(annotatedAssemblyName))
+            using (var twHeader = storage.CreateHeaderWriter(assemblyName))
             {
-                twHeader.WriteLine("#ifndef __{0}_H__", annotatedAssemblyMangledName);
-                twHeader.WriteLine("#define __{0}_H__", annotatedAssemblyMangledName);
-                twHeader.SplitLine();
-                twHeader.WriteLine("#pragma once");
-                twHeader.SplitLine();
-                twHeader.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
-                twHeader.SplitLine();
-
-                // Write assembly references.
-                InternalWriteAssemblyReferences(
-                    twHeader,
-                    translateContext,
-                    extractContext,
-                    scope);
-
-                foreach (var fileName in extractContext.EnumerateRequiredImportIncludeFileNames())
-                {
-                    twHeader.WriteLine("#include <{0}>", fileName);
-                }
-                twHeader.SplitLine();
-
-                var expr = (scope == MemberScopes.Public) ?
-                    prepared.Types.Where(type => type.IsCLanguagePublicScope) :
-                    prepared.Types.Where(type => type.IsCLanguageLinkageScope);
-
-                twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
-                twHeader.WriteLine("// Type pre definitions:");
-                twHeader.SplitLine();
-
-                foreach (var type in expr.OrderByDependant())
-                {
-                    twHeader.WriteLine(
-                        "#include \"{0}/{1}/{2}.h\"",
-                        assemblyName,
-                        Utilities.GetCLanguageScopedPath(type.ScopeName),
-                        type.Name);
-                }
-                twHeader.SplitLine();
-
-                twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
-                twHeader.WriteLine("// Type body definitions:");
+                twHeader.WriteLine(
+                    "// [13-1] This is {0} native code translated by IL2C, do not edit.",
+                    assemblyName);
                 twHeader.SplitLine();
 
                 twHeader.WriteLine(
-                    "#define {0}_DECL_TYPE_BODY__ 1",
-                    annotatedAssemblyMangledName);
+                    "#ifndef __{0}_H__",
+                    assemblyMangledName);
+                twHeader.WriteLine(
+                    "#define __{0}_H__",
+                    assemblyMangledName);
+                twHeader.SplitLine();
+                twHeader.WriteLine("#pragma once");
                 twHeader.SplitLine();
 
-                foreach (var type in expr.OrderByDependant())
+                // Write assembly references.
+                var assemblies = extractContext.EnumerateRegisteredTypes().
+                    SelectMany(entry => entry.Value).
+                    Distinct().
+                    OrderByDependant().
+                    Select(type => type.DeclaringModule.DeclaringAssembly).
+                    Where(assembly => !assembly.Equals(translateContext.Assembly)).
+                    Distinct().
+                    ToArray();
+                if (assemblies.Length >= 1)
                 {
-                    twHeader.WriteLine(
-                        "#include \"{0}/{1}/{2}.h\"",
-                        assemblyName,
-                        Utilities.GetCLanguageScopedPath(type.ScopeName),
-                        type.Name);
+                    twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [13-2] Assembly references:");
+                    twHeader.SplitLine();
+
+                    foreach (var assembly in assemblies)
+                    {
+                        twHeader.WriteLine("#include <{0}.h>", assembly.Name);
+                    }
+                    twHeader.SplitLine();
                 }
-                twHeader.SplitLine();
 
-                if (scope != MemberScopes.Public)
+                // Write native headers from the NativeType/NativeMethod/NativeValue attributes.
+                var importFileNames = extractContext.EnumerateRequiredImportIncludeFileNames().ToArray();
+                if (importFileNames.Length >= 1)
                 {
-                    var constStrings = extractContext.
-                        ExtractConstStrings().
-                        ToArray();
+                    twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [13-3] Import native headers:");
+                    twHeader.SplitLine();
 
-                    if (constStrings.Length >= 1)
+                    foreach (var fileName in importFileNames)
                     {
-                        twHeader.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                        twHeader.WriteLine("// [9-1-1] Const strings:");
-                        twHeader.SplitLine();
-
-                        foreach (var (symbolName, _) in extractContext.ExtractConstStrings())
-                        {
-                            twHeader.WriteLine(
-                                "System_String* const {0};",
-                                symbolName);
-                        }
-
-                        twHeader.SplitLine();
+                        twHeader.WriteLine("#include <{0}>", fileName);
                     }
+                    twHeader.SplitLine();
+                }
 
-                    var declaredValues = extractContext.
-                        ExtractDeclaredValues().
-                        ToArray();
+                var types = prepared.Types.
+                    Where(type => type.DeclaringType == null).
+                    OrderByDependant().
+                    ToArray();
+                if (types.Length >= 1)
+                {
+                    // Write pre definitions of type.
+                    twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [13-4] Type pre definitions:");
+                    twHeader.SplitLine();
 
-                    if (declaredValues.Length >= 1)
+                    foreach (var type in types)
                     {
-                        twHeader.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                        twHeader.WriteLine("// [12-1-1] Declared values:");
-                        twHeader.SplitLine();
-
-                        foreach (var information in extractContext.ExtractDeclaredValues())
-                        {
-                            foreach (var declaredFields in information.DeclaredFields)
-                            {
-                                twHeader.WriteLine(
-                                    "// {0}",
-                                    declaredFields.FriendlyName);
-                            }
-
-                            var targetType = (information.HintTypes.Length == 1) ?
-                                information.HintTypes[0] :
-                                extractContext.MetadataContext.ByteType.MakeArray();
-                            Debug.Assert(targetType.IsArray);
-
-                            var elementType = targetType.ElementType.ResolveToRuntimeType();
-                            var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
-
-                            var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
-                            twHeader.WriteLine(
-                                "extern const {0};",
-                                lhs);
-                        }
-
-                        twHeader.SplitLine();
+                        twHeader.WriteLine(
+                            "#include \"{0}/{1}/{2}.h\"",
+                            assemblyName,
+                            Utilities.GetCLanguageScopedPath(type.ScopeName),
+                            type.Name);
                     }
+                    twHeader.SplitLine();
+
+                    // Write body definitions of type.
+                    twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [13-5] Type body definitions:");
+                    twHeader.SplitLine();
+
+                    twHeader.WriteLine(
+                        "#define {0}_DECL_TYPE_BODY__ 1",
+                        assemblyMangledName);
+                    twHeader.SplitLine();
+
+                    foreach (var type in types)
+                    {
+                        twHeader.WriteLine(
+                            "#include \"{0}/{1}/{2}.h\"",
+                            assemblyName,
+                            Utilities.GetCLanguageScopedPath(type.ScopeName),
+                            type.Name);
+                    }
+                    twHeader.SplitLine();
                 }
 
                 twHeader.WriteLine("#endif");
@@ -238,46 +243,169 @@ namespace IL2C.Writers
             }
         }
 
-        public static void WriteHeader(
+        public static void WriteCommonInternalHeader(
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
-            MemberScopes scope)
+            string assemblyName)
+        {
+            IExtractContext extractContext = translateContext;
+            var annotatedAssemblyName = assemblyName + "_internal";
+            var annotatedAssemblyMangledName = Utilities.GetMangledName(annotatedAssemblyName);
+
+            using (var twHeader = storage.CreateHeaderWriter(annotatedAssemblyName))
+            {
+                twHeader.WriteLine(
+                    "// [13-1] This is {0} native code translated by IL2C, do not edit.",
+                    assemblyName);
+                twHeader.SplitLine();
+
+                twHeader.WriteLine(
+                    "#ifndef __{0}_H__",
+                    annotatedAssemblyMangledName);
+                twHeader.WriteLine(
+                    "#define __{0}_H__",
+                    annotatedAssemblyMangledName);
+                twHeader.SplitLine();
+                twHeader.WriteLine("#pragma once");
+                twHeader.SplitLine();
+
+                twHeader.WriteLine("#include <{0}.h>", assemblyName);
+                twHeader.SplitLine();
+
+                var constStrings = extractContext.
+                    ExtractConstStrings().
+                    ToArray();
+                if (constStrings.Length >= 1)
+                {
+                    twHeader.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [9-1-1] Const strings:");
+                    twHeader.SplitLine();
+
+                    foreach (var (symbolName, _) in constStrings)
+                    {
+                        twHeader.WriteLine(
+                            "System_String* const {0};",
+                            symbolName);
+                    }
+                    twHeader.SplitLine();
+                }
+
+                var declaredValues = extractContext.
+                    ExtractDeclaredValues().
+                    ToArray();
+                if (declaredValues.Length >= 1)
+                {
+                    twHeader.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    twHeader.WriteLine("// [12-1-1] Declared values:");
+                    twHeader.SplitLine();
+
+                    foreach (var information in declaredValues)
+                    {
+                        foreach (var declaredFields in information.DeclaredFields)
+                        {
+                            twHeader.WriteLine(
+                                "// {0}",
+                                declaredFields.FriendlyName);
+                        }
+
+                        var targetType = (information.HintTypes.Length == 1) ?
+                            information.HintTypes[0] :
+                            extractContext.MetadataContext.ByteType.MakeArray();
+                        Debug.Assert(targetType.IsArray);
+
+                        var elementType = targetType.ElementType.ResolveToRuntimeType();
+                        var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
+
+                        var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
+                        twHeader.WriteLine(
+                            "extern const {0};",
+                            lhs);
+                    }
+                    twHeader.SplitLine();
+                }
+
+                twHeader.WriteLine("#endif");
+                twHeader.Flush();
+            }
+        }
+
+        private static void InternalWriteHeader(
+            CodeTextWriter twHeader,
+            PreparedInformations prepared,
+            ITypeInformation targetType,
+            MemberScopes memberScope,
+            IReadOnlyDictionary<ITypeInformation, ITypeInformation[]> typesByDeclaring)
+        {
+            if (typesByDeclaring.TryGetValue(targetType, out var types))
+            {
+                foreach (var type in types)
+                {
+                    // The nested types have to declare before outer types.
+                    if (!type.Equals(targetType))
+                    {
+                        InternalWriteHeader(
+                            twHeader,
+                            prepared,
+                            type,
+                            memberScope,
+                            typesByDeclaring);
+                    }
+
+                    // Write value type and object reference type.
+                    TypeWriter.WriteTypeDefinitions(
+                        twHeader,
+                        type);
+
+                    // Write type members.
+                    TypeWriter.WriteMemberDefinitions(
+                        twHeader,
+                        type,
+                        field => true,
+                        method => prepared.Functions.ContainsKey(method));
+
+                        // TODO: The internal or private members can separate into the internal headers.
+                        //field => field.CLanguageMemberScope == memberScope,
+                        //method => (method.CLanguageMemberScope == memberScope) && prepared.Functions.ContainsKey(method));
+                }
+            }
+        }
+
+        public static void WriteHeaders(
+            CodeTextStorage storage,
+            TranslateContext translateContext,
+            PreparedInformations prepared)
         {
             IExtractContext extractContext = translateContext;
             var assemblyName = translateContext.Assembly.Name;
-            var annotatedAssemblyMangledName = (scope == MemberScopes.Public) ?
-                translateContext.Assembly.MangledName :
-                (translateContext.Assembly.MangledName + "_internal");
+            var assemblyMangledName = translateContext.Assembly.MangledName;
 
-            var predictField = (scope == MemberScopes.Public) ?
-                new Func<IFieldInformation, bool>(field => field.IsCLanguagePublicScope) :
-                new Func<IFieldInformation, bool>(field => field.IsCLanguageLinkageScope);
-            var predictMethod = (scope == MemberScopes.Public) ?
-                new Func<IMethodInformation, bool>(method => method.IsCLanguagePublicScope && prepared.Functions.ContainsKey(method)) :
-                new Func<IMethodInformation, bool>(method => method.IsCLanguageLinkageScope && prepared.Functions.ContainsKey(method));
+            var typesByDeclaring = prepared.Types.
+                GroupBy(type => type.DeclaringType ?? type).
+                ToDictionary(
+                    g => g.Key,
+                    g => g.OrderByDependant().ToArray());
 
-            foreach (var g in prepared.Types.GroupBy(type => type.ScopeName))
+            foreach (var g in prepared.Types.
+                Where(type => type.DeclaringType == null).
+                GroupBy(type => type.ScopeName))
             {
                 using (var _ = storage.EnterScope(g.Key))
                 {
-                    var typeExpr = (scope == MemberScopes.Public) ?
-                        g.Where(type => type.IsCLanguagePublicScope) :
-                        g.Where(type => type.IsCLanguageLinkageScope);
-                    foreach (var type in typeExpr)
+                    foreach (var type in g)
                     {
                         using (var twHeader = storage.CreateHeaderWriter(type.Name))
                         {
                             var scopeName = Utilities.GetMangledName(type.ScopeName);
 
-                            twHeader.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                            twHeader.WriteLine(
+                                "// [14-1] This is {0} native code translated by IL2C, do not edit.",
+                                assemblyName);
                             twHeader.SplitLine();
 
-                            twHeader.WriteLine("#include <{0}.h>", assemblyName);
-                            if (scope != MemberScopes.Public)
-                            {
-                                twHeader.WriteLine("#include <{0}_internal.h>", assemblyName);
-                            }
+                            twHeader.WriteLine(
+                                "#include <{0}.h>",
+                                assemblyName);
                             twHeader.SplitLine();
 
                             twHeader.WriteLine("#ifdef __cplusplus");
@@ -286,34 +414,30 @@ namespace IL2C.Writers
                             twHeader.SplitLine();
 
                             twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
-                            twHeader.WriteLine("// Type pre definitions:");
+                            twHeader.WriteLine("// [14-2] Type pre definitions:");
                             twHeader.SplitLine();
 
                             // All types exclude privates
                             WriteTypePreDefinitions(
                                 twHeader,
-                                type);
+                                type,
+                                typesByDeclaring);
 
                             twHeader.WriteLine("///////////////////////////////////////////////////////////////////////////");
-                            twHeader.WriteLine("// Type body definitions:");
+                            twHeader.WriteLine("// [14-3] Type body definitions:");
                             twHeader.SplitLine();
 
                             twHeader.WriteLine(
                                 "#ifdef {0}_DECL_TYPE_BODY__",
-                                annotatedAssemblyMangledName);
+                                assemblyMangledName);
                             twHeader.SplitLine();
 
-                            // Write value type and object reference type.
-                            TypeWriter.WriteTypeDefinitions(
+                            InternalWriteHeader(
                                 twHeader,
-                                type);
-
-                            // Write type members.
-                            TypeWriter.WriteMemberDefinitions(
-                                twHeader,
+                                prepared,
                                 type,
-                                predictField,
-                                predictMethod);
+                                MemberScopes.Public,
+                                typesByDeclaring);
 
                             twHeader.WriteLine("#endif");
                             twHeader.SplitLine();

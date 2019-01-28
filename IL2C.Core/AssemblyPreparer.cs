@@ -157,11 +157,10 @@ namespace IL2C
             var returnType = method.ReturnType;
             var parameters = method.Parameters;
 
-            var signatureScope = method.GetScope();
-            prepareContext.RegisterType(returnType, signatureScope);
+            prepareContext.RegisterType(returnType, method.CLanguageMemberScope);
             foreach (var parameter in parameters)
             {
-                prepareContext.RegisterType(parameter.TargetType, signatureScope);
+                prepareContext.RegisterType(parameter.TargetType, method.CLanguageMemberScope);
             }
 
             // Pure abstract method (ignored.)
@@ -256,17 +255,16 @@ namespace IL2C
             foreach (var type in allTypes)
             {
                 // Register used type.
-                var declaringScope = type.GetScope();
-                prepareContext.RegisterType(type, declaringScope);
+                prepareContext.RegisterType(type, type.CLanguageMemberScope);
 
                 if (type.BaseType != null)
                 {
-                    prepareContext.RegisterType(type.BaseType, declaringScope);
+                    prepareContext.RegisterType(type.BaseType, type.CLanguageMemberScope);
                 }
 
                 foreach (var interfaceType in type.InterfaceTypes)
                 {
-                    prepareContext.RegisterType(type.BaseType, declaringScope);
+                    prepareContext.RegisterType(type.BaseType, type.CLanguageMemberScope);
                 }
             }
 
@@ -274,7 +272,7 @@ namespace IL2C
             foreach (var field in allTypes.SelectMany(type => type.Fields))
             {
                 // Register field type.
-                prepareContext.RegisterType(field.FieldType, field.GetScope());
+                prepareContext.RegisterType(field.FieldType, field.CLanguageMemberScope);
 
                 // Register include file from the native value.
                 if (field.NativeValue != null)

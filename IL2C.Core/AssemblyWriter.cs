@@ -23,22 +23,20 @@ namespace IL2C
         {
             var assemblyName = translateContext.Assembly.Name;
 
-            // Write assembly level common public header.
+            // Write assembly level common header.
             HeaderWriter.WriteCommonHeader(
                 storage,
                 translateContext,
                 prepared,
-                assemblyName,
-                MemberScopes.Public);
+                assemblyName);
 
             using (var _ = storage.EnterScope(assemblyName, false))
             {
                 // Write public headers.
-                HeaderWriter.WriteHeader(
+                HeaderWriter.WriteHeaders(
                     storage,
                     translateContext,
-                    prepared,
-                    MemberScopes.Public);
+                    prepared);
             }
         }
 
@@ -53,16 +51,15 @@ namespace IL2C
             var assemblyName = translateContext.Assembly.Name;
 
             // Write assembly level common internal header.
-            HeaderWriter.WriteCommonHeader(
+            HeaderWriter.WriteCommonInternalHeader(
                 storage,
                 translateContext,
                 prepared,
-                assemblyName,
-                MemberScopes.Linkage);
+                assemblyName);
 
             // Write assembly level common internal source code.
             sourceFilePaths.Add(
-                SourceCodeWriter.WriteCommonSourceCode(
+                SourceCodeWriter.WriteCommonInternalSourceCode(
                     storage,
                     translateContext,
                     prepared,
@@ -76,16 +73,9 @@ namespace IL2C
 
             using (var _ = storage.EnterScope(assemblyName, false))
             {
-                // Write internal headers.
-                HeaderWriter.WriteHeader(
-                    storage,
-                    translateContext,
-                    prepared,
-                    MemberScopes.Linkage);
-
                 // Write source codes.
                 sourceFilePaths.AddRange(
-                    SourceCodeWriter.WriteSourceCode(
+                    SourceCodeWriter.WriteSourceCodes(
                         storage,
                         translateContext,
                         prepared,

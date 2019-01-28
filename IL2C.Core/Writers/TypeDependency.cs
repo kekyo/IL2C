@@ -65,7 +65,7 @@ namespace IL2C.Writers
             }
         }
 
-        public static ITypeInformation[] OrderByDependant(this IEnumerable<ITypeInformation> types)
+        public static IEnumerable<ITypeInformation> OrderByDependant(this IEnumerable<ITypeInformation> types)
         {
             var context = new Context();
             var list = new LinkedList<ITypeInformation>();
@@ -111,7 +111,7 @@ namespace IL2C.Writers
                 }
             }
 
-            return list.ToArray();
+            return list;
         }
     }
 }

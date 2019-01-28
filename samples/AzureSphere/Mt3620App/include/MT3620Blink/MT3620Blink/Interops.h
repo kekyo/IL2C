@@ -1,22 +1,18 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [14-1] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
-#include <MT3620Blink_internal.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////
-// Type pre definitions:
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
+// [14-2] Type pre definitions:
 
 ////////////////////////////////////////////////////////////
 // [2-1-1] .NET types:
 
-typedef struct MT3620Blink_Interops MT3620Blink_Interops;
+/* internal static class */ typedef struct MT3620Blink_Interops MT3620Blink_Interops;
 
 ////////////////////////////////////////////////////////////
 // [2-1-2] VTable types:
@@ -24,15 +20,15 @@ typedef struct MT3620Blink_Interops MT3620Blink_Interops;
 typedef System_Object_VTABLE_DECL__ MT3620Blink_Interops_VTABLE_DECL__;
 
 ///////////////////////////////////////////////////////////////////////////
-// Type body definitions:
+// [14-3] Type body definitions:
 
-#ifdef MT3620Blink_internal_DECL_TYPE_BODY__
+#ifdef MT3620Blink_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Interops
 
 // [1-1-2] Class layout
-struct MT3620Blink_Interops
+/* internal static class */ struct MT3620Blink_Interops
 {
     MT3620Blink_Interops_VTABLE_DECL__* vptr0__;
 };
@@ -44,7 +40,7 @@ struct MT3620Blink_Interops
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Interops);
 
 //////////////////////////////////////////////////////////////////////////////////
-// [2-2] Static fields:
+// [2-2] Static fields: MT3620Blink.Interops
 
 #define MT3620Blink_Interops_MT3620_RDB_LED1_RED MT3620_RDB_LED1_RED
 #define MT3620Blink_Interops_MT3620_RDB_BUTTON_A MT3620_RDB_BUTTON_A
@@ -53,9 +49,7 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Interops);
 #define MT3620Blink_Interops_EPOLLIN EPOLLIN
 
 //////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
-
-// [2-4] Member methods: MT3620Blink.Interops
+// [2-3] Methods: MT3620Blink.Interops
 
 extern /* public static sealed */ int32_t MT3620Blink_Interops_close(int32_t fd);
 extern /* public static sealed */ void MT3620Blink_Interops_nanosleep(MT3620Blink_timespec* req, MT3620Blink_timespec* rem);

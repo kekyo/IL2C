@@ -28,7 +28,7 @@ namespace IL2C.Writers
             tw.SplitLine();
         }
 
-        public static string WriteCommonSourceCode(
+        public static string WriteCommonInternalSourceCode(
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
@@ -40,11 +40,17 @@ namespace IL2C.Writers
             {
                 var assemblyMangledName = Utilities.GetMangledName(assemblyName);
 
-                twSource.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                twSource.WriteLine(
+                    "// [15-1] This is {0} native code translated by IL2C, do not edit.",
+                    assemblyName);
                 twSource.SplitLine();
 
-                twSource.WriteLine("#include <{0}.h>", assemblyName);
-                twSource.WriteLine("#include <{0}_internal.h>", assemblyName);
+                twSource.WriteLine(
+                    "#include <{0}.h>",
+                    assemblyName);
+                twSource.WriteLine(
+                    "#include <{0}_internal.h>",
+                    assemblyName);
                 twSource.SplitLine();
 
                 var constStrings = extractContext.
@@ -56,7 +62,7 @@ namespace IL2C.Writers
                     twSource.WriteLine("// [9-1-2] Const strings:");
                     twSource.SplitLine();
 
-                    foreach (var (symbolName, value) in extractContext.ExtractConstStrings())
+                    foreach (var (symbolName, value) in constStrings)
                     {
                         twSource.WriteLine(
                             "IL2C_CONST_STRING({0}, {1});",
@@ -76,7 +82,7 @@ namespace IL2C.Writers
                     twSource.WriteLine("// [12-1-2] Declared values:");
                     twSource.SplitLine();
 
-                    foreach (var information in extractContext.ExtractDeclaredValues())
+                    foreach (var information in declaredValues)
                     {
                         foreach (var declaredFields in information.DeclaredFields)
                         {
@@ -141,7 +147,7 @@ namespace IL2C.Writers
 
                     twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
                     twSource.WriteLine(
-                        "// [9] Type: {0}",
+                        "// [9-1] Type: {0}",
                         targetType.FriendlyName);
                     twSource.SplitLine();
 
@@ -149,25 +155,12 @@ namespace IL2C.Writers
                     twSource.WriteLine("// [9-2] File scope prototypes:");
                     twSource.SplitLine();
 
-                    // Embeds all types exclude publics and internals (for file scope prototypes)
-                    if (type.IsCLanguageFileScope)
-                    {
-                        HeaderWriter.WriteTypePreDefinitions(
-                            twSource,
-                            type);
-
-                        // Write value type and object reference type.
-                        TypeWriter.WriteTypeDefinitions(
-                            twSource,
-                            type);
-                    }
-
                     // Write type members.
                     TypeWriter.WriteMemberDefinitions(
                         twSource,
                         type,
-                        field => field.IsCLanguageFileScope,
-                        method => method.IsCLanguageFileScope && prepared.Functions.ContainsKey(method));
+                        field => field.CLanguageMemberScope == MemberScopes.File,
+                        method => (method.CLanguageMemberScope == MemberScopes.File) && prepared.Functions.ContainsKey(method));
 
                     twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
                     twSource.WriteLine("// [9-3] Static field instances:");
@@ -223,7 +216,7 @@ namespace IL2C.Writers
             }
         }
 
-        public static string[] WriteSourceCode(
+        public static string[] WriteSourceCodes(
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
@@ -234,7 +227,9 @@ namespace IL2C.Writers
 
             var typesByDeclaring = prepared.Types.
                 GroupBy(type => type.DeclaringType ?? type).
-                ToDictionary(g => g.Key, g => g.OrderByDependant());
+                ToDictionary(
+                    g => g.Key,
+                    g => g.OrderByDependant().ToArray());
 
             var sourceFiles = new List<string>();
 
@@ -245,10 +240,17 @@ namespace IL2C.Writers
                 {
                     using (var twSource = storage.CreateSourceCodeWriter(targetType.Name))
                     {
-                        twSource.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                        twSource.WriteLine(
+                            "// [15-2] This is {0} native code translated by IL2C, do not edit.",
+                            assemblyName);
                         twSource.SplitLine();
-                        twSource.WriteLine("#include <{0}.h>", assemblyName);
-                        twSource.WriteLine("#include <{0}_internal.h>", assemblyName);
+
+                        twSource.WriteLine(
+                            "#include <{0}.h>",
+                            assemblyName);
+                        twSource.WriteLine(
+                            "#include <{0}_internal.h>",
+                            assemblyName);
                         twSource.SplitLine();
 
                         // Write assembly references at the file scope.
@@ -295,10 +297,15 @@ namespace IL2C.Writers
             {
                 var assemblyMangledName = Utilities.GetMangledName(assemblyName);
 
-                twSource.WriteLine("// This is {0} native code translated by IL2C, do not edit.", assemblyName);
+                twSource.WriteLine(
+                    "// [15-3] This is {0} native code translated by IL2C, do not edit.",
+                    assemblyName);
                 twSource.SplitLine();
-                twSource.WriteLine("// This is the bundler source code for {0},", assemblyName);
-                twSource.WriteLine("// you can use it if you wanna compile only one source file.");
+                twSource.WriteLine(
+                    "// This is the bundler source code for {0},",
+                    assemblyName);
+                twSource.WriteLine(
+                    "// you can use it if you wanna compile only one source file.");
                 twSource.SplitLine();
 
                 twSource.WriteLine(

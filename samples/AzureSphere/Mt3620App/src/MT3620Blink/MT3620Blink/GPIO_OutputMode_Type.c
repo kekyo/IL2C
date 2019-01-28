@@ -1,4 +1,4 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [15-2] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9] Type: MT3620Blink.GPIO_OutputMode_Type
+// [9-1] Type: MT3620Blink.GPIO_OutputMode_Type
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:

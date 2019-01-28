@@ -24,9 +24,10 @@ namespace IL2C.Metadata
     public interface IMethodInformation : IMemberInformation
     {
         bool IsPublic { get; }
+        bool IsPrivate { get; }
         bool IsFamily { get; }
         bool IsFamilyOrAssembly { get; }
-        bool IsPrivate { get; }
+        bool IsFamilyAndAssembly { get; }
 
         bool IsConstructor { get; }
         bool IsStatic { get; }
@@ -44,6 +45,8 @@ namespace IL2C.Metadata
         IParameterInformation[] Parameters { get; }
         ILocalVariableInformation[] LocalVariables { get; }
         IMethodInformation[] Overrides { get; }
+
+        (ITypeInformation, IMethodInformation)? GetOverridedOrImplementedMethod();
 
         ICodeStream CodeStream { get; }
         int OverloadIndex { get; }
@@ -86,6 +89,38 @@ namespace IL2C.Metadata
                             "Virtual method" :
                             "Method";
 
+        public override string AttributeDescription
+        {
+            get
+            {
+                var scope = this.IsPublic ?
+                    "public" :
+                    this.IsFamily ?
+                    "protected" :
+                    this.IsFamilyOrAssembly ?
+                    "protected internal" :
+                    this.IsFamilyAndAssembly ?
+                    "private protected" :
+                    this.IsPrivate ?
+                    "private" :
+                    "internal";
+                var attribute1 = this.IsStatic ?
+                    "static" :
+                    this.IsVirtual ?
+                    (this.IsReuseSlot ? "override" : "virtual") :
+                    string.Empty;
+                var attribute2 = this.IsSealed ?
+                    "sealed" :
+                    this.IsExtern ?
+                    "extern" :
+                    string.Empty;
+
+                return string.Join(" ",
+                    new[] { scope, attribute1, attribute2 }.
+                    Where(a => !string.IsNullOrWhiteSpace(a)));
+            }
+        }
+
         private IParameterInformation CreateThisParameterInformation(ITypeInformation thisType) =>
             new ParameterInformation(
                 this,
@@ -112,12 +147,14 @@ namespace IL2C.Metadata
 
         public bool IsPublic =>
             this.Definition.IsPublic;
+        public bool IsPrivate =>
+            this.Definition.IsPrivate;
         public bool IsFamily =>
             this.Definition.IsFamily;
         public bool IsFamilyOrAssembly =>
             this.Definition.IsFamilyOrAssembly;
-        public bool IsPrivate =>
-            this.Definition.IsPrivate;
+        public bool IsFamilyAndAssembly =>
+            this.Definition.IsFamilyAndAssembly;
 
         public bool IsConstructor =>
             this.Definition.IsConstructor;
@@ -130,11 +167,14 @@ namespace IL2C.Metadata
             //   2. The method at value type maybe marked virtual, so dropped it to make excluding from vtable entry.
             !(this.IsSealed && this.IsNewSlot) &&
             !(this.DeclaringType.IsValueType && !this.IsReuseSlot);
+
+        public (ITypeInformation, IMethodInformation)? GetOverridedOrImplementedMethod() =>
+            this.DeclaringType?.InterfaceTypes.
+                Select(t => (t, t.DeclaredMethods.FirstOrDefault(m => MetadataUtilities.VirtualMethodSignatureComparer.Equals(m, this)))).
+                FirstOrDefault(entry => entry.Item2 != null);
+
         public bool IsOverridedOrImplemented =>
-            this.Definition.IsVirtual ||
-            (this.DeclaringType?.InterfaceTypes.
-                Any(t => t.DeclaredMethods.
-                    Any(m => MetadataUtilities.VirtualMethodSignatureComparer.Equals(m, this))) ?? false);
+            this.Definition.IsVirtual || this.GetOverridedOrImplementedMethod().HasValue;
         public bool IsAbstract =>
             this.Definition.IsAbstract;
         public bool IsSealed =>
@@ -377,15 +417,54 @@ namespace IL2C.Metadata
                 ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
             FirstOrDefault();
 
-        public override bool IsCLanguagePublicScope =>
-            this.DeclaringType.IsCLanguagePublicScope &&
-            (this.Definition.IsPublic || this.IsFamily || this.Definition.IsFamilyOrAssembly);
-        public override bool IsCLanguageLinkageScope =>
-            this.DeclaringType.IsCLanguageLinkageScope &&
-            (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);
-        public override bool IsCLanguageFileScope =>
-            this.DeclaringType.IsCLanguageFileScope ||
-            this.Definition.IsPrivate;
+        private ITypeInformation GetInterfaceImplementerType() =>
+            this.GetOverridedOrImplementedMethod()?.Item1;
+
+        public override MemberScopes CLanguageMemberScope
+        {
+            get
+            {
+                var scope = MemberScopes.HiddenOrUnknown;
+                var definition = this.Definition;
+
+                if (definition.IsPrivate)
+                {
+                    scope = MemberScopes.File;
+                }
+                else if (definition.IsFamily || definition.IsFamilyAndAssembly)
+                {
+                    scope = MemberScopes.Linkage;
+                }
+                else if (definition.IsPublic || definition.IsFamilyOrAssembly)
+                {
+                    scope = MemberScopes.Public;
+                }
+
+                var declaringType = this.DeclaringType;
+                if (declaringType.CLanguageMemberScope < scope)
+                {
+                    scope = declaringType.CLanguageMemberScope;
+                }
+
+                // The virtual method or interface implemented method expose wider scope than member declaration.
+                // Because these methods are required the vtable entries from the derived class types.
+                if (declaringType.IsClass)
+                {
+                    if (definition.IsVirtual &&
+                        (declaringType.CLanguageMemberScope > scope))
+                    {
+                        scope = declaringType.CLanguageMemberScope;
+                    }
+                    var interfaceType = this.GetInterfaceImplementerType();
+                    if (interfaceType?.CLanguageMemberScope > scope)
+                    {
+                        scope = interfaceType.CLanguageMemberScope;
+                    }
+                }
+
+                return scope;
+            }
+        }
 
         public string CLanguageFunctionName =>
             this.GetFriendlyName(FriendlyNameTypes.FullName | FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);

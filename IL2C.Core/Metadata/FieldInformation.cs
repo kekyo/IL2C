@@ -8,8 +8,10 @@ namespace IL2C.Metadata
     public interface IFieldInformation : IMemberInformation
     {
         bool IsPublic { get; }
+        bool IsPrivate { get; }
         bool IsFamily { get; }
         bool IsFamilyOrAssembly { get; }
+        bool IsFamilyAndAssembly { get; }
 
         bool IsStatic { get; }
         bool HasConstant { get; }
@@ -37,12 +39,41 @@ namespace IL2C.Metadata
             ? "Static field"
             : "Field";
 
+        public override string AttributeDescription
+        {
+            get
+            {
+                var scope = this.IsPublic ?
+                    "public" :
+                    this.IsFamily ?
+                    "protected" :
+                    this.IsFamilyOrAssembly ?
+                    "protected internal" :
+                    this.IsFamilyAndAssembly ?
+                    "private protected" :
+                    this.IsPrivate ?
+                    "private" :
+                    "internal";
+                var attribute1 = this.HasConstant ?
+                    "const" :
+                    this.IsStatic ?
+                    "static" :
+                    string.Empty;
+
+                return string.Join(" ",
+                    new[] { scope, attribute1 }.
+                    Where(a => !string.IsNullOrWhiteSpace(a)));
+            }
+        }
+
         public override string UniqueName =>
             string.Format("{0}.{1}", this.Member.DeclaringType.FullName, this.Member.Name);
 
         public bool IsPublic => this.Definition.IsPublic;
+        public bool IsPrivate => this.Definition.IsPrivate;
         public bool IsFamily => this.Definition.IsFamily;
         public bool IsFamilyOrAssembly => this.Definition.IsFamilyOrAssembly;
+        public bool IsFamilyAndAssembly => this.Definition.IsFamilyAndAssembly;
 
         public bool IsStatic => this.Definition.IsStatic;
         public bool HasConstant => this.Definition.HasConstant;
@@ -70,15 +101,35 @@ namespace IL2C.Metadata
                 initializer);
         }
 
-        public override bool IsCLanguagePublicScope =>
-            this.DeclaringType.IsCLanguagePublicScope &&
-            (this.Definition.IsPublic || this.IsFamily || this.Definition.IsFamilyOrAssembly);
-        public override bool IsCLanguageLinkageScope =>
-            this.DeclaringType.IsCLanguageLinkageScope &&
-            (!this.Definition.IsPrivate || this.Definition.IsFamilyAndAssembly);
-        public override bool IsCLanguageFileScope =>
-            this.DeclaringType.IsCLanguageFileScope ||
-            this.Definition.IsPrivate;
+        public override MemberScopes CLanguageMemberScope
+        {
+            get
+            {
+                var scope = MemberScopes.HiddenOrUnknown;
+                var definition = this.Definition;
+
+                if (definition.IsPrivate)
+                {
+                    scope = MemberScopes.File;
+                }
+                else if (definition.IsFamily || definition.IsFamilyAndAssembly)
+                {
+                    scope = MemberScopes.Linkage;
+                }
+                else if (definition.IsPublic || definition.IsFamilyOrAssembly)
+                {
+                    scope = MemberScopes.Public;
+                }
+
+                var declaringType = this.DeclaringType;
+                if (declaringType.CLanguageMemberScope < scope)
+                {
+                    scope = declaringType.CLanguageMemberScope;
+                }
+
+                return scope;
+            }
+        }
 
         public NativeValueAttribute NativeValue =>
             this.Definition.CustomAttributes.

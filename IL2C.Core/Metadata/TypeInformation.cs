@@ -14,9 +14,12 @@ namespace IL2C.Metadata
         string ScopeName { get; }
 
         bool IsPublic { get; }
+        bool IsNotPublic { get; }
         bool IsNestedPublic { get; }
+        bool IsNestedPrivate { get; }
         bool IsNestedFamily { get; }
         bool IsNestedFamilyOrAssembly { get; }
+        bool IsNestedFamilyAndAssembly { get; }
 
         bool IsAbstract { get; }
         bool IsStatic { get; }
@@ -155,10 +158,55 @@ namespace IL2C.Metadata
                             "Array" :
                             "Class";
 
+        public override string AttributeDescription
+        {
+            get
+            {
+                var scope = (this.IsPublic || this.IsNestedPublic) ?
+                    "public" :
+                    this.IsNestedFamily?
+                    "protected" :
+                    this.IsNestedFamilyOrAssembly?
+                    "protected internal" :
+                    this.IsNestedFamilyAndAssembly ?
+                    "private protected" :
+                    this.IsNestedPrivate?
+                    "private" :
+                    "internal";
+                var attribute1 = !this.IsClass ?
+                    string.Empty :
+                    this.IsStatic ?
+                    "static" :
+                    this.IsAbstract ?
+                    "abstract" :
+                    this.IsSealed ?
+                    "sealed" :
+                    string.Empty;
+                var typeName = this.IsEnum ?
+                    "enum" :
+                    this.IsDelegate ?
+                    "delegate" :
+                    this.IsInterface ?
+                    "interface" :
+                    this.IsValueType ?
+                    "struct" :
+                    this.IsPointer ?
+                    "pointer" :
+                    "class";
+
+                return string.Join(" ",
+                    new[] { scope, attribute1, typeName }.
+                    Where(a => !string.IsNullOrWhiteSpace(a)));
+            }
+        }
+
         public bool IsPublic => (this.Definition as TypeDefinition)?.IsPublic ?? false;
+        public bool IsNotPublic => (this.Definition as TypeDefinition)?.IsNotPublic ?? false;
         public bool IsNestedPublic => (this.Definition as TypeDefinition)?.IsNestedPublic ?? false;
+        public bool IsNestedPrivate => (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
         public bool IsNestedFamily => (this.Definition as TypeDefinition)?.IsNestedFamily ?? false;
         public bool IsNestedFamilyOrAssembly => (this.Definition as TypeDefinition)?.IsNestedFamilyOrAssembly ?? false;
+        public bool IsNestedFamilyAndAssembly => (this.Definition as TypeDefinition)?.IsNestedFamilyAndAssembly ?? false;
         public bool IsAbstract => (this.Definition as TypeDefinition)?.IsAbstract ?? false;
 
         public bool IsStatic
@@ -436,46 +484,34 @@ namespace IL2C.Metadata
                     method.DeclaringType.IsAssignableFrom(this)).
                 ToArray();
 
-        public override bool IsCLanguagePublicScope
+        public override MemberScopes CLanguageMemberScope
         {
             get
             {
                 var definition = this.Definition as TypeDefinition;
                 if (definition != null)
                 {
-                    return definition.IsPublic ||
+                    if (definition.IsNestedPrivate)
+                    {
+                        return MemberScopes.File;
+                    }
+                    else if (definition.IsNotPublic ||
+                        definition.IsNestedAssembly ||
+                        definition.IsNestedFamilyAndAssembly)
+                    {
+                        return MemberScopes.Linkage;
+                    }
+                    else if (definition.IsPublic ||
                         definition.IsNestedPublic ||
                         definition.IsNestedFamily ||
-                        definition.IsNestedFamilyOrAssembly;
+                        definition.IsNestedFamilyOrAssembly)
+                    {
+                        return MemberScopes.Public;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
+                return MemberScopes.HiddenOrUnknown;
             }
         }
-
-        public override bool IsCLanguageLinkageScope
-        {
-            get
-            {
-                var definition = this.Definition as TypeDefinition;
-                if (definition != null)
-                {
-                    return
-                        definition.IsNotPublic ||
-                        definition.IsNestedAssembly ||
-                        definition.IsNestedFamilyAndAssembly;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-
-        public override bool IsCLanguageFileScope =>
-            (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
 
         public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false)
         {

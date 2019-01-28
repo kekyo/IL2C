@@ -122,12 +122,13 @@ namespace IL2C.Writers
                     declaredType.MemberTypeName);
 
                 // Emit enum values:
-                //   Unfortunately the enum type at C language has not the underlying type.
+                //   Unfortunately the enum type at C language doesn't have the strict underlying type.
                 //   IL2C emits the enum types using not C language syntax.
                 foreach (var field in declaredType.Fields.Where(field => field.HasConstant))
                 {
                     tw.WriteLine(
-                        "static const {0} {1}_{2} = {3};",
+                        "/* {0} */ static const {1} {2}_{3} = {4};",
+                        declaredType.AttributeDescription,
                         declaredType.CLanguageTypeName,
                         declaredType.MangledUniqueName,
                         field.Name,
@@ -143,7 +144,8 @@ namespace IL2C.Writers
                     declaredType.MemberTypeName);
 
                 tw.WriteLine(
-                    "struct {0}",
+                    "/* {0} */ struct {1}",
+                    declaredType.AttributeDescription,
                     declaredType.MangledUniqueName);
                 tw.WriteLine("{");
 
@@ -280,6 +282,7 @@ namespace IL2C.Writers
             Func<IFieldInformation, bool> predictField,
             Func<IMethodInformation, bool> predictMethod)
         {
+            // Doesn't required writing the enum type members.
             if (!declaredType.IsEnum)
             {
                 var staticFields = declaredType.Fields.
@@ -288,7 +291,9 @@ namespace IL2C.Writers
                 if (staticFields.Length >= 1)
                 {
                     tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                    tw.WriteLine("// [2-2] Static fields:");
+                    tw.WriteLine(
+                        "// [2-2] Static fields: {0}",
+                        declaredType.FriendlyName);
                     tw.SplitLine();
 
                     foreach (var field in staticFields)
@@ -311,45 +316,22 @@ namespace IL2C.Writers
                     tw.SplitLine();
                 }
 
-                tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                tw.WriteLine("// [2-3] Methods:");
-                tw.SplitLine();
-
                 var methods = declaredType.DeclaredMethods.
                     Where(predictMethod).
                     ToArray();
                 if (methods.Length >= 1)
                 {
+                    tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
                     tw.WriteLine(
-                        "// [2-4] Member methods: {0}",
+                        "// [2-3] Methods: {0}",
                         declaredType.FriendlyName);
                     tw.SplitLine();
 
                     foreach (var method in methods)
                     {
-                        var scope = method.IsPublic ?
-                            "public" :
-                            method.IsFamily ?
-                            "protected" :
-                            method.IsFamilyOrAssembly ?
-                            "protected internal" :
-                            method.IsPrivate ?
-                            "private" :
-                            "internal";
-                        var attribute1 = method.IsStatic ?
-                            "static" :
-                            method.IsVirtual ?
-                            (method.IsReuseSlot ? "override" : "virtual") :
-                            string.Empty;
-                        var attribute2 = method.IsSealed ?
-                            "sealed" :
-                            method.IsExtern ?
-                            "extern" :
-                            string.Empty;
-
                         tw.WriteLine(
                             "extern /* {0} */ {1};",
-                            string.Join(" ", new[] { scope, attribute1, attribute2 }.Where(a => !string.IsNullOrWhiteSpace(a))),
+                            method.AttributeDescription,
                             method.CLanguageFunctionPrototype);
                     }
                     tw.SplitLine();

@@ -1,4 +1,4 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [15-2] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
@@ -10,24 +10,16 @@ extern "C" {
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9] Type: MT3620Blink.Timer
+// [9-1] Type: MT3620Blink.Timer
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:
 
 //////////////////////////////////////////////////////////////////////////////////
-// [2-2] Static fields:
+// [2-2] Static fields: MT3620Blink.Timer
 
 #define MT3620Blink_Timer_CLOCK_MONOTONIC CLOCK_MONOTONIC
 #define MT3620Blink_Timer_TFD_NONBLOCK TFD_NONBLOCK
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
-
-// [2-4] Member methods: MT3620Blink.Timer
-
-extern /* private sealed */ int32_t MT3620Blink_Timer_MT3620Blink_IEPollListener_get_Identity(MT3620Blink_Timer* this__);
-extern /* private sealed */ void MT3620Blink_Timer_MT3620Blink_IEPollListener_OnRaised(MT3620Blink_Timer* this__);
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-3] Static field instances:

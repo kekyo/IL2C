@@ -4,17 +4,24 @@ using Mono.Cecil;
 
 namespace IL2C.Metadata
 {
+    public enum MemberScopes
+    {
+        HiddenOrUnknown,
+        File,
+        Linkage,
+        Public
+    }
+
     public interface IMemberInformation
         : IMetadataInformation
     {
         string MemberTypeName { get; }
+        string AttributeDescription { get; }
 
         IModuleInformation DeclaringModule { get; }
         ITypeInformation DeclaringType { get; }
 
-        bool IsCLanguagePublicScope { get; }
-        bool IsCLanguageLinkageScope { get; }
-        bool IsCLanguageFileScope { get; }
+        MemberScopes CLanguageMemberScope { get; }
     }
 
     internal abstract class MemberInformation<TReference, TDefinition>
@@ -36,6 +43,7 @@ namespace IL2C.Metadata
             this.Member.GetFriendlyName();
 
         public abstract string MemberTypeName { get; }
+        public abstract string AttributeDescription { get; }
 
         internal ModuleInformation DeclaringModule { get; }
         IModuleInformation IMemberInformation.DeclaringModule =>
@@ -44,9 +52,7 @@ namespace IL2C.Metadata
         public ITypeInformation DeclaringType =>
             this.MetadataContext.GetOrAddType(this.Member.DeclaringType);
 
-        public abstract bool IsCLanguagePublicScope { get; }
-        public abstract bool IsCLanguageLinkageScope { get; }
-        public abstract bool IsCLanguageFileScope { get; }
+        public abstract MemberScopes CLanguageMemberScope { get; }
 
         public override string ToString() =>
             string.Format("{0}: {1}", this.MemberTypeName, this.FriendlyName);

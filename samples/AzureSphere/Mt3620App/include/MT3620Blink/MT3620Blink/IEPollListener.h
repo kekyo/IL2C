@@ -1,4 +1,4 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [14-1] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 
@@ -7,15 +7,12 @@ extern "C" {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////
-// Type pre definitions:
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
+// [14-2] Type pre definitions:
 
 ////////////////////////////////////////////////////////////
 // [2-1-1] .NET types:
 
-typedef struct MT3620Blink_IEPollListener MT3620Blink_IEPollListener;
+/* public interface */ typedef struct MT3620Blink_IEPollListener MT3620Blink_IEPollListener;
 
 ////////////////////////////////////////////////////////////
 // [2-1-2] VTable types:
@@ -23,7 +20,7 @@ typedef struct MT3620Blink_IEPollListener MT3620Blink_IEPollListener;
 typedef const struct MT3620Blink_IEPollListener_VTABLE_DECL___ MT3620Blink_IEPollListener_VTABLE_DECL__;
 
 ///////////////////////////////////////////////////////////////////////////
-// Type body definitions:
+// [14-3] Type body definitions:
 
 #ifdef MT3620Blink_DECL_TYPE_BODY__
 
@@ -39,16 +36,13 @@ struct MT3620Blink_IEPollListener_VTABLE_DECL___
 };
 
 // [1-1-2] Interface layout
-struct MT3620Blink_IEPollListener
+/* public interface */ struct MT3620Blink_IEPollListener
 {
     MT3620Blink_IEPollListener_VTABLE_DECL__* vptr0__;
 };
 
 // [1-4] Runtime type information
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_IEPollListener);
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
 
 #endif
 

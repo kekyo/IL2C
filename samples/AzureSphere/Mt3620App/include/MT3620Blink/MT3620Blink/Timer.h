@@ -1,22 +1,18 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [14-1] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
-#include <MT3620Blink_internal.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 ///////////////////////////////////////////////////////////////////////////
-// Type pre definitions:
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
+// [14-2] Type pre definitions:
 
 ////////////////////////////////////////////////////////////
 // [2-1-1] .NET types:
 
-typedef struct MT3620Blink_Timer MT3620Blink_Timer;
+/* internal abstract class */ typedef struct MT3620Blink_Timer MT3620Blink_Timer;
 
 ////////////////////////////////////////////////////////////
 // [2-1-2] VTable types:
@@ -24,9 +20,9 @@ typedef struct MT3620Blink_Timer MT3620Blink_Timer;
 typedef const struct MT3620Blink_Timer_VTABLE_DECL___ MT3620Blink_Timer_VTABLE_DECL__;
 
 ///////////////////////////////////////////////////////////////////////////
-// Type body definitions:
+// [14-3] Type body definitions:
 
-#ifdef MT3620Blink_internal_DECL_TYPE_BODY__
+#ifdef MT3620Blink_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.Timer
@@ -44,7 +40,7 @@ struct MT3620Blink_Timer_VTABLE_DECL___
 };
 
 // [1-1-2] Class layout
-struct MT3620Blink_Timer
+/* internal abstract class */ struct MT3620Blink_Timer
 {
     MT3620Blink_Timer_VTABLE_DECL__* vptr0__;
     System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
@@ -56,12 +52,18 @@ struct MT3620Blink_Timer
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Timer);
 
 //////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
+// [2-2] Static fields: MT3620Blink.Timer
 
-// [2-4] Member methods: MT3620Blink.Timer
+#define MT3620Blink_Timer_CLOCK_MONOTONIC CLOCK_MONOTONIC
+#define MT3620Blink_Timer_TFD_NONBLOCK TFD_NONBLOCK
+
+//////////////////////////////////////////////////////////////////////////////////
+// [2-3] Methods: MT3620Blink.Timer
 
 extern /* protected */ void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__);
 extern /* public */ void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec);
+extern /* private sealed */ int32_t MT3620Blink_Timer_MT3620Blink_IEPollListener_get_Identity(MT3620Blink_Timer* this__);
+extern /* private sealed */ void MT3620Blink_Timer_MT3620Blink_IEPollListener_OnRaised(MT3620Blink_Timer* this__);
 
 #endif
 

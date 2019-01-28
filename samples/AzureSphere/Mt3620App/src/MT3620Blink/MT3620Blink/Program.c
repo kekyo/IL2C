@@ -1,4 +1,4 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [15-2] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
@@ -10,50 +10,13 @@ extern "C" {
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9] Type: MT3620Blink.Program
+// [9-1] Type: MT3620Blink.Program
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:
 
 //////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
-
-////////////////////////////////////////////////////////////
-// [2-1-1] .NET types:
-
-typedef struct MT3620Blink_Program_GpioBlinker MT3620Blink_Program_GpioBlinker;
-
-////////////////////////////////////////////////////////////
-// [2-1-2] VTable types:
-
-typedef MT3620Blink_Timer_VTABLE_DECL__ MT3620Blink_Program_GpioBlinker_VTABLE_DECL__;
-
-////////////////////////////////////////////////////////////
-// [1] MT3620Blink.Program.GpioBlinker
-
-// [1-1-2] Class layout
-struct MT3620Blink_Program_GpioBlinker
-{
-    MT3620Blink_Program_GpioBlinker_VTABLE_DECL__* vptr0__;
-    System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
-    int32_t baseField1__;
-    MT3620Blink_IEPollListener_VTABLE_DECL__* vptr_MT3620Blink_IEPollListener__;
-    il2c_arraytype(System_Int64)* blinkIntervals;
-    MT3620Blink_GpioOutput* output;
-    bool flag;
-    int32_t blinkIntervalIndex;
-};
-
-// [1-5-2] VTable (Derived from MT3620Blink.Timer)
-extern MT3620Blink_Program_GpioBlinker_VTABLE_DECL__ MT3620Blink_Program_GpioBlinker_VTABLE__;
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program_GpioBlinker);
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
-
-// [2-4] Member methods: MT3620Blink.Program.GpioBlinker
+// [2-3] Methods: MT3620Blink.Program.GpioBlinker
 
 extern /* public sealed */ void MT3620Blink_Program_GpioBlinker__ctor(MT3620Blink_Program_GpioBlinker* this__, int32_t gpioId);
 extern /* public override sealed */ void MT3620Blink_Program_GpioBlinker_Dispose(MT3620Blink_Program_GpioBlinker* this__);
@@ -397,49 +360,13 @@ IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Program_GpioBlinker, "MT3620Blink.Program.Gp
 IL2C_RUNTIME_TYPE_END();
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9] Type: MT3620Blink.Program
+// [9-1] Type: MT3620Blink.Program
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:
 
 //////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
-
-////////////////////////////////////////////////////////////
-// [2-1-1] .NET types:
-
-typedef struct MT3620Blink_Program_GpioPoller MT3620Blink_Program_GpioPoller;
-
-////////////////////////////////////////////////////////////
-// [2-1-2] VTable types:
-
-typedef MT3620Blink_Timer_VTABLE_DECL__ MT3620Blink_Program_GpioPoller_VTABLE_DECL__;
-
-////////////////////////////////////////////////////////////
-// [1] MT3620Blink.Program.GpioPoller
-
-// [1-1-2] Class layout
-struct MT3620Blink_Program_GpioPoller
-{
-    MT3620Blink_Program_GpioPoller_VTABLE_DECL__* vptr0__;
-    System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
-    int32_t baseField1__;
-    MT3620Blink_IEPollListener_VTABLE_DECL__* vptr_MT3620Blink_IEPollListener__;
-    MT3620Blink_GpioInput* input;
-    MT3620Blink_Program_GpioBlinker* blinker;
-    bool last;
-};
-
-// [1-5-2] VTable (Derived from MT3620Blink.Timer)
-extern MT3620Blink_Program_GpioPoller_VTABLE_DECL__ MT3620Blink_Program_GpioPoller_VTABLE__;
-
-// [1-4] Runtime type information
-IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program_GpioPoller);
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
-
-// [2-4] Member methods: MT3620Blink.Program.GpioPoller
+// [2-3] Methods: MT3620Blink.Program.GpioPoller
 
 extern /* public sealed */ void MT3620Blink_Program_GpioPoller__ctor(MT3620Blink_Program_GpioPoller* this__, int32_t gpioId, MT3620Blink_Program_GpioBlinker* blinker);
 extern /* public override sealed */ void MT3620Blink_Program_GpioPoller_Dispose(MT3620Blink_Program_GpioPoller* this__);
@@ -738,13 +665,10 @@ IL2C_RUNTIME_TYPE_BEGIN(MT3620Blink_Program_GpioPoller, "MT3620Blink.Program.Gpi
 IL2C_RUNTIME_TYPE_END();
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9] Type: MT3620Blink.Program
+// [9-1] Type: MT3620Blink.Program
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:
-
-//////////////////////////////////////////////////////////////////////////////////
-// [2-3] Methods:
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-3] Static field instances:

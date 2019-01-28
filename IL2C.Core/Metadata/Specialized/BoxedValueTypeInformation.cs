@@ -16,15 +16,19 @@ namespace IL2C.Metadata.Specialized
         }
 
         public string MetadataTypeName => "Type";
+        public string AttributeDescription => string.Empty;
 
         public string ScopeName => string.Empty;
 
         public bool IsValidDefinition => false;
 
         public bool IsPublic => false;
+        public bool IsNotPublic => false;
         public bool IsNestedPublic => false;
+        public bool IsNestedPrivate => false;
         public bool IsNestedFamily => false;
         public bool IsNestedFamilyOrAssembly => false;
+        public bool IsNestedFamilyAndAssembly => false;
 
         public bool IsAbstract => false;
         public bool IsStatic => false;
@@ -105,6 +109,7 @@ namespace IL2C.Metadata.Specialized
         public IModuleInformation DeclaringModule => throw new NotImplementedException();
         public ITypeInformation DeclaringType => throw new NotImplementedException();
 
+        public MemberScopes CLanguageMemberScope => MemberScopes.HiddenOrUnknown;
         public bool IsCLanguagePublicScope => false;
         public bool IsCLanguageLinkageScope => false;
         public bool IsCLanguageFileScope => false;

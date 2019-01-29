@@ -25,12 +25,12 @@
         <DebugSymbols>true</DebugSymbols>
         <NoWarn>1701;1702;0649</NoWarn>
 
-        <IL2COutputPath>$(ProjectDir)../MT3620App/Generated</IL2COutputPath>
+        <IL2COutputPath>$(ProjectDir)../MT3620App</IL2COutputPath>
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
     </PropertyGroup>
 
     <ItemGroup>
-      <!-- <PackageReference Include="IL2C.Build" Version="0.4.22" /> -->
-      <PackageReference Include="IL2C.Interop" Version="0.4.22" />
+      <PackageReference Include="IL2C.Build" Version="0.4.30" />
+        <!-- <PackageReference Include="IL2C.Interop" Version="0.4.30" /> -->
     </ItemGroup>
 </Project>

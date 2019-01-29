@@ -1,9 +1,17 @@
 # IL2C - A translator for ECMA-335 CIL/MSIL to C language.
 
+## Status
+
 |Provider|Branch|Build|
 |:--|:--|:--|
 |AppVeyor|master|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=master&includeBuildsFromPullRequest=false)|
 |AppVeyor|devel|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/devel?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/devel.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=devel&includeBuildsFromPullRequest=false)|
+
+| NuGet | Current |
+|:---|:---|
+| IL2C.Interop | [![NuGet IL2C.Interop](https://img.shields.io/nuget/v/IL2C.Interop.svg?style=flat)](https://www.nuget.org/packages/IL2C.Interop) 
+| IL2C.Core | [![NuGet IL2C.Core](https://img.shields.io/nuget/v/IL2C.Core.svg?style=flat)](https://www.nuget.org/packages/IL2C.Core) 
+| IL2C.Build | [![NuGet IL2C.Build](https://img.shields.io/nuget/v/IL2C.Build.svg?style=flat)](https://www.nuget.org/packages/IL2C.Build) 
 
 ## What's this?
 
@@ -91,16 +99,16 @@ This is first step for use the IL2C: ["Try writing code using both the Azure Sph
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| Value types | Partial supported | M3
-| Class types | Partial supported |
-| Managed reference | Partial supported | M3
+| Value types | Supported | M3
+| Class types | Supported |
+| Managed reference | Supported | M3
 | Unmanaged pointer |
-| Enum types | Partial supported |
-| Delegate types | Partial supported |
-| Interface types | Partial supported |
-| Nested types |
-| Class inherits | Partial supported |
-| Interface implements | Partial supported |
+| Enum types | Supported |
+| Delegate types | Supported |
+| Interface types | Supported |
+| Nested types | Supported |
+| Class inherits | Supported |
+| Interface implements | Supported |
 | Array types | Partial supported |
 | Multi dimensional array types |
 | Closed generic types |
@@ -111,59 +119,58 @@ This is first step for use the IL2C: ["Try writing code using both the Azure Sph
 | Issue | Status | Milestone
 |:---|:---|:---|
 | Static field | Partial supported | M3
-| Instance field | Partial supported | M3
-| Static method | Partial supported | M3
-| Instance method | Partial supported | M3
+| Instance field | Supported | M3
+| Static method | Supported | M3
+| Instance method | Supported | M3
 | Virtual method (class) | Supported |
-| Virtual method (interface) | Partial supported |
-| Interop method (extern static) | Partial supported |
-| Internal method (internal call) |
-| Constructor | Partial supported |
-| Constructor (ValueType) | Partial supported | M3
+| Virtual method (interface) | Supported |
+| Constructor | Supported |
+| Constructor (ValueType) | Supported | M3
 | Type initializer |
 | Static property |
-| Instance property |
+| Instance property | Supported |
 | Static event |
-| Instance event |
+| Instance event | Supported |
 
 #### Support metadata handling
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| Value type scopes | Partial supported | M3
-| Class type scopes | Partial supported |
-| Enum type scopes |
-| Delegate type scopes |
-| Interface type scopes | Partial supported |
-| Nested type scopes |
-| Field scopes | Partial supported | M3
-| Method scopes | Partial supported | M3
-| Property scopes |
-| Event scopes |
+| Value type scopes | Supported | M3
+| Class type scopes | Supported |
+| Enum type scopes | Supported |
+| Delegate type scopes | Supported |
+| Interface type scopes | Supported |
+| Nested type scopes | Supported |
+| Field scopes | Supported | M3
+| Method scopes | Supported | M3
+| Property scopes | Supported |
+| Event scopes | Supported |
 | Can handle reflection | (not support) | -
 
 #### Support runtime relates
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| Referenced instance handler | Partial supported | 
-| Value type boxed instance handler | Partial supported |
+| Referenced instance handler | Supported | 
+| Value type boxed instance handler | Supported |
 | Collect unused instance (GC) | Partial supported |
 | Heap compaction (GC) |
 | Exception throw and handles | Partial supported |
 | Async exception throws | Partial supported |
 | Monitor lock features |
-| Platform invoke (P/Invoke) | Partial supported |
+| Interop (P/Invoke) | Partial supported |
+| Interop (IL2C/Invoke) | Partial supported |
 | Can handle unsafe pointers |
-| Can handle marshaling features (Marshal) |
+| Can handle marshaling features (Marshal) | Partial supported |
 
 #### Application lifecycle managements
 
 | Issue | Status | Milestone
 |:---|:---|:---|
 | Basic commandline driver | Partial supported | M2
-| MSBuild (old/Task handler) |
-| MSBuild (new/.NET Core CLI) |
+| MSBuild (old/Task handler) | Partial supported |
+| MSBuild (new/.NET Core CLI) | Partial supported |
 | Platform independent core library |
 | Translator platform on .NET 4.5 | Supported | M1
 | Translator platform on .NET Core 1 | (not support) | -

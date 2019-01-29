@@ -150,43 +150,44 @@ extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile voi
 // It's pseudo referenced-type null value used by ldnull.
 typedef void* untyped_ptr;
 
-#include <System.Object.h>
-#include <System.Type.h>
-#include <System.ValueType.h>
-#include <System.Array.h>
-#include <System.Char.h>
-#include <System.String.h>
-#include <System.Boolean.h>
-#include <System.Byte.h>
-#include <System.Int16.h>
-#include <System.Int32.h>
-#include <System.Int64.h>
-#include <System.SByte.h>
-#include <System.UInt16.h>
-#include <System.UInt32.h>
-#include <System.UInt64.h>
-#include <System.IntPtr.h>
-#include <System.UIntPtr.h>
-#include <System.Single.h>
-#include <System.Double.h>
-#include <System.Enum.h>
-#include <System.Delegate.h>
-#include <System.MulticastDelegate.h>
-#include <System.RuntimeFieldHandle.h>
-#include <System.Runtime.CompilerServices.RuntimeHelpers.h>
-#include <System.Exception.h>
-#include <System.NullReferenceException.h>
-#include <System.InvalidCastException.h>
-#include <System.IndexOutOfRangeException.h>
-#include <System.GC.h>
-#include <System.Runtime.InteropServices.GCHandleType.h>
-#include <System.Runtime.InteropServices.GCHandle.h>
-#include <System.Runtime.InteropServices.NativePointer.h>
+#include <System/Object.h>
+#include <System/Type.h>
+#include <System/ValueType.h>
+#include <System/Array.h>
+#include <System/Char.h>
+#include <System/String.h>
+#include <System/Boolean.h>
+#include <System/Byte.h>
+#include <System/Int16.h>
+#include <System/Int32.h>
+#include <System/Int64.h>
+#include <System/SByte.h>
+#include <System/UInt16.h>
+#include <System/UInt32.h>
+#include <System/UInt64.h>
+#include <System/IntPtr.h>
+#include <System/UIntPtr.h>
+#include <System/Single.h>
+#include <System/Double.h>
+#include <System/Enum.h>
+#include <System/Delegate.h>
+#include <System/MulticastDelegate.h>
+#include <System/RuntimeFieldHandle.h>
+#include <System/Runtime/CompilerServices/RuntimeHelpers.h>
+#include <System/Exception.h>
+#include <System/NullReferenceException.h>
+#include <System/InvalidCastException.h>
+#include <System/IndexOutOfRangeException.h>
+#include <System/GC.h>
+#include <System/Runtime/InteropServices/GCHandleType.h>
+#include <System/Runtime/InteropServices/GCHandle.h>
+#include <System/Runtime/InteropServices/NativePointer.h>
 
-// TODO: will remove after implemented packaging strategy.
-#include <System.Console.h>
-#include <System.IDisposable.h>
-#include <System.Threading.Interlocked.h>
+// Independent types for IL2C core.
+#include <System/Console.h>
+#include <System/IDisposable.h>
+#include <System/Threading/Interlocked.h>
+#include <System/Threading/Thread.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

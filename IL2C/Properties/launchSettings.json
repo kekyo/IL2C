@@ -1,8 +1,8 @@
 {
-    "profiles": {
-        "IL2C": {
-            "commandName": "Project",
-            "commandLineArgs": "-g $(ProjectDir)..\\samples\\AzureSphere\\MT3620App $(ProjectDir)..\\samples\\AzureSphere\\MT3620Blink\\bin\\Debug\\net46\\MT3620Blink.dll"
-        }
+  "profiles": {
+    "IL2C": {
+      "commandName": "Project",
+      "commandLineArgs": "-g1 $(ProjectDir)..\\samples\\AzureSphere\\MT3620App $(ProjectDir)..\\samples\\AzureSphere\\MT3620Blink\\bin\\Debug\\net46\\MT3620Blink.dll"
     }
+  }
 }

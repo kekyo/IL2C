@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace IL2C.Writers
 {
     internal static class TypeWriter
     {
-        public static void InternalConvertType(
+        public static void WriteTypeDefinitions(
             CodeTextWriter tw,
             ITypeInformation declaredType)
         {
@@ -121,12 +122,13 @@ namespace IL2C.Writers
                     declaredType.MemberTypeName);
 
                 // Emit enum values:
-                //   Unfortunately the enum type at C language has not the underlying type.
+                //   Unfortunately the enum type at C language doesn't have the strict underlying type.
                 //   IL2C emits the enum types using not C language syntax.
                 foreach (var field in declaredType.Fields.Where(field => field.HasConstant))
                 {
                     tw.WriteLine(
-                        "static const {0} {1}_{2} = {3};",
+                        "/* {0} */ static const {1} {2}_{3} = {4};",
+                        declaredType.AttributeDescription,
                         declaredType.CLanguageTypeName,
                         declaredType.MangledUniqueName,
                         field.Name,
@@ -142,7 +144,8 @@ namespace IL2C.Writers
                     declaredType.MemberTypeName);
 
                 tw.WriteLine(
-                    "struct {0}",
+                    "/* {0} */ struct {1}",
+                    declaredType.AttributeDescription,
                     declaredType.MangledUniqueName);
                 tw.WriteLine("{");
 
@@ -271,6 +274,69 @@ namespace IL2C.Writers
                 "IL2C_DECLARE_RUNTIME_TYPE({0});",
                 declaredType.MangledUniqueName);
             tw.SplitLine();
+        }
+
+        public static void WriteMemberDefinitions(
+            CodeTextWriter tw,
+            ITypeInformation declaredType,
+            Func<IFieldInformation, bool> predictField,
+            Func<IMethodInformation, bool> predictMethod)
+        {
+            // Doesn't required writing the enum type members.
+            if (!declaredType.IsEnum)
+            {
+                var staticFields = declaredType.Fields.
+                    Where(field => field.IsStatic && predictField(field)).
+                    ToArray();
+                if (staticFields.Length >= 1)
+                {
+                    tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    tw.WriteLine(
+                        "// [2-2] Static fields: {0}",
+                        declaredType.FriendlyName);
+                    tw.SplitLine();
+
+                    foreach (var field in staticFields)
+                    {
+                        if (field.NativeValue != null)
+                        {
+                            tw.WriteLine(
+                                "#define {0} {1}",
+                                field.MangledUniqueName,
+                                field.CLanguageNativeSymbolName);
+                        }
+                        else
+                        {
+                            tw.WriteLine(
+                            "extern {0};",
+                            field.GetCLanguageStaticPrototype(false));
+                        }
+                    }
+
+                    tw.SplitLine();
+                }
+
+                var methods = declaredType.DeclaredMethods.
+                    Where(predictMethod).
+                    ToArray();
+                if (methods.Length >= 1)
+                {
+                    tw.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                    tw.WriteLine(
+                        "// [2-3] Methods: {0}",
+                        declaredType.FriendlyName);
+                    tw.SplitLine();
+
+                    foreach (var method in methods)
+                    {
+                        tw.WriteLine(
+                            "extern /* {0} */ {1};",
+                            method.AttributeDescription,
+                            method.CLanguageFunctionPrototype);
+                    }
+                    tw.SplitLine();
+                }
+            }
         }
     }
 }

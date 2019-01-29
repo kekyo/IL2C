@@ -1,5 +1,5 @@
 #include "il2c_private.h"
-#include "System.Console.h"
+#include <System/Console.h>
 
 /////////////////////////////////////////////////////////////
 // System.Console

@@ -7,13 +7,6 @@ using Mono.Cecil;
 
 namespace IL2C.Metadata
 {
-    internal enum MemberScopes
-    {
-        File,
-        Linkage,
-        Public
-    }
-
     internal static class MetadataUtilities
     {
         public static string GetLabelName(int offset) =>
@@ -47,39 +40,6 @@ namespace IL2C.Metadata
                 return type.ElementType.UnwrapCoveredType();
             }
             return type;
-        }
-
-        public static bool IsScoped(this IMemberInformation member, MemberScopes scope)
-        {
-            switch (scope)
-            {
-                case MemberScopes.Public:
-                    return member.IsCLanguagePublicScope;
-                case MemberScopes.Linkage:
-                    return member.IsCLanguageLinkageScope;
-                case MemberScopes.File:
-                    return member.IsCLanguageFileScope;
-            }
-            Debug.Assert(false);
-            return false;
-        }
-
-        public static MemberScopes GetScope(this IMemberInformation member)
-        {
-            if (member.IsCLanguagePublicScope)
-            {
-                return MemberScopes.Public;
-            }
-            if (member.IsCLanguageLinkageScope)
-            {
-                return MemberScopes.Linkage;
-            }
-            if (member.IsCLanguageFileScope)
-            {
-                return MemberScopes.File;
-            }
-            Debug.Assert(false);
-            return MemberScopes.File;
         }
 
         #region MethodSignatureTypeComparer
@@ -298,6 +258,9 @@ namespace IL2C.Metadata
 
         public static readonly ICombinedComparer<IMethodInformation> MethodSignatureComparer =
             new MethodSignatureComparerImpl(false);
+
+        // It compares type equality without first argument.
+        // Because the first argument is maybe different type by polymorphic at the virtual methods.
         public static readonly ICombinedComparer<IMethodInformation> VirtualMethodSignatureComparer =
             new MethodSignatureComparerImpl(true);
         #endregion

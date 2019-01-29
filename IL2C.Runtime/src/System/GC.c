@@ -1,5 +1,5 @@
 #include "il2c_private.h"
-#include "System.GC.h"
+#include <System/GC.h>
 
 /////////////////////////////////////////////////////////////
 // System.GC

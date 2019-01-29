@@ -11,77 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="../../../IL2C.Runtime/il2c.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Array.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Boolean.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Byte.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Char.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Console.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Delegate.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Double.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Enum.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Exception.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.GC.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.IDisposable.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Int16.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Int32.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Int64.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.IntPtr.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.IndexOutOfRangeException.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.InvalidCastException.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.MulticastDelegate.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.NullReferenceException.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Object.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandle.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.SByte.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Single.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.String.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Threading.Interlocked.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.Type.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.UInt16.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.UInt32.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.UInt64.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.UIntPtr.c" />
-    <ClCompile Include="../../../IL2C.Runtime/System.ValueType.c" />
-    <ClInclude Include="../../../IL2C.Runtime/debugbreak.h" />
-    <ClInclude Include="../../../IL2C.Runtime/il2c.h" />
-    <ClInclude Include="../../../IL2C.Runtime/il2c_private.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Array.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Boolean.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Byte.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Char.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Console.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Delegate.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Double.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Enum.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Exception.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.GC.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.IDisposable.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Int16.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Int32.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Int64.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.IntPtr.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.IndexOutOfRangeException.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.InvalidCastException.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.MulticastDelegate.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.NullReferenceException.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Object.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.RuntimeFieldHandle.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.CompilerServices.RuntimeHelpers.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandleType.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.GCHandle.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Runtime.InteropServices.NativePointer.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.SByte.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Single.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.String.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Threading.Interlocked.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.Type.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.UInt16.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.UInt32.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.UInt64.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.UIntPtr.h" />
-    <ClInclude Include="../../../IL2C.Runtime/System.ValueType.h" />
+    <ClCompile Include="../../../IL2C.Runtime/src/**/*.c" />
+    <ClInclude Include="../../../IL2C.Runtime/include/**/*.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -117,7 +48,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;../../../IL2C.Runtime</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../IL2C.Runtime/include;../../../IL2C.Runtime/src</AdditionalIncludeDirectories>
       <AdditionalOptions>-fdata-sections -ffunction-sections -Werror=implicit-function-declaration -Wno-unused-value %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">

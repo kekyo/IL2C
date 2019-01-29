@@ -24,6 +24,9 @@ static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
 static IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget__ = NULL;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
+static volatile bool g_ExecutingCollection__ = false;
+
+static void il2c_collect__(interlock_t comparand);
 
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
@@ -32,7 +35,7 @@ void* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
 {
     // TODO: always collect
-    il2c_collect();
+    il2c_collect__(GCMARK_LIVE);
 
     // +----------------------+ <-- pHeader
     // | IL2C_REF_HEADER      |
@@ -47,7 +50,7 @@ void* il2c_get_uninitialized_object_internal__(
     {
         while (1)
         {
-            il2c_collect();
+            il2c_collect__(GCMARK_LIVE);
 
             pHeader = (IL2C_REF_HEADER*)il2c_malloc(sizeof(IL2C_REF_HEADER) + bodySize);
             if (pHeader != NULL)
@@ -146,7 +149,7 @@ void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pFrame)
     il2c_assert(pFrame != NULL);
 
     // TODO: always collect
-    il2c_collect();
+    il2c_collect__(GCMARK_LIVE);
 
     g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
 }
@@ -272,14 +275,14 @@ void il2c_default_mark_handler__(void* pReference)
 /////////////////////////////////////////////////////////////
 // GC process
 
-void il2c_step1_clear_gcmark__(void)
+void il2c_step1_clear_gcmark__(interlock_t comparand)
 {
     // Clear header marks.
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     while (pCurrentHeader != NULL)
     {
         // (Exclude GCMARK_CONST)
-        if (pCurrentHeader->gcMark == GCMARK_LIVE)
+        if (pCurrentHeader->gcMark <= comparand)
         {
             pCurrentHeader->gcMark = GCMARK_NOMARK;
         }
@@ -345,6 +348,17 @@ void il2c_step3_sweep_garbage__(void)
 
             DEBUG_WRITE("il2c_step3_sweep_garbage__", pCurrentHeader->type->pTypeName);
 
+            // Class type overrided the finalizer:
+            if ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize)
+            {
+                System_Object* pObject = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
+                il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);
+
+                // Call finalizer.
+                // TODO: Implement F-reachable queue.
+                pObject->vptr0__->Finalize(pObject);
+            }
+
             // Heap discarded
             il2c_free((void*)pCurrentHeader);
 
@@ -358,15 +372,29 @@ void il2c_step3_sweep_garbage__(void)
     }
 }
 
-void il2c_collect(void)
+static void il2c_collect__(interlock_t comparand)
 {
+    if (g_ExecutingCollection__)
+    {
+        return;
+    }
+
+    g_ExecutingCollection__ = true;
+
     il2c_check_heap();
-    il2c_step1_clear_gcmark__();
+    il2c_step1_clear_gcmark__(comparand);
     il2c_check_heap();
     il2c_step2_mark_gcmark__();
     il2c_check_heap();
     il2c_step3_sweep_garbage__();
     il2c_check_heap();
+
+    g_ExecutingCollection__ = false;
+}
+
+void il2c_collect(void)
+{
+    il2c_collect__(GCMARK_LIVE);
 }
 
 /////////////////////////////////////////////////////////////
@@ -837,7 +865,8 @@ void il2c_shutdown(void)
 {
     il2c_assert(g_pTopUnwindTarget__ == NULL);
 
-    il2c_collect();
+    // The final collection step has to release fixed (pinned) instances.
+    il2c_collect__(GCMARK_FIXED);
 
 #ifdef IL2C_USE_SIGNAL
     signal(SIGSEGV, g_SIGSEGV_saved);

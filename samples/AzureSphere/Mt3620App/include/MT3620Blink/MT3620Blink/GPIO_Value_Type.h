@@ -1,29 +1,28 @@
-﻿#ifndef __MT3620Blink_MT3620Blink_GPIO_Value_Type_H__
-#define __MT3620Blink_MT3620Blink_GPIO_Value_Type_H__
-
-#pragma once
-
-// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [14-1] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
-#include <MT3620Blink_internal.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////
-// [2-1] Types:
+///////////////////////////////////////////////////////////////////////////
+// [14-2] Type pre definitions:
 
 ////////////////////////////////////////////////////////////
 // [2-1-1] .NET types:
 
-typedef GPIO_Value_Type MT3620Blink_GPIO_Value_Type;
+/* native type */ typedef GPIO_Value_Type MT3620Blink_GPIO_Value_Type;
 
 ////////////////////////////////////////////////////////////
 // [2-1-2] VTable types:
 
 typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_Value_Type_VTABLE_DECL__;
+
+///////////////////////////////////////////////////////////////////////////
+// [14-3] Type body definitions:
+
+#ifdef MT3620Blink_DECL_TYPE_BODY__
 
 ////////////////////////////////////////////////////////////
 // [1] MT3620Blink.GPIO_Value_Type
@@ -34,8 +33,8 @@ typedef System_Enum_VTABLE_DECL__ MT3620Blink_GPIO_Value_Type_VTABLE_DECL__;
 // [1-4] Runtime type information
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_GPIO_Value_Type);
 
-#ifdef __cplusplus
-}
 #endif
 
+#ifdef __cplusplus
+}
 #endif

@@ -1,29 +1,21 @@
-﻿#ifndef __MT3620Blink_internal_H__
+﻿// [13-1] This is MT3620Blink native code translated by IL2C, do not edit.
+
+#ifndef __MT3620Blink_internal_H__
 #define __MT3620Blink_internal_H__
 
 #pragma once
 
-// This is MT3620Blink native code translated by IL2C, do not edit.
+#include <MT3620Blink.h>
 
-#include <mscorlib.h>
+//////////////////////////////////////////////////////////////////////////////////
+// [9-1-1] Const strings:
 
-#include <mt3620_rdb.h>
-#include <sys/epoll.h>
-#include <unistd.h>
-#include <time.h>
-#include <applibs/gpio.h>
-
-#include "MT3620Blink/MT3620Blink/timespec.h"
-#include "MT3620Blink/MT3620Blink/GPIO_OutputMode_Type.h"
-#include "MT3620Blink/MT3620Blink/GPIO_Value_Type.h"
-#include "MT3620Blink/MT3620Blink/epoll_data_t.h"
-#include "MT3620Blink/MT3620Blink/epoll_event.h"
-#include "MT3620Blink/MT3620Blink/Interops.h"
+System_String* const MT3620Blink_string0__;
 
 //////////////////////////////////////////////////////////////////////////////////
 // [12-1-1] Declared values:
 
-// .<PrivateImplementationDetails>.C55E5D2E10ACF1F04C09C95EC16BC769B727C58F
-extern const int32_t MT3620Blink_declaredValue0__[];
+// .<PrivateImplementationDetails>.E902362F9BEE92BBA97ECE5B88B94AF4A8D3201D
+extern const int64_t MT3620Blink_declaredValue0__[];
 
 #endif

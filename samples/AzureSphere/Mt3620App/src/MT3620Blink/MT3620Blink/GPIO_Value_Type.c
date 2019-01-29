@@ -1,4 +1,4 @@
-﻿// This is MT3620Blink native code translated by IL2C, do not edit.
+﻿// [15-2] This is MT3620Blink native code translated by IL2C, do not edit.
 
 #include <MT3620Blink.h>
 #include <MT3620Blink_internal.h>
@@ -6,6 +6,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+//////////////////////////////////////////////////////////////////////////////////
+// [9-1] Type: MT3620Blink.GPIO_Value_Type
 
 //////////////////////////////////////////////////////////////////////////////////
 // [9-2] File scope prototypes:

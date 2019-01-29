@@ -1,5 +1,5 @@
 #include "il2c_private.h"
-#include "System.IDisposable.h"
+#include <System/IDisposable.h>
 
 /////////////////////////////////////////////////////////////
 // System.IDisposable

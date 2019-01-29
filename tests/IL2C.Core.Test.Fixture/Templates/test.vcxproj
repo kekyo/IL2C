@@ -57,7 +57,7 @@
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <FunctionLevelLinking>true</FunctionLevelLinking>
             <CreateHotpatchableImage>false</CreateHotpatchableImage>
-            <AdditionalIncludeDirectories>.;..\..\..\..\..\..\..\..\IL2C.Runtime</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>.;..\..\..\..\..\..\..\..\IL2C.Runtime\include</AdditionalIncludeDirectories>
             <DisableSpecificWarnings>4100</DisableSpecificWarnings>
             <ExceptionHandling>false</ExceptionHandling>
             <AssemblerOutput>All</AssemblerOutput>

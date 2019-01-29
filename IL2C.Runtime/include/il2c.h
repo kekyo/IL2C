@@ -183,10 +183,11 @@ typedef void* untyped_ptr;
 #include <System/Runtime/InteropServices/GCHandle.h>
 #include <System/Runtime/InteropServices/NativePointer.h>
 
-// TODO: will remove after implemented packaging strategy.
+// Independent types for IL2C core.
 #include <System/Console.h>
 #include <System/IDisposable.h>
 #include <System/Threading/Interlocked.h>
+#include <System/Threading/Thread.h>
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

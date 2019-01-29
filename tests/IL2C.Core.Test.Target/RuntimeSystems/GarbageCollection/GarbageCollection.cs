@@ -79,7 +79,7 @@ namespace IL2C.RuntimeSystems
     [TestCase("ABCDEF1", "MultipleInsideValueType", 0, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF2", "MultipleInsideValueType", 1, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF3", "MultipleInsideValueType", 2, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
-    [TestCase(true, "CallFinalizer", IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(true, new[] { "CallFinalizer", "RunCallFinalizer" }, IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     public sealed class GarbageCollection
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

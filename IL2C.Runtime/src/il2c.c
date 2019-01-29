@@ -345,6 +345,17 @@ void il2c_step3_sweep_garbage__(void)
 
             DEBUG_WRITE("il2c_step3_sweep_garbage__", pCurrentHeader->type->pTypeName);
 
+            // Class type overrided the finalizer:
+            if ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize)
+            {
+                System_Object* pObject = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
+                il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);
+
+                // Call finalizer.
+                // TODO: Implement F-reachable queue.
+                pObject->vptr0__->Finalize(pObject);
+            }
+
             // Heap discarded
             il2c_free((void*)pCurrentHeader);
 

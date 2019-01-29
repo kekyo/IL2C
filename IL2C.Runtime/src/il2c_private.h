@@ -56,6 +56,7 @@ typedef long interlock_t;
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
+#define il2c_sleep Sleep
 
 #define il2c_longjmp longjmp
 
@@ -116,6 +117,7 @@ extern void il2c_free(void* p);
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
+#define il2c_sleep(milliseconds) Sleep(milliseconds)
 
 #define il2c_longjmp longjmp
 
@@ -172,6 +174,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
+#define il2c_sleep(milliseconds) Sleep(milliseconds)
 
 #define il2c_longjmp longjmp
 
@@ -206,6 +209,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 
+#include <windows.h>
+
 // Compatibility symbols (required platform depended functions)
 #define il2c_itow(v, b, l) _itow(v, b, 10)
 #define il2c_ultow _ultow
@@ -235,6 +240,7 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
+#define il2c_sleep Sleep
 
 #define il2c_longjmp longjmp
 
@@ -267,6 +273,8 @@ extern void WriteLineToError(const wchar_t* pMessage);
 #include <wchar.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
+
+#include <unistd.h>
 
 #if defined(__AZURE_SPHERE__)
 #include <applibs/log.h>
@@ -301,6 +309,7 @@ static inline wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l) { swprintf
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
+#define il2c_sleep sleep
 
 #define il2c_longjmp longjmp
 

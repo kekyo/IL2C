@@ -272,14 +272,14 @@ void il2c_default_mark_handler__(void* pReference)
 /////////////////////////////////////////////////////////////
 // GC process
 
-void il2c_step1_clear_gcmark__(void)
+void il2c_step1_clear_gcmark__(interlock_t comparand)
 {
     // Clear header marks.
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     while (pCurrentHeader != NULL)
     {
         // (Exclude GCMARK_CONST)
-        if (pCurrentHeader->gcMark == GCMARK_LIVE)
+        if (pCurrentHeader->gcMark <= comparand)
         {
             pCurrentHeader->gcMark = GCMARK_NOMARK;
         }
@@ -369,15 +369,20 @@ void il2c_step3_sweep_garbage__(void)
     }
 }
 
-void il2c_collect(void)
+static void il2c_collect__(interlock_t comparand)
 {
     il2c_check_heap();
-    il2c_step1_clear_gcmark__();
+    il2c_step1_clear_gcmark__(comparand);
     il2c_check_heap();
     il2c_step2_mark_gcmark__();
     il2c_check_heap();
     il2c_step3_sweep_garbage__();
     il2c_check_heap();
+}
+
+void il2c_collect(void)
+{
+    il2c_collect__(GCMARK_LIVE);
 }
 
 /////////////////////////////////////////////////////////////
@@ -848,7 +853,8 @@ void il2c_shutdown(void)
 {
     il2c_assert(g_pTopUnwindTarget__ == NULL);
 
-    il2c_collect();
+    // The final collection step has to release fixed (pinned) instances.
+    il2c_collect__(GCMARK_LIVE);
 
 #ifdef IL2C_USE_SIGNAL
     signal(SIGSEGV, g_SIGSEGV_saved);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace IL2C.RuntimeSystems
@@ -51,9 +52,10 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public class FinalizerCalleeHolder
     {
-        public bool Called;
+        public int Called;
     }
 
     public class FinalzerImplemented
@@ -67,7 +69,24 @@ namespace IL2C.RuntimeSystems
 
         ~FinalzerImplemented()
         {
-            holder.Called = true;
+            holder.Called = 1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class FinalzerImplementedWithPinned
+    {
+        private GCHandle handle;
+
+        public FinalzerImplementedWithPinned(FinalizerCalleeHolder holder)
+        {
+            this.handle = GCHandle.Alloc(holder, GCHandleType.Pinned);
+        }
+
+        ~FinalzerImplementedWithPinned()
+        {
+            var holder = (FinalizerCalleeHolder)(handle.Target);
+            holder.Called = 1;
         }
     }
 
@@ -79,7 +98,8 @@ namespace IL2C.RuntimeSystems
     [TestCase("ABCDEF1", "MultipleInsideValueType", 0, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF2", "MultipleInsideValueType", 1, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF3", "MultipleInsideValueType", 2, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
-    [TestCase(true, new[] { "CallFinalizer", "RunCallFinalizer" }, IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(1, new[] { "CallFinalizer", "RunCallFinalizer" }, IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(0, new[] { "CallFinalizerWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
     public sealed class GarbageCollection
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -102,10 +122,27 @@ namespace IL2C.RuntimeSystems
             var implemented = new FinalzerImplemented(holder);
         }
  
-        public static bool CallFinalizer()
+        public static int CallFinalizer()
         {
             var holder = new FinalizerCalleeHolder();
             RunCallFinalizer(holder);
+
+            GC.Collect();
+            Thread.Sleep(1000);
+
+            return holder.Called;
+        }
+
+        private static void RunCallFinalizerWithPinned(FinalizerCalleeHolder holder)
+        {
+            var implemented = new FinalzerImplementedWithPinned(holder);
+            var handle = GCHandle.Alloc(implemented, GCHandleType.Pinned);
+        }
+
+        public static int CallFinalizerWithPinned()
+        {
+            var holder = new FinalizerCalleeHolder();
+            RunCallFinalizerWithPinned(holder);
 
             GC.Collect();
             Thread.Sleep(1000);

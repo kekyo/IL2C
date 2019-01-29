@@ -411,11 +411,10 @@ struct IL2C_RUNTIME_TYPE_DECL
 //    //const void* markTargets[markTarget];
 //};
 
-// TODO: Support finalizer
-#define GCMARK_NOMARK ((interlock_t)1)
-#define GCMARK_LIVE ((interlock_t)0)
-#define GCMARK_CONST ((interlock_t)2)
-#define GCMARK_FIXED ((interlock_t)3)   // For GCHandle
+#define GCMARK_NOMARK ((interlock_t)0)
+#define GCMARK_LIVE ((interlock_t)1)
+#define GCMARK_FIXED ((interlock_t)2)
+#define GCMARK_CONST ((interlock_t)3)   // For GCHandle
 
 #define il2c_get_header__(pReference) \
     ((IL2C_REF_HEADER*)(((uint8_t*)(pReference)) - sizeof(IL2C_REF_HEADER)))
@@ -472,7 +471,7 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, ui
 
 extern void il2c_default_mark_handler__(void* pReference);
 
-extern void il2c_step1_clear_gcmark__(void);
+extern void il2c_step1_clear_gcmark__(interlock_t comparand);
 extern void il2c_step2_mark_gcmark__(void);
 extern void il2c_step3_sweep_garbage__(void);
 

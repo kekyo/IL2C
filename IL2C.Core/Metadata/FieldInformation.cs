@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 
+using IL2C.Metadata.Attributes;
+
 namespace IL2C.Metadata
 {
     public interface IFieldInformation : IMemberInformation
@@ -21,7 +23,7 @@ namespace IL2C.Metadata
 
         string GetCLanguageStaticPrototype(bool requireInitializerExpression);
 
-        NativeValueAttribute NativeValue { get; }
+        NativeValueAttributeInformation NativeValue { get; }
         string CLanguageNativeSymbolName { get; }
     }
 
@@ -131,12 +133,10 @@ namespace IL2C.Metadata
             }
         }
 
-        public NativeValueAttribute NativeValue =>
+        public NativeValueAttributeInformation NativeValue =>
             this.Definition.CustomAttributes.
-            Where(ca => ca.AttributeType.FullName == typeof(NativeValueAttribute).FullName).
-            Select(ca => new NativeValueAttribute(
-                ca.ConstructorArguments[0].Value,
-                ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+            Where(ca => ca.AttributeType.FullName == NativeValueAttributeInformation.FullName).
+            Select(ca => new NativeValueAttributeInformation(ca)).
             FirstOrDefault();
 
         public string CLanguageNativeSymbolName =>

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
+
+using IL2C.Metadata.Attributes;
 
 namespace IL2C.Metadata
 {
@@ -103,7 +104,7 @@ namespace IL2C.Metadata
 
         Type ResolveToRuntimeType();
 
-        NativeTypeAttribute NativeType { get; }
+        NativeTypeAttributeInformation NativeType { get; }
         string CLanguageNativeTypeName { get; }
     }
 
@@ -746,12 +747,10 @@ namespace IL2C.Metadata
             return typeof(object).Assembly.GetType(this.FriendlyName);
         }
 
-        public NativeTypeAttribute NativeType =>
+        public NativeTypeAttributeInformation NativeType =>
             (this.Definition as TypeDefinition)?.CustomAttributes.
-                Where(ca => ca.AttributeType.FullName == typeof(NativeTypeAttribute).FullName).
-                Select(ca => new NativeTypeAttribute(
-                    ca.ConstructorArguments[0].Value,
-                    ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+                Where(ca => ca.AttributeType.FullName == NativeTypeAttributeInformation.FullName).
+                Select(ca => new NativeTypeAttributeInformation(ca)).
                 FirstOrDefault();
 
         public string CLanguageNativeTypeName =>

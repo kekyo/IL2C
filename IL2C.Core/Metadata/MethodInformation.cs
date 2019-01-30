@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
+using IL2C.Metadata.Attributes;
 
 namespace IL2C.Metadata
 {
@@ -55,7 +56,7 @@ namespace IL2C.Metadata
         IParameterInformation[] GetParameters(ITypeInformation thisType);
 
         PInvokeInfo PInvokeInformation { get; }
-        NativeMethodAttribute NativeMethod { get; }
+        NativeMethodAttributeInformation NativeMethod { get; }
 
         string CLanguageFunctionName { get; }
         string CLanguageFunctionPrototype { get; }
@@ -409,12 +410,10 @@ namespace IL2C.Metadata
 
         public PInvokeInfo PInvokeInformation =>
             this.Definition.PInvokeInfo;
-        public NativeMethodAttribute NativeMethod =>
+        public NativeMethodAttributeInformation NativeMethod =>
             this.Definition.CustomAttributes.
-            Where(ca => ca.AttributeType.FullName == typeof(NativeMethodAttribute).FullName).
-            Select(ca => new NativeMethodAttribute(
-                ca.ConstructorArguments[0].Value,
-                ca.Properties.ToDictionary(p => p.Name, p => p.Argument.Value))).
+            Where(ca => ca.AttributeType.FullName == NativeMethodAttributeInformation.FullName).
+            Select(ca => new NativeMethodAttributeInformation(ca)).
             FirstOrDefault();
 
         private ITypeInformation GetInterfaceImplementerType() =>

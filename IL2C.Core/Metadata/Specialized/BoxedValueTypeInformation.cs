@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+
+using IL2C.Metadata.Attributes;
 
 namespace IL2C.Metadata.Specialized
 {
@@ -156,7 +157,7 @@ namespace IL2C.Metadata.Specialized
         public Type ResolveToRuntimeType() =>
             throw new NotImplementedException();
 
-        public NativeTypeAttribute NativeType => null;
+        public NativeTypeAttributeInformation NativeType => null;
         public string CLanguageNativeTypeName =>
             this.GetCLanguageTypeName(null, true, true);
     }

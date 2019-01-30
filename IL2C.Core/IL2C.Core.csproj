@@ -31,8 +31,4 @@
         <PackageReference Include="Mono.Cecil" Version="0.10.1" />
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\IL2C.Interop\IL2C.Interop.csproj" />
-    </ItemGroup>
-
 </Project>

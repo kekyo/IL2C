@@ -21,6 +21,7 @@
     <ItemGroup>
         <ClCompile Include="src/**/*.c" />
         <ClInclude Include="include/**/*.h" />
+        <ClInclude Include="src/**/*.h" />
     </ItemGroup>
     <PropertyGroup Label="Globals">
         <VCProjectVersion>15.0</VCProjectVersion>

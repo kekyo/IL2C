@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="../../../IL2C.Runtime/src/**/*.c" />
     <ClInclude Include="../../../IL2C.Runtime/include/**/*.h" />
+    <ClInclude Include="../../../IL2C.Runtime/src/**/*.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

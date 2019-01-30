@@ -275,7 +275,7 @@ void il2c_default_mark_handler__(void* pReference)
 /////////////////////////////////////////////////////////////
 // GC process
 
-void il2c_step1_clear_gcmark__(interlock_t comparand)
+static void il2c_step1_clear_gcmark__(interlock_t comparand)
 {
     // Clear header marks.
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
@@ -290,7 +290,7 @@ void il2c_step1_clear_gcmark__(interlock_t comparand)
     }
 }
 
-void il2c_step2_mark_gcmark__(void)
+static void il2c_step2_mark_gcmark__(void)
 {
     // Mark headers.
     IL2C_EXECUTION_FRAME* pCurrentFrame = g_pBeginFrame__;
@@ -333,7 +333,7 @@ void il2c_step2_mark_gcmark__(void)
     }
 }
 
-void il2c_step3_sweep_garbage__(void)
+static void il2c_step3_sweep_garbage__(void)
 {
     // Sweep garbage if gcmark isn't marked.
     IL2C_REF_HEADER** ppUnlinkTarget = &g_pBeginHeader__;

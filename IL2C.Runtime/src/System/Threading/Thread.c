@@ -5,7 +5,7 @@
 
 void System_Threading_Thread_Sleep(int millisecondsTimeout)
 {
-    il2c_sleep(millisecondsTimeout);
+    il2c_sleep((uint32_t)millisecondsTimeout);
 }
 
 /////////////////////////////////////////////////

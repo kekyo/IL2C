@@ -38,8 +38,10 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="main.c" />
-    <ClCompile Include="src\MT3620Blink_bundle.c" />
+    <ClCompile Include="src\**\*.c" />
     <ClInclude Include="mt3620_rdb.h" />
+    <ClInclude Include="include\**\*.h" />
+    <ClInclude Include="src\**\*.h" />
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>

@@ -30,7 +30,7 @@ namespace IL2C
 
             logw.Write("IL2C: Writing: \"{0}\" ...", path);
 
-            return new InternalCodeTextWriter(logw, path, tw, indent);
+            return new InternalCodeTextWriter(logw, tw, path, indent);
         }
 
         public CodeTextWriter CreateSourceCodeWriter(string fileName)
@@ -67,18 +67,15 @@ namespace IL2C
             return new ScopeDisposer(this);
         }
 
-        internal sealed class InternalCodeTextWriter : CodeTextWriter
+        private sealed class InternalCodeTextWriter : CodeTextWriter
         {
             private TextWriter logw;
 
-            public InternalCodeTextWriter(TextWriter logw, string path, TextWriter tw, string indent)
-                : base(tw, indent)
+            public InternalCodeTextWriter(TextWriter logw, TextWriter tw, string relatedPath, string indent)
+                : base(tw, relatedPath, indent)
             {
-                this.Path = path;
                 this.logw = logw;
             }
-
-            public string Path { get; }
 
             public override void Dispose()
             {

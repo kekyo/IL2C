@@ -44,6 +44,7 @@ namespace IL2C
             CodeTextStorage storage,
             TranslateContext translateContext,
             PreparedInformations prepared,
+            bool enableBundler,
             DebugInformationOptions debugInformationOption)
         {
             var sourceFilePaths = new List<string>();
@@ -66,10 +67,13 @@ namespace IL2C
                     assemblyName));
 
             // Write source code bundler.
-            SourceCodeWriter.WriteBundlerSourceCode(
-                storage,
-                prepared,
-                assemblyName);
+            if (enableBundler)
+            {
+                SourceCodeWriter.WriteBundlerSourceCode(
+                    storage,
+                    prepared,
+                    assemblyName);
+            }
 
             using (var _ = storage.EnterScope(assemblyName, false))
             {

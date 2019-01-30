@@ -17,7 +17,8 @@ namespace IL2C
             {
                 var debugInformationOptions = DebugInformationOptions.None;
                 var readSymbols = true;
-                var cpp = false;
+                var enableBundler = false;
+                var enableCpp = false;
                 var help = false;
 
                 var options = new OptionSet()
@@ -25,7 +26,8 @@ namespace IL2C
                     { "g1|debug", "Emit debug informations (contains only comments)", v => debugInformationOptions = DebugInformationOptions.CommentOnly },
                     { "g|g2|debug-full", "Emit debug informations (contains line numbers)", v => debugInformationOptions = DebugInformationOptions.Full },
                     { "no-read-symbols", "NO read symbol files", _ => readSymbols = false },
-                    { "cpp", "Produce C++ files (apply extension *.cpp instead *.c, body will not changed)", _ => cpp = true },
+                    { "cpp", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", _ => enableCpp = true },
+                    { "bundler", "Produce bundler source file", _ => enableBundler = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -44,7 +46,8 @@ namespace IL2C
                         Console.Out,
                         outputPath,
                         readSymbols,
-                        cpp,
+                        enableCpp,
+                        enableBundler,
                         debugInformationOptions,
                         assemblyPaths);
                 }

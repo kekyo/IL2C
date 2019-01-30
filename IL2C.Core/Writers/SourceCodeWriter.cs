@@ -116,7 +116,7 @@ namespace IL2C.Writers
 
                 twSource.Flush();
 
-                return ((CodeTextStorage.InternalCodeTextWriter)twSource).Path;
+                return twSource.RelatedPath;
             }
         }
 
@@ -280,7 +280,7 @@ namespace IL2C.Writers
 
                         twSource.Flush();
 
-                        sourceFiles.Add(((CodeTextStorage.InternalCodeTextWriter)twSource).Path);
+                        sourceFiles.Add(twSource.RelatedPath);
                     }
                 }
             }

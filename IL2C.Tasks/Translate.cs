@@ -33,6 +33,11 @@ namespace IL2C
             get; set;
         }
 
+        public bool EnableBundler
+        {
+            get; set;
+        }
+
         public string DebugInformation
         {
             get; set;
@@ -43,7 +48,7 @@ namespace IL2C
             var outputPath = this.OutputPath.ItemSpec.Trim();
             var debugInformation = string.IsNullOrWhiteSpace(this.DebugInformation)
                 ? DebugInformationOptions.CommentOnly
-                : (DebugInformationOptions) Enum.Parse(typeof(DebugInformationOptions), this.DebugInformation);
+                : (DebugInformationOptions)Enum.Parse(typeof(DebugInformationOptions), this.DebugInformation);
 
             var logw = new LogWriter(message =>
                 this.Log.LogMessage(
@@ -55,6 +60,7 @@ namespace IL2C
                 outputPath,
                 this.ReadSymbols,
                 this.EnableCpp,
+                this.EnableBundler,
                 debugInformation,
                 this.AssemblyPaths.
                     Select(path => path.ItemSpec.Trim()).

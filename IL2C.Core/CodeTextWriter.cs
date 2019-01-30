@@ -13,9 +13,10 @@ namespace IL2C
         private string indent = string.Empty;
         private bool split = false;
 
-        public CodeTextWriter(TextWriter tw, string indent)
+        public CodeTextWriter(TextWriter tw, string relatedPath, string indent)
         {
             this.Parent = tw;
+            this.RelatedPath = relatedPath;
             this.oneIndent = indent;
         }
 
@@ -25,6 +26,7 @@ namespace IL2C
         }
 
         public TextWriter Parent { get; }
+        public string RelatedPath { get; }
 
         private void UpdateIndent(int shiftCount)
         {
@@ -96,14 +98,14 @@ namespace IL2C
             this.Parent.Flush();
         }
 
-        public static CodeTextWriter Create(TextWriter tw, string indent)
+        public static CodeTextWriter Create(TextWriter tw, string relatedPath, string indent)
         {
-            return new CodeTextWriter(tw, indent);
+            return new CodeTextWriter(tw, relatedPath, indent);
         }
 
-        public static CodeTextWriter Create(Stream stream, string indent)
+        public static CodeTextWriter Create(Stream stream, string relatedPath, string indent)
         {
-            return new CodeTextWriter(new StreamWriter(stream, Encoding.UTF8), indent);
+            return new CodeTextWriter(new StreamWriter(stream, Encoding.UTF8), relatedPath, indent);
         }
 
         private sealed class Unshifter : IDisposable

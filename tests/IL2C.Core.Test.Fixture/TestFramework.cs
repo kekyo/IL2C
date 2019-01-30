@@ -202,6 +202,7 @@ namespace IL2C
                 storage,
                 translateContext,
                 prepared,
+                true,
                 DebugInformationOptions.CommentOnly);
 
             // Step 1-5: Write source code into a file from template.

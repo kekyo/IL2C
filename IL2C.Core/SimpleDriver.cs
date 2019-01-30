@@ -9,6 +9,7 @@ namespace IL2C
             TextWriter logw,
             CodeTextStorage storage,
             bool readSymbols,
+            bool enableBundler,
             DebugInformationOptions debugInformationOptions,
             string assemblyPath)
         {
@@ -22,13 +23,19 @@ namespace IL2C
             using (var _ = storage.EnterScope("include"))
             {
                 AssemblyWriter.WriteHeader(
-                    storage, translateContext, preparedFunctions);
+                    storage,
+                    translateContext,
+                    preparedFunctions);
             }
 
             using (var _ = storage.EnterScope("src"))
             {
                 AssemblyWriter.WriteSourceCode(
-                    storage, translateContext, preparedFunctions, debugInformationOptions);
+                    storage,
+                    translateContext,
+                    preparedFunctions,
+                    enableBundler,
+                    debugInformationOptions);
             }
         }
 
@@ -36,12 +43,19 @@ namespace IL2C
             TextWriter logw,
             CodeTextStorage storage,
             bool readSymbols,
+            bool enableBundler,
             DebugInformationOptions debugInformationOptions,
             IEnumerable<string> assemblyPaths)
         {
             foreach (var aseemblyPath in assemblyPaths)
             {
-                Translate(logw, storage, readSymbols, debugInformationOptions, aseemblyPath);
+                Translate(
+                    logw,
+                    storage,
+                    readSymbols,
+                    enableBundler,
+                    debugInformationOptions,
+                    aseemblyPath);
             }
         }
 
@@ -49,10 +63,17 @@ namespace IL2C
             TextWriter logw,
             CodeTextStorage storage,
             bool readSymbols,
+            bool enableBundler,
             DebugInformationOptions debugInformationOptions,
             params string[] assemblyPaths)
         {
-            TranslateAll(logw, storage, readSymbols, debugInformationOptions, (IEnumerable<string>)assemblyPaths);
+            TranslateAll(
+                logw,
+                storage,
+                readSymbols,
+                enableBundler,
+                debugInformationOptions,
+                (IEnumerable<string>)assemblyPaths);
         }
 
         public static void TranslateAll(
@@ -60,14 +81,25 @@ namespace IL2C
             string outputPath,
             bool readSymbols,
             bool enableCpp,
+            bool enableBundler,
             DebugInformationOptions debugInformationOptions,
             IEnumerable<string> assemblyPaths)
         {
-            var storage = new CodeTextStorage(logw, outputPath, enableCpp, "    ");
+            var storage = new CodeTextStorage(
+                logw,
+                outputPath,
+                enableCpp,
+                "    ");
 
             foreach (var aseemblyPath in assemblyPaths)
             {
-                Translate(logw, storage, readSymbols, debugInformationOptions, aseemblyPath);
+                Translate(
+                    logw,
+                    storage,
+                    readSymbols,
+                    enableBundler,
+                    debugInformationOptions,
+                    aseemblyPath);
             }
         }
 
@@ -76,10 +108,18 @@ namespace IL2C
             string outputPath,
             bool readSymbols,
             bool enableCpp,
+            bool enableBundler,
             DebugInformationOptions debugInformationOptions,
             params string[] assemblyPaths)
         {
-            TranslateAll(logw, outputPath, readSymbols, enableCpp, debugInformationOptions, (IEnumerable<string>)assemblyPaths);
+            TranslateAll(
+                logw,
+                outputPath,
+                readSymbols,
+                enableCpp,
+                enableBundler,
+                debugInformationOptions,
+                (IEnumerable<string>)assemblyPaths);
         }
     }
 }

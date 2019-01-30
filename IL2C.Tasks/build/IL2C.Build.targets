@@ -7,6 +7,7 @@
         <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
         <IL2CReadSymbols Condition="'$(IL2CReadSymbols)' == ''">true</IL2CReadSymbols>
         <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
+        <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
         <CoreBuildDependsOn>
             $(CoreBuildDependsOn);
             IL2CBuild
@@ -14,6 +15,6 @@
     </PropertyGroup>
     <Target Name="IL2CBuild" Outputs="$(IL2COutputPath)">
         <!-- TODO: Can't use @(IL2CAssemblyPaths) -->
-        <Translate AssemblyPaths="$(IL2CTargetAssemblyPath)" OutputPath="$(IL2COutputPath)" DebugInformation="$(IL2CDebugInformation)" ReadSymbols="$(IL2CReadSymbols)" EnableCpp="$(IL2CEnableCpp)" />
+        <Translate AssemblyPaths="$(IL2CTargetAssemblyPath)" OutputPath="$(IL2COutputPath)" DebugInformation="$(IL2CDebugInformation)" ReadSymbols="$(IL2CReadSymbols)" EnableCpp="$(IL2CEnableCpp)" EnableBundler="$(IL2CEnableBundler)" />
     </Target>
 </Project>

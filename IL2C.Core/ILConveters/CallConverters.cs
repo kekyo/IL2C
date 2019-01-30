@@ -87,16 +87,15 @@ namespace IL2C.ILConverters
                     method = implementationMethod;
                     return (arg0.TargetType, arg0, "il2c_adjusted_reference({0})");
                 }
-                else
+                else if (!(parameter0.TargetType.IsClass && arg0.TargetType.IsClass &&
+                    parameter0.TargetType.IsAssignableFrom(arg0.TargetType)))
                 {
                     // Include adjust offset expression
                     return (parameter0.TargetType, arg0, "il2c_adjusted_reference({0})");
                 }
             }
-            else
-            {
-                return (parameter0.TargetType, arg0, "{0}");
-            }
+
+            return (parameter0.TargetType, arg0, "{0}");
         }
 
         public static Func<IExtractContext, string[]> Apply(

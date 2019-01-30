@@ -30,7 +30,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="IL2C.Build" Version="0.4.30" />
-        <!-- <PackageReference Include="IL2C.Interop" Version="0.4.30" /> -->
+        <!-- <PackageReference Include="IL2C.Build" Version="0.4.30" /> -->
+    <PackageReference Include="IL2C.Interop" Version="0.4.30" />
     </ItemGroup>
 </Project>

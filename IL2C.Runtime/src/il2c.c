@@ -338,6 +338,7 @@ void il2c_step3_sweep_garbage__(void)
     // Sweep garbage if gcmark isn't marked.
     IL2C_REF_HEADER** ppUnlinkTarget = &g_pBeginHeader__;
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
+    IL2C_REF_HEADER* pScheduledHeader = NULL;
     while (pCurrentHeader != NULL)
     {
         IL2C_REF_HEADER* pNext = pCurrentHeader->pNext;
@@ -346,29 +347,42 @@ void il2c_step3_sweep_garbage__(void)
             // Very important link steps: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
 
-            DEBUG_WRITE("il2c_step3_sweep_garbage__", pCurrentHeader->type->pTypeName);
-
             // Class type overrided the finalizer:
             if ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize)
             {
                 System_Object* pObject = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
                 il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);
 
+                DEBUG_WRITE("il2c_step3_sweep_garbage__: Call finalizer", pCurrentHeader->type->pTypeName);
+
                 // Call finalizer.
-                // TODO: Implement F-reachable queue.
                 pObject->vptr0__->Finalize(pObject);
             }
 
-            // Heap discarded
-            il2c_free((void*)pCurrentHeader);
-
-            pCurrentHeader = pNext;
+            // Insert to free list.
+            pCurrentHeader->pNext = pScheduledHeader;
+            pScheduledHeader = pCurrentHeader;
         }
         else
         {
             ppUnlinkTarget = (void*)&pCurrentHeader->pNext;
-            pCurrentHeader = pNext;
         }
+
+        // Next
+        pCurrentHeader = pNext;
+    }
+
+    while (pScheduledHeader != NULL)
+    {
+        IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
+
+        DEBUG_WRITE("il2c_step3_sweep_garbage__: Free", pCurrentHeader->type->pTypeName);
+
+        // Heap discarded
+        il2c_free((void*)pScheduledHeader);
+
+        // Next
+        pScheduledHeader = pNext;
     }
 }
 

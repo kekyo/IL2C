@@ -97,27 +97,6 @@ namespace IL2C.ILConverters
         }
     }
 
-    internal sealed class LdsfldConverter : InlineFieldConverter
-    {
-        public override OpCode OpCode => OpCodes.Ldsfld;
-
-        public override Func<IExtractContext, string[]> Apply(
-            IFieldInformation field, DecodeContext decodeContext)
-        {
-            Debug.Assert(field.IsStatic);
-
-            decodeContext.PrepareContext.RegisterStaticField(field);
-
-            var targetType = field.FieldType;
-            var symbol = decodeContext.PushStack(targetType);
-
-            return extractContext => new [] { string.Format(
-                "{0} = {1}",
-                extractContext.GetSymbolName(symbol),
-                extractContext.GetRightExpression(targetType, field.FieldType, field.MangledUniqueName)) };
-        }
-    }
-
     internal sealed class LdfldConverter : InlineFieldConverter
     {
         public override OpCode OpCode => OpCodes.Ldfld;
@@ -137,6 +116,25 @@ namespace IL2C.ILConverters
             IFieldInformation field, DecodeContext decodeContext)
         {
             return LdfldConverterUtilities.Apply(field, decodeContext, true);
+        }
+    }
+
+    internal sealed class LdsfldConverter : InlineFieldConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldsfld;
+
+        public override Func<IExtractContext, string[]> Apply(
+            IFieldInformation field, DecodeContext decodeContext)
+        {
+            Debug.Assert(field.IsStatic);
+
+            var targetType = field.FieldType;
+            var symbol = decodeContext.PushStack(targetType);
+
+            return extractContext => new[] { string.Format(
+                "{0} = {1}",
+                extractContext.GetSymbolName(symbol),
+                extractContext.GetRightExpression(targetType, field.FieldType, field.MangledUniqueName)) };
         }
     }
 }

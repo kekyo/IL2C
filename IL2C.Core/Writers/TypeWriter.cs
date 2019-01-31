@@ -301,19 +301,25 @@ namespace IL2C.Writers
                         if (field.NativeValue != null)
                         {
                             tw.WriteLine(
-                                "#define {0} {1}",
+                                "/* {0} */ #define {1} {2}",
+                                field.AttributeDescription,
                                 field.MangledUniqueName,
                                 field.CLanguageNativeSymbolName);
                         }
                         else
                         {
                             tw.WriteLine(
-                            "extern {0};",
-                            field.GetCLanguageStaticPrototype(false));
+                                "extern {0}{1}* {2}_HANDLER__(void);",
+                                field.IsInitOnly ? "const " : string.Empty,
+                                field.FieldType.CLanguageTypeName,
+                                field.MangledUniqueName);
+                            tw.WriteLine(
+                                "/* {0} */ #define {1} (*{1}_HANDLER__())",
+                                field.AttributeDescription,
+                                field.MangledUniqueName);
                         }
+                        tw.SplitLine();
                     }
-
-                    tw.SplitLine();
                 }
 
                 var methods = declaredType.DeclaredMethods.
@@ -329,10 +335,20 @@ namespace IL2C.Writers
 
                     foreach (var method in methods)
                     {
-                        tw.WriteLine(
-                            "extern /* {0} */ {1};",
-                            method.AttributeDescription,
-                            method.CLanguageFunctionPrototype);
+                        // Special case: The type initializer hides into the file scope.
+                        if (method.IsConstructor && method.IsStatic)
+                        {
+                            tw.WriteLine(
+                                "static {0};",
+                                method.CLanguageFunctionPrototype);
+                        }
+                        else
+                        {
+                            tw.WriteLine(
+                                "extern /* {0} */ {1};",
+                                method.AttributeDescription,
+                                method.CLanguageFunctionPrototype);
+                        }
                     }
                     tw.SplitLine();
                 }

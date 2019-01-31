@@ -28,6 +28,9 @@ static volatile bool g_ExecutingCollection__ = false;
 
 static void il2c_collect__(interlock_t comparand);
 
+static uintptr_t il2c_initializer_count = 0;
+const uintptr_t* il2c_initializer_count__ = &il2c_initializer_count;
+
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
 
@@ -864,6 +867,8 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 
 void il2c_initialize(void)
 {
+    il2c_initializer_count++;
+
     il2c_initialize_heap();
 
     g_pBeginFrame__ = NULL;

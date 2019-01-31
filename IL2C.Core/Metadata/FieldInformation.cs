@@ -16,6 +16,7 @@ namespace IL2C.Metadata
         bool IsFamilyAndAssembly { get; }
 
         bool IsStatic { get; }
+        bool IsInitOnly { get; }
         bool HasConstant { get; }
 
         ITypeInformation FieldType { get; }
@@ -58,8 +59,12 @@ namespace IL2C.Metadata
                     "internal";
                 var attribute1 = this.HasConstant ?
                     "const" :
+                    (this.IsStatic && this.IsInitOnly) ?
+                    "static readonly" :
                     this.IsStatic ?
                     "static" :
+                    this.IsInitOnly ?
+                    "readonly" :
                     string.Empty;
 
                 return string.Join(" ",
@@ -78,6 +83,7 @@ namespace IL2C.Metadata
         public bool IsFamilyAndAssembly => this.Definition.IsFamilyAndAssembly;
 
         public bool IsStatic => this.Definition.IsStatic;
+        public bool IsInitOnly => this.Definition.IsInitOnly;
         public bool HasConstant => this.Definition.HasConstant;
 
         public ITypeInformation FieldType =>
@@ -91,10 +97,10 @@ namespace IL2C.Metadata
         public string GetCLanguageStaticPrototype(bool requireInitializerExpression)
         {
             var initializer = requireInitializerExpression ?
-                string.Empty :
                 string.Format(
                     " = {0}",
-                    Utilities.GetCLanguageExpression(this.DeclaredValue ?? 0));
+                    Utilities.GetCLanguageExpression(this.DeclaredValue ?? 0)) :
+                string.Empty;
 
             return string.Format(
                 "{0} {1}{2}",

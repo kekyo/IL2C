@@ -132,6 +132,8 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 #define il2c_cast_from_boxed_to_interface(interfaceTypeName, size, interfaceIndex, pReference) \
     il2c_cast_to_interface__(interfaceTypeName, sizeof(System_ValueType) + (size) + (interfaceIndex) * sizeof(void*), (pReference))
 
+extern const uintptr_t* il2c_initializer_count__;
+
 ///////////////////////////////////////////////////////
 // Garbage collector related declarations
 

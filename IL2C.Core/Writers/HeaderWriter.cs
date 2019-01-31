@@ -285,7 +285,7 @@ namespace IL2C.Writers
                     foreach (var (symbolName, _) in constStrings)
                     {
                         twHeader.WriteLine(
-                            "System_String* const {0};",
+                            "extern System_String* const {0};",
                             symbolName);
                     }
                     twHeader.SplitLine();

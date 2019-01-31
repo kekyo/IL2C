@@ -1,7 +1,7 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 121 / 219
-* Number of opcode tests: 616 [64 / 219]
+* Number of opcode implementations: 122 / 219
+* Number of opcode tests: 631 [64 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
 |:---|:---|:---|:---|:---|
@@ -154,7 +154,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldloca.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloca_s) | 0x12 | Implemented | [Test [17]](tests/IL2C.Core.Test.Target/ILConverters/Ldloca_S) | IL2C.ILConverters.Ldloca_sConverter |
 | [ldnull](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldnull) | 0x14 | Implemented | [Test [3]](tests/IL2C.Core.Test.Target/ILConverters/Ldnull) | IL2C.ILConverters.LdnullConverter |
 | [ldobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldobj) | 0x71 |  |  |  |
-| [ldsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldsfld) | 0x7e | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Ldsfld) | IL2C.ILConverters.LdsfldConverter |
+| [ldsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldsfld) | 0x7e | Implemented | [Test [16]](tests/IL2C.Core.Test.Target/ILConverters/Ldsfld) | IL2C.ILConverters.LdsfldConverter |
 | [ldsflda](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldsflda) | 0x7f |  |  |  |
 | [ldstr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldstr) | 0x72 | Implemented | [Test [1]](tests/IL2C.Core.Test.Target/ILConverters/Ldstr) | IL2C.ILConverters.LdstrConverter |
 | [ldtoken](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldtoken) | 0xd0 | Implemented |  | IL2C.ILConverters.LdtokenConverters |
@@ -212,7 +212,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [stloc.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_3) | 0xd | Implemented | [Test [16]](tests/IL2C.Core.Test.Target/ILConverters/Stloc_3) | IL2C.ILConverters.Stloc_3Converter |
 | [stloc.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_s) | 0x13 | Implemented | [Test [17]](tests/IL2C.Core.Test.Target/ILConverters/Stloc_S) | IL2C.ILConverters.Stloc_SConverter |
 | [stobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stobj) | 0x81 |  |  |  |
-| [stsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stsfld) | 0x80 |  |  |  |
+| [stsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stsfld) | 0x80 | Implemented |  | IL2C.ILConverters.StsfldConverter |
 | [sub](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub) | 0x59 | Implemented | [Test [11]](tests/IL2C.Core.Test.Target/ILConverters/Sub) | IL2C.ILConverters.SubConverter |
 | [sub.ovf](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub_ovf) | 0xda |  |  |  |
 | [sub.ovf.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub_ovf_un) | 0xdb |  |  |  |

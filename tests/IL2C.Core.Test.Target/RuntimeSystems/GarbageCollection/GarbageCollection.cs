@@ -90,6 +90,20 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class StaticFieldInstanceType
+    {
+        public StaticFieldInstanceType()
+        {
+        }
+
+        public int Value;
+    }
+
+    public static class StaticFieldTracible
+    {
+        public static StaticFieldInstanceType StaticFieldInstance;
+    }
+
     [Description("These tests are verified the IL2C manages tracing the object references and collect garbages from the heap memory.")]
     [TestCase("ABCDEF", "ObjRefInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF", "ObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
@@ -100,6 +114,7 @@ namespace IL2C.RuntimeSystems
     [TestCase("ABCDEF3", "MultipleInsideValueType", 2, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase(1, new[] { "CallFinalizer", "RunCallFinalizer" }, IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(0, new[] { "CallFinalizerWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
+    [TestCase(12345, new[] { "TraceStaticField", "RunTraceStaticField" }, 12345, IncludeTypes = new[] { typeof(StaticFieldTracible), typeof(StaticFieldInstanceType) })]
     public sealed class GarbageCollection
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -148,6 +163,24 @@ namespace IL2C.RuntimeSystems
             Thread.Sleep(1000);
 
             return holder.Called;
+        }
+
+        private static void RunTraceStaticField(int value)
+        {
+            var v = new StaticFieldInstanceType();
+            v.Value = value;
+
+            StaticFieldTracible.StaticFieldInstance = v;
+        }
+
+        public static int TraceStaticField(int value)
+        {
+            RunTraceStaticField(value);
+
+            GC.Collect();
+            Thread.Sleep(1000);
+
+            return StaticFieldTracible.StaticFieldInstance.Value;
         }
     }
 }

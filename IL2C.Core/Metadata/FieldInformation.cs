@@ -16,12 +16,11 @@ namespace IL2C.Metadata
         bool IsFamilyAndAssembly { get; }
 
         bool IsStatic { get; }
+        bool IsInitOnly { get; }
         bool HasConstant { get; }
 
         ITypeInformation FieldType { get; }
         object DeclaredValue { get; }
-
-        string GetCLanguageStaticPrototype(bool requireInitializerExpression);
 
         NativeValueAttributeInformation NativeValue { get; }
         string CLanguageNativeSymbolName { get; }
@@ -58,8 +57,12 @@ namespace IL2C.Metadata
                     "internal";
                 var attribute1 = this.HasConstant ?
                     "const" :
+                    (this.IsStatic && this.IsInitOnly) ?
+                    "static readonly" :
                     this.IsStatic ?
                     "static" :
+                    this.IsInitOnly ?
+                    "readonly" :
                     string.Empty;
 
                 return string.Join(" ",
@@ -78,6 +81,7 @@ namespace IL2C.Metadata
         public bool IsFamilyAndAssembly => this.Definition.IsFamilyAndAssembly;
 
         public bool IsStatic => this.Definition.IsStatic;
+        public bool IsInitOnly => this.Definition.IsInitOnly;
         public bool HasConstant => this.Definition.HasConstant;
 
         public ITypeInformation FieldType =>
@@ -87,21 +91,6 @@ namespace IL2C.Metadata
             this.HasConstant ?
                 this.Definition.Constant :
                 this.Definition.InitialValue;
-
-        public string GetCLanguageStaticPrototype(bool requireInitializerExpression)
-        {
-            var initializer = requireInitializerExpression ?
-                string.Empty :
-                string.Format(
-                    " = {0}",
-                    Utilities.GetCLanguageExpression(this.DeclaredValue ?? 0));
-
-            return string.Format(
-                "{0} {1}{2}",
-                this.FieldType.CLanguageTypeName,
-                this.MangledUniqueName,
-                initializer);
-        }
 
         public override MemberScopes CLanguageMemberScope
         {

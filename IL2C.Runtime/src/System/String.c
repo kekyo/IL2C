@@ -192,6 +192,9 @@ const wchar_t* il2c_c_str(System_String* str)
 /////////////////////////////////////////////////////////////
 // System.String
 
+IL2C_CONST_STRING(System_String_Empty, L"");
+System_String** System_String_Empty_REF__ = (System_String**)&System_String_Empty;
+
 System_String* System_String_ToString(System_String* this__)
 {
     il2c_assert(this__ != NULL);
@@ -254,9 +257,23 @@ int32_t System_String_GetHashCode(System_String* this__)
 
 System_String* System_String_Concat_3(System_String* str0, System_String* str1)
 {
-    // TODO: NullReferenceException
-    il2c_assert(str0 != NULL);
-    il2c_assert(str1 != NULL);
+    // TODO: IsNullOrEmpty()
+    if (str0 == NULL)
+    {
+        if (str1 == NULL)
+        {
+            return System_String_Empty;
+        }
+        else
+        {
+            return str1;
+        }
+    }
+    
+    if (str1 == NULL)
+    {
+        return str0;
+    }
 
     il2c_assert(str0->string_body__ != NULL);
     il2c_assert(str1->string_body__ != NULL);

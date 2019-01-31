@@ -25,7 +25,9 @@ extern /* virtual */ int32_t System_UIntPtr_GetHashCode(uintptr_t* this__);
 extern bool System_UIntPtr_Equals(uintptr_t* this__, uintptr_t obj);
 extern /* virtual */ bool System_UIntPtr_Equals_1(uintptr_t* this__, System_Object* obj);
 
-#define System_UIntPtr_op_Explicit_2(value) ((uintptr_t)value)
+#define System_UIntPtr_op_Explicit_2(value) ((uintptr_t)(value))
+#define System_UIntPtr_op_Explicit_3(value) ((uintptr_t)(value))
+#define System_UIntPtr_op_Addition(lhs, rhs) (((uintptr_t)(lhs)) + ((uintptr_t)(rhs)))
 
 extern const System_UIntPtr System_UIntPtr_Zero;
 

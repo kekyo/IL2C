@@ -18,8 +18,6 @@ namespace IL2C
         private readonly Dictionary<ITypeInformation, HashSet<ITypeInformation>> registeredTypesByDeclaringType =
             new Dictionary<ITypeInformation, HashSet<ITypeInformation>>();
         private readonly HashSet<string> importIncludes = new HashSet<string>();
-        private readonly Dictionary<string, IFieldInformation> staticFields =
-            new Dictionary<string, IFieldInformation>();
         private readonly Dictionary<string, string> constStrings =
             new Dictionary<string, string>();
         private readonly Dictionary<byte[], (string symbolName, HashSet<IFieldInformation> fields)> declaredValues =
@@ -82,13 +80,6 @@ namespace IL2C
                 registeredTypesByDeclaringType.Add(declaringType, set);
             }
             set.Add(type);
-        }
-
-        void IPrepareContext.RegisterStaticField(IFieldInformation staticField)
-        {
-            Debug.Assert(staticField.IsStatic);
-
-            staticFields.Add(staticField.UniqueName, staticField);
         }
 
         string IPrepareContext.RegisterConstString(string value)
@@ -333,9 +324,6 @@ namespace IL2C
 
         string IExtractContext.GetSymbolName(IVariableInformation variable) =>
             this.GetSymbolName(variable);
-
-        IEnumerable<IFieldInformation> IExtractContext.ExtractStaticFields() =>
-            staticFields.Values;
 
         IEnumerable<(string symbolName, string value)> IExtractContext.ExtractConstStrings() =>
             constStrings.Select(kv => (kv.Value, kv.Key));

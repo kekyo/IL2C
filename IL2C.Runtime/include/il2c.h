@@ -144,6 +144,9 @@ extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type);
 extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame);
 extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame);
 
+extern const uintptr_t* il2c_initializer_count;
+extern void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields);
+
 ///////////////////////////////////////////////////////
 // The basis types
 

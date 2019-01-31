@@ -95,26 +95,47 @@ namespace IL2C.ILConverters
                 };
             }
         }
-    }
 
-    internal sealed class LdsfldConverter : InlineFieldConverter
-    {
-        public override OpCode OpCode => OpCodes.Ldsfld;
-
-        public override Func<IExtractContext, string[]> Apply(
-            IFieldInformation field, DecodeContext decodeContext)
+        public static Func<IExtractContext, string[]> ApplyStatic(
+            IFieldInformation field, DecodeContext decodeContext, bool requestPointer)
         {
             Debug.Assert(field.IsStatic);
 
-            decodeContext.PrepareContext.RegisterStaticField(field);
-
             var targetType = field.FieldType;
-            var symbol = decodeContext.PushStack(targetType);
+            var symbol = decodeContext.PushStack(
+                requestPointer ? targetType.MakeByReference() : targetType);
 
-            return extractContext => new [] { string.Format(
-                "{0} = {1}",
+            // Special case: This method is the type initializer and target field inside it type.
+            if (decodeContext.Method.IsConstructor && decodeContext.Method.IsStatic &&
+                decodeContext.Method.DeclaringType.Equals(field.DeclaringType))
+            {
+                if (field.FieldType.IsReferenceType ||
+                    (field.FieldType.IsValueType && field.FieldType.IsRequiredTraverse))
+                {
+                    return extractContext => new[] { string.Format(
+                        "{0} = {1}{2}_STATIC_FIELDS__.{3}",
+                        extractContext.GetSymbolName(symbol),
+                        requestPointer ? "&" : string.Empty,
+                        field.DeclaringType.MangledUniqueName,
+                        field.MangledName) };
+                }
+                else
+                {
+                    return extractContext => new[] { string.Format(
+                        "{0} = {1}{2}",
+                        extractContext.GetSymbolName(symbol),
+                        requestPointer ? "&" : string.Empty,
+                        field.MangledUniqueName) };
+                }
+            }
+            else
+            {
+                return extractContext => new[] { string.Format(
+                "{0} = {1}{2}_REF__",
                 extractContext.GetSymbolName(symbol),
+                requestPointer ? string.Empty : "*",
                 extractContext.GetRightExpression(targetType, field.FieldType, field.MangledUniqueName)) };
+            }
         }
     }
 
@@ -137,6 +158,28 @@ namespace IL2C.ILConverters
             IFieldInformation field, DecodeContext decodeContext)
         {
             return LdfldConverterUtilities.Apply(field, decodeContext, true);
+        }
+    }
+
+    internal sealed class LdsfldConverter : InlineFieldConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldsfld;
+
+        public override Func<IExtractContext, string[]> Apply(
+            IFieldInformation field, DecodeContext decodeContext)
+        {
+            return LdfldConverterUtilities.ApplyStatic(field, decodeContext, false);
+        }
+    }
+
+    internal sealed class LdsfldaConverter : InlineFieldConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldsflda;
+
+        public override Func<IExtractContext, string[]> Apply(
+            IFieldInformation field, DecodeContext decodeContext)
+        {
+            return LdfldConverterUtilities.ApplyStatic(field, decodeContext, true);
         }
     }
 }

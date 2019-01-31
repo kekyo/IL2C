@@ -27,15 +27,9 @@ extern /* virtual */ bool System_IntPtr_Equals_1(intptr_t* this__, System_Object
 
 extern const intptr_t System_IntPtr_Zero;
 
-static inline intptr_t System_IntPtr_op_Addition(intptr_t lhs, intptr_t rhs)
-{
-    return lhs + rhs;
-}
-
-static inline bool System_IntPtr_op_Inequality(intptr_t lhs, intptr_t rhs)
-{
-    return lhs != rhs;
-}
+#define System_IntPtr_op_Explicit_4(value) ((intptr_t)(value))
+#define System_IntPtr_op_Addition(lhs, rhs) (((intptr_t)(lhs)) + ((intptr_t)(rhs)))
+#define System_IntPtr_op_Inequality(lhs, rhs) (((intptr_t)(lhs)) != ((intptr_t)(rhs)))
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using IL2C.Metadata;
 
@@ -38,7 +37,6 @@ namespace IL2C.Translators
         IReadOnlyDictionary<MemberScopes, IEnumerable<ITypeInformation>> EnumerateRegisteredTypes();
         IEnumerable<ITypeInformation> EnumerateRegisteredTypesByDeclaringType(ITypeInformation declaringType);
         IEnumerable<string> EnumerateRequiredImportIncludeFileNames();
-        IEnumerable<IFieldInformation> ExtractStaticFields();
         IEnumerable<(string symbolName, string value)> ExtractConstStrings();
         IEnumerable<DeclaredValuesInformation> ExtractDeclaredValues();
     }

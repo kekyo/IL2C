@@ -255,4 +255,50 @@ namespace IL2C.ILConverters
                 extractContext.GetSymbolName(siFrom)) };
         }
     }
+
+    internal sealed class Conv_r4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Conv_R4;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var siFrom = decodeContext.PopStack();
+            if (!(siFrom.TargetType.IsSingleType || siFrom.TargetType.IsDoubleType))
+            {
+                throw new InvalidProgramSequenceException(
+                    "Cannot convert to floating point type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
+            }
+
+            var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.SingleType);
+            return extractContext => new[] { string.Format(
+                "{0} = (float){1}",
+                extractContext.GetSymbolName(result),
+                extractContext.GetSymbolName(siFrom)) };
+        }
+    }
+
+    internal sealed class Conv_r8Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Conv_R8;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            var siFrom = decodeContext.PopStack();
+            if (!(siFrom.TargetType.IsSingleType || siFrom.TargetType.IsDoubleType))
+            {
+                throw new InvalidProgramSequenceException(
+                    "Cannot convert to floating point type: Location={0}, FromType={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    siFrom.TargetType.FriendlyName);
+            }
+
+            var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+            return extractContext => new[] { string.Format(
+                "{0} = (double){1}",
+                extractContext.GetSymbolName(result),
+                extractContext.GetSymbolName(siFrom)) };
+        }
+    }
 }

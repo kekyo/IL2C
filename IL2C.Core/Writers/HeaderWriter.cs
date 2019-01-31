@@ -285,7 +285,7 @@ namespace IL2C.Writers
                     foreach (var (symbolName, _) in constStrings)
                     {
                         twHeader.WriteLine(
-                            "System_String* const {0};",
+                            "extern System_String* const {0};",
                             symbolName);
                     }
                     twHeader.SplitLine();
@@ -362,7 +362,10 @@ namespace IL2C.Writers
                         twHeader,
                         type,
                         field => true,
-                        method => prepared.Functions.ContainsKey(method));
+                        method =>
+                            // Except type initializer
+                            !(method.IsConstructor && method.IsStatic) &&
+                            prepared.Functions.ContainsKey(method));
 
                         // TODO: The internal or private members can separate into the internal headers.
                         //field => field.CLanguageMemberScope == memberScope,

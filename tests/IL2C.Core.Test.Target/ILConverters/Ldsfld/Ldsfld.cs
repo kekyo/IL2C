@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    public sealed class Ldsfld_Field
+    public static class Ldsfld_Field
     {
         public static readonly bool TrueValue = true;
         public static readonly bool FalseValue = false;

@@ -110,7 +110,7 @@ namespace IL2C.ILConverters
             else
             {
                 return extractContext => new[] { string.Format(
-                    "{0} = {1}",
+                    "*{0}_REF__ = {1}",
                     field.MangledUniqueName,
                     extractContext.GetRightExpression(targetType, symbol)) };
             }

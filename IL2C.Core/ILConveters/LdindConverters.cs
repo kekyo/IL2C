@@ -31,6 +31,26 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Ldind_u1Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_U1;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
+    internal sealed class Ldind_i2Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_I2;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
     internal sealed class Ldind_i4Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Ldind_I4;
@@ -41,9 +61,69 @@ namespace IL2C.ILConverters
         }
     }
 
-    internal sealed class Ldind_u1Converter : InlineNoneConverter
+    internal sealed class Ldind_i8Converter : InlineNoneConverter
     {
-        public override OpCode OpCode => OpCodes.Ldind_U1;
+        public override OpCode OpCode => OpCodes.Ldind_I8;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
+    internal sealed class Ldind_i1Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_I1;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
+    internal sealed class Ldind_u2Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_U2;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
+    internal sealed class Ldind_u4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_U4;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
+    internal sealed class Ldind_r4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_R4;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
+    internal sealed class Ldind_r8Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_R8;
+
+        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        {
+            return LdindConverterUtilities.Apply(decodeContext);
+        }
+    }
+
+    internal sealed class Ldind_iConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldind_I;
 
         public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
         {

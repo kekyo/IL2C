@@ -201,12 +201,9 @@ namespace IL2C.Writers
 
                             foreach (var field in staticFields)
                             {
-                                var constString = field.IsInitOnly ? " const" : string.Empty;
-
                                 twSource.WriteLine(
-                                    "{0}{1}* {2}_HANDLER__(void)",
+                                    "{0}* {1}_HANDLER__(void)",
                                     field.FieldType.CLanguageTypeName,
-                                    constString,
                                     field.MangledUniqueName);
                                 twSource.WriteLine("{");
 

@@ -308,14 +308,12 @@ namespace IL2C.Writers
                         }
                         else
                         {
-                            var constString = field.IsInitOnly ? " const" : string.Empty;
                             tw.WriteLine(
-                                "extern {0}{1}* {2}_HANDLER__(void);",
+                                "extern {0}* {1}_HANDLER__(void);",
                                 field.FieldType.CLanguageTypeName,
-                                constString,
                                 field.MangledUniqueName);
                             tw.WriteLine(
-                                "/* {0} */ #define {1} (*{1}_HANDLER__())",
+                                "/* {0} */ #define {1}_REF__ ({1}_HANDLER__())",
                                 field.AttributeDescription,
                                 field.MangledUniqueName);
                         }

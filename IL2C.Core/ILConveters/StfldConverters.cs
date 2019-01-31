@@ -118,6 +118,13 @@ namespace IL2C.ILConverters
                         extractContext.GetRightExpression(targetType, symbol)) };
                 }
             }
+            else if (field.NativeValue != null)
+            {
+                return extractContext => new[] { string.Format(
+                    "{0} = {1}",
+                    field.MangledUniqueName,
+                    extractContext.GetRightExpression(targetType, symbol)) };
+            }
             else
             {
                 return extractContext => new[] { string.Format(

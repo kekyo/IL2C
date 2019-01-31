@@ -73,10 +73,10 @@ void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__)
     frame__.stack0_0__ = this__;
     /* IL_0001: ldsfld MT3620Blink.Timer.CLOCK_MONOTONIC */
 #line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    stack1_0__ = *MT3620Blink_Timer_CLOCK_MONOTONIC_REF__;
+    stack1_0__ = MT3620Blink_Timer_CLOCK_MONOTONIC;
     /* IL_0006: ldsfld MT3620Blink.Timer.TFD_NONBLOCK */
 #line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    stack2_0__ = *MT3620Blink_Timer_TFD_NONBLOCK_REF__;
+    stack2_0__ = MT3620Blink_Timer_TFD_NONBLOCK;
     /* IL_000b: call MT3620Blink.Interops.timerfd_create */
 #line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = MT3620Blink_Interops_timerfd_create(stack1_0__, stack2_0__);

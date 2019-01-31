@@ -192,7 +192,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     stack0_2__ = &local2__;
     /* IL_0013: ldsfld MT3620Blink.Interops.EPOLLIN */
 #line 22 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    stack1_1__ = *MT3620Blink_Interops_EPOLLIN_REF__;
+    stack1_1__ = MT3620Blink_Interops_EPOLLIN;
     /* IL_0018: stfld MT3620Blink.epoll_event.events */
 #line 22 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     stack0_2__->events = stack1_1__;
@@ -240,7 +240,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_4__);
     /* IL_0047: ldsfld MT3620Blink.Interops.EPOLL_CTL_ADD */
 #line 27 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    stack1_0__ = *MT3620Blink_Interops_EPOLL_CTL_ADD_REF__;
+    stack1_0__ = MT3620Blink_Interops_EPOLL_CTL_ADD;
     /* IL_004c: ldarg.1  */
 #line 27 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     frame__.stack2_3__ = target;
@@ -363,7 +363,7 @@ void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this_
     stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_4__);
     /* IL_001f: ldsfld MT3620Blink.Interops.EPOLL_CTL_DEL */
 #line 41 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    stack1_0__ = *MT3620Blink_Interops_EPOLL_CTL_DEL_REF__;
+    stack1_0__ = MT3620Blink_Interops_EPOLL_CTL_DEL;
     /* IL_0024: ldarg.1  */
 #line 41 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     frame__.stack2_0__ = target;

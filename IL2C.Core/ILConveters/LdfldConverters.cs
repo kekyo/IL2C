@@ -128,6 +128,14 @@ namespace IL2C.ILConverters
                         field.MangledUniqueName) };
                 }
             }
+            else if (field.NativeValue != null)
+            {
+                return extractContext => new[] { string.Format(
+                        "{0} = {1}{2}",
+                        extractContext.GetSymbolName(symbol),
+                        requestPointer ? "&" : string.Empty,
+                        field.MangledUniqueName) };
+            }
             else
             {
                 return extractContext => new[] { string.Format(

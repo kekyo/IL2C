@@ -920,7 +920,7 @@ int32_t MT3620Blink_Program_Main(void)
         /* IL_0007: nop  */
         /* IL_0008: ldsfld MT3620Blink.Interops.MT3620_RDB_LED1_RED */
 #line 82 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
-        stack0_1__ = *MT3620Blink_Interops_MT3620_RDB_LED1_RED_REF__;
+        stack0_1__ = MT3620Blink_Interops_MT3620_RDB_LED1_RED;
         /* IL_000d: newobj MT3620Blink.Program.GpioBlinker..ctor */
 #line 82 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
         frame__.stack0_2__ = il2c_get_uninitialized_object(MT3620Blink_Program_GpioBlinker);
@@ -936,7 +936,7 @@ int32_t MT3620Blink_Program_Main(void)
             /* IL_0013: nop  */
             /* IL_0014: ldsfld MT3620Blink.Interops.MT3620_RDB_BUTTON_A */
 #line 84 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
-            stack0_1__ = *MT3620Blink_Interops_MT3620_RDB_BUTTON_A_REF__;
+            stack0_1__ = MT3620Blink_Interops_MT3620_RDB_BUTTON_A;
             /* IL_0019: ldloc.1  */
 #line 84 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Program.cs"
             frame__.stack1_0__ = frame__.ledBlinker;

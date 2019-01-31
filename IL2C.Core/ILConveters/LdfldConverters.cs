@@ -115,7 +115,7 @@ namespace IL2C.ILConverters
                     return extractContext => new[] { string.Format(
                         "{0} = {1}{2}_STATIC_FIELDS__.{3}",
                         extractContext.GetSymbolName(symbol),
-                        requestPointer ? string.Empty : "*",
+                        requestPointer ? "&" : string.Empty,
                         field.DeclaringType.MangledUniqueName,
                         field.MangledName) };
                 }
@@ -124,7 +124,7 @@ namespace IL2C.ILConverters
                     return extractContext => new[] { string.Format(
                         "{0} = {1}{2}",
                         extractContext.GetSymbolName(symbol),
-                        requestPointer ? string.Empty : "*",
+                        requestPointer ? "&" : string.Empty,
                         field.MangledUniqueName) };
                 }
             }

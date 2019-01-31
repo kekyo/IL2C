@@ -54,8 +54,9 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Timer);
 //////////////////////////////////////////////////////////////////////////////////
 // [2-2] Static fields: MT3620Blink.Timer
 
-#define MT3620Blink_Timer_CLOCK_MONOTONIC CLOCK_MONOTONIC
-#define MT3620Blink_Timer_TFD_NONBLOCK TFD_NONBLOCK
+/* private static readonly */ #define MT3620Blink_Timer_CLOCK_MONOTONIC CLOCK_MONOTONIC
+
+/* private static readonly */ #define MT3620Blink_Timer_TFD_NONBLOCK TFD_NONBLOCK
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods: MT3620Blink.Timer

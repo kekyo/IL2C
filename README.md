@@ -109,7 +109,7 @@ This is first step for use the IL2C: ["Try writing code using both the Azure Sph
 | Nested types | Supported |
 | Class inherits | Supported |
 | Interface implements | Supported |
-| Array types | Partial supported |
+| Array types | Supported |
 | Multi dimensional array types |
 | Closed generic types |
 | Open generic types | (not support) | -
@@ -118,7 +118,7 @@ This is first step for use the IL2C: ["Try writing code using both the Azure Sph
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| Static field | Partial supported | M3
+| Static field | Supported | M3
 | Instance field | Supported | M3
 | Static method | Supported | M3
 | Instance method | Supported | M3
@@ -126,10 +126,10 @@ This is first step for use the IL2C: ["Try writing code using both the Azure Sph
 | Virtual method (interface) | Supported |
 | Constructor | Supported |
 | Constructor (ValueType) | Supported | M3
-| Type initializer |
-| Static property |
+| Type initializer | Supported |
+| Static property | Supported |
 | Instance property | Supported |
-| Static event |
+| Static event | Supported |
 | Instance event | Supported |
 
 #### Support metadata handling
@@ -154,7 +154,7 @@ This is first step for use the IL2C: ["Try writing code using both the Azure Sph
 |:---|:---|:---|
 | Referenced instance handler | Supported | 
 | Value type boxed instance handler | Supported |
-| Collect unused instance (GC) | Partial supported |
+| Collect unused instance (GC) | Supported |
 | Heap compaction (GC) |
 | Exception throw and handles | Partial supported |
 | Async exception throws | Partial supported |
@@ -168,9 +168,10 @@ This is first step for use the IL2C: ["Try writing code using both the Azure Sph
 
 | Issue | Status | Milestone
 |:---|:---|:---|
-| Basic commandline driver | Partial supported | M2
+| Basic commandline driver | Supported | M2
 | MSBuild (old/Task handler) | Partial supported |
-| MSBuild (new/.NET Core CLI) | Partial supported |
+| MSBuild (new) | Supported |
+| MSBuild (.NET Core CLI) |
 | Platform independent core library |
 | Translator platform on .NET 4.5 | Supported | M1
 | Translator platform on .NET Core 1 | (not support) | -

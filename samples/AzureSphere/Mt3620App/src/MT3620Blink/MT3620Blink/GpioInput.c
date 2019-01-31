@@ -16,9 +16,6 @@ extern "C" {
 // [9-2] File scope prototypes:
 
 //////////////////////////////////////////////////////////////////////////////////
-// [9-3] Static field instances:
-
-//////////////////////////////////////////////////////////////////////////////////
 // [9-4] Type: MT3620Blink.GpioInput
 
 ///////////////////////////////////////
@@ -41,36 +38,47 @@ typedef struct MT3620Blink_GpioInput__ctor_EXECUTION_FRAME_DECL
 
 void MT3620Blink_GpioInput__ctor(MT3620Blink_GpioInput* this__, int32_t gpioId)
 {
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     int32_t stack1_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     MT3620Blink_GpioInput__ctor_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0                         : GpioInput.cs(6) */
+    /* IL_0000: ldarg.0  */
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0001: ldarg.1                         : GpioInput.cs(6) */
+    /* IL_0001: ldarg.1  */
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack1_0__ = gpioId;
-    /* IL_0002: call MT3620Blink.Interops.GPIO_OpenAsInput : GpioInput.cs(6) */
+    /* IL_0002: call MT3620Blink.Interops.GPIO_OpenAsInput */
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack1_0__ = MT3620Blink_Interops_GPIO_OpenAsInput(stack1_0__);
-    /* IL_0007: call MT3620Blink.Descriptor..ctor : GpioInput.cs(6) */
+    /* IL_0007: call MT3620Blink.Descriptor..ctor */
+#line 6 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
-    /* IL_000c: nop                             : GpioInput.cs(6) */
+    /* IL_000c: nop  */
     /* IL_000d: nop  */
     /* IL_000e: ret  */
+#line 8 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 8 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     return;
+#line 8 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
 }
 
 ///////////////////////////////////////
@@ -93,60 +101,84 @@ typedef struct MT3620Blink_GpioInput_get_Value_EXECUTION_FRAME_DECL
 
 bool MT3620Blink_GpioInput_get_Value(MT3620Blink_GpioInput* this__)
 {
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-3] Local variables (!objref):
 
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     MT3620Blink_GPIO_Value_Type value;
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     il2c_memset(&value, 0x00, sizeof value);
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     bool local1__ = false;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     int32_t stack0_1__;
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     MT3620Blink_GPIO_Value_Type stack0_2__;
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     bool stack0_3__;
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     MT3620Blink_GPIO_Value_Type* stack1_0__;
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     int32_t stack1_1__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     MT3620Blink_GpioInput_get_Value_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : GpioInput.cs(13) */
+    /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0002: call MT3620Blink.Descriptor.get_Identity : GpioInput.cs(14) */
+    /* IL_0002: call MT3620Blink.Descriptor.get_Identity */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack0_1__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0007: ldloca.s value                  : GpioInput.cs(14) */
+    /* IL_0007: ldloca.s value */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack1_0__ = &value;
-    /* IL_0009: call MT3620Blink.Interops.GPIO_GetValue : GpioInput.cs(14) */
+    /* IL_0009: call MT3620Blink.Interops.GPIO_GetValue */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack0_1__ = MT3620Blink_Interops_GPIO_GetValue(stack0_1__, stack1_0__);
-    /* IL_000e: pop                             : GpioInput.cs(14) */
+    /* IL_000e: pop  */
     /* IL_000f: ldloc.0  */
+#line 15 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack0_2__ = value;
-    /* IL_0010: ldc.i4.1                        : GpioInput.cs(15) */
+    /* IL_0010: ldc.i4.1  */
+#line 15 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack1_1__ = 1;
-    /* IL_0011: ceq                             : GpioInput.cs(15) */
+    /* IL_0011: ceq  */
+#line 15 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack0_1__ = (int32_t)stack0_2__ == (int32_t)stack1_1__;
-    /* IL_0013: stloc.1                         : GpioInput.cs(15) */
+    /* IL_0013: stloc.1  */
+#line 15 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     local1__ = (bool)stack0_1__;
-    /* IL_0014: br.s IL_0016                    : GpioInput.cs(15) */
+    /* IL_0014: br.s IL_0016 */
+#line 15 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     goto IL_0016;
 IL_0016:
-    /* IL_0016: ldloc.1                         : GpioInput.cs(16) */
+    /* IL_0016: ldloc.1  */
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     stack0_3__ = local1__;
-    /* IL_0017: ret                             : GpioInput.cs(16) */
+    /* IL_0017: ret  */
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     return stack0_3__;
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
 }
 
 //////////////////////

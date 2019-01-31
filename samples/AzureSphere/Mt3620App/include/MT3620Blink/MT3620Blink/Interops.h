@@ -42,11 +42,15 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Interops);
 //////////////////////////////////////////////////////////////////////////////////
 // [2-2] Static fields: MT3620Blink.Interops
 
-#define MT3620Blink_Interops_MT3620_RDB_LED1_RED MT3620_RDB_LED1_RED
-#define MT3620Blink_Interops_MT3620_RDB_BUTTON_A MT3620_RDB_BUTTON_A
-#define MT3620Blink_Interops_EPOLL_CTL_ADD EPOLL_CTL_ADD
-#define MT3620Blink_Interops_EPOLL_CTL_DEL EPOLL_CTL_DEL
-#define MT3620Blink_Interops_EPOLLIN EPOLLIN
+/* public static readonly */ #define MT3620Blink_Interops_MT3620_RDB_LED1_RED MT3620_RDB_LED1_RED
+
+/* public static readonly */ #define MT3620Blink_Interops_MT3620_RDB_BUTTON_A MT3620_RDB_BUTTON_A
+
+/* public static readonly */ #define MT3620Blink_Interops_EPOLL_CTL_ADD EPOLL_CTL_ADD
+
+/* public static readonly */ #define MT3620Blink_Interops_EPOLL_CTL_DEL EPOLL_CTL_DEL
+
+/* public static readonly */ #define MT3620Blink_Interops_EPOLLIN EPOLLIN
 
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods: MT3620Blink.Interops

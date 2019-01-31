@@ -101,11 +101,22 @@ namespace IL2C.ILConverters
             if (decodeContext.Method.IsConstructor && decodeContext.Method.IsStatic &&
                 decodeContext.Method.DeclaringType.Equals(field.DeclaringType))
             {
-                return extractContext => new[] { string.Format(
-                    "{0}_STATIC_FIELDS__.{1} = {2}",
-                    field.DeclaringType.MangledUniqueName,
-                    field.MangledName,
-                    extractContext.GetRightExpression(targetType, symbol)) };
+                if (field.FieldType.IsReferenceType ||
+                    (field.FieldType.IsValueType && field.FieldType.IsRequiredTraverse))
+                {
+                    return extractContext => new[] { string.Format(
+                        "{0}_STATIC_FIELDS__.{1} = {2}",
+                        field.DeclaringType.MangledUniqueName,
+                        field.MangledName,
+                        extractContext.GetRightExpression(targetType, symbol)) };
+                }
+                else
+                {
+                    return extractContext => new[] { string.Format(
+                        "{0} = {1}",
+                        field.MangledUniqueName,
+                        extractContext.GetRightExpression(targetType, symbol)) };
+                }
             }
             else
             {

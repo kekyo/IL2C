@@ -105,11 +105,37 @@ namespace IL2C.ILConverters
             var symbol = decodeContext.PushStack(
                 requestPointer ? targetType.MakeByReference() : targetType);
 
-            return extractContext => new[] { string.Format(
+            // Special case: This method is the type initializer and target field inside it type.
+            if (decodeContext.Method.IsConstructor && decodeContext.Method.IsStatic &&
+                decodeContext.Method.DeclaringType.Equals(field.DeclaringType))
+            {
+                if (field.FieldType.IsReferenceType ||
+                    (field.FieldType.IsValueType && field.FieldType.IsRequiredTraverse))
+                {
+                    return extractContext => new[] { string.Format(
+                        "{0} = {1}{2}_STATIC_FIELDS__.{3}",
+                        extractContext.GetSymbolName(symbol),
+                        requestPointer ? string.Empty : "*",
+                        field.DeclaringType.MangledUniqueName,
+                        field.MangledName) };
+                }
+                else
+                {
+                    return extractContext => new[] { string.Format(
+                        "{0} = {1}{2}",
+                        extractContext.GetSymbolName(symbol),
+                        requestPointer ? string.Empty : "*",
+                        field.MangledUniqueName) };
+                }
+            }
+            else
+            {
+                return extractContext => new[] { string.Format(
                 "{0} = {1}{2}_REF__",
                 extractContext.GetSymbolName(symbol),
                 requestPointer ? string.Empty : "*",
                 extractContext.GetRightExpression(targetType, field.FieldType, field.MangledUniqueName)) };
+            }
         }
     }
 

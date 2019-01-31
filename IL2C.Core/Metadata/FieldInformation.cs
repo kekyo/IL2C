@@ -22,8 +22,6 @@ namespace IL2C.Metadata
         ITypeInformation FieldType { get; }
         object DeclaredValue { get; }
 
-        string GetCLanguageStaticPrototype(bool requireInitializerExpression);
-
         NativeValueAttributeInformation NativeValue { get; }
         string CLanguageNativeSymbolName { get; }
     }
@@ -93,21 +91,6 @@ namespace IL2C.Metadata
             this.HasConstant ?
                 this.Definition.Constant :
                 this.Definition.InitialValue;
-
-        public string GetCLanguageStaticPrototype(bool requireInitializerExpression)
-        {
-            var initializer = requireInitializerExpression ?
-                string.Format(
-                    " = {0}",
-                    Utilities.GetCLanguageExpression(this.DeclaredValue ?? 0)) :
-                string.Empty;
-
-            return string.Format(
-                "{0} {1}{2}",
-                this.FieldType.CLanguageTypeName,
-                this.MangledUniqueName,
-                initializer);
-        }
 
         public override MemberScopes CLanguageMemberScope
         {

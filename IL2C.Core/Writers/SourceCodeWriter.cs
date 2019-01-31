@@ -177,26 +177,69 @@ namespace IL2C.Writers
                             var staticFieldsName = type.MangledUniqueName + "_STATIC_FIELDS";
 
                             twSource.WriteLine(
-                                "static struct {0}_DECL__",
+                                "static volatile uintptr_t {0}_initializerCount__ = 0;",
+                                staticFieldsName);
+                            twSource.SplitLine();
+                            twSource.WriteLine(
+                                "static struct {0}_DECL__ /* IL2C_EXECUTION_FRAME */",
                                 staticFieldsName);
                             twSource.WriteLine("{");
 
+                            var objrefStaticFields = staticFields.
+                                Where(field => field.FieldType.IsReferenceType).
+                                ToArray();
+                            var valueTypeStaticFields = staticFields.
+                                Where(field => field.FieldType.IsValueType && field.FieldType.IsRequiredTraverse).
+                                ToArray();
+                            var otherStaticFields = new HashSet<IFieldInformation>(staticFields.
+                                Except(objrefStaticFields).
+                                Except(valueTypeStaticFields));
+
                             using (var _ = twSource.Shift())
                             {
-                                twSource.WriteLine("uintptr_t initializerCount__;");
+                                twSource.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
+                                twSource.WriteLine("const uint16_t objRefCount__;");
+                                twSource.WriteLine("const uint16_t valueCount__;");
 
-                                foreach (var field in staticFields)
+                                if (objrefStaticFields.Length >= 1)
                                 {
-                                    twSource.WriteLine(
-                                        "{0} {1};",
-                                        field.FieldType.CLanguageTypeName,
-                                        field.MangledName);
+                                    twSource.WriteLine("//-------------------- objref");
+                                    foreach (var field in objrefStaticFields)
+                                    {
+                                        twSource.WriteLine(
+                                            "{0} {1};",
+                                            field.FieldType.CLanguageTypeName,
+                                            field.MangledName);
+                                    }
+                                }
+
+                                if (valueTypeStaticFields.Length >= 1)
+                                {
+                                    twSource.WriteLine("//-------------------- value type");
+                                    foreach (var field in valueTypeStaticFields)
+                                    {
+                                        twSource.WriteLine(
+                                            "{0} {1};",
+                                            field.FieldType.CLanguageTypeName,
+                                            field.MangledName);
+                                    }
                                 }
                             }
 
                             twSource.WriteLine(
-                                "}} {0}__ = {{ 0 }};",
-                                staticFieldsName);
+                                "}} {0}__ = {{ NULL, {1}, {2} }};",
+                                staticFieldsName,
+                                objrefStaticFields.Length,
+                                valueTypeStaticFields.Length);
+                            twSource.SplitLine();
+
+                            foreach (var field in otherStaticFields)
+                            {
+                                twSource.WriteLine(
+                                   "static {0} {1};",
+                                   field.FieldType.CLanguageTypeName,
+                                   field.MangledUniqueName);
+                            }
                             twSource.SplitLine();
 
                             foreach (var field in staticFields)
@@ -209,38 +252,48 @@ namespace IL2C.Writers
 
                                 using (var _ = twSource.Shift())
                                 {
-                                    var typeInitializer = type.DeclaredMethods.
-                                        FirstOrDefault(method => method.IsConstructor && method.IsStatic);
-                                    if (typeInitializer != null)
+                                    // TODO: Have to guard race condition for the multi threading feature.
+                                    twSource.WriteLine(
+                                        "if ({0}_initializerCount__ != *il2c_initializer_count)",
+                                        staticFieldsName);
+                                    twSource.WriteLine("{");
+                                    using (var __ = twSource.Shift())
                                     {
-                                        // TODO: Have to guard race condition for the multi threading feature.
                                         twSource.WriteLine(
-                                            "if ({0}__.initializerCount__ != *il2c_initializer_count__)",
+                                            "{0}_initializerCount__ = *il2c_initializer_count;",
                                             staticFieldsName);
-                                        twSource.WriteLine("{");
-                                        using (var __ = twSource.Shift())
+                                        twSource.WriteLine(
+                                            "il2c_register_static_fields(&{0}__);",
+                                            staticFieldsName);
+
+                                        var typeInitializer = type.DeclaredMethods.
+                                            FirstOrDefault(method => method.IsConstructor && method.IsStatic);
+                                        if (typeInitializer != null)
                                         {
-                                            twSource.WriteLine(
-                                                "{0}__.initializerCount__ = *il2c_initializer_count__;",
-                                                staticFieldsName);
                                             twSource.WriteLine(
                                                 "{0}();",
                                                 typeInitializer.CLanguageFunctionName);
                                         }
-                                        twSource.WriteLine("}");
                                     }
-                                    twSource.WriteLine(
-                                        "return &{0}__.{1};",
-                                        staticFieldsName,
-                                        field.MangledName);
+                                    twSource.WriteLine("}");
+
+                                    if (otherStaticFields.Contains(field))
+                                    {
+                                        twSource.WriteLine(
+                                            "return &{0};",
+                                            field.MangledUniqueName);
+                                    }
+                                    else
+                                    {
+                                        twSource.WriteLine(
+                                            "return &{0}__.{1};",
+                                            staticFieldsName,
+                                            field.MangledName);
+                                    }
                                 }
 
                                 twSource.WriteLine("}");
                                 twSource.SplitLine();
-
-                                //twSource.WriteLine(
-                                //        "{0};",
-                                //        field.GetCLanguageStaticPrototype(true));
                             }
                         }
                     }

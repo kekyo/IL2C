@@ -23,13 +23,15 @@ typedef volatile struct IL2C_EXECUTION_FRAME_DECL
 static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
 static IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget__ = NULL;
 
+static IL2C_EXECUTION_FRAME* g_pBeginStaticFields__ = NULL;
+
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 static volatile bool g_ExecutingCollection__ = false;
 
-static void il2c_collect__(interlock_t comparand);
+static void il2c_collect__(bool finalShutdown);
 
-static uintptr_t il2c_initializer_count = 0;
-const uintptr_t* il2c_initializer_count__ = &il2c_initializer_count;
+static uintptr_t il2c_initializer_count__ = 0;
+const uintptr_t* il2c_initializer_count = &il2c_initializer_count__;
 
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
@@ -38,7 +40,7 @@ void* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
 {
     // TODO: always collect
-    il2c_collect__(GCMARK_LIVE);
+    il2c_collect__(false);
 
     // +----------------------+ <-- pHeader
     // | IL2C_REF_HEADER      |
@@ -53,7 +55,7 @@ void* il2c_get_uninitialized_object_internal__(
     {
         while (1)
         {
-            il2c_collect__(GCMARK_LIVE);
+            il2c_collect__(false);
 
             pHeader = (IL2C_REF_HEADER*)il2c_malloc(sizeof(IL2C_REF_HEADER) + bodySize);
             if (pHeader != NULL)
@@ -152,9 +154,25 @@ void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pFrame)
     il2c_assert(pFrame != NULL);
 
     // TODO: always collect
-    il2c_collect__(GCMARK_LIVE);
+    il2c_collect__(false);
 
     g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
+}
+
+/////////////////////////////////////////////////////////////
+// Static fields tracing functions
+
+void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields)
+{
+    il2c_assert(pStaticFields != NULL);
+
+    IL2C_EXECUTION_FRAME* p = pStaticFields;
+
+    memset((void*)&(p->pReferences__[0]), 0,
+        (p->objRefCount__ * sizeof(void*)) + (p->valueCount__ * sizeof(IL2C_VALUE_DESCRIPTOR)));
+
+    p->pNext__ = g_pBeginStaticFields__;
+    g_pBeginStaticFields__ = p;
 }
 
 /////////////////////////////////////////////////////////////
@@ -293,10 +311,10 @@ static void il2c_step1_clear_gcmark__(interlock_t comparand)
     }
 }
 
-static void il2c_step2_mark_gcmark__(void)
+static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
 {
     // Mark headers.
-    IL2C_EXECUTION_FRAME* pCurrentFrame = g_pBeginFrame__;
+    IL2C_EXECUTION_FRAME* pCurrentFrame = pBeginFrame;
     while (pCurrentFrame != NULL)
     {
         // Traverse objrefs at the current frame.
@@ -379,7 +397,7 @@ static void il2c_step3_sweep_garbage__(void)
     {
         IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
 
-        DEBUG_WRITE("il2c_step3_sweep_garbage__: Free", pCurrentHeader->type->pTypeName);
+        DEBUG_WRITE("il2c_step3_sweep_garbage__: Free", pScheduledHeader->type->pTypeName);
 
         // Heap discarded
         il2c_free((void*)pScheduledHeader);
@@ -389,7 +407,7 @@ static void il2c_step3_sweep_garbage__(void)
     }
 }
 
-static void il2c_collect__(interlock_t comparand)
+static void il2c_collect__(bool finalShutdown)
 {
     if (g_ExecutingCollection__)
     {
@@ -399,10 +417,21 @@ static void il2c_collect__(interlock_t comparand)
     g_ExecutingCollection__ = true;
 
     il2c_check_heap();
-    il2c_step1_clear_gcmark__(comparand);
+
+    // The final collection step has to release fixed (pinned) instances.
+    il2c_step1_clear_gcmark__(finalShutdown ? GCMARK_FIXED : GCMARK_LIVE);
     il2c_check_heap();
-    il2c_step2_mark_gcmark__();
+
+    il2c_step2_mark_gcmark__(g_pBeginFrame__);
     il2c_check_heap();
+
+    // The final collection step has to ignore static fields.
+    if (!finalShutdown)
+    {
+        il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
+        il2c_check_heap();
+    }
+
     il2c_step3_sweep_garbage__();
     il2c_check_heap();
 
@@ -411,7 +440,7 @@ static void il2c_collect__(interlock_t comparand)
 
 void il2c_collect(void)
 {
-    il2c_collect__(GCMARK_LIVE);
+    il2c_collect__(false);
 }
 
 /////////////////////////////////////////////////////////////
@@ -867,12 +896,13 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 
 void il2c_initialize(void)
 {
-    il2c_initializer_count++;
-
     il2c_initialize_heap();
+
+    il2c_initializer_count__++;
 
     g_pBeginFrame__ = NULL;
     g_pBeginHeader__ = NULL;
+    g_pBeginStaticFields__ = NULL;
     g_pTopUnwindTarget__ = NULL;
 
 #ifdef IL2C_USE_SIGNAL
@@ -884,8 +914,7 @@ void il2c_shutdown(void)
 {
     il2c_assert(g_pTopUnwindTarget__ == NULL);
 
-    // The final collection step has to release fixed (pinned) instances.
-    il2c_collect__(GCMARK_FIXED);
+    il2c_collect__(true);
 
 #ifdef IL2C_USE_SIGNAL
     signal(SIGSEGV, g_SIGSEGV_saved);

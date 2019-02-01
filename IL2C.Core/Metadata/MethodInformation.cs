@@ -186,12 +186,13 @@ namespace IL2C.Metadata
             this.Definition.IsReuseSlot;
         public bool IsExtern =>
             this.Definition.IsPInvokeImpl || this.Definition.IsInternalCall ||
+            // HACK: Marked extern but doesn't have the IL body (will produced by Roslyn)
             // HACK: Externed but not marked method (ex: delegate constructor)
             (!this.HasBody && (this.IsConstructor || !this.IsAbstract));
         public bool HasThis =>
             this.Definition.HasThis;
         public bool HasBody => 
-            this.Definition.HasBody;
+            this.Definition.HasBody && (this.Definition.Body?.CodeSize >= 1);
 
         public ITypeInformation ReturnType =>
             this.MetadataContext.GetOrAddType(this.Member.ReturnType) ?? this.MetadataContext.VoidType;
@@ -235,11 +236,13 @@ namespace IL2C.Metadata
         {
             get
             {
-                var body = this.Definition.Body;
-                if (body == null)
+                if (!this.HasBody)
                 {
                     return null;
                 }
+
+                var body = this.Definition.Body;
+                Debug.Assert(body != null);
 
                 // It gathers sequence point informations.
                 // It will use writing the line preprocessor directive.

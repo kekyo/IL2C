@@ -17,7 +17,7 @@ namespace IL2C.Writers
         {
             foreach (var assembly in extractContext.EnumerateRegisteredTypesByDeclaringType(declaringType).
                 Distinct().
-                OrderByDependant().
+                OrderByDependant(declaringType.DeclaringModule.DeclaringAssembly).
                 Select(type => type.DeclaringModule.DeclaringAssembly).
                 Where(assembly => !assembly.Equals(translateContext.Assembly)).
                 Distinct().
@@ -345,7 +345,7 @@ namespace IL2C.Writers
                 GroupBy(type => type.DeclaringType ?? type).
                 ToDictionary(
                     g => g.Key,
-                    g => g.OrderByDependant().ToArray());
+                    g => g.OrderByDependant(translateContext.Assembly).ToArray());
 
             var sourceFiles = new List<string>();
 

@@ -1,3 +1,5 @@
+#include <Calculator.Core.h>
+
 #include <windows.h>
 
 #include <stdio.h>
@@ -5,12 +7,8 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#include <il2c.h>
-
-#include "Calculator.Code.h"
-
 //////////////////////////////////////////////////////////////////////////
-// IL2C <---> UEFI interop functions
+// IL2C <---> Win32 API interop functions
 
 bool twtoi(const wchar_t *_Str, int32_t* value)
 {

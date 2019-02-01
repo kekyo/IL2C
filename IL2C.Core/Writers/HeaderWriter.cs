@@ -163,7 +163,7 @@ namespace IL2C.Writers
                 var assemblies = extractContext.EnumerateRegisteredTypes().
                     SelectMany(entry => entry.Value).
                     Distinct().
-                    OrderByDependant().
+                    OrderByDependant(translateContext.Assembly).
                     Select(type => type.DeclaringModule.DeclaringAssembly).
                     Where(assembly => !assembly.Equals(translateContext.Assembly)).
                     Distinct().
@@ -198,7 +198,7 @@ namespace IL2C.Writers
 
                 var types = prepared.Types.
                     Where(type => type.DeclaringType == null).
-                    OrderByDependant().
+                    OrderByDependant(translateContext.Assembly).
                     ToArray();
                 if (types.Length >= 1)
                 {
@@ -387,7 +387,7 @@ namespace IL2C.Writers
                 GroupBy(type => type.DeclaringType ?? type).
                 ToDictionary(
                     g => g.Key,
-                    g => g.OrderByDependant().ToArray());
+                    g => g.OrderByDependant(translateContext.Assembly).ToArray());
 
             foreach (var g in prepared.Types.
                 Where(type => type.DeclaringType == null).

@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: InternalsVisibleTo("Calculator.Code.Tests")]
+[assembly: InternalsVisibleTo("Calculator.Core.Tests")]
 
 namespace Calculator
 {
@@ -196,8 +196,8 @@ namespace Calculator
             return new ExpressionNode(oper, left, right, index);
         }
 
-        [DllImport("Calculator.h")]
-        private static extern void SendExternalTicker(string message);
+        //[NativeMethod("Main.h")]
+        //private static extern void SendExternalTicker(string message);
 
         public static void Main()
         {
@@ -231,11 +231,11 @@ namespace Calculator
                     Console.Write("Reuslt=");
                     Console.WriteLine(result);
 
-                    var message = "(";
-                    message += line;
-                    message += ") = ";
-                    message += result.ToString();
-                    SendExternalTicker(message);
+                    //var message = "(";
+                    //message += line;
+                    //message += ") = ";
+                    //message += result.ToString();
+                    //SendExternalTicker(message);
                 }
             }
         }

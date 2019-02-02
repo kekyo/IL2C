@@ -11,7 +11,7 @@
         <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
         <Product>IL2C</Product>
         <Trademark>IL2C</Trademark>
-        <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
+        <Copyright>Copyright (c) 2017-2019 Kouji Matsui</Copyright>
         <Description>A translator implementation of .NET intermediate language to C language.</Description>
         <Company>Kouji Matsui (@kozy_kekyo)</Company>
         <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
@@ -41,14 +41,12 @@
         <Content Include="buildMultiTargeting/IL2C.Build.targets" PackagePath="buildMultiTargeting/" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" />
-        <!-- marks all packages as 'local only' so they don't end up in the nuspec -->
-        <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="../IL2C.Interop/IL2C.Interop.csproj" />
-        <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" />
+        <ProjectReference Include="../IL2C.Interop/IL2C.Interop.csproj" PrivateAssets="None" />
+        <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" PrivateAssets="All" />
     </ItemGroup>
 
     <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">

@@ -36,34 +36,44 @@ typedef struct Calculator_ReducibleNode__ctor_EXECUTION_FRAME_DECL
 
 void Calculator_ReducibleNode__ctor(Calculator_ReducibleNode* this__, int32_t nextIndex)
 {
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     int32_t stack1_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_ReducibleNode__ctor_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0                         : PolishNotation.cs(31) */
+    /* IL_0000: ldarg.0  */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0001: ldarg.1                         : PolishNotation.cs(31) */
+    /* IL_0001: ldarg.1  */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = nextIndex;
-    /* IL_0002: call Calculator.AbstractNode..ctor : PolishNotation.cs(31) */
+    /* IL_0002: call Calculator.AbstractNode..ctor */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_AbstractNode__ctor((Calculator_AbstractNode*)frame__.stack0_0__, stack1_0__);
-    /* IL_0007: nop                             : PolishNotation.cs(31) */
+    /* IL_0007: nop  */
     /* IL_0008: nop  */
     /* IL_0009: ret  */
+#line 33 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 33 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     return;
+#line 33 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
 }
 
 //////////////////////

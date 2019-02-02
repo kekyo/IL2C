@@ -23,8 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <!-- <PackageReference Include="IL2C.Build" Version="0.4.33" /> -->
-      <PackageReference Include="IL2C.Interop" Version="0.4.33" />
+        <PackageReference Include="IL2C.Build" Version="0.4.34" />
     </ItemGroup>
 
 </Project>

@@ -14,7 +14,7 @@ typedef long interlock_t;
 ///////////////////////////////////////////////////
 // Visual C++ (User mode Win32)
 
-#if defined(_MSC_VER) && defined(_WIN32)
+#if defined(_MSC_VER) && defined(_WIN32) && !defined(UEFI) && !defined(WDM)
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRTDBG_MAP_ALLOC 1
@@ -85,6 +85,7 @@ typedef long interlock_t;
 #if defined(_MSC_VER) && defined(UEFI)
 
 #include <intrin.h>
+#include <efi.h>
 
 // Compatibility symbols (required platform depended functions)
 #define il2c_itow(v, b, l) _itow(v, b, 10)

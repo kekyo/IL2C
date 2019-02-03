@@ -1,4 +1,5 @@
-#include <il2c.h>
+
+#include <Calculator.Core.h>
 
 #include <efi.h>
 
@@ -6,8 +7,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <wchar.h>
-
-#include "Calculator.Code.h"
 
 //////////////////////////////////////////////////////////////////////////
 // IL2C <---> UEFI interop functions

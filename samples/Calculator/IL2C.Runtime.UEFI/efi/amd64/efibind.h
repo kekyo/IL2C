@@ -30,6 +30,8 @@ Revision History
 
 #ifdef __FreeBSD__
 #include <sys/stdint.h>
+#elif defined(_MSC_VER)
+#include <stdint.h>
 #else
 //
 // Basic int types of various widths
@@ -249,7 +251,7 @@ typedef uint64_t   UINTN;
 
 #endif // EFI_FW_NT 
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(_MSC_VER)
 #define INTERFACE_DECL(x) struct x
 #else
 //

@@ -65,7 +65,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;UEFI</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;efi;efi/amd64;../Generated;../../../IL2C.Runtime</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;efi;efi/amd64;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <UndefinePreprocessorDefinitions>_WIN32</UndefinePreprocessorDefinitions>
@@ -98,7 +98,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;UEFI</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;efi;efi/amd64;../Generated;../../../IL2C.Runtime</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;efi;efi/amd64;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <UndefinePreprocessorDefinitions>_WIN32</UndefinePreprocessorDefinitions>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
@@ -127,18 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\IL2C.Runtime\*.c" />
-    <ClCompile Include="..\Generated\*.c" />
+    <ClCompile Include="..\Generated\src\**\*.c" />
     <ClCompile Include="Main.c" />
     <ClCompile Include="il2c_bridges.c">
       <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IntrinsicFunctions>
       <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Disabled</InlineFunctionExpansion>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\IL2C.Runtime\*.h" />
-    <ClInclude Include="..\Generated\*.h" />
-    <ClInclude Include="Calculator.h" />
+    <ClInclude Include="..\Generated\include\**\*.h" />
+    <ClInclude Include="..\Generated\src\**\*.h" />
+    <ClInclude Include="..\..\..\IL2C.Runtime\include\**\*.h" />
+    <ClInclude Include="Main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,39 +1,36 @@
 #include "il2c_private.h"
-#include <System/Console.h>
 
 /////////////////////////////////////////////////////////////
 // System.Console
 
-extern void ReadLine(wchar_t* pBuffer, uint16_t length);
-
 void System_Console_Write_9(System_String* value)
 {
-    // TODO: NullReferenceException
-    il2c_assert(value != NULL);
-
-    il2c_assert(value->string_body__ != NULL);
-    il2c_wwrite(value->string_body__);
+    if (value != NULL)
+    {
+        il2c_assert(value->string_body__ != NULL);
+        il2c_write(value->string_body__);
+    }
 }
 
 void System_Console_WriteLine(void)
 {
-    il2c_wwriteline(L"");
+    il2c_writeline(L"");
 }
 
 void System_Console_WriteLine_6(int32_t value)
 {
-    wchar_t buf[20];
-    il2c_itow(value, buf, 19);
-    il2c_wwrite(buf);
+    wchar_t buffer[20];
+    il2c_itow(value, buffer, 19);
+    il2c_writeline(buffer);
 }
 
 void System_Console_WriteLine_10(System_String* value)
 {
-    // TODO: NullReferenceException
-    il2c_assert(value != NULL);
-
-    il2c_assert(value->string_body__ != NULL);
-    il2c_wwriteline(value->string_body__);
+    if (value != NULL)
+    {
+        il2c_assert(value->string_body__ != NULL);
+        il2c_writeline(value->string_body__);
+    }
 }
 
 // TODO: limitation
@@ -43,8 +40,14 @@ System_String* System_Console_ReadLine(void)
 {
     wchar_t buffer[MAX_READLINE];
 
-    il2c_fgetws(buffer, MAX_READLINE, stdin);
-    return il2c_new_string(buffer);
+    if (il2c_readline(buffer, MAX_READLINE))
+    {
+        return il2c_new_string(buffer);
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 /////////////////////////////////////////////////

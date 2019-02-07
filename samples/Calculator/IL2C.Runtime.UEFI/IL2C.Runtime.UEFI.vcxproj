@@ -22,7 +22,6 @@
     <ClCompile Include="../../../IL2C.Runtime/src/**/*.c" />
     <ClInclude Include="../../../IL2C.Runtime/include/**/*.h" />
     <ClInclude Include="../../../IL2C.Runtime/src/**/*.h" />
-    <ClInclude Include="efi/**/*.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -63,12 +62,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BrowseInformation>true</BrowseInformation>
-    </ClCompile>
-    <ClCompile Condition="'$(Platform)'=='Win32'">
-      <AdditionalIncludeDirectories>../../../IL2C.Runtime/include;../../../IL2C.Runtime/src;efi;efi/i386</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Condition="'$(Platform)'=='x64'">
-      <AdditionalIncludeDirectories>../../../IL2C.Runtime/include;../../../IL2C.Runtime/src;efi;efi/amd64</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../IL2C.Runtime/include;../../../IL2C.Runtime/src</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
       <Optimization>Disabled</Optimization>
@@ -85,22 +79,12 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapExports>true</MapExports>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-    </Link>
-    <Link Condition="'$(Configuration)'=='Debug'">
-    </Link>
-    <Link Condition="'$(Configuration)'=='Release'">
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-    </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

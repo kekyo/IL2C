@@ -1,7 +1,14 @@
+#include <il2c_private.h>
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "efi/efi.h"
 
+//////////////////////////////////////////////////
+// Visual C++
+
+// UEFI
+#if defined(_MSC_VER) && defined(UEFI)
+
+#if 0
 // Can't enable intrinsic inlined memcpy/memset with VC++'s /GL and /LTCG options.
 // So these are simple implementations for thiers.
 void* il2c_memcpy(void* to, const void* from, size_t n)
@@ -22,8 +29,9 @@ void* il2c_memset(void* target, int ch, size_t n)
         *p++ = ch;
     return target;
 }
+#endif
 
-bool twtoi(const wchar_t *_Str, int32_t* value)
+bool il2c_twtoi(const wchar_t *_Str, int32_t* value)
 {
     char sign = 0;
 
@@ -69,7 +77,7 @@ bool twtoi(const wchar_t *_Str, int32_t* value)
     return true;
 }
 
-void itow(int32_t value, wchar_t* p)
+void il2c_itow(int32_t value, wchar_t* p)
 {
     wchar_t *j;
     wchar_t b[6];
@@ -119,3 +127,37 @@ char* il2c_itoa(int i, char* d)
 
     return d;
 }
+
+void il2c_debug_write(const char* format, ...)
+{
+    va_list va;
+    char buffer[128];
+
+    va_start(va, format);
+    il2c_assert(format != NULL);
+    vsprintf(buffer, format, va);
+    DbgPrint(D_INFO, (const CHAR8*)buffer);
+    va_end(va);
+}
+
+void il2c_write(const wchar_t* s)
+{
+    il2c_assert(s != NULL);
+    fputws(s, stdout);
+}
+
+void il2c_writeline(const wchar_t* s)
+{
+    il2c_assert(s != NULL);
+    _putws(s);
+}
+
+bool il2c_readline(wchar_t* buffer, int32_t length)
+{
+    il2c_assert(buffer != NULL);
+    il2c_assert(length >= 1);
+    const wchar_t* p = fgetws(buffer, length - 1, stdin);
+    return p != NULL;
+}
+
+#endif

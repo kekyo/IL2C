@@ -42,13 +42,13 @@ extern "C" {
 #define DEBUG_BREAK_USE_BULTIN_TRAP      2
 #define DEBUG_BREAK_USE_SIGTRAP          3
 
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(_M_IX86) || defined(_M_AMD64) || defined(_M_X64) || defined(__i386__) || defined(__x86_64__)
 	#define DEBUG_BREAK_IMPL DEBUG_BREAK_USE_TRAP_INSTRUCTION
 __inline__ static void trap_instruction(void)
 {
 	__asm__ volatile("int $0x03");
 }
-#elif defined(__thumb__)
+#elif defined(_M_ARM) || (defined(__arm__) && defined(__thumb__))
 	#define DEBUG_BREAK_IMPL DEBUG_BREAK_USE_TRAP_INSTRUCTION
 /* FIXME: handle __THUMB_INTERWORK__ */
 __attribute__((gnu_inline, always_inline))
@@ -81,7 +81,7 @@ __inline__ static void trap_instruction(void)
 	 * (gdb) jump   *($pc + $instruction_len)
 	 */
 }
-#elif defined(__arm__) && !defined(__thumb__)
+#elif defined(_M_ARM64) || (defined(__arm__) && !defined(__thumb__))
 	#define DEBUG_BREAK_IMPL DEBUG_BREAK_USE_TRAP_INSTRUCTION
 __attribute__((gnu_inline, always_inline))
 __inline__ static void trap_instruction(void)

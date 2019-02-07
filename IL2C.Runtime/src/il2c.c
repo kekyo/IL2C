@@ -1,6 +1,5 @@
-#include "il2c_private.h"
-
-#include "debugbreak.h"
+#include <il2c_private.h>
+#include "Private/debugbreak.h"
 
 /////////////////////////////////////////////////////////////
 

@@ -40,8 +40,18 @@ Revision History
 #define EFI_FIRMWARE_MINOR_REVISION 62
 #define EFI_FIRMWARE_REVISION ((EFI_FIRMWARE_MAJOR_REVISION <<16) | (EFI_FIRMWARE_MINOR_REVISION))
 
-#include "efibind.h"
+#if defined(_M_IX86) || defined(__i386__)
+#include "i386/efibind.h"
+#elif defined(_M_AMD64) || defined(_M_X64) || defined(__x86_64__)
+#include "amd64/efibind.h"
+#elif defined(_M_ARM) || (defined(__arm__) && defined(__thumb__))
+#include "arm/efibind.h"
+#elif defined(_M_ARM64) || (defined(__arm__) && !defined(__thumb__))
+#include "arm64/efibind.h"
+#endif
+
 #include "efidef.h"
+#include "efidebug.h"
 #include "efidevp.h"
 #include "efiprot.h"
 #include "eficon.h"

@@ -136,7 +136,7 @@ void il2c_debug_write(const char* format, ...)
     va_start(va, format);
     il2c_assert(format != NULL);
     vsprintf(buffer, format, va);
-    DbgPrint(D_INFO, (const CHAR8*)buffer);
+    DbgPrint(D_INFO, (CHAR8*)buffer);
     va_end(va);
 }
 

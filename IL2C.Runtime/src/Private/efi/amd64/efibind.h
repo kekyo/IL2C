@@ -30,7 +30,7 @@ Revision History
 
 #ifdef __FreeBSD__
 #include <sys/stdint.h>
-#elif defined(_MSC_VER)
+#elif defined(_MSC_VER) || defined(__GNUC__)
 #include <stdint.h>
 #else
 //
@@ -251,7 +251,7 @@ typedef uint64_t   UINTN;
 
 #endif // EFI_FW_NT 
 
-#if defined(__FreeBSD__) || defined(_MSC_VER)
+#if defined(__FreeBSD__) || defined(_MSC_VER) || defined(__GNUC__)
 #define INTERFACE_DECL(x) struct x
 #else
 //

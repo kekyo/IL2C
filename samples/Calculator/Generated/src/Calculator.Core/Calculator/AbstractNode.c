@@ -65,18 +65,16 @@ void Calculator_AbstractNode__ctor(Calculator_AbstractNode* this__, int32_t next
     /* IL_0001: call System.Object..ctor */
 #line 13 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     System_Object__ctor((System_Object*)frame__.stack0_0__);
-    /* IL_0006: nop  */
-    /* IL_0007: nop  */
-    /* IL_0008: ldarg.0  */
+    /* IL_0006: ldarg.0  */
 #line 15 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0009: ldarg.1  */
+    /* IL_0007: ldarg.1  */
 #line 15 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = nextIndex;
-    /* IL_000a: stfld Calculator.AbstractNode.NextIndex */
+    /* IL_0008: stfld Calculator.AbstractNode.NextIndex */
 #line 15 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__->NextIndex = stack1_0__;
-    /* IL_000f: ret  */
+    /* IL_000d: ret  */
 #line 16 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_unlink_execution_frame(&frame__);
 #line 16 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"

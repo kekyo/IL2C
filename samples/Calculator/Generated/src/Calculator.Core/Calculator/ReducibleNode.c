@@ -66,9 +66,7 @@ void Calculator_ReducibleNode__ctor(Calculator_ReducibleNode* this__, int32_t ne
     /* IL_0002: call Calculator.AbstractNode..ctor */
 #line 31 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_AbstractNode__ctor((Calculator_AbstractNode*)frame__.stack0_0__, stack1_0__);
-    /* IL_0007: nop  */
-    /* IL_0008: nop  */
-    /* IL_0009: ret  */
+    /* IL_0007: ret  */
 #line 33 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_unlink_execution_frame(&frame__);
 #line 33 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"

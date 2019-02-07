@@ -43,6 +43,8 @@ Abstract:
 
 #ifdef __FreeBSD__
 #include <sys/stdint.h>
+#elif defined(_MSC_VER) || defined(__GNUC__)
+#include <stdint.h>
 #else
 //
 // Assume standard IA-32 alignment.

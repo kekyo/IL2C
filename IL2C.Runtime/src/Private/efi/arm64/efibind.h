@@ -30,6 +30,8 @@ Revision History
 
 #ifdef __FreeBSD__
 #include <sys/stdint.h>
+#elif defined(_MSC_VER) || defined(__GNUC__)
+#include <stdint.h>
 #else
 //
 // Basic int types of various widths
@@ -200,7 +202,7 @@ void __mfa (void);
             (_if)->LoadInternal(type, name, entry)
 //        entry(NULL, ST)
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(_MSC_VER) || defined(__GNUC__)
 #define INTERFACE_DECL(x) struct x
 #else
 //

@@ -8,6 +8,8 @@
 // UEFI
 #if defined(_MSC_VER) && defined(UEFI)
 
+static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
+
 #if 0
 // Can't enable intrinsic inlined memcpy/memset with VC++'s /GL and /LTCG options.
 // So these are simple implementations for thiers.
@@ -128,6 +130,44 @@ char* il2c_itoa(int i, char* d)
     return d;
 }
 
+void* il2c_malloc(size_t _Size)
+{
+    void* ppAllocated = NULL;
+    if (g_pSystemTable->BootServices->AllocatePool(
+        EfiLoaderData, _Size, &ppAllocated) == EFI_SUCCESS)
+    {
+        return ppAllocated;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void il2c_free(void* _Block)
+{
+    g_pSystemTable->BootServices->FreePool(_Block);
+}
+
+static EFI_EVENT g_TimerEvent = NULL;
+
+void il2c_sleep(uint32_t milliseconds)
+{
+    UINTN index;
+
+    // TODO: Will cause race condition if use multithreading environment.
+    if (g_TimerEvent == NULL)
+    {
+        g_pSystemTable->BootServices->CreateEvent(
+            EVT_TIMER, 0, NULL, NULL, &g_TimerEvent);
+        il2c_assert(g_TimerEvent != NULL);
+    }
+
+    g_pSystemTable->BootServices->SetTimer(
+        g_TimerEvent, TimerRelative, (uint64_t)milliseconds * 1000);
+    g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
+}
+
 void il2c_debug_write(const char* format, ...)
 {
     va_list va;
@@ -136,28 +176,115 @@ void il2c_debug_write(const char* format, ...)
     va_start(va, format);
     il2c_assert(format != NULL);
     vsprintf(buffer, format, va);
-    DbgPrint(D_INFO, (CHAR8*)buffer);
+    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (wchar_t*)pMessage);
+    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"\r\n");
     va_end(va);
 }
 
 void il2c_write(const wchar_t* s)
 {
     il2c_assert(s != NULL);
-    fputws(s, stdout);
+    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (wchar_t*)pMessage);
 }
 
 void il2c_writeline(const wchar_t* s)
 {
     il2c_assert(s != NULL);
-    _putws(s);
+    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (wchar_t*)pMessage);
+    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
 }
 
 bool il2c_readline(wchar_t* buffer, int32_t length)
 {
     il2c_assert(buffer != NULL);
     il2c_assert(length >= 1);
-    const wchar_t* p = fgetws(buffer, length - 1, stdin);
-    return p != NULL;
+
+    while ((index + 1) < length)
+    {
+        unsigned long long waitIndex;
+
+        buffer[0] = L'_';
+        buffer[1] = CHAR_NULL;
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+
+    loop:
+        waitIndex = 0;
+        g_pSystemTable->BootServices->WaitForEvent(
+            1, &(g_pSystemTable->ConIn->WaitForKey), &waitIndex);
+
+        EFI_INPUT_KEY efi_input_key;
+        if (g_pSystemTable->ConIn->ReadKeyStroke(
+            g_pSystemTable->ConIn, &efi_input_key) != 0)
+        {
+            goto loop;
+        }
+
+        if (efi_input_key.ScanCode != SCAN_NULL)
+        {
+            goto loop;
+        }
+
+        buffer[0] = CHAR_BACKSPACE;
+        buffer[1] = L' ';
+        buffer[2] = CHAR_BACKSPACE;
+        buffer[3] = CHAR_NULL;
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+
+        if (efi_input_key.UnicodeChar < 0x20)
+        {
+            if (efi_input_key.UnicodeChar == CHAR_BACKSPACE)
+            {
+                if (index >= 1)
+                {
+                    index--;
+
+                    buffer[0] = CHAR_BACKSPACE;
+                    buffer[1] = CHAR_NULL;
+                    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+                }
+            }
+            else if (efi_input_key.UnicodeChar == CHAR_CARRIAGE_RETURN)
+            {
+                break;
+            }
+
+            continue;
+        }
+
+        pBuffer[index++] = efi_input_key.UnicodeChar;
+
+        buffer[0] = efi_input_key.UnicodeChar;
+        buffer[1] = CHAR_NULL;
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+    }
+
+    pBuffer[index] = CHAR_NULL;
+
+    buffer[0] = CHAR_CARRIAGE_RETURN;
+    buffer[1] = CHAR_LINEFEED;
+    buffer[2] = CHAR_NULL;
+    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, buffer);
+
+    return true;
+}
+
+void il2c_initialize(void* imageHandle, void* pSystemTable)
+{
+    // Setup interop pointer
+    g_pSystemTable = pSystemTable;
+
+    // Disable default auto-reset watchdog timer
+    g_pSystemTable->BootServices->SetWatchdogTimer(0, 0, 0, NULL);
+
+    // Clear screen
+    //g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
+
+    il2c_initialize__();
+}
+
+void il2c_shutdown()
+{
+    il2c_shutdown__();
 }
 
 #endif

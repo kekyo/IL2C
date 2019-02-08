@@ -893,7 +893,7 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 /////////////////////////////////////////////////////////////
 // IL2C runtime initialzer / shutdown
 
-void il2c_initialize(void)
+void il2c_initialize__(void)
 {
     il2c_initialize_heap();
 
@@ -909,7 +909,7 @@ void il2c_initialize(void)
 #endif
 }
 
-void il2c_shutdown(void)
+void il2c_shutdown__(void)
 {
     il2c_assert(g_pTopUnwindTarget__ == NULL);
 

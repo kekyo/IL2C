@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && defined(_WIN32)
 #include <intrin.h>
 #include <setjmp.h> // TODO:
 
@@ -44,8 +44,18 @@ extern "C" {
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime
 
+#if defined(_MSC_VER) && defined(_WIN32)
+#if defined(UEFI)
+extern void il2c_initialize(void* imageHandle, void* pSystemTable);
+extern void il2c_shutdown();
+#elif defined(_WDM)
+extern void il2c_initialize(void);  // TODO:
+extern void il2c_shutdown(void);
+#else
 extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
+#endif
+#endif
 
 ///////////////////////////////////////////////////////
 // Runtime stack frame types

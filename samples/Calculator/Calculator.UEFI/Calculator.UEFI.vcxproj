@@ -65,7 +65,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;UEFI</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;efi;efi/amd64;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <UndefinePreprocessorDefinitions>_WIN32</UndefinePreprocessorDefinitions>
@@ -83,7 +83,7 @@
       <AdditionalDependencies />
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SetChecksum>true</SetChecksum>
-      <EntryPointSymbol>EfiMain</EntryPointSymbol>
+      <EntryPointSymbol>efi_main</EntryPointSymbol>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <AdditionalOptions>/ignore:4217 %(AdditionalOptions)</AdditionalOptions>
@@ -98,7 +98,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;UEFI</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;efi;efi/amd64;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <UndefinePreprocessorDefinitions>_WIN32</UndefinePreprocessorDefinitions>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
@@ -118,7 +118,7 @@
       <AdditionalDependencies />
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SetChecksum>true</SetChecksum>
-      <EntryPointSymbol>EfiMain</EntryPointSymbol>
+      <EntryPointSymbol>efi_main</EntryPointSymbol>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <AdditionalOptions>/ignore:4217 %(AdditionalOptions)</AdditionalOptions>
@@ -128,15 +128,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Generated\src\**\*.c" />
-    <ClCompile Include="Main.c" />
-    <ClCompile Include="il2c_bridges.c">
-      <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IntrinsicFunctions>
-      <InlineFunctionExpansion Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Disabled</InlineFunctionExpansion>
-    </ClCompile>
+    <ClCompile Include="efi_main.c" />
     <ClInclude Include="..\Generated\include\**\*.h" />
     <ClInclude Include="..\Generated\src\**\*.h" />
     <ClInclude Include="..\..\..\IL2C.Runtime\include\**\*.h" />
-    <ClInclude Include="Main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

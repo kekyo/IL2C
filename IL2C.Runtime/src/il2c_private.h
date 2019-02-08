@@ -27,6 +27,9 @@ typedef long interlock_t;
 #define DEBUG_WRITE(step, message)
 #endif
 
+extern void il2c_initialize__(void);
+extern void il2c_shutdown__(void);
+
 ///////////////////////////////////////////////////
 // il2c.h
 

@@ -80,4 +80,14 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 #endif
 
+void il2c_initialize(void)
+{
+    il2c_initialize__();
+}
+
+void il2c_shutdown(void)
+{
+    il2c_shutdown__();
+}
+
 #endif

@@ -112,19 +112,19 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     System_Runtime_InteropServices_GCHandle handle;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&handle, 0x00, sizeof handle);
+    memset(&handle, 0x00, sizeof handle);
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     MT3620Blink_epoll_event ev;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&ev, 0x00, sizeof ev);
+    memset(&ev, 0x00, sizeof ev);
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     MT3620Blink_epoll_event local2__;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&local2__, 0x00, sizeof local2__);
+    memset(&local2__, 0x00, sizeof local2__);
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     MT3620Blink_epoll_data_t local3__;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&local3__, 0x00, sizeof local3__);
+    memset(&local3__, 0x00, sizeof local3__);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
@@ -186,7 +186,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     stack0_2__ = &local2__;
     /* IL_000b: initobj MT3620Blink.epoll_event */
 #line 22 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(stack0_2__, 0x00, sizeof *stack0_2__);
+    memset(stack0_2__, 0x00, sizeof *stack0_2__);
     /* IL_0011: ldloca.s local2__ */
 #line 22 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     stack0_2__ = &local2__;
@@ -204,7 +204,7 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     stack1_2__ = &local3__;
     /* IL_0021: initobj MT3620Blink.epoll_data_t */
 #line 22 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(stack1_2__, 0x00, sizeof *stack1_2__);
+    memset(stack1_2__, 0x00, sizeof *stack1_2__);
     /* IL_0027: ldloca.s local3__ */
 #line 22 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     stack1_2__ = &local3__;
@@ -293,11 +293,11 @@ void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this_
 #line 35 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     System_Runtime_InteropServices_GCHandle handle;
 #line 35 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&handle, 0x00, sizeof handle);
+    memset(&handle, 0x00, sizeof handle);
 #line 35 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     MT3620Blink_epoll_event ev;
 #line 35 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&ev, 0x00, sizeof ev);
+    memset(&ev, 0x00, sizeof ev);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
@@ -354,7 +354,7 @@ void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this_
     stack0_3__ = &ev;
     /* IL_0013: initobj MT3620Blink.epoll_event */
 #line 39 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(stack0_3__, 0x00, sizeof *stack0_3__);
+    memset(stack0_3__, 0x00, sizeof *stack0_3__);
     /* IL_0019: ldarg.0  */
 #line 41 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     frame__.stack0_4__ = this__;
@@ -417,7 +417,7 @@ void MT3620Blink_Application_Run(MT3620Blink_Application* this__)
 #line 49 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     MT3620Blink_epoll_event ev;
 #line 49 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&ev, 0x00, sizeof ev);
+    memset(&ev, 0x00, sizeof ev);
 #line 49 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     int32_t numEventsOccurred = 0;
 #line 49 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
@@ -427,7 +427,7 @@ void MT3620Blink_Application_Run(MT3620Blink_Application* this__)
 #line 49 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     System_Runtime_InteropServices_GCHandle handle;
 #line 49 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(&handle, 0x00, sizeof handle);
+    memset(&handle, 0x00, sizeof handle);
 #line 49 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     bool local6__ = false;
 
@@ -484,7 +484,7 @@ IL_0003:
     stack0_1__ = &ev;
     /* IL_0006: initobj MT3620Blink.epoll_event */
 #line 52 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
-    il2c_memset(stack0_1__, 0x00, sizeof *stack0_1__);
+    memset(stack0_1__, 0x00, sizeof *stack0_1__);
     /* IL_000c: ldarg.0  */
 #line 53 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Application.cs"
     frame__.stack0_2__ = this__;

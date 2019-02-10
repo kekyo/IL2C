@@ -110,7 +110,7 @@ bool MT3620Blink_GpioInput_get_Value(MT3620Blink_GpioInput* this__)
 #line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     MT3620Blink_GPIO_Value_Type value;
 #line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
-    il2c_memset(&value, 0x00, sizeof value);
+    memset(&value, 0x00, sizeof value);
 #line 13 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\GpioInput.cs"
     bool local1__ = false;
 

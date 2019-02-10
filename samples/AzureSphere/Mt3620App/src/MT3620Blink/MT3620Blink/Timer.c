@@ -122,23 +122,23 @@ void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_timespec tm;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    il2c_memset(&tm, 0x00, sizeof tm);
+    memset(&tm, 0x00, sizeof tm);
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec newValue;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    il2c_memset(&newValue, 0x00, sizeof newValue);
+    memset(&newValue, 0x00, sizeof newValue);
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec dummy;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    il2c_memset(&dummy, 0x00, sizeof dummy);
+    memset(&dummy, 0x00, sizeof dummy);
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_timespec local3__;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    il2c_memset(&local3__, 0x00, sizeof local3__);
+    memset(&local3__, 0x00, sizeof local3__);
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec local4__;
 #line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    il2c_memset(&local4__, 0x00, sizeof local4__);
+    memset(&local4__, 0x00, sizeof local4__);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
@@ -186,7 +186,7 @@ void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
     stack0_0__ = &local3__;
     /* IL_0003: initobj MT3620Blink.timespec */
 #line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    il2c_memset(stack0_0__, 0x00, sizeof *stack0_0__);
+    memset(stack0_0__, 0x00, sizeof *stack0_0__);
     /* IL_0009: ldloca.s local3__ */
 #line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_0__ = &local3__;
@@ -240,7 +240,7 @@ void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
     stack0_2__ = &local4__;
     /* IL_002d: initobj MT3620Blink.itimerspec */
 #line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
-    il2c_memset(stack0_2__, 0x00, sizeof *stack0_2__);
+    memset(stack0_2__, 0x00, sizeof *stack0_2__);
     /* IL_0033: ldloca.s local4__ */
 #line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_2__ = &local4__;

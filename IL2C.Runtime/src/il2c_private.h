@@ -21,8 +21,8 @@ typedef long interlock_t;
 #include "Private/gcc_linux.h"
 
 #if defined(IL2C_DEBUG_WRITE)
-#define DEBUG_WRITE(step, message) \
-    il2c_debug_write("%s: %s", step, message)
+#define DEBUG_WRITE(step, message) { \
+    il2c_debug_write2(step ": ", message); }
 #else
 #define DEBUG_WRITE(step, message)
 #endif
@@ -129,7 +129,6 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 
 #include <string.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <math.h>
 
 ///////////////////////////////////////////////////
@@ -144,7 +143,8 @@ extern void il2c_default_mark_handler__(void* pReference);
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs
 
-extern void il2c_debug_write(const char* format, ...);
+extern void il2c_debug_write(const char* message);
+extern void il2c_debug_write2(const char* message1, const char* message2);
 
 extern void il2c_write(const wchar_t* s);
 extern void il2c_writeline(const wchar_t* s);

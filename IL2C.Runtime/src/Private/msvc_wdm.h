@@ -32,16 +32,13 @@ extern "C" {
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
-#define il2c_memcpy memcpy
-#define il2c_memset memset
-#define il2c_memcmp memcmp
 #define il2c_initialize_heap()
 #define il2c_check_heap()
 #define il2c_shutdown_heap()
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 #define il2c_mcalloc il2c_malloc
-#define Il2c_mcfree il2c_free
+#define il2c_mcfree il2c_free
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))

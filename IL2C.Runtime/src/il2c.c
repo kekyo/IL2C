@@ -69,7 +69,7 @@ void* il2c_get_uninitialized_object_internal__(
 
     void* pReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
     // Guarantee cleared body
-    il2c_memset(pReference, 0, bodySize);
+    memset(pReference, 0, bodySize);
 
     pHeader->pNext = NULL;
     pHeader->type = type;
@@ -544,7 +544,7 @@ System_ValueType* il2c_box__(
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 
     pBoxed->vptr0__ = valueType->vptr0;
-    il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
+    memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
 
     // Setup interface vptrs.
     il2c_setup_interface_vptrs(valueType, pBoxed);
@@ -669,16 +669,16 @@ System_ValueType* il2c_box2__(
     switch (valueType->bodySize)
     {
     case 1:
-        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i1, 1);
+        memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i1, 1);
         break;
     case 2:
-        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i2, 2);
+        memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i2, 2);
         break;
     case 4:
-        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i4, 4);
+        memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i4, 4);
         break;
     case 8:
-        il2c_memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i8, 8);
+        memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), &v.i8, 8);
         break;
     }
 
@@ -925,10 +925,12 @@ void il2c_shutdown__(void)
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
+#if !defined(UEFI)
 double il2c_fmod(double lhs, double rhs)
 {
     return fmod(lhs, rhs);
 }
+#endif
 
 void il2c_break(void)
 {

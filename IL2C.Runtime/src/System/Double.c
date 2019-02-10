@@ -57,7 +57,7 @@ bool System_Double_TryParse(System_String* s, double* result)
     // Strict value expression from: https://github.com/dotnet/corefx/blob/master/src/Common/src/CoreLib/System/Double.cs
 
     // TODO: NaN, INF
-    return ((s->string_body__ != endPtr) && (errno == 0) &&
+    return ((s->string_body__ != endPtr) && (il2c_errno == 0) &&
         (value <= 1.7976931348623157E+308) && (value >= -1.7976931348623157E+308)) ? true : false;
 }
 

@@ -298,7 +298,7 @@ namespace IL2C.Writers
 
                             debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
-                                "il2c_memset({0}&{1}, 0x00, sizeof {1});",
+                                "memset({0}&{1}, 0x00, sizeof {1});",
                                 (codeStream.ExceptionHandlers.Length >= 1) ? "(void*)" : string.Empty,
                                 name);
                         }
@@ -334,7 +334,7 @@ namespace IL2C.Writers
                         {
                             debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
-                                "il2c_memset(&{0}, 0, sizeof {0});",
+                                "memset(&{0}, 0, sizeof {0});",
                                 name);
                         }
                     }

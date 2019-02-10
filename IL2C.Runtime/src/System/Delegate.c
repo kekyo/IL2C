@@ -38,7 +38,7 @@ bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj)
         return false;
     }
 
-    return il2c_memcmp(
+    return memcmp(
         this__->methodtbl__,
         rhs->methodtbl__,
         this__->count__ * sizeof(IL2C_METHOD_TABLE)) == 0;
@@ -92,8 +92,8 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     
     dlg->count__ = count;
     struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
-    il2c_memcpy(&pMethodtbl[0], &a->methodtbl__[0], a->count__ * sizeof(IL2C_METHOD_TABLE));
-    il2c_memcpy(&pMethodtbl[a->count__], &b->methodtbl__[0], b->count__ * sizeof(IL2C_METHOD_TABLE));
+    memcpy(&pMethodtbl[0], &a->methodtbl__[0], a->count__ * sizeof(IL2C_METHOD_TABLE));
+    memcpy(&pMethodtbl[a->count__], &b->methodtbl__[0], b->count__ * sizeof(IL2C_METHOD_TABLE));
 
     return dlg;
 }
@@ -140,7 +140,7 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
         IL2C_METHOD_TABLE* pMethodtblSource = &source->methodtbl__[index];
 
         // Equals
-        if (il2c_memcmp(pMethodtblValue, pMethodtblSource, value->count__ * sizeof(IL2C_METHOD_TABLE)) == 0)
+        if (memcmp(pMethodtblValue, pMethodtblSource, value->count__ * sizeof(IL2C_METHOD_TABLE)) == 0)
         {
             // Exactly match: result's gonna be empty
             if (source->count__ <= value->count__)
@@ -157,8 +157,8 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
             dlg->count__ = count;
 
             struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
-            il2c_memcpy(&pMethodtbl[0], &source->methodtbl__[0], ((size_t)index) * sizeof(IL2C_METHOD_TABLE));
-            il2c_memcpy(&pMethodtbl[index], &source->methodtbl__[((uintptr_t)index) + value->count__], ((size_t)count - (size_t)index) * sizeof(IL2C_METHOD_TABLE));
+            memcpy(&pMethodtbl[0], &source->methodtbl__[0], ((size_t)index) * sizeof(IL2C_METHOD_TABLE));
+            memcpy(&pMethodtbl[index], &source->methodtbl__[((uintptr_t)index) + value->count__], ((size_t)count - (size_t)index) * sizeof(IL2C_METHOD_TABLE));
 
             return dlg;
         }

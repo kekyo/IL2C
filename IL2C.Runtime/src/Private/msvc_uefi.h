@@ -15,15 +15,16 @@ extern "C" {
 #if defined(_MSC_VER) && defined(UEFI)
 
 #include <intrin.h>
-#include "efi/efi.h"
+#include <stdint.h>
+#include <wchar.h>
 
 // Compatibility symbols (required platform depended functions)
-extern void il2c_itow(int32_t value, wchar_t* p);
+extern wchar_t* il2c_itow(int32_t value, wchar_t* d, int radix);
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
-#define il2c_wcstol wcstol
+extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_wcstoul wcstoul
 #define il2c_wcstoll wcstoll
 #define il2c_wcstoull wcstoull
@@ -32,9 +33,6 @@ extern void il2c_itow(int32_t value, wchar_t* p);
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
-#define il2c_memcpy memcpy
-#define il2c_memset memset
-#define il2c_memcmp memcmp
 #define il2c_initialize_heap()
 #define il2c_check_heap()
 #define il2c_shutdown_heap()
@@ -42,7 +40,7 @@ extern void il2c_itow(int32_t value, wchar_t* p);
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 #define il2c_mcalloc il2c_malloc
-#define Il2c_mcfree il2c_free
+#define il2c_mcfree il2c_free
 
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))

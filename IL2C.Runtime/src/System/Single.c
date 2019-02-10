@@ -57,7 +57,7 @@ bool System_Single_TryParse(System_String* s, float* result)
     // Strict value expression from: https://github.com/dotnet/corefx/blob/master/src/Common/src/CoreLib/System/Single.cs
 
     // TODO: NaN, INF
-    return ((s->string_body__ != endPtr) && (errno == 0) &&
+    return ((s->string_body__ != endPtr) && (il2c_errno == 0) &&
         (value <= (float)3.40282346638528859e+38) && (value >= (float)-3.40282346638528859e+38)) ? true : false;
 }
 

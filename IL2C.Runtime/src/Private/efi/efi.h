@@ -31,9 +31,10 @@ Revision History
 //  EFI_NT_EMULATOR         - Building for running under NT
 //
 
-
 #ifndef _EFI_INCLUDE_
 #define _EFI_INCLUDE_
+
+#pragma once
 
 #define EFI_FIRMWARE_VENDOR         L"INTEL"
 #define EFI_FIRMWARE_MAJOR_REVISION 14

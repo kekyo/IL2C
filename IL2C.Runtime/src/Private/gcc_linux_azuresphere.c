@@ -8,17 +8,23 @@
 
 #include <applibs/log.h>
 
-void il2c_debug_write(const char* format, ...)
+void il2c_debug_write(const char* message)
 {
-    va_list va;
-    char buffer[128];
+    il2c_assert(message != NULL);
 
-    va_start(va, format);
-    il2c_assert(format != NULL);
-    vsprintf(buffer, format, va);
-    Log_Debug(buffer);
-    va_end(va);
+    Log_Debug(message);
 }
+
+void il2c_debug_write2(const char* message1, const char* message2)
+{
+    il2c_assert(message1 != NULL);
+    il2c_assert(message2 != NULL);
+
+    Log_Debug(message1);
+    Log_Debug(message2);
+}
+
+// TODO: UTF16 --> UTF8
 
 void il2c_write(const wchar_t* p)
 {

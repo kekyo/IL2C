@@ -70,34 +70,36 @@ void Calculator_ExpressionNode__ctor(Calculator_ExpressionNode* this__, Calculat
     /* IL_0003: call Calculator.ReducibleNode..ctor */
 #line 59 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_ReducibleNode__ctor((Calculator_ReducibleNode*)frame__.stack0_0__, stack1_0__);
-    /* IL_0008: ldarg.0  */
+    /* IL_0008: nop  */
+    /* IL_0009: nop  */
+    /* IL_000a: ldarg.0  */
 #line 61 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0009: ldarg.1  */
+    /* IL_000b: ldarg.1  */
 #line 61 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack1_1__ = oper;
-    /* IL_000a: stfld Calculator.ExpressionNode.Operator */
+    /* IL_000c: stfld Calculator.ExpressionNode.Operator */
 #line 61 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__->Operator = frame__.stack1_1__;
-    /* IL_000f: ldarg.0  */
+    /* IL_0011: ldarg.0  */
 #line 62 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0010: ldarg.2  */
+    /* IL_0012: ldarg.2  */
 #line 62 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack1_2__ = left;
-    /* IL_0011: stfld Calculator.ExpressionNode.Left */
+    /* IL_0013: stfld Calculator.ExpressionNode.Left */
 #line 62 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__->Left = frame__.stack1_2__;
-    /* IL_0016: ldarg.0  */
+    /* IL_0018: ldarg.0  */
 #line 63 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0017: ldarg.3  */
+    /* IL_0019: ldarg.3  */
 #line 63 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack1_2__ = right;
-    /* IL_0018: stfld Calculator.ExpressionNode.Right */
+    /* IL_001a: stfld Calculator.ExpressionNode.Right */
 #line 63 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__->Right = frame__.stack1_2__;
-    /* IL_001d: ret  */
+    /* IL_001f: ret  */
 #line 64 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_unlink_execution_frame(&frame__);
 #line 64 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
@@ -127,192 +129,259 @@ typedef struct Calculator_ExpressionNode_Reduce_EXECUTION_FRAME_DECL
 
 int32_t Calculator_ExpressionNode_Reduce(Calculator_ExpressionNode* this__)
 {
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-3] Local variables (!objref):
 
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     int32_t leftResult = 0;
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     int32_t rightResult = 0;
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    bool local2__ = false;
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    int32_t local3__ = 0;
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    bool local4__ = false;
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    bool local5__ = false;
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    bool local6__ = false;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     int32_t stack0_2__;
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     wchar_t stack0_4__;
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    bool stack0_5__;
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     int32_t stack1_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_ExpressionNode_Reduce_EXECUTION_FRAME__ frame__ =
         { NULL, 3 };
-#line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 67 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0  */
+    /* IL_0000: nop  */
+    /* IL_0001: ldarg.0  */
 #line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0001: ldfld Calculator.ExpressionNode.Left */
+    /* IL_0002: ldfld Calculator.ExpressionNode.Left */
 #line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_1__ = frame__.stack0_0__->Left;
-    /* IL_0006: callvirt Calculator.ReducibleNode.Reduce */
+    /* IL_0007: callvirt Calculator.ReducibleNode.Reduce */
 #line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = frame__.stack0_1__->vptr0__->Reduce(frame__.stack0_1__);
-    /* IL_000b: stloc.0  */
+    /* IL_000c: stloc.0  */
 #line 68 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     leftResult = stack0_2__;
-    /* IL_000c: ldarg.0  */
+    /* IL_000d: ldarg.0  */
 #line 69 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_000d: ldfld Calculator.ExpressionNode.Right */
+    /* IL_000e: ldfld Calculator.ExpressionNode.Right */
 #line 69 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_1__ = frame__.stack0_0__->Right;
-    /* IL_0012: callvirt Calculator.ReducibleNode.Reduce */
+    /* IL_0013: callvirt Calculator.ReducibleNode.Reduce */
 #line 69 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = frame__.stack0_1__->vptr0__->Reduce(frame__.stack0_1__);
-    /* IL_0017: stloc.1  */
+    /* IL_0018: stloc.1  */
 #line 69 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     rightResult = stack0_2__;
-    /* IL_0018: ldarg.0  */
+    /* IL_0019: ldarg.0  */
 #line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0019: ldfld Calculator.ExpressionNode.Operator */
+    /* IL_001a: ldfld Calculator.ExpressionNode.Operator */
 #line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_3__ = frame__.stack0_0__->Operator;
-    /* IL_001e: ldfld Calculator.OperatorNode.Operator */
+    /* IL_001f: ldfld Calculator.OperatorNode.Operator */
 #line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_4__ = frame__.stack0_3__->Operator;
-    /* IL_0023: ldc.i4.s 43 */
+    /* IL_0024: ldc.i4.s 43 */
 #line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = 43;
-    /* IL_0025: bne.un.s IL_002b */
+    /* IL_0026: ceq  */
 #line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    if (stack0_4__ != stack1_0__) goto IL_002b;
-    /* IL_0027: ldloc.0  */
+    stack0_2__ = (int32_t)stack0_4__ == (int32_t)stack1_0__;
+    /* IL_0028: stloc.2  */
+#line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    local2__ = (bool)stack0_2__;
+    /* IL_0029: ldloc.2  */
+#line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    stack0_5__ = local2__;
+    /* IL_002a: brfalse.s IL_0033 */
+#line 70 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    if (stack0_5__ == false) goto IL_0033;
+    /* IL_002c: nop  */
+    /* IL_002d: ldloc.0  */
 #line 72 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = leftResult;
-    /* IL_0028: ldloc.1  */
+    /* IL_002e: ldloc.1  */
 #line 72 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = rightResult;
-    /* IL_0029: add  */
+    /* IL_002f: add  */
 #line 72 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = stack0_2__ + stack1_0__;
-    /* IL_002a: ret  */
+    /* IL_0030: stloc.3  */
 #line 72 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    il2c_unlink_execution_frame(&frame__);
+    local3__ = stack0_2__;
+    /* IL_0031: br.s IL_008b */
 #line 72 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    return stack0_2__;
-IL_002b:
-    /* IL_002b: ldarg.0  */
+    goto IL_008b;
+IL_0033:
+    /* IL_0033: ldarg.0  */
 #line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_002c: ldfld Calculator.ExpressionNode.Operator */
+    /* IL_0034: ldfld Calculator.ExpressionNode.Operator */
 #line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_3__ = frame__.stack0_0__->Operator;
-    /* IL_0031: ldfld Calculator.OperatorNode.Operator */
+    /* IL_0039: ldfld Calculator.OperatorNode.Operator */
 #line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_4__ = frame__.stack0_3__->Operator;
-    /* IL_0036: ldc.i4.s 45 */
+    /* IL_003e: ldc.i4.s 45 */
 #line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = 45;
-    /* IL_0038: bne.un.s IL_003e */
+    /* IL_0040: ceq  */
 #line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    if (stack0_4__ != stack1_0__) goto IL_003e;
-    /* IL_003a: ldloc.0  */
+    stack0_2__ = (int32_t)stack0_4__ == (int32_t)stack1_0__;
+    /* IL_0042: stloc.s local4__ */
+#line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    local4__ = (bool)stack0_2__;
+    /* IL_0044: ldloc.s local4__ */
+#line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    stack0_5__ = local4__;
+    /* IL_0046: brfalse.s IL_004f */
+#line 74 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    if (stack0_5__ == false) goto IL_004f;
+    /* IL_0048: nop  */
+    /* IL_0049: ldloc.0  */
 #line 76 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = leftResult;
-    /* IL_003b: ldloc.1  */
+    /* IL_004a: ldloc.1  */
 #line 76 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = rightResult;
-    /* IL_003c: sub  */
+    /* IL_004b: sub  */
 #line 76 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = stack0_2__ - stack1_0__;
-    /* IL_003d: ret  */
+    /* IL_004c: stloc.3  */
 #line 76 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    il2c_unlink_execution_frame(&frame__);
+    local3__ = stack0_2__;
+    /* IL_004d: br.s IL_008b */
 #line 76 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    return stack0_2__;
-IL_003e:
-    /* IL_003e: ldarg.0  */
+    goto IL_008b;
+IL_004f:
+    /* IL_004f: ldarg.0  */
 #line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_003f: ldfld Calculator.ExpressionNode.Operator */
+    /* IL_0050: ldfld Calculator.ExpressionNode.Operator */
 #line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_3__ = frame__.stack0_0__->Operator;
-    /* IL_0044: ldfld Calculator.OperatorNode.Operator */
+    /* IL_0055: ldfld Calculator.OperatorNode.Operator */
 #line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_4__ = frame__.stack0_3__->Operator;
-    /* IL_0049: ldc.i4.s 42 */
+    /* IL_005a: ldc.i4.s 42 */
 #line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = 42;
-    /* IL_004b: bne.un.s IL_0051 */
+    /* IL_005c: ceq  */
 #line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    if (stack0_4__ != stack1_0__) goto IL_0051;
-    /* IL_004d: ldloc.0  */
+    stack0_2__ = (int32_t)stack0_4__ == (int32_t)stack1_0__;
+    /* IL_005e: stloc.s local5__ */
+#line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    local5__ = (bool)stack0_2__;
+    /* IL_0060: ldloc.s local5__ */
+#line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    stack0_5__ = local5__;
+    /* IL_0062: brfalse.s IL_006b */
+#line 78 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    if (stack0_5__ == false) goto IL_006b;
+    /* IL_0064: nop  */
+    /* IL_0065: ldloc.0  */
 #line 80 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = leftResult;
-    /* IL_004e: ldloc.1  */
+    /* IL_0066: ldloc.1  */
 #line 80 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = rightResult;
-    /* IL_004f: mul  */
+    /* IL_0067: mul  */
 #line 80 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = stack0_2__ * stack1_0__;
-    /* IL_0050: ret  */
+    /* IL_0068: stloc.3  */
 #line 80 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    il2c_unlink_execution_frame(&frame__);
+    local3__ = stack0_2__;
+    /* IL_0069: br.s IL_008b */
 #line 80 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    return stack0_2__;
-IL_0051:
-    /* IL_0051: ldarg.0  */
+    goto IL_008b;
+IL_006b:
+    /* IL_006b: ldarg.0  */
 #line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0052: ldfld Calculator.ExpressionNode.Operator */
+    /* IL_006c: ldfld Calculator.ExpressionNode.Operator */
 #line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_3__ = frame__.stack0_0__->Operator;
-    /* IL_0057: ldfld Calculator.OperatorNode.Operator */
+    /* IL_0071: ldfld Calculator.OperatorNode.Operator */
 #line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_4__ = frame__.stack0_3__->Operator;
-    /* IL_005c: ldc.i4.s 47 */
+    /* IL_0076: ldc.i4.s 47 */
 #line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = 47;
-    /* IL_005e: bne.un.s IL_0064 */
+    /* IL_0078: ceq  */
 #line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    if (stack0_4__ != stack1_0__) goto IL_0064;
-    /* IL_0060: ldloc.0  */
+    stack0_2__ = (int32_t)stack0_4__ == (int32_t)stack1_0__;
+    /* IL_007a: stloc.s local6__ */
+#line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    local6__ = (bool)stack0_2__;
+    /* IL_007c: ldloc.s local6__ */
+#line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    stack0_5__ = local6__;
+    /* IL_007e: brfalse.s IL_0087 */
+#line 82 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    if (stack0_5__ == false) goto IL_0087;
+    /* IL_0080: nop  */
+    /* IL_0081: ldloc.0  */
 #line 84 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = leftResult;
-    /* IL_0061: ldloc.1  */
+    /* IL_0082: ldloc.1  */
 #line 84 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_0__ = rightResult;
-    /* IL_0062: div  */
+    /* IL_0083: div  */
 #line 84 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = stack0_2__ / stack1_0__;
-    /* IL_0063: ret  */
+    /* IL_0084: stloc.3  */
 #line 84 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    il2c_unlink_execution_frame(&frame__);
+    local3__ = stack0_2__;
+    /* IL_0085: br.s IL_008b */
 #line 84 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
-    return stack0_2__;
-IL_0064:
-    /* IL_0064: ldc.i4.0  */
+    goto IL_008b;
+IL_0087:
+    /* IL_0087: ldc.i4.0  */
 #line 88 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack0_2__ = 0;
-    /* IL_0065: ret  */
+    /* IL_0088: stloc.3  */
 #line 88 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    local3__ = stack0_2__;
+    /* IL_0089: br.s IL_008b */
+#line 88 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    goto IL_008b;
+IL_008b:
+    /* IL_008b: ldloc.3  */
+#line 89 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    stack0_2__ = local3__;
+    /* IL_008c: ret  */
+#line 89 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_unlink_execution_frame(&frame__);
-#line 88 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 89 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     return stack0_2__;
-#line 88 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+#line 89 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
 }
 
 //////////////////////

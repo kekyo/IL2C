@@ -6,25 +6,23 @@
 
 ## The core
 
-* "Calculator.Code" is a proof of concept for polish-notation based calculator code library written by C#.
+* "Calculator.Core" is a proof of concept for polish-notation based calculator code library written by C#.
 * It's very neutral implementation, not included any platform dependent code.
-* Target platform is .NET Standard 1.3, but IL2C can't understand external libraries currently :)
+* Target platform is .NET Standard 2.0, but IL2C can't understand external libraries currently :)
 
 ## The rule for unit tests
 
-* "Calculator.Code" already independent. So we can test this library with standard .NET test technics.
-* The "Calculator.Code.Tests" project contains same test code using for NUnit library.
+* "Calculator.Core" already independent. So we can test this library with standard .NET test technics.
+* The "Calculator.Core.Tests" project contains same test code using for NUnit library.
 
 ## Platform implementations
 
-* IL2C translated to c language code and stored to "Generated" directory.
+* IL2C translated to C language code and stored to "$(SolutionDir)Generated" directory.
 
 ### Windows
 
 * "Calculator.Win32" can execute directly on Windows.
-* It contains platform-dependent glue functions.
-  * Bypass from-to Windows console used for standard c runtime functions.
-  * fgetws, wprintf, fwprintf.
+* It contains platform-dependent glue functions at the bootstrap main function.
 
 ![Calculator.Win32](../../images/Calculator.Win32.png)
 
@@ -32,8 +30,7 @@
 
 * "Calculator.UEFI" can execute directly on UEFI platform.
   * Exactly, this code absolutely contains non-OSes, can boot up from USB flash memory :)
-* It contains platform-dependent glue functions.
-  * Bypass from-to UEFI console service functions.
+* It contains platform-dependent glue functions at the bootstrap main function.
   * ConIn, ConOut, OutputString, WaitForEvent, WaitForKey, ReadKeyStroke.
 
 ![Calculator.UEFI](../../images/Calculator.UEFI.jpg)
@@ -42,9 +39,12 @@
 
 * "Calculator.M5Stack" can execute directly on [M5Stack with calculator FACES module.](http://m5stack.com/)
   * Exactly, this code absolutely contains non-OSes, it's firmware-level programming :)
-* It contains platform-dependent glue functions.
+* It contains platform-dependent glue functions at the bootstrap main function.
   * Bypass from-to display module (ILI9341) on SPI and Calculator-FACES keyboard (custom AVR) on I2C.
   * M5_Terminal, i2c_keyboard_read
 
 ![Calculator.M5Stack](../../images/Calculator.M5Stack.jpg)
 
+### WDM
+
+// TODO:

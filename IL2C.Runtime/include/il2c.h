@@ -34,17 +34,30 @@ extern "C" {
 #include <string.h>
 #include <wchar.h>
 #include <float.h>
-#include <assert.h>
 
+#if defined(_MSC_VER) && defined(UEFI)
+#if defined(DEBUG)
+#define DBGASSERT(a) DbgAssert(__FILE__, __LINE__, #a)
+#else
+#define DBGASSERT(a)
+#endif
+#define il2c_assert DBGASSERT
+extern int32_t* il2c_errno__(void);
+#define il2c_errno (*il2c_errno__())
+#else
+#include <assert.h>
+#include <errno.h>
 #define il2c_assert assert
-#define il2c_memset memset
+#define il2c_errno errno
+#endif
+
 #define il2c_setjmp setjmp
 #define IL2C_JUMP_BUFFER jmp_buf
 
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime
 
-#if defined(_MSC_VER) && defined(_WIN32)
+#if defined(_WIN32)
 #if defined(UEFI)
 extern void il2c_initialize(void* imageHandle, void* pSystemTable);
 extern void il2c_shutdown();
@@ -55,6 +68,11 @@ extern void il2c_shutdown(void);
 extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
 #endif
+#endif
+
+#if defined(__linux__)
+extern void il2c_initialize(void);
+extern void il2c_shutdown(void);
 #endif
 
 ///////////////////////////////////////////////////////

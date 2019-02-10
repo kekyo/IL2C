@@ -34,10 +34,8 @@ void il2c_writeline(const wchar_t* s)
 
 bool il2c_readline(wchar_t* buffer, int32_t length)
 {
-    il2c_assert(buffer != NULL);
-    il2c_assert(length >= 1);
-    const wchar_t* p = fgetws(buffer, length - 1, stdin);
-    return p != NULL;
+    // Can't read from the default console on the WDM kernel mode driver.
+    return false;
 }
 
 void il2c_initialize(void)

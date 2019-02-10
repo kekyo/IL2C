@@ -25,7 +25,6 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 #include <wchar.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
@@ -47,9 +46,6 @@ extern wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l);
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcscasecmp
 #define il2c_wcslen wcslen
-#define il2c_memcpy memcpy
-#define il2c_memset memset
-#define il2c_memcmp memcmp
 #define il2c_initialize_heap()
 #define il2c_check_heap()
 #define il2c_shutdown_heap()

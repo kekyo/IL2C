@@ -57,10 +57,23 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
     {
         wchar_t* cr = wcschr(buffer, L'\r');
         wchar_t* lf = wcschr(buffer, L'\n');
-        if ((cr != NULL) && (lf != NULL) && ((lf - cr) == 1))
+        if ((cr != NULL) || (lf != NULL))
         {
-            *cr = L'\0';
-            return true;
+            if ((cr != NULL) && (lf != NULL) && ((lf - cr) == 1))
+            {
+                *cr = L'\0';
+                return true;
+            }
+            if (lf != NULL)
+            {
+                *lf = L'\0';
+                return true;
+            }
+            if (cr != NULL)
+            {
+                *cr = L'\0';
+                return true;
+            }
         }
     }
 

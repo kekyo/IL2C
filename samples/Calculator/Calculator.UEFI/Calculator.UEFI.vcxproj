@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -34,7 +34,6 @@
     <PlatformToolset>v141</PlatformToolset>
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
-    <TargetExt>.efi</TargetExt>
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -53,9 +52,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Platform)'=='x64'">
     <TargetName>bootx64</TargetName>
+    <TargetExt>.efi</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Win32'">
     <TargetName>bootx86</TargetName>
+    <TargetExt>.efi</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

@@ -48,7 +48,11 @@ extern /* static */ bool System_String_op_Inequality(System_String* lhs, System_
 
 extern System_String* il2c_new_string(const wchar_t* pString);
 extern System_String* il2c_new_string_from_utf8(const char* pUtf8String);
+
 extern const wchar_t* il2c_c_str(System_String* str);
+
+extern int32_t il2c_get_utf8_length(const char* pUtf8String, bool detectInvalidChars);
+extern wchar_t* il2c_utf16_from_utf8_and_get_last(wchar_t* pDest, const char* pUtf8String);
 
 typedef const struct
 {

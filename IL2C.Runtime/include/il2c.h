@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && defined(_WIN32)
 #include <intrin.h>
 #include <setjmp.h> // TODO:
 
@@ -34,18 +34,46 @@ extern "C" {
 #include <string.h>
 #include <wchar.h>
 #include <float.h>
-#include <assert.h>
 
+#if defined(_MSC_VER) && defined(UEFI)
+#if defined(DEBUG)
+#define DBGASSERT(a) DbgAssert(__FILE__, __LINE__, #a)
+#else
+#define DBGASSERT(a)
+#endif
+#define il2c_assert DBGASSERT
+extern int32_t* il2c_errno__(void);
+#define il2c_errno (*il2c_errno__())
+#else
+#include <assert.h>
+#include <errno.h>
 #define il2c_assert assert
-#define il2c_memset memset
+#define il2c_errno errno
+#endif
+
 #define il2c_setjmp setjmp
 #define IL2C_JUMP_BUFFER jmp_buf
 
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime
 
+#if defined(_WIN32)
+#if defined(UEFI)
+extern void il2c_initialize(void* imageHandle, void* pSystemTable);
+extern void il2c_shutdown();
+#elif defined(_WDM)
+extern void il2c_initialize(void);  // TODO:
+extern void il2c_shutdown(void);
+#else
 extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
+#endif
+#endif
+
+#if defined(__linux__)
+extern void il2c_initialize(void);
+extern void il2c_shutdown(void);
+#endif
 
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
@@ -153,44 +181,44 @@ extern void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile voi
 // It's pseudo referenced-type null value used by ldnull.
 typedef void* untyped_ptr;
 
-#include <System/Object.h>
-#include <System/Type.h>
-#include <System/ValueType.h>
-#include <System/Array.h>
-#include <System/Char.h>
-#include <System/String.h>
-#include <System/Boolean.h>
-#include <System/Byte.h>
-#include <System/Int16.h>
-#include <System/Int32.h>
-#include <System/Int64.h>
-#include <System/SByte.h>
-#include <System/UInt16.h>
-#include <System/UInt32.h>
-#include <System/UInt64.h>
-#include <System/IntPtr.h>
-#include <System/UIntPtr.h>
-#include <System/Single.h>
-#include <System/Double.h>
-#include <System/Enum.h>
-#include <System/Delegate.h>
-#include <System/MulticastDelegate.h>
-#include <System/RuntimeFieldHandle.h>
-#include <System/Runtime/CompilerServices/RuntimeHelpers.h>
-#include <System/Exception.h>
-#include <System/NullReferenceException.h>
-#include <System/InvalidCastException.h>
-#include <System/IndexOutOfRangeException.h>
-#include <System/GC.h>
-#include <System/Runtime/InteropServices/GCHandleType.h>
-#include <System/Runtime/InteropServices/GCHandle.h>
-#include <System/Runtime/InteropServices/NativePointer.h>
+#include "System/Object.h"
+#include "System/Type.h"
+#include "System/ValueType.h"
+#include "System/Array.h"
+#include "System/Char.h"
+#include "System/String.h"
+#include "System/Boolean.h"
+#include "System/Byte.h"
+#include "System/Int16.h"
+#include "System/Int32.h"
+#include "System/Int64.h"
+#include "System/SByte.h"
+#include "System/UInt16.h"
+#include "System/UInt32.h"
+#include "System/UInt64.h"
+#include "System/IntPtr.h"
+#include "System/UIntPtr.h"
+#include "System/Single.h"
+#include "System/Double.h"
+#include "System/Enum.h"
+#include "System/Delegate.h"
+#include "System/MulticastDelegate.h"
+#include "System/RuntimeFieldHandle.h"
+#include "System/Runtime/CompilerServices/RuntimeHelpers.h"
+#include "System/Exception.h"
+#include "System/NullReferenceException.h"
+#include "System/InvalidCastException.h"
+#include "System/IndexOutOfRangeException.h"
+#include "System/GC.h"
+#include "System/Runtime/InteropServices/GCHandleType.h"
+#include "System/Runtime/InteropServices/GCHandle.h"
+#include "System/Runtime/InteropServices/NativePointer.h"
 
 // Independent types for IL2C core.
-#include <System/Console.h>
-#include <System/IDisposable.h>
-#include <System/Threading/Interlocked.h>
-#include <System/Threading/Thread.h>
+#include "System/Console.h"
+#include "System/IDisposable.h"
+#include "System/Threading/Interlocked.h"
+#include "System/Threading/Thread.h"
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

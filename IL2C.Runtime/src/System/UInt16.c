@@ -7,7 +7,7 @@ System_String* System_UInt16_ToString(uint16_t* this__)
 {
     wchar_t buffer[7];
 
-    il2c_itow(*this__, buffer, 6);
+    il2c_itow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 
@@ -53,7 +53,7 @@ bool System_UInt16_TryParse(System_String* s, uint16_t* result)
 
     // We have to use a literal value of max instead standard C symbol named *_MAX.
     // Because it's rarely different between .NET and C implementation.
-    return ((s->string_body__ != endPtr) && (errno == 0) && (value <= 65535)) ? true : false;
+    return ((s->string_body__ != endPtr) && (il2c_errno == 0) && (value <= 65535)) ? true : false;
 }
 
 /////////////////////////////////////////////////

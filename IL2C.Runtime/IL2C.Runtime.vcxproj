@@ -1,100 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ItemGroup Label="ProjectConfigurations">
-        <ProjectConfiguration Include="Debug|Win32">
-            <Configuration>Debug</Configuration>
-            <Platform>Win32</Platform>
-        </ProjectConfiguration>
-        <ProjectConfiguration Include="Debug|x64">
-            <Configuration>Debug</Configuration>
-            <Platform>x64</Platform>
-        </ProjectConfiguration>
-        <ProjectConfiguration Include="Release|Win32">
-            <Configuration>Release</Configuration>
-            <Platform>Win32</Platform>
-        </ProjectConfiguration>
-        <ProjectConfiguration Include="Release|x64">
-            <Configuration>Release</Configuration>
-            <Platform>x64</Platform>
-        </ProjectConfiguration>
-    </ItemGroup>
-    <ItemGroup>
-        <ClCompile Include="src/**/*.c" />
-        <ClInclude Include="include/**/*.h" />
-        <ClInclude Include="src/**/*.h" />
-    </ItemGroup>
-    <PropertyGroup Label="Globals">
-        <VCProjectVersion>15.0</VCProjectVersion>
-        <ProjectGuid>{182A62A4-47AC-4290-8EA5-250AE8131613}</ProjectGuid>
-        <Keyword>Win32Proj</Keyword>
-        <RootNamespace>IL2CRuntime</RootNamespace>
-        <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-        <ConfigurationType>StaticLibrary</ConfigurationType>
-        <PlatformToolset>v141</PlatformToolset>
-        <LinkIncremental>false</LinkIncremental>
-        <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
-        <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
-    </PropertyGroup>
-    <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Debug'">
-        <UseDebugLibraries>true</UseDebugLibraries>
-    </PropertyGroup>
-    <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Release'">
-        <UseDebugLibraries>false</UseDebugLibraries>
-        <WholeProgramOptimization>true</WholeProgramOptimization>
-    </PropertyGroup>
-    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-    <ImportGroup Label="PropertySheets">
-        <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    </ImportGroup>
-    <ItemDefinitionGroup>
-        <ClCompile>
-            <WarningLevel>Level4</WarningLevel>
-            <SDLCheck>true</SDLCheck>
-            <StringPooling>true</StringPooling>
-            <IntrinsicFunctions>true</IntrinsicFunctions>
-            <FunctionLevelLinking>true</FunctionLevelLinking>
-            <CreateHotpatchableImage>false</CreateHotpatchableImage>
-            <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include</AdditionalIncludeDirectories>
-            <DisableSpecificWarnings>4100</DisableSpecificWarnings>
-            <ExceptionHandling>false</ExceptionHandling>
-            <AssemblerOutput>All</AssemblerOutput>
-            <!-- <TreatWarningAsError>true</TreatWarningAsError> -->
-            <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-            <MultiProcessorCompilation>true</MultiProcessorCompilation>
-            <BrowseInformation>true</BrowseInformation>
-        </ClCompile>
-        <ClCompile Condition="'$(Configuration)'=='Debug'">
-            <Optimization>Disabled</Optimization>
-            <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;IL2C_DEBUG_WRITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-        </ClCompile>
-        <ClCompile Condition="'$(Configuration)'=='Release'">
-            <Optimization>MaxSpeed</Optimization>
-            <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-            <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-            <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-            <OmitFramePointers>true</OmitFramePointers>
-            <WholeProgramOptimization>true</WholeProgramOptimization>
-            <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-        </ClCompile>
-        <Link>
-            <SubSystem>Windows</SubSystem>
-            <GenerateDebugInformation>true</GenerateDebugInformation>
-            <GenerateMapFile>true</GenerateMapFile>
-            <MapExports>true</MapExports>
-            <OptimizeReferences>true</OptimizeReferences>
-            <EnableCOMDATFolding>true</EnableCOMDATFolding>
-        </Link>
-        <Link Condition="'$(Configuration)'=='Debug'">
-        </Link>
-        <Link Condition="'$(Configuration)'=='Release'">
-            <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-        </Link>
-        <Bscmake>
-            <PreserveSbr>true</PreserveSbr>
-        </Bscmake>
-    </ItemDefinitionGroup>
-    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src/**/*.c" />
+    <ClInclude Include="include/**/*.h" />
+    <ClInclude Include="src/**/*.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{182A62A4-47AC-4290-8EA5-250AE8131613}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>IL2CRuntime</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Debug'">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Release'">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <StringPooling>true</StringPooling>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <CreateHotpatchableImage>false</CreateHotpatchableImage>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4100</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <AssemblerOutput>All</AssemblerOutput>
+      <!-- <TreatWarningAsError>true</TreatWarningAsError> -->
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Condition="'$(Configuration)'=='Debug'">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;IL2C_DEBUG_WRITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile Condition="'$(Configuration)'=='Release'">
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
 </Project>

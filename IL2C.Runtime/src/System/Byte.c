@@ -53,7 +53,7 @@ bool System_Byte_TryParse(System_String* s, uint8_t* result)
 
     // We have to use a literal value of max instead standard C symbol named *_MAX.
     // Because it's rarely different between .NET and C implementation.
-    return ((s->string_body__ != endPtr) && (errno == 0) && (value <= 255)) ? true : false;
+    return ((s->string_body__ != endPtr) && (il2c_errno == 0) && (value <= 255)) ? true : false;
 }
 
 /////////////////////////////////////////////////

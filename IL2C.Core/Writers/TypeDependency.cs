@@ -14,29 +14,36 @@ namespace IL2C.Writers
                 new Dictionary<ITypeInformation, HashSet<ITypeInformation>>();
             private readonly Dictionary<(ITypeInformation, ITypeInformation), bool> isDependCache =
                 new Dictionary<(ITypeInformation, ITypeInformation), bool>();
+            private readonly HashSet<IAssemblyInformation> regions;
 
-            public Context()
-            {
-            }
+            public Context(IEnumerable<IAssemblyInformation> regions) =>
+                this.regions = new HashSet<IAssemblyInformation>(regions);
 
-            private ISet<ITypeInformation> GetDependentTypes(ITypeInformation type)
+            private ISet<ITypeInformation> GetDependentTypes(ITypeInformation type, bool onlyPublic)
             {
                 if (!dependTypeCache.TryGetValue(type, out var results))
                 {
                     results = new HashSet<ITypeInformation>();
                     dependTypeCache.Add(type, results);
 
+                    var methods = type.DeclaredMethods.
+                        Where(t => !onlyPublic || t.IsPublic).
+                        ToArray();
+
                     foreach (var t in
                         new[] { type, type.BaseType }.
-                        Concat(type.InterfaceTypes).
-                        Concat(type.NestedTypes).
+                        Concat(type.InterfaceTypes.
+                            Where(t => !onlyPublic || t.IsPublic)).
+                        Concat(type.NestedTypes.
+                            Where(t => !onlyPublic || t.IsPublic)).
                         Concat(type.Fields.
+                            Where(t => !onlyPublic || t.IsPublic).
                             Select(field => field.FieldType)).
-                        Concat(type.DeclaredMethods.
+                        Concat(methods.
                             Select(method => method.ReturnType)).
-                        Concat(type.DeclaredMethods.
+                        Concat(methods.
                             SelectMany(method => method.Parameters.Select(parameter => parameter.TargetType))).
-                        Concat(type.DeclaredMethods.
+                        Concat(methods.
                             SelectMany(method => method.CodeStream?.Select(ci => ci.Operand).
                                 OfType<ITypeInformation>() ??
                                 Enumerable.Empty<ITypeInformation>())).
@@ -55,9 +62,11 @@ namespace IL2C.Writers
             {
                 if (!isDependCache.TryGetValue((to, from), out var result))
                 {
-                    var fromTypes = GetDependentTypes(from);
-
+                    // Calculate dependency only public members if refer to external assemblies.
+                    var fromInRegion = regions.Contains(from.DeclaringModule.DeclaringAssembly);
+                    var fromTypes = GetDependentTypes(from, !fromInRegion);
                     result = fromTypes.Contains(to);
+
                     isDependCache.Add((to, from), result);
                 }
 
@@ -65,9 +74,11 @@ namespace IL2C.Writers
             }
         }
 
-        public static IEnumerable<ITypeInformation> OrderByDependant(this IEnumerable<ITypeInformation> types)
+        public static IEnumerable<ITypeInformation> OrderByDependant(
+            this IEnumerable<ITypeInformation> types,
+            IEnumerable<IAssemblyInformation> regions)
         {
-            var context = new Context();
+            var context = new Context(regions.Distinct());
             var list = new LinkedList<ITypeInformation>();
             foreach (var type in types.
                 Select(MetadataUtilities.UnwrapCoveredType).
@@ -112,6 +123,13 @@ namespace IL2C.Writers
             }
 
             return list;
+        }
+
+        public static IEnumerable<ITypeInformation> OrderByDependant(
+            this IEnumerable<ITypeInformation> types,
+            params IAssemblyInformation[] regions)
+        {
+            return types.OrderByDependant((IEnumerable<IAssemblyInformation>)regions);
         }
     }
 }

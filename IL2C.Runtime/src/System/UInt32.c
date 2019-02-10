@@ -49,7 +49,7 @@ bool System_UInt32_TryParse(System_String* s, uint32_t* result)
     wchar_t* endPtr;
 
     *result = il2c_wcstoul(s->string_body__, &endPtr, 10);
-    return ((s->string_body__ != endPtr) && (errno == 0)) ? true : false;
+    return ((s->string_body__ != endPtr) && (il2c_errno == 0)) ? true : false;
 }
 
 /////////////////////////////////////////////////

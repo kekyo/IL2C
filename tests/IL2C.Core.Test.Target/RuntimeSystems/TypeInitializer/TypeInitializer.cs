@@ -38,6 +38,13 @@ namespace IL2C.RuntimeSystems
             DoubleValue = (double)(DoubleValue + 1);
             CharValue = (char)(CharValue + 1);
             StringValue = StringValue + "ABC";
+
+            DoRefInt32(ref Int32Value);
+        }
+
+        private static void DoRefInt32(ref int value)
+        {
+            value += 2;
         }
     }
 
@@ -46,7 +53,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(true, "Bool", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase((byte)1, "Byte", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase((short)1, "Int16", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((int)1, "Int32", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
+    [TestCase((int)3, "Int32", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase((long)1, "Int64", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase((sbyte)1, "SByte", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase((ushort)1, "UInt16", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]

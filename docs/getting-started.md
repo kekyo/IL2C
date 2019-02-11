@@ -295,3 +295,11 @@ Then, this USB flash stick insert into target (UEFI enabled) PC, reset and invok
 ![UEFI boot device prompt](../images/tutorial32.jpg)
 
 ![Polish notation calculator bootup on the UEFI](../images/tutorial33.jpg)
+
+## 4. Another way
+
+Another way, I tested the M5Stack IoT device with the numerical keypad extension:
+
+![Calculator.M5Stack](../images/Calculator.M5Stack.jpg)
+
+TODO: write details

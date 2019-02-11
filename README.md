@@ -65,7 +65,7 @@ void HelloWorld_Main()
 
 ## Getting started
 
-The IL2C current status is experimental. Contributions are welcome but we have [a only simple Getting started document.](docs/getting-started.md)
+The IL2C current status is experimental, we have a only simple [Getting started document.](docs/getting-started.md)
 
 And you can refer the blog post: ["Try writing code using both the Azure Sphere Development Kit and C#" (My blog)](https://www.kekyo.net/2019/01/04/6917).
 

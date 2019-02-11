@@ -37,7 +37,7 @@ extern "C" {
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
 #define il2c_wcscmp wcscmp
-#define il2c_wcsicmp wcsicmp
+#define il2c_wcsicmp _wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_initialize_heap() _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF)
 #define il2c_check_heap() _CrtCheckMemory()

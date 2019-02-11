@@ -108,7 +108,7 @@ This is the second half stage. For example, this project named "GettingStartedIL
 
 Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (because it's easy way):
 
-1. Add "AdditionalIncludeDirectories" property each descendant ItemDefinitionGroup/ClCompile elements. We have to do it because the VC++ compiler requires referring IL2C runtime header files and translated header files.
+1. Add "AdditionalIncludeDirectories" property each descendant ItemDefinitionGroup/ClCompile elements. We have to do it because the VC++ compiler requires referring both IL2C runtime header files and translated header files.
 
 ```xml
 <ItemDefinitionGroup Condition="..."> <!-- each conditions --> 
@@ -120,6 +120,8 @@ Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (beca
   <!-- ... -->
 </ItemDefinitionGroup>
 ```
+
+You have to adjust valid paths for your environments. You see a bit detail, the name "netcoreapp2.0" is perhaps different in your environment.
 
 2. Add referring the IL2C runtime and translated files nearly exist "ClInclude" and "ClCompile" elements:
 
@@ -147,9 +149,9 @@ Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (beca
 </ItemGroup>
 ```
 
-You have to adjust valid paths for your environments. The "PrecompiledHeader" property requires because the translated files target to the "C language" and the feature can use only C++ language.
+You have to adjust valid paths for your environments too. The "PrecompiledHeader" property requires because the translated files target to the "C language" and the feature can use only C++ language. (It's Visual C++ limitation.)
 
-3. Write (change) C main function body:
+3. Write (modify) C main function body (GettingStartedIL2CMain.cpp):
 
 ```c++
 #include "pch.h"
@@ -175,7 +177,7 @@ int main()
 
 ### 1-5. Finished Hello world
 
-Run the project and got result (Note: you maybe fail if you forget set the startup project.)
+Run the project and got result (Note: you maybe fail if you forget setting the startup project.)
 
 ![Finished Hello world](../images/tutorial15.png)
 
@@ -185,8 +187,9 @@ If your build random failing, it maybe causes the Visual Studio can't calculate 
 
 ![Project dependency dialog](../images/tutorial16.png)
 
-![Configuration manager dialog](../images/tutorial17.png)
+And check it up for success building the entire solution at the "Configuration Manager" dialog.
 
+![Configuration manager dialog](../images/tutorial17.png)
 
 ## 2. Trying sample for the polish notation calculator
 

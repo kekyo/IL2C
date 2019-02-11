@@ -196,9 +196,6 @@ namespace Calculator
             return new ExpressionNode(oper, left, right, index);
         }
 
-        //[NativeMethod("Main.h")]
-        //private static extern void SendExternalTicker(string message);
-
         public static void Main()
         {
             Console.WriteLine("Polish notation calculator.");
@@ -206,6 +203,8 @@ namespace Calculator
             Console.WriteLine("https://github.com/kekyo/IL2C");
             Console.WriteLine();
             Console.WriteLine("Type \"exit\" to exit.");
+            Console.WriteLine("Example: \"+ 2 3\"");
+            Console.WriteLine("Example: \"* + 2 3 6\"");
 
             while (true)
             {
@@ -230,12 +229,6 @@ namespace Calculator
 
                     Console.Write("Reuslt=");
                     Console.WriteLine(result);
-
-                    //var message = "(";
-                    //message += line;
-                    //message += ") = ";
-                    //message += result.ToString();
-                    //SendExternalTicker(message);
                 }
             }
         }

@@ -18,5 +18,7 @@ extern System_String* const Calculator_Core_string4__;
 extern System_String* const Calculator_Core_string5__;
 extern System_String* const Calculator_Core_string6__;
 extern System_String* const Calculator_Core_string7__;
+extern System_String* const Calculator_Core_string8__;
+extern System_String* const Calculator_Core_string9__;
 
 #endif

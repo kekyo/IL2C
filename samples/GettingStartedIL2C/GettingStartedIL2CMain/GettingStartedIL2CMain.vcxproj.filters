@@ -1,0 +1,1038 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\mscorlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System.Runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Boolean.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Byte.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Char.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Delegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Double.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Enum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\GC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\IDisposable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\IndexOutOfRangeException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Int16.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Int32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Int64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\IntPtr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\InvalidCastException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\MulticastDelegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\NullReferenceException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\RuntimeFieldHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Runtime\CompilerServices\RuntimeHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Runtime\InteropServices\GCHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Runtime\InteropServices\GCHandleType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Runtime\InteropServices\NativePointer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\SByte.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Single.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Threading\Interlocked.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Threading\Thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\Type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\UInt16.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\UInt32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\UInt64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\UIntPtr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\include\System\ValueType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\debugbreak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\amd64\efibind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\amd64\pe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\arm64\efibind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\arm\efibind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efiapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efichar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\eficon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\eficonsctl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efidebug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efidef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efidevp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efierr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efifpswa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efifs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efigop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efilib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efinet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efipart.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efipciio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efiprot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efipxebc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efiser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efistdarg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efiuga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\efi_nii.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\i386\efibind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\efi\i386\pe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\gcc_linux.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\gcc_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\msvc_uefi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\msvc_wdm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\IL2C\IL2C.Runtime\src\Private\msvc_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/include/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GettingStartedIL2CMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\Private\gcc_linux.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\Private\gcc_linux_azuresphere.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\Private\gcc_win32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\Private\msvc_uefi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\Private\msvc_wdm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\Private\msvc_win32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Array.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Boolean.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Byte.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Char.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Console.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Delegate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Double.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Enum.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Exception.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\GC.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\IDisposable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\IndexOutOfRangeException.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Int16.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Int32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Int64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\IntPtr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\InvalidCastException.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\MulticastDelegate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\NullReferenceException.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Object.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Runtime\CompilerServices\RuntimeHelpers.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Runtime\InteropServices\GCHandle.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\SByte.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Single.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\String.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Threading\Interlocked.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Threading\Thread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\Type.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\UInt16.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\UInt32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\UInt64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\UIntPtr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\IL2C\IL2C.Runtime\src\System\ValueType.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(ProjectDir)../../IL2C/IL2C.Runtime/src/**/*.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

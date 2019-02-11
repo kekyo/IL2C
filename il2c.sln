@@ -13,10 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		pack.bat = pack.bat
 		pack.sh = pack.sh
 		README.md = README.md
-		sample-translation-results.md = sample-translation-results.md
-		supported-basic-types.md = supported-basic-types.md
-		supported-opcodes.md = supported-opcodes.md
-		supported-runtime-system-features.md = supported-runtime-system-features.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core", "IL2C.Core\IL2C.Core.csproj", "{678EFB0E-BC0A-4749-AD48-079F98D9468D}"
@@ -35,6 +31,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core.Test.Fixture", "t
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Interop", "IL2C.Interop\IL2C.Interop.csproj", "{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3EBFA913-CF51-4A28-9E4D-73CB5AE27D2F}"
+	ProjectSection(SolutionItems) = preProject
+		docs\getting-started.md = docs\getting-started.md
+		docs\sample-translation-results.md = docs\sample-translation-results.md
+		docs\supported-basic-types.md = docs\supported-basic-types.md
+		docs\supported-opcodes.md = docs\supported-opcodes.md
+		docs\supported-runtime-system-features.md = docs\supported-runtime-system-features.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +82,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{ACE3F9B1-0A92-4F1F-B817-7A74114030E5} = {5710A57F-57F8-4D50-8C78-82E2DFDCB613}
 		{B0F1010D-8B73-46F7-AF8E-E3C58F68525F} = {5710A57F-57F8-4D50-8C78-82E2DFDCB613}
+		{3EBFA913-CF51-4A28-9E4D-73CB5AE27D2F} = {D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

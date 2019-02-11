@@ -4,7 +4,7 @@
 ## How works the IL2C
 
 The IL2C will translate your C# (or another .NET based) code to the C language source code.
-It bites the .NET assembly (*.dll or *.exe) and will produce multiple C language source code files. It illustrates:
+It bites the .NET assembly (*.dll or *.exe) and will produce multiple C language source code files. It illustrates the graph:
 
 ![The IL2C building structure](../images/overview.png)
 
@@ -16,7 +16,7 @@ This document introduces generally usage for the IL2C. Try it!
 
 ## 1. Step by step for first trying
 
-We know about better first step, it's the "Hello world."
+We know about better first step, it's the "Hello world." [(The completed projects contain the IL2C repository. You can refer it.)](https://github.com/kekyo/IL2C/tree/master/samples/GettingStartedIL2C)
 
 ### 1-1. Create new C# library project with "net46" or "netcoreapp2.0" platform using Visual Studio 2017.
 
@@ -24,7 +24,7 @@ You can choice ether old (.NET Framework style) project or new (.NET Core/Standa
 
 ![.NET Core console app](../images/tutorial11.png)
 
-### 1-2. Add [the IL2C.Build NuGet package](https://www.nuget.org/packages/IL2C.Build) using the "Package Manager Console" or "NuGet package manager dialog."
+### 1-2. Add the [IL2C.Build NuGet package](https://www.nuget.org/packages/IL2C.Build) using the "Package Manager Console" or "NuGet package manager dialog."
 
 ![The IL2C.Build NuGet package](../images/tutorial12.png)
 
@@ -193,13 +193,105 @@ And check it up for success building the entire solution at the "Configuration M
 
 ## 2. Trying sample for the polish notation calculator
 
-* Run the Win32 native Calculator sample
+If you understand how to use the IL2C from scratch, you go to the next step. What are we thinking about using the IL2C? A topic is we can apply for OOP design with C# language different the C language.
 
-* (can write C# code with the OOP technics)
-* (Step by step? or refer the samples/Calculator?)
-  * (if choices step by step, maybe setting up is complex)
-  * (if can use the GccDriver, write from scratch)
+The next sample code is "The Polish notation calculator." It's the console application, input the PN expression and show result.
+
+![Configuration manager dialog](../images/tutorial21.png)
+
+It has modern design using OOP technics. And the solution contains unit test using the NUnit3. [(The completed projects contain the IL2C repository. You can refer it.)](https://github.com/kekyo/IL2C/tree/master/samples/Calculator)
+
+I introduce the project highlights:
+
+### 2-1. Using OOP features
+
+It contains class-base inheritance technics for the AST nodes (Abstract syntax tree).
+
+![PN calculator AST nodes](../images/tutorial22.png)
+
+For example:
+
+```csharp
+// Base class
+public abstract class AbstractNode
+{
+    public readonly int NextIndex;
+
+    protected AbstractNode(int nextIndex)
+    {
+        this.NextIndex = nextIndex;
+    }
+}
+
+// Derived class
+public class OperatorNode : AbstractNode
+{
+    public readonly char Operator;
+
+    public OperatorNode(char oper, int nextIndex) : base(nextIndex)
+    {
+        this.Operator = oper;
+    }
+}
+
+// Derived class
+public abstract class ReducibleNode : AbstractNode
+{
+    protected ReducibleNode(int nextIndex) : base(nextIndex)
+    {
+    }
+
+    public abstract int Reduce();
+}
+```
+
+If you wanna check these node types, please refer [the repository.](https://github.com/kekyo/IL2C/tree/master/samples/Calculator) Everyday we use the OOP technics both the C# and another languages on the .NET. For class inheritance, polymorphism, interface separation, first class function (delegate) and related many others. All technics can use on the IL2C. (Currently limitations are dynamic related features same as the AOP)
+
+### 2-2. The library
+
+First tutorial the Hello world is combined all source codes into the Visual C++ project. But the normally case we separate the libraries.
+
+The IL2C is capable combined into a library. It's two ways:
+
+* Construct managed library and will combine at linking stage into one native project.
+  * We gonna apply IL2C.Build package each managed library projects.
+* Construct native library from each managed library and linking it.
+  * We gonna apply IL2C.Build package each managed library projects, and compile to native binary each projects.
+
+It illustrates the graph:
+
+![The building schemes](../images/tutorial23.png)
+
+The Polish notation calculator has only one library (IL2C.Runtime) and combined at linking into one native project.
+
+### 2-3. The unit tests
+
+You can test with NUnit or likely testing framework. The test technics isn't different for standard knowleges. You can use the dependency injection technics (using abstract types) if you have a platform depended accessor.
 
 ## 3. You can witness working the C# code at non-OSes environment
 
-* Run the UEFI native Calculator sample
+The IL2C maybe shows abroads these samples, because it's running on the Win32 environment. The .NET Core already has native binary compilation ability. Is it different?
+
+* The IL2C's native binary is VERY SMALL footprint. You'll see the static code size is between 2 and 3 times larger than "native C language code."
+* The IL2C's runtime ports easy to another platform include the embedded systems. The environment doesn't have any operating systems, called "Firmware level programming" or "Bare metal programming".
+
+The third sample targets for the "UEFI." The UEFI is same as the BIOS for PC's. Of course, it's non-OS environment. You can see the UEFI version for the Polish notation calculator.
+
+![The UEFI project](../images/tutorial31.png)
+
+"IL2C.Runtime.UEFI" project is the Visual C++ library project for UEFI (VC++ can build it). And "Calculator.UEFI" project is combined both translated source code and runtime library in it. Then, the project outputs "bootx64.efi" file.
+
+It's truly UEFI application binary file. You can store into the USB flash stick with strictly directory structure:
+
+```
+E:.
+\---EFI
+    \---BOOT
+            bootx64.efi
+```
+
+Then, this USB flash stick insert into target (UEFI enabled) PC, reset and invoke the boot device prompt.
+
+![UEFI boot device prompt](../images/tutorial32.jpg)
+
+![Polish notation calculator bootup on the UEFI](../images/tutorial33.jpg)

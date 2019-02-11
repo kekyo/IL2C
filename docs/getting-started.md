@@ -290,6 +290,8 @@ E:.
             bootx64.efi
 ```
 
+[(Prebuilt UEFI x64 binary is here: Calculator.UEFI.x64_sample.zip)](https://github.com/kekyo/IL2C/releases/download/getting-started/Calculator.UEFI.x64_sample.zip)
+
 Then, this USB flash stick insert into target (UEFI enabled) PC, reset and invoke the boot device prompt.
 
 ![UEFI boot device prompt](../images/tutorial32.jpg)

@@ -34,6 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Interop", "IL2C.Intero
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3EBFA913-CF51-4A28-9E4D-73CB5AE27D2F}"
 	ProjectSection(SolutionItems) = preProject
+		docs\getting-started.md = docs\getting-started.md
 		docs\sample-translation-results.md = docs\sample-translation-results.md
 		docs\supported-basic-types.md = docs\supported-basic-types.md
 		docs\supported-opcodes.md = docs\supported-opcodes.md

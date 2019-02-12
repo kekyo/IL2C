@@ -121,8 +121,7 @@ Under Apache v2.
   * [Session video (Japanese)](http://bit.ly/2DiaoKZ)
   
 * Polish notation calculator:  [Minimum, but useful impls for "Win32", "UEFI" and "M5Stack(ESP32)"](samples/Calculator)
-  * Project for IL2C proof of concept
-  * ![Calculator.M5Stack](images/Calculator.M5Stack.jpg)
+  ![Calculator.M5Stack](images/Calculator.M5Stack.jpg)
 
 * Slide: [How to make the calculator / Making archive IL2C](https://www.slideshare.net/kekyo/how-to-make-the-calculator)
   * #6-52 session in [.NET Fringe Japan 2018](https://dotnetfringe-japan.connpass.com/event/74536/)
@@ -139,7 +138,7 @@ Under Apache v2.
   * #1 session in [Center CLR #6](https://centerclr.connpass.com/)
 
 * Video letter (Japanese): [Tested IL2C on micro:bit and arduino platform](http://bit.ly/2xGFo9J)
-  * [![Tested IL2C on micro:bit and arduino platform #8](images/microbit.jpg)]
+  ![Tested IL2C on micro:bit and arduino platform #8](images/microbit.jpg)
 
 * Session video (Japanese): [Making archive IL2C](http://bit.ly/2hI1jTb)
   * #6-28 session in [.NET Conf 2017 in Tokyo Room B](https://csugjp.connpass.com/event/66004/)

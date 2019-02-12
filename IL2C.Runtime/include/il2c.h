@@ -75,6 +75,11 @@ extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
 #endif
 
+#if defined(ARDUINO)
+extern void il2c_initialize(void);
+extern void il2c_shutdown(void);
+#endif
+
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
 

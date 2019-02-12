@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 
 set VERSION=0.4.35
 
@@ -31,6 +32,20 @@ echo.
 
 dotnet pack --configuration Release --include-symbols -p:VersionPrefix=%VERSION% IL2C.Tasks\IL2C.Tasks.csproj
 copy IL2C.Tasks\bin\Release\IL2C.Build.%VERSION%.symbols.nupkg artifacts\IL2C.Build.%VERSION%.nupkg
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build Arduino library
+echo.
+
+mkdir artifacts\Arduino
+xcopy /s IL2C.Runtime\include\*.* artifacts\Arduino\src\
+xcopy /s IL2C.Runtime\src\*.* artifacts\Arduino\src\
+
+for /f "delims=" %%a in (Arduino.properties) do (
+  set line=%%a
+  echo !line:{version}=%VERSION%! >> artifacts\Arduino\library.properties
+)
 
 echo.
 echo Done.

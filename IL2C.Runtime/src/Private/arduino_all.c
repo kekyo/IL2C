@@ -1,43 +1,9 @@
 //////////////////////////////////////////////////
-// Visual C++
+// Arduino
 
-// UEFI
-#if defined(_MSC_VER) && defined(UEFI)
-
-#if defined(DEBUG)
-#define EFI_DEBUG 1
-#else
-#undef EFI_DEBUG
-#endif
+#if defined(__GNUC__) && defined(ARDUINO)
 
 #include <il2c_private.h>
-
-#include "efi/efi.h"
-
-int _fltused = 1;
-
-#if 0
-// Can't enable intrinsic inlined memcpy/memset with VC++'s /GL and /LTCG options.
-// So these are simple implementations for thiers.
-void* memcpy(void* to, const void* from, size_t n)
-{
-    uint8_t* t = to;
-    const uint8_t* f = from;
-    n++;
-    while (--n >= 1)
-        *t++ = *f++;
-    return to;
-}
-
-void* memset(void* target, int ch, size_t n)
-{
-    uint8_t* p = target;
-    n++;
-    while (--n >= 1)
-        *p++ = ch;
-    return target;
-}
-#endif
 
 bool il2c_twtoi(const wchar_t *_Str, int32_t* value)
 {
@@ -341,59 +307,14 @@ long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base)
     return (acc);
 }
 
-//////////////////////////////////////////////////////////
-// These functions use the UEFI services.
-
-static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
-
-void* il2c_malloc(size_t _Size)
-{
-    il2c_assert(g_pSystemTable != NULL);
-
-    void* ppAllocated = NULL;
-    if (g_pSystemTable->BootServices->AllocatePool(
-        EfiLoaderData, _Size, &ppAllocated) == EFI_SUCCESS)
-    {
-        return ppAllocated;
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-void il2c_free(void* _Block)
-{
-    il2c_assert(g_pSystemTable != NULL);
-
-    g_pSystemTable->BootServices->FreePool(_Block);
-}
-
-static EFI_EVENT g_TimerEvent = NULL;
-
 void il2c_sleep(uint32_t milliseconds)
 {
-    il2c_assert(g_pSystemTable != NULL);
-
-    UINTN index;
-
-    // TODO: Will cause race condition if use multithreading environment.
-    if (g_TimerEvent == NULL)
-    {
-        g_pSystemTable->BootServices->CreateEvent(
-            EVT_TIMER, 0, NULL, NULL, &g_TimerEvent);
-        il2c_assert(g_TimerEvent != NULL);
-    }
-
-    g_pSystemTable->BootServices->SetTimer(
-        g_TimerEvent, TimerRelative, (uint64_t)milliseconds * 1000);
-    g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
+    // TODO:
 }
 
 void il2c_debug_write(const char* message)
 {
     il2c_assert(message != NULL);
-    il2c_assert(g_pSystemTable != NULL);
 
     int32_t length = il2c_get_utf8_length(message, false);
     wchar_t* pBuffer = il2c_mcalloc((length + 3) * sizeof(wchar_t));
@@ -402,7 +323,8 @@ void il2c_debug_write(const char* message)
     *pLast++ = L'\n';
     *pLast = L'\0';
 
-    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
+    // TODO: Serial out
+    //g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
 
     il2c_mcfree(pBuffer);
 }
@@ -411,7 +333,6 @@ void il2c_debug_write2(const char* message1, const char* message2)
 {
     il2c_assert(message1 != NULL);
     il2c_assert(message2 != NULL);
-    il2c_assert(g_pSystemTable != NULL);
 
     int32_t length1 = il2c_get_utf8_length(message1, false);
     int32_t length2 = il2c_get_utf8_length(message2, false);
@@ -422,7 +343,8 @@ void il2c_debug_write2(const char* message1, const char* message2)
     *pLast2++ = L'\n';
     *pLast2 = L'\0';
 
-    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
+    // TODO: Serial out
+    //g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
 
     il2c_mcfree(pBuffer);
 }
@@ -430,109 +352,30 @@ void il2c_debug_write2(const char* message1, const char* message2)
 void il2c_write(const wchar_t* s)
 {
     il2c_assert(s != NULL);
-    il2c_assert(g_pSystemTable != NULL);
 
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+    // TODO: Serial out
+    //g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
 }
 
 void il2c_writeline(const wchar_t* s)
 {
     il2c_assert(s != NULL);
-    il2c_assert(g_pSystemTable != NULL);
 
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
+    // TODO: Serial out
+    //g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+    //g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
 }
 
 bool il2c_readline(wchar_t* buffer, int32_t length)
 {
     il2c_assert(buffer != NULL);
     il2c_assert(length >= 1);
-    il2c_assert(g_pSystemTable != NULL);
 
-    wchar_t tempBuffer[4];
-
-    int32_t index = 0;
-    while ((index + 1) < length)
-    {
-        unsigned long long waitIndex;
-
-        tempBuffer[0] = L'_';
-        tempBuffer[1] = CHAR_NULL;
-        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, tempBuffer);
-
-    loop:
-        waitIndex = 0;
-        g_pSystemTable->BootServices->WaitForEvent(
-            1, &(g_pSystemTable->ConIn->WaitForKey), &waitIndex);
-
-        EFI_INPUT_KEY efi_input_key;
-        if (g_pSystemTable->ConIn->ReadKeyStroke(
-            g_pSystemTable->ConIn, &efi_input_key) != 0)
-        {
-            goto loop;
-        }
-
-        if (efi_input_key.ScanCode != SCAN_NULL)
-        {
-            goto loop;
-        }
-
-        tempBuffer[0] = CHAR_BACKSPACE;
-        tempBuffer[1] = L' ';
-        tempBuffer[2] = CHAR_BACKSPACE;
-        tempBuffer[3] = CHAR_NULL;
-        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, tempBuffer);
-
-        if (efi_input_key.UnicodeChar < 0x20)
-        {
-            if (efi_input_key.UnicodeChar == CHAR_BACKSPACE)
-            {
-                if (index >= 1)
-                {
-                    index--;
-
-                    tempBuffer[0] = CHAR_BACKSPACE;
-                    tempBuffer[1] = CHAR_NULL;
-                    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, tempBuffer);
-                }
-            }
-            else if (efi_input_key.UnicodeChar == CHAR_CARRIAGE_RETURN)
-            {
-                break;
-            }
-
-            continue;
-        }
-
-        buffer[index++] = efi_input_key.UnicodeChar;
-
-        tempBuffer[0] = efi_input_key.UnicodeChar;
-        tempBuffer[1] = CHAR_NULL;
-        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, tempBuffer);
-    }
-
-    buffer[index] = CHAR_NULL;
-
-    tempBuffer[0] = CHAR_CARRIAGE_RETURN;
-    tempBuffer[1] = CHAR_LINEFEED;
-    tempBuffer[2] = CHAR_NULL;
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, tempBuffer);
-
-    return true;
+    return false;
 }
 
-void il2c_initialize(void* imageHandle, void* pSystemTable)
+void il2c_initialize()
 {
-    // Setup interop pointer
-    g_pSystemTable = pSystemTable;
-
-    // Disable default auto-reset watchdog timer
-    g_pSystemTable->BootServices->SetWatchdogTimer(0, 0, 0, NULL);
-
-    // Clear screen
-    g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
-
     il2c_initialize__();
 }
 

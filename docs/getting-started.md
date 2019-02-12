@@ -270,10 +270,17 @@ You can test with NUnit or likely testing framework. The test technics isn't dif
 
 ## 3. You can witness working the C# code at non-OSes environment
 
-The IL2C maybe shows abroads these samples, because it's running on the Win32 environment. The .NET Core already has native binary compilation ability. Is it different?
+The IL2C maybe shows boring these samples, because it's running on the Win32 environment. The .NET Core already has native binary compilation ability. Is it different?
 
-* The IL2C's native binary is VERY SMALL footprint. You'll see the static code size is between 2 and 3 times larger than "native C language code."
-* The IL2C's runtime ports easy to another platform include the embedded systems. The environment doesn't have any operating systems, called "Firmware level programming" or "Bare metal programming".
+### 3-1. The IL2C's native binary is VERY TINY footprint.
+
+The runtime usage, there're footprint measured result using ProcessExplorer. Left values are private bytes, it's about smaller than 20 multiple. And right values are working set size, it's about smaller than 5 multiple.
+
+![Measured results using ProcessExplorer](../images/tutorial24.png)
+
+### 3-2. The IL2C's runtime ports easy to another platform include the embedded systems.
+
+The environment doesn't have any operating systems, called "Firmware level programming" or "Bare metal programming".
 
 The third sample targets for the "UEFI." The UEFI is same as the BIOS for PC's. Of course, it's non-OS environment. You can see the UEFI version for the Polish notation calculator.
 

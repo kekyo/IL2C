@@ -70,7 +70,8 @@ void HelloWorld_Main()
 
 ## Getting started
 
-We have a only simple [Getting started document.](docs/getting-started.md)
+* A simple [Getting started document.](docs/getting-started.md)
+* [Inside IL2C document.](docs/inside.md)
 
 And also you can read a blog post: ["Try writing code using both the Azure Sphere Development Kit and C#" (My blog)](https://www.kekyo.net/2019/01/04/6917).
 

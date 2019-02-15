@@ -88,7 +88,18 @@ Dynamic generate: [il2c_new_string(pString)](https://github.com/kekyo/IL2C/blob/
 // TODO: details
 
 The IL2C aggregates from all array types into a single array type named "System.Array". The translated source code defines with the macro [il2c_arraytype(elementTypeName)](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/Array.h#L41).
+
 It's pseudo generic implementation, use the macros [il2c_array_item0ptr__(array)](https://github.com/kekyo/IL2C/blob/254390d506b1dec5faa5eb94ce7a893768618905/IL2C.Runtime/include/System/Array.h#L44) and [il2c_array_item(array, elementTypeName, index)](https://github.com/kekyo/IL2C/blob/254390d506b1dec5faa5eb94ce7a893768618905/IL2C.Runtime/include/System/Array.h#L63) can access array elements with tiny overheads.
+
+```c
+// The array type variable (int[])
+il2c_arraytype(System_Int32)* arr;
+
+// Create array instance (arr = new int[100])
+arr = il2c_new_array(System_Int32, 100);
+// Access array element (arr[10] = 12345)
+il2c_array_item(arr, System_Int32, 10) = 12345;
+```
 
 The array instance create with [il2c_new_array(elementTypeName, length)](https://github.com/kekyo/IL2C/blob/254390d506b1dec5faa5eb94ce7a893768618905/IL2C.Runtime/include/System/Array.h#L68).
 
@@ -97,7 +108,7 @@ The array instance create with [il2c_new_array(elementTypeName, length)](https:/
 // TODO: details
 
 The delegates have too complex implementation at the .NET Framework/.NET Core.
-So the IL2C way is simply combined unifying structure.
+So the IL2C way is simply combined unifying structure:
 
 ```c
 typedef const struct IL2C_METHOD_TABLE_DECL
@@ -115,7 +126,7 @@ struct System_Delegate
 };
 ```
 
-The "System_Delegate" has multiple method target at the "IL2C_METHOD_TABLE". And you will surprise because the IL2C's delegate is variable storage size, the field "methodtbl__". If we combine multiple delegates with "Combine" method, combines all delegate target into it.
+The "System_Delegate" has multiple method target at the "IL2C_METHOD_TABLE". And you will surprise because the IL2C's delegate is variable storage size same as System.String, the field "methodtbl__". If we combine multiple delegates with ["System.Delegate.Combine()"](https://github.com/kekyo/IL2C/blob/216916632f880a73dd5233ad0b5d1fa204ce9fb0/IL2C.Runtime/src/System/Delegate.c#L47) method, combines all delegate target into a single instance.
 
 Multicast delegate type is same as single cast delegate: [System_MulticastDelegate](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/MulticastDelegate.h#L17)
 
@@ -186,6 +197,8 @@ static const Test_Colors Test_Colors_Green = 3;
 ## Virtual function
 
 ### Adjustor thunk less VTable
+
+### Devirtualization
 
 ## Garbage collector
 

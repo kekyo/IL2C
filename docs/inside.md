@@ -144,9 +144,9 @@ struct System_Delegate
 };
 ```
 
-The "System_Delegate" has multiple method target at the "IL2C_METHOD_TABLE". And you will surprise because IL2C's delegate is variable storage size same as System.String, the field "methodtbl__". If we combine multiple delegates with ["System.Delegate.Combine()"](https://github.com/kekyo/IL2C/blob/216916632f880a73dd5233ad0b5d1fa204ce9fb0/IL2C.Runtime/src/System/Delegate.c#L47) method, combines all delegate target into a single instance.
+The "System_Delegate" has multiple method target with "IL2C_METHOD_TABLE" entries. And you'll surprise because IL2C's delegate is variable storage size same as System.String. Stretches the field "methodtbl__". If we combine multiple delegates with ["System.Delegate.Combine()"](https://github.com/kekyo/IL2C/blob/216916632f880a73dd5233ad0b5d1fa204ce9fb0/IL2C.Runtime/src/System/Delegate.c#L47) method, combines all delegate target into a single instance.
 
-Multicast delegate type is same as single cast delegate: [System_MulticastDelegate](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/MulticastDelegate.h#L17)
+[System_MulticastDelegate](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/MulticastDelegate.h#L17) type is same as single cast delegate. It means it has always multicast capabilitiy for IL2C solution.
 
 Type definition: [System_Delegate](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/Delegate.h#L27)
 

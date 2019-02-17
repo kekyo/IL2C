@@ -200,8 +200,8 @@ static const Test_Colors Test_Colors_Green = 3;
 
 ## Boxing and Unboxing
 
-IL2C can boxing and unboxing operation. If a value type boxed, it gonna [allocate on the heap (malloc)]() with instance header and will copy value body into it.
-Unbox operation will get naturally direct refer point. Do dereference point if we wanna read a value:
+IL2C can boxing and unboxing operation. If a value type boxed, it gonna [allocate on the heap (malloc)](https://github.com/kekyo/IL2C/blob/3057cc0cd19492ae339fbffc7c699ed2d73ff1a8/IL2C.Runtime/src/il2c.c#L52) with instance header and will copy value body into it.
+Unbox operation will get naturally direct refer pointer. Do dereference pointer if we wanna read a value:
 
 ```c
 // Boxing
@@ -213,7 +213,7 @@ int32_t unboxedInt32;
 unboxedInt32 = *il2c_unbox(boxedInt32, System_Int32);
 ```
 
-The boxed type is declared to a raw pointer with C language. But it's different to both managed object reference (objref) and managed reference (&). The ["il2c_boxedtype()"]() macro makes pseudo boxed type same as "il2c_arraytype()" macro because readability too. 
+The boxed type is declared to a raw pointer with C language. But it's different to both managed object reference (objref) and managed reference (&). The ["il2c_boxedtype()"](https://github.com/kekyo/IL2C/blob/3057cc0cd19492ae339fbffc7c699ed2d73ff1a8/IL2C.Runtime/include/il2c.h#L237) macro makes pseudo boxed type same as "il2c_arraytype()" macro because readability too. 
 
 And if call the method with real (unboxed) this pointer:
 

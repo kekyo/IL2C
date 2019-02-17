@@ -2,6 +2,24 @@
 
 // TODO: Sorry, this document write in progress.
 
+## Getting started for core hacking
+
+### Summarized lazy steps
+
+1. Open il2c.sln by Visual Studio 2017. Your environment requires enabling C#, VC++ and NUnit3 vsix addin.
+2. Build with "Debug - AnyCPU" configuration.
+3. If this don't show any errors, kick starts unit tests at the Test Explorer (Run All).
+4. The unit tests need a long time for the first execution. It's because these tests automatically download mingw platform and run on it.
+5. After all tests passed, you are ready to hack!
+
+### Core implementation note
+
+* Essentially, the unit tests compare and verify results executed on .NET CLR with results executed by the native code gcc compiled.
+* You can see ["tests/IL2C.Core.Test.Target project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Target). The translated code:  ["tests/IL2C.Core.Test.Fixture project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Fixture) of subfolder "bin/Debug/net462."
+* About the CI engineering, you can get more information: ["appveyor.yml"](appveyor.yml) file.
+* Currently IL2C contains the VC++ project file because it's better for debugging mates. You don't need this because "IL2C.Runtime.vcxproj" project file DOESN'T REQUIRE for any building (manually and CI buildings.)
+* If you want to see internal IL2C, I think these slides help you: [Making archive IL2C #6-55: dotNET 600 2018 session slide](https://www.slideshare.net/kekyo/making-archive-il2c-655-dotnet600-2018)
+
 ## Basis types
 
 // TODO: details
@@ -25,7 +43,7 @@ Uses with "stdint.h", "stdbool.h", "float.h" and "wchar.h" headers.
 |System.Double|double|
 |System.Char|wchar_t|
 
-The IL2C uses these types sometimes using "Mangled type name." For example: "System.Int32" mangles to "System_Int32".
+IL2C uses these types sometimes using "Mangled type name." For example: "System.Int32" mangles to "System_Int32".
 A variable with simple declaration has an alias name:
 
 ```c
@@ -36,7 +54,7 @@ void foo()
 }
 ```
 
-But if the IL2C uses into the custom operators:
+But if IL2C uses into the custom operators:
 
 ```c
 void foo()
@@ -87,7 +105,7 @@ Dynamic generate: [il2c_new_string(pString)](https://github.com/kekyo/IL2C/blob/
 
 // TODO: details
 
-The IL2C aggregates from all array types into a single array type named "System.Array". The translated source code defines with the macro [il2c_arraytype(elementTypeName)](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/Array.h#L41).
+IL2C aggregates from all array types into a single array type named "System.Array". The translated the pseudo type name with the macro [il2c_arraytype(elementTypeName)](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/Array.h#L41) because readability.
 
 It's pseudo generic implementation, use the macros [il2c_array_item0ptr__(array)](https://github.com/kekyo/IL2C/blob/254390d506b1dec5faa5eb94ce7a893768618905/IL2C.Runtime/include/System/Array.h#L44) and [il2c_array_item(array, elementTypeName, index)](https://github.com/kekyo/IL2C/blob/254390d506b1dec5faa5eb94ce7a893768618905/IL2C.Runtime/include/System/Array.h#L63) can access array elements with tiny overheads.
 
@@ -108,7 +126,7 @@ The array instance create with [il2c_new_array(elementTypeName, length)](https:/
 // TODO: details
 
 The delegates have too complex implementation at the .NET Framework/.NET Core.
-So the IL2C way is simply combined unifying structure:
+So IL2C way is simply combined unifying structure:
 
 ```c
 typedef const struct IL2C_METHOD_TABLE_DECL
@@ -126,7 +144,7 @@ struct System_Delegate
 };
 ```
 
-The "System_Delegate" has multiple method target at the "IL2C_METHOD_TABLE". And you will surprise because the IL2C's delegate is variable storage size same as System.String, the field "methodtbl__". If we combine multiple delegates with ["System.Delegate.Combine()"](https://github.com/kekyo/IL2C/blob/216916632f880a73dd5233ad0b5d1fa204ce9fb0/IL2C.Runtime/src/System/Delegate.c#L47) method, combines all delegate target into a single instance.
+The "System_Delegate" has multiple method target at the "IL2C_METHOD_TABLE". And you will surprise because IL2C's delegate is variable storage size same as System.String, the field "methodtbl__". If we combine multiple delegates with ["System.Delegate.Combine()"](https://github.com/kekyo/IL2C/blob/216916632f880a73dd5233ad0b5d1fa204ce9fb0/IL2C.Runtime/src/System/Delegate.c#L47) method, combines all delegate target into a single instance.
 
 Multicast delegate type is same as single cast delegate: [System_MulticastDelegate](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/MulticastDelegate.h#L17)
 
@@ -155,7 +173,8 @@ enum Test_Colors : byte
 The C language cannot do it because by language design.
 
 ```c
-enum Test_Colors /* : byte */  // can't do it
+// Enum type in the C Language:
+enum Test_Colors /* : uint8_t */  // can't do it
 {
     None,   // And these symbols not structured by type names - places at globally
     Red,
@@ -164,11 +183,12 @@ enum Test_Colors /* : byte */  // can't do it
 };
 ```
 
-So, the IL2C defines enum type values with simple way:
+So, IL2C defines enum type values with simple way:
 
 ```c
 // Storage size
 typedef uint8_t Test_Colors;
+
 // Mangled with type name prefix.
 static const Test_Colors Test_Colors_None = 0;
 static const Test_Colors Test_Colors_Red = 1;
@@ -179,6 +199,38 @@ static const Test_Colors Test_Colors_Green = 3;
 [The System.Enum type implementations](https://github.com/kekyo/IL2C/blob/254390d506b1dec5faa5eb94ce7a893768618905/IL2C.Runtime/include/System/Enum.h#L15) only use for the boxed instance.
 
 ## Boxing and Unboxing
+
+IL2C can boxing and unboxing operation. If a value type boxed, it gonna [allocate on the heap (malloc)]() with instance header and will copy value body into it.
+Unbox operation will get naturally direct refer point. Do dereference point if we wanna read a value:
+
+```c
+// Boxing
+int32_t value = 123;
+il2c_boxedtype(System_Int32)* boxedInt32 = il2c_box(&value, System_Int32);
+
+// Unboxing (with dereference)
+int32_t unboxedInt32;
+unboxedInt32 = *il2c_unbox(boxedInt32, System_Int32);
+```
+
+The boxed type is declared to a raw pointer with C language. But it's different to both managed object reference (objref) and managed reference (&). The ["il2c_boxedtype()"]() macro makes pseudo boxed type same as "il2c_arraytype()" macro because readability too. 
+
+And if call the method with real (unboxed) this pointer:
+
+```c
+il2c_boxedtype(Test_Foo)* boxedfoo;
+boxedFoo = ...;
+
+// Unboxing, but not dereference for will call instance method:
+Test_Foo* unboxedFoo = il2c_unbox(boxedFoo, Test_Foo);
+
+// public struct Foo { public void FooMethod(int a, int b); }
+// Maybe it requires mutable access on the value type instance method, the this pointer can do it.
+// (And the virtual and interface implemented method aren't mutable (makes copy).)
+Test_Foo_FooMethod(unboxedFoo, 123, 456);
+```
+
+Type definition: [System.ValueType]().
 
 ## Managed references
 

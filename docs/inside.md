@@ -244,6 +244,12 @@ void Test_Foo(System_String** value)
 
 The managed reference doesn't track by garbage collector. Because it always refers trackable (linked from another) instance.
 
+## Runtime type information
+
+// TODO: details
+
+
+
 ## Constructor and allocate the object
 
 // TODO: details
@@ -254,10 +260,30 @@ The IL2C's allocation strategy for the object reference (objref) type has two st
 Then initialize [object reference header (IL2C_REF_HEADER)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/include/il2c.h#L100). All objref instance has this header. It's linked list, holds [the runtime type information (IL2C_RUNTIME_TYPE)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L53) pointer and the "gcmark" field. Initializer sequence [setups the vptr0 and interface vptrs (See below sections)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L131). It does only objref types.
 2. Call the constructor (.ctor) method.
 
+```c
+// public class Foo {
+//   public Foo(int num, string str) { ... }
+// }
+
+Test_Foo* foo;
+foo = il2c_get_uninitialized_object(Test_Foo);
+Test_Foo__ctor(foo, 123, string1__);
+```
+
 The value types are different for objref's.
 
 1. Clear value with storage size (Using memset() directly).
 2. Call the constructor (.ctor) method if available.
+
+```c
+// public struct Bar {
+//   public Bar(int num, string str) { ... }
+// }
+
+Test_Bar bar;
+memset(&bar, 0, sizeof bar);
+Test_Bar__ctor(&bar, 123, string1__);
+```
 
 Helper function: [il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L119)
 

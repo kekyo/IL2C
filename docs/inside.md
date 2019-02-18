@@ -156,21 +156,7 @@ Macro: [il2c_new_delegate(typeName, object, method)](https://github.com/kekyo/IL
 
 // TODO: details
 
-The C language's enum types cannot declare with storage size likely C#:
-
-```csharp
-// The .NET enum type with storage size "byte".
-// The C language cannot do it because by language design.
-enum Test_Colors : byte
-{
-    None,
-    Red,
-    Blue,
-    Green
-};
-```
-
-The C language cannot do it because by language design.
+The C language's enum types cannot declare with storage size likely C#. Because the C language cannot do it because by language design.
 
 ```c
 // Enum type in the C Language:
@@ -225,7 +211,7 @@ boxedFoo = ...;
 Test_Foo* unboxedFoo = il2c_unbox(boxedFoo, Test_Foo);
 
 // public struct Foo { public void FooMethod(int a, int b); }
-// Maybe it requires mutable access on the value type instance method, the this pointer can do it.
+// Maybe it requires mutable access on the value type instance method, the "this" pointer can do it.
 // (And the virtual and interface implemented method aren't mutable (makes copy).)
 Test_Foo_FooMethod(unboxedFoo, 123, 456);
 ```
@@ -234,7 +220,46 @@ Type definition: [System.ValueType]().
 
 ## Managed references
 
-## Constructor
+// TODO: details
+
+A managed reference almost same as a raw pointer.
+
+```c
+// void Foo(ref int value)
+void Test_Foo(int32_t* value)
+{
+    // ...
+}
+```
+
+ The object reference (objref) has pointer form. So it will be double pointer form.
+
+```c
+// void Foo(ref string value)
+void Test_Foo(System_String** value)
+{
+    // ...
+}
+```
+
+The managed reference doesn't track by garbage collector. Because it always refers trackable (linked from another) instance.
+
+## Constructor and allocate the object
+
+// TODO: details
+
+The IL2C's allocation strategy for the object reference (objref) type has two steps:
+
+1. Allocate memory on [the heap (malloc)](https://github.com/kekyo/IL2C/blob/3057cc0cd19492ae339fbffc7c699ed2d73ff1a8/IL2C.Runtime/src/il2c.c#L52).
+Then initialize [object reference header (IL2C_REF_HEADER)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/include/il2c.h#L100). All objref instance has this header. It's linked list, holds [the runtime type information (IL2C_RUNTIME_TYPE)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L53) pointer and the "gcmark" field. Initializer sequence [setups the vptr0 and interface vptrs (See below sections)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L131). It does only objref types.
+2. Call the constructor (.ctor) method.
+
+The value types are different for objref's.
+
+1. Clear value with storage size (Using memset() directly).
+2. Call the constructor (.ctor) method if available.
+
+Helper function: [il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L119)
 
 ## Type initializer
 

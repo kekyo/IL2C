@@ -266,11 +266,25 @@ Then initialize [object reference header (IL2C_REF_HEADER)](https://github.com/k
 // }
 
 Test_Foo* foo;
-foo = il2c_get_uninitialized_object(Test_Foo);
+foo = il2c_get_uninitialized_object(Test_Foo);  // returns "pReference"
 Test_Foo__ctor(foo, 123, string1__);
 ```
 
-The value types are different for objref's.
+The objref's memory layout is:
+
+```
++----------------------+ <-- pHeader
+| IL2C_REF_HEADER      |
++----------------------+ <-- pReference   -------
+|          :           |                    ^
+| (Instance body)      |                    | bodySize
+|          :           |                    v
++----------------------+                  -------
+```
+
+"pReference" is real pointer value. "pHeader" isn't public, it'll recalculate from "pReference."
+
+The value types are different for objref's:
 
 1. Clear value with storage size (Using memset() directly).
 2. Call the constructor (.ctor) method if available.

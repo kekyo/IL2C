@@ -42,6 +42,7 @@ Uses with "stdint.h", "stdbool.h", "float.h" and "wchar.h" headers.
 |System.Single|float|
 |System.Double|double|
 |System.Char|wchar_t|
+|System.Void|void|
 
 IL2C uses these types sometimes using "Mangled type name." For example: "System.Int32" mangles to "System_Int32".
 A variable with simple declaration has an alias name:
@@ -79,6 +80,8 @@ So, IL2C will place string body in the rdata section with "IL2C_CONST_STRING()" 
 The macro marks the constant flag into the header. The GC will ignore constant string instances.
 But will track if make string instance at the runtime (dynamic generate with string constructors).
 
+![String (1)](../images/inside-string.png)
+
 ```c
 // Const literal string places into read only section.
 IL2C_CONST_STRING(string1__, L"Hello world IL2C!");
@@ -89,6 +92,8 @@ IL2C_CONST_STRING(string1__, L"Hello world IL2C!");
 System_String* str;
 str = string1__;
 ```
+
+![String (2)](../images/inside-string2.png)
 
 ```c
 // String instance come from the UTF8 string.
@@ -146,6 +151,8 @@ struct System_Delegate
 
 The "System_Delegate" has multiple method target with "IL2C_METHOD_TABLE" entries. And you'll surprise because IL2C's delegate is variable storage size same as System.String. Stretches the field "methodtbl__". If we combine multiple delegates with ["System.Delegate.Combine()"](https://github.com/kekyo/IL2C/blob/216916632f880a73dd5233ad0b5d1fa204ce9fb0/IL2C.Runtime/src/System/Delegate.c#L47) method, combines all delegate target into a single instance.
 
+![Delegate](../images/inside-delegate.png)
+
 [System_MulticastDelegate](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/MulticastDelegate.h#L17) type is same as single cast delegate. It means it has always multicast capabilitiy for IL2C solution.
 
 Type definition: [System_Delegate](https://github.com/kekyo/IL2C/blob/dbf94e22c6ca4e523f60cd10052defbdd8eeb51c/IL2C.Runtime/include/System/Delegate.h#L27)
@@ -187,6 +194,9 @@ static const Test_Colors Test_Colors_Green = 3;
 ## Boxing and Unboxing
 
 IL2C can boxing and unboxing operation. If a value type boxed, it gonna [allocate on the heap (malloc)](https://github.com/kekyo/IL2C/blob/3057cc0cd19492ae339fbffc7c699ed2d73ff1a8/IL2C.Runtime/src/il2c.c#L52) with instance header and will copy value body into it.
+
+![Boxing](../images/inside-boxing.png)
+
 Unbox operation will get naturally direct refer pointer. Do dereference pointer if we wanna read a value:
 
 ```c
@@ -216,7 +226,9 @@ Test_Foo* unboxedFoo = il2c_unbox(boxedFoo, Test_Foo);
 Test_Foo_FooMethod(unboxedFoo, 123, 456);
 ```
 
-Type definition: [System.ValueType]().
+TIPS: Do you know that "System.ValueType" is objref? ;) All boxed instance [inherited from System.ValueType](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/src/System/ValueType.c#L59) at [the runtime](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/src/il2c.c#L524).
+
+Type definition: [System.ValueType](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/include/System/ValueType.h#L19).
 
 ## Managed references
 
@@ -247,8 +259,69 @@ The managed reference doesn't track by garbage collector. Because it always refe
 ## Runtime type information
 
 // TODO: details
+// TODO: I'll change the structures in the future.
 
+The IL2C requires runtime type information, structure named ["IL2C_RUNTIME_TYPE_DECL"](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L53) and refer pointer named ["IL2C_RUNTIME_TYPE"](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/include/il2c.h#L87). It's public but the body is opaque.
 
+It contains these fields:
+
+```c
+struct IL2C_RUNTIME_TYPE_DECL
+{
+    const char* pTypeName;
+    const uintptr_t flags;
+    const uintptr_t bodySize;       // uint32_t
+    const IL2C_RUNTIME_TYPE baseType;
+    const void* vptr0;
+    const uintptr_t markTarget;     // mark target count / custom mark handler (only variable type)
+    const uintptr_t interfaceCount;
+    //IL2C_MARK_TARGET markTargets[markTarget];
+    //IL2C_IMPLEMENTED_INTERFACE interfaces[interfaceCount];
+};
+```
+
+Toughly you can understand meaning these fields, I'll tell you important fields:
+
+* flags: The field contains [flag values declared here](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/include/il2c.h#L113). It's characteristics for the type. For example, "IL2C_TYPE_REFERENCE" is a object reference (objref) type, "IL2C_TYPE_VARIABLE" is a variable storage type (only array, string and delegate types).
+
+  | Symbol | Description |
+  |---|---|
+  | IL2C_TYPE_REFERENCE | A objref type. |
+  | IL2C_TYPE_VALUE | A value type. |
+  | IL2C_TYPE_INTEGER | A integer (numeric but not floating point) type. The boxing operator uses on bothe narrowing and widing storage size. |
+  | IL2C_TYPE_VARIABLE | A variable type, only using with array, string and delegate types. |
+  | IL2C_TYPE_UNSIGNED_INTEGER | A unsigned integer (numeric but not floating point) type. The boxing operator uses on bothe narrowing and widing storage size. |
+  | IL2C_TYPE_STATIC | A static type (sealed abstract). It doesn't have the VTables. |
+  | IL2C_TYPE_INTERFACE | A interface type. [It has lesser fields than another types](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L67). |
+
+* vptr0: The primary VTable pointer for the types. The [il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L119) function setup instance using it.
+* markTarget, markTargets: Variable fields and count for garbage collector mark target (below).
+* interfaceCount, interfaces: Variable fields and count for implemented interfaces (below).
+
+### The mark targets and implemented interfaces
+
+These are multiple entries by following structures:
+
+```c
+typedef const struct IL2C_MARK_TARGET_DECL
+{
+    const IL2C_RUNTIME_TYPE valueType;
+    const uintptr_t offset;
+} IL2C_MARK_TARGET;
+
+typedef const struct IL2C_IMPLEMENTED_INTERFACE_DECL
+{
+    const IL2C_RUNTIME_TYPE type;
+    const void* vptr0;
+} IL2C_IMPLEMENTED_INTERFACE;
+```
+
+[The mark targets "IL2C_MARK_TARGET"](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L41) append tracking ability for the object references by the garbage collector. It has two way usages (mark target count or custom mark handler pointer).
+
+[The implemented interfaces "IL2C_IMPLEMENTED_INTERFACE"](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L47) uses for two ways:
+
+* Setup interface VTable pointers into [the allocated instance](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/src/il2c.c#L98).
+* [The dynamic cast calculation](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/src/il2c.c#L457) at the runtime.
 
 ## Constructor and allocate the object
 
@@ -257,7 +330,7 @@ The managed reference doesn't track by garbage collector. Because it always refe
 The IL2C's allocation strategy for the object reference (objref) type has two steps:
 
 1. Allocate memory on [the heap (malloc)](https://github.com/kekyo/IL2C/blob/3057cc0cd19492ae339fbffc7c699ed2d73ff1a8/IL2C.Runtime/src/il2c.c#L52).
-Then initialize [object reference header (IL2C_REF_HEADER)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/include/il2c.h#L100). All objref instance has this header. It's linked list, holds [the runtime type information (IL2C_RUNTIME_TYPE)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L53) pointer and the "gcmark" field. Initializer sequence [setups the vptr0 and interface vptrs (See below sections)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L131). It does only objref types.
+Then initialize [object reference header (IL2C_REF_HEADER)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/include/il2c.h#L100). All objref instance has this header. It's linked list, holds "IL2C_RUNTIME_TYPE" pointer and the "gcmark" field. Initializer sequence [setups the vptr0 and interface vptrs (See below sections)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L131). It does only objref types.
 2. Call the constructor (.ctor) method.
 
 ```c
@@ -272,6 +345,16 @@ Test_Foo__ctor(foo, 123, string1__);
 
 The objref's memory layout is:
 
+```c
+// IL2C_REF_HEADER structure
+struct IL2C_REF_HEADER_DECL
+{
+    IL2C_REF_HEADER* pNext;   // Next instance pointer (all objref instances are linked this field)
+    IL2C_RUNTIME_TYPE type;
+    interlock_t gcMark;
+};
+```
+
 ```
 +----------------------+ <-- pHeader
 | IL2C_REF_HEADER      |
@@ -282,7 +365,7 @@ The objref's memory layout is:
 +----------------------+                  -------
 ```
 
-"pReference" is real pointer value. "pHeader" isn't public, it'll recalculate from "pReference."
+"pReference" is real pointer value. "pHeader" isn't public, it'll recalculate from "pReference" at the runtime.
 
 The value types are different for objref's:
 
@@ -298,6 +381,8 @@ Test_Bar bar;
 memset(&bar, 0, sizeof bar);
 Test_Bar__ctor(&bar, 123, string1__);
 ```
+
+Of course, the value type storage doesn't include "IL2C_REF_HEADER."
 
 Helper function: [il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c.c#L119)
 

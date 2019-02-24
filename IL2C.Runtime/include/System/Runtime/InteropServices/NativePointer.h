@@ -14,6 +14,10 @@ extern "C" {
 
 typedef void* System_Runtime_InteropServices_NativePointer;
 
+typedef System_IntPtr_VTABLE_DECL__ System_Runtime_InteropServices_NativePointer_VTABLE_DECL__;
+
+#define System_Runtime_InteropServices_NativePointer_VTABLE__ System_IntPtr_VTABLE__
+
 IL2C_DECLARE_RUNTIME_TYPE(System_Runtime_InteropServices_NativePointer);
 
 #define System_Runtime_InteropServices_NativePointer_op_Implicit(value) ((void*)(value))

@@ -26,7 +26,7 @@
         <NoWarn>1701;1702;0649</NoWarn>
 
         <IL2COutputPath>$(ProjectDir)../MT3620App</IL2COutputPath>
-        <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
+        <IL2CDebugInformation>CommentOnly</IL2CDebugInformation>
     </PropertyGroup>
 
     <ItemGroup>

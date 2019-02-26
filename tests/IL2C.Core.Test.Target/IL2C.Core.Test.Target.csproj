@@ -22,6 +22,7 @@
         <LangVersion>7.1</LangVersion>
         <DebugType>full</DebugType>
         <DebugSymbols>true</DebugSymbols>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
@@ -111,9 +112,6 @@
         </PropertyGroup>
         <PropertyGroup Condition=" '$(Optimize)' == 'true' ">
             <ILAsm>$(ILAsm) /optimize</ILAsm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" '$(Platform)' == 'x64' ">
-            <ILAsm>$(ILAsm) /pe64 /x64</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(Platform)' == 'Itanium' ">
             <ILAsm>$(ILAsm) /pe64 /itanium</ILAsm>

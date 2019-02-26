@@ -24,6 +24,7 @@
         <LangVersion>7.1</LangVersion>
         <DebugType>portable</DebugType>
         <DebugSymbols>true</DebugSymbols>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

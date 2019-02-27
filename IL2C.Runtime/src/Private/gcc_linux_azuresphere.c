@@ -15,13 +15,30 @@ void il2c_debug_write(const char* message)
     Log_Debug(message);
 }
 
-void il2c_debug_write2(const char* message1, const char* message2)
+void il2c_debug_write_format(const char* format, ...)
 {
-    il2c_assert(message1 != NULL);
-    il2c_assert(message2 != NULL);
+    il2c_assert(format != NULL);
 
-    Log_Debug(message1);
-    Log_Debug(message2);
+    va_list va;
+    char buffer[128];
+
+    va_start(va, format);
+    vfwprintf(buffer, format, va);
+    OutputDebugStringA(buffer);
+    va_end(va);
+}
+
+void il2c_debug_write_format(const char* format, ...)
+{
+    il2c_assert(format != NULL);
+
+    va_list va;
+    char buffer[128];
+
+    va_start(va, format);
+    vfwprintf(buffer, format, va);
+    Log_Debug(buffer);
+    va_end(va);
 }
 
 // TODO: UTF16 --> UTF8

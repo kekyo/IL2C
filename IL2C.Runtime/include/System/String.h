@@ -46,8 +46,17 @@ extern /* static */ bool System_String_op_Inequality(System_String* lhs, System_
 /////////////////////////////////////////////////
 // String special functions
 
-extern System_String* il2c_new_string(const wchar_t* pString);
-extern System_String* il2c_new_string_from_utf8(const char* pUtf8String);
+#if defined(_DEBUG)
+extern System_String* il2c_new_string__(const wchar_t* pString, const char* pFile, int line);
+extern System_String* il2c_new_string_from_utf8__(const char* pUtf8String, const char* pFile, int line);
+#define il2c_new_string(pString) il2c_new_string__(pString, __FILE__, __LINE__)
+#define il2c_new_string_from_utf8(pUtf8String) il2c_new_string_from_utf8__(pUtf8String, __FILE__, __LINE__)
+#else
+extern System_String* il2c_new_string__(const wchar_t* pString);
+extern System_String* il2c_new_string_from_utf8__(const char* pUtf8String);
+#define il2c_new_string(pString) il2c_new_string__(pString)
+#define il2c_new_string_from_utf8(pUtf8String) il2c_new_string_from_utf8__(pUtf8String)
+#endif
 
 extern const wchar_t* il2c_c_str(System_String* str);
 

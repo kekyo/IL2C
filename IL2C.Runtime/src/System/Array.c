@@ -51,7 +51,11 @@ int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension)
 // Array special functions
 
 System_Array* il2c_new_array__(
-    IL2C_RUNTIME_TYPE elementType, intptr_t length)
+    IL2C_RUNTIME_TYPE elementType, intptr_t length
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    )
 {
     il2c_assert(elementType != NULL);
     
@@ -68,7 +72,11 @@ System_Array* il2c_new_array__(
     uintptr_t size = (uintptr_t)sizeof(System_Array) + ((uintptr_t)length) * elementSize;
     
     System_Array* arr = il2c_get_uninitialized_object_internal__(
-        il2c_typeof(System_Array), size);
+        il2c_typeof(System_Array), size
+#if defined(_DEBUG)
+        , pFile, line
+#endif
+        );
     arr->vptr0__ = &System_Array_VTABLE__;
 
     arr->elementType__ = elementType;

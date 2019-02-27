@@ -407,24 +407,18 @@ void il2c_debug_write(const char* message)
     il2c_mcfree(pBuffer);
 }
 
-void il2c_debug_write2(const char* message1, const char* message2)
+void il2c_debug_write_format(const char* format, ...)
 {
-    il2c_assert(message1 != NULL);
-    il2c_assert(message2 != NULL);
-    il2c_assert(g_pSystemTable != NULL);
+    il2c_assert(format != NULL);
 
-    int32_t length1 = il2c_get_utf8_length(message1, false);
-    int32_t length2 = il2c_get_utf8_length(message2, false);
-    wchar_t* pBuffer = il2c_mcalloc((length1 + length2 + 3) * sizeof(wchar_t));
-    wchar_t* pLast1 = il2c_utf16_from_utf8_and_get_last(pBuffer, message1);
-    wchar_t* pLast2 = il2c_utf16_from_utf8_and_get_last(pLast1, message2);
-    *pLast2++ = L'\r';
-    *pLast2++ = L'\n';
-    *pLast2 = L'\0';
+    va_list va;
+    char buffer[128];
 
-    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
+    va_start(va, format);
+    vsprintf(buffer, format, va);
 
-    il2c_mcfree(pBuffer);
+    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, buffer);
+    va_end(va);
 }
 
 void il2c_write(const wchar_t* s)

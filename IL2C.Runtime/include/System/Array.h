@@ -63,10 +63,17 @@ static inline void* il2c_array_item__(
 #define il2c_array_item(array, elementTypeName, index) \
     (*(elementTypeName*)il2c_array_item__(array, sizeof(elementTypeName), index))
 
+#if defined(_DEBUG)
+extern System_Array* il2c_new_array__(
+    IL2C_RUNTIME_TYPE elementType, intptr_t length, const char* pFile, int line);
+#define il2c_new_array(elementTypeName, length) \
+    ((il2c_arraytype(elementTypeName)*)il2c_new_array__(il2c_typeof(elementTypeName), length, __FILE__, __LINE__))
+#else
 extern System_Array* il2c_new_array__(
     IL2C_RUNTIME_TYPE elementType, intptr_t length);
 #define il2c_new_array(elementTypeName, length) \
     ((il2c_arraytype(elementTypeName)*)il2c_new_array__(il2c_typeof(elementTypeName), length))
+#endif
 
 #ifdef __cplusplus
 }

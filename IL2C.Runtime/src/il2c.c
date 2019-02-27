@@ -27,7 +27,11 @@ static IL2C_EXECUTION_FRAME* g_pBeginStaticFields__ = NULL;
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 static volatile bool g_ExecutingCollection__ = false;
 
-static void il2c_collect__(bool finalShutdown);
+static void il2c_collect__(bool finalShutdown
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+);
 
 static uintptr_t il2c_initializer_count__ = 0;
 const uintptr_t* il2c_initializer_count = &il2c_initializer_count__;
@@ -36,10 +40,18 @@ const uintptr_t* il2c_initializer_count = &il2c_initializer_count__;
 // Instance allocator functions
 
 void* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    )
 {
     // TODO: always collect
+#if defined(_DEBUG)
+    il2c_collect__(false, pFile, line);
+#else
     il2c_collect__(false);
+#endif
 
     // +----------------------+ <-- pHeader
     // | IL2C_REF_HEADER      |
@@ -54,7 +66,11 @@ void* il2c_get_uninitialized_object_internal__(
     {
         while (1)
         {
+#if defined(_DEBUG)
+            il2c_collect__(false, pFile, line);
+#else
             il2c_collect__(false);
+#endif
 
             pHeader = (IL2C_REF_HEADER*)il2c_malloc(sizeof(IL2C_REF_HEADER) + bodySize);
             if (pHeader != NULL)
@@ -116,7 +132,11 @@ static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
     }
 }
 
-void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
+void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    )
 {
     il2c_assert(type != NULL);
     il2c_assert(type->vptr0 != NULL);
@@ -127,7 +147,11 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     il2c_assert(type->bodySize >= sizeof(void*));   // vptr0
 
     // Setup vptr0
-    uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
+    uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize
+#if defined(_DEBUG)
+        , pFile, line
+#endif
+        );
     *((const void**)pReference) = type->vptr0;
 
     // Setup interface vptrs.
@@ -139,7 +163,11 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 /////////////////////////////////////////////////////////////
 // Execution frame linker functions
 
-void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pNewFrame)
+void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFrame
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    )
 {
     il2c_assert(pNewFrame != NULL);
     il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
@@ -148,12 +176,20 @@ void il2c_link_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pNewFrame
     g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)pNewFrame;
 }
 
-void il2c_unlink_execution_frame(/* EXECUTION_FRAME__* */ volatile void* pFrame)
+void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+)
 {
     il2c_assert(pFrame != NULL);
 
     // TODO: always collect
-    il2c_collect__(false);
+    il2c_collect__(false
+#if defined(_DEBUG)
+        , pFile, line
+#endif
+        );
 
     g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
 }
@@ -197,7 +233,7 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
     if (currentMark != GCMARK_NOMARK)
     {
-        // Already marked.
+        // Already marked/fixed/constant
         return;
     }
 
@@ -396,7 +432,7 @@ static void il2c_step3_sweep_garbage__(void)
     {
         IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
 
-        DEBUG_WRITE("il2c_step3_sweep_garbage__: Free", pScheduledHeader->type->pTypeName);
+        DEBUG_WRITE("il2c_step3_sweep_garbage__: free", pScheduledHeader->type->pTypeName);
 
         // Heap discarded
         il2c_free((void*)pScheduledHeader);
@@ -406,7 +442,11 @@ static void il2c_step3_sweep_garbage__(void)
     }
 }
 
-static void il2c_collect__(bool finalShutdown)
+static void il2c_collect__(bool finalShutdown
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    )
 {
     if (g_ExecutingCollection__)
     {
@@ -414,6 +454,12 @@ static void il2c_collect__(bool finalShutdown)
     }
 
     g_ExecutingCollection__ = true;
+
+#if defined(_DEBUG)
+    DEBUG_WRITE("il2c_collect__: begin: %s(%d)", pFile, line);
+#else
+    DEBUG_WRITE("il2c_collect__: begin: %s(%d)", __FILE__, __LINE__);
+#endif
 
     il2c_check_heap();
 
@@ -434,12 +480,22 @@ static void il2c_collect__(bool finalShutdown)
     il2c_step3_sweep_garbage__();
     il2c_check_heap();
 
+#if defined(_DEBUG)
+    DEBUG_WRITE("il2c_collect__: finished: %s(%d)", pFile, line);
+#else
+    DEBUG_WRITE("il2c_collect__: finished: %s(%d)", __FILE__, __LINE__);
+#endif
+
     g_ExecutingCollection__ = false;
 }
 
 void il2c_collect(void)
 {
+#if defined(_DEBUG)
+    il2c_collect__(false, __FILE__, __LINE__);
+#else
     il2c_collect__(false);
+#endif
 }
 
 /////////////////////////////////////////////////////////////
@@ -533,7 +589,11 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 // +----------------------+                   -----------------------------------------------
 
 System_ValueType* il2c_box__(
-    void* pValue, IL2C_RUNTIME_TYPE valueType)
+    void* pValue, IL2C_RUNTIME_TYPE valueType
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    )
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
@@ -541,7 +601,11 @@ System_ValueType* il2c_box__(
     uintptr_t bodySize = sizeof(System_ValueType) +
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
+    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize
+#if defined(_DEBUG)
+        , pFile, line
+#endif
+        );
 
     pBoxed->vptr0__ = valueType->vptr0;
     memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
@@ -555,7 +619,11 @@ System_ValueType* il2c_box__(
 // Boxing with widing/narrowing combination for signed/unsigned integer value.
 // NOTE: This implemenation makes safer for endian order.
 System_ValueType* il2c_box2__(
-    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType)
+    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    )
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
@@ -661,7 +729,11 @@ System_ValueType* il2c_box2__(
     uintptr_t bodySize = sizeof(System_ValueType) +
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
+    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize
+#if defined(_DEBUG)
+        , pFile, line
+#endif
+        );
 
     // vptr0 setup.
     pBoxed->vptr0__ = valueType->vptr0;
@@ -913,7 +985,11 @@ void il2c_shutdown__(void)
 {
     il2c_assert(g_pTopUnwindTarget__ == NULL);
 
-    il2c_collect__(true);
+    il2c_collect__(true
+#if defined(_DEBUG)
+        , __FILE__, __LINE__
+#endif
+        );
 
 #ifdef IL2C_USE_SIGNAL
     signal(SIGSEGV, g_SIGSEGV_saved);

@@ -21,10 +21,9 @@ typedef long interlock_t;
 #include "Private/gcc_linux.h"
 
 #if defined(IL2C_DEBUG_WRITE)
-#define DEBUG_WRITE(step, message) { \
-    il2c_debug_write2(step ": ", message); }
+#define DEBUG_WRITE il2c_debug_write_format
 #else
-#define DEBUG_WRITE(step, message)
+#define DEBUG_WRITE
 #endif
 
 extern void il2c_initialize__(void);
@@ -134,7 +133,11 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
-extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
+extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize
+#if defined(_DEBUG)
+    , const char* pFile, int line
+#endif
+    );
 extern void il2c_default_mark_handler__(void* pReference);
 
 
@@ -144,7 +147,7 @@ extern void il2c_default_mark_handler__(void* pReference);
 // TODO: move defs
 
 extern void il2c_debug_write(const char* message);
-extern void il2c_debug_write2(const char* message1, const char* message2);
+extern void il2c_debug_write_format(const char* format, ...);
 
 extern void il2c_write(const wchar_t* s);
 extern void il2c_writeline(const wchar_t* s);

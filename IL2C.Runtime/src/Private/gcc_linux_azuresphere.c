@@ -8,14 +8,14 @@
 
 #include <applibs/log.h>
 
-void il2c_debug_write(const char* message)
+void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);
 
     Log_Debug(message);
 }
 
-void il2c_debug_write_format(const char* format, ...)
+void il2c_debug_write_format__(const char* format, ...)
 {
     il2c_assert(format != NULL);
 
@@ -23,20 +23,7 @@ void il2c_debug_write_format(const char* format, ...)
     char buffer[128];
 
     va_start(va, format);
-    vfwprintf(buffer, format, va);
-    OutputDebugStringA(buffer);
-    va_end(va);
-}
-
-void il2c_debug_write_format(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-    char buffer[128];
-
-    va_start(va, format);
-    vfwprintf(buffer, format, va);
+    vsprintf(buffer, format, va);
     Log_Debug(buffer);
     va_end(va);
 }

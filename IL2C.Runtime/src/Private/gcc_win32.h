@@ -37,9 +37,7 @@ extern "C" {
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
-#define il2c_initialize_heap()
 #define il2c_check_heap()
-#define il2c_shutdown_heap()
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_mcalloc il2c_malloc

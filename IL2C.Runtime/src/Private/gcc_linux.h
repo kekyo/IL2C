@@ -46,9 +46,7 @@ extern wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l);
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcscasecmp
 #define il2c_wcslen wcslen
-#define il2c_initialize_heap()
 #define il2c_check_heap()
-#define il2c_shutdown_heap()
 #define il2c_malloc malloc
 #define il2c_free free
 #define il2c_mcalloc il2c_malloc

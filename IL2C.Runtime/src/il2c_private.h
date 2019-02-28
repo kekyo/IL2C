@@ -21,9 +21,11 @@ typedef long interlock_t;
 #include "Private/gcc_linux.h"
 
 #if defined(IL2C_DEBUG_WRITE)
-#define DEBUG_WRITE il2c_debug_write_format
+#define il2c_debug_write(message) il2c_debug_write__(message "\r\n")
+#define il2c_debug_write_format(format, ...) il2c_debug_write_format__(format "\r\n", __VA_ARGS__)
 #else
-#define DEBUG_WRITE
+#define il2c_debug_write(message)
+#define il2c_debug_write_format(format, ...)
 #endif
 
 extern void il2c_initialize__(void);
@@ -146,8 +148,8 @@ extern void il2c_default_mark_handler__(void* pReference);
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs
 
-extern void il2c_debug_write(const char* message);
-extern void il2c_debug_write_format(const char* format, ...);
+extern void il2c_debug_write__(const char* message);
+extern void il2c_debug_write_format__(const char* format, ...);
 
 extern void il2c_write(const wchar_t* s);
 extern void il2c_writeline(const wchar_t* s);

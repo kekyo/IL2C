@@ -312,7 +312,7 @@ void il2c_sleep(uint32_t milliseconds)
     // TODO:
 }
 
-void il2c_debug_write(const char* message)
+void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);
 
@@ -329,7 +329,7 @@ void il2c_debug_write(const char* message)
     il2c_mcfree(pBuffer);
 }
 
-void il2c_debug_write_format(const char* format, ...)
+void il2c_debug_write_format__(const char* format, ...)
 {
     il2c_assert(format != NULL);
 

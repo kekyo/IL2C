@@ -46,7 +46,7 @@ void il2c_sleep(uint32_t milliseconds)
 // NOT Azure Sphere
 #if !defined(__AZURE_SPHERE__)
 
-void il2c_debug_write(const char* message)
+void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);
 
@@ -57,18 +57,20 @@ void il2c_debug_write(const char* message)
     *pLast++ = L'\n';
     *pLast = L'\0';
 
+    // TODO: syslog
     fputws(pBuffer, stderr);
 
     il2c_mcfree(pBuffer);
 }
 
-void il2c_debug_write_format(const char* format, ...)
+void il2c_debug_write_format__(const char* format, ...)
 {
     il2c_assert(format != NULL);
 
     va_list va;
 
     va_start(va, format);
+    // TODO: syslog
     vfwprintf(stderr, format, va);
     va_end(va);
 }

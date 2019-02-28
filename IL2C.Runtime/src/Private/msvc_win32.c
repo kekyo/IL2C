@@ -6,23 +6,14 @@
 // Standard Win32 API
 #if defined(_MSC_VER) && defined(_WIN32) && !defined(UEFI) && !defined(_WDM)
 
-void il2c_debug_write(const char* message)
+void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);
 
-    int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* pBuffer = il2c_mcalloc((length + 3) * sizeof(wchar_t));
-    wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
-    *pLast++ = L'\r';
-    *pLast++ = L'\n';
-    *pLast = L'\0';
-
-    OutputDebugStringW(pBuffer);
-
-    il2c_mcfree(pBuffer);
+    OutputDebugStringA(message);
 }
 
-void il2c_debug_write_format(const char* format, ...)
+void il2c_debug_write_format__(const char* format, ...)
 {
     il2c_assert(format != NULL);
 
@@ -82,12 +73,16 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 void il2c_initialize(void)
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
+
     il2c_initialize__();
 }
 
 void il2c_shutdown(void)
 {
     il2c_shutdown__();
+
+    _CrtDumpMemoryLeaks();
 }
 
 #endif

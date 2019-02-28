@@ -238,7 +238,10 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     }
 
     il2c_assert(pHeader->type != NULL);
-    DEBUG_WRITE("il2c_mark_handler_for_objref__", pHeader->type->pTypeName);
+    il2c_debug_write_format(
+        "il2c_mark_handler_for_objref__: %s, 0x%x",
+        pHeader->type->pTypeName,
+        pAdjustedReference);
 
     // This type has the custom mark handler.
     // Because it's variable type, can't fix pointer offsets.
@@ -270,7 +273,10 @@ static void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE v
     il2c_assert(valueType != NULL);
     il2c_assert((valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
-    DEBUG_WRITE("il2c_mark_handler_for_value_type__", valueType->pTypeName);
+    il2c_debug_write_format(
+        "il2c_mark_handler_for_value_type__: %s, 0x%x",
+        valueType->pTypeName,
+        pValue);
 
     // Traverse recursivity.
     il2c_mark_handler_recursive__(pValue, valueType, 0);
@@ -409,7 +415,10 @@ static void il2c_step3_sweep_garbage__(void)
                 System_Object* pObject = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
                 il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);
 
-                DEBUG_WRITE("il2c_step3_sweep_garbage__: Call finalizer", pCurrentHeader->type->pTypeName);
+                il2c_debug_write_format(
+                    "il2c_step3_sweep_garbage__: call finalizer: %s, 0x%x",
+                    pCurrentHeader->type->pTypeName,
+                    pObject);
 
                 // Call finalizer.
                 pObject->vptr0__->Finalize(pObject);
@@ -432,7 +441,10 @@ static void il2c_step3_sweep_garbage__(void)
     {
         IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
 
-        DEBUG_WRITE("il2c_step3_sweep_garbage__: free", pScheduledHeader->type->pTypeName);
+        il2c_debug_write_format(
+            "il2c_step3_sweep_garbage__: free: %s, 0x%x",
+            pScheduledHeader->type->pTypeName,
+            ((uint8_t*)pScheduledHeader) + sizeof(IL2C_REF_HEADER));
 
         // Heap discarded
         il2c_free((void*)pScheduledHeader);
@@ -456,9 +468,9 @@ static void il2c_collect__(bool finalShutdown
     g_ExecutingCollection__ = true;
 
 #if defined(_DEBUG)
-    DEBUG_WRITE("il2c_collect__: begin: %s(%d)", pFile, line);
+    il2c_debug_write_format("il2c_collect__: begin: %s(%d)", pFile, line);
 #else
-    DEBUG_WRITE("il2c_collect__: begin: %s(%d)", __FILE__, __LINE__);
+    il2c_debug_write_format("il2c_collect__: begin: %s(%d)", __FILE__, __LINE__);
 #endif
 
     il2c_check_heap();
@@ -481,9 +493,9 @@ static void il2c_collect__(bool finalShutdown
     il2c_check_heap();
 
 #if defined(_DEBUG)
-    DEBUG_WRITE("il2c_collect__: finished: %s(%d)", pFile, line);
+    il2c_debug_write_format("il2c_collect__: finished: %s(%d)", pFile, line);
 #else
-    DEBUG_WRITE("il2c_collect__: finished: %s(%d)", __FILE__, __LINE__);
+    il2c_debug_write_format("il2c_collect__: finished: %s(%d)", __FILE__, __LINE__);
 #endif
 
     g_ExecutingCollection__ = false;
@@ -630,7 +642,9 @@ System_ValueType* il2c_box2__(
     il2c_assert(stackType != NULL);
 
     // Require type conversion  (OK: IL2C_TYPE_INTEGER || IL2C_TYPE_UNSIGNED_INTEGER)
-    il2c_assert(((valueType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER) && ((stackType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER));
+    il2c_assert(
+        ((valueType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER) &&
+        ((stackType->flags & IL2C_TYPE_INTEGER) == IL2C_TYPE_INTEGER));
     il2c_assert((valueType->bodySize <= 8) && (stackType->bodySize <= 8));
     il2c_assert((valueType->bodySize >= 1) && (stackType->bodySize >= 1));
 
@@ -967,8 +981,6 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 
 void il2c_initialize__(void)
 {
-    il2c_initialize_heap();
-
     il2c_initializer_count__++;
 
     g_pBeginFrame__ = NULL;
@@ -994,8 +1006,6 @@ void il2c_shutdown__(void)
 #ifdef IL2C_USE_SIGNAL
     signal(SIGSEGV, g_SIGSEGV_saved);
 #endif
-
-    il2c_shutdown_heap();
 }
 
 ///////////////////////////////////////////////////////

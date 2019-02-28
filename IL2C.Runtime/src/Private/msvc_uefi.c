@@ -390,7 +390,7 @@ void il2c_sleep(uint32_t milliseconds)
     g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
 }
 
-void il2c_debug_write(const char* message)
+void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);
     il2c_assert(g_pSystemTable != NULL);
@@ -407,7 +407,7 @@ void il2c_debug_write(const char* message)
     il2c_mcfree(pBuffer);
 }
 
-void il2c_debug_write_format(const char* format, ...)
+void il2c_debug_write_format__(const char* format, ...)
 {
     il2c_assert(format != NULL);
 
@@ -417,7 +417,8 @@ void il2c_debug_write_format(const char* format, ...)
     va_start(va, format);
     vsprintf(buffer, format, va);
 
-    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, buffer);
+    il2c_debug_write__(buffer);
+
     va_end(va);
 }
 

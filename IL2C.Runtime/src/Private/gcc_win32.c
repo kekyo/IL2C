@@ -24,12 +24,13 @@ void il2c_debug_write_format(const char* format, ...)
     il2c_assert(format != NULL);
 
     va_list va;
+    char buffer[128];
 
     va_start(va, format);
-    vfwprintf(stderr, format, va);
+    vsprintf(buffer, format, va);
     va_end(va);
 
-    OutputDebugStringW(pBuffer);
+    OutputDebugStringA(buffer);
 }
 
 void il2c_write(const wchar_t* s)

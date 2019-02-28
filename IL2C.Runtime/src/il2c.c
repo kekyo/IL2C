@@ -454,6 +454,11 @@ static void il2c_step3_sweep_garbage__(void)
     }
 }
 
+#if defined(_DEBUG)
+static interlock_t g_CollectCount = 0;
+interlock_t g_CollectCountBreak = -1;
+#endif
+
 static void il2c_collect__(bool finalShutdown
 #if defined(_DEBUG)
     , const char* pFile, int line
@@ -468,9 +473,20 @@ static void il2c_collect__(bool finalShutdown
     g_ExecutingCollection__ = true;
 
 #if defined(_DEBUG)
-    il2c_debug_write_format("il2c_collect__: begin: %s(%d)", pFile, line);
+    interlock_t collectCount = g_CollectCount++;
+    if (g_CollectCountBreak != -1)
+    {
+        assert(collectCount != g_CollectCountBreak);
+    }
+    il2c_debug_write_format(
+        "il2c_collect__: begin: %d: Header=0x%x, Frame=0x%x, SFrame=0x%x, %s(%d)",
+        collectCount,
+        g_pBeginHeader__,
+        g_pBeginFrame__,
+        g_pBeginStaticFields__,
+        pFile, line);
 #else
-    il2c_debug_write_format("il2c_collect__: begin: %s(%d)", __FILE__, __LINE__);
+    il2c_debug_write("il2c_collect__: begin");
 #endif
 
     il2c_check_heap();
@@ -495,7 +511,7 @@ static void il2c_collect__(bool finalShutdown
 #if defined(_DEBUG)
     il2c_debug_write_format("il2c_collect__: finished: %s(%d)", pFile, line);
 #else
-    il2c_debug_write_format("il2c_collect__: finished: %s(%d)", __FILE__, __LINE__);
+    il2c_debug_write("il2c_collect__: finished");
 #endif
 
     g_ExecutingCollection__ = false;

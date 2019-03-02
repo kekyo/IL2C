@@ -345,7 +345,14 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 // Another special runtime helper functions
 
 extern double il2c_fmod(double lhs, double rhs);
-extern void il2c_break(void);
+
+#if defined(_DEBUG)
+extern void il2c_break__(const char* pFile, int line);
+#define il2c_break() il2c_break__(__FILE__, __LINE__)
+#else
+extern void il2c_break__(void);
+#define il2c_break() il2c_break__()
+#endif
 
 extern void il2c_throw_nullreferenceexception__(void);
 extern void il2c_throw_invalidcastexception__(void);

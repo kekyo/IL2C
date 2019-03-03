@@ -18,6 +18,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/timerfd.h>
+#include <sys/eventfd.h>
 #include <applibs/gpio.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,7 @@
 #include "MT3620Blink/MT3620Blink/GpioOutput.h"
 #include "MT3620Blink/MT3620Blink/GpioInput.h"
 #include "MT3620Blink/MT3620Blink/IEPollListener.h"
+#include "MT3620Blink/MT3620Blink/Event.h"
 #include "MT3620Blink/MT3620Blink/Application.h"
 #include "MT3620Blink/MT3620Blink/timespec.h"
 #include "MT3620Blink/MT3620Blink/itimerspec.h"
@@ -50,6 +52,7 @@
 #include "MT3620Blink/MT3620Blink/GpioOutput.h"
 #include "MT3620Blink/MT3620Blink/GpioInput.h"
 #include "MT3620Blink/MT3620Blink/IEPollListener.h"
+#include "MT3620Blink/MT3620Blink/Event.h"
 #include "MT3620Blink/MT3620Blink/Application.h"
 #include "MT3620Blink/MT3620Blink/timespec.h"
 #include "MT3620Blink/MT3620Blink/itimerspec.h"

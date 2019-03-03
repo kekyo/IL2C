@@ -10,9 +10,40 @@ namespace MT3620Blink
 
     public sealed class Application : Descriptor
     {
+        private sealed class AbortEvent : Event
+        {
+            private readonly Application parent;
+
+            public AbortEvent(Application parent)
+            {
+                this.parent = parent;
+            }
+
+            protected override void Received(ulong value)
+            {
+                parent.abortFlag = true;
+            }
+        }
+
+        private AbortEvent abort;
+        private bool abortFlag;
+
         public Application()
             : base(Interops.epoll_create1(0))
         {
+            abort = new AbortEvent(this);
+            this.RegisterDescriptor(abort);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            if (abort != null)
+            {
+                abort.Dispose();
+                abort = null;
+            }
         }
 
         public void RegisterDescriptor(IEPollListener target)
@@ -45,9 +76,14 @@ namespace MT3620Blink
                 ref ev);
         }
 
+        public void Abort()
+        {
+            abort.Send(0);
+        }
+
         public void Run()
         {
-            while (true)
+            while (!this.abortFlag)
             {
                 var ev = new epoll_event();
                 var numEventsOccurred = Interops.epoll_wait(this.Identity, ref ev, 1, -1);

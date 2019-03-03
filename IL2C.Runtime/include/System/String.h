@@ -78,7 +78,7 @@ typedef const struct
 
 #define IL2C_CONST_STRING(name, string_body) \
     static IL2C_CONST_STRING_DECL name##_CONST_STRING__ = { \
-        NULL, il2c_typeof(System_String), /* IL2C_CHARACTERISTIC_CONST */ 0x80000000UL, &System_String_VTABLE__, string_body }; \
+        NULL, il2c_typeof(System_String), /* IL2C_CHARACTERISTIC_CONST */ (interlock_t)0x80000000UL, &System_String_VTABLE__, string_body }; \
     System_String* const name = ((System_String*)&(name##_CONST_STRING__.vptr0__))
 
 #ifdef __cplusplus

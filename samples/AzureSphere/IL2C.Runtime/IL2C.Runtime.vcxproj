@@ -53,7 +53,7 @@
       <AdditionalOptions>-fdata-sections -ffunction-sections -Werror=implicit-function-declaration -Wno-unused-value %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
-      <PreprocessorDefinitions>__AZURE_SPHERE__;_DEBUG;IL2C_DEBUG_WRITE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AZURE_SPHERE__;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Release'">
       <PreprocessorDefinitions>__AZURE_SPHERE__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

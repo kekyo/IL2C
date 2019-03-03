@@ -46,6 +46,8 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Interops);
 
 /* public static readonly */ #define MT3620Blink_Interops_MT3620_RDB_BUTTON_A MT3620_RDB_BUTTON_A
 
+/* public static readonly */ #define MT3620Blink_Interops_MT3620_RDB_BUTTON_B MT3620_RDB_BUTTON_B
+
 /* public static readonly */ #define MT3620Blink_Interops_EPOLL_CTL_ADD EPOLL_CTL_ADD
 
 /* public static readonly */ #define MT3620Blink_Interops_EPOLL_CTL_DEL EPOLL_CTL_DEL
@@ -60,6 +62,9 @@ extern /* public static sealed */ void MT3620Blink_Interops_nanosleep(MT3620Blin
 extern /* public static sealed */ int32_t MT3620Blink_Interops_timerfd_create(int32_t clockid, int32_t flags);
 extern /* public static sealed */ int32_t MT3620Blink_Interops_timerfd_settime(int32_t fd, int32_t flags, MT3620Blink_itimerspec* new_value, MT3620Blink_itimerspec* old_value);
 extern /* public static sealed */ int32_t MT3620Blink_Interops_timerfd_read(int32_t fd, uint64_t* timerData, uintptr_t size);
+extern /* public static sealed */ int32_t MT3620Blink_Interops_eventfd(uint32_t initval, int32_t flags);
+extern /* public static sealed */ int32_t MT3620Blink_Interops_eventfd_write(int32_t fd, uint64_t value);
+extern /* public static sealed */ int32_t MT3620Blink_Interops_eventfd_read(int32_t fd, uint64_t* value);
 extern /* public static sealed */ int32_t MT3620Blink_Interops_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue);
 extern /* public static sealed */ int32_t MT3620Blink_Interops_GPIO_SetValue(int32_t gpioFd, MT3620Blink_GPIO_Value_Type value);
 extern /* public static sealed */ int32_t MT3620Blink_Interops_GPIO_OpenAsInput(int32_t gpioId);

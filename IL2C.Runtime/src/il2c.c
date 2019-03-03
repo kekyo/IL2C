@@ -313,7 +313,7 @@ void il2c_unregister_fixed_instance__(void* pReference)
     }
 }
 
-static void il2c_unregister_all_fixed_instance_for_final_shutdown__()
+static void il2c_unregister_all_fixed_instance_for_final_shutdown__(void)
 {
     while (1)
     {
@@ -504,7 +504,7 @@ void il2c_default_mark_handler__(void* pReference)
 /////////////////////////////////////////////////////////////
 // GC processes
 
-static void il2c_step1_clear_gcmark__()
+static void il2c_step1_clear_gcmark__(void)
 {
     // Clear header marks.
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
@@ -1125,6 +1125,12 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
     }
 
     // TODO: Unhandled exception
+    IL2C_REF_HEADER* pHeader = il2c_get_header__(ex);
+    il2c_debug_write_format(
+        "Throw unhandled exception: type=%s, Message=\"%ls\"",
+        pHeader->type->pTypeName,
+        (ex->message__->string_body__ != NULL) ? ex->message__->string_body__ : L"");
+
     il2c_assert(0);
 }
 
@@ -1145,7 +1151,6 @@ void il2c_throw__(System_Exception* ex)
 void il2c_rethrow(void)
 {
     il2c_assert(g_pTopUnwindTarget__ != NULL);
-    il2c_assert(g_pTopUnwindTarget__->pNext != NULL);   // Will cause unhandled exception
 
     // If this state is inside for caught block
     if (g_pTopUnwindTarget__->ex != NULL)

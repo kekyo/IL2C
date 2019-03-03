@@ -57,6 +57,30 @@ int32_t MT3620Blink_Interops_timerfd_read(int32_t fd, uint64_t* timerData, uintp
 }
 
 ///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.eventfd(System.UInt32 initval, System.Int32 flags)
+
+int32_t MT3620Blink_Interops_eventfd(uint32_t initval, int32_t flags)
+{
+    return eventfd(initval, flags);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.eventfd_write(System.Int32 fd, System.UInt64 value)
+
+int32_t MT3620Blink_Interops_eventfd_write(int32_t fd, uint64_t value)
+{
+    return eventfd_write(fd, value);
+}
+
+///////////////////////////////////////
+// [6] IL2C/Invoke: MT3620Blink.Interops.eventfd_read(System.Int32 fd, System.UInt64& value)
+
+int32_t MT3620Blink_Interops_eventfd_read(int32_t fd, uint64_t* value)
+{
+    return eventfd_read(fd, value);
+}
+
+///////////////////////////////////////
 // [6] IL2C/Invoke: MT3620Blink.Interops.GPIO_OpenAsOutput(System.Int32 gpioId, MT3620Blink.GPIO_OutputMode_Type outputMode, MT3620Blink.GPIO_Value_Type initialValue)
 
 int32_t MT3620Blink_Interops_GPIO_OpenAsOutput(int32_t gpioId, MT3620Blink_GPIO_OutputMode_Type outputMode, MT3620Blink_GPIO_Value_Type initialValue)

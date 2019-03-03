@@ -51,6 +51,10 @@ extern wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l);
 #define il2c_free free
 #define il2c_mcalloc il2c_malloc
 #define il2c_mcfree il2c_free
+#define il2c_iand(pDest, newValue) __sync_fetch_and_and((interlock_t*)(pDest), (interlock_t)(newValue))
+#define il2c_ior(pDest, newValue) __sync_fetch_and_or((interlock_t*)(pDest), (interlock_t)(newValue))
+#define il2c_iinc(pDest) __sync_add_and_fetch((interlock_t*)(pDest), 1)
+#define il2c_idec(pDest) __sync_sub_and_fetch((interlock_t*)(pDest), 1)
 #define il2c_ixchg(pDest, newValue) __sync_lock_test_and_set((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))

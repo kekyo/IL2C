@@ -14,9 +14,17 @@ typedef volatile struct IL2C_EXECUTION_FRAME_DECL
     IL2C_EXECUTION_FRAME* pNext__;
     const uint16_t objRefCount__;
     const uint16_t valueCount__;
-    void* pReferences__[1];     // objRefCount__
+    volatile void* pReferences__[1];     // objRefCount__
     // IL2C_VALUE_DESCRIPTOR valueDescriptors__[];  // valueCount__
 } IL2C_EXECUTION_FRAME;
+
+typedef volatile struct IL2C_FIXED_INSTANCES_DECL IL2C_FIXED_INSTANCES;
+
+struct IL2C_FIXED_INSTANCES_DECL
+{
+    IL2C_FIXED_INSTANCES* pNext;
+    volatile void* pReferences[3];
+};
 
 // TODO: Become store to thread local storage
 static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
@@ -25,7 +33,8 @@ static IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget__ = NULL;
 static IL2C_EXECUTION_FRAME* g_pBeginStaticFields__ = NULL;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
-static volatile bool g_ExecutingCollection__ = false;
+static IL2C_FIXED_INSTANCES* g_pFixedInstances__ = NULL;
+static interlock_t g_ExecutingCollection__ = 0;
 
 #if defined(_DEBUG)
 static void il2c_collect__(bool finalShutdown, const char* pFile, int line);
@@ -33,8 +42,11 @@ static void il2c_collect__(bool finalShutdown, const char* pFile, int line);
 static void il2c_collect__(bool finalShutdown);
 #endif
 
-static uintptr_t il2c_initializer_count__ = 0;
-const uintptr_t* il2c_initializer_count = &il2c_initializer_count__;
+// The initializer count produces when works the type initializer.
+// "il2c_initializer_count" will compare the local type counter,
+// the translated code have to initialize first using static members if count value different.
+static uintptr_t g_InitializerCount = 0;
+const uintptr_t* il2c_initializer_count = &g_InitializerCount;
 
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
@@ -92,20 +104,14 @@ void* il2c_get_uninitialized_object_internal__(
 
     pHeader->pNext = NULL;
     pHeader->type = type;
-    pHeader->gcMark = GCMARK_NOMARK;
+    pHeader->characteristic = 0;
 
     // Safe link both headers.
     while (1)
     {
-        // (1)
         IL2C_REF_HEADER* pNext = g_pBeginHeader__;
-        // (2)
         pHeader->pNext = pNext;
-        // (3)
-        if ((IL2C_REF_HEADER*)il2c_icmpxchgptr(
-            &g_pBeginHeader__,
-            pHeader,
-            pNext) == pNext)
+        if ((IL2C_REF_HEADER*)il2c_icmpxchgptr(&g_pBeginHeader__, pHeader, pNext) == pNext)
         {
             break;
         }
@@ -175,8 +181,15 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
     il2c_assert(pNewFrame != NULL);
     il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
 
-    ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = g_pBeginFrame__;
-    g_pBeginFrame__ = (IL2C_EXECUTION_FRAME*)pNewFrame;
+    while (1)
+    {
+        IL2C_EXECUTION_FRAME* pNext = g_pBeginFrame__;
+        ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = pNext;
+        if (il2c_icmpxchgptr(&g_pBeginFrame__, pNewFrame, pNext) == pNext)
+        {
+            break;
+        }
+    }
 }
 
 #if defined(_DEBUG)
@@ -209,8 +222,110 @@ void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pSta
     memset((void*)&(p->pReferences__[0]), 0,
         (p->objRefCount__ * sizeof(void*)) + (p->valueCount__ * sizeof(IL2C_VALUE_DESCRIPTOR)));
 
-    p->pNext__ = g_pBeginStaticFields__;
-    g_pBeginStaticFields__ = p;
+    while (1)
+    {
+        IL2C_EXECUTION_FRAME* pNext = g_pBeginStaticFields__;
+        p->pNext__ = pNext;
+        if (il2c_icmpxchgptr(&g_pBeginStaticFields__, p, pNext) == pNext)
+        {
+            break;
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////
+// GC fixed instance manipulator functions
+
+void il2c_register_fixed_instance__(void* pReference)
+{
+    il2c_assert(pReference != NULL);
+
+    // TODO: O(n) order
+    IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
+    volatile void* volatile* ppFreeReference = NULL;
+    while (pCurrentFixedInstances != NULL)
+    {
+        uint8_t index;
+        volatile void* volatile* ppReference;
+        for (index = 0, ppReference = &pCurrentFixedInstances->pReferences[0];
+            index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
+            index++, ppReference++)
+        {
+            if (*ppReference == pReference)
+            {
+                // Already registered
+                return;
+            }
+            if (*ppReference == NULL)
+            {
+                ppFreeReference = ppReference;
+            }
+        }
+
+        pCurrentFixedInstances = pCurrentFixedInstances->pNext;
+    }
+
+    if (ppFreeReference != NULL)
+    {
+        *ppFreeReference = pReference;
+        return;
+    }
+
+    pCurrentFixedInstances = il2c_malloc(sizeof(IL2C_FIXED_INSTANCES));
+    memset((void*)pCurrentFixedInstances, 0, sizeof(IL2C_FIXED_INSTANCES));
+
+    pCurrentFixedInstances->pReferences[0] = pReference;
+
+    while (1)
+    {
+        IL2C_FIXED_INSTANCES* pNext = g_pFixedInstances__;
+        pCurrentFixedInstances->pNext = pNext;
+        if (il2c_icmpxchgptr(&g_pFixedInstances__, pCurrentFixedInstances, pNext) == pNext)
+        {
+            break;
+        }
+    }
+}
+
+void il2c_unregister_fixed_instance__(void* pReference)
+{
+    il2c_assert(pReference != NULL);
+
+    // TODO: O(n) order
+    IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
+    while (pCurrentFixedInstances != NULL)
+    {
+        uint8_t index;
+        volatile void* volatile* ppReference; 
+        for (index = 0, ppReference = &pCurrentFixedInstances->pReferences[0];
+            index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
+            index++, ppReference++)
+        {
+            if (*ppReference == pReference)
+            {
+                // Found, unregister.
+                *ppReference = NULL;
+                return;
+            }
+        }
+
+        pCurrentFixedInstances = pCurrentFixedInstances->pNext;
+    }
+}
+
+static void il2c_unregister_all_fixed_instance_for_final_shutdown__()
+{
+    while (1)
+    {
+        IL2C_FIXED_INSTANCES* pCurrent = g_pFixedInstances__;
+        if (pCurrent == NULL)
+        {
+            break;
+        }
+
+        g_pFixedInstances__ = pCurrent->pNext;
+        il2c_free((void*)pCurrent);
+    }
 }
 
 /////////////////////////////////////////////////////////////
@@ -219,11 +334,11 @@ void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pSta
 typedef void(*IL2C_MARK_HANDLER)(void* pReference);
 
 // Has to ignore if objref is const.
-// HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory.
+// HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory (CONST).
 //   (at x86/x64 cause, another platform may cause)
 #define TRY_GET_HEADER(pHeader, pReference) \
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference); \
-    if (pHeader->gcMark <= GCMARK_FIXED)
+    if ((pHeader->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_LIVE)) == 0)
 
 static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const uint8_t offset);
 
@@ -234,15 +349,15 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
     il2c_assert(pHeader->type != NULL);
     
-    // Marking with atomic exchange.
-    interlock_t currentMark = il2c_icmpxchg(&pHeader->gcMark, GCMARK_LIVE, GCMARK_NOMARK);
-    if (currentMark == GCMARK_LIVE)
+    // Marking with atomicity.
+    interlock_t characteristic = il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_LIVE);
+    if ((characteristic & IL2C_CHARACTERISTIC_LIVE) == IL2C_CHARACTERISTIC_LIVE)
     {
         il2c_debug_write_format(
-            "il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x%p, type=%s, currentMark=%d",
+            "il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x%p, type=%s, characteristic=0x%08x",
             pAdjustedReference,
             pHeader->type->pTypeName,
-            currentMark);
+            characteristic);
         // Already marked/fixed/constant
         return;
     }
@@ -363,13 +478,13 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             else
             {
                 il2c_debug_write_format(
-                    "il2c_mark_handler_recursive__ [4]: p=0x%p, type=%s, index=%u, pAdjustedReferenceInner=0x%p, targetType=%s, gcMark=%d",
+                    "il2c_mark_handler_recursive__ [4]: p=0x%p, type=%s, index=%u, pAdjustedReferenceInner=0x%p, targetType=%s, characteristic=0x%08x",
                     p,
                     type->pTypeName,
                     index,
                     pAdjustedReferenceInner,
                     pHeaderInner->type->pTypeName,
-                    pHeaderInner->gcMark);
+                    pHeaderInner->characteristic);
             }
         }
     }
@@ -389,17 +504,14 @@ void il2c_default_mark_handler__(void* pReference)
 /////////////////////////////////////////////////////////////
 // GC processes
 
-static void il2c_step1_clear_gcmark__(interlock_t comparand)
+static void il2c_step1_clear_gcmark__()
 {
     // Clear header marks.
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     while (pCurrentHeader != NULL)
     {
-        // (Exclude GCMARK_CONST)
-        if (pCurrentHeader->gcMark <= comparand)
-        {
-            pCurrentHeader->gcMark = GCMARK_NOMARK;
-        }
+        // Drop live marking.
+        il2c_iand(&pCurrentHeader->characteristic, ~IL2C_CHARACTERISTIC_LIVE);
         pCurrentHeader = pCurrentHeader->pNext;
     }
 }
@@ -442,13 +554,13 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             else
             {
                 il2c_debug_write_format(
-                    "il2c_step2_mark_gcmark__ [4]: pCurrentFrame=0x%p, index=%u, *ppReference=0x%p, pAdjustedReference=0x%p, type=%s, gcMark=%d",
+                    "il2c_step2_mark_gcmark__ [4]: pCurrentFrame=0x%p, index=%u, *ppReference=0x%p, pAdjustedReference=0x%p, type=%s, characteristic=0x%08x",
                     pCurrentFrame,
                     index,
                     *ppReference,
                     pAdjustedReference,
                     pHeader->type->pTypeName,
-                    pHeader->gcMark);
+                    pHeader->characteristic);
             }
         }
 
@@ -486,9 +598,9 @@ static void il2c_step3_sweep_garbage__(void)
     while (pCurrentHeader != NULL)
     {
         IL2C_REF_HEADER* pNext = pCurrentHeader->pNext;
-        if (pCurrentHeader->gcMark == GCMARK_NOMARK)
+        if ((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_LIVE) == 0)
         {
-            // Very important link steps: because cause misread on purpose this__ instance is living.
+            // Very important unlink step: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
 
             // Class type overrided the finalizer:
@@ -498,7 +610,7 @@ static void il2c_step3_sweep_garbage__(void)
                 il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);
 
                 il2c_debug_write_format(
-                    "il2c_step3_sweep_garbage__: call finalizer: %s, 0x%p",
+                    "il2c_step3_sweep_garbage__: call finalizer: type=%s, pObject=0x%p",
                     pCurrentHeader->type->pTypeName,
                     pObject);
 
@@ -524,7 +636,7 @@ static void il2c_step3_sweep_garbage__(void)
         IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
 
         il2c_debug_write_format(
-            "il2c_step3_sweep_garbage__: free: %s, 0x%p",
+            "il2c_step3_sweep_garbage__: free: type=%s, pObject=0x%p",
             pScheduledHeader->type->pTypeName,
             ((uint8_t*)pScheduledHeader) + sizeof(IL2C_REF_HEADER));
 
@@ -537,7 +649,10 @@ static void il2c_step3_sweep_garbage__(void)
 }
 
 #if defined(_DEBUG)
-static interlock_t g_CollectCount = 0;
+static uint32_t g_CollectCount = 0;
+
+// For GC debugging purpose.
+// Refer g_CollectCount log value and set number to the variable on start debugging.
 int64_t g_CollectCountBreak = -1;
 #endif
 
@@ -547,18 +662,17 @@ static void il2c_collect__(bool finalShutdown, const char* pFile, int line)
 static void il2c_collect__(bool finalShutdown)
 #endif
 {
-    if (g_ExecutingCollection__)
+    if (il2c_iinc(&g_ExecutingCollection__) >= 2)
     {
+        il2c_idec(&g_ExecutingCollection__);
         return;
     }
 
-    g_ExecutingCollection__ = true;
-
 #if defined(_DEBUG)
-    interlock_t collectCount = g_CollectCount++;
+    uint32_t collectCount = g_CollectCount++;
     if (g_CollectCountBreak != -1)
     {
-        assert(collectCount != (interlock_t)g_CollectCountBreak);
+        assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
     il2c_debug_write_format(
         "il2c_collect__: begin: %d: Header=0x%p, Frame=0x%p, SFrame=0x%p, %s(%d)",
@@ -573,19 +687,40 @@ static void il2c_collect__(bool finalShutdown)
 
     il2c_check_heap();
 
-    // The final collection step has to release fixed (pinned) instances.
-    il2c_step1_clear_gcmark__(finalShutdown ? GCMARK_FIXED : GCMARK_LIVE);
+    //////////////////////////////////////////////////
+    // GC Step 1:
+
+    il2c_step1_clear_gcmark__();
     il2c_check_heap();
+
+    //////////////////////////////////////////////////
+    // GC Step 2-1:
+
+    if (finalShutdown)
+    {
+        // Will release all fixed instance if final shutdown.
+        il2c_unregister_all_fixed_instance_for_final_shutdown__();
+        il2c_check_heap();
+    }
+
+    //////////////////////////////////////
+    // GC Step 2-2:
 
     il2c_step2_mark_gcmark__(g_pBeginFrame__);
     il2c_check_heap();
 
-    // The final collection step has to ignore static fields.
+    //////////////////////////////////////
+    // GC Step 2-3:
+
     if (!finalShutdown)
     {
+        // The final collection step has to ignore static fields.
         il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
         il2c_check_heap();
     }
+
+    //////////////////////////////////////////////////
+    // GC Step 3:
 
     il2c_step3_sweep_garbage__();
     il2c_check_heap();
@@ -600,7 +735,7 @@ static void il2c_collect__(bool finalShutdown)
     il2c_debug_write("il2c_collect__: finished");
 #endif
 
-    g_ExecutingCollection__ = false;
+    il2c_idec(&g_ExecutingCollection__);
 }
 
 void il2c_collect(void)
@@ -1085,12 +1220,18 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 
 void il2c_initialize__(void)
 {
-    il2c_initializer_count__++;
+    g_InitializerCount++;
 
     g_pBeginFrame__ = NULL;
     g_pBeginHeader__ = NULL;
     g_pBeginStaticFields__ = NULL;
+    g_pFixedInstances__ = NULL;
     g_pTopUnwindTarget__ = NULL;
+
+#if defined(_DEBUG)
+    g_CollectCount = 0;
+    g_CollectCountBreak = -1;
+#endif
 
 #ifdef IL2C_USE_SIGNAL
     g_SIGSEGV_saved = signal(SIGSEGV, il2c_SIGSEGV_handler);

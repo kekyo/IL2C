@@ -56,7 +56,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)include</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4100;4206</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4197;4206</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>AssemblyCode</AssemblerOutput>
       <!-- <TreatWarningAsError>true</TreatWarningAsError> -->

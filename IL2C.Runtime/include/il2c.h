@@ -83,7 +83,7 @@ extern void il2c_shutdown(void);
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
 
-typedef long interlock_t;
+typedef volatile long interlock_t;
 
 typedef volatile struct IL2C_EXECUTION_FRAME_DECL IL2C_EXECUTION_FRAME;
 typedef volatile struct IL2C_EXCEPTION_FRAME_DECL IL2C_EXCEPTION_FRAME;
@@ -106,7 +106,7 @@ struct IL2C_REF_HEADER_DECL
 {
     IL2C_REF_HEADER* pNext;
     IL2C_RUNTIME_TYPE type;
-    interlock_t gcMark;
+    interlock_t characteristic;
 };
 
 ///////////////////////////////////////////////////////

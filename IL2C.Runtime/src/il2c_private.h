@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-typedef long interlock_t;
+typedef volatile long interlock_t;
 
 ///////////////////////////////////////////////////
 // Internal depended definitions
@@ -79,10 +79,9 @@ struct IL2C_RUNTIME_TYPE_DECL
 //    //const void* markTargets[markTarget];
 //};
 
-#define GCMARK_NOMARK ((interlock_t)0)
-#define GCMARK_FIXED ((interlock_t)1)
-#define GCMARK_LIVE ((interlock_t)2)
-#define GCMARK_CONST ((interlock_t)3)   // For GCHandle
+// IL2C_REF_HEADER_DECL.characteristic
+#define IL2C_CHARACTERISTIC_LIVE ((interlock_t)0x40000000UL)
+#define IL2C_CHARACTERISTIC_CONST ((interlock_t)0x80000000UL)
 
 #define il2c_get_header__(pReference) \
     ((IL2C_REF_HEADER*)(((uint8_t*)(pReference)) - sizeof(IL2C_REF_HEADER)))
@@ -135,11 +134,14 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
-extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize
 #if defined(_DEBUG)
-    , const char* pFile, int line
+extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
+#else
+extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
 #endif
-    );
+
+extern void il2c_register_fixed_instance__(void* pReference);
+extern void il2c_unregister_fixed_instance__(void* pReference);
 extern void il2c_default_mark_handler__(void* pReference);
 
 

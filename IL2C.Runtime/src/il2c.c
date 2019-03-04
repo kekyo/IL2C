@@ -240,6 +240,8 @@ void il2c_register_fixed_instance__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
+    void* pAdjustedReference = il2c_adjusted_reference(pReference);
+
     // TODO: O(n) order
     IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
     volatile void* volatile* ppFreeReference = NULL;
@@ -251,7 +253,7 @@ void il2c_register_fixed_instance__(void* pReference)
             index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
             index++, ppReference++)
         {
-            if (*ppReference == pReference)
+            if (*ppReference == pAdjustedReference)
             {
                 // Already registered
                 return;
@@ -267,14 +269,14 @@ void il2c_register_fixed_instance__(void* pReference)
 
     if (ppFreeReference != NULL)
     {
-        *ppFreeReference = pReference;
+        *ppFreeReference = pAdjustedReference;
         return;
     }
 
     pCurrentFixedInstances = il2c_malloc(sizeof(IL2C_FIXED_INSTANCES));
     memset((void*)pCurrentFixedInstances, 0, sizeof(IL2C_FIXED_INSTANCES));
 
-    pCurrentFixedInstances->pReferences[0] = pReference;
+    pCurrentFixedInstances->pReferences[0] = pAdjustedReference;
 
     while (1)
     {
@@ -291,6 +293,8 @@ void il2c_unregister_fixed_instance__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
+    void* pAdjustedReference = il2c_adjusted_reference(pReference);
+
     // TODO: O(n) order
     IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
     while (pCurrentFixedInstances != NULL)
@@ -301,7 +305,7 @@ void il2c_unregister_fixed_instance__(void* pReference)
             index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
             index++, ppReference++)
         {
-            if (*ppReference == pReference)
+            if (*ppReference == pAdjustedReference)
             {
                 // Found, unregister.
                 *ppReference = NULL;
@@ -589,6 +593,40 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
     }
 }
 
+static void il2c_step2_mark_gcmark_for_fixed__(void)
+{
+    IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
+    while (pCurrentFixedInstances != NULL)
+    {
+        uint8_t index;
+        volatile void* volatile* ppReference;
+        for (index = 0, ppReference = &pCurrentFixedInstances->pReferences[0];
+            index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
+            index++, ppReference++)
+        {
+            // This slot is assigned.
+            void* pReference = (void*)*ppReference;
+            if (pReference != NULL)
+            {
+                TRY_GET_HEADER(pHeader, pReference)
+                {
+                    il2c_debug_write_format(
+                        "il2c_step2_mark_gcmark_for_fixed__: pCurrentFixedInstances=0x%p, index=%u, pReference=0x%p, type=%s",
+                        pCurrentFixedInstances,
+                        index,
+                        pReference,
+                        pHeader->type->pTypeName);
+
+                    // Mark for this objref.
+                    il2c_mark_handler_for_objref__(pReference);
+                }
+            }
+        }
+
+        pCurrentFixedInstances = pCurrentFixedInstances->pNext;
+    }
+}
+
 static void il2c_step3_sweep_garbage__(void)
 {
     // Sweep garbage if gcmark isn't marked.
@@ -696,26 +734,24 @@ static void il2c_collect__(bool finalShutdown)
     //////////////////////////////////////////////////
     // GC Step 2-1:
 
-    if (finalShutdown)
-    {
-        // Will release all fixed instance if final shutdown.
-        il2c_unregister_all_fixed_instance_for_final_shutdown__();
-        il2c_check_heap();
-    }
-
-    //////////////////////////////////////
-    // GC Step 2-2:
-
     il2c_step2_mark_gcmark__(g_pBeginFrame__);
     il2c_check_heap();
 
     //////////////////////////////////////
-    // GC Step 2-3:
+    // GC Step 2-2:
 
     if (!finalShutdown)
     {
-        // The final collection step has to ignore static fields.
+        // The final collection step has to ignore both static fields and fixed instances.
         il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
+        il2c_check_heap();
+
+        il2c_step2_mark_gcmark_for_fixed__();
+        il2c_check_heap();
+    }
+    else
+    {
+        il2c_unregister_all_fixed_instance_for_final_shutdown__();
         il2c_check_heap();
     }
 
@@ -1125,10 +1161,9 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
     }
 
     // TODO: Unhandled exception
-    IL2C_REF_HEADER* pHeader = il2c_get_header__(ex);
     il2c_debug_write_format(
         "Throw unhandled exception: type=%s, Message=\"%ls\"",
-        pHeader->type->pTypeName,
+        (il2c_get_header__(ex))->type->pTypeName,
         (ex->message__->string_body__ != NULL) ? ex->message__->string_body__ : L"");
 
     il2c_assert(0);

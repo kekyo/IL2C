@@ -48,7 +48,13 @@ extern wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l);
 #define il2c_wcslen wcslen
 #define il2c_check_heap()
 #define il2c_malloc malloc
+
+#if defined(_DEBUG)
+extern void il2c_free(void* p);
+#else
 #define il2c_free free
+#endif
+
 #define il2c_mcalloc il2c_malloc
 #define il2c_mcfree il2c_free
 #define il2c_iand(pDest, newValue) __sync_fetch_and_and((interlock_t*)(pDest), (interlock_t)(newValue))

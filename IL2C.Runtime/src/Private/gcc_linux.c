@@ -30,6 +30,18 @@ wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l)
     return b;
 }
 
+#if defined(_DEBUG)
+#include <malloc.h>
+void il2c_free(void* p)
+{
+    if (p)
+    {
+        memset(p, 0xdd, malloc_usable_size(p));
+        free(p);
+    }
+}
+#endif
+
 #include <time.h>
 
 void il2c_sleep(uint32_t milliseconds)

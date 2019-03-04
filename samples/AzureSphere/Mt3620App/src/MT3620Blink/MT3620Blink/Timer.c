@@ -45,39 +45,52 @@ typedef struct MT3620Blink_Timer__ctor_EXECUTION_FRAME_DECL
 
 void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__)
 {
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack1_0__;
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack2_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_Timer__ctor_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0                         : Timer.cs(14) */
+    /* IL_0000: ldarg.0  */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0001: ldsfld MT3620Blink.Timer.CLOCK_MONOTONIC : Timer.cs(14) */
+    /* IL_0001: ldsfld MT3620Blink.Timer.CLOCK_MONOTONIC */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = MT3620Blink_Timer_CLOCK_MONOTONIC;
-    /* IL_0006: ldsfld MT3620Blink.Timer.TFD_NONBLOCK : Timer.cs(14) */
+    /* IL_0006: ldsfld MT3620Blink.Timer.TFD_NONBLOCK */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_0__ = MT3620Blink_Timer_TFD_NONBLOCK;
-    /* IL_000b: call MT3620Blink.Interops.timerfd_create : Timer.cs(14) */
+    /* IL_000b: call MT3620Blink.Interops.timerfd_create */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = MT3620Blink_Interops_timerfd_create(stack1_0__, stack2_0__);
-    /* IL_0010: call MT3620Blink.Descriptor..ctor : Timer.cs(14) */
+    /* IL_0010: call MT3620Blink.Descriptor..ctor */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
-    /* IL_0015: nop                             : Timer.cs(14) */
+    /* IL_0015: nop  */
     /* IL_0016: nop  */
     /* IL_0017: ret  */
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     return;
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
 }
 
 ///////////////////////////////////////
@@ -100,121 +113,183 @@ typedef struct MT3620Blink_Timer_SetInterval_EXECUTION_FRAME_DECL
 
 void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
 {
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-3] Local variables (!objref):
 
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_timespec tm;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     memset(&tm, 0x00, sizeof tm);
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec newValue;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     memset(&newValue, 0x00, sizeof newValue);
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec dummy;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     memset(&dummy, 0x00, sizeof dummy);
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_timespec local3__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     memset(&local3__, 0x00, sizeof local3__);
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec local4__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     memset(&local4__, 0x00, sizeof local4__);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_timespec* stack0_0__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_timespec stack0_1__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec* stack0_2__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec stack0_3__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack0_5__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int64_t stack1_0__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack1_1__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_timespec stack1_2__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack2_0__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int64_t stack2_1__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec* stack2_2__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_itimerspec* stack3_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_Timer_SetInterval_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : Timer.cs(19) */
+    /* IL_0000: nop  */
     /* IL_0001: ldloca.s local3__ */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_0__ = &local3__;
-    /* IL_0003: initobj MT3620Blink.timespec    : Timer.cs(20) */
+    /* IL_0003: initobj MT3620Blink.timespec */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     memset(stack0_0__, 0x00, sizeof *stack0_0__);
-    /* IL_0009: ldloca.s local3__               : Timer.cs(20) */
+    /* IL_0009: ldloca.s local3__ */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_0__ = &local3__;
-    /* IL_000b: ldarg.1                         : Timer.cs(20) */
+    /* IL_000b: ldarg.1  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = nsec;
-    /* IL_000c: ldc.i4 1000000000               : Timer.cs(20) */
+    /* IL_000c: ldc.i4 1000000000 */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_0__ = 1000000000;
-    /* IL_0011: conv.i8                         : Timer.cs(20) */
+    /* IL_0011: conv.i8  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_1__ = (int64_t)stack2_0__;
-    /* IL_0012: div                             : Timer.cs(20) */
+    /* IL_0012: div  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = stack1_0__ / stack2_1__;
-    /* IL_0013: conv.i4                         : Timer.cs(20) */
+    /* IL_0013: conv.i4  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_1__ = (int32_t)stack1_0__;
-    /* IL_0014: stfld MT3620Blink.timespec.tv_sec : Timer.cs(20) */
+    /* IL_0014: stfld MT3620Blink.timespec.tv_sec */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_0__->tv_sec = stack1_1__;
-    /* IL_0019: ldloca.s local3__               : Timer.cs(20) */
+    /* IL_0019: ldloca.s local3__ */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_0__ = &local3__;
-    /* IL_001b: ldarg.1                         : Timer.cs(20) */
+    /* IL_001b: ldarg.1  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = nsec;
-    /* IL_001c: ldc.i4 1000000000               : Timer.cs(20) */
+    /* IL_001c: ldc.i4 1000000000 */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_0__ = 1000000000;
-    /* IL_0021: conv.i8                         : Timer.cs(20) */
+    /* IL_0021: conv.i8  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_1__ = (int64_t)stack2_0__;
-    /* IL_0022: rem                             : Timer.cs(20) */
+    /* IL_0022: rem  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = stack1_0__ % stack2_1__;
-    /* IL_0023: conv.i4                         : Timer.cs(20) */
+    /* IL_0023: conv.i4  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_1__ = (int32_t)stack1_0__;
-    /* IL_0024: stfld MT3620Blink.timespec.tv_nsec : Timer.cs(20) */
+    /* IL_0024: stfld MT3620Blink.timespec.tv_nsec */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_0__->tv_nsec = stack1_1__;
-    /* IL_0029: ldloc.3                         : Timer.cs(20) */
+    /* IL_0029: ldloc.3  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_1__ = local3__;
-    /* IL_002a: stloc.0                         : Timer.cs(20) */
+    /* IL_002a: stloc.0  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     tm = stack0_1__;
-    /* IL_002b: ldloca.s local4__               : Timer.cs(25) */
+    /* IL_002b: ldloca.s local4__ */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_2__ = &local4__;
-    /* IL_002d: initobj MT3620Blink.itimerspec  : Timer.cs(25) */
+    /* IL_002d: initobj MT3620Blink.itimerspec */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     memset(stack0_2__, 0x00, sizeof *stack0_2__);
-    /* IL_0033: ldloca.s local4__               : Timer.cs(25) */
+    /* IL_0033: ldloca.s local4__ */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_2__ = &local4__;
-    /* IL_0035: ldloc.0                         : Timer.cs(25) */
+    /* IL_0035: ldloc.0  */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_2__ = tm;
-    /* IL_0036: stfld MT3620Blink.itimerspec.it_value : Timer.cs(25) */
+    /* IL_0036: stfld MT3620Blink.itimerspec.it_value */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_2__->it_value = stack1_2__;
-    /* IL_003b: ldloca.s local4__               : Timer.cs(25) */
+    /* IL_003b: ldloca.s local4__ */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_2__ = &local4__;
-    /* IL_003d: ldloc.0                         : Timer.cs(25) */
+    /* IL_003d: ldloc.0  */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_2__ = tm;
-    /* IL_003e: stfld MT3620Blink.itimerspec.it_interval : Timer.cs(25) */
+    /* IL_003e: stfld MT3620Blink.itimerspec.it_interval */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_2__->it_interval = stack1_2__;
-    /* IL_0043: ldloc.s local4__                : Timer.cs(25) */
+    /* IL_0043: ldloc.s local4__ */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_3__ = local4__;
-    /* IL_0045: stloc.1                         : Timer.cs(25) */
+    /* IL_0045: stloc.1  */
+#line 25 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     newValue = stack0_3__;
-    /* IL_0046: ldarg.0                         : Timer.cs(31) */
+    /* IL_0046: ldarg.0  */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     frame__.stack0_4__ = this__;
-    /* IL_0047: call MT3620Blink.Descriptor.get_Identity : Timer.cs(31) */
+    /* IL_0047: call MT3620Blink.Descriptor.get_Identity */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_4__);
-    /* IL_004c: ldc.i4.0                        : Timer.cs(31) */
+    /* IL_004c: ldc.i4.0  */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_1__ = 0;
-    /* IL_004d: ldloca.s newValue               : Timer.cs(31) */
+    /* IL_004d: ldloca.s newValue */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_2__ = &newValue;
-    /* IL_004f: ldloca.s dummy                  : Timer.cs(31) */
+    /* IL_004f: ldloca.s dummy */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack3_0__ = &dummy;
-    /* IL_0051: call MT3620Blink.Interops.timerfd_settime : Timer.cs(31) */
+    /* IL_0051: call MT3620Blink.Interops.timerfd_settime */
+#line 31 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_5__ = MT3620Blink_Interops_timerfd_settime(stack0_5__, stack1_1__, stack2_2__, stack3_0__);
-    /* IL_0056: pop                             : Timer.cs(31) */
+    /* IL_0056: pop  */
     /* IL_0057: ret  */
+#line 32 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 32 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     return;
+#line 32 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
 }
 
 ///////////////////////////////////////
@@ -237,30 +312,39 @@ typedef struct MT3620Blink_Timer_MT3620Blink_IEPollListener_get_Identity_EXECUTI
 
 int32_t MT3620Blink_Timer_MT3620Blink_IEPollListener_get_Identity(MT3620Blink_Timer* this__)
 {
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack0_1__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_Timer_MT3620Blink_IEPollListener_get_Identity_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0                         : Timer.cs(34) */
+    /* IL_0000: ldarg.0  */
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0001: call MT3620Blink.Descriptor.get_Identity : Timer.cs(34) */
+    /* IL_0001: call MT3620Blink.Descriptor.get_Identity */
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_1__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0006: ret                             : Timer.cs(34) */
+    /* IL_0006: ret  */
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     return stack0_1__;
+#line 34 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
 }
 
 ///////////////////////////////////////
@@ -283,56 +367,77 @@ typedef struct MT3620Blink_Timer_MT3620Blink_IEPollListener_OnRaised_EXECUTION_F
 
 void MT3620Blink_Timer_MT3620Blink_IEPollListener_OnRaised(MT3620Blink_Timer* this__)
 {
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-3] Local variables (!objref):
 
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     uint64_t timerData = 0ULL;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack0_1__;
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     uint64_t* stack1_0__;
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int32_t stack2_0__;
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     int64_t stack2_1__;
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     uintptr_t stack2_2__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     MT3620Blink_Timer_MT3620Blink_IEPollListener_OnRaised_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 37 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : Timer.cs(37) */
+    /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
+#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0002: call MT3620Blink.Descriptor.get_Identity : Timer.cs(38) */
+    /* IL_0002: call MT3620Blink.Descriptor.get_Identity */
+#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_1__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0007: ldloca.s timerData              : Timer.cs(38) */
+    /* IL_0007: ldloca.s timerData */
+#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack1_0__ = &timerData;
-    /* IL_0009: ldc.i4.8                        : Timer.cs(38) */
+    /* IL_0009: ldc.i4.8  */
+#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_0__ = 8;
-    /* IL_000a: conv.i8                         : Timer.cs(38) */
+    /* IL_000a: conv.i8  */
+#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_1__ = (int64_t)stack2_0__;
-    /* IL_000b: call System.UIntPtr.op_Explicit : Timer.cs(38) */
+    /* IL_000b: call System.UIntPtr.op_Explicit */
+#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack2_2__ = System_UIntPtr_op_Explicit_2((uint64_t)stack2_1__);
-    /* IL_0010: call MT3620Blink.Interops.timerfd_read : Timer.cs(38) */
+    /* IL_0010: call MT3620Blink.Interops.timerfd_read */
+#line 38 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     stack0_1__ = MT3620Blink_Interops_timerfd_read(stack0_1__, stack1_0__, stack2_2__);
-    /* IL_0015: pop                             : Timer.cs(38) */
+    /* IL_0015: pop  */
     /* IL_0016: ldarg.0  */
+#line 39 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0017: callvirt MT3620Blink.Timer.Raised : Timer.cs(39) */
+    /* IL_0017: callvirt MT3620Blink.Timer.Raised */
+#line 39 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     frame__.stack0_0__->vptr0__->Raised(frame__.stack0_0__);
-    /* IL_001c: nop                             : Timer.cs(39) */
+    /* IL_001c: nop  */
     /* IL_001d: ret  */
+#line 40 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 40 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
     return;
+#line 40 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Timer.cs"
 }
 
 //////////////////////

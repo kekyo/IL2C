@@ -13,12 +13,12 @@
 ///////////////////////////////////////////////////////////////////////////
 // [13-3] Import native headers:
 
+#include <sys/eventfd.h>
 #include <mt3620_rdb.h>
 #include <sys/epoll.h>
 #include <time.h>
 #include <unistd.h>
 #include <sys/timerfd.h>
-#include <sys/eventfd.h>
 #include <applibs/gpio.h>
 
 ///////////////////////////////////////////////////////////////////////////

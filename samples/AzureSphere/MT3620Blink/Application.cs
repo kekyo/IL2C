@@ -14,15 +14,11 @@ namespace MT3620Blink
         {
             private readonly Application parent;
 
-            public AbortEvent(Application parent)
-            {
+            public AbortEvent(Application parent) =>
                 this.parent = parent;
-            }
 
-            protected override void Received(ulong value)
-            {
+            protected override void Received() =>
                 parent.abortFlag = true;
-            }
         }
 
         private AbortEvent abort;
@@ -76,10 +72,8 @@ namespace MT3620Blink
                 ref ev);
         }
 
-        public void Abort()
-        {
-            abort.Send(0);
-        }
+        public void Abort() =>
+            abort.Pulse();
 
         public void Run()
         {

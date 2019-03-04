@@ -78,7 +78,7 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Application_AbortEvent);
 // [2-3] Methods: MT3620Blink.Application.AbortEvent
 
 extern /* public sealed */ void MT3620Blink_Application_AbortEvent__ctor(MT3620Blink_Application_AbortEvent* this__, MT3620Blink_Application* parent);
-extern /* protected override sealed */ void MT3620Blink_Application_AbortEvent_Received(MT3620Blink_Application_AbortEvent* this__, uint64_t value);
+extern /* protected override sealed */ void MT3620Blink_Application_AbortEvent_Received(MT3620Blink_Application_AbortEvent* this__);
 
 #endif
 

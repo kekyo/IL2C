@@ -36,7 +36,7 @@ struct MT3620Blink_Event_VTABLE_DECL___
     int32_t (*GetHashCode)(void* this__);
     System_String* (*ToString)(void* this__);
     void (*Dispose)(void* this__);
-    void (*Received)(void* this__, uint64_t value);
+    void (*Received)(void* this__);
 };
 
 // [1-1-2] Class layout
@@ -52,10 +52,17 @@ struct MT3620Blink_Event_VTABLE_DECL___
 IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Event);
 
 //////////////////////////////////////////////////////////////////////////////////
+// [2-2] Static fields: MT3620Blink.Event
+
+/* private static readonly */ #define MT3620Blink_Event_EFD_NONBLOCK EFD_NONBLOCK
+
+/* private static readonly */ #define MT3620Blink_Event_EFD_SEMAPHORE EFD_SEMAPHORE
+
+//////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods: MT3620Blink.Event
 
 extern /* protected */ void MT3620Blink_Event__ctor(MT3620Blink_Event* this__);
-extern /* public */ void MT3620Blink_Event_Send(MT3620Blink_Event* this__, uint64_t value);
+extern /* public */ void MT3620Blink_Event_Pulse(MT3620Blink_Event* this__);
 extern /* private sealed */ int32_t MT3620Blink_Event_MT3620Blink_IEPollListener_get_Identity(MT3620Blink_Event* this__);
 extern /* private sealed */ void MT3620Blink_Event_MT3620Blink_IEPollListener_OnRaised(MT3620Blink_Event* this__);
 

@@ -7,13 +7,9 @@
         {
         }
 
-        public bool Value
-        {
-            get
-            {
-                Interops.GPIO_GetValue(this.Identity, out var value);
-                return value == GPIO_Value_Type.GPIO_Value_High;
-            }
-        }
+        public bool Value =>
+            (Interops.GPIO_GetValue(this.Identity, out var value) == 0) ?
+                (value == GPIO_Value_Type.GPIO_Value_High) :
+                false;
     }
 }

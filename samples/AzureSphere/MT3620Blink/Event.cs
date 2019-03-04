@@ -5,14 +5,19 @@ namespace MT3620Blink
 {
     internal abstract class Event : Descriptor, IEPollListener
     {
+        [NativeValue("sys/eventfd.h")]
+        private static readonly int EFD_NONBLOCK;
+        [NativeValue("sys/eventfd.h")]
+        private static readonly int EFD_SEMAPHORE;
+
         protected Event()
-            : base(Interops.eventfd(0, 0))
+            : base(Interops.eventfd(0, EFD_NONBLOCK | EFD_SEMAPHORE))
         {
         }
 
-        public void Send(ulong value)
+        public void Pulse()
         {
-            Interops.eventfd_write(this.Identity, value);
+            Interops.eventfd_write(this.Identity, 1);
         }
 
         int IEPollListener.Identity => this.Identity;
@@ -20,9 +25,9 @@ namespace MT3620Blink
         void IEPollListener.OnRaised()
         {
             Interops.eventfd_read(this.Identity, out var value);
-            Received(value);
+            Received();
         }
 
-        protected abstract void Received(ulong value);
+        protected abstract void Received();
     }
 }

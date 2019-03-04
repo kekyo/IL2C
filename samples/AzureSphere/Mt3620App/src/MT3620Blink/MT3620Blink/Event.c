@@ -16,6 +16,13 @@ extern "C" {
 // [9-2] File scope prototypes:
 
 //////////////////////////////////////////////////////////////////////////////////
+// [2-2] Static fields: MT3620Blink.Event
+
+/* private static readonly */ #define MT3620Blink_Event_EFD_NONBLOCK EFD_NONBLOCK
+
+/* private static readonly */ #define MT3620Blink_Event_EFD_SEMAPHORE EFD_SEMAPHORE
+
+//////////////////////////////////////////////////////////////////////////////////
 // [9-4] Type: MT3620Blink.Event
 
 ///////////////////////////////////////
@@ -38,92 +45,130 @@ typedef struct MT3620Blink_Event__ctor_EXECUTION_FRAME_DECL
 
 void MT3620Blink_Event__ctor(MT3620Blink_Event* this__)
 {
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     int32_t stack1_0__;
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     int32_t stack2_0__;
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    int32_t stack3_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     MT3620Blink_Event__ctor_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0                         : Event.cs(9) */
+    /* IL_0000: ldarg.0  */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0001: ldc.i4.0                        : Event.cs(9) */
+    /* IL_0001: ldc.i4.0  */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     stack1_0__ = 0;
-    /* IL_0002: ldc.i4.0                        : Event.cs(9) */
-    stack2_0__ = 0;
-    /* IL_0003: call MT3620Blink.Interops.eventfd : Event.cs(9) */
+    /* IL_0002: ldsfld MT3620Blink.Event.EFD_NONBLOCK */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    stack2_0__ = MT3620Blink_Event_EFD_NONBLOCK;
+    /* IL_0007: ldsfld MT3620Blink.Event.EFD_SEMAPHORE */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    stack3_0__ = MT3620Blink_Event_EFD_SEMAPHORE;
+    /* IL_000c: or  */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    stack2_0__ = stack2_0__ | stack3_0__;
+    /* IL_000d: call MT3620Blink.Interops.eventfd */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     stack1_0__ = MT3620Blink_Interops_eventfd((uint32_t)stack1_0__, stack2_0__);
-    /* IL_0008: call MT3620Blink.Descriptor..ctor : Event.cs(9) */
+    /* IL_0012: call MT3620Blink.Descriptor..ctor */
+#line 14 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
-    /* IL_000d: nop                             : Event.cs(9) */
-    /* IL_000e: nop  */
-    /* IL_000f: ret  */
+    /* IL_0017: nop  */
+    /* IL_0018: nop  */
+    /* IL_0019: ret  */
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     return;
+#line 16 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
 }
 
 ///////////////////////////////////////
-// [3] MT3620Blink.Event.Send(MT3620Blink.Event this__, System.UInt64 value)
+// [3] MT3620Blink.Event.Pulse(MT3620Blink.Event this__)
 
 //-------------------
 // [3-7] Declare execution frame:
 
-typedef struct MT3620Blink_Event_Send_EXECUTION_FRAME_DECL
+typedef struct MT3620Blink_Event_Pulse_EXECUTION_FRAME_DECL
 {
     const IL2C_EXECUTION_FRAME* pNext__;
     const uint16_t objRefCount__;
     const uint16_t valueCount__;
     //-------------------- objref
     MT3620Blink_Event* stack0_0__;
-} MT3620Blink_Event_Send_EXECUTION_FRAME__;
+} MT3620Blink_Event_Pulse_EXECUTION_FRAME__;
 
 //-------------------
 // [3-2] Function body:
 
-void MT3620Blink_Event_Send(MT3620Blink_Event* this__, uint64_t value)
+void MT3620Blink_Event_Pulse(MT3620Blink_Event* this__)
 {
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     int32_t stack0_1__;
-    uint64_t stack1_0__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    int32_t stack1_0__;
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    int64_t stack1_1__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
-    MT3620Blink_Event_Send_EXECUTION_FRAME__ frame__ =
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    MT3620Blink_Event_Pulse_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 19 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : Event.cs(14) */
+    /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0002: call MT3620Blink.Descriptor.get_Identity : Event.cs(15) */
+    /* IL_0002: call MT3620Blink.Descriptor.get_Identity */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     stack0_1__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0007: ldarg.1                         : Event.cs(15) */
-    stack1_0__ = value;
-    /* IL_0008: call MT3620Blink.Interops.eventfd_write : Event.cs(15) */
-    stack0_1__ = MT3620Blink_Interops_eventfd_write(stack0_1__, stack1_0__);
-    /* IL_000d: pop                             : Event.cs(15) */
-    /* IL_000e: ret  */
+    /* IL_0007: ldc.i4.1  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    stack1_0__ = 1;
+    /* IL_0008: conv.i8  */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    stack1_1__ = (int64_t)stack1_0__;
+    /* IL_0009: call MT3620Blink.Interops.eventfd_write */
+#line 20 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    stack0_1__ = MT3620Blink_Interops_eventfd_write(stack0_1__, (uint64_t)stack1_1__);
+    /* IL_000e: pop  */
+    /* IL_000f: ret  */
+#line 21 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 21 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     return;
+#line 21 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
 }
 
 ///////////////////////////////////////
@@ -146,30 +191,39 @@ typedef struct MT3620Blink_Event_MT3620Blink_IEPollListener_get_Identity_EXECUTI
 
 int32_t MT3620Blink_Event_MT3620Blink_IEPollListener_get_Identity(MT3620Blink_Event* this__)
 {
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     int32_t stack0_1__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     MT3620Blink_Event_MT3620Blink_IEPollListener_get_Identity_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0                         : Event.cs(18) */
+    /* IL_0000: ldarg.0  */
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0001: call MT3620Blink.Descriptor.get_Identity : Event.cs(18) */
+    /* IL_0001: call MT3620Blink.Descriptor.get_Identity */
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     stack0_1__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0006: ret                             : Event.cs(18) */
+    /* IL_0006: ret  */
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     return stack0_1__;
+#line 23 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
 }
 
 ///////////////////////////////////////
@@ -192,50 +246,62 @@ typedef struct MT3620Blink_Event_MT3620Blink_IEPollListener_OnRaised_EXECUTION_F
 
 void MT3620Blink_Event_MT3620Blink_IEPollListener_OnRaised(MT3620Blink_Event* this__)
 {
+#line 26 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-3] Local variables (!objref):
 
+#line 26 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     uint64_t value = 0ULL;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+#line 26 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     int32_t stack0_1__;
+#line 26 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     uint64_t* stack1_0__;
-    uint64_t stack1_1__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
+#line 26 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     MT3620Blink_Event_MT3620Blink_IEPollListener_OnRaised_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
+#line 26 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : Event.cs(21) */
+    /* IL_0000: nop  */
     /* IL_0001: ldarg.0  */
+#line 27 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0002: call MT3620Blink.Descriptor.get_Identity : Event.cs(22) */
+    /* IL_0002: call MT3620Blink.Descriptor.get_Identity */
+#line 27 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     stack0_1__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0007: ldloca.s value                  : Event.cs(22) */
+    /* IL_0007: ldloca.s value */
+#line 27 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     stack1_0__ = &value;
-    /* IL_0009: call MT3620Blink.Interops.eventfd_read : Event.cs(22) */
+    /* IL_0009: call MT3620Blink.Interops.eventfd_read */
+#line 27 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     stack0_1__ = MT3620Blink_Interops_eventfd_read(stack0_1__, stack1_0__);
-    /* IL_000e: pop                             : Event.cs(22) */
+    /* IL_000e: pop  */
     /* IL_000f: ldarg.0  */
+#line 28 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0010: ldloc.0                         : Event.cs(23) */
-    stack1_1__ = value;
-    /* IL_0011: callvirt MT3620Blink.Event.Received : Event.cs(23) */
-    frame__.stack0_0__->vptr0__->Received(frame__.stack0_0__, stack1_1__);
-    /* IL_0016: nop                             : Event.cs(23) */
-    /* IL_0017: ret  */
+    /* IL_0010: callvirt MT3620Blink.Event.Received */
+#line 28 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
+    frame__.stack0_0__->vptr0__->Received(frame__.stack0_0__);
+    /* IL_0015: nop  */
+    /* IL_0016: ret  */
+#line 29 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     il2c_unlink_execution_frame(&frame__);
+#line 29 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
     return;
+#line 29 "D:\\PROJECT\\IL2C\\samples\\AzureSphere\\MT3620Blink\\Event.cs"
 }
 
 //////////////////////

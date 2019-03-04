@@ -436,14 +436,13 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
         if (pMarkTarget->valueType != NULL)
         {
             il2c_assert((pMarkTarget->valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
-            il2c_assert(*ppField != NULL);
 
             il2c_debug_write_format(
-                "il2c_mark_handler_recursive__ [1]: p=0x%p, type=%s, index=%u, *ppField=0x%p, fieldType=%s",
+                "il2c_mark_handler_recursive__ [1]: p=0x%p, type=%s, index=%u, ppField=0x%p, fieldType=%s",
                 p,
                 type->pTypeName,
                 index,
-                *ppField,
+                ppField,
                 pMarkTarget->valueType->pTypeName);
 
             // Mark for this value.

@@ -18,7 +18,7 @@ void il2c_debug_write_format__(const char* format, ...)
     il2c_assert(format != NULL);
 
     va_list va;
-    char buffer[256];
+    char buffer[512];
 
     va_start(va, format);
     vsprintf(buffer, format, va);

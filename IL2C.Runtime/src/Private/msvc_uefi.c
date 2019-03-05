@@ -12,13 +12,18 @@
 
 #include <il2c_private.h>
 
+#include <stdio.h>
+#include <stdarg.h>
+#include "debugbreak.h"
+
 #include "efi/efi.h"
 
 int _fltused = 1;
 
-#if 0
-// Can't enable intrinsic inlined memcpy/memset with VC++'s /GL and /LTCG options.
+#if defined(NDEBUG)
+// Can't enable intrinsic inlined memcpy/memset with VC++'s /GL and /LTCG options in release build.
 // So these are simple implementations for thiers.
+#pragma function(memcpy, memset)
 void* memcpy(void* to, const void* from, size_t n)
 {
     uint8_t* t = to;
@@ -34,7 +39,7 @@ void* memset(void* target, int ch, size_t n)
     uint8_t* p = target;
     n++;
     while (--n >= 1)
-        *p++ = ch;
+        *p++ = (uint8_t)ch;
     return target;
 }
 #endif
@@ -126,7 +131,9 @@ int32_t* il2c_errno__(void)
 // From musl: http://git.musl-libc.org/cgit/musl/tree/src/math/fmod.c
 double il2c_fmod(double x, double y)
 {
-    union { double f; uint64_t i; } ux = { x }, uy = { y };
+    union { double f; uint64_t i; } ux, uy;
+    ux.f = x;
+    uy.f = y;
     int ex = ux.i >> 52 & 0x7ff;
     int ey = uy.i >> 52 & 0x7ff;
     int sx = ux.i >> 63;
@@ -412,7 +419,7 @@ void il2c_debug_write_format__(const char* format, ...)
     il2c_assert(format != NULL);
 
     va_list va;
-    char buffer[256];
+    char buffer[512];
 
     va_start(va, format);
     vsprintf(buffer, format, va);
@@ -421,6 +428,39 @@ void il2c_debug_write_format__(const char* format, ...)
 
     va_end(va);
 }
+
+#if defined(_DEBUG)
+void il2c_assert__(const char* pFile, int line, const char* pExpr)
+{
+    if ((pFile != NULL) && (g_pSystemTable != NULL))
+    {
+        wchar_t buffer[12];
+        il2c_itow(line, buffer, 10);
+
+        int32_t length1 = il2c_get_utf8_length(pFile, false);
+        int32_t length2 = (int32_t)il2c_wcslen(buffer);
+        int32_t length3 = il2c_get_utf8_length(pExpr, false);
+        wchar_t* pBuffer = il2c_mcalloc((length1 + length2 + length3 + 7) * sizeof(wchar_t));
+        wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, pFile);
+        *pLast++ = L'(';
+        memcpy(pLast, buffer, length2 * sizeof(wchar_t));
+        pLast += length2;
+        *pLast++ = L')';
+        *pLast++ = L':';
+        *pLast++ = L' ';
+        pLast = il2c_utf16_from_utf8_and_get_last(pLast, pExpr);
+        *pLast++ = L'\r';
+        *pLast++ = L'\n';
+        *pLast = L'\0';
+
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
+
+        il2c_mcfree(pBuffer);
+    }
+
+    debug_break();
+}
+#endif
 
 void il2c_write(const wchar_t* s)
 {

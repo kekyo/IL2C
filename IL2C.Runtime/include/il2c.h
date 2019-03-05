@@ -36,12 +36,12 @@ extern "C" {
 #include <float.h>
 
 #if defined(_MSC_VER) && defined(UEFI)
-#if defined(DEBUG)
-#define DBGASSERT(a) DbgAssert(__FILE__, __LINE__, #a)
+#if defined(_DEBUG)
+extern void il2c_assert__(const char* pFile, int line, const char* pExpr);
+#define il2c_assert(expr) { if (expr) il2c_assert__(__FILE__, __LINE__, #expr); }
 #else
-#define DBGASSERT(a)
+#define il2c_assert(expr)
 #endif
-#define il2c_assert DBGASSERT
 extern int32_t* il2c_errno__(void);
 #define il2c_errno (*il2c_errno__())
 #else

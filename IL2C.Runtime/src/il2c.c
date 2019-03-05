@@ -709,7 +709,7 @@ static void il2c_collect__(bool finalShutdown)
     uint32_t collectCount = g_CollectCount++;
     if (g_CollectCountBreak != -1)
     {
-        assert(collectCount != (uint32_t)g_CollectCountBreak);
+        il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
     il2c_debug_write_format(
         "il2c_collect__: begin: %d: Header=0x%p, Frame=0x%p, SFrame=0x%p, %s(%d)",

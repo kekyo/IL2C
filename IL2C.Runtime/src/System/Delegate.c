@@ -87,11 +87,13 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     uintptr_t count = a->count__ + b->count__;
     uintptr_t size = sizeof(System_Delegate) +
         (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
-    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size
+
 #if defined(_DEBUG)
-        , __FILE__, __LINE__
+    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size, __FILE__, __LINE__);
+#else
+    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size);
 #endif
-        );
+
     dlg->vptr0__ = &System_Delegate_VTABLE__;
     
     dlg->count__ = count;
@@ -155,11 +157,13 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
             uintptr_t count = source->count__ - value->count__;
             uintptr_t size = sizeof(System_Delegate) +
                 (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
-            System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size
+
 #if defined(_DEBUG)
-                , __FILE__, __LINE__
+            System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size, __FILE__, __LINE__);
+#else
+            System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size);
 #endif
-                );
+
             dlg->vptr0__ = &System_Delegate_VTABLE__;
 
             dlg->count__ = count;
@@ -179,21 +183,23 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
 /////////////////////////////////////////////////
 // Delegate special functions
 
-System_Delegate* il2c_new_delegate__(
-    IL2C_RUNTIME_TYPE delegateType, System_Object* object, intptr_t method
 #if defined(_DEBUG)
-    , const char* pFile, int line
+System_Delegate* il2c_new_delegate__(
+    IL2C_RUNTIME_TYPE delegateType, System_Object* object, intptr_t method, const char* pFile, int line)
+#else
+System_Delegate* il2c_new_delegate__(
+    IL2C_RUNTIME_TYPE delegateType, System_Object* object, intptr_t method)
 #endif
-    )
 {
     il2c_assert(delegateType != NULL);
     il2c_assert(method != 0);
 
-    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(delegateType, sizeof(System_Delegate)
 #if defined(_DEBUG)
-        , pFile, line
+    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(delegateType, sizeof(System_Delegate), pFile, line);
+#else
+    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(delegateType, sizeof(System_Delegate));
 #endif
-        );
+
     dlg->vptr0__ = &System_Delegate_VTABLE__;
     
     dlg->count__ = 1;

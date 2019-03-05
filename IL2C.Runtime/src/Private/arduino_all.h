@@ -36,7 +36,13 @@ extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_check_heap()
 
 #define il2c_malloc malloc
+
+#if defined(_DEBUG)
+extern void il2c_free(void* p);
+#else
 #define il2c_free free
+#endif
+
 #define il2c_mcalloc il2c_malloc
 #define il2c_mcfree il2c_free
 

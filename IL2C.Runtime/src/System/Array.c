@@ -50,12 +50,13 @@ int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension)
 /////////////////////////////////////////////////
 // Array special functions
 
-System_Array* il2c_new_array__(
-    IL2C_RUNTIME_TYPE elementType, intptr_t length
 #if defined(_DEBUG)
-    , const char* pFile, int line
+System_Array* il2c_new_array__(
+    IL2C_RUNTIME_TYPE elementType, intptr_t length, const char* pFile, int line)
+#else
+System_Array* il2c_new_array__(
+    IL2C_RUNTIME_TYPE elementType, intptr_t length)
 #endif
-    )
 {
     il2c_assert(elementType != NULL);
     
@@ -71,12 +72,14 @@ System_Array* il2c_new_array__(
     // -1 is "uint8_t Item[1]"
     uintptr_t size = (uintptr_t)sizeof(System_Array) + ((uintptr_t)length) * elementSize;
     
-    System_Array* arr = il2c_get_uninitialized_object_internal__(
-        il2c_typeof(System_Array), size
 #if defined(_DEBUG)
-        , pFile, line
+    System_Array* arr = il2c_get_uninitialized_object_internal__(
+        il2c_typeof(System_Array), size, pFile, line);
+#else
+    System_Array* arr = il2c_get_uninitialized_object_internal__(
+        il2c_typeof(System_Array), size);
 #endif
-        );
+
     arr->vptr0__ = &System_Array_VTABLE__;
 
     arr->elementType__ = elementType;
@@ -85,7 +88,7 @@ System_Array* il2c_new_array__(
     return arr;
 }
 
-IL2C_CONST_STRING(il2c_index_out_of_range_message, L"Specified cast is not valid.");
+IL2C_CONST_STRING(il2c_index_out_of_range_message, L"Index was outside the bounds of the array.");
 
 void il2c_throw_indexoutofrangeexception__()
 {
@@ -111,7 +114,7 @@ static void System_Array_MarkHandler(System_Array* arr)
     intptr_t index;
     for (index = 0; index < arr->Length; index++)
     {
-        System_Object* pReference = il2c_array_item(arr, System_Object*, index);
+        void* pReference = il2c_array_item(arr, void*, index);
         if (pReference != NULL)
         {
             il2c_default_mark_handler__(pReference);

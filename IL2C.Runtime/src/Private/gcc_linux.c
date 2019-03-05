@@ -36,6 +36,8 @@ void il2c_free(void* p)
 {
     if (p)
     {
+        // Overwrite invalid signature to target memory.
+        // (For debugging purpose same as VC++ runtime.)
         memset(p, 0xdd, malloc_usable_size(p));
         free(p);
     }

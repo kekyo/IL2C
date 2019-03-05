@@ -312,6 +312,20 @@ void il2c_sleep(uint32_t milliseconds)
     // TODO:
 }
 
+#if defined(_DEBUG)
+#include <malloc.h>
+void il2c_free(void* p)
+{
+    if (p)
+    {
+        // Overwrite invalid signature to target memory.
+        // (For debugging purpose same as VC++ runtime.)
+        memset(p, 0xdd, malloc_usable_size(p));
+        free(p);
+    }
+}
+#endif
+
 void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);

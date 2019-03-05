@@ -248,11 +248,12 @@ const wchar_t* il2c_c_str(System_String* str)
 }
 
 int32_t il2c_prepare_format_string__(
-    const wchar_t* pFormat, int32_t count, System_Object** ppArgs)
+    const wchar_t* pFormat, int32_t count, System_Object** ppArgs, System_String** ppStringArgs)
 {
     il2c_assert(pFormat != NULL);
     il2c_assert(count >= 0);
     il2c_assert(ppArgs != NULL);
+    il2c_assert(ppStringArgs != NULL);
 
     enum { state_store, state_index0, state_index } state = state_store;
     int32_t index = 0;
@@ -308,7 +309,12 @@ int32_t il2c_prepare_format_string__(
 
                 if (pString != NULL)
                 {
+                    ppStringArgs[index] = pString;
                     length += System_String_get_Length(pString);
+                }
+                else
+                {
+                    ppStringArgs[index] = *System_String_Empty_REF__;
                 }
 
                 state = state_store;
@@ -325,12 +331,11 @@ int32_t il2c_prepare_format_string__(
 }
 
 void il2c_format_string__(
-    wchar_t* pDest, const wchar_t* pFormat, int32_t count, System_Object** ppArgs)
+    wchar_t* pDest, const wchar_t* pFormat, System_String** ppStringArgs)
 {
     il2c_assert(pDest != NULL);
     il2c_assert(pFormat != NULL);
-    il2c_assert(count >= 0);
-    il2c_assert(ppArgs != NULL);
+    il2c_assert(ppStringArgs != NULL);
 
     enum { state_store, state_index0, state_index } state = state_store;
     int32_t index = 0;
@@ -373,23 +378,10 @@ void il2c_format_string__(
             }
             else if (ch == L'}')
             {
-                if (index >= count)
+                const wchar_t* p = ppStringArgs[index]->string_body__;
+                while (*p != L'\0')
                 {
-                    il2c_assert(0);
-                }
-
-                System_Object* pReference = il2c_adjusted_reference(ppArgs[index]);
-                System_String* pString = (pReference != NULL) ?
-                    pReference->vptr0__->ToString(pReference) :
-                    NULL;
-
-                if (pString != NULL)
-                {
-                    const wchar_t* p = pString->string_body__;
-                    while (*p != L'\0')
-                    {
-                        *pDest++ = *p++;
-                    }
+                    *pDest++ = *p++;
                 }
 
                 state = state_store;
@@ -685,10 +677,12 @@ System_String* System_String_Format(System_String* format, System_Object* arg0)
         const uint16_t objRefCount__;
         const uint16_t valueCount__;
         System_String* pString;
-    } frame__ = { NULL, 1 };
+        System_String* pStringArg0;
+    } frame__ = { NULL, 2 };
     il2c_link_execution_frame(&frame__);
 
-    int32_t length = il2c_prepare_format_string__(format->string_body__, 1, &arg0);
+    int32_t length = il2c_prepare_format_string__(
+        format->string_body__, 1, &arg0, &frame__.pStringArg0);
     
 #if defined(_DEBUG)
     frame__.pString = new_string_internal__((length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
@@ -696,7 +690,9 @@ System_String* System_String_Format(System_String* format, System_Object* arg0)
     frame__.pString = new_string_internal__((length + 1) * sizeof(wchar_t));
 #endif
 
-    il2c_format_string__((wchar_t*)frame__.pString->string_body__, format->string_body__, 1, &arg0);
+    il2c_format_string__(
+        (wchar_t*)frame__.pString->string_body__,
+        format->string_body__, &frame__.pStringArg0);
 
     il2c_unlink_execution_frame(&frame__);
     return frame__.pString;

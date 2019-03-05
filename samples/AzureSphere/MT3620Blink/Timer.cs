@@ -35,7 +35,7 @@ namespace MT3620Blink
 
         void IEPollListener.OnRaised()
         {
-            Interops.timerfd_read(this.Identity, out var timerData,(UIntPtr)(sizeof(ulong)));
+            Interops.timerfd_read(this.Identity, out var timerData, (UIntPtr)(sizeof(ulong)));
             Raised();
         }
 

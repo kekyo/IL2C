@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-typedef long interlock_t;
+typedef volatile long interlock_t;
 
 ///////////////////////////////////////////////////
 // Internal depended definitions
@@ -21,10 +21,11 @@ typedef long interlock_t;
 #include "Private/gcc_linux.h"
 
 #if defined(IL2C_DEBUG_WRITE)
-#define DEBUG_WRITE(step, message) { \
-    il2c_debug_write2(step ": ", message); }
+#define il2c_debug_write(message) il2c_debug_write__(message "\r\n")
+#define il2c_debug_write_format(format, ...) il2c_debug_write_format__(format "\r\n", __VA_ARGS__)
 #else
-#define DEBUG_WRITE(step, message)
+#define il2c_debug_write(message)
+#define il2c_debug_write_format(format, ...)
 #endif
 
 extern void il2c_initialize__(void);
@@ -78,10 +79,9 @@ struct IL2C_RUNTIME_TYPE_DECL
 //    //const void* markTargets[markTarget];
 //};
 
-#define GCMARK_NOMARK ((interlock_t)0)
-#define GCMARK_LIVE ((interlock_t)1)
-#define GCMARK_FIXED ((interlock_t)2)
-#define GCMARK_CONST ((interlock_t)3)   // For GCHandle
+// IL2C_REF_HEADER_DECL.characteristic
+#define IL2C_CHARACTERISTIC_LIVE ((interlock_t)0x40000000UL)
+#define IL2C_CHARACTERISTIC_CONST ((interlock_t)0x80000000UL)
 
 #define il2c_get_header__(pReference) \
     ((IL2C_REF_HEADER*)(((uint8_t*)(pReference)) - sizeof(IL2C_REF_HEADER)))
@@ -134,7 +134,14 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
+#if defined(_DEBUG)
+extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
+#else
 extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
+#endif
+
+extern void il2c_register_fixed_instance__(void* pReference);
+extern void il2c_unregister_fixed_instance__(void* pReference);
 extern void il2c_default_mark_handler__(void* pReference);
 
 
@@ -143,8 +150,8 @@ extern void il2c_default_mark_handler__(void* pReference);
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs
 
-extern void il2c_debug_write(const char* message);
-extern void il2c_debug_write2(const char* message1, const char* message2);
+extern void il2c_debug_write__(const char* message);
+extern void il2c_debug_write_format__(const char* format, ...);
 
 extern void il2c_write(const wchar_t* s);
 extern void il2c_writeline(const wchar_t* s);

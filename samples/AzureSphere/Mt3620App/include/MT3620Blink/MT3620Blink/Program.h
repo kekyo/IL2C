@@ -68,9 +68,12 @@ extern /* public sealed */ void MT3620Blink_Program_GpioBlinker_NextInterval(MT3
     System_IDisposable_VTABLE_DECL__* vptr_System_IDisposable__;
     int32_t baseField1__;
     MT3620Blink_IEPollListener_VTABLE_DECL__* vptr_MT3620Blink_IEPollListener__;
-    MT3620Blink_GpioInput* input;
+    MT3620Blink_GpioInput* changeInput;
+    MT3620Blink_GpioInput* exitInput;
+    bool lastChangeInput;
+    bool lastExitInput;
     MT3620Blink_Program_GpioBlinker* blinker;
-    bool last;
+    MT3620Blink_Application* app;
 };
 
 // [1-5-2] VTable (Derived from MT3620Blink.Timer)
@@ -82,7 +85,7 @@ IL2C_DECLARE_RUNTIME_TYPE(MT3620Blink_Program_GpioPoller);
 //////////////////////////////////////////////////////////////////////////////////
 // [2-3] Methods: MT3620Blink.Program.GpioPoller
 
-extern /* public sealed */ void MT3620Blink_Program_GpioPoller__ctor(MT3620Blink_Program_GpioPoller* this__, int32_t gpioId, MT3620Blink_Program_GpioBlinker* blinker);
+extern /* public sealed */ void MT3620Blink_Program_GpioPoller__ctor(MT3620Blink_Program_GpioPoller* this__, int32_t changeInputGpioId, int32_t exitInputGpioId, MT3620Blink_Program_GpioBlinker* blinker, MT3620Blink_Application* app);
 extern /* public override sealed */ void MT3620Blink_Program_GpioPoller_Dispose(MT3620Blink_Program_GpioPoller* this__);
 extern /* protected override sealed */ void MT3620Blink_Program_GpioPoller_Raised(MT3620Blink_Program_GpioPoller* this__);
 

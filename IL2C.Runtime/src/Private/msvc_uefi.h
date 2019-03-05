@@ -33,15 +33,17 @@ extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
-#define il2c_initialize_heap()
 #define il2c_check_heap()
-#define il2c_shutdown_heap()
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 #define il2c_mcalloc il2c_malloc
 #define il2c_mcfree il2c_free
 
+#define il2c_iand(pDest, newValue) _InterlockedAnd((interlock_t*)(pDest), (interlock_t)(newValue))
+#define il2c_ior(pDest, newValue) _InterlockedOr((interlock_t*)(pDest), (interlock_t)(newValue))
+#define il2c_iinc(pDest) _InterlockedIncrement((interlock_t*)(pDest))
+#define il2c_idec(pDest) _InterlockedDecrement((interlock_t*)(pDest))
 #define il2c_ixchg(pDest, newValue) _InterlockedExchange((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))

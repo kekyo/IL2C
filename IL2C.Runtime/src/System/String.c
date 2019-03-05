@@ -32,19 +32,35 @@
 // |        :             |
 // +----------------------+ (terminated with \0)
 
+#if defined(_DEBUG)
+static System_String* new_string_internal__(uintptr_t byteSize, const char* pFile, int line)
+#else
 static System_String* new_string_internal__(uintptr_t byteSize)
+#endif
 {
     uintptr_t bodySize = sizeof(System_String) + byteSize;
+
+#if defined(_DEBUG)
+    System_String* pString = il2c_get_uninitialized_object_internal__(
+        il2c_typeof(System_String),
+        bodySize, pFile, line);
+#else
     System_String* pString = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
         bodySize);
+#endif
+
     pString->vptr0__ = &System_String_VTABLE__;
     wchar_t* string_body = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
     pString->string_body__ = string_body;
     return pString;
 }
 
-System_String* il2c_new_string(const wchar_t* pString)
+#if defined(_DEBUG)
+System_String* il2c_new_string__(const wchar_t* pString, const char* pFile, int line)
+#else
+System_String* il2c_new_string__(const wchar_t* pString)
+#endif
 {
     if (pString == NULL)
     {
@@ -52,7 +68,12 @@ System_String* il2c_new_string(const wchar_t* pString)
     }
 
     uintptr_t size = (uintptr_t)(il2c_wcslen(pString) + 1) * sizeof(wchar_t);
+
+#if defined(_DEBUG)
+    System_String* p = new_string_internal__(size, pFile, line);
+#else
     System_String* p = new_string_internal__(size);
+#endif
 
     // Copy string at below
     memcpy((wchar_t*)(p->string_body__), pString, size);
@@ -185,7 +206,11 @@ wchar_t* il2c_utf16_from_utf8_and_get_last(wchar_t* pDest, const char* pUtf8Stri
     return pDest;
 }
 
-System_String* il2c_new_string_from_utf8(const char* pUtf8String)
+#if defined(_DEBUG)
+System_String* il2c_new_string_from_utf8__(const char* pUtf8String, const char* pFile, int line)
+#else
+System_String* il2c_new_string_from_utf8__(const char* pUtf8String)
+#endif
 {
     if (pUtf8String == NULL)
     {
@@ -196,7 +221,12 @@ System_String* il2c_new_string_from_utf8(const char* pUtf8String)
     il2c_assert(length >= 0);
 
     uintptr_t size = (uintptr_t)(length) * sizeof(wchar_t);
+
+#if defined(_DEBUG)
+    System_String* p = new_string_internal__(size, pFile, line);
+#else
     System_String* p = new_string_internal__(size);
+#endif
 
     // Write into internal string buffer.
     il2c_utf16_from_utf8_and_get_last((wchar_t*)(p->string_body__), pUtf8String);
@@ -309,7 +339,12 @@ System_String* System_String_Concat_3(System_String* str0, System_String* str1)
     uintptr_t str0Size = (uintptr_t)il2c_wcslen(str0->string_body__) * sizeof(wchar_t);
     uintptr_t str1Size = (uintptr_t)il2c_wcslen(str1->string_body__) * sizeof(wchar_t);
 
+#if defined(_DEBUG)
+    System_String* pString = new_string_internal__(str0Size + str1Size + sizeof(wchar_t), __FILE__, __LINE__);
+#else
     System_String* pString = new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
+#endif
+
     memcpy((wchar_t*)(pString->string_body__), str0->string_body__, str0Size);
     memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size + sizeof(wchar_t));
 
@@ -355,7 +390,12 @@ System_String* System_String_Concat_5(System_String* str0, System_String* str1, 
     uintptr_t str1Size = (uintptr_t)il2c_wcslen(str1->string_body__) * sizeof(wchar_t);
     uintptr_t str2Size = (uintptr_t)il2c_wcslen(str2->string_body__) * sizeof(wchar_t);
 
+#if defined(_DEBUG)
+    System_String* pString = new_string_internal__(str0Size + str1Size + str2Size + sizeof(wchar_t), __FILE__, __LINE__);
+#else
     System_String* pString = new_string_internal__(str0Size + str1Size + str2Size + sizeof(wchar_t));
+#endif
+
     memcpy((wchar_t*)(pString->string_body__), str0->string_body__, str0Size);
     memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size);
     memcpy(((uint8_t*)(pString->string_body__)) + str0Size + str1Size, str2->string_body__, str2Size + sizeof(wchar_t));
@@ -381,7 +421,13 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
     il2c_assert(startIndex < thisLength);
 
     uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
+
+#if defined(_DEBUG)
+    System_String* pString = new_string_internal__(newSize, __FILE__, __LINE__);
+#else
     System_String* pString = new_string_internal__(newSize);
+#endif
+
     memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
 
     return pString;
@@ -406,7 +452,13 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
     }
 
     uintptr_t newSize = (uintptr_t)length * sizeof(wchar_t);
+
+#if defined(_DEBUG)
+    System_String* pString = new_string_internal__(newSize + sizeof(wchar_t), __FILE__, __LINE__);
+#else
     System_String* pString = new_string_internal__(newSize + sizeof(wchar_t));
+#endif
+
     memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
     ((wchar_t*)(pString->string_body__))[length] = L'\0';
 

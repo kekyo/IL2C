@@ -67,7 +67,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
-      <DisableSpecificWarnings>4100;4091</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4100;4146;4197;4206</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>All</AssemblerOutput>
       <!-- <TreatWarningAsError>true</TreatWarningAsError> -->

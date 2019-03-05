@@ -80,6 +80,18 @@ namespace MT3620Blink
         public static extern int timerfd_read(int fd, out ulong timerData, UIntPtr size);
 
         //////////////////////////////////////////////////////////////////////
+        // event
+
+        [NativeMethod("sys/eventfd.h")]
+        public static extern int eventfd(uint initval, int flags);
+
+        [NativeMethod("sys/eventfd.h")]
+        public static extern int eventfd_write(int fd, ulong value);
+
+        [NativeMethod("sys/eventfd.h")]
+        public static extern int eventfd_read(int fd, out ulong value);
+
+        //////////////////////////////////////////////////////////////////////
         // gpio
 
         [NativeValue("mt3620_rdb.h")]
@@ -94,6 +106,9 @@ namespace MT3620Blink
 
         [NativeValue("mt3620_rdb.h")]
         public static readonly int MT3620_RDB_BUTTON_A;
+
+        [NativeValue("mt3620_rdb.h")]
+        public static readonly int MT3620_RDB_BUTTON_B;
 
         [NativeMethod("applibs/gpio.h")]
         public static extern int GPIO_OpenAsInput(int gpioId);

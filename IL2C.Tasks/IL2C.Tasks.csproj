@@ -31,6 +31,7 @@
         <!-- <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder> -->
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
+        <Platforms>AnyCPU</Platforms>
         <!-- <TaskPublishOutput>D:\PROJECT\IL2C\IL2C.Tasks\bin\Debug\netstandard1.6\publish</TaskPublishOutput> -->
     </PropertyGroup>
 
@@ -51,7 +52,7 @@
 
     <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
         <ItemGroup>
-            <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)"/>
+            <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
         </ItemGroup>
     </Target>
 </Project>

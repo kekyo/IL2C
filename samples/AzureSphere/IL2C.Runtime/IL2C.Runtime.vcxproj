@@ -15,7 +15,7 @@
     <ClInclude Include="../../../IL2C.Runtime/include/**/*.h" />
     <ClInclude Include="../../../IL2C.Runtime/src/**/*.h" />
   </ItemGroup>
-  <PropertyGroup Label="Globals">
+  <PropertyGroup Label="Configuration">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{4a3bf87a-c826-450f-93bf-09313917964a}</ProjectGuid>
     <Keyword>AzureSphere</Keyword>
@@ -32,14 +32,14 @@
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Label="Globals">
+  <PropertyGroup Label="Configuration">
     <TargetSysroot>1</TargetSysroot>
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
-  <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Debug'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Debug'">
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
-  <PropertyGroup Label="Globals" Condition="'$(Configuration)'=='Release'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Release'">
     <UseDebugLibraries>false</UseDebugLibraries>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -53,10 +53,10 @@
       <AdditionalOptions>-fdata-sections -ffunction-sections -Werror=implicit-function-declaration -Wno-unused-value %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">__AZURE_SPHERE__;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AZURE_SPHERE__;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Release'">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">__AZURE_SPHERE__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AZURE_SPHERE__;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

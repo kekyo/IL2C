@@ -24,6 +24,7 @@
         <DebugType>pdbonly</DebugType>
         <DebugSymbols>true</DebugSymbols>
         <LangVersion>7.1</LangVersion>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

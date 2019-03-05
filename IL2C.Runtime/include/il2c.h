@@ -36,12 +36,12 @@ extern "C" {
 #include <float.h>
 
 #if defined(_MSC_VER) && defined(UEFI)
-#if defined(DEBUG)
-#define DBGASSERT(a) DbgAssert(__FILE__, __LINE__, #a)
+#if defined(_DEBUG)
+extern void il2c_assert__(const char* pFile, int line, const char* pExpr);
+#define il2c_assert(expr) { if (expr) il2c_assert__(__FILE__, __LINE__, #expr); }
 #else
-#define DBGASSERT(a)
+#define il2c_assert(expr)
 #endif
-#define il2c_assert DBGASSERT
 extern int32_t* il2c_errno__(void);
 #define il2c_errno (*il2c_errno__())
 #else
@@ -75,10 +75,15 @@ extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
 #endif
 
+#if defined(ARDUINO)
+extern void il2c_initialize(void);
+extern void il2c_shutdown(void);
+#endif
+
 ///////////////////////////////////////////////////////
 // Runtime stack frame types
 
-typedef long interlock_t;
+typedef volatile long interlock_t;
 
 typedef volatile struct IL2C_EXECUTION_FRAME_DECL IL2C_EXECUTION_FRAME;
 typedef volatile struct IL2C_EXCEPTION_FRAME_DECL IL2C_EXCEPTION_FRAME;
@@ -101,7 +106,7 @@ struct IL2C_REF_HEADER_DECL
 {
     IL2C_REF_HEADER* pNext;
     IL2C_RUNTIME_TYPE type;
-    interlock_t gcMark;
+    interlock_t characteristic;
 };
 
 ///////////////////////////////////////////////////////
@@ -165,12 +170,25 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 
 extern void il2c_collect(void);
 
+#if defined(_DEBUG)
+extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type, const char* pFile, int line);
+#define il2c_get_uninitialized_object(typeName) \
+    il2c_get_uninitialized_object__(il2c_typeof(typeName), __FILE__, __LINE__)
+
+extern void il2c_link_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame, const char* pFile, int line);
+extern void il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame, const char* pFile, int line);
+#define il2c_link_execution_frame(pNewFrame) il2c_link_execution_frame__(pNewFrame, __FILE__, __LINE__)
+#define il2c_unlink_execution_frame(pFrame) il2c_unlink_execution_frame__(pFrame, __FILE__, __LINE__)
+#else
 extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type);
 #define il2c_get_uninitialized_object(typeName) \
     il2c_get_uninitialized_object__(il2c_typeof(typeName))
 
-extern void il2c_link_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame);
-extern void il2c_unlink_execution_frame(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame);
+extern void il2c_link_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame);
+extern void il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame);
+#define il2c_link_execution_frame(pNewFrame) il2c_link_execution_frame__(pNewFrame)
+#define il2c_unlink_execution_frame(pFrame) il2c_unlink_execution_frame__(pFrame)
+#endif
 
 extern const uintptr_t* il2c_initializer_count;
 extern void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields);
@@ -227,17 +245,31 @@ typedef void* untyped_ptr;
 #define il2c_boxedtype(valueTypeName) \
     System_ValueType
 
+#if defined(_DEBUG)
+extern System_ValueType* il2c_box__(
+    void* pValue, IL2C_RUNTIME_TYPE valueType, const char* pFile, int line);
+extern System_ValueType* il2c_box2__(
+    void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType, const char* pFile, int line);
+
+#define il2c_box(pValue, valueTypeName) \
+    (il2c_box__(pValue, il2c_typeof(valueTypeName), __FILE__, __LINE__))
+#define il2c_box2(pValue, valueTypeName, stackTypeName) \
+    (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName), __FILE__, __LINE__))
+#else
 extern System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType);
 extern System_ValueType* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType);
-extern void* il2c_unbox__(
-    /* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE valueType);
 
 #define il2c_box(pValue, valueTypeName) \
     (il2c_box__(pValue, il2c_typeof(valueTypeName)))
 #define il2c_box2(pValue, valueTypeName, stackTypeName) \
     (il2c_box2__(pValue, il2c_typeof(valueTypeName), il2c_typeof(stackTypeName)))
+#endif
+
+extern void* il2c_unbox__(
+    /* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE valueType);
+
 #define il2c_unbox(pObject, valueTypeName) \
     ((valueTypeName*)il2c_unbox__(pObject, il2c_typeof(valueTypeName)))
 #define il2c_unsafe_unbox__(pObject, typeName) \
@@ -313,7 +345,14 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 // Another special runtime helper functions
 
 extern double il2c_fmod(double lhs, double rhs);
-extern void il2c_break(void);
+
+#if defined(_DEBUG)
+extern void il2c_break__(const char* pFile, int line);
+#define il2c_break() il2c_break__(__FILE__, __LINE__)
+#else
+extern void il2c_break__(void);
+#define il2c_break() il2c_break__()
+#endif
 
 extern void il2c_throw_nullreferenceexception__(void);
 extern void il2c_throw_invalidcastexception__(void);

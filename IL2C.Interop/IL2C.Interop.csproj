@@ -23,6 +23,7 @@
         <PackageTags>il2c;il;translate;transpile;convert;c;c++;assembly;multi-platform</PackageTags>
         <DebugType>pdbonly</DebugType>
         <DebugSymbols>true</DebugSymbols>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
 </Project>

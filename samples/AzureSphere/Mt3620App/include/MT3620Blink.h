@@ -13,6 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////
 // [13-3] Import native headers:
 
+#include <sys/eventfd.h>
 #include <mt3620_rdb.h>
 #include <sys/epoll.h>
 #include <time.h>
@@ -30,6 +31,7 @@
 #include "MT3620Blink/MT3620Blink/GpioOutput.h"
 #include "MT3620Blink/MT3620Blink/GpioInput.h"
 #include "MT3620Blink/MT3620Blink/IEPollListener.h"
+#include "MT3620Blink/MT3620Blink/Event.h"
 #include "MT3620Blink/MT3620Blink/Application.h"
 #include "MT3620Blink/MT3620Blink/timespec.h"
 #include "MT3620Blink/MT3620Blink/itimerspec.h"
@@ -50,6 +52,7 @@
 #include "MT3620Blink/MT3620Blink/GpioOutput.h"
 #include "MT3620Blink/MT3620Blink/GpioInput.h"
 #include "MT3620Blink/MT3620Blink/IEPollListener.h"
+#include "MT3620Blink/MT3620Blink/Event.h"
 #include "MT3620Blink/MT3620Blink/Application.h"
 #include "MT3620Blink/MT3620Blink/timespec.h"
 #include "MT3620Blink/MT3620Blink/itimerspec.h"

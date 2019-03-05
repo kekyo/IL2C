@@ -16,14 +16,7 @@ void System_Runtime_InteropServices_GCHandle_set_Target(System_Runtime_InteropSe
 
     if (value != NULL)
     {
-        // TODO: Force pinned.
-        IL2C_REF_HEADER* pHeader = il2c_get_header__(value);
-        volatile interlock_t gcMark = pHeader->gcMark;
-        if ((gcMark == GCMARK_NOMARK) || (gcMark == GCMARK_LIVE))
-        {
-            // Fixed this objref
-            pHeader->gcMark = GCMARK_FIXED;
-        }
+        il2c_register_fixed_instance__(value);
     }
 
     *this__ = (intptr_t)value;
@@ -33,15 +26,10 @@ void System_Runtime_InteropServices_GCHandle_Free(System_Runtime_InteropServices
 {
     il2c_assert(this__ != NULL);
 
-    System_Object* obj = (System_Object*)*this__;
-    if (obj != NULL)
+    System_Object* pObject = (System_Object*)*this__;
+    if (pObject != NULL)
     {
-        IL2C_REF_HEADER* pHeader = il2c_get_header__(obj);
-        if (pHeader->gcMark == GCMARK_FIXED)
-        {
-            // No problem for previous state was GCMARK_NOMARK.
-            pHeader->gcMark = GCMARK_LIVE;
-        }
+        il2c_unregister_fixed_instance__(pObject);
     }
 
     *this__ = 0;
@@ -69,13 +57,7 @@ System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_
     {
         if (value != NULL)
         {
-            IL2C_REF_HEADER* pHeader = il2c_get_header__(value);
-            volatile interlock_t gcMark = pHeader->gcMark;
-            if ((gcMark == GCMARK_NOMARK) || (gcMark == GCMARK_LIVE))
-            {
-                // Fixed this objref
-                pHeader->gcMark = GCMARK_FIXED;
-            }
+            il2c_register_fixed_instance__(value);
         }
     }
 

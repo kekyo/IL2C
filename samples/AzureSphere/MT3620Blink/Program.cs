@@ -43,50 +43,75 @@ namespace MT3620Blink
 
         private sealed class GpioPoller : Timer
         {
-            private readonly GpioInput input;
+            private readonly GpioInput changeInput;
+            private readonly GpioInput exitInput;
+            private bool lastChangeInput;
+            private bool lastExitInput;
             private readonly GpioBlinker blinker;
-            private bool last;
+            private readonly Application app;
 
-            public GpioPoller(int gpioId, GpioBlinker blinker)
+            public GpioPoller(
+                int changeInputGpioId, int exitInputGpioId,
+                GpioBlinker blinker, Application app)
             {
-                input = new GpioInput(gpioId);
-                last = input.Value;
+                changeInput = new GpioInput(changeInputGpioId);
+                lastChangeInput = changeInput.Value;
+
+                exitInput = new GpioInput(exitInputGpioId);
+                lastExitInput = exitInput.Value;
+
                 this.blinker = blinker;
+                this.app = app;
                 this.SetInterval(100_000_000L);
             }
 
             public override void Dispose()
             {
                 base.Dispose();
-                input.Dispose();
+                changeInput.Dispose();
+                exitInput.Dispose();
             }
 
             protected override void Raised()
             {
-                var current = input.Value;
-                if (current != last)
+                var current = changeInput.Value;
+                if (current != lastChangeInput)
                 {
                     if (!current)
                     {
                         blinker.NextInterval();
                     }
                 }
-                last = current;
+                lastChangeInput = current;
+
+                current = exitInput.Value;
+                if (current != lastExitInput)
+                {
+                    if (!current)
+                    {
+                        app.Abort();
+                    }
+                }
+                lastExitInput = current;
             }
         }
 
         public static int Main()
         {
-            using (var epoll = new Application())
+            using (var app = new Application())
             {
                 using (var ledBlinker = new GpioBlinker(Interops.MT3620_RDB_LED1_RED))
                 {
-                    using (var buttonPoller = new GpioPoller(Interops.MT3620_RDB_BUTTON_A, ledBlinker))
+                    using (var buttonPoller = new GpioPoller(
+                        Interops.MT3620_RDB_BUTTON_A,
+                        Interops.MT3620_RDB_BUTTON_B,
+                        ledBlinker,
+                        app))
                     {
-                        epoll.RegisterDescriptor(ledBlinker);
-                        epoll.RegisterDescriptor(buttonPoller);
+                        app.RegisterDescriptor(ledBlinker);
+                        app.RegisterDescriptor(buttonPoller);
 
-                        epoll.Run();
+                        app.Run();
                     }
                 }
             }

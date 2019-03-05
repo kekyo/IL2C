@@ -1,7 +1,7 @@
 // It uses for internal purpose only.
 
-#ifndef __GCC_WIN32_H__
-#define __GCC_WIN32_H__
+#ifndef __ARDUINO_ALL_H__
+#define __ARDUINO_ALL_H__
 
 #pragma once
 
@@ -10,25 +10,21 @@ extern "C" {
 #endif
 
 ///////////////////////////////////////////////////
-// MinGW gcc (Win32)
+// Arduino
 
-#if defined(__GNUC__) && defined(_WIN32)
+#if defined(__GNUC__) && defined(ARDUINO)
 
-#include <x86intrin.h>
-#include <stdio.h>
+#include <intrin.h>
+#include <stdint.h>
 #include <wchar.h>
-#define IL2C_USE_SIGNAL
-#include <signal.h>
-
-#include <windows.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow(v, b, l) _itow(v, b, 10)
+extern wchar_t* il2c_itow(int32_t value, wchar_t* d, int radix);
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
 #define il2c_snwprintf _snwprintf
-#define il2c_wcstol wcstol
+extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_wcstoul wcstoul
 #define il2c_wcstoll wcstoll
 #define il2c_wcstoull wcstoull
@@ -38,8 +34,15 @@ extern "C" {
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_check_heap()
+
 #define il2c_malloc malloc
+
+#if defined(_DEBUG)
+extern void il2c_free(void* p);
+#else
 #define il2c_free free
+#endif
+
 #define il2c_mcalloc il2c_malloc
 #define il2c_mcfree il2c_free
 
@@ -51,7 +54,8 @@ extern "C" {
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
-#define il2c_sleep(milliseconds) Sleep((DWORD)milliseconds)
+extern void il2c_sleep(uint32_t milliseconds);
+
 #define il2c_longjmp longjmp
 
 #endif

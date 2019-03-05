@@ -30,6 +30,20 @@ wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l)
     return b;
 }
 
+#if defined(_DEBUG)
+#include <malloc.h>
+void il2c_free(void* p)
+{
+    if (p)
+    {
+        // Overwrite invalid signature to target memory.
+        // (For debugging purpose same as VC++ runtime.)
+        memset(p, 0xdd, malloc_usable_size(p));
+        free(p);
+    }
+}
+#endif
+
 #include <time.h>
 
 void il2c_sleep(uint32_t milliseconds)
@@ -46,7 +60,7 @@ void il2c_sleep(uint32_t milliseconds)
 // NOT Azure Sphere
 #if !defined(__AZURE_SPHERE__)
 
-void il2c_debug_write(const char* message)
+void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);
 
@@ -57,28 +71,22 @@ void il2c_debug_write(const char* message)
     *pLast++ = L'\n';
     *pLast = L'\0';
 
+    // TODO: syslog
     fputws(pBuffer, stderr);
 
     il2c_mcfree(pBuffer);
 }
 
-void il2c_debug_write2(const char* message1, const char* message2)
+void il2c_debug_write_format__(const char* format, ...)
 {
-    il2c_assert(message1 != NULL);
-    il2c_assert(message2 != NULL);
+    il2c_assert(format != NULL);
 
-    int32_t length1 = il2c_get_utf8_length(message1, false);
-    int32_t length2 = il2c_get_utf8_length(message2, false);
-    wchar_t* pBuffer = il2c_mcalloc((length1 + length2 + 3) * sizeof(wchar_t));
-    wchar_t* pLast1 = il2c_utf16_from_utf8_and_get_last(pBuffer, message1);
-    wchar_t* pLast2 = il2c_utf16_from_utf8_and_get_last(pLast1, message2);
-    *pLast2++ = L'\r';
-    *pLast2++ = L'\n';
-    *pLast2 = L'\0';
+    va_list va;
 
-    fputws(pBuffer, stderr);
-
-    il2c_mcfree(pBuffer);
+    va_start(va, format);
+    // TODO: syslog
+    vfwprintf(stderr, format, va);
+    va_end(va);
 }
 
 void il2c_write(const wchar_t* s)

@@ -11,7 +11,7 @@
 void il2c_debug_write(const char* format, ...)
 {
     va_list va;
-    char buffer[128];
+    char buffer[256];
 
     va_start(va, format);
     il2c_assert(format != NULL);

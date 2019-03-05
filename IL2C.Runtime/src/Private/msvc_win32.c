@@ -6,33 +6,24 @@
 // Standard Win32 API
 #if defined(_MSC_VER) && defined(_WIN32) && !defined(UEFI) && !defined(_WDM)
 
-void il2c_debug_write(const char* message)
+void il2c_debug_write__(const char* message)
 {
     il2c_assert(message != NULL);
 
-    int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* pBuffer = il2c_mcalloc((length + 1) * sizeof(wchar_t));
-    il2c_utf16_from_utf8_and_get_last(pBuffer, message);
-
-    OutputDebugStringW(pBuffer);
-
-    il2c_mcfree(pBuffer);
+    OutputDebugStringA(message);
 }
 
-void il2c_debug_write2(const char* message1, const char* message2)
+void il2c_debug_write_format__(const char* format, ...)
 {
-    il2c_assert(message1 != NULL);
-    il2c_assert(message2 != NULL);
+    il2c_assert(format != NULL);
 
-    int32_t length1 = il2c_get_utf8_length(message1, false);
-    int32_t length2 = il2c_get_utf8_length(message2, false);
-    wchar_t* pBuffer = il2c_mcalloc((length1 + length2 + 1) * sizeof(wchar_t));
-    wchar_t* pLast1 = il2c_utf16_from_utf8_and_get_last(pBuffer, message1);
-    il2c_utf16_from_utf8_and_get_last(pLast1, message2);
+    va_list va;
+    char buffer[512];
 
-    OutputDebugStringW(pBuffer);
-
-    il2c_mcfree(pBuffer);
+    va_start(va, format);
+    vsprintf(buffer, format, va);
+    OutputDebugStringA(buffer);
+    va_end(va);
 }
 
 void il2c_write(const wchar_t* s)
@@ -82,12 +73,16 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 void il2c_initialize(void)
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
+
     il2c_initialize__();
 }
 
 void il2c_shutdown(void)
 {
     il2c_shutdown__();
+
+    _CrtDumpMemoryLeaks();
 }
 
 #endif

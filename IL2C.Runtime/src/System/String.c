@@ -247,6 +247,164 @@ const wchar_t* il2c_c_str(System_String* str)
     }
 }
 
+int32_t il2c_prepare_format_string__(
+    const wchar_t* pFormat, int32_t count, System_Object** ppArgs)
+{
+    il2c_assert(pFormat != NULL);
+    il2c_assert(count >= 0);
+    il2c_assert(ppArgs != NULL);
+
+    enum { state_store, state_index0, state_index } state = state_store;
+    int32_t index = 0;
+    int32_t length = 0;
+    while (*pFormat != L'\0')
+    {
+        wchar_t ch = *pFormat++;
+        switch (state)
+        {
+        case state_store:
+            if (ch == L'{')
+            {
+                index = 0;
+                state = state_index0;
+            }
+            else
+            {
+                length++;
+            }
+            break;
+        case state_index0:
+            if ((ch >= L'0') && (ch <= L'9'))
+            {
+                index = index * 10 + (ch - L'0');
+                state = state_index;
+            }
+            else if (ch == L'{')
+            {
+                length++;
+                state = state_store;
+            }
+            else
+            {
+                il2c_throw_formatexception__();
+            }
+            break;
+        case state_index:
+            if ((ch >= L'0') && (ch <= L'9'))
+            {
+                index = index * 10 + (ch - L'0');
+            }
+            else if (ch == L'}')
+            {
+                if (index >= count)
+                {
+                    il2c_throw_formatexception__();
+                }
+
+                System_Object* pReference = il2c_adjusted_reference(ppArgs[index]);
+                System_String* pString = (pReference != NULL) ?
+                    pReference->vptr0__->ToString(pReference) :
+                    NULL;
+
+                if (pString != NULL)
+                {
+                    length += System_String_get_Length(pString);
+                }
+
+                state = state_store;
+            }
+            else
+            {
+                il2c_throw_formatexception__();
+            }
+            break;
+        }
+    }
+
+    return length;
+}
+
+void il2c_format_string__(
+    wchar_t* pDest, const wchar_t* pFormat, int32_t count, System_Object** ppArgs)
+{
+    il2c_assert(pDest != NULL);
+    il2c_assert(pFormat != NULL);
+    il2c_assert(count >= 0);
+    il2c_assert(ppArgs != NULL);
+
+    enum { state_store, state_index0, state_index } state = state_store;
+    int32_t index = 0;
+    while (*pFormat != L'\0')
+    {
+        wchar_t ch = *pFormat++;
+        switch (state)
+        {
+        case state_store:
+            if (ch == L'{')
+            {
+                index = 0;
+                state = state_index0;
+            }
+            else
+            {
+                *pDest++ = ch;
+            }
+            break;
+        case state_index0:
+            if ((ch >= L'0') && (ch <= L'9'))
+            {
+                index = index * 10 + (ch - L'0');
+                state = state_index;
+            }
+            else if (ch == L'{')
+            {
+                *pDest++ = ch;
+                state = state_store;
+            }
+            else
+            {
+                il2c_assert(0);
+            }
+            break;
+        case state_index:
+            if ((ch >= L'0') && (ch <= L'9'))
+            {
+                index = index * 10 + (ch - L'0');
+            }
+            else if (ch == L'}')
+            {
+                if (index >= count)
+                {
+                    il2c_assert(0);
+                }
+
+                System_Object* pReference = il2c_adjusted_reference(ppArgs[index]);
+                System_String* pString = (pReference != NULL) ?
+                    pReference->vptr0__->ToString(pReference) :
+                    NULL;
+
+                if (pString != NULL)
+                {
+                    const wchar_t* p = pString->string_body__;
+                    while (*p != L'\0')
+                    {
+                        *pDest++ = *p++;
+                    }
+                }
+
+                state = state_store;
+            }
+            else
+            {
+                il2c_assert(0);
+            }
+            break;
+        }
+    }
+
+    *pDest = L'\0';
+}
+
 /////////////////////////////////////////////////////////////
 // System.String
 
@@ -513,6 +671,35 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
 
         index++;
     }
+}
+
+System_String* System_String_Format(System_String* format, System_Object* arg0)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(format != NULL);
+    il2c_assert(format->string_body__ != NULL);
+
+    struct System_String_Format_EXECUTION_FRAME
+    {
+        IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
+        System_String* pString;
+    } frame__ = { NULL, 1 };
+    il2c_link_execution_frame(&frame__);
+
+    int32_t length = il2c_prepare_format_string__(format->string_body__, 1, &arg0);
+    
+#if defined(_DEBUG)
+    frame__.pString = new_string_internal__((length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
+#else
+    frame__.pString = new_string_internal__((length + 1) * sizeof(wchar_t));
+#endif
+
+    il2c_format_string__((wchar_t*)frame__.pString->string_body__, format->string_body__, 1, &arg0);
+
+    il2c_unlink_execution_frame(&frame__);
+    return frame__.pString;
 }
 
 bool System_String_op_Equality(System_String* lhs, System_String* rhs)

@@ -194,6 +194,14 @@ extern const uintptr_t* il2c_initializer_count;
 extern void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields);
 
 ///////////////////////////////////////////////////////
+// Basic exceptions
+
+extern void il2c_throw_nullreferenceexception__(void);
+extern void il2c_throw_invalidcastexception__(void);
+extern void il2c_throw_indexoutofrangeexception__(void);
+extern void il2c_throw_formatexception__(void);
+
+///////////////////////////////////////////////////////
 // The basis types
 
 // It's pseudo referenced-type null value used by ldnull.
@@ -227,6 +235,7 @@ typedef void* untyped_ptr;
 #include "System/NullReferenceException.h"
 #include "System/InvalidCastException.h"
 #include "System/IndexOutOfRangeException.h"
+#include "System/FormatException.h"
 #include "System/GC.h"
 #include "System/Runtime/InteropServices/GCHandleType.h"
 #include "System/Runtime/InteropServices/GCHandle.h"
@@ -353,9 +362,6 @@ extern void il2c_break__(const char* pFile, int line);
 extern void il2c_break__(void);
 #define il2c_break() il2c_break__()
 #endif
-
-extern void il2c_throw_nullreferenceexception__(void);
-extern void il2c_throw_invalidcastexception__(void);
 
 ///////////////////////////////////////////////////////
 // Generator macro for runtime type information.

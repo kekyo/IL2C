@@ -1332,3 +1332,21 @@ void il2c_throw_invalidcastexception__(void)
     System_InvalidCastException__ctor_1(ex, il2c_invalid_cast_message);
     il2c_throw(ex);
 }
+
+IL2C_CONST_STRING(il2c_index_out_of_range_message, L"Index was outside the bounds of the array.");
+
+void il2c_throw_indexoutofrangeexception__(void)
+{
+    System_IndexOutOfRangeException* ex = il2c_get_uninitialized_object(System_IndexOutOfRangeException);
+    System_IndexOutOfRangeException__ctor_1(ex, il2c_index_out_of_range_message);
+    il2c_throw(ex);
+}
+
+IL2C_CONST_STRING(il2c_format_message, L"Input string was not in a correct format.");
+
+void il2c_throw_formatexception__(void)
+{
+    System_FormatException* ex = il2c_get_uninitialized_object(System_FormatException);
+    System_FormatException__ctor_1(ex, il2c_format_message);
+    il2c_throw(ex);
+}

@@ -21,7 +21,6 @@ namespace IL2C.BasicTypes
     [TestCase(false, "IndexOutOfRange", "ABC", 2)]
     [TestCase(true, "IndexOutOfRange", "ABC", -1)]
     [TestCase(true, "IndexOutOfRange", "ABC", 3)]
-    [TestCase("ABC123DEF", "Format1", "ABC{0}DEF", 123)]
     public sealed class System_String
     {
         // NOTE: ToString and Equals are written by IL.
@@ -77,11 +76,6 @@ namespace IL2C.BasicTypes
                 return ex.Message == "Index was outside the bounds of the array.";
             }
             return false;
-        }
-
-        public static string Format1(string format, object value0)
-        {
-            return string.Format(format, value0);
         }
     }
 }

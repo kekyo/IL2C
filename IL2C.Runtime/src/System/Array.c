@@ -88,15 +88,6 @@ System_Array* il2c_new_array__(
     return arr;
 }
 
-IL2C_CONST_STRING(il2c_index_out_of_range_message, L"Index was outside the bounds of the array.");
-
-void il2c_throw_indexoutofrangeexception__()
-{
-    System_IndexOutOfRangeException* ex = il2c_get_uninitialized_object(System_IndexOutOfRangeException);
-    System_IndexOutOfRangeException__ctor_1(ex, il2c_index_out_of_range_message);
-    il2c_throw(ex);
-}
-
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 

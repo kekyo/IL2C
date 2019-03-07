@@ -247,163 +247,91 @@ const wchar_t* il2c_c_str(System_String* str)
     }
 }
 
-int32_t il2c_prepare_format_string__(
-    const wchar_t* pFormat, int32_t count, System_Object** ppArgs, System_String** ppStringArgs)
-{
-    il2c_assert(pFormat != NULL);
-    il2c_assert(count >= 0);
-    il2c_assert(ppArgs != NULL);
-    il2c_assert(ppStringArgs != NULL);
+////////////////////////////////////////////////////////
+// String formatting basis function.
+// It's flexible with applicating delegation functions.
 
-    enum { state_store, state_index0, state_index } state = state_store;
-    int32_t index = 0;
-    int32_t length = 0;
-    while (*pFormat != L'\0')
-    {
-        wchar_t ch = *pFormat++;
-        switch (state)
-        {
-        case state_store:
-            if (ch == L'{')
-            {
-                index = 0;
-                state = state_index0;
-            }
-            else
-            {
-                length++;
-            }
-            break;
-        case state_index0:
-            if ((ch >= L'0') && (ch <= L'9'))
-            {
-                index = index * 10 + (ch - L'0');
-                state = state_index;
-            }
-            else if (ch == L'{')
-            {
-                length++;
-                state = state_store;
-            }
-            else
-            {
-                il2c_throw_formatexception__();
-            }
-            break;
-        case state_index:
-            if ((ch >= L'0') && (ch <= L'9'))
-            {
-                index = index * 10 + (ch - L'0');
-            }
-            else if (ch == L'}')
-            {
-                if (index >= count)
-                {
-                    il2c_throw_formatexception__();
-                }
-
-                System_String* pString;
-                System_Object* pReference = ppArgs[index];
-                if (pReference != NULL)
-                {
-                    pReference = il2c_adjusted_reference(pReference);
-                    pString = (pReference != NULL) ?
-                        pReference->vptr0__->ToString(pReference) :
-                        NULL;
-                }
-                else
-                {
-                    pString = NULL;
-                }
-
-                if (pString != NULL)
-                {
-                    ppStringArgs[index] = pString;
-                    length += System_String_get_Length(pString);
-                }
-                else
-                {
-                    ppStringArgs[index] = *System_String_Empty_REF__;
-                }
-
-                state = state_store;
-            }
-            else
-            {
-                il2c_throw_formatexception__();
-            }
-            break;
-        }
-    }
-
-    return length;
-}
-
+// The formatting precess.
 void il2c_format_string__(
-    wchar_t* pDest, const wchar_t* pFormat, System_String** ppStringArgs)
+    const wchar_t* pFormat,
+    IL2C_FORMAT_WRITER pWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
+    void* pState)
 {
-    il2c_assert(pDest != NULL);
     il2c_assert(pFormat != NULL);
-    il2c_assert(ppStringArgs != NULL);
+    il2c_assert(pWriter != NULL);
+    il2c_assert(pArgumentWriter != NULL);
 
-    enum { state_store, state_index0, state_index } state = state_store;
-    int32_t index = 0;
-    while (*pFormat != L'\0')
+    enum { state_fetch, state_index0, state_index } state = state_fetch;
+    int32_t argumentIndex = 0;
+    int32_t startPosition = 0;
+    int32_t position = 0;
+    while (1)
     {
-        wchar_t ch = *pFormat++;
+        const wchar_t ch = pFormat[position++];
+        if (ch == L'\0')
+        {
+            if ((position - 1) > startPosition)
+            {
+                (*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState);
+            }
+            
+            break;
+        }
+
         switch (state)
         {
-        case state_store:
+        case state_fetch:
             if (ch == L'{')
             {
-                index = 0;
+                argumentIndex = 0;
                 state = state_index0;
-            }
-            else
-            {
-                *pDest++ = ch;
             }
             break;
         case state_index0:
             if ((ch >= L'0') && (ch <= L'9'))
             {
-                index = index * 10 + (ch - L'0');
+                if ((position - 2) > startPosition)
+                {
+                    (*pWriter)(pFormat + startPosition, (position - 2) - startPosition, pState);
+                }
+
+                argumentIndex = argumentIndex * 10 + (ch - L'0');
                 state = state_index;
             }
             else if (ch == L'{')
             {
-                *pDest++ = ch;
-                state = state_store;
+                if ((position - 1) > startPosition)
+                {
+                    (*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState);
+                }
+
+                startPosition = position;
+                state = state_fetch;
             }
             else
             {
-                il2c_assert(0);
+                il2c_throw_formatexception__();
             }
             break;
         case state_index:
             if ((ch >= L'0') && (ch <= L'9'))
             {
-                index = index * 10 + (ch - L'0');
+                argumentIndex = argumentIndex * 10 + (ch - L'0');
             }
             else if (ch == L'}')
             {
-                const wchar_t* p = ppStringArgs[index]->string_body__;
-                while (*p != L'\0')
-                {
-                    *pDest++ = *p++;
-                }
+                (*pArgumentWriter)(argumentIndex, pState);
 
-                state = state_store;
+                startPosition = position;
+                state = state_fetch;
             }
             else
             {
-                il2c_assert(0);
+                il2c_throw_formatexception__();
             }
             break;
         }
     }
-
-    *pDest = L'\0';
 }
 
 /////////////////////////////////////////////////////////////
@@ -674,30 +602,189 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
     }
 }
 
+bool System_String_op_Equality(System_String* lhs, System_String* rhs)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(lhs != NULL);
+    il2c_assert(rhs != NULL);
+
+    il2c_assert(lhs->string_body__ != NULL);
+    il2c_assert(rhs->string_body__ != NULL);
+
+    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) == 0;
+}
+
+bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(lhs != NULL);
+    il2c_assert(rhs != NULL);
+
+    il2c_assert(lhs->string_body__ != NULL);
+    il2c_assert(rhs->string_body__ != NULL);
+
+    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) != 0;
+}
+
+////////////////////////////////////////////////////////
+// System.String.Format() common functions.
+
+typedef struct System_String_InternalFormatState
+{
+    // Total formatted string length.
+    int32_t length;
+
+    // The arguments count.
+    int32_t argumentCount;
+
+    // The arguments.
+    System_Object** ppArgs;
+
+    // The string converted arguments by System.Object.ToString().
+    System_String** ppStringArgs;
+
+    // String storing buffer.
+    wchar_t* pWriteTarget;
+} System_String_InternalFormatState;
+
+static void il2c_format_string_prepare_writer__(
+    const wchar_t* pFrom, int32_t length, void* pState)
+{
+    il2c_assert(pFrom != NULL);
+    il2c_assert(length >= 0);
+    il2c_assert(pState != NULL);
+
+    System_String_InternalFormatState* p = pState;
+    il2c_assert(p->pWriteTarget == NULL);
+
+    p->length += length;
+}
+
+static void il2c_format_string_prepare_argument_writer__(
+    int32_t argumentIndex, void* pState)
+{
+    il2c_assert(argumentIndex >= 0);
+    il2c_assert(pState != NULL);
+
+    System_String_InternalFormatState* p = pState;
+    il2c_assert(p->pWriteTarget == NULL);
+
+    if (argumentIndex >= p->argumentCount)
+    {
+        il2c_throw_formatexception__();
+    }
+
+    System_String** ppStringArg = &p->ppStringArgs[argumentIndex];
+    if (*ppStringArg == NULL)
+    {
+        void* pArg = p->ppArgs[argumentIndex];
+        if (pArg != NULL)
+        {
+            System_Object* pAdjustedReference = il2c_adjusted_reference(pArg);
+            *ppStringArg = pAdjustedReference->vptr0__->ToString(pAdjustedReference);
+        }
+        else
+        {
+            *ppStringArg = *System_String_Empty_REF__;
+        }
+    }
+
+    p->length += il2c_wcslen((*ppStringArg)->string_body__);
+}
+
+static void il2c_format_string_writer__(
+    const wchar_t* pFrom, int32_t length, void* pState)
+{
+    il2c_assert(pFrom != NULL);
+    il2c_assert(length >= 0);
+    il2c_assert(pState != NULL);
+
+    System_String_InternalFormatState* p = pState;
+    il2c_assert(p->pWriteTarget != NULL);
+
+    while (length > 0)
+    {
+        *(p->pWriteTarget)++ = *pFrom++;
+        length--;
+    }
+}
+
+static void il2c_format_string_argument_writer__(
+    int32_t argumentIndex, void* pState)
+{
+    il2c_assert(argumentIndex >= 0);
+    il2c_assert(pState != NULL);
+
+    System_String_InternalFormatState* p = pState;
+    il2c_assert(p->pWriteTarget != NULL);
+    il2c_assert(argumentIndex < p->argumentCount);
+
+    System_String* pStringArg = p->ppStringArgs[argumentIndex];
+    il2c_assert(pStringArg != NULL);
+    il2c_assert(pStringArg->string_body__ != NULL);
+
+    const wchar_t* pFrom = pStringArg->string_body__;
+    while (1)
+    {
+        const wchar_t ch = *pFrom++;
+        if (ch == L'\0')
+        {
+            break;
+        }
+        *(p->pWriteTarget)++ = ch;
+    }
+}
+
 static void System_String_InternalFormat(
     System_String** ppString, System_String* pFormat,
-    int32_t count, System_Object** ppArgs, System_String** ppStringArgs)
+    int32_t argumentCount, System_Object** ppArgs, System_String** ppStringArgs)
 {
     il2c_assert(ppString != NULL);
     il2c_assert(pFormat != NULL);
     il2c_assert(pFormat->string_body__ != NULL);
-    il2c_assert(count >= 0);
+    il2c_assert(argumentCount >= 0);
     il2c_assert(ppArgs != NULL);
     il2c_assert(ppStringArgs != NULL);
 
-    int32_t length = il2c_prepare_format_string__(
-        pFormat->string_body__, count, ppArgs, ppStringArgs);
+    System_String_InternalFormatState state = { 0 };
+    state.argumentCount = argumentCount;
+    state.ppArgs = ppArgs;
+    state.ppStringArgs = ppStringArgs;
 
-#if defined(_DEBUG)
-    *ppString = new_string_internal__((length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
-#else
-    *ppString = new_string_internal__((length + 1) * sizeof(wchar_t));
-#endif
+    /////////////////////////////////////////////////
+    // Step 1. Calculate formatted string length.
 
     il2c_format_string__(
-        (wchar_t*)(*ppString)->string_body__,
-        pFormat->string_body__, ppStringArgs);
+        pFormat->string_body__,
+        il2c_format_string_prepare_writer__,
+        il2c_format_string_prepare_argument_writer__,
+        &state);
+
+    /////////////////////////////////////////////////
+    // Step 2. Allocate once System.String
+
+#if defined(_DEBUG)
+    *ppString = new_string_internal__((state.length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
+#else
+    *ppString = new_string_internal__((state.length + 1) * sizeof(wchar_t));
+#endif
+
+    state.pWriteTarget = (wchar_t*)((*ppString)->string_body__);
+
+    /////////////////////////////////////////////////
+    // Step 3. Write formatted string into System.String
+
+    il2c_format_string__(
+        pFormat->string_body__,
+        il2c_format_string_writer__,
+        il2c_format_string_argument_writer__,
+        &state);
+
+    *state.pWriteTarget = L'\0';
 }
+
+////////////////////////////////////////////////////////
+// System.String.Format()
 
 System_String* System_String_Format(
     System_String* format, System_Object* arg0)
@@ -781,30 +868,6 @@ System_String* System_String_Format_3(
 
     il2c_unlink_execution_frame(&frame__);
     return frame__.pString;
-}
-
-bool System_String_op_Equality(System_String* lhs, System_String* rhs)
-{
-    // TODO: ArgumentNullException
-    il2c_assert(lhs != NULL);
-    il2c_assert(rhs != NULL);
-
-    il2c_assert(lhs->string_body__ != NULL);
-    il2c_assert(rhs->string_body__ != NULL);
-
-    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) == 0;
-}
-
-bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
-{
-    // TODO: ArgumentNullException
-    il2c_assert(lhs != NULL);
-    il2c_assert(rhs != NULL);
-
-    il2c_assert(lhs->string_body__ != NULL);
-    il2c_assert(rhs->string_body__ != NULL);
-
-    return il2c_wcscmp(lhs->string_body__, rhs->string_body__) != 0;
 }
 
 /////////////////////////////////////////////////

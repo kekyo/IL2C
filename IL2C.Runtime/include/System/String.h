@@ -66,6 +66,16 @@ extern const wchar_t* il2c_c_str(System_String* str);
 extern int32_t il2c_get_utf8_length(const char* pUtf8String, bool detectInvalidChars);
 extern wchar_t* il2c_utf16_from_utf8_and_get_last(wchar_t* pDest, const char* pUtf8String);
 
+typedef void(*IL2C_FORMAT_WRITER)(const wchar_t* pFrom, int32_t length, void* pState);
+typedef void(*IL2C_FORMAT_ARGUMENT_WRITER)(int32_t argumentIndex, void* pState);
+extern void il2c_format_string__(
+    const wchar_t* pFormat,
+    IL2C_FORMAT_WRITER pWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
+    void* pState);
+
+/////////////////////////////////////////////////
+// Literal string generator macro.
+
 typedef const struct
 {
     // IL2C_REF_HEADER

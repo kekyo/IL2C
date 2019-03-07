@@ -302,10 +302,19 @@ int32_t il2c_prepare_format_string__(
                     il2c_throw_formatexception__();
                 }
 
-                System_Object* pReference = il2c_adjusted_reference(ppArgs[index]);
-                System_String* pString = (pReference != NULL) ?
-                    pReference->vptr0__->ToString(pReference) :
-                    NULL;
+                System_String* pString;
+                System_Object* pReference = ppArgs[index];
+                if (pReference != NULL)
+                {
+                    pReference = il2c_adjusted_reference(pReference);
+                    pString = (pReference != NULL) ?
+                        pReference->vptr0__->ToString(pReference) :
+                        NULL;
+                }
+                else
+                {
+                    pString = NULL;
+                }
 
                 if (pString != NULL)
                 {
@@ -665,7 +674,33 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
     }
 }
 
-System_String* System_String_Format(System_String* format, System_Object* arg0)
+static void System_String_InternalFormat(
+    System_String** ppString, System_String* pFormat,
+    int32_t count, System_Object** ppArgs, System_String** ppStringArgs)
+{
+    il2c_assert(ppString != NULL);
+    il2c_assert(pFormat != NULL);
+    il2c_assert(pFormat->string_body__ != NULL);
+    il2c_assert(count >= 0);
+    il2c_assert(ppArgs != NULL);
+    il2c_assert(ppStringArgs != NULL);
+
+    int32_t length = il2c_prepare_format_string__(
+        pFormat->string_body__, count, ppArgs, ppStringArgs);
+
+#if defined(_DEBUG)
+    *ppString = new_string_internal__((length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
+#else
+    *ppString = new_string_internal__((length + 1) * sizeof(wchar_t));
+#endif
+
+    il2c_format_string__(
+        (wchar_t*)(*ppString)->string_body__,
+        pFormat->string_body__, ppStringArgs);
+}
+
+System_String* System_String_Format(
+    System_String* format, System_Object* arg0)
 {
     // TODO: ArgumentNullException
     il2c_assert(format != NULL);
@@ -681,18 +716,68 @@ System_String* System_String_Format(System_String* format, System_Object* arg0)
     } frame__ = { NULL, 2 };
     il2c_link_execution_frame(&frame__);
 
-    int32_t length = il2c_prepare_format_string__(
-        format->string_body__, 1, &arg0, &frame__.pStringArg0);
-    
-#if defined(_DEBUG)
-    frame__.pString = new_string_internal__((length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
-#else
-    frame__.pString = new_string_internal__((length + 1) * sizeof(wchar_t));
-#endif
+    System_String_InternalFormat(
+        &frame__.pString, format, 1, &arg0, &frame__.pStringArg0);
 
-    il2c_format_string__(
-        (wchar_t*)frame__.pString->string_body__,
-        format->string_body__, &frame__.pStringArg0);
+    il2c_unlink_execution_frame(&frame__);
+    return frame__.pString;
+}
+
+System_String* System_String_Format_1(
+    System_String* format, System_Object* arg0, System_Object* arg1)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(format != NULL);
+    il2c_assert(format->string_body__ != NULL);
+
+    System_Object* pArgs[2];
+    pArgs[0] = arg0;
+    pArgs[1] = arg1;
+
+    struct System_String_Format_EXECUTION_FRAME
+    {
+        IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
+        System_String* pString;
+        System_String* pStringArg0;
+        System_String* pStringArg1;
+    } frame__ = { NULL, 3 };
+    il2c_link_execution_frame(&frame__);
+
+    System_String_InternalFormat(
+        &frame__.pString, format, 2, pArgs, &frame__.pStringArg0);
+
+    il2c_unlink_execution_frame(&frame__);
+    return frame__.pString;
+}
+
+System_String* System_String_Format_3(
+    System_String* format, System_Object* arg0, System_Object* arg1, System_Object* arg2)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(format != NULL);
+    il2c_assert(format->string_body__ != NULL);
+
+    System_Object* pArgs[3];
+    pArgs[0] = arg0;
+    pArgs[1] = arg1;
+    pArgs[2] = arg2;
+
+    struct System_String_Format_EXECUTION_FRAME
+    {
+        IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
+        System_String* pString;
+        System_String* pStringArg0;
+        System_String* pStringArg1;
+        System_String* pStringArg2;
+    } frame__ = { NULL, 4 };
+    il2c_link_execution_frame(&frame__);
+
+    System_String_InternalFormat(
+        &frame__.pString, format, 3, pArgs, &frame__.pStringArg0);
 
     il2c_unlink_execution_frame(&frame__);
     return frame__.pString;

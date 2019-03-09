@@ -16,6 +16,7 @@ extern "C" {
 
 #include <intrin.h>
 #include <wdm.h>
+#include <malloc.h>
 
 // Compatibility symbols (required platform depended functions)
 #define il2c_itow(v, b, l) _itow(v, b, 10)
@@ -35,8 +36,13 @@ extern "C" {
 #define il2c_check_heap()
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
-#define il2c_mcalloc il2c_malloc
-#define il2c_mcfree il2c_free
+
+#define il2c_mcalloc(name, size) \
+    name = (((size) >= 32) ? il2c_malloc(size) : _alloca(size)); \
+    const bool is_##name##_heaped__ = ((size) >= 32)
+#define il2c_mcfree(name) \
+    do { if (is_##name##_heaped__) il2c_free(name); } while (0)
+
 #define il2c_iand(pDest, newValue) _InterlockedAnd((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) _InterlockedOr((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_iinc(pDest) _InterlockedIncrement((interlock_t*)(pDest))

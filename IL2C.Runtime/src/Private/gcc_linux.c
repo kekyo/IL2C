@@ -65,7 +65,7 @@ void il2c_debug_write__(const char* message)
     il2c_assert(message != NULL);
 
     int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* pBuffer = il2c_mcalloc((length + 3) * sizeof(wchar_t));
+    wchar_t* il2c_mcalloc(pBuffer, (length + 3) * sizeof(wchar_t));
     wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
     *pLast++ = L'\r';
     *pLast++ = L'\n';

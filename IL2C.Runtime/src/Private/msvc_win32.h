@@ -21,6 +21,7 @@ extern "C" {
 #include <intrin.h>
 #include <windows.h>
 #include <stdio.h>
+#include <malloc.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 
@@ -42,8 +43,13 @@ extern "C" {
 #define il2c_check_heap() _CrtCheckMemory()
 #define il2c_malloc malloc
 #define il2c_free free
-#define il2c_mcalloc il2c_malloc
-#define il2c_mcfree il2c_free
+
+#define il2c_mcalloc(name, size) \
+    name = (((size) >= 256) ? il2c_malloc(size) : _alloca(size)); \
+    const bool is_##name##_heaped__ = ((size) >= 256)
+#define il2c_mcfree(name) \
+    do { if (is_##name##_heaped__) il2c_free(name); } while (0)
+
 #define il2c_iand(pDest, newValue) _InterlockedAnd((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) _InterlockedOr((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_iinc(pDest) _InterlockedIncrement((interlock_t*)(pDest))

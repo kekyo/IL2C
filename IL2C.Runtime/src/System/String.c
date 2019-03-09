@@ -926,7 +926,7 @@ System_String* System_String_Format_6(
     } System_String_Format6_EXECUTION_FRAME;
 
     intptr_t size = sizeof(System_String_Format6_EXECUTION_FRAME) + args->Length * sizeof(System_String*);
-    System_String_Format6_EXECUTION_FRAME* pFrame = il2c_mcalloc(size);
+    System_String_Format6_EXECUTION_FRAME* il2c_mcalloc(pFrame, size);
     memset(pFrame, 0, size);
     *((uint16_t*)(&pFrame->objRefCount__)) = (uint16_t)(args->Length + 1);
 

@@ -17,6 +17,7 @@ extern "C" {
 #include <intrin.h>
 #include <stdint.h>
 #include <wchar.h>
+#include <malloc.h>
 
 // Compatibility symbols (required platform depended functions)
 extern wchar_t* il2c_itow(int32_t value, wchar_t* d, int radix);
@@ -37,8 +38,12 @@ extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
 
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
-#define il2c_mcalloc il2c_malloc
-#define il2c_mcfree il2c_free
+
+#define il2c_mcalloc(name, size) \
+    name = (((size) >= 256) ? il2c_malloc(size) : _alloca(size)); \
+    const bool is_##name##_heaped__ = ((size) >= 256)
+#define il2c_mcfree(name) \
+    do { if (is_##name##_heaped__) il2c_free(name); } while (0)
 
 #define il2c_iand(pDest, newValue) _InterlockedAnd((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) _InterlockedOr((interlock_t*)(pDest), (interlock_t)(newValue))

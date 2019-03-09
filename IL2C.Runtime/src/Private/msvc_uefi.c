@@ -403,7 +403,7 @@ void il2c_debug_write__(const char* message)
     il2c_assert(g_pSystemTable != NULL);
 
     int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* pBuffer = il2c_mcalloc((length + 3) * sizeof(wchar_t));
+    wchar_t* il2c_mcalloc(pBuffer, (length + 3) * sizeof(wchar_t));
     wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
     *pLast++ = L'\r';
     *pLast++ = L'\n';
@@ -440,7 +440,7 @@ void il2c_assert__(const char* pFile, int line, const char* pExpr)
         int32_t length1 = il2c_get_utf8_length(pFile, false);
         int32_t length2 = (int32_t)il2c_wcslen(buffer);
         int32_t length3 = il2c_get_utf8_length(pExpr, false);
-        wchar_t* pBuffer = il2c_mcalloc((length1 + length2 + length3 + 7) * sizeof(wchar_t));
+        wchar_t* il2c_mcalloc(pBuffer, (length1 + length2 + length3 + 7) * sizeof(wchar_t));
         wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, pFile);
         *pLast++ = L'(';
         memcpy(pLast, buffer, length2 * sizeof(wchar_t));

@@ -9,12 +9,12 @@ namespace IL2C.BasicTypes
     }
 
     [TestId("System_String")]
-    [TestCase("A123BC124DE125FG125H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", (byte)123, (byte)124, (byte)125, (byte)126)]
+    [TestCase("A123BC124DE125FG126H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", (byte)123, (byte)124, (byte)125, (byte)126)]
     [TestCase("A-123BC-124DE-125FG-126H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", (sbyte)-123, (sbyte)-124, (sbyte)-125, (sbyte)-126)]
     [TestCase("A-12345BC-12346DE-12347FG-12348H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", (short)-12345, (short)-12346, (short)-12347, (short)-12348)]
     [TestCase("A12345BC12346DE12347FG12348H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", (ushort)12345, (ushort)12346, (ushort)12347, (ushort)12348)]
     [TestCase("A1234567BC1234568DE1234569FG1234570H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", 1234567, 1234568, 1234569, 1234570)]
-    [TestCase("A-1234567BC-1234568DE-1234569FG-12345670H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", -1234567, -1234568, -1234569, -1234570)]
+    [TestCase("A-1234567BC-1234568DE-1234569FG-1234570H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", -1234567, -1234568, -1234569, -1234570)]
     [TestCase("A1234567890123BC1234567890124DE1234567890125FG1234567890126H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", 1234567890123, 1234567890124, 1234567890125, 1234567890126)]
     [TestCase("A-1234567890123BC-1234567890124DE-1234567890125FG-1234567890126H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", -1234567890123, -1234567890124, -1234567890125, -1234567890126)]
     [TestCase("A123.456BC123.457DE123.458FG123.459H", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", 123.456f, 123.457f, 123.458f, 123.459f)]
@@ -26,8 +26,8 @@ namespace IL2C.BasicTypes
     [TestCase("123A123B124C124D125E125F126", "Format_Params", "{0}A{0}B{1}C{1}D{2}E{2}F{3}", 123, 124, 125, 126)]
     [TestCase("A126BC125DE124FG123H", "Format_Params", "A{3}BC{2}DE{1}FG{0}H", 123, 124, 125, 126)]
     [TestCase("ABCDEF", "Format_Params", "ABCDEF", 123, 124, 125, 126)]
-    [TestCase("ABCDEF", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", "", "", "", "")]
-    [TestCase("ABCDEF", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", null, null, null, null)]
+    [TestCase("ABCDEFGH", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", "", "", "", "")]
+    [TestCase("ABCDEFGH", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", null, null, null, null)]
     [TestCase(true, "Format_Params_Exception", "ABC{4}DEF", 123, 124, 125, 126)]
     public sealed class System_String_Format_Params
     {
@@ -41,7 +41,7 @@ namespace IL2C.BasicTypes
             var cp1 = new Format1_CustomProducer();
             var cp2 = new Format2_CustomProducer();
             var cp3 = new Format3_CustomProducer();
-            var cp4 = new Format3_CustomProducer();
+            var cp4 = new Format4_CustomProducer();
             return string.Format(format, cp1, cp2, cp3, cp4);
         }
 

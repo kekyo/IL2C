@@ -272,7 +272,7 @@ bool il2c_format_string__(
         {
             if ((position - 1) > startPosition)
             {
-                if ((*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState))
+                if (!(*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState))
                 {
                     return false;
                 }
@@ -329,7 +329,7 @@ bool il2c_format_string__(
             }
             else if (ch == L'}')
             {
-                if ((*pArgumentWriter)(argumentIndex, pState) == false)
+                if (!(*pArgumentWriter)(argumentIndex, pState))
                 {
                     return false;
                 }
@@ -799,7 +799,10 @@ static bool System_String_InternalFormat(
     /////////////////////////////////////////////////
     // Step 3. Write formatted string into System.String
 
-    bool result = il2c_format_string__(
+#if defined(_DEBUG)
+    bool result =
+#endif
+    il2c_format_string__(
         pFormat->string_body__,
         System_String_InternalFormatWriter,
         System_String_InternalFormatArgumentWriter,

@@ -41,7 +41,7 @@ extern int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimensio
 
 #define il2c_array_item0ptr__(array) \
     (((uint8_t*)array) + sizeof(System_Array))
-static inline void* il2c_array_item__(
+static inline void* il2c_array_itemptr__(
     System_Array* array, uint32_t elementSize, intptr_t index)
 {
     il2c_assert(array != NULL); // TODO: NullReferenceException
@@ -58,8 +58,10 @@ static inline void* il2c_array_item__(
 
     return il2c_array_item0ptr__(array) + ((intptr_t)elementSize) * index;
 }
+#define il2c_array_itemptr(array, elementTypeName, index) \
+    (il2c_array_itemptr__(array, sizeof(elementTypeName), index))
 #define il2c_array_item(array, elementTypeName, index) \
-    (*(elementTypeName*)il2c_array_item__(array, sizeof(elementTypeName), index))
+    (*(elementTypeName*)il2c_array_itemptr(array, elementTypeName, index))
 
 #if defined(_DEBUG)
 extern System_Array* il2c_new_array__(

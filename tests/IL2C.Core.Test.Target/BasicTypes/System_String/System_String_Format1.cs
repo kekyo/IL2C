@@ -18,7 +18,7 @@ namespace IL2C.BasicTypes
     [TestCase("ABC1234567890123DEF", "Format1", "ABC{0}DEF", 1234567890123)]
     [TestCase("ABC-1234567890123DEF", "Format1", "ABC{0}DEF", -1234567890123)]
     [TestCase("ABC123.456DEF", "Format1", "ABC{0}DEF", 123.456f)]
-    [TestCase("ABC123.456DEF", "Format1", "ABC{0}DEF", 123.456)]
+    [TestCase("ABC123.456789DEF", "Format1", "ABC{0}DEF", 123.456789)]
     [TestCase("ABCTrueDEF", "Format1", "ABC{0}DEF", true)]
     [TestCase("ABCFalseDEF", "Format1", "ABC{0}DEF", false)]
     [TestCase("ABCXDEF", "Format1", "ABC{0}DEF", 'X')]

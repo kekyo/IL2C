@@ -18,7 +18,7 @@ namespace IL2C.BasicTypes
     [TestCase("AB1234567890123CD1234567890124EF", "Format2", "AB{0}CD{1}EF", 1234567890123, 1234567890124)]
     [TestCase("AB-1234567890123CD-1234567890124EF", "Format2", "AB{0}CD{1}EF", -1234567890123, -1234567890124)]
     [TestCase("AB123.456CD123.457EF", "Format2", "AB{0}CD{1}EF", 123.456f, 123.457f)]
-    [TestCase("AB123.456CD123.457EF", "Format2", "AB{0}CD{1}EF", 123.456, 123.457)]
+    [TestCase("AB123.456789CD123.456788EF", "Format2", "AB{0}CD{1}EF", 123.456789, 123.456788)]
     [TestCase("ABTrueCDFalseEF", "Format2", "AB{0}CD{1}EF", true, false)]
     [TestCase("ABXCDYEF", "Format2", "AB{0}CD{1}EF", 'X', 'Y')]
     [TestCase("ABXYZCDPQREF", "Format2", "AB{0}CD{1}EF", "XYZ", "PQR")]

@@ -47,7 +47,7 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(siArray),
                     siArray.TargetType.ElementType.MangledUniqueName,
                     extractContext.GetSymbolName(siIndex),
-                    extractContext.GetSymbolName(siValue)) };
+                    extractContext.GetRightExpression(siArray.TargetType.ElementType, siValue)) };
         }
     }
 
@@ -93,7 +93,7 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(siArray),
                     siArray.TargetType.ElementType.CLanguageTypeName,
                     extractContext.GetSymbolName(siIndex),
-                    extractContext.GetSymbolName(siValue)) };
+                    extractContext.GetRightExpression(siArray.TargetType.ElementType, siValue)) };
         }
     }
 }

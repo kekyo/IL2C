@@ -252,7 +252,7 @@ const wchar_t* il2c_c_str(System_String* str)
 // It's flexible with applicating delegation functions.
 
 // The formatting precess.
-void il2c_format_string__(
+bool il2c_format_string__(
     const wchar_t* pFormat,
     IL2C_FORMAT_WRITER pWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
     void* pState)
@@ -272,7 +272,10 @@ void il2c_format_string__(
         {
             if ((position - 1) > startPosition)
             {
-                (*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState);
+                if ((*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState))
+                {
+                    return false;
+                }
             }
             
             break;
@@ -292,7 +295,10 @@ void il2c_format_string__(
             {
                 if ((position - 2) > startPosition)
                 {
-                    (*pWriter)(pFormat + startPosition, (position - 2) - startPosition, pState);
+                    if (!(*pWriter)(pFormat + startPosition, (position - 2) - startPosition, pState))
+                    {
+                        return false;
+                    }
                 }
 
                 argumentIndex = argumentIndex * 10 + (ch - L'0');
@@ -302,7 +308,10 @@ void il2c_format_string__(
             {
                 if ((position - 1) > startPosition)
                 {
-                    (*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState);
+                    if (!(*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState))
+                    {
+                        return false;
+                    }
                 }
 
                 startPosition = position;
@@ -310,7 +319,7 @@ void il2c_format_string__(
             }
             else
             {
-                il2c_throw_formatexception__();
+                return false;
             }
             break;
         case state_index:
@@ -320,18 +329,23 @@ void il2c_format_string__(
             }
             else if (ch == L'}')
             {
-                (*pArgumentWriter)(argumentIndex, pState);
+                if ((*pArgumentWriter)(argumentIndex, pState) == false)
+                {
+                    return false;
+                }
 
                 startPosition = position;
                 state = state_fetch;
             }
             else
             {
-                il2c_throw_formatexception__();
+                return false;
             }
             break;
         }
     }
+
+    return true;
 }
 
 /////////////////////////////////////////////////////////////
@@ -647,7 +661,7 @@ typedef struct System_String_InternalFormatState
     wchar_t* pWriteTarget;
 } System_String_InternalFormatState;
 
-static void il2c_format_string_prepare_writer__(
+static bool System_String_InternalFormatPrepareWriter(
     const wchar_t* pFrom, int32_t length, void* pState)
 {
     il2c_assert(pFrom != NULL);
@@ -658,9 +672,11 @@ static void il2c_format_string_prepare_writer__(
     il2c_assert(p->pWriteTarget == NULL);
 
     p->length += length;
+
+    return true;
 }
 
-static void il2c_format_string_prepare_argument_writer__(
+static bool System_String_InternalFormatPrepareArgumentWriter(
     int32_t argumentIndex, void* pState)
 {
     il2c_assert(argumentIndex >= 0);
@@ -671,7 +687,7 @@ static void il2c_format_string_prepare_argument_writer__(
 
     if (argumentIndex >= p->argumentCount)
     {
-        il2c_throw_formatexception__();
+        return false;
     }
 
     System_String** ppStringArg = &p->ppStringArgs[argumentIndex];
@@ -685,14 +701,16 @@ static void il2c_format_string_prepare_argument_writer__(
         }
         else
         {
-            *ppStringArg = *System_String_Empty_REF__;
+            *ppStringArg = System_String_Empty;
         }
     }
 
-    p->length += il2c_wcslen((*ppStringArg)->string_body__);
+    p->length += (int32_t)il2c_wcslen((*ppStringArg)->string_body__);
+
+    return true;
 }
 
-static void il2c_format_string_writer__(
+static bool System_String_InternalFormatWriter(
     const wchar_t* pFrom, int32_t length, void* pState)
 {
     il2c_assert(pFrom != NULL);
@@ -707,9 +725,11 @@ static void il2c_format_string_writer__(
         *(p->pWriteTarget)++ = *pFrom++;
         length--;
     }
+
+    return true;
 }
 
-static void il2c_format_string_argument_writer__(
+static bool System_String_InternalFormatArgumentWriter(
     int32_t argumentIndex, void* pState)
 {
     il2c_assert(argumentIndex >= 0);
@@ -733,9 +753,11 @@ static void il2c_format_string_argument_writer__(
         }
         *(p->pWriteTarget)++ = ch;
     }
+
+    return true;
 }
 
-static void System_String_InternalFormat(
+static bool System_String_InternalFormat(
     System_String** ppString, System_String* pFormat,
     int32_t argumentCount, System_Object** ppArgs, System_String** ppStringArgs)
 {
@@ -754,11 +776,14 @@ static void System_String_InternalFormat(
     /////////////////////////////////////////////////
     // Step 1. Calculate formatted string length.
 
-    il2c_format_string__(
+    if (!il2c_format_string__(
         pFormat->string_body__,
-        il2c_format_string_prepare_writer__,
-        il2c_format_string_prepare_argument_writer__,
-        &state);
+        System_String_InternalFormatPrepareWriter,
+        System_String_InternalFormatPrepareArgumentWriter,
+        &state))
+    {
+        return false;
+    }
 
     /////////////////////////////////////////////////
     // Step 2. Allocate once System.String
@@ -774,13 +799,16 @@ static void System_String_InternalFormat(
     /////////////////////////////////////////////////
     // Step 3. Write formatted string into System.String
 
-    il2c_format_string__(
+    bool result = il2c_format_string__(
         pFormat->string_body__,
-        il2c_format_string_writer__,
-        il2c_format_string_argument_writer__,
+        System_String_InternalFormatWriter,
+        System_String_InternalFormatArgumentWriter,
         &state);
+    il2c_assert(result);
 
     *state.pWriteTarget = L'\0';
+
+    return true;
 }
 
 ////////////////////////////////////////////////////////
@@ -803,8 +831,11 @@ System_String* System_String_Format(
     } frame__ = { NULL, 2 };
     il2c_link_execution_frame(&frame__);
 
-    System_String_InternalFormat(
-        &frame__.pString, format, 1, &arg0, &frame__.pStringArg0);
+    if (!System_String_InternalFormat(
+        &frame__.pString, format, 1, &arg0, &frame__.pStringArg0))
+    {
+        il2c_throw_formatexception__();
+    }
 
     il2c_unlink_execution_frame(&frame__);
     return frame__.pString;
@@ -821,7 +852,7 @@ System_String* System_String_Format_1(
     pArgs[0] = arg0;
     pArgs[1] = arg1;
 
-    struct System_String_Format_EXECUTION_FRAME
+    struct System_String_Format1_EXECUTION_FRAME
     {
         IL2C_EXECUTION_FRAME* pNext__;
         const uint16_t objRefCount__;
@@ -832,8 +863,11 @@ System_String* System_String_Format_1(
     } frame__ = { NULL, 3 };
     il2c_link_execution_frame(&frame__);
 
-    System_String_InternalFormat(
-        &frame__.pString, format, 2, pArgs, &frame__.pStringArg0);
+    if (!System_String_InternalFormat(
+        &frame__.pString, format, 2, pArgs, &frame__.pStringArg0))
+    {
+        il2c_throw_formatexception__();
+    }
 
     il2c_unlink_execution_frame(&frame__);
     return frame__.pString;
@@ -851,7 +885,7 @@ System_String* System_String_Format_3(
     pArgs[1] = arg1;
     pArgs[2] = arg2;
 
-    struct System_String_Format_EXECUTION_FRAME
+    struct System_String_Format3_EXECUTION_FRAME
     {
         IL2C_EXECUTION_FRAME* pNext__;
         const uint16_t objRefCount__;
@@ -863,11 +897,60 @@ System_String* System_String_Format_3(
     } frame__ = { NULL, 4 };
     il2c_link_execution_frame(&frame__);
 
-    System_String_InternalFormat(
-        &frame__.pString, format, 3, pArgs, &frame__.pStringArg0);
+    if (!System_String_InternalFormat(
+        &frame__.pString, format, 3, pArgs, &frame__.pStringArg0))
+    {
+        il2c_throw_formatexception__();
+    }
 
     il2c_unlink_execution_frame(&frame__);
     return frame__.pString;
+}
+
+System_String* System_String_Format_6(
+    System_String* format, il2c_arraytype(System_Object)* args)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(format != NULL);
+    il2c_assert(format->string_body__ != NULL);
+    il2c_assert(args != NULL);
+    il2c_assert(args->Length <= UINT32_MAX);
+
+    typedef struct System_String_Format6_EXECUTION_FRAME
+    {
+        IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
+        System_String* pString;
+        //System_String* pStringArg[n];
+    } System_String_Format6_EXECUTION_FRAME;
+
+    int32_t size = (int32_t)(sizeof(System_String_Format6_EXECUTION_FRAME) + args->Length * sizeof(System_String*));
+    System_String_Format6_EXECUTION_FRAME* pFrame = il2c_mcalloc(size);
+    memset(pFrame, 0, size);
+    *((uint16_t*)(&pFrame->objRefCount__)) = (uint16_t)(args->Length + 1);
+
+    il2c_link_execution_frame(pFrame);
+
+    if (!System_String_InternalFormat(
+        &pFrame->pString, format, (int32_t)(args->Length),
+        il2c_array_itemptr(args, System_Object*, 0),
+        (&pFrame->pString) + 1))
+    {
+        // Very important, it blocks leaking dynamic allocation frame.
+        // TODO: Will lost current execution frame. Maybe not recorded stack frame into the Exception if it holds.
+        il2c_unlink_execution_frame(pFrame);
+        il2c_mcfree(pFrame);
+
+        il2c_throw_formatexception__();
+    }
+
+    System_String* pFormatted = pFrame->pString;
+
+    il2c_unlink_execution_frame(pFrame);
+    il2c_mcfree(pFrame);
+
+    return pFormatted;
 }
 
 /////////////////////////////////////////////////

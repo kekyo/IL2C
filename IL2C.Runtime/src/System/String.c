@@ -262,17 +262,17 @@ bool il2c_format_string__(
     il2c_assert(pArgumentWriter != NULL);
 
     enum { state_fetch, state_index0, state_index } state = state_fetch;
-    int32_t argumentIndex = 0;
-    int32_t startPosition = 0;
-    int32_t position = 0;
+    uint32_t argumentIndex = 0;
+    uint32_t formatStartIndex = 0;
+    uint32_t formatIndex = 0;
     while (1)
     {
-        const wchar_t ch = pFormat[position++];
+        const wchar_t ch = pFormat[formatIndex++];
         if (ch == L'\0')
         {
-            if ((position - 1) > startPosition)
+            if ((formatIndex - 1) > formatStartIndex)
             {
-                if (!(*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState))
+                if (!(*pWriter)(pFormat + formatStartIndex, (formatIndex - 1) - formatStartIndex, pState))
                 {
                     return false;
                 }
@@ -293,9 +293,9 @@ bool il2c_format_string__(
         case state_index0:
             if ((ch >= L'0') && (ch <= L'9'))
             {
-                if ((position - 2) > startPosition)
+                if ((formatIndex - 2) > formatStartIndex)
                 {
-                    if (!(*pWriter)(pFormat + startPosition, (position - 2) - startPosition, pState))
+                    if (!(*pWriter)(pFormat + formatStartIndex, (formatIndex - 2) - formatStartIndex, pState))
                     {
                         return false;
                     }
@@ -306,15 +306,15 @@ bool il2c_format_string__(
             }
             else if (ch == L'{')
             {
-                if ((position - 1) > startPosition)
+                if ((formatIndex - 1) > formatStartIndex)
                 {
-                    if (!(*pWriter)(pFormat + startPosition, (position - 1) - startPosition, pState))
+                    if (!(*pWriter)(pFormat + formatStartIndex, (formatIndex - 1) - formatStartIndex, pState))
                     {
                         return false;
                     }
                 }
 
-                startPosition = position;
+                formatStartIndex = formatIndex;
                 state = state_fetch;
             }
             else
@@ -334,7 +334,7 @@ bool il2c_format_string__(
                     return false;
                 }
 
-                startPosition = position;
+                formatStartIndex = formatIndex;
                 state = state_fetch;
             }
             else
@@ -646,10 +646,10 @@ bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
 typedef struct System_String_InternalFormatState
 {
     // Total formatted string length.
-    int32_t length;
+    uint32_t length;
 
     // The arguments count.
-    int32_t argumentCount;
+    uint32_t argumentCount;
 
     // The arguments.
     System_Object** ppArgs;
@@ -662,10 +662,9 @@ typedef struct System_String_InternalFormatState
 } System_String_InternalFormatState;
 
 static bool System_String_InternalFormatPrepareWriter(
-    const wchar_t* pFrom, int32_t length, void* pState)
+    const wchar_t* pFrom, uint32_t length, void* pState)
 {
     il2c_assert(pFrom != NULL);
-    il2c_assert(length >= 0);
     il2c_assert(pState != NULL);
 
     System_String_InternalFormatState* p = pState;
@@ -677,7 +676,7 @@ static bool System_String_InternalFormatPrepareWriter(
 }
 
 static bool System_String_InternalFormatPrepareArgumentWriter(
-    int32_t argumentIndex, void* pState)
+    uint32_t argumentIndex, void* pState)
 {
     il2c_assert(argumentIndex >= 0);
     il2c_assert(pState != NULL);
@@ -705,16 +704,15 @@ static bool System_String_InternalFormatPrepareArgumentWriter(
         }
     }
 
-    p->length += (int32_t)il2c_wcslen((*ppStringArg)->string_body__);
+    p->length += (uint32_t)il2c_wcslen((*ppStringArg)->string_body__);
 
     return true;
 }
 
 static bool System_String_InternalFormatWriter(
-    const wchar_t* pFrom, int32_t length, void* pState)
+    const wchar_t* pFrom, uint32_t length, void* pState)
 {
     il2c_assert(pFrom != NULL);
-    il2c_assert(length >= 0);
     il2c_assert(pState != NULL);
 
     System_String_InternalFormatState* p = pState;
@@ -730,9 +728,8 @@ static bool System_String_InternalFormatWriter(
 }
 
 static bool System_String_InternalFormatArgumentWriter(
-    int32_t argumentIndex, void* pState)
+    uint32_t argumentIndex, void* pState)
 {
-    il2c_assert(argumentIndex >= 0);
     il2c_assert(pState != NULL);
 
     System_String_InternalFormatState* p = pState;
@@ -759,7 +756,7 @@ static bool System_String_InternalFormatArgumentWriter(
 
 static bool System_String_InternalFormat(
     System_String** ppString, System_String* pFormat,
-    int32_t argumentCount, System_Object** ppArgs, System_String** ppStringArgs)
+    uint32_t argumentCount, System_Object** ppArgs, System_String** ppStringArgs)
 {
     il2c_assert(ppString != NULL);
     il2c_assert(pFormat != NULL);
@@ -928,7 +925,7 @@ System_String* System_String_Format_6(
         //System_String* pStringArg[n];
     } System_String_Format6_EXECUTION_FRAME;
 
-    int32_t size = (int32_t)(sizeof(System_String_Format6_EXECUTION_FRAME) + args->Length * sizeof(System_String*));
+    intptr_t size = sizeof(System_String_Format6_EXECUTION_FRAME) + args->Length * sizeof(System_String*);
     System_String_Format6_EXECUTION_FRAME* pFrame = il2c_mcalloc(size);
     memset(pFrame, 0, size);
     *((uint16_t*)(&pFrame->objRefCount__)) = (uint16_t)(args->Length + 1);
@@ -936,7 +933,7 @@ System_String* System_String_Format_6(
     il2c_link_execution_frame(pFrame);
 
     if (!System_String_InternalFormat(
-        &pFrame->pString, format, (int32_t)(args->Length),
+        &pFrame->pString, format, (uint32_t)(args->Length),
         il2c_array_itemptr(args, System_Object*, 0),
         (&pFrame->pString) + 1))
     {

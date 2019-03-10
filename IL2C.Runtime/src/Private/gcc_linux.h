@@ -33,10 +33,10 @@ extern "C" {
 #include <unistd.h>
 
 // Compatibility symbols (required platform depended functions)
-extern wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l);
-extern wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l);
-extern wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l);
-extern wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l);
+extern wchar_t* il2c_itow(int32_t v, wchar_t* b, int radix);
+extern wchar_t* il2c_ultow(uint32_t v, wchar_t* b, int radix);
+extern wchar_t* il2c_i64tow(int64_t v, wchar_t* b, int radix);
+extern wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, int radix);
 #define il2c_snwprintf swprintf
 #define il2c_wcstol wcstol
 #define il2c_wcstoul wcstoul

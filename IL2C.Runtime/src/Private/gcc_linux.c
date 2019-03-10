@@ -6,27 +6,59 @@
 // Linux
 #if defined(__GNUC__) && defined(__linux__)
 
-wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l)
+wchar_t* il2c_itow(int32_t v, wchar_t* b, int radix)
 {
-    swprintf(b, l, L"%d", v);
+    if (radix == 10)
+    {
+        swprintf(b, 12, L"%d", v);
+    }
+    else if (radix == 16)
+    {
+        swprintf(b, 12, L"%x", v);
+    }
+
     return b;
 }
 
-wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l)
+wchar_t* il2c_ultow(uint32_t v, wchar_t* b, int radix)
 {
-    swprintf(b, l, L"%lu", v);
+    if (radix == 10)
+    {
+        swprintf(b, 12, L"%lu", v);
+    }
+    else if (radix == 16)
+    {
+        swprintf(b, 12, L"%lx", v);
+    }
+
     return b;
 }
 
-wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l)
+wchar_t* il2c_i64tow(int64_t v, wchar_t* b, int radix)
 {
-    swprintf(b, l, L"%lld", v);
+    if (radix == 10)
+    {
+        swprintf(b, 12, L"%lld", v);
+    }
+    else if (radix == 16)
+    {
+        swprintf(b, 12, L"%llx", v);
+    }
+
     return b;
 }
 
-wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l)
+wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, int radix)
 {
-    swprintf(b, l, L"%llu", v);
+    if (radix == 10)
+    {
+        swprintf(b, 12, L"%llu", v);
+    }
+    else if (radix == 16)
+    {
+        swprintf(b, 12, L"%llx", v);
+    }
+
     return b;
 }
 

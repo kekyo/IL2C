@@ -358,7 +358,7 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     if ((characteristic & IL2C_CHARACTERISTIC_LIVE) == IL2C_CHARACTERISTIC_LIVE)
     {
         il2c_debug_write_format(
-            "il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x%p, type=%s, characteristic=0x%08x",
+            L"il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x{0:p}, type={1:s}, characteristic=0x{2:x}",
             pAdjustedReference,
             pHeader->type->pTypeName,
             characteristic);
@@ -374,7 +374,7 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
         if (pMarkHandler != NULL)
         {
             il2c_debug_write_format(
-                "il2c_mark_handler_for_objref__ [2]: pAdjustedReference=0x%p, type=%s, pMarkHandler=0x%p",
+                L"il2c_mark_handler_for_objref__ [2]: pAdjustedReference=0x{0:p}, type={1:s}, pMarkHandler=0x{2:p}",
                 pAdjustedReference,
                 pHeader->type->pTypeName,
                 pMarkHandler);
@@ -393,7 +393,7 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
             0;
 
         il2c_debug_write_format(
-            "il2c_mark_handler_for_objref__ [3]: pAdjustedReference=0x%p, type=%s, offset=%u",
+            L"il2c_mark_handler_for_objref__ [3]: pAdjustedReference=0x{0:p}, type={1:s}, offset={2:u}",
             pAdjustedReference,
             pHeader->type->pTypeName,
             offset);
@@ -410,7 +410,7 @@ static void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE v
     il2c_assert((valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
     il2c_debug_write_format(
-        "il2c_mark_handler_for_value_type__: pValue=0x%p, type=%s",
+        L"il2c_mark_handler_for_value_type__: pValue=0x{0:p}, type={1:s}",
         pValue,
         valueType->pTypeName);
 
@@ -438,7 +438,7 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             il2c_assert((pMarkTarget->valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
             il2c_debug_write_format(
-                "il2c_mark_handler_recursive__ [1]: p=0x%p, type=%s, index=%u, ppField=0x%p, fieldType=%s",
+                L"il2c_mark_handler_recursive__ [1]: p=0x{0:p}, type={1:s}, index={2:u}, ppField=0x{3:p}, fieldType={4:s}",
                 p,
                 type->pTypeName,
                 index,
@@ -455,7 +455,7 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             if (*ppField == NULL)
             {
                 il2c_debug_write_format(
-                    "il2c_mark_handler_recursive__ [2]: p=0x%p, type=%s, index=%u, *ppField=NULL",
+                    L"il2c_mark_handler_recursive__ [2]: p=0x{0:p}, type={1:s}, index={2:u}, *ppField=NULL",
                     p,
                     type->pTypeName,
                     index,
@@ -468,7 +468,7 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             TRY_GET_HEADER(pHeaderInner, pAdjustedReferenceInner)
             {
                 il2c_debug_write_format(
-                    "il2c_mark_handler_recursive__ [3]: p=0x%p, type=%s, index=%u, pAdjustedReferenceInner=0x%p, targetType=%s",
+                    L"il2c_mark_handler_recursive__ [3]: p=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:x}, targetType={4:s}",
                     p,
                     type->pTypeName,
                     index,
@@ -481,7 +481,7 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             else
             {
                 il2c_debug_write_format(
-                    "il2c_mark_handler_recursive__ [4]: p=0x%p, type=%s, index=%u, pAdjustedReferenceInner=0x%p, targetType=%s, characteristic=0x%08x",
+                    L"il2c_mark_handler_recursive__ [4]: p=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:p}, targetType={4:s}, characteristic=0x{5:x}",
                     p,
                     type->pTypeName,
                     index,
@@ -534,7 +534,7 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             if (*ppReference == NULL)
             {
                 il2c_debug_write_format(
-                    "il2c_step2_mark_gcmark__ [2]: pCurrentFrame=0x%p, index=%u, *ppReference=NULL",
+                    L"il2c_step2_mark_gcmark__ [2]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=NULL",
                     pCurrentFrame,
                     index);
                 continue;
@@ -544,7 +544,7 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             TRY_GET_HEADER(pHeader, pAdjustedReference)
             {
                 il2c_debug_write_format(
-                    "il2c_step2_mark_gcmark__ [3]: pCurrentFrame=0x%p, index=%u, *ppReference=0x%p, pAdjustedReference=0x%p, type=%s",
+                    L"il2c_step2_mark_gcmark__ [3]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=0x{2:p}, pAdjustedReference=0x{3:p}, type={4:s}",
                     pCurrentFrame,
                     index,
                     *ppReference,
@@ -557,7 +557,7 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             else
             {
                 il2c_debug_write_format(
-                    "il2c_step2_mark_gcmark__ [4]: pCurrentFrame=0x%p, index=%u, *ppReference=0x%p, pAdjustedReference=0x%p, type=%s, characteristic=0x%08x",
+                    L"il2c_step2_mark_gcmark__ [4]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=0x{2:p}, pAdjustedReference=0x{3:p}, type={4:s}, characteristic=0x{5:x}",
                     pCurrentFrame,
                     index,
                     *ppReference,
@@ -577,7 +577,7 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             il2c_assert((pValueDesc->type_value->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
             il2c_debug_write_format(
-                "il2c_step2_mark_gcmark__ [5]: pCurrentFrame=0x%p, index=%u, type=%s, pValue=%p",
+                L"il2c_step2_mark_gcmark__ [5]: pCurrentFrame=0x{0:p}, index={1:u}, type={2:s}, pValue={3:p}",
                 pCurrentFrame,
                 index,
                 pValueDesc->type_value->pTypeName,
@@ -610,7 +610,7 @@ static void il2c_step2_mark_gcmark_for_fixed__(void)
                 TRY_GET_HEADER(pHeader, pReference)
                 {
                     il2c_debug_write_format(
-                        "il2c_step2_mark_gcmark_for_fixed__: pCurrentFixedInstances=0x%p, index=%u, pReference=0x%p, type=%s",
+                        L"il2c_step2_mark_gcmark_for_fixed__: pCurrentFixedInstances=0x{0:p}, index={1:u}, pReference=0x{2:p}, type={3:s}",
                         pCurrentFixedInstances,
                         index,
                         pReference,
@@ -647,7 +647,7 @@ static void il2c_step3_sweep_garbage__(void)
                 il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);
 
                 il2c_debug_write_format(
-                    "il2c_step3_sweep_garbage__: call finalizer: type=%s, pObject=0x%p",
+                    L"il2c_step3_sweep_garbage__: call finalizer: type={0:s}, pObject=0x{0:p}",
                     pCurrentHeader->type->pTypeName,
                     pObject);
 
@@ -673,7 +673,7 @@ static void il2c_step3_sweep_garbage__(void)
         IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
 
         il2c_debug_write_format(
-            "il2c_step3_sweep_garbage__: free: type=%s, pObject=0x%p",
+            L"il2c_step3_sweep_garbage__: free: type={0:s}, pObject=0x{0:p}",
             pScheduledHeader->type->pTypeName,
             ((uint8_t*)pScheduledHeader) + sizeof(IL2C_REF_HEADER));
 
@@ -712,7 +712,7 @@ static void il2c_collect__(bool finalShutdown)
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
     il2c_debug_write_format(
-        "il2c_collect__: begin: %d: Header=0x%p, Frame=0x%p, SFrame=0x%p, %s(%d)",
+        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, Frame=0x{2:p}, SFrame=0x{3:p}, {4:s}({5:d})",
         collectCount,
         g_pBeginHeader__,
         g_pBeginFrame__,
@@ -762,7 +762,7 @@ static void il2c_collect__(bool finalShutdown)
 
 #if defined(_DEBUG)
     il2c_debug_write_format(
-        "il2c_collect__: finished: %d: %s(%d)",
+        L"il2c_collect__: finished: {0:d}: {1:s}({2:d})",
         collectCount,
         pFile,
         line);
@@ -1161,7 +1161,7 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
 
     // TODO: Unhandled exception
     il2c_debug_write_format(
-        "Throw unhandled exception: type=%s, Message=\"%ls\"",
+        L"Throw unhandled exception: type={0:s}, Message=\"{1:S}\"",
         (il2c_get_header__(ex))->type->pTypeName,
         (ex->message__->string_body__ != NULL) ? ex->message__->string_body__ : L"");
 
@@ -1327,7 +1327,7 @@ static int8_t il2c_debug_write_format_writer_step1__(
     IL2C_DEBUG_WRITE_FORMAT_STATE* p = pState;
 
     p->length = (uint16_t)(p->length + tokenLength);
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 static int8_t il2c_debug_write_format_argument_writer_step1__(
@@ -1348,7 +1348,7 @@ static int8_t il2c_debug_write_format_argument_writer_step1__(
             int32_t value = va_arg(p->va, int32_t);
             il2c_itow(value, buffer, 10);
         }
-        return 0;
+        break;
     case L'u':
         {
             uint32_t value = va_arg(p->va, uint32_t);
@@ -1387,21 +1387,32 @@ static int8_t il2c_debug_write_format_argument_writer_step1__(
         break;
     case L's':
         {
+            const char* pStr = va_arg(p->va, const char*);
+            p->length = (uint16_t)(strlen(pStr) + p->length);
+        }
+        return IL2C_STRING_FORMAT_SUCCEEDED;
+    case L'S':
+        {
             const wchar_t* pStr = va_arg(p->va, const wchar_t*);
             p->length = (uint16_t)(il2c_wcslen(pStr) + p->length);
         }
-        return 0;
+        return IL2C_STRING_FORMAT_SUCCEEDED;
     default:
         return IL2C_STRING_FORMAT_INVALID;
     }
 
     p->length = (uint16_t)(il2c_wcslen(buffer) + p->length);
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 static int8_t il2c_debug_write_format_writer_step2__(
     const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
 {
+    IL2C_DEBUG_WRITE_FORMAT_STATE* p = pState;
+
+    memcpy(p->pBuffer, pTokenFrom, tokenLength * sizeof(wchar_t));
+    p->pBuffer += tokenLength;
+
     return 0;
 }
 
@@ -1458,12 +1469,22 @@ static int8_t il2c_debug_write_format_argument_writer_step2__(
         break;
     case L's':
         {
-            const wchar_t* pStr = va_arg(p->va, const wchar_t*);
-            length = (uint16_t)il2c_wcslen(pStr);
-            memcpy(p->pBuffer, buffer, length * sizeof(wchar_t));
-            p->pBuffer += length;
+            const char* pStr = va_arg(p->va, const char*);
+            while (*pStr != '\0')
+            {
+                *p->pBuffer++ = (wchar_t)*pStr++;
+            }
         }
-        return 0;
+        return IL2C_STRING_FORMAT_SUCCEEDED;
+    case L'S':
+        {
+            const wchar_t* pStr = va_arg(p->va, const wchar_t*);
+            while (*pStr != L'\0')
+            {
+                *p->pBuffer++ = *pStr++;
+            }
+        }
+        return IL2C_STRING_FORMAT_SUCCEEDED;
     default:
         return IL2C_STRING_FORMAT_INVALID;
     }
@@ -1471,7 +1492,7 @@ static int8_t il2c_debug_write_format_argument_writer_step2__(
     length = (uint16_t)il2c_wcslen(buffer);
     memcpy(p->pBuffer, buffer, length * sizeof(wchar_t));
     p->pBuffer += length;
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 void il2c_debug_write_format__(const wchar_t* format, ...)
@@ -1485,7 +1506,7 @@ void il2c_debug_write_format__(const wchar_t* format, ...)
         il2c_debug_write_format_writer_step1__,
         il2c_debug_write_format_argument_writer_step1__,
         &state);
-    if (result == 0)
+    if (result == IL2C_STRING_FORMAT_SUCCEEDED)
     {
         wchar_t* il2c_mcalloc(pBuffer, (state.length + 1U) * sizeof(wchar_t));
         state.pBuffer = pBuffer;
@@ -1498,7 +1519,7 @@ void il2c_debug_write_format__(const wchar_t* format, ...)
             il2c_debug_write_format_writer_step2__,
             il2c_debug_write_format_argument_writer_step2__,
             &state);
-        if (result == 0)
+        if (result == IL2C_STRING_FORMAT_SUCCEEDED)
         {
             *state.pBuffer = L'\0';
             il2c_debug_write__(pBuffer);

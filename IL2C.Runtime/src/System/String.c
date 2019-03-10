@@ -299,7 +299,7 @@ int8_t il2c_format_string__(
                         pCompositeFormat + compositeFormatStartIndex,
                         (compositeFormatIndex - 1) - compositeFormatStartIndex,
                         pState);
-                    if (result != 0)
+                    if (result != IL2C_STRING_FORMAT_SUCCEEDED)
                     {
                         return result;
                     }
@@ -317,7 +317,7 @@ int8_t il2c_format_string__(
                         pCompositeFormat + compositeFormatStartIndex,
                         (compositeFormatIndex - 2) - compositeFormatStartIndex,
                         pState);
-                    if (result != 0)
+                    if (result != IL2C_STRING_FORMAT_SUCCEEDED)
                     {
                         return result;
                     }
@@ -340,7 +340,7 @@ int8_t il2c_format_string__(
                         pCompositeFormat + compositeFormatStartIndex,
                         (compositeFormatIndex - 1) - compositeFormatStartIndex,
                         pState);
-                    if (result != 0)
+                    if (result != IL2C_STRING_FORMAT_SUCCEEDED)
                     {
                         return result;
                     }
@@ -377,7 +377,7 @@ int8_t il2c_format_string__(
                     NULL,
                     0,
                     pState);
-                if (result != 0)
+                if (result != IL2C_STRING_FORMAT_SUCCEEDED)
                 {
                     return result;
                 }
@@ -398,7 +398,7 @@ int8_t il2c_format_string__(
                     pCompositeFormat + formatStartIndex,
                     compositeFormatIndex - formatStartIndex - 1,
                     pState);
-                if (result != 0)
+                if (result != IL2C_STRING_FORMAT_SUCCEEDED)
                 {
                     return result;
                 }
@@ -752,7 +752,7 @@ static int8_t System_String_InternalFormatStep1Writer(
     il2c_assert(pState != NULL);
 
     // Nothing to do.
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 static int8_t System_String_InternalFormatStep1ArgumentWriter(
@@ -772,7 +772,7 @@ static int8_t System_String_InternalFormatStep1ArgumentWriter(
     // Count up number of format items.
     p->formatItemCount++;
 
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 // ---------------
@@ -790,7 +790,7 @@ static int8_t System_String_InternalFormatStep2Writer(
     // Count up total string length.
     p->length += tokenLength;
 
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 static int8_t System_String_InternalFormatStep2ArgumentWriter(
@@ -841,7 +841,7 @@ static int8_t System_String_InternalFormatStep2ArgumentWriter(
     // Count up total string length.
     p->length += (uint32_t)il2c_wcslen((*ppFormattedString)->string_body__);
 
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 // ---------------
@@ -863,7 +863,7 @@ static int8_t System_String_InternalFormatStep3Writer(
         tokenLength--;
     }
 
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 static int8_t System_String_InternalFormatStep3ArgumentWriter(
@@ -891,7 +891,7 @@ static int8_t System_String_InternalFormatStep3ArgumentWriter(
         *(p->pWriteTarget)++ = ch;
     }
 
-    return 0;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
 // ---------------
@@ -919,7 +919,7 @@ static int8_t System_String_InternalFormat(
         System_String_InternalFormatStep1Writer,
         System_String_InternalFormatStep1ArgumentWriter,
         &state);
-    if (result != 0)
+    if (result != IL2C_STRING_FORMAT_SUCCEEDED)
     {
         return result;
     }
@@ -954,7 +954,7 @@ static int8_t System_String_InternalFormat(
         System_String_InternalFormatStep2Writer,
         System_String_InternalFormatStep2ArgumentWriter,
         &state);
-    if (result != 0)
+    if (result != IL2C_STRING_FORMAT_SUCCEEDED)
     {
         il2c_unlink_execution_frame(pFrame);
         il2c_mcfree(pFrame);
@@ -985,7 +985,7 @@ static int8_t System_String_InternalFormat(
         System_String_InternalFormatStep3Writer,
         System_String_InternalFormatStep3ArgumentWriter,
         &state);
-    il2c_assert(result == 0);
+    il2c_assert(result == IL2C_STRING_FORMAT_SUCCEEDED);
     il2c_assert(state.formatItemIndex == state.formatItemCount);
 
     *state.pWriteTarget = L'\0';

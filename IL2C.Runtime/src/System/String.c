@@ -266,24 +266,10 @@ bool il2c_format_string__(
     uint32_t argumentIndex = 0;
     uint32_t compositeFormatStartIndex = 0;
     uint32_t compositeFormatIndex = 0;
+    uint32_t formatStartIndex = 0;
     while (1)
     {
         const wchar_t ch = pCompositeFormat[compositeFormatIndex++];
-        if (ch == L'\0')
-        {
-            if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
-            {
-                if (!(*pTokenWriter)(
-                    pCompositeFormat + compositeFormatStartIndex,
-                    (compositeFormatIndex - 1) - compositeFormatStartIndex,
-                    pState))
-                {
-                    return false;
-                }
-            }
-            
-            break;
-        }
 
         switch (state)
         {
@@ -292,6 +278,21 @@ bool il2c_format_string__(
             {
                 argumentIndex = 0;
                 state = state_index0;
+            }
+            else if (ch == L'\0')
+            {
+                if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
+                {
+                    if (!(*pTokenWriter)(
+                        pCompositeFormat + compositeFormatStartIndex,
+                        (compositeFormatIndex - 1) - compositeFormatStartIndex,
+                        pState))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
             break;
         case state_index0:
@@ -327,7 +328,7 @@ bool il2c_format_string__(
                 compositeFormatStartIndex = compositeFormatIndex;
                 state = state_fetch;
             }
-            else
+            else if (ch != L' ')
             {
                 return false;
             }
@@ -339,12 +340,16 @@ bool il2c_format_string__(
             }
             else if (ch == L':')
             {
-                compositeFormatStartIndex = compositeFormatIndex;
+                formatStartIndex = compositeFormatIndex;
                 state = state_format;
             }
             else if (ch == L'}')
             {
-                if (!(*pArgumentWriter)(argumentIndex, pState))
+                if (!(*pArgumentWriter)(
+                    argumentIndex,
+                    NULL,
+                    0,
+                    pState))
                 {
                     return false;
                 }
@@ -357,10 +362,28 @@ bool il2c_format_string__(
                 return false;
             }
             break;
+        case state_format:
+            if (ch == L'}')
+            {
+                if (!(*pArgumentWriter)(
+                    argumentIndex,
+                    pCompositeFormat + formatStartIndex,
+                    compositeFormatIndex - formatStartIndex,
+                    pState))
+                {
+                    return false;
+                }
+
+                compositeFormatStartIndex = compositeFormatIndex;
+                state = state_fetch;
+            }
+            else if (ch == L'\0')
+            {
+                return false;
+            }
+            break;
         }
     }
-
-    return true;
 }
 
 /////////////////////////////////////////////////////////////
@@ -662,21 +685,17 @@ typedef struct System_String_InternalFormatState
 {
     // Total formatted string length.
     uint32_t length;
-
     // The arguments count.
     uint32_t argumentCount;
-
     // The arguments.
     System_Object** ppArgs;
-
     // The string converted arguments by System.Object.ToString().
     System_String** ppStringArgs;
-
     // String storing buffer.
     wchar_t* pWriteTarget;
 } System_String_InternalFormatState;
 
-static bool System_String_InternalFormatPrepareWriter(
+static bool System_String_InternalFormatStep1Writer(
     const wchar_t* pFrom, uint32_t length, void* pState)
 {
     il2c_assert(pFrom != NULL);
@@ -690,8 +709,8 @@ static bool System_String_InternalFormatPrepareWriter(
     return true;
 }
 
-static bool System_String_InternalFormatPrepareArgumentWriter(
-    uint32_t argumentIndex, void* pState)
+static bool System_String_InternalFormatStep1ArgumentWriter(
+    uint32_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
 {
     il2c_assert(argumentIndex >= 0);
     il2c_assert(pState != NULL);
@@ -724,7 +743,7 @@ static bool System_String_InternalFormatPrepareArgumentWriter(
     return true;
 }
 
-static bool System_String_InternalFormatWriter(
+static bool System_String_InternalFormatStep2Writer(
     const wchar_t* pFrom, uint32_t length, void* pState)
 {
     il2c_assert(pFrom != NULL);
@@ -742,8 +761,8 @@ static bool System_String_InternalFormatWriter(
     return true;
 }
 
-static bool System_String_InternalFormatArgumentWriter(
-    uint32_t argumentIndex, void* pState)
+static bool System_String_InternalFormatStep2ArgumentWriter(
+    uint32_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
 {
     il2c_assert(pState != NULL);
 
@@ -790,8 +809,8 @@ static bool System_String_InternalFormat(
 
     if (!il2c_format_string__(
         pFormat->string_body__,
-        System_String_InternalFormatPrepareWriter,
-        System_String_InternalFormatPrepareArgumentWriter,
+        System_String_InternalFormatStep1Writer,
+        System_String_InternalFormatStep1ArgumentWriter,
         &state))
     {
         return false;
@@ -816,8 +835,8 @@ static bool System_String_InternalFormat(
 #endif
     il2c_format_string__(
         pFormat->string_body__,
-        System_String_InternalFormatWriter,
-        System_String_InternalFormatArgumentWriter,
+        System_String_InternalFormatStep2Writer,
+        System_String_InternalFormatStep2ArgumentWriter,
         &state);
     il2c_assert(result);
 

@@ -44,6 +44,7 @@ namespace IL2C.BasicTypes
     [TestCase("A111BC444DE777F", "Format32_Custom", "A{0:N}BC{1:N}DE{2:N}F", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer), typeof(Format32_CustomProducer) })]
     [TestCase("123A123B124C124D125E125", "Format3", "{0}A{0}B{1}C{1}D{2}E{2}", 123, 124, 125)]
     [TestCase("A125BC124DE123F", "Format3", "A{2}BC{1}DE{0}F", 123, 124, 125)]
+    [TestCase("A333B111C666D444E999F777G", "Format32_Custom", "A{0}B{0:N}C{1}D{1:N}E{2}F{2:N}G", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer), typeof(Format32_CustomProducer) })]
     [TestCase("ABCDEF", "Format3", "ABCDEF", 123, 124, 125)]
     [TestCase("ABCDEF", "Format3", "A{0}BC{1}DE{2}F", "", "", "")]
     [TestCase("ABCDEF", "Format3", "A{0}BC{1}DE{2}F", null, null, null)]

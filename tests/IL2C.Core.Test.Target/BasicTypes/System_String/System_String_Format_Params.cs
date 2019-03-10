@@ -44,6 +44,7 @@ namespace IL2C.BasicTypes
     [TestCase("A111BC444DE777FGXXXH", "Format_Params_Custom2", "A{0:N}BC{1:N}DE{2:N}FG{3:N}H", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer), typeof(Format32_CustomProducer), typeof(Format42_CustomProducer) })]
     [TestCase("123A123B124C124D125E125F126", "Format_Params", "{0}A{0}B{1}C{1}D{2}E{2}F{3}", 123, 124, 125, 126)]
     [TestCase("A126BC125DE124FG123H", "Format_Params", "A{3}BC{2}DE{1}FG{0}H", 123, 124, 125, 126)]
+    [TestCase("A333B111C666D444E999F777GZZZHXXXI", "Format_Params_Custom2", "A{0}B{0:N}C{1}D{1:N}E{2}F{2:N}G{3}H{3:N}I", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer), typeof(Format32_CustomProducer), typeof(Format42_CustomProducer) })]
     [TestCase("ABCDEF", "Format_Params", "ABCDEF", 123, 124, 125, 126)]
     [TestCase("ABCDEFGH", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", "", "", "", "")]
     [TestCase("ABCDEFGH", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", null, null, null, null)]

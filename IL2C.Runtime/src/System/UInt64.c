@@ -5,6 +5,8 @@
 
 System_String* System_UInt64_ToString(uint64_t* this__)
 {
+    il2c_assert(this__ != NULL);
+
     wchar_t buffer[24];
 
     il2c_ui64tow(*this__, buffer, 10);

@@ -6,25 +6,9 @@
 // MinGW (Win32 API)
 #if defined(__GNUC__) && defined(_WIN32)
 
-void il2c_debug_write__(const char* message)
+void il2c_debug_write__(const wchar_t* message)
 {
-    il2c_assert(message != NULL);
-
-    OutputDebugStringA(message);
-}
-
-void il2c_debug_write_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-    char buffer[256];
-
-    va_start(va, format);
-    vsprintf(buffer, format, va);
-    va_end(va);
-
-    OutputDebugStringA(buffer);
+    OutputDebugStringW(message);
 }
 
 void il2c_write(const wchar_t* s)

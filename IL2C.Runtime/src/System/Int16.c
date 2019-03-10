@@ -7,7 +7,7 @@ System_String* System_Int16_ToString(int16_t* this__)
 {
     wchar_t buffer[7];
 
-    il2c_itow(*this__, buffer, 6);
+    il2c_itow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 

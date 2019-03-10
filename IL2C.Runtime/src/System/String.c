@@ -989,7 +989,7 @@ static int8_t System_String_InternalFormat(
     il2c_assert(state.formatItemIndex == state.formatItemCount);
 
     *state.pWriteTarget = L'\0';
-    il2c_assert((state.pWriteTarget - pFrame->pString->string_body__) == state.length);
+    il2c_assert((uint32_t)(state.pWriteTarget - pFrame->pString->string_body__) == state.length);
 
     *ppString = pFrame->pString;
 

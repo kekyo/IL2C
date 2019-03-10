@@ -5,9 +5,11 @@
 
 System_String* System_Byte_ToString(uint8_t* this__)
 {
+    il2c_assert(this__ != NULL);
+
     wchar_t buffer[5];
 
-    il2c_itow(*this__, buffer, 4);
+    il2c_itow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 

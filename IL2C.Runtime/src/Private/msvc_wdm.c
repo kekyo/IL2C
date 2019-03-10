@@ -6,18 +6,10 @@
 // WDM
 #if defined(_MSC_VER) && defined(_WDM)
 
-// TODO:
-
-void il2c_debug_write(const char* format, ...)
+void il2c_debug_write__(const wchar_t* message)
 {
-    va_list va;
-    char buffer[256];
-
-    va_start(va, format);
-    il2c_assert(format != NULL);
-    wvsprintfA(buffer, format, va);
-    DbgPrint(buffer);
-    va_end(va);
+    // TODO:
+    OutputDebugStringW(message);
 }
 
 void il2c_write(const wchar_t* s)

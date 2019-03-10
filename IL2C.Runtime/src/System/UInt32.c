@@ -5,6 +5,8 @@
 
 System_String* System_UInt32_ToString(uint32_t* this__)
 {
+    il2c_assert(this__ != NULL);
+
     wchar_t buffer[14];
 
     il2c_ultow(*this__, buffer, 10);

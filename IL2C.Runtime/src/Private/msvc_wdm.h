@@ -38,8 +38,8 @@ extern "C" {
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 
 #define il2c_mcalloc(name, size) \
-    name = (((size) >= 32) ? il2c_malloc(size) : _alloca(size)); \
-    const bool is_##name##_heaped__ = ((size) >= 32)
+    name = (((size) >= 32U) ? il2c_malloc(size) : _alloca(size)); \
+    const bool is_##name##_heaped__ = ((size) >= 32U)
 #define il2c_mcfree(name) \
     do { if (is_##name##_heaped__) il2c_free(name); } while (0)
 

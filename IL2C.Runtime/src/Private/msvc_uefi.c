@@ -397,36 +397,9 @@ void il2c_sleep(uint32_t milliseconds)
     g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
 }
 
-void il2c_debug_write__(const char* message)
+void il2c_debug_write__(const wchar_t* message)
 {
-    il2c_assert(message != NULL);
-    il2c_assert(g_pSystemTable != NULL);
-
-    int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* il2c_mcalloc(pBuffer, (length + 3) * sizeof(wchar_t));
-    wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
-    *pLast++ = L'\r';
-    *pLast++ = L'\n';
-    *pLast = L'\0';
-
-    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
-
-    il2c_mcfree(pBuffer);
-}
-
-void il2c_debug_write_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-    char buffer[512];
-
-    va_start(va, format);
-    vsprintf(buffer, format, va);
-
-    il2c_debug_write__(buffer);
-
-    va_end(va);
+    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, message);
 }
 
 #if defined(_DEBUG)

@@ -6,24 +6,9 @@
 // Standard Win32 API
 #if defined(_MSC_VER) && defined(_WIN32) && !defined(UEFI) && !defined(_WDM)
 
-void il2c_debug_write__(const char* message)
+void il2c_debug_write__(const wchar_t* message)
 {
-    il2c_assert(message != NULL);
-
-    OutputDebugStringA(message);
-}
-
-void il2c_debug_write_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-    char buffer[512];
-
-    va_start(va, format);
-    vsprintf(buffer, format, va);
-    OutputDebugStringA(buffer);
-    va_end(va);
+    OutputDebugStringW(message);
 }
 
 void il2c_write(const wchar_t* s)

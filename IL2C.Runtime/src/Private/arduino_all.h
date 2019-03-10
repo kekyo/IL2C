@@ -24,7 +24,7 @@ extern wchar_t* il2c_itow(int32_t value, wchar_t* d, int radix);
 #define il2c_ultow _ultow
 #define il2c_i64tow _i64tow
 #define il2c_ui64tow _ui64tow
-#define il2c_snwprintf _snwprintf
+#define il2c_snwprintf swprintf
 extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_wcstoul wcstoul
 #define il2c_wcstoll wcstoll
@@ -45,8 +45,8 @@ extern void il2c_free(void* p);
 #endif
 
 #define il2c_mcalloc(name, size) \
-    name = (((size) >= 32) ? il2c_malloc(size) : alloca(size)); \
-    const bool is_##name##_heaped__ = ((size) >= 32)
+    name = (((size) >= 32U) ? il2c_malloc(size) : alloca(size)); \
+    const bool is_##name##_heaped__ = ((size) >= 32U)
 #define il2c_mcfree(name) \
     do { if (is_##name##_heaped__) il2c_free(name); } while (0)
 

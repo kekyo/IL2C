@@ -1311,6 +1311,208 @@ void il2c_break__(void)
     debug_break();
 }
 
+///////////////////////////////////////////////////////
+// Low level debugger formatted writer
+
+typedef struct IL2C_DEBUG_WRITE_FORMAT_STATE
+{
+    va_list va;
+    uint16_t length;
+    wchar_t* pBuffer;
+} IL2C_DEBUG_WRITE_FORMAT_STATE;
+
+static int8_t il2c_debug_write_format_writer_step1__(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
+{
+    IL2C_DEBUG_WRITE_FORMAT_STATE* p = pState;
+
+    p->length = (uint16_t)(p->length + tokenLength);
+    return 0;
+}
+
+static int8_t il2c_debug_write_format_argument_writer_step1__(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
+{
+    IL2C_DEBUG_WRITE_FORMAT_STATE* p = pState;
+    wchar_t buffer[24];
+
+    if (formatLength != 1)
+    {
+        return IL2C_STRING_FORMAT_INVALID;
+    }
+
+    switch (*pFormatFrom)
+    {
+    case L'd':
+        {
+            int32_t value = va_arg(p->va, int32_t);
+            il2c_itow(value, buffer, 10);
+        }
+        return 0;
+    case L'u':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_ultow(value, buffer, 10);
+        }
+        break;
+    case L'x':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_ultow(value, buffer, 16);
+        }
+        break;
+    case L'D':
+        {
+            int64_t value = va_arg(p->va, int64_t);
+            il2c_i64tow(value, buffer, 10);
+        }
+        break;
+    case L'U':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_ui64tow(value, buffer, 10);
+        }
+        break;
+    case L'X':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_ui64tow(value, buffer, 16);
+        }
+        break;
+    case L'p':
+        {
+            uintptr_t value = va_arg(p->va, uintptr_t);
+            il2c_ui64tow(value, buffer, 16);
+        }
+        break;
+    case L's':
+        {
+            const wchar_t* pStr = va_arg(p->va, const wchar_t*);
+            p->length = (uint16_t)(il2c_wcslen(pStr) + p->length);
+        }
+        return 0;
+    default:
+        return IL2C_STRING_FORMAT_INVALID;
+    }
+
+    p->length = (uint16_t)(il2c_wcslen(buffer) + p->length);
+    return 0;
+}
+
+static int8_t il2c_debug_write_format_writer_step2__(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
+{
+    return 0;
+}
+
+static int8_t il2c_debug_write_format_argument_writer_step2__(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
+{
+    IL2C_DEBUG_WRITE_FORMAT_STATE* p = pState;
+    wchar_t buffer[24];
+    uint16_t length;
+
+    switch (*pFormatFrom)
+    {
+    case L'd':
+        {
+            int32_t value = va_arg(p->va, int32_t);
+            il2c_itow(value, buffer, 10);
+        }
+        break;
+    case L'u':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_ultow(value, buffer, 10);
+        }
+        break;
+    case L'x':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_ultow(value, buffer, 16);
+        }
+        break;
+    case L'D':
+        {
+            int64_t value = va_arg(p->va, int64_t);
+            il2c_i64tow(value, buffer, 10);
+        }
+        break;
+    case L'U':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_ui64tow(value, buffer, 10);
+        }
+        break;
+    case L'X':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_ui64tow(value, buffer, 16);
+        }
+        break;
+    case L'p':
+        {
+            uintptr_t value = va_arg(p->va, uintptr_t);
+            il2c_ui64tow(value, buffer, 16);
+        }
+        break;
+    case L's':
+        {
+            const wchar_t* pStr = va_arg(p->va, const wchar_t*);
+            length = (uint16_t)il2c_wcslen(pStr);
+            memcpy(p->pBuffer, buffer, length * sizeof(wchar_t));
+            p->pBuffer += length;
+        }
+        return 0;
+    default:
+        return IL2C_STRING_FORMAT_INVALID;
+    }
+
+    length = (uint16_t)il2c_wcslen(buffer);
+    memcpy(p->pBuffer, buffer, length * sizeof(wchar_t));
+    p->pBuffer += length;
+    return 0;
+}
+
+void il2c_debug_write_format__(const wchar_t* format, ...)
+{
+    IL2C_DEBUG_WRITE_FORMAT_STATE state = { 0 };
+
+    va_start(state.va, format);
+
+    int8_t result = il2c_format_string__(
+        format,
+        il2c_debug_write_format_writer_step1__,
+        il2c_debug_write_format_argument_writer_step1__,
+        &state);
+    if (result == 0)
+    {
+        wchar_t* il2c_mcalloc(pBuffer, (state.length + 1U) * sizeof(wchar_t));
+        state.pBuffer = pBuffer;
+
+        va_end(state.va);
+        va_start(state.va, format);
+
+        result = il2c_format_string__(
+            format,
+            il2c_debug_write_format_writer_step2__,
+            il2c_debug_write_format_argument_writer_step2__,
+            &state);
+        if (result == 0)
+        {
+            *state.pBuffer = L'\0';
+            il2c_debug_write__(pBuffer);
+        }
+
+        il2c_mcfree(pBuffer);
+    }
+
+    va_end(state.va);
+}
+
+///////////////////////////////////////////////////////
+// Basis exceptions
+
 IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
 
 void il2c_throw_nullreferenceexception__(void)

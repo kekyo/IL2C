@@ -60,33 +60,10 @@ void il2c_sleep(uint32_t milliseconds)
 // NOT Azure Sphere
 #if !defined(__AZURE_SPHERE__)
 
-void il2c_debug_write__(const char* message)
+void il2c_debug_write__(const wchar_t* message)
 {
-    il2c_assert(message != NULL);
-
-    int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* il2c_mcalloc(pBuffer, (length + 3) * sizeof(wchar_t));
-    wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
-    *pLast++ = L'\r';
-    *pLast++ = L'\n';
-    *pLast = L'\0';
-
     // TODO: syslog
-    fputws(pBuffer, stderr);
-
-    il2c_mcfree(pBuffer);
-}
-
-void il2c_debug_write_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-
-    va_start(va, format);
-    // TODO: syslog
-    vfwprintf(stderr, format, va);
-    va_end(va);
+    fputws(message, stderr);
 }
 
 void il2c_write(const wchar_t* s)

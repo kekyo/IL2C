@@ -43,8 +43,8 @@ extern "C" {
 #define il2c_free free
 
 #define il2c_mcalloc(name, size) \
-    name = (((size) >= 256) ? il2c_malloc(size) : alloca(size)); \
-    const bool is_##name##_heaped__ = ((size) >= 256)
+    name = (((size) >= 256U) ? il2c_malloc(size) : alloca(size)); \
+    const bool is_##name##_heaped__ = ((size) >= 256U)
 #define il2c_mcfree(name) \
     do { if (is_##name##_heaped__) il2c_free(name); } while (0)
 

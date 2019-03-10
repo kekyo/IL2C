@@ -253,26 +253,30 @@ const wchar_t* il2c_c_str(System_String* str)
 
 // The formatting precess.
 bool il2c_format_string__(
-    const wchar_t* pFormat,
-    IL2C_FORMAT_WRITER pWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
+    const wchar_t* pCompositeFormat,
+    IL2C_FORMAT_TOKEN_WRITER pTokenWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
     void* pState)
 {
-    il2c_assert(pFormat != NULL);
-    il2c_assert(pWriter != NULL);
+    il2c_assert(pCompositeFormat != NULL);
+    il2c_assert(pTokenWriter != NULL);
     il2c_assert(pArgumentWriter != NULL);
 
-    enum { state_fetch, state_index0, state_index } state = state_fetch;
+    enum states { state_fetch, state_index0, state_index, state_format }
+        state = state_fetch;
     uint32_t argumentIndex = 0;
-    uint32_t formatStartIndex = 0;
-    uint32_t formatIndex = 0;
+    uint32_t compositeFormatStartIndex = 0;
+    uint32_t compositeFormatIndex = 0;
     while (1)
     {
-        const wchar_t ch = pFormat[formatIndex++];
+        const wchar_t ch = pCompositeFormat[compositeFormatIndex++];
         if (ch == L'\0')
         {
-            if ((formatIndex - 1) > formatStartIndex)
+            if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
             {
-                if (!(*pWriter)(pFormat + formatStartIndex, (formatIndex - 1) - formatStartIndex, pState))
+                if (!(*pTokenWriter)(
+                    pCompositeFormat + compositeFormatStartIndex,
+                    (compositeFormatIndex - 1) - compositeFormatStartIndex,
+                    pState))
                 {
                     return false;
                 }
@@ -293,9 +297,12 @@ bool il2c_format_string__(
         case state_index0:
             if ((ch >= L'0') && (ch <= L'9'))
             {
-                if ((formatIndex - 2) > formatStartIndex)
+                if ((compositeFormatIndex - 2) > compositeFormatStartIndex)
                 {
-                    if (!(*pWriter)(pFormat + formatStartIndex, (formatIndex - 2) - formatStartIndex, pState))
+                    if (!(*pTokenWriter)(
+                        pCompositeFormat + compositeFormatStartIndex,
+                        (compositeFormatIndex - 2) - compositeFormatStartIndex,
+                        pState))
                     {
                         return false;
                     }
@@ -306,15 +313,18 @@ bool il2c_format_string__(
             }
             else if (ch == L'{')
             {
-                if ((formatIndex - 1) > formatStartIndex)
+                if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
                 {
-                    if (!(*pWriter)(pFormat + formatStartIndex, (formatIndex - 1) - formatStartIndex, pState))
+                    if (!(*pTokenWriter)(
+                        pCompositeFormat + compositeFormatStartIndex,
+                        (compositeFormatIndex - 1) - compositeFormatStartIndex,
+                        pState))
                     {
                         return false;
                     }
                 }
 
-                formatStartIndex = formatIndex;
+                compositeFormatStartIndex = compositeFormatIndex;
                 state = state_fetch;
             }
             else
@@ -327,6 +337,11 @@ bool il2c_format_string__(
             {
                 argumentIndex = argumentIndex * 10 + (ch - L'0');
             }
+            else if (ch == L':')
+            {
+                compositeFormatStartIndex = compositeFormatIndex;
+                state = state_format;
+            }
             else if (ch == L'}')
             {
                 if (!(*pArgumentWriter)(argumentIndex, pState))
@@ -334,7 +349,7 @@ bool il2c_format_string__(
                     return false;
                 }
 
-                formatStartIndex = formatIndex;
+                compositeFormatStartIndex = compositeFormatIndex;
                 state = state_fetch;
             }
             else

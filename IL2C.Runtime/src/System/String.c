@@ -263,7 +263,7 @@ const wchar_t* il2c_c_str(System_String* str)
 // It's flexible with applicating delegation functions.
 
 // The formatting precess.
-bool il2c_format_string__(
+int8_t il2c_format_string__(
     const wchar_t* pCompositeFormat,
     IL2C_FORMAT_TOKEN_WRITER pTokenWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
     void* pState)
@@ -274,7 +274,7 @@ bool il2c_format_string__(
 
     enum states { state_fetch, state_index0, state_index, state_format }
         state = state_fetch;
-    uint32_t argumentIndex = 0;
+    uint16_t argumentIndex = 0;
     uint32_t compositeFormatStartIndex = 0;
     uint32_t compositeFormatIndex = 0;
     uint32_t formatStartIndex = 0;
@@ -294,16 +294,17 @@ bool il2c_format_string__(
             {
                 if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
                 {
-                    if (!(*pTokenWriter)(
+                    int8_t result = (*pTokenWriter)(
                         pCompositeFormat + compositeFormatStartIndex,
                         (compositeFormatIndex - 1) - compositeFormatStartIndex,
-                        pState))
+                        pState);
+                    if (result != 0)
                     {
-                        return false;
+                        return result;
                     }
                 }
 
-                return true;
+                return 0;
             }
             break;
         case state_index0:
@@ -311,12 +312,13 @@ bool il2c_format_string__(
             {
                 if ((compositeFormatIndex - 2) > compositeFormatStartIndex)
                 {
-                    if (!(*pTokenWriter)(
+                    int8_t result = (*pTokenWriter)(
                         pCompositeFormat + compositeFormatStartIndex,
                         (compositeFormatIndex - 2) - compositeFormatStartIndex,
-                        pState))
+                        pState);
+                    if (result != 0)
                     {
-                        return false;
+                        return result;
                     }
                 }
 
@@ -327,12 +329,13 @@ bool il2c_format_string__(
             {
                 if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
                 {
-                    if (!(*pTokenWriter)(
+                    int8_t result = (*pTokenWriter)(
                         pCompositeFormat + compositeFormatStartIndex,
                         (compositeFormatIndex - 1) - compositeFormatStartIndex,
-                        pState))
+                        pState);
+                    if (result != 0)
                     {
-                        return false;
+                        return result;
                     }
                 }
 
@@ -341,7 +344,7 @@ bool il2c_format_string__(
             }
             else if (ch != L' ')
             {
-                return false;
+                return -1;
             }
             break;
         case state_index:
@@ -356,13 +359,14 @@ bool il2c_format_string__(
             }
             else if (ch == L'}')
             {
-                if (!(*pArgumentWriter)(
+                int8_t result = (*pArgumentWriter)(
                     argumentIndex,
                     NULL,
                     0,
-                    pState))
+                    pState);
+                if (result != 0)
                 {
-                    return false;
+                    return result;
                 }
 
                 compositeFormatStartIndex = compositeFormatIndex;
@@ -370,19 +374,20 @@ bool il2c_format_string__(
             }
             else
             {
-                return false;
+                return -1;
             }
             break;
         case state_format:
             if (ch == L'}')
             {
-                if (!(*pArgumentWriter)(
+                int8_t result = (*pArgumentWriter)(
                     argumentIndex,
                     pCompositeFormat + formatStartIndex,
                     compositeFormatIndex - formatStartIndex - 1,
-                    pState))
+                    pState);
+                if (result != 0)
                 {
-                    return false;
+                    return result;
                 }
 
                 compositeFormatStartIndex = compositeFormatIndex;
@@ -390,7 +395,7 @@ bool il2c_format_string__(
             }
             else if (ch == L'\0')
             {
-                return false;
+                return -1;
             }
             break;
         }
@@ -706,34 +711,37 @@ bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
 
 typedef struct System_String_InternalFormatState
 {
-    // Total formatted string length.
-    uint32_t length;
     // The arguments count.
-    uint32_t argumentCount;
+    uint16_t argumentCount;
+    // Number of format items.
+    uint16_t formatItemCount;
+    // Index of format items.
+    uint16_t formatItemIndex;
+    // Candidate string length.
+    uint32_t length;
     // The arguments.
     System_Object** ppArgs;
-    // The string converted arguments by System.Object.ToString().
-    System_String** ppStringArgs;
+    // The formatted strings by ToString().
+    System_String** ppFormattedString;
     // String storing buffer.
     wchar_t* pWriteTarget;
 } System_String_InternalFormatState;
 
-static bool System_String_InternalFormatStep1Writer(
-    const wchar_t* pFrom, uint32_t length, void* pState)
+// ---------------
+// Step 1 writers.
+
+static int8_t System_String_InternalFormatStep1Writer(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
 {
-    il2c_assert(pFrom != NULL);
+    il2c_assert(pTokenFrom != NULL);
     il2c_assert(pState != NULL);
 
-    System_String_InternalFormatState* p = pState;
-    il2c_assert(p->pWriteTarget == NULL);
-
-    p->length += length;
-
-    return true;
+    // Nothing to do.
+    return 0;
 }
 
-static bool System_String_InternalFormatStep1ArgumentWriter(
-    uint32_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
+static int8_t System_String_InternalFormatStep1ArgumentWriter(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
 {
     il2c_assert(argumentIndex >= 0);
     il2c_assert(pState != NULL);
@@ -743,68 +751,106 @@ static bool System_String_InternalFormatStep1ArgumentWriter(
 
     if (argumentIndex >= p->argumentCount)
     {
-        return false;
+        return -2;
     }
 
-    System_String** ppStringArg = &p->ppStringArgs[argumentIndex];
-    if (*ppStringArg == NULL)
+    // Count up number of format items.
+    p->formatItemCount++;
+
+    return 0;
+}
+
+// ---------------
+// Step 2 writers.
+
+static int8_t System_String_InternalFormatStep2Writer(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
+{
+    il2c_assert(pTokenFrom != NULL);
+    il2c_assert(pState != NULL);
+
+    System_String_InternalFormatState* p = pState;
+    il2c_assert(p->pWriteTarget == NULL);
+
+    // Count up total string length.
+    p->length += tokenLength;
+
+    return 0;
+}
+
+static int8_t System_String_InternalFormatStep2ArgumentWriter(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
+{
+    il2c_assert(argumentIndex >= 0);
+    il2c_assert(pState != NULL);
+
+    System_String_InternalFormatState* p = pState;
+    il2c_assert(p->pWriteTarget == NULL);
+
+    il2c_assert(argumentIndex < p->argumentCount);
+
+    System_String** ppFormattedString = &p->ppFormattedString[p->formatItemIndex++];
+    il2c_assert(*ppFormattedString == NULL);
+
+    void* pArg = p->ppArgs[argumentIndex];
+    if (pArg != NULL)
     {
-        void* pArg = p->ppArgs[argumentIndex];
-        if (pArg != NULL)
+        System_Object* pAdjustedReference = il2c_adjusted_reference(pArg);
+        System_IFormattable* pFormattable = il2c_isinst(pArg, System_IFormattable);
+        if (pFormattable != NULL)
         {
-            System_Object* pAdjustedReference = il2c_adjusted_reference(pArg);
-            System_IFormattable* pFormattable = il2c_isinst(pArg, System_IFormattable);
-            if (pFormattable != NULL)
+            if (formatLength >= 1)
             {
-                if (formatLength >= 1)
-                {
-                    il2c_assert(pFormatFrom != NULL);
-                    System_String* pFormatString = il2c_new_string_with_length(pFormatFrom, formatLength);
-                    // TODO: formatProvider
-                    *ppStringArg = pFormattable->vptr0__->ToString(pAdjustedReference, pFormatString, NULL);
-                }
-                else
-                {
-                    // TODO: formatProvider
-                    *ppStringArg = pFormattable->vptr0__->ToString(pAdjustedReference, NULL, NULL);
-                }
+                il2c_assert(pFormatFrom != NULL);
+                System_String* pFormatString = il2c_new_string_with_length(pFormatFrom, formatLength);
+                // TODO: formatProvider
+                *ppFormattedString = pFormattable->vptr0__->ToString(pAdjustedReference, pFormatString, NULL);
             }
             else
             {
-                *ppStringArg = pAdjustedReference->vptr0__->ToString(pAdjustedReference);
+                // TODO: formatProvider
+                *ppFormattedString = pFormattable->vptr0__->ToString(pAdjustedReference, NULL, NULL);
             }
         }
         else
         {
-            *ppStringArg = System_String_Empty;
+            *ppFormattedString = pAdjustedReference->vptr0__->ToString(pAdjustedReference);
         }
     }
+    else
+    {
+        *ppFormattedString = System_String_Empty;
+    }
 
-    p->length += (uint32_t)il2c_wcslen((*ppStringArg)->string_body__);
+    // Count up total string length.
+    p->length += (uint32_t)il2c_wcslen((*ppFormattedString)->string_body__);
 
-    return true;
+    return 0;
 }
 
-static bool System_String_InternalFormatStep2Writer(
-    const wchar_t* pFrom, uint32_t length, void* pState)
+// ---------------
+// Step 3 writers.
+
+static int8_t System_String_InternalFormatStep3Writer(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
 {
-    il2c_assert(pFrom != NULL);
+    il2c_assert(pTokenFrom != NULL);
     il2c_assert(pState != NULL);
 
     System_String_InternalFormatState* p = pState;
     il2c_assert(p->pWriteTarget != NULL);
 
-    while (length > 0)
+    while (tokenLength > 0)
     {
-        *(p->pWriteTarget)++ = *pFrom++;
-        length--;
+        *(p->pWriteTarget)++ = *pTokenFrom++;
+        tokenLength--;
     }
 
-    return true;
+    return 0;
 }
 
-static bool System_String_InternalFormatStep2ArgumentWriter(
-    uint32_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
+static int8_t System_String_InternalFormatStep3ArgumentWriter(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
 {
     il2c_assert(pState != NULL);
 
@@ -812,11 +858,11 @@ static bool System_String_InternalFormatStep2ArgumentWriter(
     il2c_assert(p->pWriteTarget != NULL);
     il2c_assert(argumentIndex < p->argumentCount);
 
-    System_String* pStringArg = p->ppStringArgs[argumentIndex];
-    il2c_assert(pStringArg != NULL);
-    il2c_assert(pStringArg->string_body__ != NULL);
+    System_String* pFormattedString = p->ppFormattedString[p->formatItemIndex++];
+    il2c_assert(pFormattedString != NULL);
+    il2c_assert(pFormattedString->string_body__ != NULL);
 
-    const wchar_t* pFrom = pStringArg->string_body__;
+    const wchar_t* pFrom = pFormattedString->string_body__;
     while (1)
     {
         const wchar_t ch = *pFrom++;
@@ -827,64 +873,109 @@ static bool System_String_InternalFormatStep2ArgumentWriter(
         *(p->pWriteTarget)++ = ch;
     }
 
-    return true;
+    return 0;
 }
 
-static bool System_String_InternalFormat(
+// ---------------
+// The formatter.
+
+static int8_t System_String_InternalFormat(
     System_String** ppString, System_String* pFormat,
-    uint32_t argumentCount, System_Object** ppArgs, System_String** ppStringArgs)
+    uint16_t argumentCount, System_Object** ppArgs)
 {
     il2c_assert(ppString != NULL);
     il2c_assert(pFormat != NULL);
     il2c_assert(pFormat->string_body__ != NULL);
     il2c_assert(argumentCount >= 0);
     il2c_assert(ppArgs != NULL);
-    il2c_assert(ppStringArgs != NULL);
 
     System_String_InternalFormatState state = { 0 };
     state.argumentCount = argumentCount;
     state.ppArgs = ppArgs;
-    state.ppStringArgs = ppStringArgs;
 
     /////////////////////////////////////////////////
-    // Step 1. Calculate formatted string length.
+    // Step 1-1. Count formatted string's number of format items.
 
-    if (!il2c_format_string__(
+    int8_t result = il2c_format_string__(
         pFormat->string_body__,
         System_String_InternalFormatStep1Writer,
         System_String_InternalFormatStep1ArgumentWriter,
-        &state))
+        &state);
+    if (result != 0)
     {
-        return false;
+        return result;
     }
 
     /////////////////////////////////////////////////
-    // Step 2. Allocate once System.String
+    // Step 1-2. Allocate and link string store spaces into the execution frame.
 
-#if defined(_DEBUG)
-    *ppString = new_string_internal__((state.length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
-#else
-    *ppString = new_string_internal__((state.length + 1) * sizeof(wchar_t));
-#endif
+    struct System_String_InternalFormat_EXECUTION_FRAME
+    {
+        IL2C_EXECUTION_FRAME* pNext__;
+        const uint16_t objRefCount__;
+        const uint16_t valueCount__;
+        System_String* pString;
+        //System_String* pFormattedString[state.count];
+    };
 
-    state.pWriteTarget = (wchar_t*)((*ppString)->string_body__);
+    uint32_t size =
+        sizeof(struct System_String_InternalFormat_EXECUTION_FRAME) +
+        state.formatItemCount * sizeof(System_String*);
+    struct System_String_InternalFormat_EXECUTION_FRAME* il2c_mcalloc(pFrame, size);
+    memset(pFrame, 0, size);
+    *(uint16_t*)(&pFrame->objRefCount__) = (uint16_t)(1 + state.formatItemCount);
+    il2c_link_execution_frame(pFrame);
+
+    state.ppFormattedString = (&pFrame->pString) + 1;
 
     /////////////////////////////////////////////////
-    // Step 3. Write formatted string into System.String
+    // Step 2-1. Calculate formatted string length.
 
-#if defined(_DEBUG)
-    bool result =
-#endif
-    il2c_format_string__(
+    result = il2c_format_string__(
         pFormat->string_body__,
         System_String_InternalFormatStep2Writer,
         System_String_InternalFormatStep2ArgumentWriter,
         &state);
-    il2c_assert(result);
+    if (result != 0)
+    {
+        il2c_unlink_execution_frame(pFrame);
+        il2c_mcfree(pFrame);
+        return result;
+    }
+
+    /////////////////////////////////////////////////
+    // Step 2-2. Allocate System.String with required length.
+
+#if defined(_DEBUG)
+    pFrame->pString = new_string_internal__(
+        (state.length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
+#else
+    pFrame->pString = new_string_internal__(
+        (state.length + 1) * sizeof(wchar_t));
+#endif
+
+    state.pWriteTarget = (wchar_t*)(pFrame->pString->string_body__);
+
+    /////////////////////////////////////////////////
+    // Step 3. Write formatted string into System.String
+
+    // Reset index.
+    state.formatItemIndex = 0;
+
+    result = il2c_format_string__(
+        pFormat->string_body__,
+        System_String_InternalFormatStep3Writer,
+        System_String_InternalFormatStep3ArgumentWriter,
+        &state);
+    il2c_assert(result == 0);
 
     *state.pWriteTarget = L'\0';
+    *ppString = pFrame->pString;
 
-    return true;
+    il2c_unlink_execution_frame(pFrame);
+    il2c_mcfree(pFrame);
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////
@@ -897,24 +988,14 @@ System_String* System_String_Format(
     il2c_assert(format != NULL);
     il2c_assert(format->string_body__ != NULL);
 
-    struct System_String_Format_EXECUTION_FRAME
-    {
-        IL2C_EXECUTION_FRAME* pNext__;
-        const uint16_t objRefCount__;
-        const uint16_t valueCount__;
-        System_String* pString;
-        System_String* pStringArg0;
-    } frame__ = { NULL, 2 };
-    il2c_link_execution_frame(&frame__);
-
-    if (!System_String_InternalFormat(
-        &frame__.pString, format, 1, &arg0, &frame__.pStringArg0))
+    System_String* pString;
+    if (System_String_InternalFormat(
+        &pString, format, 1, &arg0) != 0)
     {
         il2c_throw_formatexception__();
     }
 
-    il2c_unlink_execution_frame(&frame__);
-    return frame__.pString;
+    return pString;
 }
 
 System_String* System_String_Format_1(
@@ -928,25 +1009,14 @@ System_String* System_String_Format_1(
     pArgs[0] = arg0;
     pArgs[1] = arg1;
 
-    struct System_String_Format1_EXECUTION_FRAME
-    {
-        IL2C_EXECUTION_FRAME* pNext__;
-        const uint16_t objRefCount__;
-        const uint16_t valueCount__;
-        System_String* pString;
-        System_String* pStringArg0;
-        System_String* pStringArg1;
-    } frame__ = { NULL, 3 };
-    il2c_link_execution_frame(&frame__);
-
-    if (!System_String_InternalFormat(
-        &frame__.pString, format, 2, pArgs, &frame__.pStringArg0))
+    System_String* pString;
+    if (System_String_InternalFormat(
+        &pString, format, 2, pArgs) != 0)
     {
         il2c_throw_formatexception__();
     }
 
-    il2c_unlink_execution_frame(&frame__);
-    return frame__.pString;
+    return pString;
 }
 
 System_String* System_String_Format_3(
@@ -961,26 +1031,14 @@ System_String* System_String_Format_3(
     pArgs[1] = arg1;
     pArgs[2] = arg2;
 
-    struct System_String_Format3_EXECUTION_FRAME
-    {
-        IL2C_EXECUTION_FRAME* pNext__;
-        const uint16_t objRefCount__;
-        const uint16_t valueCount__;
-        System_String* pString;
-        System_String* pStringArg0;
-        System_String* pStringArg1;
-        System_String* pStringArg2;
-    } frame__ = { NULL, 4 };
-    il2c_link_execution_frame(&frame__);
-
-    if (!System_String_InternalFormat(
-        &frame__.pString, format, 3, pArgs, &frame__.pStringArg0))
+    System_String* pString;
+    if (System_String_InternalFormat(
+        &pString, format, 3, pArgs) != 0)
     {
         il2c_throw_formatexception__();
     }
 
-    il2c_unlink_execution_frame(&frame__);
-    return frame__.pString;
+    return pString;
 }
 
 System_String* System_String_Format_6(
@@ -990,43 +1048,17 @@ System_String* System_String_Format_6(
     il2c_assert(format != NULL);
     il2c_assert(format->string_body__ != NULL);
     il2c_assert(args != NULL);
-    il2c_assert(args->Length <= UINT32_MAX);
+    il2c_assert(args->Length <= UINT16_MAX);
 
-    typedef struct System_String_Format6_EXECUTION_FRAME
+    System_String* pString;
+    if (System_String_InternalFormat(
+        &pString, format, (uint16_t)args->Length,
+        il2c_array_itemptr(args, System_Object*, 0)) != 0)
     {
-        IL2C_EXECUTION_FRAME* pNext__;
-        const uint16_t objRefCount__;
-        const uint16_t valueCount__;
-        System_String* pString;
-        //System_String* pStringArg[n];
-    } System_String_Format6_EXECUTION_FRAME;
-
-    intptr_t size = sizeof(System_String_Format6_EXECUTION_FRAME) + args->Length * sizeof(System_String*);
-    System_String_Format6_EXECUTION_FRAME* il2c_mcalloc(pFrame, size);
-    memset(pFrame, 0, size);
-    *((uint16_t*)(&pFrame->objRefCount__)) = (uint16_t)(args->Length + 1);
-
-    il2c_link_execution_frame(pFrame);
-
-    if (!System_String_InternalFormat(
-        &pFrame->pString, format, (uint32_t)(args->Length),
-        il2c_array_itemptr(args, System_Object*, 0),
-        (&pFrame->pString) + 1))
-    {
-        // Very important, it blocks leaking dynamic allocation frame.
-        // TODO: Will lost current execution frame. Maybe not recorded stack frame into the Exception if it holds.
-        il2c_unlink_execution_frame(pFrame);
-        il2c_mcfree(pFrame);
-
         il2c_throw_formatexception__();
     }
 
-    System_String* pFormatted = pFrame->pString;
-
-    il2c_unlink_execution_frame(pFrame);
-    il2c_mcfree(pFrame);
-
-    return pFormatted;
+    return pString;
 }
 
 /////////////////////////////////////////////////

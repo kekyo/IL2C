@@ -74,11 +74,11 @@ extern const wchar_t* il2c_c_str(System_String* str);
 extern int32_t il2c_get_utf8_length(const char* pUtf8String, bool detectInvalidChars);
 extern wchar_t* il2c_utf16_from_utf8_and_get_last(wchar_t* pDest, const char* pUtf8String);
 
-typedef bool (*IL2C_FORMAT_TOKEN_WRITER)(
-    const wchar_t* pFrom, uint32_t length, void* pState);
-typedef bool (*IL2C_FORMAT_ARGUMENT_WRITER)(
-    uint32_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState);
-extern bool il2c_format_string__(
+typedef int8_t (*IL2C_FORMAT_TOKEN_WRITER)(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState);
+typedef int8_t(*IL2C_FORMAT_ARGUMENT_WRITER)(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState);
+extern int8_t il2c_format_string__(
     const wchar_t* pFormat,
     IL2C_FORMAT_TOKEN_WRITER pWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
     void* pState);

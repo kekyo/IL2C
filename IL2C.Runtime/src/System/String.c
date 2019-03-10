@@ -57,28 +57,39 @@ static System_String* new_string_internal__(uintptr_t byteSize)
 }
 
 #if defined(_DEBUG)
+System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t length, const char* pFile, int line)
+#else
+System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t length)
+#endif
+{
+    il2c_assert(pString != NULL);
+
+#if defined(_DEBUG)
+    System_String* p = new_string_internal__((length + 1) * sizeof(wchar_t), pFile, line);
+#else
+    System_String* p = new_string_internal__((length + 1) * sizeof(wchar_t));
+#endif
+
+    // Copy string at below
+    memcpy((wchar_t*)(p->string_body__), pString, length * sizeof(wchar_t));
+    *((wchar_t*)(p->string_body__) + length) = L'\0';
+
+    return p;
+}
+
+#if defined(_DEBUG)
 System_String* il2c_new_string__(const wchar_t* pString, const char* pFile, int line)
 #else
 System_String* il2c_new_string__(const wchar_t* pString)
 #endif
 {
-    if (pString == NULL)
-    {
-        return NULL;
-    }
-
-    uintptr_t size = (uintptr_t)(il2c_wcslen(pString) + 1) * sizeof(wchar_t);
+    il2c_assert(pString != NULL);
 
 #if defined(_DEBUG)
-    System_String* p = new_string_internal__(size, pFile, line);
+    return il2c_new_string_with_length__(pString, (uint32_t)il2c_wcslen(pString), pFile, line);
 #else
-    System_String* p = new_string_internal__(size);
+    return il2c_new_string_with_length__(pString, (uint32_t)il2c_wcslen(pString));
 #endif
-
-    // Copy string at below
-    memcpy((wchar_t*)(p->string_body__), pString, size);
-
-    return p;
 }
 
 int32_t il2c_get_utf8_length(const char* pUtf8String, bool detectInvalidChars)
@@ -368,7 +379,7 @@ bool il2c_format_string__(
                 if (!(*pArgumentWriter)(
                     argumentIndex,
                     pCompositeFormat + formatStartIndex,
-                    compositeFormatIndex - formatStartIndex,
+                    compositeFormatIndex - formatStartIndex - 1,
                     pState))
                 {
                     return false;
@@ -656,9 +667,15 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
 
 bool System_String_op_Equality(System_String* lhs, System_String* rhs)
 {
-    // TODO: ArgumentNullException
-    il2c_assert(lhs != NULL);
-    il2c_assert(rhs != NULL);
+    if ((lhs == NULL) && (rhs == NULL))
+    {
+        return true;
+    }
+
+    if ((lhs != NULL) != (rhs != NULL))
+    {
+        return false;
+    }
 
     il2c_assert(lhs->string_body__ != NULL);
     il2c_assert(rhs->string_body__ != NULL);
@@ -668,9 +685,15 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
 
 bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
 {
-    // TODO: ArgumentNullException
-    il2c_assert(lhs != NULL);
-    il2c_assert(rhs != NULL);
+    if ((lhs == NULL) && (rhs == NULL))
+    {
+        return false;
+    }
+
+    if ((lhs != NULL) != (rhs != NULL))
+    {
+        return true;
+    }
 
     il2c_assert(lhs->string_body__ != NULL);
     il2c_assert(rhs->string_body__ != NULL);
@@ -730,7 +753,26 @@ static bool System_String_InternalFormatStep1ArgumentWriter(
         if (pArg != NULL)
         {
             System_Object* pAdjustedReference = il2c_adjusted_reference(pArg);
-            *ppStringArg = pAdjustedReference->vptr0__->ToString(pAdjustedReference);
+            System_IFormattable* pFormattable = il2c_isinst(pArg, System_IFormattable);
+            if (pFormattable != NULL)
+            {
+                if (formatLength >= 1)
+                {
+                    il2c_assert(pFormatFrom != NULL);
+                    System_String* pFormatString = il2c_new_string_with_length(pFormatFrom, formatLength);
+                    // TODO: formatProvider
+                    *ppStringArg = pFormattable->vptr0__->ToString(pAdjustedReference, pFormatString, NULL);
+                }
+                else
+                {
+                    // TODO: formatProvider
+                    *ppStringArg = pFormattable->vptr0__->ToString(pAdjustedReference, NULL, NULL);
+                }
+            }
+            else
+            {
+                *ppStringArg = pAdjustedReference->vptr0__->ToString(pAdjustedReference);
+            }
         }
         else
         {

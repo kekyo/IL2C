@@ -3,9 +3,23 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    public sealed class Format2_CustomProducer
+    public sealed class Format21_CustomProducer
     {
         public override string ToString() => "PQR";
+    }
+
+    public sealed class Format22_CustomProducer : IFormattable
+    {
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            switch (format)
+            {
+                case "N": return "444";
+                case "": return "555";
+                case null: return "666";
+                default: throw new Exception();
+            }
+        }
     }
 
     [TestId("System_String")]
@@ -22,7 +36,12 @@ namespace IL2C.BasicTypes
     [TestCase("ABTrueCDFalseEF", "Format2", "AB{0}CD{1}EF", true, false)]
     [TestCase("ABXCDYEF", "Format2", "AB{0}CD{1}EF", 'X', 'Y')]
     [TestCase("ABXYZCDPQREF", "Format2", "AB{0}CD{1}EF", "XYZ", "PQR")]
-    [TestCase("ABXYZCDPQREF", "Format2_Custom", "AB{0}CD{1}EF", IncludeTypes = new[] { typeof(Format1_CustomProducer), typeof(Format2_CustomProducer) })]
+    [TestCase("ABXYZCDPQREF", "Format21_Custom", "AB{0}CD{1}EF", IncludeTypes = new[] { typeof(Format11_CustomProducer), typeof(Format21_CustomProducer) })]
+    [TestCase("ABXYZCDPQREF", "Format21_Custom", "AB{0:}CD{1:}EF", IncludeTypes = new[] { typeof(Format11_CustomProducer), typeof(Format21_CustomProducer) })]
+    [TestCase("ABXYZCDPQREF", "Format21_Custom", "AB{0:N}CD{1:N}EF", IncludeTypes = new[] { typeof(Format11_CustomProducer), typeof(Format21_CustomProducer) })]
+    [TestCase("AB333CD666EF", "Format22_Custom", "AB{0}CD{1}EF", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer) })]
+    [TestCase("AB333CD666EF", "Format22_Custom", "AB{0:}CD{1:}EF", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer) })]
+    [TestCase("AB111CD444EF", "Format22_Custom", "AB{0:N}CD{1:N}EF", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer) })]
     [TestCase("123ABCDEF124", "Format2", "{0}ABCDEF{1}", 123, 124)]
     [TestCase("123ABC124DEF123", "Format2", "{0}ABC{1}DEF{0}", 123, 124)]
     [TestCase("ABCDEF", "Format2", "ABCDEF", 123, 124)]
@@ -36,10 +55,17 @@ namespace IL2C.BasicTypes
             return string.Format(format, value0, value1);
         }
 
-        public static string Format2_Custom(string format)
+        public static string Format21_Custom(string format)
         {
-            var cp1 = new Format1_CustomProducer();
-            var cp2 = new Format2_CustomProducer();
+            var cp1 = new Format11_CustomProducer();
+            var cp2 = new Format21_CustomProducer();
+            return string.Format(format, cp1, cp2);
+        }
+
+        public static string Format22_Custom(string format)
+        {
+            var cp1 = new Format12_CustomProducer();
+            var cp2 = new Format22_CustomProducer();
             return string.Format(format, cp1, cp2);
         }
 

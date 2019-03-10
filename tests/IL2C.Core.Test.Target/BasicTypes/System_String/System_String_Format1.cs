@@ -3,9 +3,23 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    public sealed class Format1_CustomProducer
+    public sealed class Format11_CustomProducer
     {
         public override string ToString() => "XYZ";
+    }
+
+    public sealed class Format12_CustomProducer : IFormattable
+    {
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            switch (format)
+            {
+                case "N": return "111";
+                case "": return "222";
+                case null: return "333";
+                default: throw new Exception();
+            }
+        }
     }
 
     [TestId("System_String")]
@@ -23,15 +37,24 @@ namespace IL2C.BasicTypes
     [TestCase("ABCFalseDEF", "Format1", "ABC{0}DEF", false)]
     [TestCase("ABCXDEF", "Format1", "ABC{0}DEF", 'X')]
     [TestCase("ABCXYZDEF", "Format1", "ABC{0}DEF", "XYZ")]
-    [TestCase("ABCXYZDEF", "Format1_Custom", "ABC{0}DEF", IncludeTypes = new[] { typeof(Format1_CustomProducer) })]
+    [TestCase("ABCXYZDEF", "Format11_Custom", "ABC{0}DEF", IncludeTypes = new[] { typeof(Format11_CustomProducer) })]
+    [TestCase("ABCXYZDEF", "Format11_Custom", "ABC{0:}DEF", IncludeTypes = new[] { typeof(Format11_CustomProducer) })]
+    [TestCase("ABCXYZDEF", "Format11_Custom", "ABC{0:N}DEF", IncludeTypes = new[] { typeof(Format11_CustomProducer) })]
+    [TestCase("ABC333DEF", "Format12_Custom", "ABC{0}DEF", IncludeTypes = new[] { typeof(Format12_CustomProducer) })]
+    [TestCase("ABC333DEF", "Format12_Custom", "ABC{0:}DEF", IncludeTypes = new[] { typeof(Format12_CustomProducer) })]
+    [TestCase("ABC111DEF", "Format12_Custom", "ABC{0:N}DEF", IncludeTypes = new[] { typeof(Format12_CustomProducer) })]
     [TestCase("123ABCDEF", "Format1", "{0}ABCDEF", 123)]
     [TestCase("ABCDEF123", "Format1", "ABCDEF{0}", 123)]
     [TestCase("123ABC123DEF123", "Format1", "{0}ABC{0}DEF{0}", 123)]
     [TestCase("ABCDEF", "Format1", "ABCDEF", 123)]
     [TestCase("ABCDEF", "Format1", "ABC{0}DEF", "")]
     [TestCase("ABCDEF", "Format1", "ABC{0}DEF", null)]
+    [TestCase(true, "Format1_Exception", "ABC{", 123)]
+    [TestCase(true, "Format1_Exception", "ABC{0", 123)]
+    [TestCase(true, "Format1_Exception", "ABC{0:", 123)]
     [TestCase(true, "Format1_Exception", "ABC{}DEF", 123)]
     [TestCase(true, "Format1_Exception", "ABC{A}DEF", 123)]
+    [TestCase(true, "Format1_Exception", "ABC{:}DEF", 123)]
     [TestCase(true, "Format1_Exception", "ABC{12345678901234}DEF", 123)]
     [TestCase(true, "Format1_Exception", "ABC{1}DEF", 123)]
     public sealed class System_String_Format1
@@ -41,9 +64,15 @@ namespace IL2C.BasicTypes
             return string.Format(format, value0);
         }
 
-        public static string Format1_Custom(string format)
+        public static string Format11_Custom(string format)
         {
-            var cp = new Format1_CustomProducer();
+            var cp = new Format11_CustomProducer();
+            return string.Format(format, cp);
+        }
+
+        public static string Format12_Custom(string format)
+        {
+            var cp = new Format12_CustomProducer();
             return string.Format(format, cp);
         }
 

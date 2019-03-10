@@ -3,9 +3,23 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    public sealed class Format4_CustomProducer
+    public sealed class Format41_CustomProducer
     {
         public override string ToString() => "FGH";
+    }
+
+    public sealed class Format42_CustomProducer : IFormattable
+    {
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            switch (format)
+            {
+                case "N": return "XXX";
+                case "": return "YYY";
+                case null: return "ZZZ";
+                default: throw new Exception();
+            }
+        }
     }
 
     [TestId("System_String")]
@@ -22,7 +36,12 @@ namespace IL2C.BasicTypes
     [TestCase("ATrueBCFalseDETrueFGFalseH", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", true, false, true, false)]
     [TestCase("AXBCYDEZFGPH", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", 'X', 'Y', 'Z', 'P')]
     [TestCase("AXYZBCPQRDESTUFGFGHH", "Format_Params", "A{0}BC{1}DE{2}FG{3}H", "XYZ", "PQR", "STU", "FGH")]
-    [TestCase("AXYZBCPQRDESTUFGFGHH", "Format_Params_Custom", "A{0}BC{1}DE{2}FG{3}H", IncludeTypes = new[] { typeof(Format1_CustomProducer), typeof(Format2_CustomProducer), typeof(Format3_CustomProducer), typeof(Format4_CustomProducer) })]
+    [TestCase("AXYZBCPQRDESTUFGFGHH", "Format_Params_Custom1", "A{0}BC{1}DE{2}FG{3}H", IncludeTypes = new[] { typeof(Format11_CustomProducer), typeof(Format21_CustomProducer), typeof(Format31_CustomProducer), typeof(Format41_CustomProducer) })]
+    [TestCase("AXYZBCPQRDESTUFGFGHH", "Format_Params_Custom1", "A{0:}BC{1:}DE{2:}FG{3:}H", IncludeTypes = new[] { typeof(Format11_CustomProducer), typeof(Format21_CustomProducer), typeof(Format31_CustomProducer), typeof(Format41_CustomProducer) })]
+    [TestCase("AXYZBCPQRDESTUFGFGHH", "Format_Params_Custom1", "A{0:N}BC{1:N}DE{2:N}FG{3:N}H", IncludeTypes = new[] { typeof(Format11_CustomProducer), typeof(Format21_CustomProducer), typeof(Format31_CustomProducer), typeof(Format41_CustomProducer) })]
+    [TestCase("A333BC666DE999FGZZZH", "Format_Params_Custom2", "A{0}BC{1}DE{2}FG{3}H", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer), typeof(Format32_CustomProducer), typeof(Format42_CustomProducer) })]
+    [TestCase("A333BC666DE999FGZZZH", "Format_Params_Custom2", "A{0:}BC{1:}DE{2:}FG{3:}H", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer), typeof(Format32_CustomProducer), typeof(Format42_CustomProducer) })]
+    [TestCase("A111BC444DE777FGXXXH", "Format_Params_Custom2", "A{0:N}BC{1:N}DE{2:N}FG{3:N}H", IncludeTypes = new[] { typeof(Format12_CustomProducer), typeof(Format22_CustomProducer), typeof(Format32_CustomProducer), typeof(Format42_CustomProducer) })]
     [TestCase("123A123B124C124D125E125F126", "Format_Params", "{0}A{0}B{1}C{1}D{2}E{2}F{3}", 123, 124, 125, 126)]
     [TestCase("A126BC125DE124FG123H", "Format_Params", "A{3}BC{2}DE{1}FG{0}H", 123, 124, 125, 126)]
     [TestCase("ABCDEF", "Format_Params", "ABCDEF", 123, 124, 125, 126)]
@@ -36,12 +55,21 @@ namespace IL2C.BasicTypes
             return string.Format(format, value0, value1, value2, value3);
         }
 
-        public static string Format_Params_Custom(string format)
+        public static string Format_Params_Custom1(string format)
         {
-            var cp1 = new Format1_CustomProducer();
-            var cp2 = new Format2_CustomProducer();
-            var cp3 = new Format3_CustomProducer();
-            var cp4 = new Format4_CustomProducer();
+            var cp1 = new Format11_CustomProducer();
+            var cp2 = new Format21_CustomProducer();
+            var cp3 = new Format31_CustomProducer();
+            var cp4 = new Format41_CustomProducer();
+            return string.Format(format, cp1, cp2, cp3, cp4);
+        }
+
+        public static string Format_Params_Custom2(string format)
+        {
+            var cp1 = new Format12_CustomProducer();
+            var cp2 = new Format22_CustomProducer();
+            var cp3 = new Format32_CustomProducer();
+            var cp4 = new Format42_CustomProducer();
             return string.Format(format, cp1, cp2, cp3, cp4);
         }
 

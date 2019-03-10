@@ -235,6 +235,8 @@ typedef void* untyped_ptr;
 #include "System/NullReferenceException.h"
 #include "System/InvalidCastException.h"
 #include "System/IndexOutOfRangeException.h"
+#include "System/IFormatProvider.h"
+#include "System/IFormattable.h"
 #include "System/FormatException.h"
 #include "System/GC.h"
 #include "System/Runtime/InteropServices/GCHandleType.h"

@@ -26,7 +26,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
-#include <malloc.h>
+#include <alloca.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 

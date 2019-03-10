@@ -278,6 +278,7 @@ int8_t il2c_format_string__(
     uint32_t compositeFormatStartIndex = 0;
     uint32_t compositeFormatIndex = 0;
     uint32_t formatStartIndex = 0;
+    uint32_t calculatedArgumentIndex;
     while (1)
     {
         const wchar_t ch = pCompositeFormat[compositeFormatIndex++];
@@ -304,7 +305,7 @@ int8_t il2c_format_string__(
                     }
                 }
 
-                return 0;
+                return IL2C_STRING_FORMAT_SUCCEEDED;
             }
             break;
         case state_index0:
@@ -322,7 +323,13 @@ int8_t il2c_format_string__(
                     }
                 }
 
-                argumentIndex = argumentIndex * 10 + (ch - L'0');
+                calculatedArgumentIndex = argumentIndex * 10U + (uint32_t)(ch - L'0');
+                if (calculatedArgumentIndex > UINT16_MAX)
+                {
+                    return IL2C_STRING_FORMAT_ARGUMENT_ABSOLUTE_LIMIT;
+                }
+
+                argumentIndex = (uint16_t)calculatedArgumentIndex;
                 state = state_index;
             }
             else if (ch == L'{')
@@ -344,13 +351,19 @@ int8_t il2c_format_string__(
             }
             else if (ch != L' ')
             {
-                return -1;
+                return IL2C_STRING_FORMAT_INVALID;
             }
             break;
         case state_index:
             if ((ch >= L'0') && (ch <= L'9'))
             {
-                argumentIndex = argumentIndex * 10 + (ch - L'0');
+                calculatedArgumentIndex = argumentIndex * 10U + (uint32_t)(ch - L'0');
+                if (calculatedArgumentIndex > UINT16_MAX)
+                {
+                    return IL2C_STRING_FORMAT_ARGUMENT_ABSOLUTE_LIMIT;
+                }
+
+                argumentIndex = (uint16_t)calculatedArgumentIndex;
             }
             else if (ch == L':')
             {
@@ -374,7 +387,7 @@ int8_t il2c_format_string__(
             }
             else
             {
-                return -1;
+                return IL2C_STRING_FORMAT_INVALID;
             }
             break;
         case state_format:
@@ -395,7 +408,7 @@ int8_t il2c_format_string__(
             }
             else if (ch == L'\0')
             {
-                return -1;
+                return IL2C_STRING_FORMAT_INVALID;
             }
             break;
         }
@@ -727,6 +740,8 @@ typedef struct System_String_InternalFormatState
     wchar_t* pWriteTarget;
 } System_String_InternalFormatState;
 
+#define IL2C_STRING_FORMAT_ARGUMENT_INDEX_OUT_OF_RANGE (-3)
+
 // ---------------
 // Step 1 writers.
 
@@ -751,7 +766,7 @@ static int8_t System_String_InternalFormatStep1ArgumentWriter(
 
     if (argumentIndex >= p->argumentCount)
     {
-        return -2;
+        return IL2C_STRING_FORMAT_ARGUMENT_INDEX_OUT_OF_RANGE;
     }
 
     // Count up number of format items.
@@ -786,6 +801,7 @@ static int8_t System_String_InternalFormatStep2ArgumentWriter(
 
     System_String_InternalFormatState* p = pState;
     il2c_assert(p->pWriteTarget == NULL);
+    il2c_assert(p->formatItemIndex < p->formatItemCount);
 
     il2c_assert(argumentIndex < p->argumentCount);
 
@@ -839,6 +855,7 @@ static int8_t System_String_InternalFormatStep3Writer(
 
     System_String_InternalFormatState* p = pState;
     il2c_assert(p->pWriteTarget != NULL);
+    il2c_assert(p->formatItemIndex <= p->formatItemCount);
 
     while (tokenLength > 0)
     {
@@ -856,6 +873,7 @@ static int8_t System_String_InternalFormatStep3ArgumentWriter(
 
     System_String_InternalFormatState* p = pState;
     il2c_assert(p->pWriteTarget != NULL);
+    il2c_assert(p->formatItemIndex < p->formatItemCount);
     il2c_assert(argumentIndex < p->argumentCount);
 
     System_String* pFormattedString = p->ppFormattedString[p->formatItemIndex++];
@@ -968,8 +986,11 @@ static int8_t System_String_InternalFormat(
         System_String_InternalFormatStep3ArgumentWriter,
         &state);
     il2c_assert(result == 0);
+    il2c_assert(state.formatItemIndex == state.formatItemCount);
 
     *state.pWriteTarget = L'\0';
+    il2c_assert((state.pWriteTarget - pFrame->pString->string_body__) == state.length);
+
     *ppString = pFrame->pString;
 
     il2c_unlink_execution_frame(pFrame);
@@ -1048,7 +1069,11 @@ System_String* System_String_Format_6(
     il2c_assert(format != NULL);
     il2c_assert(format->string_body__ != NULL);
     il2c_assert(args != NULL);
-    il2c_assert(args->Length <= UINT16_MAX);
+
+    if (args->Length > UINT16_MAX)
+    {
+        il2c_throw_formatexception__();
+    }
 
     System_String* pString;
     if (System_String_InternalFormat(

@@ -399,7 +399,7 @@ void il2c_sleep(uint32_t milliseconds)
 
 void il2c_debug_write__(const wchar_t* message)
 {
-    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, message);
+    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)message);
 }
 
 #if defined(_DEBUG)

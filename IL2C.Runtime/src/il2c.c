@@ -1317,6 +1317,7 @@ void il2c_break__(void)
 typedef struct IL2C_DEBUG_WRITE_FORMAT_STATE
 {
     va_list va;
+    uint16_t argumentCount;
     uint16_t length;
     wchar_t* pBuffer;
 } IL2C_DEBUG_WRITE_FORMAT_STATE;
@@ -1336,7 +1337,7 @@ static int8_t il2c_debug_write_format_argument_writer_step1__(
     IL2C_DEBUG_WRITE_FORMAT_STATE* p = pState;
     wchar_t buffer[24];
 
-    if (formatLength != 1)
+    if ((argumentIndex != (p->argumentCount++)) || (formatLength != 1))
     {
         return IL2C_STRING_FORMAT_INVALID;
     }

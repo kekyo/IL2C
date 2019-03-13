@@ -40,10 +40,9 @@ extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 
 #define il2c_mcalloc(name, size) \
-    name = (((size) >= 256U) ? il2c_malloc(size) : _alloca(size)); \
-    const bool is_##name##_heaped__ = ((size) >= 256U)
+    name = il2c_malloc(size)
 #define il2c_mcfree(name) \
-    do { if (is_##name##_heaped__) il2c_free(name); } while (0)
+    il2c_free(name)
 
 #define il2c_iand(pDest, newValue) _InterlockedAnd((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) _InterlockedOr((interlock_t*)(pDest), (interlock_t)(newValue))

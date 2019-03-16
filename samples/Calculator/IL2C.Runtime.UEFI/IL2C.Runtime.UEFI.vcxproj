@@ -60,7 +60,7 @@
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <DisableSpecificWarnings>4100;4127;4146;4197;4206</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
-      <AssemblerOutput>All</AssemblerOutput>
+      <AssemblerOutput>AssemblyCode</AssemblerOutput>
       <!-- <TreatWarningAsError>true</TreatWarningAsError> -->
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -69,7 +69,7 @@
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;UEFI;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;UEFI;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;IL2C_USE_RUNTIME_DEBUG_LOG</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Release'">
       <Optimization>MaxSpeed</Optimization>

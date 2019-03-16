@@ -32,7 +32,7 @@
 // |        :             |
 // +----------------------+ (terminated with \0)
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 static System_String* new_string_internal__(uintptr_t byteSize, const char* pFile, int line)
 #else
 static System_String* new_string_internal__(uintptr_t byteSize)
@@ -40,7 +40,7 @@ static System_String* new_string_internal__(uintptr_t byteSize)
 {
     uintptr_t bodySize = sizeof(System_String) + byteSize;
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_String* pString = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
         bodySize, pFile, line);
@@ -56,7 +56,7 @@ static System_String* new_string_internal__(uintptr_t byteSize)
     return pString;
 }
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t length, const char* pFile, int line)
 #else
 System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t length)
@@ -64,7 +64,7 @@ System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t le
 {
     il2c_assert(pString != NULL);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_String* p = new_string_internal__((length + 1) * sizeof(wchar_t), pFile, line);
 #else
     System_String* p = new_string_internal__((length + 1) * sizeof(wchar_t));
@@ -77,7 +77,7 @@ System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t le
     return p;
 }
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 System_String* il2c_new_string__(const wchar_t* pString, const char* pFile, int line)
 #else
 System_String* il2c_new_string__(const wchar_t* pString)
@@ -85,7 +85,7 @@ System_String* il2c_new_string__(const wchar_t* pString)
 {
     il2c_assert(pString != NULL);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     return il2c_new_string_with_length__(pString, (uint32_t)il2c_wcslen(pString), pFile, line);
 #else
     return il2c_new_string_with_length__(pString, (uint32_t)il2c_wcslen(pString));
@@ -217,7 +217,7 @@ wchar_t* il2c_utf16_from_utf8_and_get_last(wchar_t* pDest, const char* pUtf8Stri
     return pDest;
 }
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 System_String* il2c_new_string_from_utf8__(const char* pUtf8String, const char* pFile, int line)
 #else
 System_String* il2c_new_string_from_utf8__(const char* pUtf8String)
@@ -233,7 +233,7 @@ System_String* il2c_new_string_from_utf8__(const char* pUtf8String)
 
     uintptr_t size = (uintptr_t)(length) * sizeof(wchar_t);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_String* p = new_string_internal__(size, pFile, line);
 #else
     System_String* p = new_string_internal__(size);
@@ -507,7 +507,7 @@ System_String* System_String_Concat_3(System_String* str0, System_String* str1)
     uintptr_t str0Size = (uintptr_t)il2c_wcslen(str0->string_body__) * sizeof(wchar_t);
     uintptr_t str1Size = (uintptr_t)il2c_wcslen(str1->string_body__) * sizeof(wchar_t);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_String* pString = new_string_internal__(str0Size + str1Size + sizeof(wchar_t), __FILE__, __LINE__);
 #else
     System_String* pString = new_string_internal__(str0Size + str1Size + sizeof(wchar_t));
@@ -558,7 +558,7 @@ System_String* System_String_Concat_5(System_String* str0, System_String* str1, 
     uintptr_t str1Size = (uintptr_t)il2c_wcslen(str1->string_body__) * sizeof(wchar_t);
     uintptr_t str2Size = (uintptr_t)il2c_wcslen(str2->string_body__) * sizeof(wchar_t);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_String* pString = new_string_internal__(str0Size + str1Size + str2Size + sizeof(wchar_t), __FILE__, __LINE__);
 #else
     System_String* pString = new_string_internal__(str0Size + str1Size + str2Size + sizeof(wchar_t));
@@ -590,7 +590,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
 
     uintptr_t newSize = (uintptr_t)(thisLength - startIndex + 1) * sizeof(wchar_t);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_String* pString = new_string_internal__(newSize, __FILE__, __LINE__);
 #else
     System_String* pString = new_string_internal__(newSize);
@@ -621,7 +621,7 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
 
     uintptr_t newSize = (uintptr_t)length * sizeof(wchar_t);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_String* pString = new_string_internal__(newSize + sizeof(wchar_t), __FILE__, __LINE__);
 #else
     System_String* pString = new_string_internal__(newSize + sizeof(wchar_t));
@@ -964,7 +964,7 @@ static int8_t System_String_InternalFormat(
     /////////////////////////////////////////////////
     // Step 2-2. Allocate System.String with required length.
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     pFrame->pString = new_string_internal__(
         (state.length + 1) * sizeof(wchar_t), __FILE__, __LINE__);
 #else

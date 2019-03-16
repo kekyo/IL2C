@@ -335,7 +335,7 @@ void il2c_free(void* p)
 }
 #endif
 
-void il2c_debug_write__(const char* message)
+void il2c_runtime_debug_log__(const char* message)
 {
     il2c_assert(message != NULL);
 
@@ -352,7 +352,7 @@ void il2c_debug_write__(const char* message)
     il2c_mcfree(pBuffer);
 }
 
-void il2c_debug_write_format__(const char* format, ...)
+void il2c_runtime_debug_log_format__(const char* format, ...)
 {
     il2c_assert(format != NULL);
 

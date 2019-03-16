@@ -50,7 +50,7 @@ int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension)
 /////////////////////////////////////////////////
 // Array special functions
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 System_Array* il2c_new_array__(
     IL2C_RUNTIME_TYPE elementType, intptr_t length, const char* pFile, int line)
 #else
@@ -72,7 +72,7 @@ System_Array* il2c_new_array__(
     // -1 is "uint8_t Item[1]"
     uintptr_t size = (uintptr_t)sizeof(System_Array) + ((uintptr_t)length) * elementSize;
     
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_Array* arr = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_Array), size, pFile, line);
 #else

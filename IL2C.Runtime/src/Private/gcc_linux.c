@@ -102,7 +102,7 @@ void il2c_sleep(uint32_t milliseconds)
 // NOT Azure Sphere
 #if !defined(__AZURE_SPHERE__)
 
-void il2c_debug_write__(const wchar_t* message)
+void il2c_runtime_debug_log__(const wchar_t* message)
 {
     // TODO: syslog
     fputws(message, stderr);

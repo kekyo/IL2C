@@ -3,6 +3,10 @@
 
 #pragma once
 
+#if defined(_DEBUG)
+#define IL2C_USE_LINE_INFORMATION
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -148,12 +152,6 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 #define il2c_adjusted_reference(pRawReference) \
     ((void*)((intptr_t)(pRawReference) - (**(const intptr_t**)(pRawReference))))
 
-/*#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
-    ((pReference != NULL) ? \
-        ((typeName*)(((uint8_t*)(pInterface)) - \
-         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
-        NULL) */
-
 #define il2c_cast_to_interface__(interfaceTypeName, offset, pReference) \
     ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset)))
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
@@ -170,7 +168,7 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 
 extern void il2c_collect(void);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type, const char* pFile, int line);
 #define il2c_get_uninitialized_object(typeName) \
     il2c_get_uninitialized_object__(il2c_typeof(typeName), __FILE__, __LINE__)
@@ -256,7 +254,7 @@ typedef void* untyped_ptr;
 #define il2c_boxedtype(valueTypeName) \
     System_ValueType
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType, const char* pFile, int line);
 extern System_ValueType* il2c_box2__(
@@ -357,7 +355,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 
 extern double il2c_fmod(double lhs, double rhs);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern void il2c_break__(const char* pFile, int line);
 #define il2c_break() il2c_break__(__FILE__, __LINE__)
 #else

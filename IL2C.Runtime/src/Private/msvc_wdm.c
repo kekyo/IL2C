@@ -13,7 +13,7 @@ double il2c_fmod(double lhs, double rhs)
     return fmod(lhs, rhs);
 }
 
-void il2c_debug_write__(const wchar_t* message)
+void il2c_runtime_debug_log__(const wchar_t* message)
 {
     // TODO:
     OutputDebugStringW(message);

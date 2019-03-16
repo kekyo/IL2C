@@ -53,7 +53,7 @@ extern /* static */ bool System_String_op_Inequality(System_String* lhs, System_
 /////////////////////////////////////////////////
 // String special functions
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern System_String* il2c_new_string__(const wchar_t* pString, const char* pFile, int line);
 extern System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t length, const char* pFile, int line);
 extern System_String* il2c_new_string_from_utf8__(const char* pUtf8String, const char* pFile, int line);

@@ -5,6 +5,10 @@
 
 #pragma once
 
+#if defined(_DEBUG)
+#define IL2C_USE_LINE_INFORMATION
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -20,14 +24,14 @@ typedef volatile long interlock_t;
 #include "Private/gcc_win32.h"
 #include "Private/gcc_linux.h"
 
-#if defined(IL2C_DEBUG_WRITE)
-extern void il2c_debug_write__(const wchar_t* message);
-extern void il2c_debug_write_format__(const wchar_t* format, ...);
-#define il2c_debug_write(message) il2c_debug_write__(message L"\r\n")
-#define il2c_debug_write_format(format, ...) il2c_debug_write_format__(format L"\r\n", __VA_ARGS__)
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
+extern void il2c_runtime_debug_log__(const wchar_t* message);
+extern void il2c_runtime_debug_log_format__(const wchar_t* format, ...);
+#define il2c_runtime_debug_log(message) il2c_runtime_debug_log__(message L"\r\n")
+#define il2c_runtime_debug_log_format(format, ...) il2c_runtime_debug_log_format__(format L"\r\n", __VA_ARGS__)
 #else
-#define il2c_debug_write(message)
-#define il2c_debug_write_format(format, ...)
+#define il2c_runtime_debug_log(message)
+#define il2c_runtime_debug_log_format(format, ...)
 #endif
 
 extern void il2c_initialize__(void);
@@ -136,7 +140,7 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
 #else
 extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);

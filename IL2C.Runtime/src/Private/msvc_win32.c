@@ -111,7 +111,7 @@ IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UIN
 IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
 IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
 
-void il2c_debug_write__(const wchar_t* message)
+void il2c_runtime_debug_log__(const wchar_t* message)
 {
     OutputDebugStringW(message);
 }

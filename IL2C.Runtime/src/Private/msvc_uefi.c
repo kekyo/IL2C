@@ -382,7 +382,10 @@ static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
 
 void* il2c_malloc(size_t _Size)
 {
-    il2c_assert(g_pSystemTable != NULL);
+    if (g_pSystemTable == NULL)
+    {
+        return NULL;
+    }
 
     void* ppAllocated = NULL;
     if (g_pSystemTable->BootServices->AllocatePool(
@@ -398,17 +401,16 @@ void* il2c_malloc(size_t _Size)
 
 void il2c_free(void* _Block)
 {
-    il2c_assert(g_pSystemTable != NULL);
-
-    g_pSystemTable->BootServices->FreePool(_Block);
+    if (g_pSystemTable != NULL)
+    {
+        g_pSystemTable->BootServices->FreePool(_Block);
+    }
 }
 
 static EFI_EVENT g_TimerEvent = NULL;
 
 void il2c_sleep(uint32_t milliseconds)
 {
-    il2c_assert(g_pSystemTable != NULL);
-
     UINTN index;
 
     // TODO: Will cause race condition if use multithreading environment.
@@ -424,7 +426,7 @@ void il2c_sleep(uint32_t milliseconds)
     g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
 }
 
-void il2c_debug_write__(const wchar_t* message)
+void il2c_runtime_debug_log__(const wchar_t* message)
 {
     g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)message);
 }
@@ -432,7 +434,7 @@ void il2c_debug_write__(const wchar_t* message)
 #if defined(_DEBUG)
 void il2c_assert__(const char* pFile, int line, const char* pExpr)
 {
-    if ((pFile != NULL) && (g_pSystemTable != NULL))
+    if (g_pSystemTable != NULL)
     {
         wchar_t buffer[12];
         il2c_i32tow(line, buffer, 10);
@@ -464,26 +466,27 @@ void il2c_assert__(const char* pFile, int line, const char* pExpr)
 
 void il2c_write(const wchar_t* s)
 {
-    il2c_assert(s != NULL);
-    il2c_assert(g_pSystemTable != NULL);
-
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+    if ((g_pSystemTable != NULL) && (s != NULL))
+    {
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+    }
 }
 
 void il2c_writeline(const wchar_t* s)
 {
-    il2c_assert(s != NULL);
-    il2c_assert(g_pSystemTable != NULL);
-
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
+    if ((g_pSystemTable != NULL) && (s != NULL))
+    {
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
+    }
 }
 
 bool il2c_readline(wchar_t* buffer, int32_t length)
 {
-    il2c_assert(buffer != NULL);
-    il2c_assert(length >= 1);
-    il2c_assert(g_pSystemTable != NULL);
+    if ((g_pSystemTable == NULL) || (buffer == NULL) || (length < 0))
+    {
+        return false;
+    }
 
     wchar_t tempBuffer[4];
 

@@ -44,7 +44,7 @@ extern /* static */ System_Delegate* System_Delegate_Remove(System_Delegate* sou
 /////////////////////////////////////////////////
 // Delegate special functions
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern System_Delegate* il2c_new_delegate__(
     IL2C_RUNTIME_TYPE delegateType, System_Object* object, intptr_t method, const char* pFile, int line);
 #define il2c_new_delegate(typeName, object, method) \

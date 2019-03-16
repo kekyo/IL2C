@@ -63,7 +63,7 @@ static inline void* il2c_array_itemptr__(
 #define il2c_array_item(array, elementTypeName, index) \
     (*(elementTypeName*)il2c_array_itemptr(array, elementTypeName, index))
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern System_Array* il2c_new_array__(
     IL2C_RUNTIME_TYPE elementType, intptr_t length, const char* pFile, int line);
 #define il2c_new_array(elementTypeName, length) \

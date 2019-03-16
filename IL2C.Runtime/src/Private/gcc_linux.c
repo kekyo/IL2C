@@ -26,17 +26,17 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
         case 16: \
             v = (utypeName)value; \
             do { \
-                *pTemp-- = g_pHexChars[value % 16]; \
-                value /= 16; \
-            } while (value); \
+                *pTemp-- = g_pHexChars[v % 16]; \
+                v /= 16; \
+            } while (v); \
             break; \
         default: \
             intOper \
             v = (utypeName)value; \
             do { \
-                *pTemp-- = value % 10 + L'0'; \
-                value /= 10; \
-            } while (value); \
+                *pTemp-- = (wchar_t)(v % 10 + L'0'); \
+                v /= 10; \
+            } while (v); \
             break; \
         } \
         do { \

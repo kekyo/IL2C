@@ -1504,7 +1504,7 @@ void il2c_runtime_debug_log_format__(const wchar_t* format, ...)
         &state);
     if (result == IL2C_STRING_FORMAT_SUCCEEDED)
     {
-        il2c_mcalloc(wchar_t, pBuffer, (state.length + 1) * sizeof(wchar_t));
+        il2c_mcalloc(wchar_t, pBuffer, (state.length + 1U) * sizeof(wchar_t));
         state.pBuffer = pBuffer;
 
         va_end(state.va);

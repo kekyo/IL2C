@@ -41,8 +41,10 @@ extern "C" {
 
 #if defined(_MSC_VER) && defined(UEFI)
 #if defined(_DEBUG)
-extern void il2c_assert__(const char* pFile, int line, const char* pExpr);
-#define il2c_assert(expr) { if (expr) il2c_assert__(__FILE__, __LINE__, #expr); }
+extern void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr);
+#define il2c_cause_assert_(pFile, line, pExpr) il2c_cause_assert__(L##pFile, line, L##pExpr)
+#define il2c_cause_assert(pFile, line, pExpr) il2c_cause_assert_(pFile, line, pExpr)
+#define il2c_assert(expr) do { if (!(expr)) il2c_cause_assert(__FILE__, __LINE__, #expr); } while (0)
 #else
 #define il2c_assert(expr)
 #endif

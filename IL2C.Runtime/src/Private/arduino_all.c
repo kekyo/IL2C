@@ -77,25 +77,28 @@ double il2c_fmod(double x, double y)
 
 static const wchar_t* g_pHexChars = L"0123456789abcdef";
 
-#define IL2C_DECLARE_INTTOW(name, typeName, bufferLength, intOper) \
+#define IL2C_DECLARE_INTTOW(name, typeName, utypeName, bufferLength, intOper) \
     wchar_t* name(typeName value, wchar_t* buffer, int radix) { \
         wchar_t temp[bufferLength]; \
         wchar_t *pTemp = &temp[bufferLength - 1]; \
         wchar_t *pBuffer = buffer; \
+        utypeName v; \
         *pTemp-- = L'\0'; \
         switch (radix) { \
         case 16: \
+            v = (utypeName)value; \
             do { \
-                *pTemp-- = g_pHexChars[value % 16]; \
-                value /= 16; \
-            } while (value); \
+                *pTemp-- = g_pHexChars[v % 16]; \
+                v /= 16; \
+            } while (v); \
             break; \
         default: \
             intOper \
+            v = (utypeName)value; \
             do { \
-                *pTemp-- = value % 10 + L'0'; \
-                value /= 10; \
-            } while (value); \
+                *pTemp-- = (wchar_t)(v % 10 + L'0'); \
+                v /= 10; \
+            } while (v); \
             break; \
         } \
         do { \
@@ -104,17 +107,32 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
         return buffer; \
     }
 
-#define IL2C_DECLARE_INTTOW_INT_OPERATOR \
+#define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
+    if (value == INT32_MIN) { \
+        il2c_wcscpy(buffer, L"-2147483648"); \
+        return buffer; \
+    } \
     if (value < 0) { \
         *pBuffer++ = L'-'; \
         value = -value; \
     }
+
+#define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
+    if (value == INT64_MIN) { \
+        il2c_wcscpy(buffer, L"-9223372036854775808"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
 #define IL2C_DECLARE_INTTOW_UINT_OPERATOR
 
-IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, 12, IL2C_DECLARE_INTTOW_INT_OPERATOR)
-IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, 12, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
-IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, 24, IL2C_DECLARE_INTTOW_INT_OPERATOR)
-IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT32_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
 
 bool il2c_twtoi(const wchar_t *_Str, int32_t* value)
 {

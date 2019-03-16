@@ -73,9 +73,7 @@ void MT3620Blink_Timer__ctor(MT3620Blink_Timer* this__)
     stack1_0__ = MT3620Blink_Interops_timerfd_create(stack1_0__, stack2_0__);
     /* IL_0010: call MT3620Blink.Descriptor..ctor : Timer.cs(14) */
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
-    /* IL_0015: nop                             : Timer.cs(14) */
-    /* IL_0016: nop  */
-    /* IL_0017: ret  */
+    /* IL_0015: ret                             : Timer.cs(16) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -142,77 +140,76 @@ void MT3620Blink_Timer_SetInterval(MT3620Blink_Timer* this__, int64_t nsec)
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : Timer.cs(19) */
-    /* IL_0001: ldloca.s local3__ */
+    /* IL_0000: ldloca.s local3__               : Timer.cs(20) */
     stack0_0__ = &local3__;
-    /* IL_0003: initobj MT3620Blink.timespec    : Timer.cs(20) */
+    /* IL_0002: initobj MT3620Blink.timespec    : Timer.cs(20) */
     memset(stack0_0__, 0x00, sizeof *stack0_0__);
-    /* IL_0009: ldloca.s local3__               : Timer.cs(20) */
+    /* IL_0008: ldloca.s local3__               : Timer.cs(20) */
     stack0_0__ = &local3__;
-    /* IL_000b: ldarg.1                         : Timer.cs(20) */
+    /* IL_000a: ldarg.1                         : Timer.cs(20) */
     stack1_0__ = nsec;
-    /* IL_000c: ldc.i4 1000000000               : Timer.cs(20) */
+    /* IL_000b: ldc.i4 1000000000               : Timer.cs(20) */
     stack2_0__ = 1000000000;
-    /* IL_0011: conv.i8                         : Timer.cs(20) */
+    /* IL_0010: conv.i8                         : Timer.cs(20) */
     stack2_1__ = (int64_t)stack2_0__;
-    /* IL_0012: div                             : Timer.cs(20) */
+    /* IL_0011: div                             : Timer.cs(20) */
     stack1_0__ = stack1_0__ / stack2_1__;
-    /* IL_0013: conv.i4                         : Timer.cs(20) */
+    /* IL_0012: conv.i4                         : Timer.cs(20) */
     stack1_1__ = (int32_t)stack1_0__;
-    /* IL_0014: stfld MT3620Blink.timespec.tv_sec : Timer.cs(20) */
+    /* IL_0013: stfld MT3620Blink.timespec.tv_sec : Timer.cs(20) */
     stack0_0__->tv_sec = stack1_1__;
-    /* IL_0019: ldloca.s local3__               : Timer.cs(20) */
+    /* IL_0018: ldloca.s local3__               : Timer.cs(20) */
     stack0_0__ = &local3__;
-    /* IL_001b: ldarg.1                         : Timer.cs(20) */
+    /* IL_001a: ldarg.1                         : Timer.cs(20) */
     stack1_0__ = nsec;
-    /* IL_001c: ldc.i4 1000000000               : Timer.cs(20) */
+    /* IL_001b: ldc.i4 1000000000               : Timer.cs(20) */
     stack2_0__ = 1000000000;
-    /* IL_0021: conv.i8                         : Timer.cs(20) */
+    /* IL_0020: conv.i8                         : Timer.cs(20) */
     stack2_1__ = (int64_t)stack2_0__;
-    /* IL_0022: rem                             : Timer.cs(20) */
+    /* IL_0021: rem                             : Timer.cs(20) */
     stack1_0__ = stack1_0__ % stack2_1__;
-    /* IL_0023: conv.i4                         : Timer.cs(20) */
+    /* IL_0022: conv.i4                         : Timer.cs(20) */
     stack1_1__ = (int32_t)stack1_0__;
-    /* IL_0024: stfld MT3620Blink.timespec.tv_nsec : Timer.cs(20) */
+    /* IL_0023: stfld MT3620Blink.timespec.tv_nsec : Timer.cs(20) */
     stack0_0__->tv_nsec = stack1_1__;
-    /* IL_0029: ldloc.3                         : Timer.cs(20) */
+    /* IL_0028: ldloc.3                         : Timer.cs(20) */
     stack0_1__ = local3__;
-    /* IL_002a: stloc.0                         : Timer.cs(20) */
+    /* IL_0029: stloc.0                         : Timer.cs(20) */
     tm = stack0_1__;
-    /* IL_002b: ldloca.s local4__               : Timer.cs(25) */
+    /* IL_002a: ldloca.s local4__               : Timer.cs(25) */
     stack0_2__ = &local4__;
-    /* IL_002d: initobj MT3620Blink.itimerspec  : Timer.cs(25) */
+    /* IL_002c: initobj MT3620Blink.itimerspec  : Timer.cs(25) */
     memset(stack0_2__, 0x00, sizeof *stack0_2__);
-    /* IL_0033: ldloca.s local4__               : Timer.cs(25) */
+    /* IL_0032: ldloca.s local4__               : Timer.cs(25) */
     stack0_2__ = &local4__;
-    /* IL_0035: ldloc.0                         : Timer.cs(25) */
+    /* IL_0034: ldloc.0                         : Timer.cs(25) */
     stack1_2__ = tm;
-    /* IL_0036: stfld MT3620Blink.itimerspec.it_value : Timer.cs(25) */
+    /* IL_0035: stfld MT3620Blink.itimerspec.it_value : Timer.cs(25) */
     stack0_2__->it_value = stack1_2__;
-    /* IL_003b: ldloca.s local4__               : Timer.cs(25) */
+    /* IL_003a: ldloca.s local4__               : Timer.cs(25) */
     stack0_2__ = &local4__;
-    /* IL_003d: ldloc.0                         : Timer.cs(25) */
+    /* IL_003c: ldloc.0                         : Timer.cs(25) */
     stack1_2__ = tm;
-    /* IL_003e: stfld MT3620Blink.itimerspec.it_interval : Timer.cs(25) */
+    /* IL_003d: stfld MT3620Blink.itimerspec.it_interval : Timer.cs(25) */
     stack0_2__->it_interval = stack1_2__;
-    /* IL_0043: ldloc.s local4__                : Timer.cs(25) */
+    /* IL_0042: ldloc.s local4__                : Timer.cs(25) */
     stack0_3__ = local4__;
-    /* IL_0045: stloc.1                         : Timer.cs(25) */
+    /* IL_0044: stloc.1                         : Timer.cs(25) */
     newValue = stack0_3__;
-    /* IL_0046: ldarg.0                         : Timer.cs(31) */
+    /* IL_0045: ldarg.0                         : Timer.cs(31) */
     frame__.stack0_4__ = this__;
-    /* IL_0047: call MT3620Blink.Descriptor.get_Identity : Timer.cs(31) */
+    /* IL_0046: call MT3620Blink.Descriptor.get_Identity : Timer.cs(31) */
     stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_4__);
-    /* IL_004c: ldc.i4.0                        : Timer.cs(31) */
+    /* IL_004b: ldc.i4.0                        : Timer.cs(31) */
     stack1_1__ = 0;
-    /* IL_004d: ldloca.s newValue               : Timer.cs(31) */
+    /* IL_004c: ldloca.s newValue               : Timer.cs(31) */
     stack2_2__ = &newValue;
-    /* IL_004f: ldloca.s dummy                  : Timer.cs(31) */
+    /* IL_004e: ldloca.s dummy                  : Timer.cs(31) */
     stack3_0__ = &dummy;
-    /* IL_0051: call MT3620Blink.Interops.timerfd_settime : Timer.cs(31) */
+    /* IL_0050: call MT3620Blink.Interops.timerfd_settime : Timer.cs(31) */
     stack0_5__ = MT3620Blink_Interops_timerfd_settime(stack0_5__, stack1_1__, stack2_2__, stack3_0__);
-    /* IL_0056: pop                             : Timer.cs(31) */
-    /* IL_0057: ret  */
+    /* IL_0055: pop                             : Timer.cs(31) */
+    /* IL_0056: ret  */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -309,28 +306,26 @@ void MT3620Blink_Timer_MT3620Blink_IEPollListener_OnRaised(MT3620Blink_Timer* th
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : Timer.cs(37) */
-    /* IL_0001: ldarg.0  */
+    /* IL_0000: ldarg.0                         : Timer.cs(38) */
     frame__.stack0_0__ = this__;
-    /* IL_0002: call MT3620Blink.Descriptor.get_Identity : Timer.cs(38) */
+    /* IL_0001: call MT3620Blink.Descriptor.get_Identity : Timer.cs(38) */
     stack0_1__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0007: ldloca.s timerData              : Timer.cs(38) */
+    /* IL_0006: ldloca.s timerData              : Timer.cs(38) */
     stack1_0__ = &timerData;
-    /* IL_0009: ldc.i4.8                        : Timer.cs(38) */
+    /* IL_0008: ldc.i4.8                        : Timer.cs(38) */
     stack2_0__ = 8;
-    /* IL_000a: conv.i8                         : Timer.cs(38) */
+    /* IL_0009: conv.i8                         : Timer.cs(38) */
     stack2_1__ = (int64_t)stack2_0__;
-    /* IL_000b: call System.UIntPtr.op_Explicit : Timer.cs(38) */
+    /* IL_000a: call System.UIntPtr.op_Explicit : Timer.cs(38) */
     stack2_2__ = System_UIntPtr_op_Explicit_2((uint64_t)stack2_1__);
-    /* IL_0010: call MT3620Blink.Interops.timerfd_read : Timer.cs(38) */
+    /* IL_000f: call MT3620Blink.Interops.timerfd_read : Timer.cs(38) */
     stack0_1__ = MT3620Blink_Interops_timerfd_read(stack0_1__, stack1_0__, stack2_2__);
-    /* IL_0015: pop                             : Timer.cs(38) */
-    /* IL_0016: ldarg.0  */
+    /* IL_0014: pop                             : Timer.cs(38) */
+    /* IL_0015: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_0017: callvirt MT3620Blink.Timer.Raised : Timer.cs(39) */
+    /* IL_0016: callvirt MT3620Blink.Timer.Raised : Timer.cs(39) */
     frame__.stack0_0__->vptr0__->Raised(frame__.stack0_0__);
-    /* IL_001c: nop                             : Timer.cs(39) */
-    /* IL_001d: ret  */
+    /* IL_001b: ret                             : Timer.cs(40) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }

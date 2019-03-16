@@ -129,17 +129,17 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
         case 16: \
             v = (utypeName)value; \
             do { \
-                *pTemp-- = g_pHexChars[value % 16]; \
-                value /= 16; \
-            } while (value); \
+                *pTemp-- = g_pHexChars[v % 16]; \
+                v /= 16; \
+            } while (v); \
             break; \
         default: \
             intOper \
             v = (utypeName)value; \
             do { \
-                *pTemp-- = value % 10 + L'0'; \
-                value /= 10; \
-            } while (value); \
+                *pTemp-- = (wchar_t)(v % 10 + L'0'); \
+                v /= 10; \
+            } while (v); \
             break; \
         } \
         do { \
@@ -432,32 +432,20 @@ void il2c_runtime_debug_log__(const wchar_t* message)
 }
 
 #if defined(_DEBUG)
-void il2c_assert__(const char* pFile, int line, const char* pExpr)
+void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr)
 {
     if (g_pSystemTable != NULL)
     {
-        wchar_t buffer[12];
+        wchar_t buffer[14];
         il2c_i32tow(line, buffer, 10);
 
-        int32_t length1 = il2c_get_utf8_length(pFile, false);
-        int32_t length2 = (int32_t)il2c_wcslen(buffer);
-        int32_t length3 = il2c_get_utf8_length(pExpr, false);
-        il2c_mcalloc(wchar_t, pBuffer, (length1 + length2 + length3 + 7) * sizeof(wchar_t));
-        wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, pFile);
-        *pLast++ = L'(';
-        memcpy(pLast, buffer, length2 * sizeof(wchar_t));
-        pLast += length2;
-        *pLast++ = L')';
-        *pLast++ = L':';
-        *pLast++ = L' ';
-        pLast = il2c_utf16_from_utf8_and_get_last(pLast, pExpr);
-        *pLast++ = L'\r';
-        *pLast++ = L'\n';
-        *pLast = L'\0';
-
-        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
-
-        il2c_mcfree(pBuffer);
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"assert: ");
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)pFile);
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"(");
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, buffer);
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"): ");
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)pExpr);
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->StdErr, L"\r\n");
     }
 
     debug_break();

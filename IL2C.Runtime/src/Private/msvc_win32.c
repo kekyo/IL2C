@@ -26,17 +26,17 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
         case 16: \
             v = (utypeName)value; \
             do { \
-                *pTemp-- = g_pHexChars[value % 16]; \
-                value /= 16; \
-            } while (value); \
+                *pTemp-- = g_pHexChars[v % 16]; \
+                v /= 16; \
+            } while (v); \
             break; \
         default: \
             intOper \
             v = (utypeName)value; \
             do { \
-                *pTemp-- = value % 10 + L'0'; \
-                value /= 10; \
-            } while (value); \
+                *pTemp-- = (wchar_t)(v % 10 + L'0'); \
+                v /= 10; \
+            } while (v); \
             break; \
         } \
         do { \
@@ -66,45 +66,6 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
     }
 
 #define IL2C_DECLARE_INTTOW_UINT_OPERATOR
-
-/*
-wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix) {
-    wchar_t temp[14];
-    wchar_t* pTemp = &temp[14 - 1];
-    wchar_t* pBuffer = buffer;
-    uint32_t v;
-    *pTemp-- = L'\0';
-    switch (radix) {
-    case 16:
-        v = *(const uint32_t*)&value;
-        do {
-            *pTemp-- = g_pHexChars[v % 16];
-            v /= 16;
-        } while (v);
-        break;
-    default:
-        if (value == INT32_MIN)
-        {
-            wcscpy(buffer, L"-2147483648");
-            return buffer;
-        }
-        if (value < 0) {
-            *pBuffer++ = L'-';
-            value = -value;
-        }
-        v = (uint32_t)value;
-        do {
-            *pTemp-- = v % 10 + L'0';
-            v /= 10;
-        } while (v);
-        break;
-    }
-    do {
-        *pBuffer++ = *++pTemp;
-    } while (*pTemp);
-    return buffer;
-}
-*/
 
 IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT32_OPERATOR)
 IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)

@@ -6,6 +6,72 @@
 // MinGW (Win32 API)
 #if defined(__GNUC__) && defined(_WIN32)
 
+#include <math.h>
+
+double il2c_fmod(double lhs, double rhs)
+{
+    return fmod(lhs, rhs);
+}
+
+static const wchar_t* g_pHexChars = L"0123456789abcdef";
+
+#define IL2C_DECLARE_INTTOW(name, typeName, utypeName, bufferLength, intOper) \
+    wchar_t* name(typeName value, wchar_t* buffer, int radix) { \
+        wchar_t temp[bufferLength]; \
+        wchar_t *pTemp = &temp[bufferLength - 1]; \
+        wchar_t *pBuffer = buffer; \
+        utypeName v; \
+        *pTemp-- = L'\0'; \
+        switch (radix) { \
+        case 16: \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = g_pHexChars[value % 16]; \
+                value /= 16; \
+            } while (value); \
+            break; \
+        default: \
+            intOper \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = value % 10 + L'0'; \
+                value /= 10; \
+            } while (value); \
+            break; \
+        } \
+        do { \
+            *pBuffer++ = *++pTemp; \
+        } while (*pTemp); \
+        return buffer; \
+    }
+
+#define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
+    if (value == INT32_MIN) { \
+        il2c_wcscpy(buffer, L"-2147483648"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
+    if (value == INT64_MIN) { \
+        il2c_wcscpy(buffer, L"-9223372036854775808"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_UINT_OPERATOR
+
+IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT32_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+
 void il2c_debug_write__(const wchar_t* message)
 {
     OutputDebugStringW(message);

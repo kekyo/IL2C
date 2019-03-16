@@ -9,7 +9,7 @@ System_String* System_UInt16_ToString(uint16_t* this__)
 
     wchar_t buffer[7];
 
-    il2c_itow(*this__, buffer, 10);
+    il2c_i32tow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 
@@ -50,7 +50,7 @@ bool System_UInt16_TryParse(System_String* s, uint16_t* result)
 
     wchar_t* endPtr;
 
-    unsigned long value = il2c_wcstoul(s->string_body__, &endPtr, 10);
+    unsigned long value = il2c_wtou32(s->string_body__, &endPtr, 10);
     *result = (uint16_t)value;
 
     // We have to use a literal value of max instead standard C symbol named *_MAX.

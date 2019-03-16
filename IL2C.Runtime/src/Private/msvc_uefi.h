@@ -20,17 +20,18 @@ extern "C" {
 #include <malloc.h>
 
 // Compatibility symbols (required platform depended functions)
-extern wchar_t* il2c_itow(int32_t value, wchar_t* d, int radix);
-#define il2c_ultow _ultow
-#define il2c_i64tow _i64tow
-#define il2c_ui64tow _ui64tow
+extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);
+extern wchar_t* il2c_u32tow(uint32_t value, wchar_t* buffer, int radix);
+extern wchar_t* il2c_i64tow(int64_t value, wchar_t* buffer, int radix);
+extern wchar_t* il2c_u64tow(uint64_t value, wchar_t* buffer, int radix);
 #define il2c_snwprintf _snwprintf
-extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
-#define il2c_wcstoul wcstoul
-#define il2c_wcstoll wcstoll
-#define il2c_wcstoull wcstoull
+extern long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base);
+#define il2c_wtou32 wcstoul
+#define il2c_wtoi64 wcstoll
+#define il2c_wtou64 wcstoull
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
+#define il2c_wcscpy wcscpy
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
@@ -39,8 +40,8 @@ extern long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base);
 extern void* il2c_malloc(size_t size);
 extern void il2c_free(void* p);
 
-#define il2c_mcalloc(name, size) \
-    name = il2c_malloc(size)
+#define il2c_mcalloc(elementType, name, size) \
+    elementType* name = il2c_malloc(size)
 #define il2c_mcfree(name) \
     il2c_free(name)
 

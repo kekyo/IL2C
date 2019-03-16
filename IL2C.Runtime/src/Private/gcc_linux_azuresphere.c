@@ -11,7 +11,7 @@
 void il2c_debug_write__(const wchar_t* message)
 {
     size_t l = il2c_wcslen(message);
-    char* il2c_mcalloc(d, l + 1);
+    il2c_mcalloc(char, d, l + 1);
     size_t i;
     for (i = 0; i < l; i++) d[i] = (char)(message[i]);
     d[i] = '\0';
@@ -24,7 +24,7 @@ void il2c_debug_write__(const wchar_t* message)
 void il2c_write(const wchar_t* p)
 {
     size_t l = il2c_wcslen(p);
-    char* il2c_mcalloc(d, l + 1);
+    il2c_mcalloc(char, d, l + 1);
     size_t i;
     for (i = 0; i < l; i++) d[i] = (char)(p[i]);
     d[i] = '\0';
@@ -35,7 +35,7 @@ void il2c_write(const wchar_t* p)
 void il2c_writeline(const wchar_t* p)
 {
     size_t l = il2c_wcslen(p);
-    char* il2c_mcalloc(d, l + 2);
+    il2c_mcalloc(char, d, l + 2);
     size_t i;
     for (i = 0; i < l; i++) d[i] = (char)(p[i]);
     d[i++] = '\n';

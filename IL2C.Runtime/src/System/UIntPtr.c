@@ -11,7 +11,7 @@ System_String* System_UIntPtr_ToString(uintptr_t* this__)
 
     wchar_t buffer[24];
 
-    il2c_ui64tow(*this__, buffer, 10);
+    il2c_u64tow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 

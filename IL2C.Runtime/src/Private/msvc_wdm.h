@@ -19,17 +19,18 @@ extern "C" {
 #include <malloc.h>
 
 // Compatibility symbols (required platform depended functions)
-#define il2c_itow(v, b, l) _itow(v, b, 10)
-#define il2c_ultow _ultow
+#define il2c_i32tow _itow
+#define il2c_u32tow _ultow
 #define il2c_i64tow _i64tow
-#define il2c_ui64tow _ui64tow
+#define il2c_u64tow _ui64tow
 #define il2c_snwprintf _snwprintf
-#define il2c_wcstol wcstol
-#define il2c_wcstoul wcstoul
-#define il2c_wcstoll wcstoll
-#define il2c_wcstoull wcstoull
+#define il2c_wtoi32 wcstol
+#define il2c_wtou32 wcstoul
+#define il2c_wtoi64 wcstoll
+#define il2c_wtou64 wcstoull
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
+#define il2c_wcscpy wcscpy
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
@@ -37,11 +38,12 @@ extern "C" {
 #define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 
-#define il2c_mcalloc(name, size) \
-    name = (((size) >= 32U) ? il2c_malloc(size) : _alloca(size)); \
-    const bool is_##name##_heaped__ = ((size) >= 32U)
+#define il2c_mcalloc(elementType, name, size) \
+    const uint32_t name_csize__ = (uint32_t)(size); \
+    const bool is_name_heaped__ = name_csize__ >= 256U; \
+    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__) : _alloca(name_csize__)
 #define il2c_mcfree(name) \
-    do { if (is_##name##_heaped__) il2c_free(name); } while (0)
+    do { if (is_name_heaped__) il2c_free(name); } while (0)
 
 #define il2c_iand(pDest, newValue) _InterlockedAnd((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) _InterlockedOr((interlock_t*)(pDest), (interlock_t)(newValue))

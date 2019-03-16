@@ -936,10 +936,10 @@ static int8_t System_String_InternalFormat(
         //System_String* pFormattedString[state.count];
     };
 
-    uint32_t size =
+    const uint32_t size =
         sizeof(struct System_String_InternalFormat_EXECUTION_FRAME) +
         state.formatItemCount * sizeof(System_String*);
-    struct System_String_InternalFormat_EXECUTION_FRAME* il2c_mcalloc(pFrame, size);
+    il2c_mcalloc(struct System_String_InternalFormat_EXECUTION_FRAME, pFrame, size);
     memset(pFrame, 0, size);
     *(uint16_t*)(&pFrame->objRefCount__) = (uint16_t)(1 + state.formatItemCount);
     il2c_link_execution_frame(pFrame);

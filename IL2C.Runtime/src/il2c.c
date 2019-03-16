@@ -1295,13 +1295,6 @@ void il2c_shutdown__(void)
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-#if !defined(UEFI)
-double il2c_fmod(double lhs, double rhs)
-{
-    return fmod(lhs, rhs);
-}
-#endif
-
 #if defined(_DEBUG)
 void il2c_break__(const char* pFile, int line)
 #else
@@ -1313,6 +1306,8 @@ void il2c_break__(void)
 
 ///////////////////////////////////////////////////////
 // Low level debugger formatted writer
+
+#if defined(IL2C_DEBUG_WRITE)
 
 typedef struct IL2C_DEBUG_WRITE_FORMAT_STATE
 {
@@ -1347,19 +1342,19 @@ static int8_t il2c_debug_write_format_argument_writer_step1__(
     case L'd':
         {
             int32_t value = va_arg(p->va, int32_t);
-            il2c_itow(value, buffer, 10);
+            il2c_i32tow(value, buffer, 10);
         }
         break;
     case L'u':
         {
             uint32_t value = va_arg(p->va, uint32_t);
-            il2c_ultow(value, buffer, 10);
+            il2c_u32tow(value, buffer, 10);
         }
         break;
     case L'x':
         {
             uint32_t value = va_arg(p->va, uint32_t);
-            il2c_ultow(value, buffer, 16);
+            il2c_u32tow(value, buffer, 16);
         }
         break;
     case L'D':
@@ -1371,19 +1366,19 @@ static int8_t il2c_debug_write_format_argument_writer_step1__(
     case L'U':
         {
             uint64_t value = va_arg(p->va, uint64_t);
-            il2c_ui64tow(value, buffer, 10);
+            il2c_u64tow(value, buffer, 10);
         }
         break;
     case L'X':
         {
             uint64_t value = va_arg(p->va, uint64_t);
-            il2c_ui64tow(value, buffer, 16);
+            il2c_u64tow(value, buffer, 16);
         }
         break;
     case L'p':
         {
             uintptr_t value = va_arg(p->va, uintptr_t);
-            il2c_ui64tow(value, buffer, 16);
+            il2c_u64tow(value, buffer, 16);
         }
         break;
     case L's':
@@ -1429,19 +1424,19 @@ static int8_t il2c_debug_write_format_argument_writer_step2__(
     case L'd':
         {
             int32_t value = va_arg(p->va, int32_t);
-            il2c_itow(value, buffer, 10);
+            il2c_i32tow(value, buffer, 10);
         }
         break;
     case L'u':
         {
             uint32_t value = va_arg(p->va, uint32_t);
-            il2c_ultow(value, buffer, 10);
+            il2c_u32tow(value, buffer, 10);
         }
         break;
     case L'x':
         {
             uint32_t value = va_arg(p->va, uint32_t);
-            il2c_ultow(value, buffer, 16);
+            il2c_u32tow(value, buffer, 16);
         }
         break;
     case L'D':
@@ -1453,19 +1448,19 @@ static int8_t il2c_debug_write_format_argument_writer_step2__(
     case L'U':
         {
             uint64_t value = va_arg(p->va, uint64_t);
-            il2c_ui64tow(value, buffer, 10);
+            il2c_u64tow(value, buffer, 10);
         }
         break;
     case L'X':
         {
             uint64_t value = va_arg(p->va, uint64_t);
-            il2c_ui64tow(value, buffer, 16);
+            il2c_u64tow(value, buffer, 16);
         }
         break;
     case L'p':
         {
             uintptr_t value = va_arg(p->va, uintptr_t);
-            il2c_ui64tow(value, buffer, 16);
+            il2c_u64tow(value, buffer, 16);
         }
         break;
     case L's':
@@ -1509,7 +1504,7 @@ void il2c_debug_write_format__(const wchar_t* format, ...)
         &state);
     if (result == IL2C_STRING_FORMAT_SUCCEEDED)
     {
-        wchar_t* il2c_mcalloc(pBuffer, (state.length + 1U) * sizeof(wchar_t));
+        il2c_mcalloc(wchar_t, pBuffer, (state.length + 1) * sizeof(wchar_t));
         state.pBuffer = pBuffer;
 
         va_end(state.va);
@@ -1531,6 +1526,8 @@ void il2c_debug_write_format__(const wchar_t* format, ...)
 
     va_end(state.va);
 }
+
+#endif
 
 ///////////////////////////////////////////////////////
 // Basis exceptions

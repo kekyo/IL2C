@@ -20,7 +20,7 @@ void System_Console_WriteLine(void)
 void System_Console_WriteLine_6(int32_t value)
 {
     wchar_t buffer[20];
-    il2c_itow(value, buffer, 19);
+    il2c_i32tow(value, buffer, 19);
     il2c_writeline(buffer);
 }
 

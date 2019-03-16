@@ -1,7 +1,7 @@
 # Supported basic types
 
 * Number of types: 26
-* Number of tests: 140 [18 / 26]
+* Number of tests: 142 [18 / 26]
 
 Type | Test
 |:---|:---|
@@ -15,8 +15,8 @@ Type | Test
 | [System.Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception) |  |
 | [System.GC](https://docs.microsoft.com/en-us/dotnet/api/system.gc) |  |
 | [System.Int16](https://docs.microsoft.com/en-us/dotnet/api/system.int16) | [Test [6]](../tests/IL2C.Core.Test.Target/BasicTypes/System_Int16) |
-| [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32) | [Test [6]](../tests/IL2C.Core.Test.Target/BasicTypes/System_Int32) |
-| [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) | [Test [6]](../tests/IL2C.Core.Test.Target/BasicTypes/System_Int64) |
+| [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32) | [Test [7]](../tests/IL2C.Core.Test.Target/BasicTypes/System_Int32) |
+| [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64) | [Test [7]](../tests/IL2C.Core.Test.Target/BasicTypes/System_Int64) |
 | [System.IntPtr](https://docs.microsoft.com/en-us/dotnet/api/system.intptr) | [Test [4]](../tests/IL2C.Core.Test.Target/BasicTypes/System_IntPtr) |
 | [System.Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) | [Test [12]](../tests/IL2C.Core.Test.Target/BasicTypes/System_Object) |
 | [System.Runtime.InteropServices.GCHandle](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.gchandle) |  |

@@ -6,6 +6,13 @@
 // WDM
 #if defined(_MSC_VER) && defined(_WDM)
 
+#include <math.h>
+
+double il2c_fmod(double lhs, double rhs)
+{
+    return fmod(lhs, rhs);
+}
+
 void il2c_debug_write__(const wchar_t* message)
 {
     // TODO:

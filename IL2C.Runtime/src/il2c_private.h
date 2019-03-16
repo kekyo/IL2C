@@ -20,10 +20,9 @@ typedef volatile long interlock_t;
 #include "Private/gcc_win32.h"
 #include "Private/gcc_linux.h"
 
+#if defined(IL2C_DEBUG_WRITE)
 extern void il2c_debug_write__(const wchar_t* message);
 extern void il2c_debug_write_format__(const wchar_t* format, ...);
-
-#if defined(IL2C_DEBUG_WRITE)
 #define il2c_debug_write(message) il2c_debug_write__(message L"\r\n")
 #define il2c_debug_write_format(format, ...) il2c_debug_write_format__(format L"\r\n", __VA_ARGS__)
 #else
@@ -132,7 +131,6 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 
 #include <string.h>
 #include <stdlib.h>
-#include <math.h>
 #include <stdarg.h>
 
 ///////////////////////////////////////////////////

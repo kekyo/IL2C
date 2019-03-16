@@ -36,7 +36,7 @@ static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 static IL2C_FIXED_INSTANCES* g_pFixedInstances__ = NULL;
 static interlock_t g_ExecutingCollection__ = 0;
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 static void il2c_collect__(bool finalShutdown, const char* pFile, int line);
 #else
 static void il2c_collect__(bool finalShutdown);
@@ -51,7 +51,7 @@ const uintptr_t* il2c_initializer_count = &g_InitializerCount;
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 void* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line)
 #else
@@ -60,7 +60,7 @@ void* il2c_get_uninitialized_object_internal__(
 #endif
 {
     // TODO: always collect
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     il2c_collect__(false, pFile, line);
 #else
     il2c_collect__(false);
@@ -80,7 +80,7 @@ void* il2c_get_uninitialized_object_internal__(
         while (1)
         {
             // Cannot allocate: force collecting
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
             il2c_collect__(false, pFile, line);
 #else
             il2c_collect__(false);
@@ -141,7 +141,7 @@ static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
     }
 }
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type, const char* pFile, int line)
 #else
 void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
@@ -156,7 +156,7 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     il2c_assert(type->bodySize >= sizeof(void*));   // vptr0
 
     // Setup vptr0
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize, pFile, line);
 #else
     uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
@@ -172,7 +172,7 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 /////////////////////////////////////////////////////////////
 // Execution frame linker functions
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFrame, const char* pFile, int line)
 #else
 void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFrame)
@@ -192,7 +192,7 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
     }
 }
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame, const char* pFile, int line)
 #else
 void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame)
@@ -201,7 +201,7 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     il2c_assert(pFrame != NULL);
 
     // TODO: always collect
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     il2c_collect__(false, pFile, line);
 #else
     il2c_collect__(false);
@@ -357,8 +357,8 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     interlock_t characteristic = il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_LIVE);
     if ((characteristic & IL2C_CHARACTERISTIC_LIVE) == IL2C_CHARACTERISTIC_LIVE)
     {
-        il2c_debug_write_format(
-            "il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x%p, type=%s, characteristic=0x%08x",
+        il2c_runtime_debug_log_format(
+            L"il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x{0:p}, type={1:s}, characteristic=0x{2:x}",
             pAdjustedReference,
             pHeader->type->pTypeName,
             characteristic);
@@ -373,8 +373,8 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
         IL2C_MARK_HANDLER pMarkHandler = (IL2C_MARK_HANDLER)(pHeader->type->markTarget);
         if (pMarkHandler != NULL)
         {
-            il2c_debug_write_format(
-                "il2c_mark_handler_for_objref__ [2]: pAdjustedReference=0x%p, type=%s, pMarkHandler=0x%p",
+            il2c_runtime_debug_log_format(
+                L"il2c_mark_handler_for_objref__ [2]: pAdjustedReference=0x{0:p}, type={1:s}, pMarkHandler=0x{2:p}",
                 pAdjustedReference,
                 pHeader->type->pTypeName,
                 pMarkHandler);
@@ -392,8 +392,8 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
             sizeof(System_ValueType) :
             0;
 
-        il2c_debug_write_format(
-            "il2c_mark_handler_for_objref__ [3]: pAdjustedReference=0x%p, type=%s, offset=%u",
+        il2c_runtime_debug_log_format(
+            L"il2c_mark_handler_for_objref__ [3]: pAdjustedReference=0x{0:p}, type={1:s}, offset={2:u}",
             pAdjustedReference,
             pHeader->type->pTypeName,
             offset);
@@ -409,8 +409,8 @@ static void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE v
     il2c_assert(valueType != NULL);
     il2c_assert((valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
-    il2c_debug_write_format(
-        "il2c_mark_handler_for_value_type__: pValue=0x%p, type=%s",
+    il2c_runtime_debug_log_format(
+        L"il2c_mark_handler_for_value_type__: pValue=0x{0:p}, type={1:s}",
         pValue,
         valueType->pTypeName);
 
@@ -437,8 +437,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
         {
             il2c_assert((pMarkTarget->valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
-            il2c_debug_write_format(
-                "il2c_mark_handler_recursive__ [1]: p=0x%p, type=%s, index=%u, ppField=0x%p, fieldType=%s",
+            il2c_runtime_debug_log_format(
+                L"il2c_mark_handler_recursive__ [1]: p=0x{0:p}, type={1:s}, index={2:u}, ppField=0x{3:p}, fieldType={4:s}",
                 p,
                 type->pTypeName,
                 index,
@@ -454,8 +454,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             // This field isn't assigned.
             if (*ppField == NULL)
             {
-                il2c_debug_write_format(
-                    "il2c_mark_handler_recursive__ [2]: p=0x%p, type=%s, index=%u, *ppField=NULL",
+                il2c_runtime_debug_log_format(
+                    L"il2c_mark_handler_recursive__ [2]: p=0x{0:p}, type={1:s}, index={2:u}, *ppField=NULL",
                     p,
                     type->pTypeName,
                     index,
@@ -467,8 +467,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             void* pAdjustedReferenceInner = il2c_adjusted_reference(*ppField);
             TRY_GET_HEADER(pHeaderInner, pAdjustedReferenceInner)
             {
-                il2c_debug_write_format(
-                    "il2c_mark_handler_recursive__ [3]: p=0x%p, type=%s, index=%u, pAdjustedReferenceInner=0x%p, targetType=%s",
+                il2c_runtime_debug_log_format(
+                    L"il2c_mark_handler_recursive__ [3]: p=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:x}, targetType={4:s}",
                     p,
                     type->pTypeName,
                     index,
@@ -480,8 +480,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             }
             else
             {
-                il2c_debug_write_format(
-                    "il2c_mark_handler_recursive__ [4]: p=0x%p, type=%s, index=%u, pAdjustedReferenceInner=0x%p, targetType=%s, characteristic=0x%08x",
+                il2c_runtime_debug_log_format(
+                    L"il2c_mark_handler_recursive__ [4]: p=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:p}, targetType={4:s}, characteristic=0x{5:x}",
                     p,
                     type->pTypeName,
                     index,
@@ -533,8 +533,8 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             // This variable isn't assigned.
             if (*ppReference == NULL)
             {
-                il2c_debug_write_format(
-                    "il2c_step2_mark_gcmark__ [2]: pCurrentFrame=0x%p, index=%u, *ppReference=NULL",
+                il2c_runtime_debug_log_format(
+                    L"il2c_step2_mark_gcmark__ [2]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=NULL",
                     pCurrentFrame,
                     index);
                 continue;
@@ -543,8 +543,8 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             void* pAdjustedReference = il2c_adjusted_reference(*ppReference);
             TRY_GET_HEADER(pHeader, pAdjustedReference)
             {
-                il2c_debug_write_format(
-                    "il2c_step2_mark_gcmark__ [3]: pCurrentFrame=0x%p, index=%u, *ppReference=0x%p, pAdjustedReference=0x%p, type=%s",
+                il2c_runtime_debug_log_format(
+                    L"il2c_step2_mark_gcmark__ [3]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=0x{2:p}, pAdjustedReference=0x{3:p}, type={4:s}",
                     pCurrentFrame,
                     index,
                     *ppReference,
@@ -556,8 +556,8 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             }
             else
             {
-                il2c_debug_write_format(
-                    "il2c_step2_mark_gcmark__ [4]: pCurrentFrame=0x%p, index=%u, *ppReference=0x%p, pAdjustedReference=0x%p, type=%s, characteristic=0x%08x",
+                il2c_runtime_debug_log_format(
+                    L"il2c_step2_mark_gcmark__ [4]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=0x{2:p}, pAdjustedReference=0x{3:p}, type={4:s}, characteristic=0x{5:x}",
                     pCurrentFrame,
                     index,
                     *ppReference,
@@ -576,8 +576,8 @@ static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
             il2c_assert(pValueDesc->type_value != NULL);
             il2c_assert((pValueDesc->type_value->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
-            il2c_debug_write_format(
-                "il2c_step2_mark_gcmark__ [5]: pCurrentFrame=0x%p, index=%u, type=%s, pValue=%p",
+            il2c_runtime_debug_log_format(
+                L"il2c_step2_mark_gcmark__ [5]: pCurrentFrame=0x{0:p}, index={1:u}, type={2:s}, pValue={3:p}",
                 pCurrentFrame,
                 index,
                 pValueDesc->type_value->pTypeName,
@@ -609,8 +609,8 @@ static void il2c_step2_mark_gcmark_for_fixed__(void)
             {
                 TRY_GET_HEADER(pHeader, pReference)
                 {
-                    il2c_debug_write_format(
-                        "il2c_step2_mark_gcmark_for_fixed__: pCurrentFixedInstances=0x%p, index=%u, pReference=0x%p, type=%s",
+                    il2c_runtime_debug_log_format(
+                        L"il2c_step2_mark_gcmark_for_fixed__: pCurrentFixedInstances=0x{0:p}, index={1:u}, pReference=0x{2:p}, type={3:s}",
                         pCurrentFixedInstances,
                         index,
                         pReference,
@@ -646,8 +646,8 @@ static void il2c_step3_sweep_garbage__(void)
                 System_Object* pObject = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
                 il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);
 
-                il2c_debug_write_format(
-                    "il2c_step3_sweep_garbage__: call finalizer: type=%s, pObject=0x%p",
+                il2c_runtime_debug_log_format(
+                    L"il2c_step3_sweep_garbage__: call finalizer: type={0:s}, pObject=0x{0:p}",
                     pCurrentHeader->type->pTypeName,
                     pObject);
 
@@ -672,8 +672,8 @@ static void il2c_step3_sweep_garbage__(void)
     {
         IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
 
-        il2c_debug_write_format(
-            "il2c_step3_sweep_garbage__: free: type=%s, pObject=0x%p",
+        il2c_runtime_debug_log_format(
+            L"il2c_step3_sweep_garbage__: free: type={0:s}, pObject=0x{0:p}",
             pScheduledHeader->type->pTypeName,
             ((uint8_t*)pScheduledHeader) + sizeof(IL2C_REF_HEADER));
 
@@ -693,7 +693,7 @@ static uint32_t g_CollectCount = 0;
 int64_t g_CollectCountBreak = -1;
 #endif
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 static void il2c_collect__(bool finalShutdown, const char* pFile, int line)
 #else
 static void il2c_collect__(bool finalShutdown)
@@ -705,21 +705,21 @@ static void il2c_collect__(bool finalShutdown)
         return;
     }
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     uint32_t collectCount = g_CollectCount++;
     if (g_CollectCountBreak != -1)
     {
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
-    il2c_debug_write_format(
-        "il2c_collect__: begin: %d: Header=0x%p, Frame=0x%p, SFrame=0x%p, %s(%d)",
+    il2c_runtime_debug_log_format(
+        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, Frame=0x{2:p}, SFrame=0x{3:p}, {4:s}({5:d})",
         collectCount,
         g_pBeginHeader__,
         g_pBeginFrame__,
         g_pBeginStaticFields__,
         pFile, line);
 #else
-    il2c_debug_write("il2c_collect__: begin");
+    il2c_runtime_debug_log(L"il2c_collect__: begin");
 #endif
 
     il2c_check_heap();
@@ -760,14 +760,14 @@ static void il2c_collect__(bool finalShutdown)
     il2c_step3_sweep_garbage__();
     il2c_check_heap();
 
-#if defined(_DEBUG)
-    il2c_debug_write_format(
-        "il2c_collect__: finished: %d: %s(%d)",
+#if defined(IL2C_USE_LINE_INFORMATION)
+    il2c_runtime_debug_log_format(
+        L"il2c_collect__: finished: {0:d}: {1:s}({2:d})",
         collectCount,
         pFile,
         line);
 #else
-    il2c_debug_write("il2c_collect__: finished");
+    il2c_runtime_debug_log(L"il2c_collect__: finished");
 #endif
 
     il2c_idec(&g_ExecutingCollection__);
@@ -775,7 +775,7 @@ static void il2c_collect__(bool finalShutdown)
 
 void il2c_collect(void)
 {
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     il2c_collect__(false, __FILE__, __LINE__);
 #else
     il2c_collect__(false);
@@ -872,7 +872,7 @@ void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE 
 // | vptr_IBar__          |                     | (optional implemented interface vptr)    v
 // +----------------------+                   -----------------------------------------------
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType, const char* pFile, int line)
 #else
@@ -886,7 +886,7 @@ System_ValueType* il2c_box__(
     uintptr_t bodySize = sizeof(System_ValueType) +
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize, pFile, line);
 #else
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
@@ -903,7 +903,7 @@ System_ValueType* il2c_box__(
 
 // Boxing with widing/narrowing combination for signed/unsigned integer value.
 // NOTE: This implemenation makes safer for endian order.
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 System_ValueType* il2c_box2__(
     void* pValue, IL2C_RUNTIME_TYPE valueType, IL2C_RUNTIME_TYPE stackType, const char* pFile, int line)
 #else
@@ -1017,7 +1017,7 @@ System_ValueType* il2c_box2__(
     uintptr_t bodySize = sizeof(System_ValueType) +
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize, pFile, line);
 #else
     System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
@@ -1160,8 +1160,8 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
     }
 
     // TODO: Unhandled exception
-    il2c_debug_write_format(
-        "Throw unhandled exception: type=%s, Message=\"%ls\"",
+    il2c_runtime_debug_log_format(
+        L"Throw unhandled exception: type={0:s}, Message=\"{1:S}\"",
         (il2c_get_header__(ex))->type->pTypeName,
         (ex->message__->string_body__ != NULL) ? ex->message__->string_body__ : L"");
 
@@ -1215,7 +1215,7 @@ void il2c_rethrow(void)
     il2c_assert(0);
 }
 
-#ifdef IL2C_USE_SIGNAL
+#if defined(IL2C_USE_SIGNAL)
 static void il2c_SIGSEGV_handler(int sig)
 {
     // NOTE 1:
@@ -1281,7 +1281,7 @@ void il2c_shutdown__(void)
 {
     il2c_assert(g_pTopUnwindTarget__ == NULL);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
     il2c_collect__(true, __FILE__, __LINE__);
 #else
     il2c_collect__(true);
@@ -1295,14 +1295,7 @@ void il2c_shutdown__(void)
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-#if !defined(UEFI)
-double il2c_fmod(double lhs, double rhs)
-{
-    return fmod(lhs, rhs);
-}
-#endif
-
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 void il2c_break__(const char* pFile, int line)
 #else
 void il2c_break__(void)
@@ -1310,6 +1303,234 @@ void il2c_break__(void)
 {
     debug_break();
 }
+
+///////////////////////////////////////////////////////
+// Low level debugger formatted writer
+
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
+
+typedef struct il2c_runtime_debug_log_FORMAT_STATE
+{
+    va_list va;
+    uint16_t argumentCount;
+    uint16_t length;
+    wchar_t* pBuffer;
+} il2c_runtime_debug_log_FORMAT_STATE;
+
+static int8_t il2c_runtime_debug_log_format_writer_step1__(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
+{
+    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+
+    p->length = (uint16_t)(p->length + tokenLength);
+    return IL2C_STRING_FORMAT_SUCCEEDED;
+}
+
+static int8_t il2c_runtime_debug_log_format_argument_writer_step1__(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
+{
+    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+    wchar_t buffer[24];
+
+    if ((argumentIndex != (p->argumentCount++)) || (formatLength != 1))
+    {
+        return IL2C_STRING_FORMAT_INVALID;
+    }
+
+    switch (*pFormatFrom)
+    {
+    case L'd':
+        {
+            int32_t value = va_arg(p->va, int32_t);
+            il2c_i32tow(value, buffer, 10);
+        }
+        break;
+    case L'u':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_u32tow(value, buffer, 10);
+        }
+        break;
+    case L'x':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_u32tow(value, buffer, 16);
+        }
+        break;
+    case L'D':
+        {
+            int64_t value = va_arg(p->va, int64_t);
+            il2c_i64tow(value, buffer, 10);
+        }
+        break;
+    case L'U':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_u64tow(value, buffer, 10);
+        }
+        break;
+    case L'X':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_u64tow(value, buffer, 16);
+        }
+        break;
+    case L'p':
+        {
+            uintptr_t value = va_arg(p->va, uintptr_t);
+            il2c_u64tow(value, buffer, 16);
+        }
+        break;
+    case L's':
+        {
+            const char* pStr = va_arg(p->va, const char*);
+            p->length = (uint16_t)(strlen(pStr) + p->length);
+        }
+        return IL2C_STRING_FORMAT_SUCCEEDED;
+    case L'S':
+        {
+            const wchar_t* pStr = va_arg(p->va, const wchar_t*);
+            p->length = (uint16_t)(il2c_wcslen(pStr) + p->length);
+        }
+        return IL2C_STRING_FORMAT_SUCCEEDED;
+    default:
+        return IL2C_STRING_FORMAT_INVALID;
+    }
+
+    p->length = (uint16_t)(il2c_wcslen(buffer) + p->length);
+    return IL2C_STRING_FORMAT_SUCCEEDED;
+}
+
+static int8_t il2c_runtime_debug_log_format_writer_step2__(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
+{
+    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+
+    memcpy(p->pBuffer, pTokenFrom, tokenLength * sizeof(wchar_t));
+    p->pBuffer += tokenLength;
+
+    return 0;
+}
+
+static int8_t il2c_runtime_debug_log_format_argument_writer_step2__(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
+{
+    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+    wchar_t buffer[24];
+    uint16_t length;
+
+    switch (*pFormatFrom)
+    {
+    case L'd':
+        {
+            int32_t value = va_arg(p->va, int32_t);
+            il2c_i32tow(value, buffer, 10);
+        }
+        break;
+    case L'u':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_u32tow(value, buffer, 10);
+        }
+        break;
+    case L'x':
+        {
+            uint32_t value = va_arg(p->va, uint32_t);
+            il2c_u32tow(value, buffer, 16);
+        }
+        break;
+    case L'D':
+        {
+            int64_t value = va_arg(p->va, int64_t);
+            il2c_i64tow(value, buffer, 10);
+        }
+        break;
+    case L'U':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_u64tow(value, buffer, 10);
+        }
+        break;
+    case L'X':
+        {
+            uint64_t value = va_arg(p->va, uint64_t);
+            il2c_u64tow(value, buffer, 16);
+        }
+        break;
+    case L'p':
+        {
+            uintptr_t value = va_arg(p->va, uintptr_t);
+            il2c_u64tow(value, buffer, 16);
+        }
+        break;
+    case L's':
+        {
+            const char* pStr = va_arg(p->va, const char*);
+            while (*pStr != '\0')
+            {
+                *p->pBuffer++ = (wchar_t)*pStr++;
+            }
+        }
+        return IL2C_STRING_FORMAT_SUCCEEDED;
+    case L'S':
+        {
+            const wchar_t* pStr = va_arg(p->va, const wchar_t*);
+            while (*pStr != L'\0')
+            {
+                *p->pBuffer++ = *pStr++;
+            }
+        }
+        return IL2C_STRING_FORMAT_SUCCEEDED;
+    default:
+        return IL2C_STRING_FORMAT_INVALID;
+    }
+
+    length = (uint16_t)il2c_wcslen(buffer);
+    memcpy(p->pBuffer, buffer, length * sizeof(wchar_t));
+    p->pBuffer += length;
+    return IL2C_STRING_FORMAT_SUCCEEDED;
+}
+
+void il2c_runtime_debug_log_format__(const wchar_t* format, ...)
+{
+    il2c_runtime_debug_log_FORMAT_STATE state = { 0 };
+
+    va_start(state.va, format);
+
+    int8_t result = il2c_format_string__(
+        format,
+        il2c_runtime_debug_log_format_writer_step1__,
+        il2c_runtime_debug_log_format_argument_writer_step1__,
+        &state);
+    if (result == IL2C_STRING_FORMAT_SUCCEEDED)
+    {
+        il2c_mcalloc(wchar_t, pBuffer, (state.length + 1U) * sizeof(wchar_t));
+        state.pBuffer = pBuffer;
+
+        va_end(state.va);
+        va_start(state.va, format);
+
+        result = il2c_format_string__(
+            format,
+            il2c_runtime_debug_log_format_writer_step2__,
+            il2c_runtime_debug_log_format_argument_writer_step2__,
+            &state);
+        if (result == IL2C_STRING_FORMAT_SUCCEEDED)
+        {
+            *state.pBuffer = L'\0';
+            il2c_runtime_debug_log__(pBuffer);
+        }
+
+        il2c_mcfree(pBuffer);
+    }
+
+    va_end(state.va);
+}
+
+#endif
+
+///////////////////////////////////////////////////////
+// Basis exceptions
 
 IL2C_CONST_STRING(il2c_null_reference_message, L"Object reference not set to an instance of an object.");
 
@@ -1330,5 +1551,23 @@ void il2c_throw_invalidcastexception__(void)
 {
     System_InvalidCastException* ex = il2c_get_uninitialized_object(System_InvalidCastException);
     System_InvalidCastException__ctor_1(ex, il2c_invalid_cast_message);
+    il2c_throw(ex);
+}
+
+IL2C_CONST_STRING(il2c_index_out_of_range_message, L"Index was outside the bounds of the array.");
+
+void il2c_throw_indexoutofrangeexception__(void)
+{
+    System_IndexOutOfRangeException* ex = il2c_get_uninitialized_object(System_IndexOutOfRangeException);
+    System_IndexOutOfRangeException__ctor_1(ex, il2c_index_out_of_range_message);
+    il2c_throw(ex);
+}
+
+IL2C_CONST_STRING(il2c_format_message, L"Input string was not in a correct format.");
+
+void il2c_throw_formatexception__(void)
+{
+    System_FormatException* ex = il2c_get_uninitialized_object(System_FormatException);
+    System_FormatException__ctor_1(ex, il2c_format_message);
     il2c_throw(ex);
 }

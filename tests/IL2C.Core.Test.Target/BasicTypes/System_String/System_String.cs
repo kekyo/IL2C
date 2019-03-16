@@ -21,6 +21,18 @@ namespace IL2C.BasicTypes
     [TestCase(false, "IndexOutOfRange", "ABC", 2)]
     [TestCase(true, "IndexOutOfRange", "ABC", -1)]
     [TestCase(true, "IndexOutOfRange", "ABC", 3)]
+    [TestCase(true, "Equality", "ABC", "ABC")]
+    [TestCase(false, "Equality", "ABC", "ABCDEF")]
+    [TestCase(false, "Equality", "ABC", "DEF")]
+    [TestCase(false, "Equality", "ABC", null)]
+    [TestCase(false, "Equality", null, "DEF")]
+    [TestCase(true, "Equality", null, null)]
+    [TestCase(false, "Inequality", "ABC", "ABC")]
+    [TestCase(true, "Inequality", "ABC", "ABCDEF")]
+    [TestCase(true, "Inequality", "ABC", "DEF")]
+    [TestCase(true, "Inequality", "ABC", null)]
+    [TestCase(true, "Inequality", null, "DEF")]
+    [TestCase(false, "Inequality", null, null)]
     public sealed class System_String
     {
         // NOTE: ToString and Equals are written by IL.
@@ -71,11 +83,21 @@ namespace IL2C.BasicTypes
             {
                 var ch = str[index];
             }
-            catch (IndexOutOfRangeException)
+            catch (IndexOutOfRangeException ex)
             {
-                return true;
+                return ex.Message == "Index was outside the bounds of the array.";
             }
             return false;
+        }
+
+        public static bool Equality(string value1, string value2)
+        {
+            return value1 == value2;
+        }
+
+        public static bool Inequality(string value1, string value2)
+        {
+            return value1 != value2;
         }
     }
 }

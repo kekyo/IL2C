@@ -7,9 +7,11 @@ const uintptr_t System_UIntPtr_Zero = (uintptr_t)0;
 
 System_String* System_UIntPtr_ToString(uintptr_t* this__)
 {
+    il2c_assert(this__ != NULL);
+
     wchar_t buffer[24];
 
-    il2c_ui64tow(*this__, buffer, 10);
+    il2c_u64tow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 

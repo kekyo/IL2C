@@ -78,9 +78,7 @@ IL_000a:
     stack1_0__ = MT3620Blink_Interops_GPIO_OpenAsOutput(stack1_0__, stack2_0__, (MT3620Blink_GPIO_Value_Type)stack3_1__);
     /* IL_000f: call MT3620Blink.Descriptor..ctor : GpioOutput.cs(6) */
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
-    /* IL_0014: nop                             : GpioOutput.cs(6) */
-    /* IL_0015: nop  */
-    /* IL_0016: ret  */
+    /* IL_0014: ret                             : GpioOutput.cs(11) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }

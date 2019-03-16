@@ -9,7 +9,7 @@ System_String* System_Int32_ToString(int32_t* this__)
 
     wchar_t buffer[14];
     
-    il2c_itow(*this__, buffer, 13);
+    il2c_i32tow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 
@@ -50,7 +50,7 @@ bool System_Int32_TryParse(System_String* s, int32_t* result)
 
     wchar_t* endPtr;
 
-    *result = il2c_wcstol(s->string_body__, &endPtr, 10);
+    *result = il2c_wtoi32(s->string_body__, &endPtr, 10);
     return ((s->string_body__ != endPtr) && (il2c_errno == 0)) ? true : false;
 }
 

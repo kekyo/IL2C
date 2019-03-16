@@ -44,90 +44,6 @@ void* memset(void* target, int ch, size_t n)
 }
 #endif
 
-bool il2c_twtoi(const wchar_t *_Str, int32_t* value)
-{
-    char sign = 0;
-
-    for (;; _Str++)
-    {
-        wchar_t ch = *_Str;
-        if ((ch == L' ') || (ch == L'\t'))
-        {
-            continue;
-        }
-
-        if (ch == L'-')
-        {
-            sign = -1;
-            _Str++;
-        }
-        else if (ch == L'+')
-        {
-            sign = 1;
-            _Str++;
-        }
-        else if ((*_Str < L'0') || (*_Str > L'9'))
-        {
-            return false;
-        }
-
-        break;
-    }
-
-    bool f = false;
-    int32_t n = 0;
-    while ((*_Str >= L'0') && (*_Str <= L'9'))
-    {
-        n = n * 10 + *_Str++ - L'0';
-        f = true;
-    }
-
-    if (!f) return false;
-
-    if (sign != 0) *value = sign * n;
-    else *value = n;
-
-    return true;
-}
-
-wchar_t* il2c_itow(int32_t value, wchar_t* d, int radix)
-{
-    // TODO: supported only 10 radix format.
-    il2c_assert(radix == 10);
-
-    wchar_t *p = d;
-    wchar_t *j;
-    wchar_t b[6];
-
-    if (value < 0)
-    {
-        *p++ = L'-';
-        value = -value;
-    }
-
-    j = &b[5];
-    *j-- = 0;
-
-    do
-    {
-        *j-- = value % 10 + L'0';
-        value /= 10;
-    } while (value);
-
-    do
-    {
-        *p++ = *++j;
-    } while (*j);
-
-    return d;
-}
-
-int32_t* il2c_errno__(void)
-{
-    static int eno = 0;
-    return &eno;
-}
-
 // From musl: http://git.musl-libc.org/cgit/musl/tree/src/math/fmod.c
 double il2c_fmod(double x, double y)
 {
@@ -200,6 +116,117 @@ double il2c_fmod(double x, double y)
     return ux.f;
 }
 
+static const wchar_t* g_pHexChars = L"0123456789abcdef";
+
+#define IL2C_DECLARE_INTTOW(name, typeName, utypeName, bufferLength, intOper) \
+    wchar_t* name(typeName value, wchar_t* buffer, int radix) { \
+        wchar_t temp[bufferLength]; \
+        wchar_t *pTemp = &temp[bufferLength - 1]; \
+        wchar_t *pBuffer = buffer; \
+        utypeName v; \
+        *pTemp-- = L'\0'; \
+        switch (radix) { \
+        case 16: \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = g_pHexChars[v % 16]; \
+                v /= 16; \
+            } while (v); \
+            break; \
+        default: \
+            intOper \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = (wchar_t)(v % 10 + L'0'); \
+                v /= 10; \
+            } while (v); \
+            break; \
+        } \
+        do { \
+            *pBuffer++ = *++pTemp; \
+        } while (*pTemp); \
+        return buffer; \
+    }
+
+#define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
+    if (value == INT32_MIN) { \
+        il2c_wcscpy(buffer, L"-2147483648"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
+    if (value == INT64_MIN) { \
+        il2c_wcscpy(buffer, L"-9223372036854775808"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_UINT_OPERATOR
+
+IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT32_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+
+bool il2c_twtoi(const wchar_t *_Str, int32_t* value)
+{
+    char sign = 0;
+
+    for (;; _Str++)
+    {
+        wchar_t ch = *_Str;
+        if ((ch == L' ') || (ch == L'\t'))
+        {
+            continue;
+        }
+
+        if (ch == L'-')
+        {
+            sign = -1;
+            _Str++;
+        }
+        else if (ch == L'+')
+        {
+            sign = 1;
+            _Str++;
+        }
+        else if ((*_Str < L'0') || (*_Str > L'9'))
+        {
+            return false;
+        }
+
+        break;
+    }
+
+    bool f = false;
+    int32_t n = 0;
+    while ((*_Str >= L'0') && (*_Str <= L'9'))
+    {
+        n = n * 10 + *_Str++ - L'0';
+        f = true;
+    }
+
+    if (!f) return false;
+
+    if (sign != 0) *value = sign * n;
+    else *value = n;
+
+    return true;
+}
+
+int32_t* il2c_errno__(void)
+{
+    static int eno = 0;
+    return &eno;
+}
+
 // From NetBSD: http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libc/locale/__wctoint.h?rev=1.1&content-type=text/x-cvsweb-markup&only_with_tag=MAIN
 static int __wctoint(wchar_t wc)
 {
@@ -251,7 +278,7 @@ static int __wctoint(wchar_t wc)
 
 // From NetBSD: http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libc/locale/_wcstol.h?rev=1.6&content-type=text/x-cvsweb-markup&only_with_tag=MAIN
 #define il2c_iswspace(ch) (ch == 0x20)  // easy way
-long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base)
+long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
 {
     const wchar_t *s;
     long acc, cutoff;
@@ -355,7 +382,10 @@ static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
 
 void* il2c_malloc(size_t _Size)
 {
-    il2c_assert(g_pSystemTable != NULL);
+    if (g_pSystemTable == NULL)
+    {
+        return NULL;
+    }
 
     void* ppAllocated = NULL;
     if (g_pSystemTable->BootServices->AllocatePool(
@@ -371,17 +401,16 @@ void* il2c_malloc(size_t _Size)
 
 void il2c_free(void* _Block)
 {
-    il2c_assert(g_pSystemTable != NULL);
-
-    g_pSystemTable->BootServices->FreePool(_Block);
+    if (g_pSystemTable != NULL)
+    {
+        g_pSystemTable->BootServices->FreePool(_Block);
+    }
 }
 
 static EFI_EVENT g_TimerEvent = NULL;
 
 void il2c_sleep(uint32_t milliseconds)
 {
-    il2c_assert(g_pSystemTable != NULL);
-
     UINTN index;
 
     // TODO: Will cause race condition if use multithreading environment.
@@ -397,65 +426,26 @@ void il2c_sleep(uint32_t milliseconds)
     g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
 }
 
-void il2c_debug_write__(const char* message)
+void il2c_runtime_debug_log__(const wchar_t* message)
 {
-    il2c_assert(message != NULL);
-    il2c_assert(g_pSystemTable != NULL);
-
-    int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* pBuffer = il2c_mcalloc((length + 3) * sizeof(wchar_t));
-    wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
-    *pLast++ = L'\r';
-    *pLast++ = L'\n';
-    *pLast = L'\0';
-
-    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
-
-    il2c_mcfree(pBuffer);
-}
-
-void il2c_debug_write_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-    char buffer[512];
-
-    va_start(va, format);
-    vsprintf(buffer, format, va);
-
-    il2c_debug_write__(buffer);
-
-    va_end(va);
+    g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)message);
 }
 
 #if defined(_DEBUG)
-void il2c_assert__(const char* pFile, int line, const char* pExpr)
+void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr)
 {
-    if ((pFile != NULL) && (g_pSystemTable != NULL))
+    if (g_pSystemTable != NULL)
     {
-        wchar_t buffer[12];
-        il2c_itow(line, buffer, 10);
+        wchar_t buffer[14];
+        il2c_i32tow(line, buffer, 10);
 
-        int32_t length1 = il2c_get_utf8_length(pFile, false);
-        int32_t length2 = (int32_t)il2c_wcslen(buffer);
-        int32_t length3 = il2c_get_utf8_length(pExpr, false);
-        wchar_t* pBuffer = il2c_mcalloc((length1 + length2 + length3 + 7) * sizeof(wchar_t));
-        wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, pFile);
-        *pLast++ = L'(';
-        memcpy(pLast, buffer, length2 * sizeof(wchar_t));
-        pLast += length2;
-        *pLast++ = L')';
-        *pLast++ = L':';
-        *pLast++ = L' ';
-        pLast = il2c_utf16_from_utf8_and_get_last(pLast, pExpr);
-        *pLast++ = L'\r';
-        *pLast++ = L'\n';
-        *pLast = L'\0';
-
-        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
-
-        il2c_mcfree(pBuffer);
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"assert: ");
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)pFile);
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"(");
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, buffer);
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, L"): ");
+        g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)pExpr);
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->StdErr, L"\r\n");
     }
 
     debug_break();
@@ -464,26 +454,27 @@ void il2c_assert__(const char* pFile, int line, const char* pExpr)
 
 void il2c_write(const wchar_t* s)
 {
-    il2c_assert(s != NULL);
-    il2c_assert(g_pSystemTable != NULL);
-
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+    if ((g_pSystemTable != NULL) && (s != NULL))
+    {
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+    }
 }
 
 void il2c_writeline(const wchar_t* s)
 {
-    il2c_assert(s != NULL);
-    il2c_assert(g_pSystemTable != NULL);
-
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
-    g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
+    if ((g_pSystemTable != NULL) && (s != NULL))
+    {
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, (CHAR16*)s);
+        g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, L"\r\n");
+    }
 }
 
 bool il2c_readline(wchar_t* buffer, int32_t length)
 {
-    il2c_assert(buffer != NULL);
-    il2c_assert(length >= 1);
-    il2c_assert(g_pSystemTable != NULL);
+    if ((g_pSystemTable == NULL) || (buffer == NULL) || (length < 0))
+    {
+        return false;
+    }
 
     wchar_t tempBuffer[4];
 

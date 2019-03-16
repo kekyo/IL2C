@@ -5,9 +5,11 @@
 
 System_String* System_UInt32_ToString(uint32_t* this__)
 {
+    il2c_assert(this__ != NULL);
+
     wchar_t buffer[14];
 
-    il2c_ultow(*this__, buffer, 10);
+    il2c_u32tow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 
@@ -48,7 +50,7 @@ bool System_UInt32_TryParse(System_String* s, uint32_t* result)
 
     wchar_t* endPtr;
 
-    *result = il2c_wcstoul(s->string_body__, &endPtr, 10);
+    *result = il2c_wtou32(s->string_body__, &endPtr, 10);
     return ((s->string_body__ != endPtr) && (il2c_errno == 0)) ? true : false;
 }
 

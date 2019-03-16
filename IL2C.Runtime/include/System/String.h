@@ -28,6 +28,8 @@ IL2C_DECLARE_RUNTIME_TYPE(System_String);
 
 extern System_String** System_String_Empty_REF__;
 
+typedef struct System_IFormatProvider System_IFormatProvider;
+
 extern /* virtual */ System_String* System_String_ToString(System_String* this__);
 extern bool System_String_Equals(System_String* this__, System_String* obj);
 extern /* virtual */ bool System_String_Equals_1(System_String* this__, System_Object* obj);
@@ -40,21 +42,30 @@ extern System_String* System_String_Substring_1(System_String* this__, int32_t s
 extern wchar_t System_String_get_Chars(System_String* this__, int32_t index);
 extern int32_t System_String_get_Length(System_String* this__);
 extern /* static */ bool System_String_IsNullOrWhiteSpace(System_String* value);
+extern /* static */ System_String* System_String_Format(System_String* format, System_Object* arg0);
+extern /* static */ System_String* System_String_Format_1(System_String* format, System_Object* arg0, System_Object* arg1);
+extern /* static */ System_String* System_String_Format_3(System_String* format, System_Object* arg0, System_Object* arg1, System_Object* arg2);
+extern System_String* System_String_Format_6(System_String* format, /* params */ il2c_arraytype(System_Object)* args);
+    
 extern /* static */ bool System_String_op_Equality(System_String* lhs, System_String* rhs);
 extern /* static */ bool System_String_op_Inequality(System_String* lhs, System_String* rhs);
 
 /////////////////////////////////////////////////
 // String special functions
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern System_String* il2c_new_string__(const wchar_t* pString, const char* pFile, int line);
+extern System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t length, const char* pFile, int line);
 extern System_String* il2c_new_string_from_utf8__(const char* pUtf8String, const char* pFile, int line);
 #define il2c_new_string(pString) il2c_new_string__(pString, __FILE__, __LINE__)
+#define il2c_new_string_with_length(pString, length) il2c_new_string_with_length__(pString, length, __FILE__, __LINE__)
 #define il2c_new_string_from_utf8(pUtf8String) il2c_new_string_from_utf8__(pUtf8String, __FILE__, __LINE__)
 #else
 extern System_String* il2c_new_string__(const wchar_t* pString);
+extern System_String* il2c_new_string_with_length__(const wchar_t* pString, uint32_t length);
 extern System_String* il2c_new_string_from_utf8__(const char* pUtf8String);
 #define il2c_new_string(pString) il2c_new_string__(pString)
+#define il2c_new_string_with_length(pString, length) il2c_new_string_with_length__(pString, length)
 #define il2c_new_string_from_utf8(pUtf8String) il2c_new_string_from_utf8__(pUtf8String)
 #endif
 
@@ -62,6 +73,22 @@ extern const wchar_t* il2c_c_str(System_String* str);
 
 extern int32_t il2c_get_utf8_length(const char* pUtf8String, bool detectInvalidChars);
 extern wchar_t* il2c_utf16_from_utf8_and_get_last(wchar_t* pDest, const char* pUtf8String);
+
+#define IL2C_STRING_FORMAT_SUCCEEDED (0)
+#define IL2C_STRING_FORMAT_INVALID (-1)
+#define IL2C_STRING_FORMAT_ARGUMENT_ABSOLUTE_LIMIT (-2)
+
+typedef int8_t (*IL2C_FORMAT_TOKEN_WRITER)(
+    const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState);
+typedef int8_t(*IL2C_FORMAT_ARGUMENT_WRITER)(
+    uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState);
+extern int8_t il2c_format_string__(
+    const wchar_t* pFormat,
+    IL2C_FORMAT_TOKEN_WRITER pWriter, IL2C_FORMAT_ARGUMENT_WRITER pArgumentWriter,
+    void* pState);
+
+/////////////////////////////////////////////////
+// Literal string generator macro.
 
 typedef const struct
 {

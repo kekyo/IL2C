@@ -3,6 +3,10 @@
 
 #pragma once
 
+#if defined(_DEBUG)
+#define IL2C_USE_LINE_INFORMATION
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,8 +41,10 @@ extern "C" {
 
 #if defined(_MSC_VER) && defined(UEFI)
 #if defined(_DEBUG)
-extern void il2c_assert__(const char* pFile, int line, const char* pExpr);
-#define il2c_assert(expr) { if (expr) il2c_assert__(__FILE__, __LINE__, #expr); }
+extern void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr);
+#define il2c_cause_assert_(pFile, line, pExpr) il2c_cause_assert__(L##pFile, line, L##pExpr)
+#define il2c_cause_assert(pFile, line, pExpr) il2c_cause_assert_(pFile, line, pExpr)
+#define il2c_assert(expr) do { if (!(expr)) il2c_cause_assert(__FILE__, __LINE__, #expr); } while (0)
 #else
 #define il2c_assert(expr)
 #endif
@@ -148,12 +154,6 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 #define il2c_adjusted_reference(pRawReference) \
     ((void*)((intptr_t)(pRawReference) - (**(const intptr_t**)(pRawReference))))
 
-/*#define il2c_cast_from_interface(typeName, interfaceTypeName, pInterface) \
-    ((pReference != NULL) ? \
-        ((typeName*)(((uint8_t*)(pInterface)) - \
-         il2c_adjustor_offset(typeName, interfaceTypeName))) : \
-        NULL) */
-
 #define il2c_cast_to_interface__(interfaceTypeName, offset, pReference) \
     ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset)))
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
@@ -170,7 +170,7 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 
 extern void il2c_collect(void);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type, const char* pFile, int line);
 #define il2c_get_uninitialized_object(typeName) \
     il2c_get_uninitialized_object__(il2c_typeof(typeName), __FILE__, __LINE__)
@@ -192,6 +192,14 @@ extern void il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile v
 
 extern const uintptr_t* il2c_initializer_count;
 extern void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields);
+
+///////////////////////////////////////////////////////
+// Basic exceptions
+
+extern void il2c_throw_nullreferenceexception__(void);
+extern void il2c_throw_invalidcastexception__(void);
+extern void il2c_throw_indexoutofrangeexception__(void);
+extern void il2c_throw_formatexception__(void);
 
 ///////////////////////////////////////////////////////
 // The basis types
@@ -227,6 +235,9 @@ typedef void* untyped_ptr;
 #include "System/NullReferenceException.h"
 #include "System/InvalidCastException.h"
 #include "System/IndexOutOfRangeException.h"
+#include "System/IFormatProvider.h"
+#include "System/IFormattable.h"
+#include "System/FormatException.h"
 #include "System/GC.h"
 #include "System/Runtime/InteropServices/GCHandleType.h"
 #include "System/Runtime/InteropServices/GCHandle.h"
@@ -245,7 +256,7 @@ typedef void* untyped_ptr;
 #define il2c_boxedtype(valueTypeName) \
     System_ValueType
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern System_ValueType* il2c_box__(
     void* pValue, IL2C_RUNTIME_TYPE valueType, const char* pFile, int line);
 extern System_ValueType* il2c_box2__(
@@ -346,16 +357,13 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 
 extern double il2c_fmod(double lhs, double rhs);
 
-#if defined(_DEBUG)
+#if defined(IL2C_USE_LINE_INFORMATION)
 extern void il2c_break__(const char* pFile, int line);
 #define il2c_break() il2c_break__(__FILE__, __LINE__)
 #else
 extern void il2c_break__(void);
 #define il2c_break() il2c_break__()
 #endif
-
-extern void il2c_throw_nullreferenceexception__(void);
-extern void il2c_throw_invalidcastexception__(void);
 
 ///////////////////////////////////////////////////////
 // Generator macro for runtime type information.

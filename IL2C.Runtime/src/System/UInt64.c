@@ -5,9 +5,11 @@
 
 System_String* System_UInt64_ToString(uint64_t* this__)
 {
+    il2c_assert(this__ != NULL);
+
     wchar_t buffer[24];
 
-    il2c_ui64tow(*this__, buffer, 10);
+    il2c_u64tow(*this__, buffer, 10);
     return il2c_new_string(buffer);
 }
 
@@ -48,7 +50,7 @@ bool System_UInt64_TryParse(System_String* s, uint64_t* result)
 
     wchar_t* endPtr;
 
-    *result = il2c_wcstoull(s->string_body__, &endPtr, 10);
+    *result = il2c_wtou64(s->string_body__, &endPtr, 10);
     return ((s->string_body__ != endPtr) && (il2c_errno == 0)) ? true : false;
 }
 

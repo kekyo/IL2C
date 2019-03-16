@@ -6,29 +6,71 @@
 // Linux
 #if defined(__GNUC__) && defined(__linux__)
 
-wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l)
+#include <math.h>
+
+double il2c_fmod(double lhs, double rhs)
 {
-    swprintf(b, l, L"%d", v);
-    return b;
+    return fmod(lhs, rhs);
 }
 
-wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l)
-{
-    swprintf(b, l, L"%lu", v);
-    return b;
-}
+static const wchar_t* g_pHexChars = L"0123456789abcdef";
 
-wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l)
-{
-    swprintf(b, l, L"%lld", v);
-    return b;
-}
+#define IL2C_DECLARE_INTTOW(name, typeName, utypeName, bufferLength, intOper) \
+    wchar_t* name(typeName value, wchar_t* buffer, int radix) { \
+        wchar_t temp[bufferLength]; \
+        wchar_t *pTemp = &temp[bufferLength - 1]; \
+        wchar_t *pBuffer = buffer; \
+        utypeName v; \
+        *pTemp-- = L'\0'; \
+        switch (radix) { \
+        case 16: \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = g_pHexChars[v % 16]; \
+                v /= 16; \
+            } while (v); \
+            break; \
+        default: \
+            intOper \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = (wchar_t)(v % 10 + L'0'); \
+                v /= 10; \
+            } while (v); \
+            break; \
+        } \
+        do { \
+            *pBuffer++ = *++pTemp; \
+        } while (*pTemp); \
+        return buffer; \
+    }
 
-wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l)
-{
-    swprintf(b, l, L"%llu", v);
-    return b;
-}
+#define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
+    if (value == INT32_MIN) { \
+        il2c_wcscpy(buffer, L"-2147483648"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
+    if (value == INT64_MIN) { \
+        il2c_wcscpy(buffer, L"-9223372036854775808"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_UINT_OPERATOR
+
+IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT32_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
 
 #if defined(_DEBUG)
 #include <malloc.h>
@@ -60,33 +102,10 @@ void il2c_sleep(uint32_t milliseconds)
 // NOT Azure Sphere
 #if !defined(__AZURE_SPHERE__)
 
-void il2c_debug_write__(const char* message)
+void il2c_runtime_debug_log__(const wchar_t* message)
 {
-    il2c_assert(message != NULL);
-
-    int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* pBuffer = il2c_mcalloc((length + 3) * sizeof(wchar_t));
-    wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
-    *pLast++ = L'\r';
-    *pLast++ = L'\n';
-    *pLast = L'\0';
-
     // TODO: syslog
-    fputws(pBuffer, stderr);
-
-    il2c_mcfree(pBuffer);
-}
-
-void il2c_debug_write_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-
-    va_start(va, format);
-    // TODO: syslog
-    vfwprintf(stderr, format, va);
-    va_end(va);
+    fputws(message, stderr);
 }
 
 void il2c_write(const wchar_t* s)

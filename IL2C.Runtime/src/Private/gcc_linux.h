@@ -26,23 +26,25 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
+#include <alloca.h>
 #define IL2C_USE_SIGNAL
 #include <signal.h>
 
 #include <unistd.h>
 
 // Compatibility symbols (required platform depended functions)
-extern wchar_t* il2c_itow(int32_t v, wchar_t* b, size_t l);
-extern wchar_t* il2c_ultow(uint32_t v, wchar_t* b, size_t l);
-extern wchar_t* il2c_i64tow(int64_t v, wchar_t* b, size_t l);
-extern wchar_t* il2c_ui64tow(uint64_t v, wchar_t* b, size_t l);
+extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);
+extern wchar_t* il2c_u32tow(uint32_t value, wchar_t* buffer, int radix);
+extern wchar_t* il2c_i64tow(int64_t value, wchar_t* buffer, int radix);
+extern wchar_t* il2c_u64tow(uint64_t value, wchar_t* buffer, int radix);
 #define il2c_snwprintf swprintf
-#define il2c_wcstol wcstol
-#define il2c_wcstoul wcstoul
-#define il2c_wcstoll wcstoll
-#define il2c_wcstoull wcstoull
+#define il2c_wtoi32 wcstol
+#define il2c_wtou32 wcstoul
+#define il2c_wtoi64 wcstoll
+#define il2c_wtou64 wcstoull
 #define il2c_wcstof wcstof
 #define il2c_wcstod wcstod
+#define il2c_wcscpy wcscpy
 #define il2c_wcscmp wcscmp
 #define il2c_wcsicmp wcscasecmp
 #define il2c_wcslen wcslen
@@ -55,8 +57,13 @@ extern void il2c_free(void* p);
 #define il2c_free free
 #endif
 
-#define il2c_mcalloc il2c_malloc
-#define il2c_mcfree il2c_free
+#define il2c_mcalloc(elementType, name, size) \
+    const uint32_t name_csize__ = (uint32_t)(size); \
+    const bool is_name_heaped__ = name_csize__ >= 256U; \
+    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__) : alloca(name_csize__)
+#define il2c_mcfree(name) \
+    do { if (is_name_heaped__) il2c_free(name); } while (0)
+
 #define il2c_iand(pDest, newValue) __sync_fetch_and_and((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) __sync_fetch_and_or((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_iinc(pDest) __sync_add_and_fetch((interlock_t*)(pDest), 1)

@@ -1,93 +1,9 @@
+#include <il2c_private.h>
+
 //////////////////////////////////////////////////
 // Arduino
 
 #if defined(__GNUC__) && defined(ARDUINO)
-
-#include <il2c_private.h>
-
-bool il2c_twtoi(const wchar_t *_Str, int32_t* value)
-{
-    char sign = 0;
-
-    for (;; _Str++)
-    {
-        wchar_t ch = *_Str;
-        if ((ch == L' ') || (ch == L'\t'))
-        {
-            continue;
-        }
-
-        if (ch == L'-')
-        {
-            sign = -1;
-            _Str++;
-        }
-        else if (ch == L'+')
-        {
-            sign = 1;
-            _Str++;
-        }
-        else if ((*_Str < L'0') || (*_Str > L'9'))
-        {
-            return false;
-        }
-
-        break;
-    }
-
-    bool f = false;
-    int32_t n = 0;
-    while ((*_Str >= L'0') && (*_Str <= L'9'))
-    {
-        n = n * 10 + *_Str++ - L'0';
-        f = true;
-    }
-
-    if (!f) return false;
-
-    if (sign != 0) *value = sign * n;
-    else *value = n;
-
-    return true;
-}
-
-wchar_t* il2c_itow(int32_t value, wchar_t* d, int radix)
-{
-    // TODO: supported only 10 radix format.
-    il2c_assert(radix == 10);
-
-    wchar_t *p = d;
-    wchar_t *j;
-    wchar_t b[6];
-
-    if (value < 0)
-    {
-        *p++ = L'-';
-        value = -value;
-    }
-
-    j = &b[5];
-    *j-- = 0;
-
-    do
-    {
-        *j-- = value % 10 + L'0';
-        value /= 10;
-    } while (value);
-
-    do
-    {
-        *p++ = *++j;
-    } while (*j);
-
-    return d;
-}
-
-int32_t* il2c_errno__(void)
-{
-    static int eno = 0;
-    return &eno;
-}
 
 // From musl: http://git.musl-libc.org/cgit/musl/tree/src/math/fmod.c
 double il2c_fmod(double x, double y)
@@ -159,6 +75,117 @@ double il2c_fmod(double x, double y)
     return ux.f;
 }
 
+static const wchar_t* g_pHexChars = L"0123456789abcdef";
+
+#define IL2C_DECLARE_INTTOW(name, typeName, utypeName, bufferLength, intOper) \
+    wchar_t* name(typeName value, wchar_t* buffer, int radix) { \
+        wchar_t temp[bufferLength]; \
+        wchar_t *pTemp = &temp[bufferLength - 1]; \
+        wchar_t *pBuffer = buffer; \
+        utypeName v; \
+        *pTemp-- = L'\0'; \
+        switch (radix) { \
+        case 16: \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = g_pHexChars[v % 16]; \
+                v /= 16; \
+            } while (v); \
+            break; \
+        default: \
+            intOper \
+            v = (utypeName)value; \
+            do { \
+                *pTemp-- = (wchar_t)(v % 10 + L'0'); \
+                v /= 10; \
+            } while (v); \
+            break; \
+        } \
+        do { \
+            *pBuffer++ = *++pTemp; \
+        } while (*pTemp); \
+        return buffer; \
+    }
+
+#define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
+    if (value == INT32_MIN) { \
+        il2c_wcscpy(buffer, L"-2147483648"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
+    if (value == INT64_MIN) { \
+        il2c_wcscpy(buffer, L"-9223372036854775808"); \
+        return buffer; \
+    } \
+    if (value < 0) { \
+        *pBuffer++ = L'-'; \
+        value = -value; \
+    }
+
+#define IL2C_DECLARE_INTTOW_UINT_OPERATOR
+
+IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT32_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
+IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+
+bool il2c_twtoi(const wchar_t *_Str, int32_t* value)
+{
+    char sign = 0;
+
+    for (;; _Str++)
+    {
+        wchar_t ch = *_Str;
+        if ((ch == L' ') || (ch == L'\t'))
+        {
+            continue;
+        }
+
+        if (ch == L'-')
+        {
+            sign = -1;
+            _Str++;
+        }
+        else if (ch == L'+')
+        {
+            sign = 1;
+            _Str++;
+        }
+        else if ((*_Str < L'0') || (*_Str > L'9'))
+        {
+            return false;
+        }
+
+        break;
+    }
+
+    bool f = false;
+    int32_t n = 0;
+    while ((*_Str >= L'0') && (*_Str <= L'9'))
+    {
+        n = n * 10 + *_Str++ - L'0';
+        f = true;
+    }
+
+    if (!f) return false;
+
+    if (sign != 0) *value = sign * n;
+    else *value = n;
+
+    return true;
+}
+
+int32_t* il2c_errno__(void)
+{
+    static int eno = 0;
+    return &eno;
+}
+
 // From NetBSD: http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libc/locale/__wctoint.h?rev=1.1&content-type=text/x-cvsweb-markup&only_with_tag=MAIN
 static int __wctoint(wchar_t wc)
 {
@@ -210,7 +237,7 @@ static int __wctoint(wchar_t wc)
 
 // From NetBSD: http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libc/locale/_wcstol.h?rev=1.6&content-type=text/x-cvsweb-markup&only_with_tag=MAIN
 #define il2c_iswspace(ch) (ch == 0x20)  // easy way
-long il2c_wcstol(const wchar_t *nptr, wchar_t **endptr, int base)
+long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
 {
     const wchar_t *s;
     long acc, cutoff;
@@ -326,12 +353,12 @@ void il2c_free(void* p)
 }
 #endif
 
-void il2c_debug_write__(const char* message)
+void il2c_runtime_debug_log__(const char* message)
 {
     il2c_assert(message != NULL);
 
     int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* pBuffer = il2c_mcalloc((length + 3) * sizeof(wchar_t));
+    wchar_t* il2c_mcalloc(pBuffer, (length + 3) * sizeof(wchar_t));
     wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
     *pLast++ = L'\r';
     *pLast++ = L'\n';
@@ -343,7 +370,7 @@ void il2c_debug_write__(const char* message)
     il2c_mcfree(pBuffer);
 }
 
-void il2c_debug_write_format__(const char* format, ...)
+void il2c_runtime_debug_log_format__(const char* format, ...)
 {
     il2c_assert(format != NULL);
 

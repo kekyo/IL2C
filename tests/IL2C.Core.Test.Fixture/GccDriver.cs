@@ -212,7 +212,7 @@ namespace IL2C
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
             var libPath = Path.GetFullPath(Path.Combine(gccBasePath, ".."));
-            var optimizeFlag = optimize ? "-Ofast -ffloat-store -DNDEBUG" : "-O0 -ffloat-store -D_DEBUG -DIL2C_DEBUG_WRITE";
+            var optimizeFlag = optimize ? "-Ofast -ffloat-store -DNDEBUG" : "-O0 -ffloat-store -D_DEBUG -DIL2C_USE_RUNTIME_DEBUG_LOG";
             var disableObjDump = optimize ? "rem " : string.Empty;
 
             if (!Directory.Exists(outPath))

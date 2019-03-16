@@ -8,24 +8,15 @@
 
 #include <applibs/log.h>
 
-void il2c_debug_write__(const char* message)
+void il2c_runtime_debug_log__(const wchar_t* message)
 {
-    il2c_assert(message != NULL);
-
-    Log_Debug(message);
-}
-
-void il2c_debug_write_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-    char buffer[256];
-
-    va_start(va, format);
-    vsprintf(buffer, format, va);
-    Log_Debug(buffer);
-    va_end(va);
+    size_t l = il2c_wcslen(message);
+    il2c_mcalloc(char, d, l + 1);
+    size_t i;
+    for (i = 0; i < l; i++) d[i] = (char)(message[i]);
+    d[i] = '\0';
+    Log_Debug(d);
+    il2c_mcfree(d);
 }
 
 // TODO: UTF16 --> UTF8
@@ -33,7 +24,7 @@ void il2c_debug_write_format__(const char* format, ...)
 void il2c_write(const wchar_t* p)
 {
     size_t l = il2c_wcslen(p);
-    char* d = il2c_mcalloc(l + 1);
+    il2c_mcalloc(char, d, l + 1);
     size_t i;
     for (i = 0; i < l; i++) d[i] = (char)(p[i]);
     d[i] = '\0';
@@ -44,7 +35,7 @@ void il2c_write(const wchar_t* p)
 void il2c_writeline(const wchar_t* p)
 {
     size_t l = il2c_wcslen(p);
-    char* d = il2c_mcalloc(l + 2);
+    il2c_mcalloc(char, d, l + 2);
     size_t i;
     for (i = 0; i < l; i++) d[i] = (char)(p[i]);
     d[i++] = '\n';

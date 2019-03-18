@@ -240,8 +240,8 @@ static int __wctoint(wchar_t wc)
 long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
 {
     const wchar_t *s;
-    long acc, cutoff;
-    wint_t wc;
+    int32_t acc, cutoff;
+    wchar_t wc;
     int i;
     int neg, any, cutlim;
 
@@ -286,7 +286,7 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
     /*
      * See strtol for comments as to the logic used.
      */
-    cutoff = neg ? LONG_MIN : LONG_MAX;
+    cutoff = neg ? INT32_MIN : INT32_MAX;
     cutlim = (int)(cutoff % base);
     cutoff /= base;
     if (neg) {
@@ -307,7 +307,7 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
         if (neg) {
             if (acc < cutoff || (acc == cutoff && i > cutlim)) {
                 any = -1;
-                acc = LONG_MIN;
+                acc = INT32_MIN;
                 il2c_errno = ERANGE;
             }
             else {
@@ -319,7 +319,7 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
         else {
             if (acc > cutoff || (acc == cutoff && i > cutlim)) {
                 any = -1;
-                acc = LONG_MAX;
+                acc = INT32_MAX;
                 il2c_errno = ERANGE;
             }
             else {
@@ -358,7 +358,7 @@ void il2c_runtime_debug_log__(const char* message)
     il2c_assert(message != NULL);
 
     int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* il2c_mcalloc(pBuffer, (length + 3) * sizeof(wchar_t));
+    il2c_mcalloc(wchar_t, pBuffer, (length + 3) * sizeof(wchar_t));
     wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
     *pLast++ = L'\r';
     *pLast++ = L'\n';

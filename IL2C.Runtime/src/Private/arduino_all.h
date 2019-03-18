@@ -14,10 +14,10 @@ extern "C" {
 
 #if defined(__GNUC__) && defined(ARDUINO)
 
-#include <intrin.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <wchar.h>
-#include <malloc.h>
+#include <alloca.h>
 
 // Compatibility symbols (required platform depended functions)
 extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);

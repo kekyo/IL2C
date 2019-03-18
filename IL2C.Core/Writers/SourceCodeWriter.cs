@@ -181,7 +181,7 @@ namespace IL2C.Writers
                                 staticFieldsName);
                             twSource.SplitLine();
                             twSource.WriteLine(
-                                "static struct {0}_DECL__ /* IL2C_EXECUTION_FRAME */",
+                                "static struct {0}_DECL__ /* IL2C_STATIC_FIELDS */",
                                 staticFieldsName);
                             twSource.WriteLine("{");
 
@@ -197,7 +197,7 @@ namespace IL2C.Writers
 
                             using (var _ = twSource.Shift())
                             {
-                                twSource.WriteLine("IL2C_EXECUTION_FRAME* pNext__;");
+                                twSource.WriteLine("IL2C_STATIC_FIELDS* pNext__;");
                                 twSource.WriteLine("const uint16_t objRefCount__;");
                                 twSource.WriteLine("const uint16_t valueCount__;");
 

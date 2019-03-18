@@ -9,14 +9,17 @@ typedef const struct IL2C_VALUE_DESCRIPTOR_DECL
     const void* ptr_value;
 } IL2C_VALUE_DESCRIPTOR;
 
-typedef volatile struct IL2C_EXECUTION_FRAME_DECL
+typedef volatile struct IL2C_GC_TRACKING_INFORMATION_DECL
 {
-    IL2C_EXECUTION_FRAME* pNext__;
+    IL2C_GC_TRACKING_INFORMATION* pNext__;
     const uint16_t objRefCount__;
     const uint16_t valueCount__;
     volatile void* pReferences__[1];     // objRefCount__
     // IL2C_VALUE_DESCRIPTOR valueDescriptors__[];  // valueCount__
-} IL2C_EXECUTION_FRAME;
+} IL2C_GC_TRACKING_INFORMATION;
+
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_EXECUTION_FRAME;
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_STATIC_FIELDS;
 
 typedef volatile struct IL2C_FIXED_INSTANCES_DECL IL2C_FIXED_INSTANCES;
 
@@ -30,7 +33,7 @@ struct IL2C_FIXED_INSTANCES_DECL
 static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
 static IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget__ = NULL;
 
-static IL2C_EXECUTION_FRAME* g_pBeginStaticFields__ = NULL;
+static IL2C_STATIC_FIELDS* g_pBeginStaticFields__ = NULL;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 static IL2C_FIXED_INSTANCES* g_pFixedInstances__ = NULL;
@@ -213,18 +216,18 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
 /////////////////////////////////////////////////////////////
 // Static fields tracing functions
 
-void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields)
+void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields)
 {
     il2c_assert(pStaticFields != NULL);
 
-    IL2C_EXECUTION_FRAME* p = pStaticFields;
+    IL2C_STATIC_FIELDS* p = pStaticFields;
 
     memset((void*)&(p->pReferences__[0]), 0,
         (p->objRefCount__ * sizeof(void*)) + (p->valueCount__ * sizeof(IL2C_VALUE_DESCRIPTOR)));
 
     while (1)
     {
-        IL2C_EXECUTION_FRAME* pNext = g_pBeginStaticFields__;
+        IL2C_STATIC_FIELDS* pNext = g_pBeginStaticFields__;
         p->pNext__ = pNext;
         if (il2c_icmpxchgptr(&g_pBeginStaticFields__, p, pNext) == pNext)
         {
@@ -519,10 +522,10 @@ static void il2c_step1_clear_gcmark__(void)
     }
 }
 
-static void il2c_step2_mark_gcmark__(IL2C_EXECUTION_FRAME* pBeginFrame)
+static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 {
     // Mark headers.
-    IL2C_EXECUTION_FRAME* pCurrentFrame = pBeginFrame;
+    IL2C_GC_TRACKING_INFORMATION* pCurrentFrame = pBeginFrame;
     while (pCurrentFrame != NULL)
     {
         // Traverse objrefs at the current frame.
@@ -712,7 +715,7 @@ static void il2c_collect__(bool finalShutdown)
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
     il2c_runtime_debug_log_format(
-        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, Frame=0x{2:p}, SFrame=0x{3:p}, {4:s}({5:d})",
+        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, Frame=0x{2:p}, StaticFields=0x{3:p}, {4:s}({5:d})",
         collectCount,
         g_pBeginHeader__,
         g_pBeginFrame__,

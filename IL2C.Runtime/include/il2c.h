@@ -91,7 +91,10 @@ extern void il2c_shutdown(void);
 
 typedef volatile long interlock_t;
 
-typedef volatile struct IL2C_EXECUTION_FRAME_DECL IL2C_EXECUTION_FRAME;
+typedef volatile struct IL2C_GC_TRACKING_INFORMATION_DECL IL2C_GC_TRACKING_INFORMATION;
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_EXECUTION_FRAME;
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_STATIC_FIELDS;
+
 typedef volatile struct IL2C_EXCEPTION_FRAME_DECL IL2C_EXCEPTION_FRAME;
 typedef volatile struct IL2C_REF_HEADER_DECL IL2C_REF_HEADER;
 
@@ -191,7 +194,7 @@ extern void il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile v
 #endif
 
 extern const uintptr_t* il2c_initializer_count;
-extern void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields);
+extern void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields);
 
 ///////////////////////////////////////////////////////
 // Basic exceptions
@@ -247,6 +250,7 @@ typedef void* untyped_ptr;
 #include "System/Console.h"
 #include "System/IDisposable.h"
 #include "System/Threading/Interlocked.h"
+#include "System/Threading/ThreadStart.h"
 #include "System/Threading/Thread.h"
 
 ///////////////////////////////////////////////////////

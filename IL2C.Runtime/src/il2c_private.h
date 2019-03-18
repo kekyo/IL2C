@@ -35,7 +35,7 @@ extern void il2c_runtime_debug_log_format__(const wchar_t* format, ...);
 #define il2c_runtime_debug_log_format(format, ...)
 #endif
 
-extern void il2c_initialize__(void);
+extern void il2c_initialize__(intptr_t mainThreadHandle);
 extern void il2c_shutdown__(void);
 
 ///////////////////////////////////////////////////

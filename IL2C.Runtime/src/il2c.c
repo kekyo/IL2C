@@ -29,9 +29,14 @@ struct IL2C_FIXED_INSTANCES_DECL
     volatile void* pReferences[3];
 };
 
-// TODO: Become store to thread local storage
-static IL2C_EXECUTION_FRAME* g_pBeginFrame__ = NULL;
-static IL2C_EXCEPTION_FRAME* g_pTopUnwindTarget__ = NULL;
+typedef volatile struct IL2C_THREAD_CONTROL_BLOCK_DECL
+{
+    IL2C_EXECUTION_FRAME* pFrame__;
+    IL2C_EXCEPTION_FRAME* pTopUnwindTarget__;
+    intptr_t rawHandle__;
+} IL2C_THREAD_CONTROL_BLOCK;
+
+static IL2C_THREAD_CONTROL_BLOCK g_MainThread__;
 
 static IL2C_STATIC_FIELDS* g_pBeginStaticFields__ = NULL;
 
@@ -1260,15 +1265,17 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 /////////////////////////////////////////////////////////////
 // IL2C runtime initialzer / shutdown
 
-void il2c_initialize__(void)
+void il2c_initialize__(intptr_t mainThreadHandle)
 {
     g_InitializerCount++;
 
-    g_pBeginFrame__ = NULL;
+    g_MainThread__.pFrame__ = NULL;
+    g_MainThread__.pTopUnwindTarget__ = NULL;
+    g_MainThread__.rawHandle__ = mainThreadHandle;
+
     g_pBeginHeader__ = NULL;
     g_pBeginStaticFields__ = NULL;
     g_pFixedInstances__ = NULL;
-    g_pTopUnwindTarget__ = NULL;
 
 #if defined(_DEBUG)
     g_CollectCount = 0;

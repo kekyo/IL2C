@@ -7,6 +7,7 @@
 #if defined(__GNUC__) && defined(__linux__)
 
 #include <math.h>
+#include <pthread.h>
 
 double il2c_fmod(double lhs, double rhs)
 {
@@ -158,7 +159,8 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 void il2c_initialize(void)
 {
-    il2c_initialize__();
+    intptr_t mainThreadHandle = (intptr_t)pthread_self();
+    il2c_initialize__(mainThreadHandle);
 }
 
 void il2c_shutdown(void)

@@ -409,7 +409,7 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 void il2c_initialize()
 {
-    il2c_initialize__();
+    il2c_initialize__(0);
 }
 
 void il2c_shutdown()

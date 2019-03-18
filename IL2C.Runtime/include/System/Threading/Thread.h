@@ -18,9 +18,14 @@ typedef System_Object_VTABLE_DECL__ System_Threading_Thread_VTABLE_DECL__;
 
 struct System_Threading_Thread
 {
-	System_Threading_Thread_VTABLE_DECL__* vptr0__;
-	System_Delegate* start__;
-	intptr_t rawHandle__;
+    System_Threading_Thread_VTABLE_DECL__* vptr0__;
+
+    /* IL2C_THREAD_CONTROL_BLOCK */
+    IL2C_EXECUTION_FRAME* pFrame__;
+    IL2C_EXCEPTION_FRAME* pTopUnwindTarget__;
+    intptr_t rawHandle__;
+
+    System_Delegate* start__;
 };
 
 IL2C_DECLARE_RUNTIME_TYPE(System_Threading_Thread);

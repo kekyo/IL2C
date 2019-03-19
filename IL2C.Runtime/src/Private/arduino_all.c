@@ -353,6 +353,48 @@ void il2c_free(void* p)
 }
 #endif
 
+#if defined(_POSIX_THREADS)
+IL2C_TLS_INDEX il2c_tls_alloc(void)
+{
+    pthread_key_t key;
+    int result = pthread_key_create(&key, il2c_free);
+    il2c_assert(result == 0);
+
+    return key;
+}
+
+void* il2c_get_tls_value(IL2C_TLS_INDEX tlsIndex)
+{
+    void* value;
+    int result = pthread_getspecific((pthread_key_t)tlsIndex, &value);
+    return (result == 0) ? value : NULL;
+}
+
+void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value)
+{
+    int result = pthread_setspecific((pthread_key_t)tlsIndex, value);
+    il2c_assert(result == 0);
+}
+
+intptr_t il2c_create_thread__(start_routine entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
+{
+    pthread_t handle;
+
+    int result = pthread_create(&handle, NULL, entryPoint, parameter);
+    il2c_assert(result == 0);
+
+    return (intptr_t)handle;
+}
+
+void il2c_join_thread__(intptr_t handle)
+{
+    il2c_assert(handle != 0);
+
+    void* value;
+    int result = pthread_join((pthread_t)handle, &value);
+}
+#endif
+
 void il2c_runtime_debug_log__(const char* message)
 {
     il2c_assert(message != NULL);

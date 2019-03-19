@@ -35,7 +35,7 @@ extern void il2c_runtime_debug_log_format__(const wchar_t* format, ...);
 #define il2c_runtime_debug_log_format(format, ...)
 #endif
 
-extern void il2c_initialize__(intptr_t mainThreadHandle);
+extern void il2c_initialize__(void);
 extern void il2c_shutdown__(void);
 
 ///////////////////////////////////////////////////
@@ -151,8 +151,20 @@ extern void il2c_register_fixed_instance__(void* pReference);
 extern void il2c_unregister_fixed_instance__(void* pReference);
 extern void il2c_default_mark_handler__(void* pReference);
 
+typedef volatile struct IL2C_THREAD_CONTEXT_DECL
+{
+    IL2C_EXECUTION_FRAME* pFrame__;
+    IL2C_EXCEPTION_FRAME* pUnwindTarget__;
+    volatile intptr_t rawHandle__;
+} IL2C_THREAD_CONTEXT;
 
-
+#if defined(IL2C_USE_LINE_INFORMATION)
+extern IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(
+    /* EXECUTION_FRAME__* */ volatile void* pNewFrame, const char* pFile, int line);
+#else
+extern IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(
+    /* EXECUTION_FRAME__* */ volatile void* pNewFrame);
+#endif
 
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs

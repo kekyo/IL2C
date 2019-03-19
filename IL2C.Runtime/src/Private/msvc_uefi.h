@@ -53,9 +53,28 @@ extern void il2c_free(void* p);
 #define il2c_ixchgptr(ppDest, pNewValue) _InterlockedExchangePointer((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) _InterlockedCompareExchange((interlock_t*)(pDest), (interlock_t)(newValue), (interlock_t)(comperandValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) _InterlockedCompareExchangePointer((void**)(ppDest), (void*)(pNewValue), (void*)(pComperandValue))
-extern void il2c_sleep(uint32_t milliseconds);
+#define il2c_memory_barrier() MemoryBarrier()
 
+extern void il2c_sleep(uint32_t milliseconds);
 #define il2c_longjmp longjmp
+
+// UEFI enviuronment: multithreading feature not supported.
+typedef intptr_t IL2C_TLS_INDEX;
+#define il2c_tls_alloc() ((IL2C_TLS_INDEX)0)
+#define il2c_tls_free(tlsIndex) (tlsIndex = 0)
+#define il2c_get_tls_value(tlsIndex) ((void*)(tlsIndex))
+#define il2c_set_tls_value(tlsIndex, value) (tlsIndex = (intptr_t)(value))
+
+#define IL2C_THREAD_ENTRY_POINT_RESULT_TYPE void
+#define IL2C_THREAD_ENTRY_POINT_RETURN(value) ((void)0)
+#define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
+
+// TODO: has to get real handle
+#define il2c_get_current_thread__() ((intptr_t)0)
+#define il2c_get_current_thread_id__() ((int32_t)0)
+#define il2c_create_thread__(entryPoint, parameter) ((intptr_t)-1)
+#define il2c_resume_thread__(handle) ((void)0)
+#define il2c_join_thread__(handle) ((void)0)
 
 #endif
 

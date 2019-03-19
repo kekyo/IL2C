@@ -20,21 +20,23 @@ struct System_Threading_Thread
 {
     System_Threading_Thread_VTABLE_DECL__* vptr0__;
 
-    /* IL2C_THREAD_CONTROL_BLOCK */
+    /* IL2C_THREAD_CONTROL_BLOCK: Important field order! */
     IL2C_EXECUTION_FRAME* pFrame__;
     IL2C_EXCEPTION_FRAME* pTopUnwindTarget__;
-    intptr_t rawHandle__;
+    volatile intptr_t rawHandle__;
+    int32_t id__;
 
     System_Delegate* start__;
 };
 
-IL2C_DECLARE_RUNTIME_TYPE(System_Threading_Thread);
-
 #define System_Threading_Thread_VTABLE__ System_Object_VTABLE__
+
+IL2C_DECLARE_RUNTIME_TYPE(System_Threading_Thread);
 
 extern void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threading_ThreadStart* start);
 extern void System_Threading_Thread_Start(System_Threading_Thread* this__);
 extern void System_Threading_Thread_Join(System_Threading_Thread* this__);
+extern int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* this__);
 
 extern /* static */ System_Threading_Thread* System_Threading_Thread_get_CurrentThread();
 extern /* static */ void System_Threading_Thread_Sleep(int millisecondsTimeout);

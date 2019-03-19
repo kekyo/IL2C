@@ -29,14 +29,7 @@ struct IL2C_FIXED_INSTANCES_DECL
     volatile void* pReferences[3];
 };
 
-typedef volatile struct IL2C_THREAD_CONTROL_BLOCK_DECL
-{
-    IL2C_EXECUTION_FRAME* pFrame__;
-    IL2C_EXCEPTION_FRAME* pTopUnwindTarget__;
-    intptr_t rawHandle__;
-} IL2C_THREAD_CONTROL_BLOCK;
-
-static IL2C_THREAD_CONTROL_BLOCK g_MainThread__;
+IL2C_TLS_INDEX g_TlsIndex__;
 
 static IL2C_STATIC_FIELDS* g_pBeginStaticFields__ = NULL;
 
@@ -189,13 +182,43 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
     il2c_assert(pNewFrame != NULL);
     il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
 
-    while (1)
+    // First arrived current native thread: Auto attaching managed thread.
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    if (pThreadContext == NULL)
     {
-        IL2C_EXECUTION_FRAME* pNext = g_pBeginFrame__;
-        ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = pNext;
-        if (il2c_icmpxchgptr(&g_pBeginFrame__, pNewFrame, pNext) == pNext)
+#if defined(IL2C_USE_LINE_INFORMATION)
+        System_Threading_Thread* pThread = il2c_get_uninitialized_object__(
+            il2c_typeof(System_Threading_Thread),
+            pFile, line);
+#else
+        System_Threading_Thread* pThread = il2c_get_uninitialized_object__(
+            il2c_typeof(System_Threading_Thread));
+#endif
+
+        pThread->pFrame__ = pNewFrame;
+        pThread->rawHandle__ = il2c_get_current_thread__();
+        pThread->id__ = il2c_get_current_thread_id__();
+
+        // Save IL2C_THREAD_CONTROL_BLOCK into tls.
+        il2c_set_tls_value(g_TlsIndex__, (void*)&pThread->pFrame__);
+
+        // Register into statically resource.
+        // NOTE: Auto attached Thread class instances aren't freed when before shutdown.
+        //   If we instantiated with Thread.Start(), it's manually allocated and can collect by GC.
+        //   (See System_Threading_Thread_InternalEntryPoint())
+        il2c_register_fixed_instance__(pThread);
+    }
+    // Got thread control block:
+    else
+    {
+        while (1)
         {
-            break;
+            IL2C_EXECUTION_FRAME* pNext = pThreadContext->pFrame__;
+            ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = pNext;
+            if (il2c_icmpxchgptr(&pThreadContext->pFrame__, pNewFrame, pNext) == pNext)
+            {
+                break;
+            }
         }
     }
 }
@@ -215,7 +238,10 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     il2c_collect__(false);
 #endif
 
-    g_pBeginFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    il2c_assert(pThreadContext != NULL);
+
+    pThreadContext->pFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
 }
 
 /////////////////////////////////////////////////////////////
@@ -713,12 +739,15 @@ static void il2c_collect__(bool finalShutdown)
         return;
     }
 
-#if defined(IL2C_USE_LINE_INFORMATION)
+#if defined(_DEBUG)
     uint32_t collectCount = g_CollectCount++;
     if (g_CollectCountBreak != -1)
     {
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
+#endif
+
+#if defined(IL2C_USE_LINE_INFORMATION)
     il2c_runtime_debug_log_format(
         L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, Frame=0x{2:p}, StaticFields=0x{3:p}, {4:s}({5:d})",
         collectCount,
@@ -1085,41 +1114,51 @@ void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTI
     il2c_assert(pUnwindTarget != NULL);
     il2c_assert(filter != NULL);
 
-    pUnwindTarget->pFrame = g_pBeginFrame__;
+    // TODO: The tcb will always acquired?
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    il2c_assert(pThreadContext != NULL);
+
+    pUnwindTarget->pFrame = pThreadContext->pFrame__;
     pUnwindTarget->ex = NULL;   // Current caught exception
     pUnwindTarget->filter = filter;
-    pUnwindTarget->pNext = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget);
+    pUnwindTarget->pNext = il2c_ixchgptr(&pThreadContext->pUnwindTarget__, pUnwindTarget);
 }
 
 void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget)
 {
     il2c_assert(pUnwindTarget != NULL);
 
-    IL2C_EXCEPTION_FRAME* p = il2c_ixchgptr(&g_pTopUnwindTarget__, pUnwindTarget->pNext);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    il2c_assert(pThreadContext != NULL);
+
+    IL2C_EXCEPTION_FRAME* p = il2c_ixchgptr(&pThreadContext->pUnwindTarget__, pUnwindTarget->pNext);
     il2c_assert(p == pUnwindTarget);
     (void)p;
 }
 
 static void il2c_do_throw__(
-    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t filterNumber)
+    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, int16_t filterNumber, IL2C_THREAD_CONTEXT* pThreadContext)
 {
     il2c_assert(ex != NULL);
     il2c_assert(pTargetFrame != NULL);
+    il2c_assert(pThreadContext != NULL);
 
     // Update current exception frame.
     pTargetFrame->ex = ex;
-    g_pTopUnwindTarget__ = pTargetFrame;
+    pThreadContext->pUnwindTarget__ = pTargetFrame;
 
     // Update execution frame.
-    g_pBeginFrame__ = pTargetFrame->pFrame;
+    pThreadContext->pFrame__ = pTargetFrame->pFrame;
 
     // Transision to target handler.
     il2c_longjmp((void*)pTargetFrame->saved, filterNumber);
 }
 
-static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame)
+static void il2c_throw_internal__(
+    System_Exception* ex, IL2C_EXCEPTION_FRAME* pTargetFrame, IL2C_THREAD_CONTEXT* pThreadContext)
 {
     il2c_assert(ex != NULL);
+    il2c_assert(pThreadContext != NULL);
 
     IL2C_EXCEPTION_FRAME* pFrame = pTargetFrame;
     IL2C_EXCEPTION_FRAME* pFinallyFrame = NULL;
@@ -1146,13 +1185,13 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
             if (pFinallyFrame != NULL)
             {
                 // Send to finally
-                il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
+                il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY, pThreadContext);
             }
             else
             {
                 // NOTE: This place is the first-chance.
                 // Send to catch
-                il2c_do_throw__(ex, pFrame, filterNumber);
+                il2c_do_throw__(ex, pFrame, filterNumber, pThreadContext);
             }
         }
 
@@ -1164,7 +1203,7 @@ static void il2c_throw_internal__(System_Exception* ex, IL2C_EXCEPTION_FRAME* pT
     if (pFinallyFrame != NULL)
     {
         // Send to finally
-        il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY);
+        il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY, pThreadContext);
     }
 
     // TODO: Unhandled exception
@@ -1180,33 +1219,39 @@ void il2c_throw__(System_Exception* ex)
 {
     il2c_assert(ex != NULL);
 
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    il2c_assert(pThreadContext != NULL);
+
     // If this state is inside for caught block, skip current frame.
     // (Throwing new exception instance)
     IL2C_EXCEPTION_FRAME* pFrame =
-        (g_pTopUnwindTarget__ != NULL) ?
-            ((g_pTopUnwindTarget__->ex != NULL) ? g_pTopUnwindTarget__->pNext : g_pTopUnwindTarget__) :
+        (pThreadContext->pUnwindTarget__ != NULL) ?
+            ((pThreadContext->pUnwindTarget__->ex != NULL) ? pThreadContext->pUnwindTarget__->pNext : pThreadContext->pUnwindTarget__) :
         NULL;
 
-    il2c_throw_internal__(ex, pFrame);
+    il2c_throw_internal__(ex, pFrame, pThreadContext);
 }
 
 void il2c_rethrow(void)
 {
-    il2c_assert(g_pTopUnwindTarget__ != NULL);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    il2c_assert(pThreadContext != NULL);
+
+    il2c_assert(pThreadContext->pUnwindTarget__ != NULL);
 
     // If this state is inside for caught block
-    if (g_pTopUnwindTarget__->ex != NULL)
+    if (pThreadContext->pUnwindTarget__->ex != NULL)
     {
         // Unwind one frame.
-        System_Exception* ex = g_pTopUnwindTarget__->ex;
-        il2c_ixchgptr(&g_pTopUnwindTarget__, g_pTopUnwindTarget__->pNext);
+        System_Exception* ex = pThreadContext->pUnwindTarget__->ex;
+        il2c_ixchgptr(&pThreadContext->pUnwindTarget__, pThreadContext->pUnwindTarget__->pNext);
 
         // Throw with this exception
-        il2c_throw_internal__(ex, g_pTopUnwindTarget__);
+        il2c_throw_internal__(ex, pThreadContext->pUnwindTarget__, pThreadContext);
     }
 
     // Search nearest caught exception
-    IL2C_EXCEPTION_FRAME* pFrame = g_pTopUnwindTarget__->pNext;
+    IL2C_EXCEPTION_FRAME* pFrame = pThreadContext->pUnwindTarget__->pNext;
     while (pFrame != NULL)
     {
         // Found.
@@ -1214,7 +1259,7 @@ void il2c_rethrow(void)
         if (ex != NULL)
         {
             // Throw with this exception (at the current frame)
-            il2c_throw_internal__(ex, g_pTopUnwindTarget__);
+            il2c_throw_internal__(ex, pThreadContext->pUnwindTarget__, pThreadContext);
         }
         pFrame = pFrame->pNext;
     }
@@ -1265,13 +1310,11 @@ static il2c_sighandler g_SIGSEGV_saved = SIG_DFL;
 /////////////////////////////////////////////////////////////
 // IL2C runtime initialzer / shutdown
 
-void il2c_initialize__(intptr_t mainThreadHandle)
+void il2c_initialize__(void)
 {
     g_InitializerCount++;
 
-    g_MainThread__.pFrame__ = NULL;
-    g_MainThread__.pTopUnwindTarget__ = NULL;
-    g_MainThread__.rawHandle__ = mainThreadHandle;
+    g_TlsIndex__ = il2c_tls_alloc();
 
     g_pBeginHeader__ = NULL;
     g_pBeginStaticFields__ = NULL;
@@ -1289,13 +1332,13 @@ void il2c_initialize__(intptr_t mainThreadHandle)
 
 void il2c_shutdown__(void)
 {
-    il2c_assert(g_pTopUnwindTarget__ == NULL);
-
 #if defined(IL2C_USE_LINE_INFORMATION)
     il2c_collect__(true, __FILE__, __LINE__);
 #else
     il2c_collect__(true);
 #endif
+
+    il2c_tls_free(g_TlsIndex__);
 
 #ifdef IL2C_USE_SIGNAL
     signal(SIGSEGV, g_SIGSEGV_saved);

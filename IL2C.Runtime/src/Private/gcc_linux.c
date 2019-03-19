@@ -111,9 +111,7 @@ IL2C_TLS_INDEX il2c_tls_alloc(void)
 
 void* il2c_get_tls_value(IL2C_TLS_INDEX tlsIndex)
 {
-    void* value;
-    int result = pthread_getspecific((pthread_key_t)tlsIndex, &value);
-    return (result == 0) ? value : NULL;
+    return pthread_getspecific((pthread_key_t)tlsIndex);
 }
 
 void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value)
@@ -122,7 +120,7 @@ void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value)
     il2c_assert(result == 0);
 }
 
-intptr_t il2c_create_thread__(start_routine entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
+intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
 {
     pthread_t handle;
 
@@ -137,7 +135,7 @@ void il2c_join_thread__(intptr_t handle)
     il2c_assert(handle != 0);
 
     void* value;
-    int result = pthread_join((pthread_t)handle, &value);
+    pthread_join((pthread_t)handle, &value);
 }
 
 // NOT Azure Sphere
@@ -199,8 +197,7 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 void il2c_initialize(void)
 {
-    intptr_t mainThreadHandle = (intptr_t)pthread_self();
-    il2c_initialize__(mainThreadHandle);
+    il2c_initialize__();
 }
 
 void il2c_shutdown(void)

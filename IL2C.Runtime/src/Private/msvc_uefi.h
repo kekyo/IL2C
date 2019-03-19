@@ -68,6 +68,7 @@ typedef intptr_t IL2C_TLS_INDEX;
 #define IL2C_THREAD_ENTRY_POINT_RESULT_TYPE void
 #define IL2C_THREAD_ENTRY_POINT_RETURN(value) ((void)0)
 #define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
+typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
 
 // TODO: has to get real handle
 #define il2c_get_current_thread__() ((intptr_t)0)

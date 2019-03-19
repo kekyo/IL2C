@@ -157,9 +157,7 @@ void il2c_initialize(void)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
 
-    // TODO:
-    intptr_t mainThreadHandle = (intptr_t)GetCurrentThread();
-    il2c_initialize__(mainThreadHandle);
+    il2c_initialize__();
 }
 
 void il2c_shutdown(void)

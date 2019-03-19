@@ -32,8 +32,10 @@ extern "C" {
 
 #include <unistd.h>
 #include <pthread.h>
-#include <sys/syscall.h>
 #include <sys/types.h>
+#if !defined(__AZURE_SPHERE__)
+#include <sys/syscall.h>
+#endif
 
 // Compatibility symbols (required platform depended functions)
 extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);
@@ -87,12 +89,17 @@ extern void* il2c_get_tls_value(IL2C_TLS_INDEX tlsIndex);
 extern void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value);
 
 #define IL2C_THREAD_ENTRY_POINT_RESULT_TYPE void*
-#define IL2C_THREAD_ENTRY_POINT_RETURN(value) pthread_exit(NULL); return NULL
+#define IL2C_THREAD_ENTRY_POINT_RETURN(value) pthread_exit(value); return value
 #define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
+typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
 
 #define il2c_get_current_thread__() ((intptr_t)pthread_self())
+#if !defined(__AZURE_SPHERE__)
 #define il2c_get_current_thread_id__() ((int32_t)syscall(SYS_gettid))
-extern intptr_t il2c_create_thread__(start_routine entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter);
+#else
+#define il2c_get_current_thread_id__() ((int32_t)pthread_self())
+#endif
+extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter);
 #define il2c_resume_thread__(handle)
 extern void il2c_join_thread__(intptr_t handle);
 

@@ -1,8 +1,5 @@
 #include "il2c_private.h"
 
-// TODO:
-#include <process.h>
-
 /////////////////////////////////////////////////////////////
 // System.Threading.Thread
 
@@ -34,7 +31,7 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     il2c_assert(pThread->vptr0__ == &System_Threading_Thread_VTABLE__);
     il2c_assert(il2c_isinst(pThread->start__, System_Threading_ThreadStart) != NULL);
 
-    // It's naive for passing handle if startup with suspending not implemented. (pthread)
+    // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
     while (pThread->rawHandle__ == 0);
 
     // Invoke delegate.
@@ -47,8 +44,6 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
 #endif
-
-    _endthreadex(0);
 
     IL2C_THREAD_ENTRY_POINT_RETURN(0);
 }
@@ -71,7 +66,7 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     // TODO: OutOfMemoryException
     il2c_assert(rawHandle > 0);
 
-    // It's naive for passing handle if startup with suspending not implemented. (pthread)
+    // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
     il2c_ixchgptr(&this__->rawHandle__, rawHandle);
     il2c_resume_thread__(rawHandle);
 }
@@ -93,7 +88,7 @@ int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* thi
     return this__->id__;
 }
 
-System_Threading_Thread* System_Threading_Thread_get_CurrentThread()
+System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void)
 {
     // NOTE: Will assertion failed if doesn't construct any execution frames.
     //   But maybe construct it because we'll save the Thread instance into execution frame strcuture...

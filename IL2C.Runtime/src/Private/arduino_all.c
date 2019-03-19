@@ -334,11 +334,6 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
     return (acc);
 }
 
-void il2c_sleep(uint32_t milliseconds)
-{
-    // TODO:
-}
-
 #if defined(_DEBUG)
 #include <malloc.h>
 void il2c_free(void* p)
@@ -353,11 +348,60 @@ void il2c_free(void* p)
 }
 #endif
 
-#if defined(_POSIX_THREADS)
+void il2c_sleep(uint32_t milliseconds)
+{
+#if defined(portTICK_RATE_MS)
+    vTaskDelay(milliseconds / portTICK_RATE_MS);
+#else
+    delay(milliseconds);
+#endif
+}
+
+#if defined(portNUM_PROCESSORS)
+
+intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
+{
+    il2c_assert(entryPoint != 0);
+
+    TaskHandle_t handle;
+
+#if defined(tskNO_AFFINITY)
+    // ESP32 related: https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/system/freertos.html
+    BaseType_t result = xTaskCreatePinnedToCore(
+        entryPoint,
+        "IL2C.Thread",
+        8192,
+        parameter,
+        1,
+        &handle,
+        tskNO_AFFINITY);
+#else
+    BaseType_t result = xTaskCreate(
+        entryPoint,
+        "IL2C.Thread",
+        8192,
+        parameter,
+        1,
+        &handle);
+#endif
+    il2c_assert(result == pdPASS);
+
+    return (intptr_t)handle;
+}
+
+void il2c_join_thread__(intptr_t handle)
+{
+    il2c_assert(handle != 0);
+
+    // TODO:
+}
+
+#elif defined(_POSIX_THREADS)
+
 IL2C_TLS_INDEX il2c_tls_alloc(void)
 {
     pthread_key_t key;
-    int result = pthread_key_create(&key, il2c_free);
+    int result = pthread_key_create(&key, NULL);
     il2c_assert(result == 0);
 
     return key;
@@ -365,9 +409,7 @@ IL2C_TLS_INDEX il2c_tls_alloc(void)
 
 void* il2c_get_tls_value(IL2C_TLS_INDEX tlsIndex)
 {
-    void* value;
-    int result = pthread_getspecific((pthread_key_t)tlsIndex, &value);
-    return (result == 0) ? value : NULL;
+    return pthread_getspecific((pthread_key_t)tlsIndex);
 }
 
 void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value)
@@ -376,7 +418,7 @@ void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value)
     il2c_assert(result == 0);
 }
 
-intptr_t il2c_create_thread__(start_routine entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
+intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
 {
     pthread_t handle;
 
@@ -391,8 +433,9 @@ void il2c_join_thread__(intptr_t handle)
     il2c_assert(handle != 0);
 
     void* value;
-    int result = pthread_join((pthread_t)handle, &value);
+    pthread_join((pthread_t)handle, &value);
 }
+
 #endif
 
 void il2c_runtime_debug_log__(const char* message)

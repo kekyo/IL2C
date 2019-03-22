@@ -171,17 +171,14 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 }
 
 /////////////////////////////////////////////////////////////
-// Execution frame linker functions
+// Thread context functions
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFrame, const char* pFile, int line)
+IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line)
 #else
-void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFrame)
+IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
 #endif
 {
-    il2c_assert(pNewFrame != NULL);
-    il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
-
     // First arrived arbitary native thread: Auto attaching managed thread.
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
     if (pThreadContext == NULL)
@@ -196,12 +193,13 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
 #endif
 
         // Initialize thread context.
-        pThread->pFrame__ = pNewFrame;
-        pThread->rawHandle__ = il2c_get_current_thread__();
-        pThread->id__ = il2c_get_current_thread_id__();
+        pThreadContext = (IL2C_THREAD_CONTEXT*)&pThread->pFrame__;
 
-        // Save IL2C_THREAD_CONTROL_BLOCK into tls.
-        il2c_set_tls_value(g_TlsIndex__, (void*)&pThread->pFrame__);
+        pThreadContext->rawHandle__ = il2c_get_current_thread__();
+        pThreadContext->id__ = il2c_get_current_thread_id__();
+
+        // Save IL2C_THREAD_CONTEXT into tls.
+        il2c_set_tls_value(g_TlsIndex__, (void*)pThreadContext);
 
         // Register into statically resource.
         // NOTE: Auto attached Thread class instances aren't freed when before shutdown.
@@ -209,17 +207,36 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
         //   (See System_Threading_Thread_InternalEntryPoint())
         il2c_register_fixed_instance__(pThread);
     }
-    // Got thread context:
-    else
+
+    return pThreadContext;
+}
+
+/////////////////////////////////////////////////////////////
+// Execution frame linker functions
+
+#if defined(IL2C_USE_LINE_INFORMATION)
+void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFrame, const char* pFile, int line)
+#else
+void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFrame)
+#endif
+{
+    il2c_assert(pNewFrame != NULL);
+    il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
+
+    // Get thread context.
+#if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(pFile, line);
+#else
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
+#endif
+
+    while (1)
     {
-        while (1)
+        IL2C_EXECUTION_FRAME* pNext = pThreadContext->pFrame__;
+        ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = pNext;
+        if (il2c_icmpxchgptr(&pThreadContext->pFrame__, pNewFrame, pNext) == pNext)
         {
-            IL2C_EXECUTION_FRAME* pNext = pThreadContext->pFrame__;
-            ((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ = pNext;
-            if (il2c_icmpxchgptr(&pThreadContext->pFrame__, pNewFrame, pNext) == pNext)
-            {
-                break;
-            }
+            break;
         }
     }
 }
@@ -243,6 +260,8 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     il2c_assert(pThreadContext != NULL);
 
     pThreadContext->pFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
+
+    // TODO: Remove thread context for the last frame?
 }
 
 /////////////////////////////////////////////////////////////

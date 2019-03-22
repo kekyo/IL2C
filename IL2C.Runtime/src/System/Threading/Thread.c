@@ -52,12 +52,12 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     // TODO: catch exception.
     System_Threading_ThreadStart_Invoke((System_Threading_ThreadStart*)(pThread->start__));
 
-    // Unregister.
-    il2c_unregister_fixed_instance__(pThread);
-
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
 #endif
+
+    // Unregister.
+    il2c_unregister_fixed_instance__(pThread);
 
     IL2C_THREAD_ENTRY_POINT_RETURN(0);
 }
@@ -69,7 +69,7 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     // TODO: InvalidOperationException? (Auto attached managed thread)
     il2c_assert(this__->start__ != NULL);
 
-    // TODO: ThreadStateException?
+    // TODO: ThreadStateException? (Already started)
     il2c_assert(this__->rawHandle__ == -1);
 
     // Register into statically resource.
@@ -106,12 +106,12 @@ int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* thi
 
 System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void)
 {
-    // NOTE: Will assertion failed if doesn't construct any execution frames.
-    //   But maybe construct it because we'll save the Thread instance into execution frame strcuture...
-    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
-
-    // TODO: Auto attach now?
-    il2c_assert(pThreadContext != NULL);
+    // Get thread context.
+#if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(__FILE__, __LINE__);
+#else
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
+#endif
 
     // Come from unoffsetted:
     return (System_Threading_Thread*)((*(uint8_t*)pThreadContext) - offsetof(System_Threading_Thread, pFrame__));

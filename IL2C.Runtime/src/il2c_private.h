@@ -161,6 +161,12 @@ typedef volatile struct IL2C_THREAD_CONTEXT_DECL
     int32_t id__;
 } IL2C_THREAD_CONTEXT;
 
+#if defined(IL2C_USE_LINE_INFORMATION)
+IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);
+#else
+IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void);
+#endif
+
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs
 

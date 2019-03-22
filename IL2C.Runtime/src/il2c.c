@@ -153,7 +153,7 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 
     // String, Delegate or Array (IL2C_TYPE_VARIABLE):
     // throw new InvalidProgramException();
-    il2c_assert((type->flags & IL2C_TYPE_VARIABLE) == 0);
+    il2c_assert((type->flags & IL2C_TYPE_VARIABLE) != IL2C_TYPE_VARIABLE);
     il2c_assert(type->bodySize >= sizeof(void*));   // vptr0
 
     // Setup vptr0
@@ -182,7 +182,7 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
     il2c_assert(pNewFrame != NULL);
     il2c_assert(((IL2C_EXECUTION_FRAME*)pNewFrame)->pNext__ == NULL);
 
-    // First arrived current native thread: Auto attaching managed thread.
+    // First arrived arbitary native thread: Auto attaching managed thread.
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
     if (pThreadContext == NULL)
     {
@@ -195,6 +195,7 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
             il2c_typeof(System_Threading_Thread));
 #endif
 
+        // Initialize thread context.
         pThread->pFrame__ = pNewFrame;
         pThread->rawHandle__ = il2c_get_current_thread__();
         pThread->id__ = il2c_get_current_thread_id__();
@@ -208,7 +209,7 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
         //   (See System_Threading_Thread_InternalEntryPoint())
         il2c_register_fixed_instance__(pThread);
     }
-    // Got thread control block:
+    // Got thread context:
     else
     {
         while (1)
@@ -402,7 +403,7 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
 
     // This type has the custom mark handler.
     // Because it's variable type, can't fix pointer offsets.
-    if ((pHeader->type->flags & IL2C_TYPE_VARIABLE) == IL2C_TYPE_VARIABLE)
+    if ((pHeader->type->flags & IL2C_TYPE_WITH_MARK_HANDLER) == IL2C_TYPE_WITH_MARK_HANDLER)
     {
         IL2C_MARK_HANDLER pMarkHandler = (IL2C_MARK_HANDLER)(pHeader->type->markTarget);
         if (pMarkHandler != NULL)
@@ -553,7 +554,7 @@ static void il2c_step1_clear_gcmark__(void)
     }
 }
 
-static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
+void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 {
     // Mark headers.
     IL2C_GC_TRACKING_INFORMATION* pCurrentFrame = pBeginFrame;
@@ -749,10 +750,9 @@ static void il2c_collect__(bool finalShutdown)
 
 #if defined(IL2C_USE_LINE_INFORMATION)
     il2c_runtime_debug_log_format(
-        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, Frame=0x{2:p}, StaticFields=0x{3:p}, {4:s}({5:d})",
+        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}, {3:s}({4:d})",
         collectCount,
         g_pBeginHeader__,
-        g_pBeginFrame__,
         g_pBeginStaticFields__,
         pFile, line);
 #else
@@ -767,18 +767,11 @@ static void il2c_collect__(bool finalShutdown)
     il2c_step1_clear_gcmark__();
     il2c_check_heap();
 
-    //////////////////////////////////////////////////
-    // GC Step 2-1:
-
-    il2c_step2_mark_gcmark__(g_pBeginFrame__);
-    il2c_check_heap();
-
     //////////////////////////////////////
-    // GC Step 2-2:
+    // GC Step 2:
 
     if (!finalShutdown)
     {
-        // The final collection step has to ignore both static fields and fixed instances.
         il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
         il2c_check_heap();
 
@@ -787,6 +780,7 @@ static void il2c_collect__(bool finalShutdown)
     }
     else
     {
+        // (The final collection step has to ignore both static fields and fixed instances.)
         il2c_unregister_all_fixed_instance_for_final_shutdown__();
         il2c_check_heap();
     }

@@ -155,9 +155,7 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 void il2c_initialize(void)
 {
-    // TODO:
-    intptr_t mainThreadHandle = (intptr_t)GetCurrentThread();
-    il2c_initialize__(mainThreadHandle);
+    il2c_initialize__();
 }
 
 void il2c_shutdown(void)

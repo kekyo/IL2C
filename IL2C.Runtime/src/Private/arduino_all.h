@@ -87,6 +87,7 @@ typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C
 extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter);
 #define il2c_resume_thread__(handle)
 extern void il2c_join_thread__(intptr_t handle);
+#define il2c_close_thread_handle__(handle) vTaskDelete((TaskHandle_t)(handle))
 
 // POSIX threads (pthread)
 #elif defined(_POSIX_THREADS)
@@ -109,6 +110,7 @@ typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C
 extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, void* parameter);
 #define il2c_resume_thread__(handle)
 extern void il2c_join_thread__(intptr_t handle);
+#define il2c_close_thread_handle__(handle)
 
 // Lack for anything scheduler
 #else
@@ -125,7 +127,7 @@ typedef intptr_t IL2C_TLS_INDEX;
 typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
 
 #define il2c_get_current_thread__() ((intptr_t)0)
-#define il2c_get_current_thread_id__() ((intptr_t)0)
+#define il2c_get_current_thread_id__() ((int32_t)0)
 #define il2c_create_thread__(entryPoint, parameter) ((intptr_t)-1)
 #define il2c_resume_thread__(handle) ((void)0)
 #define il2c_join_thread__(handle) ((void)0)

@@ -81,6 +81,7 @@ typedef unsigned int (__stdcall *IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY
     ((intptr_t)_beginthreadex(NULL, 0, entryPoint, parameter, CREATE_SUSPENDED, NULL))
 #define il2c_resume_thread__(handle) ResumeThread((HANDLE)handle)
 extern void il2c_join_thread__(intptr_t handle);
+#define il2c_close_thread_handle__(handle) CloseHandle((HANDLE)(handle))
 
 #endif
 

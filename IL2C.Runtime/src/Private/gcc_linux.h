@@ -102,6 +102,7 @@ typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C
 extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter);
 #define il2c_resume_thread__(handle)
 extern void il2c_join_thread__(intptr_t handle);
+#define il2c_close_thread_handle__(handle)
 
 #endif
 

@@ -61,8 +61,8 @@ extern void il2c_sleep(uint32_t milliseconds);
 typedef DWORD IL2C_TLS_INDEX;
 #define il2c_tls_alloc() ((IL2C_TLS_INDEX)TlsAlloc())
 #define il2c_tls_free(tlsIndex) TlsFree((DWORD)(tlsIndex))
-#define il2c_get_tls_value(tlsIndex) (TlsGetValue((DWORD)(tlsIndex))
-#define il2c_set_tls_value(tlsIndex, value) (TlsSetValue((DWORD)(tlsIndex), value)
+#define il2c_get_tls_value(tlsIndex) TlsGetValue((DWORD)(tlsIndex))
+#define il2c_set_tls_value(tlsIndex, value) TlsSetValue((DWORD)(tlsIndex), value)
 
 #define IL2C_THREAD_ENTRY_POINT_RESULT_TYPE unsigned int __stdcall
 #define IL2C_THREAD_ENTRY_POINT_RETURN(value) _endthreadex(value); return value
@@ -76,7 +76,7 @@ typedef unsigned int (__stdcall *IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY
     ((intptr_t)_beginthreadex(NULL, 0, entryPoint, parameter, CREATE_SUSPENDED, NULL))
 #define il2c_resume_thread__(handle) ResumeThread((HANDLE)handle)
 extern void il2c_join_thread__(intptr_t handle);
-#define il2c_get_thread_id__(handle) ((int32_t)GetThreadId((HANDLE)handle))
+#define il2c_close_thread_handle__(handle)CloseHandle((HANDLE)(handle))
 
 #endif
 

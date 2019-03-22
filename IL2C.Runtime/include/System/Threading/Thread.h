@@ -18,20 +18,28 @@ typedef System_Object_VTABLE_DECL__ System_Threading_Thread_VTABLE_DECL__;
 
 struct System_Threading_Thread
 {
-	System_Threading_Thread_VTABLE_DECL__* vptr0__;
-	System_Delegate* start__;
-	intptr_t rawHandle__;
+    System_Threading_Thread_VTABLE_DECL__* vptr0__;
+
+    /* IL2C_THREAD_CONTEXT: Important field order! */
+    IL2C_EXECUTION_FRAME* pFrame__;
+    IL2C_EXCEPTION_FRAME* pTopUnwindTarget__;
+    volatile intptr_t rawHandle__;
+    int32_t id__;
+
+    System_Delegate* start__;
 };
+
+extern System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__;
 
 IL2C_DECLARE_RUNTIME_TYPE(System_Threading_Thread);
 
-#define System_Threading_Thread_VTABLE__ System_Object_VTABLE__
-
 extern void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threading_ThreadStart* start);
+extern void System_Threading_Thread_Finalize(System_Threading_Thread* this__);
 extern void System_Threading_Thread_Start(System_Threading_Thread* this__);
 extern void System_Threading_Thread_Join(System_Threading_Thread* this__);
+extern int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* this__);
 
-extern /* static */ System_Threading_Thread* System_Threading_Thread_get_CurrentThread();
+extern /* static */ System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void);
 extern /* static */ void System_Threading_Thread_Sleep(int millisecondsTimeout);
 
 #ifdef __cplusplus

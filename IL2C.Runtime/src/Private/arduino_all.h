@@ -59,9 +59,80 @@ extern void il2c_free(void* p);
 #define il2c_ixchgptr(ppDest, pNewValue) __sync_lock_test_and_set((void**)(ppDest), (void*)(pNewValue))
 #define il2c_icmpxchg(pDest, newValue, comperandValue) __sync_val_compare_and_swap((interlock_t*)(pDest), (interlock_t)(comperandValue), (interlock_t)(newValue))
 #define il2c_icmpxchgptr(ppDest, pNewValue, pComperandValue) __sync_val_compare_and_swap((void**)(ppDest), (void*)(pComperandValue), (void*)(pNewValue))
-extern void il2c_sleep(uint32_t milliseconds);
+#define il2c_memory_barrier() __sync_synchronize()
 
 #define il2c_longjmp longjmp
+
+// FreeRTOS
+#if defined(portNUM_PROCESSORS)
+
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
+extern void il2c_sleep(uint32_t milliseconds);
+
+typedef BaseType_t IL2C_TLS_INDEX;
+#define il2c_tls_alloc() ((IL2C_TLS_INDEX)((configNUM_THREAD_LOCAL_STORAGE_POINTERS) - 1))
+#define il2c_tls_free(tlsIndex) ((void)0)
+#define il2c_get_tls_value(tlsIndex) pvTaskGetThreadLocalStoragePointer(NULL, tlsIndex)
+#define il2c_set_tls_value(tlsIndex, value) vTaskSetThreadLocalStoragePointer(NULL, tlsIndex, value)
+
+#define IL2C_THREAD_ENTRY_POINT_RESULT_TYPE void
+#define IL2C_THREAD_ENTRY_POINT_RETURN(value) ((void)0)
+#define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
+typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
+
+#define il2c_get_current_thread__() ((intptr_t)xTaskGetCurrentTaskHandle())
+#define il2c_get_current_thread_id__() ((int32_t)xTaskGetCurrentTaskHandle())
+extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter);
+#define il2c_resume_thread__(handle)
+extern void il2c_join_thread__(intptr_t handle);
+#define il2c_close_thread_handle__(handle) vTaskDelete((TaskHandle_t)(handle))
+
+// POSIX threads (pthread)
+#elif defined(_POSIX_THREADS)
+
+#include <pthread.h>
+
+typedef pthread_key_t IL2C_TLS_INDEX;
+extern IL2C_TLS_INDEX il2c_tls_alloc(void);
+#define il2c_tls_free(tlsIndex) pthread_key_delete(tlsIndex)
+extern void* il2c_get_tls_value(IL2C_TLS_INDEX tlsIndex);
+extern void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value);
+
+#define IL2C_THREAD_ENTRY_POINT_RESULT_TYPE void*
+#define IL2C_THREAD_ENTRY_POINT_RETURN(value) pthread_exit(NULL); return NULL
+#define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
+typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
+
+#define il2c_get_current_thread__() ((intptr_t)pthread_self())
+#define il2c_get_current_thread_id__() ((int32_t)pthread_self())
+extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, void* parameter);
+#define il2c_resume_thread__(handle)
+extern void il2c_join_thread__(intptr_t handle);
+#define il2c_close_thread_handle__(handle)
+
+// Lack for anything scheduler
+#else
+
+typedef intptr_t IL2C_TLS_INDEX;
+#define il2c_tls_alloc() ((IL2C_TLS_INDEX)0)
+#define il2c_tls_free(tlsIndex) (tlsIndex = 0)
+#define il2c_get_tls_value(tlsIndex) ((void*)(tlsIndex))
+#define il2c_set_tls_value(tlsIndex, value) (tlsIndex = (intptr_t)(value))
+
+#define IL2C_THREAD_ENTRY_POINT_RESULT_TYPE void
+#define IL2C_THREAD_ENTRY_POINT_RETURN(value) ((void)0)
+#define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
+typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
+
+#define il2c_get_current_thread__() ((intptr_t)0)
+#define il2c_get_current_thread_id__() ((int32_t)0)
+#define il2c_create_thread__(entryPoint, parameter) ((intptr_t)-1)
+#define il2c_resume_thread__(handle) ((void)0)
+#define il2c_join_thread__(handle) ((void)0)
+
+#endif
 
 #endif
 

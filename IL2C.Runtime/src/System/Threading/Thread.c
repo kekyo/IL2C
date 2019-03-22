@@ -1,8 +1,5 @@
 #include "il2c_private.h"
 
-// TODO:
-#include <process.h>
-
 /////////////////////////////////////////////////////////////
 // System.Threading.Thread
 
@@ -14,105 +11,110 @@ void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threa
     il2c_assert(start != NULL);
 
     this__->start__ = (System_Delegate*)start;
+    this__->rawHandle__ = -1;
 }
 
-static unsigned int __stdcall System_Threading_Thread_InternalEntryPoint(void* parameter)
+void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
+{
+    il2c_assert(this__ != NULL);
+
+    if (this__->rawHandle__ != -1)
+    {
+        il2c_close_thread_handle__(this__->rawHandle__);
+#if defined(_DEBUG)
+        this__->rawHandle__ = -1;
+        this__->id__ = 0;
+#endif
+    }
+}
+
+extern IL2C_TLS_INDEX g_TlsIndex__;
+
+static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntryPoint(
+    IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
 {
     il2c_assert(parameter != NULL);
 
-    // Root of execution frame.
-    struct
-    {
-        const IL2C_EXECUTION_FRAME* pNext__;
-        const uint16_t objRefCount__;
-        const uint16_t valueCount__;
-        System_Threading_Thread* thread;
-    } frame__ = { NULL, 1 };
-    il2c_link_execution_frame(&frame__);
+    System_Threading_Thread* pThread = (System_Threading_Thread*)parameter;
+    il2c_assert(pThread->vptr0__ == &System_Threading_Thread_VTABLE__);
+    il2c_assert(il2c_isinst(pThread->start__, System_Threading_ThreadStart) != NULL);
 
-    // Retreive Thread instance and unpin.
-    frame__.thread = (System_Threading_Thread*)parameter;
-    il2c_unregister_fixed_instance__(frame__.thread);
+    // Set real thread id.
+    pThread->id__ = il2c_get_current_thread_id__();
 
-    il2c_assert(frame__.thread != NULL);
-    il2c_assert(frame__.thread->vptr0__ == &System_Threading_Thread_VTABLE__);
-    il2c_assert(frame__.thread->rawHandle__ != 0);
+    // Save IL2C_THREAD_CONTEXT into tls.
+    il2c_set_tls_value(g_TlsIndex__, (void*)&pThread->pFrame__);
 
-    il2c_assert(il2c_isinst(frame__.thread->start__, System_Threading_ThreadStart) != NULL);
+    // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
+    while (pThread->rawHandle__ == -1);
 
+    // Invoke delegate.
     // TODO: catch exception.
+    System_Threading_ThreadStart_Invoke((System_Threading_ThreadStart*)(pThread->start__));
 
-    System_Threading_ThreadStart_Invoke((System_Threading_ThreadStart*)(frame__.thread->start__));
+    // Unregister.
+    il2c_unregister_fixed_instance__(pThread);
 
-    il2c_unlink_execution_frame(&frame__);
+#if defined(_DEBUG)
+    il2c_set_tls_value(g_TlsIndex__, NULL);
+#endif
 
-    _endthreadex(0);
-    return 0;
+    IL2C_THREAD_ENTRY_POINT_RETURN(0);
 }
 
 void System_Threading_Thread_Start(System_Threading_Thread* this__)
 {
     il2c_assert(this__ != NULL);
+
+    // TODO: InvalidOperationException? (Auto attached managed thread)
     il2c_assert(this__->start__ != NULL);
 
-    // TODO: ThreadStateException
-    il2c_assert(this__->rawHandle__ == 0);
+    // TODO: ThreadStateException?
+    il2c_assert(this__->rawHandle__ == -1);
 
-    // Fixed Thread class instance.
+    // Register into statically resource.
     il2c_register_fixed_instance__(this__);
 
-    // TODO:
-    uintptr_t rawHandle = _beginthreadex(
-        NULL,
-        0,
-        System_Threading_Thread_InternalEntryPoint,
-        (void*)this__,
-        CREATE_SUSPENDED,
-        NULL);
+    // Create (suspended if available) thread.
+    intptr_t rawHandle = il2c_create_thread__(
+        System_Threading_Thread_InternalEntryPoint, this__);
 
     // TODO: OutOfMemoryException
-    il2c_assert(rawHandle > 0);
+    il2c_assert(rawHandle >= 0);
 
-    this__->rawHandle__ = (intptr_t)rawHandle;
-    ResumeThread((HANDLE)rawHandle);
+    // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
+    this__->rawHandle__ = rawHandle;
+    il2c_resume_thread__(rawHandle);
 }
 
 void System_Threading_Thread_Join(System_Threading_Thread* this__)
 {
     il2c_assert(this__ != NULL);
+    il2c_assert(this__->rawHandle__ != 0);
     il2c_assert(this__->start__ != NULL);
 
-    while (1)
-    {
-        MSG msg;
-        DWORD result = MsgWaitForMultipleObjects(
-            1,
-            (const HANDLE*)(&(this__->rawHandle__)),
-            FALSE,
-            INFINITE,
-            QS_ALLEVENTS);
-        switch (result)
-        {
-        case WAIT_OBJECT_0:
-            return;
-        case WAIT_OBJECT_0 + 1:
-            while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-            {
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
-            }
-            break;
-        default:
-            // TODO: ThreadAbortException?
-            break;
-        }
-    }
+    il2c_join_thread__(this__->rawHandle__);
 }
 
-System_Threading_Thread* System_Threading_Thread_get_CurrentThread()
+int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* this__)
 {
-    // TODO:
-    return NULL;
+    il2c_assert(this__ != NULL);
+    il2c_assert(this__->rawHandle__ >= 0);
+
+    return this__->id__;
+}
+
+System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void)
+{
+    // NOTE: Will assertion failed if doesn't construct any execution frames.
+    //   But maybe construct it because we'll save the Thread instance into execution frame strcuture...
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+
+    // TODO: Auto attach now?
+    il2c_assert(pThreadContext != NULL);
+
+    // Come from unoffsetted:
+    return (System_Threading_Thread*)((*(uint8_t*)pThreadContext) - offsetof(System_Threading_Thread, pFrame__));
 }
 
 void System_Threading_Thread_Sleep(int millisecondsTimeout)
@@ -123,6 +125,39 @@ void System_Threading_Thread_Sleep(int millisecondsTimeout)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Threading_Thread, "System.Threading.Thread", IL2C_TYPE_REFERENCE, sizeof(System_Threading_Thread), System_Object, 1, 0)
-IL2C_RUNTIME_TYPE_MARK_TARGET_FOR_REFERENCE(System_Threading_Thread, start__)
+static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* thread)
+{
+    il2c_assert(thread != NULL);
+    il2c_assert(thread->vptr0__ == &System_Threading_Thread_VTABLE__);
+
+    // Check start field.
+    if (thread->start__ != NULL)
+    {
+        il2c_default_mark_handler__(thread->start__);
+    }
+
+    ///////////////////////////////////////////////////////////////
+    // Check IL2C_EXECUTION_FRAME.
+    // It's important step for GC collecting sequence.
+    // All method execution frame traversal begins this location.
+
+    il2c_step2_mark_gcmark__(thread->pFrame__);
+}
+
+System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__ = {
+    0, // Adjustor offset
+    (bool(*)(void*, System_Object*))System_Object_Equals,
+    (void(*)(void*))System_Threading_Thread_Finalize,
+    (int32_t(*)(void*))System_Object_GetHashCode,
+    (System_String* (*)(void*))System_Object_ToString
+};
+
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_Threading_Thread,
+    "System.Threading.Thread",
+    IL2C_TYPE_REFERENCE | IL2C_TYPE_WITH_MARK_HANDLER,
+    sizeof(System_Threading_Thread),
+    System_Object,
+    System_Threading_Thread_MarkHandler__,
+    0)
 IL2C_RUNTIME_TYPE_END();

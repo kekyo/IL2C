@@ -65,24 +65,27 @@ void MT3620Blink_Application__ctor(MT3620Blink_Application* this__)
     stack1_0__ = MT3620Blink_Interops_epoll_create1(stack1_0__);
     /* IL_0007: call MT3620Blink.Descriptor..ctor : Application.cs(28) */
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
-    /* IL_000c: ldarg.0                         : Application.cs(30) */
+    /* IL_000c: nop                             : Application.cs(28) */
+    /* IL_000d: nop  */
+    /* IL_000e: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_000d: ldarg.0                         : Application.cs(30) */
+    /* IL_000f: ldarg.0                         : Application.cs(30) */
     frame__.stack1_1__ = this__;
-    /* IL_000e: newobj MT3620Blink.Application.AbortEvent..ctor : Application.cs(30) */
+    /* IL_0010: newobj MT3620Blink.Application.AbortEvent..ctor : Application.cs(30) */
     frame__.stack1_2__ = il2c_get_uninitialized_object(MT3620Blink_Application_AbortEvent);
     MT3620Blink_Application_AbortEvent__ctor(frame__.stack1_2__, frame__.stack1_1__);
-    /* IL_0013: stfld MT3620Blink.Application.abort : Application.cs(30) */
+    /* IL_0015: stfld MT3620Blink.Application.abort : Application.cs(30) */
     frame__.stack0_0__->abort = frame__.stack1_2__;
-    /* IL_0018: ldarg.0                         : Application.cs(31) */
+    /* IL_001a: ldarg.0                         : Application.cs(31) */
     frame__.stack0_0__ = this__;
-    /* IL_0019: ldarg.0                         : Application.cs(31) */
+    /* IL_001b: ldarg.0                         : Application.cs(31) */
     frame__.stack1_1__ = this__;
-    /* IL_001a: ldfld MT3620Blink.Application.abort : Application.cs(31) */
+    /* IL_001c: ldfld MT3620Blink.Application.abort : Application.cs(31) */
     frame__.stack1_2__ = frame__.stack1_1__->abort;
-    /* IL_001f: call MT3620Blink.Application.RegisterDescriptor : Application.cs(31) */
+    /* IL_0021: call MT3620Blink.Application.RegisterDescriptor : Application.cs(31) */
     MT3620Blink_Application_RegisterDescriptor(frame__.stack0_0__, il2c_cast_to_interface(MT3620Blink_IEPollListener, MT3620Blink_Application_AbortEvent, frame__.stack1_2__));
-    /* IL_0024: ret                             : Application.cs(32) */
+    /* IL_0026: nop                             : Application.cs(31) */
+    /* IL_0027: ret  */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -111,8 +114,15 @@ void MT3620Blink_Application_Dispose(MT3620Blink_Application* this__)
     il2c_assert(this__ != NULL);
 
     //-------------------
+    // [3-3] Local variables (!objref):
+
+    bool local0__ = false;
+
+    //-------------------
     // [3-4] Evaluation stacks (!objref):
 
+    int32_t stack0_2__;
+    bool stack0_3__;
     untyped_ptr stack1_0__;
 
     //-------------------
@@ -125,30 +135,43 @@ void MT3620Blink_Application_Dispose(MT3620Blink_Application* this__)
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0                         : Application.cs(36) */
+    /* IL_0000: nop                             : Application.cs(35) */
+    /* IL_0001: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_0001: call MT3620Blink.Descriptor.Dispose : Application.cs(36) */
+    /* IL_0002: call MT3620Blink.Descriptor.Dispose : Application.cs(36) */
     MT3620Blink_Descriptor_Dispose((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0006: ldarg.0                         : Application.cs(38) */
+    /* IL_0007: nop                             : Application.cs(36) */
+    /* IL_0008: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_0007: ldfld MT3620Blink.Application.abort : Application.cs(38) */
+    /* IL_0009: ldfld MT3620Blink.Application.abort : Application.cs(38) */
     frame__.stack0_1__ = frame__.stack0_0__->abort;
-    /* IL_000c: brfalse.s IL_0020               : Application.cs(38) */
-    if (frame__.stack0_1__ == NULL) goto IL_0020;
-    /* IL_000e: ldarg.0                         : Application.cs(40) */
-    frame__.stack0_0__ = this__;
-    /* IL_000f: ldfld MT3620Blink.Application.abort : Application.cs(40) */
-    frame__.stack0_1__ = frame__.stack0_0__->abort;
-    /* IL_0014: callvirt MT3620Blink.Descriptor.Dispose : Application.cs(40) */
-    frame__.stack0_1__->vptr0__->Dispose((MT3620Blink_Descriptor*)frame__.stack0_1__);
-    /* IL_0019: ldarg.0                         : Application.cs(41) */
-    frame__.stack0_0__ = this__;
-    /* IL_001a: ldnull                          : Application.cs(41) */
+    /* IL_000e: ldnull                          : Application.cs(38) */
     stack1_0__ = NULL;
-    /* IL_001b: stfld MT3620Blink.Application.abort : Application.cs(41) */
+    /* IL_000f: cgt.un                          : Application.cs(38) */
+    stack0_2__ = (uintptr_t)frame__.stack0_1__ > (uintptr_t)stack1_0__;
+    /* IL_0011: stloc.0                         : Application.cs(38) */
+    local0__ = (bool)stack0_2__;
+    /* IL_0012: ldloc.0                         : Application.cs(38) */
+    stack0_3__ = local0__;
+    /* IL_0013: brfalse.s IL_002a               : Application.cs(38) */
+    if (stack0_3__ == false) goto IL_002a;
+    /* IL_0015: nop                             : Application.cs(39) */
+    /* IL_0016: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_0017: ldfld MT3620Blink.Application.abort : Application.cs(40) */
+    frame__.stack0_1__ = frame__.stack0_0__->abort;
+    /* IL_001c: callvirt MT3620Blink.Descriptor.Dispose : Application.cs(40) */
+    frame__.stack0_1__->vptr0__->Dispose((MT3620Blink_Descriptor*)frame__.stack0_1__);
+    /* IL_0021: nop                             : Application.cs(40) */
+    /* IL_0022: ldarg.0  */
+    frame__.stack0_0__ = this__;
+    /* IL_0023: ldnull                          : Application.cs(41) */
+    stack1_0__ = NULL;
+    /* IL_0024: stfld MT3620Blink.Application.abort : Application.cs(41) */
     frame__.stack0_0__->abort = (MT3620Blink_Application_AbortEvent*)stack1_0__;
-IL_0020:
-    /* IL_0020: ret                             : Application.cs(43) */
+    /* IL_0029: nop                             : Application.cs(42) */
+IL_002a:
+    /* IL_002a: ret  */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -216,64 +239,65 @@ void MT3620Blink_Application_RegisterDescriptor(MT3620Blink_Application* this__,
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.1                         : Application.cs(47) */
+    /* IL_0000: nop                             : Application.cs(46) */
+    /* IL_0001: ldarg.1  */
     frame__.stack0_0__ = target;
-    /* IL_0001: ldc.i4.3                        : Application.cs(47) */
+    /* IL_0002: ldc.i4.3                        : Application.cs(47) */
     stack1_0__ = 3;
-    /* IL_0002: call System.Runtime.InteropServices.GCHandle.Alloc : Application.cs(47) */
+    /* IL_0003: call System.Runtime.InteropServices.GCHandle.Alloc : Application.cs(47) */
     stack0_1__ = System_Runtime_InteropServices_GCHandle_Alloc_1(il2c_adjusted_reference(frame__.stack0_0__), (System_Runtime_InteropServices_GCHandleType)stack1_0__);
-    /* IL_0007: stloc.0                         : Application.cs(47) */
+    /* IL_0008: stloc.0                         : Application.cs(47) */
     handle = stack0_1__;
-    /* IL_0008: ldloca.s local2__               : Application.cs(49) */
+    /* IL_0009: ldloca.s local2__               : Application.cs(49) */
     stack0_2__ = &local2__;
-    /* IL_000a: initobj MT3620Blink.epoll_event : Application.cs(49) */
+    /* IL_000b: initobj MT3620Blink.epoll_event : Application.cs(49) */
     memset(stack0_2__, 0x00, sizeof *stack0_2__);
-    /* IL_0010: ldloca.s local2__               : Application.cs(49) */
+    /* IL_0011: ldloca.s local2__               : Application.cs(49) */
     stack0_2__ = &local2__;
-    /* IL_0012: ldsfld MT3620Blink.Interops.EPOLLIN : Application.cs(49) */
+    /* IL_0013: ldsfld MT3620Blink.Interops.EPOLLIN : Application.cs(49) */
     stack1_1__ = MT3620Blink_Interops_EPOLLIN;
-    /* IL_0017: stfld MT3620Blink.epoll_event.events : Application.cs(49) */
+    /* IL_0018: stfld MT3620Blink.epoll_event.events : Application.cs(49) */
     stack0_2__->events = stack1_1__;
-    /* IL_001c: ldloca.s local2__               : Application.cs(49) */
+    /* IL_001d: ldloca.s local2__               : Application.cs(49) */
     stack0_2__ = &local2__;
-    /* IL_001e: ldloca.s local3__               : Application.cs(49) */
+    /* IL_001f: ldloca.s local3__               : Application.cs(49) */
     stack1_2__ = &local3__;
-    /* IL_0020: initobj MT3620Blink.epoll_data_t : Application.cs(49) */
+    /* IL_0021: initobj MT3620Blink.epoll_data_t : Application.cs(49) */
     memset(stack1_2__, 0x00, sizeof *stack1_2__);
-    /* IL_0026: ldloca.s local3__               : Application.cs(49) */
+    /* IL_0027: ldloca.s local3__               : Application.cs(49) */
     stack1_2__ = &local3__;
-    /* IL_0028: ldloc.0                         : Application.cs(49) */
+    /* IL_0029: ldloc.0                         : Application.cs(49) */
     stack2_0__ = handle;
-    /* IL_0029: call System.Runtime.InteropServices.GCHandle.ToIntPtr : Application.cs(49) */
+    /* IL_002a: call System.Runtime.InteropServices.GCHandle.ToIntPtr : Application.cs(49) */
     stack2_1__ = System_Runtime_InteropServices_GCHandle_ToIntPtr(stack2_0__);
-    /* IL_002e: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(49) */
+    /* IL_002f: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(49) */
     stack2_2__ = System_Runtime_InteropServices_NativePointer_op_Implicit(stack2_1__);
-    /* IL_0033: stfld MT3620Blink.epoll_data_t.ptr : Application.cs(49) */
+    /* IL_0034: stfld MT3620Blink.epoll_data_t.ptr : Application.cs(49) */
     stack1_2__->ptr = stack2_2__;
-    /* IL_0038: ldloc.3                         : Application.cs(49) */
+    /* IL_0039: ldloc.3                         : Application.cs(49) */
     stack1_3__ = local3__;
-    /* IL_0039: stfld MT3620Blink.epoll_event.data : Application.cs(49) */
+    /* IL_003a: stfld MT3620Blink.epoll_event.data : Application.cs(49) */
     stack0_2__->data = stack1_3__;
-    /* IL_003e: ldloc.2                         : Application.cs(49) */
+    /* IL_003f: ldloc.2                         : Application.cs(49) */
     stack0_3__ = local2__;
-    /* IL_003f: stloc.1                         : Application.cs(49) */
+    /* IL_0040: stloc.1                         : Application.cs(49) */
     ev = stack0_3__;
-    /* IL_0040: ldarg.0                         : Application.cs(54) */
+    /* IL_0041: ldarg.0                         : Application.cs(54) */
     frame__.stack0_4__ = this__;
-    /* IL_0041: call MT3620Blink.Descriptor.get_Identity : Application.cs(54) */
+    /* IL_0042: call MT3620Blink.Descriptor.get_Identity : Application.cs(54) */
     stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_4__);
-    /* IL_0046: ldsfld MT3620Blink.Interops.EPOLL_CTL_ADD : Application.cs(54) */
+    /* IL_0047: ldsfld MT3620Blink.Interops.EPOLL_CTL_ADD : Application.cs(54) */
     stack1_0__ = MT3620Blink_Interops_EPOLL_CTL_ADD;
-    /* IL_004b: ldarg.1                         : Application.cs(54) */
+    /* IL_004c: ldarg.1                         : Application.cs(54) */
     frame__.stack2_3__ = target;
-    /* IL_004c: callvirt MT3620Blink.IEPollListener.get_Identity : Application.cs(54) */
+    /* IL_004d: callvirt MT3620Blink.IEPollListener.get_Identity : Application.cs(54) */
     stack2_4__ = frame__.stack2_3__->vptr0__->get_Identity(il2c_adjusted_reference(frame__.stack2_3__));
-    /* IL_0051: ldloca.s ev                     : Application.cs(54) */
+    /* IL_0052: ldloca.s ev                     : Application.cs(54) */
     stack3_0__ = &ev;
-    /* IL_0053: call MT3620Blink.Interops.epoll_ctl : Application.cs(54) */
+    /* IL_0054: call MT3620Blink.Interops.epoll_ctl : Application.cs(54) */
     stack0_5__ = MT3620Blink_Interops_epoll_ctl(stack0_5__, stack1_0__, stack2_4__, stack3_0__);
-    /* IL_0058: pop                             : Application.cs(54) */
-    /* IL_0059: ret  */
+    /* IL_0059: pop                             : Application.cs(54) */
+    /* IL_005a: ret  */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -331,38 +355,40 @@ void MT3620Blink_Application_UnregisterDescriptor(MT3620Blink_Application* this_
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.1                         : Application.cs(63) */
+    /* IL_0000: nop                             : Application.cs(62) */
+    /* IL_0001: ldarg.1  */
     frame__.stack0_0__ = target;
-    /* IL_0001: ldc.i4.3                        : Application.cs(63) */
+    /* IL_0002: ldc.i4.3                        : Application.cs(63) */
     stack1_0__ = 3;
-    /* IL_0002: call System.Runtime.InteropServices.GCHandle.Alloc : Application.cs(63) */
+    /* IL_0003: call System.Runtime.InteropServices.GCHandle.Alloc : Application.cs(63) */
     stack0_1__ = System_Runtime_InteropServices_GCHandle_Alloc_1(il2c_adjusted_reference(frame__.stack0_0__), (System_Runtime_InteropServices_GCHandleType)stack1_0__);
-    /* IL_0007: stloc.0                         : Application.cs(63) */
+    /* IL_0008: stloc.0                         : Application.cs(63) */
     handle = stack0_1__;
-    /* IL_0008: ldloca.s handle                 : Application.cs(64) */
+    /* IL_0009: ldloca.s handle                 : Application.cs(64) */
     stack0_2__ = &handle;
-    /* IL_000a: call System.Runtime.InteropServices.GCHandle.Free : Application.cs(64) */
+    /* IL_000b: call System.Runtime.InteropServices.GCHandle.Free : Application.cs(64) */
     System_Runtime_InteropServices_GCHandle_Free(stack0_2__);
-    /* IL_000f: ldloca.s ev                     : Application.cs(66) */
+    /* IL_0010: nop                             : Application.cs(64) */
+    /* IL_0011: ldloca.s ev */
     stack0_3__ = &ev;
-    /* IL_0011: initobj MT3620Blink.epoll_event : Application.cs(66) */
+    /* IL_0013: initobj MT3620Blink.epoll_event : Application.cs(66) */
     memset(stack0_3__, 0x00, sizeof *stack0_3__);
-    /* IL_0017: ldarg.0                         : Application.cs(68) */
+    /* IL_0019: ldarg.0                         : Application.cs(68) */
     frame__.stack0_4__ = this__;
-    /* IL_0018: call MT3620Blink.Descriptor.get_Identity : Application.cs(68) */
+    /* IL_001a: call MT3620Blink.Descriptor.get_Identity : Application.cs(68) */
     stack0_5__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_4__);
-    /* IL_001d: ldsfld MT3620Blink.Interops.EPOLL_CTL_DEL : Application.cs(68) */
+    /* IL_001f: ldsfld MT3620Blink.Interops.EPOLL_CTL_DEL : Application.cs(68) */
     stack1_0__ = MT3620Blink_Interops_EPOLL_CTL_DEL;
-    /* IL_0022: ldarg.1                         : Application.cs(68) */
+    /* IL_0024: ldarg.1                         : Application.cs(68) */
     frame__.stack2_0__ = target;
-    /* IL_0023: callvirt MT3620Blink.IEPollListener.get_Identity : Application.cs(68) */
+    /* IL_0025: callvirt MT3620Blink.IEPollListener.get_Identity : Application.cs(68) */
     stack2_1__ = frame__.stack2_0__->vptr0__->get_Identity(il2c_adjusted_reference(frame__.stack2_0__));
-    /* IL_0028: ldloca.s ev                     : Application.cs(68) */
+    /* IL_002a: ldloca.s ev                     : Application.cs(68) */
     stack3_0__ = &ev;
-    /* IL_002a: call MT3620Blink.Interops.epoll_ctl : Application.cs(68) */
+    /* IL_002c: call MT3620Blink.Interops.epoll_ctl : Application.cs(68) */
     stack0_5__ = MT3620Blink_Interops_epoll_ctl(stack0_5__, stack1_0__, stack2_1__, stack3_0__);
-    /* IL_002f: pop                             : Application.cs(68) */
-    /* IL_0030: ret  */
+    /* IL_0031: pop                             : Application.cs(68) */
+    /* IL_0032: ret  */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -406,7 +432,8 @@ void MT3620Blink_Application_Abort(MT3620Blink_Application* this__)
     frame__.stack0_1__ = frame__.stack0_0__->abort;
     /* IL_0006: callvirt MT3620Blink.Event.Pulse : Application.cs(76) */
     MT3620Blink_Event_Pulse((MT3620Blink_Event*)frame__.stack0_1__);
-    /* IL_000b: ret                             : Application.cs(76) */
+    /* IL_000b: nop                             : Application.cs(76) */
+    /* IL_000c: ret  */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -442,23 +469,26 @@ void MT3620Blink_Application_Run(MT3620Blink_Application* this__)
     MT3620Blink_epoll_event ev;
     memset(&ev, 0x00, sizeof ev);
     int32_t numEventsOccurred = 0;
+    bool local2__ = false;
+    bool local3__ = false;
     System_Runtime_InteropServices_GCHandle handle;
     memset(&handle, 0x00, sizeof handle);
+    bool local6__ = false;
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
     bool stack0_1__;
-    MT3620Blink_epoll_event* stack0_2__;
-    int32_t stack0_3__;
+    int32_t stack0_2__;
+    MT3620Blink_epoll_event* stack0_3__;
     MT3620Blink_epoll_event stack0_4__;
     MT3620Blink_epoll_data_t stack0_5__;
     System_Runtime_InteropServices_NativePointer stack0_6__;
     intptr_t stack0_7__;
     System_Runtime_InteropServices_GCHandle stack0_8__;
     System_Runtime_InteropServices_GCHandle* stack0_9__;
-    MT3620Blink_epoll_event* stack1_0__;
-    int32_t stack1_1__;
+    int32_t stack1_0__;
+    MT3620Blink_epoll_event* stack1_1__;
     int32_t stack2_0__;
     int32_t stack3_0__;
 
@@ -472,72 +502,103 @@ void MT3620Blink_Application_Run(MT3620Blink_Application* this__)
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: br.s IL_004b */
-    goto IL_004b;
-IL_0002:
-    /* IL_0002: ldloca.s ev                     : Application.cs(82) */
-    stack0_2__ = &ev;
-    /* IL_0004: initobj MT3620Blink.epoll_event : Application.cs(82) */
-    memset(stack0_2__, 0x00, sizeof *stack0_2__);
-    /* IL_000a: ldarg.0                         : Application.cs(83) */
+    /* IL_0000: nop                             : Application.cs(79) */
+    /* IL_0001: br.s IL_005f */
+    goto IL_005f;
+IL_0003:
+    /* IL_0003: nop                             : Application.cs(81) */
+    /* IL_0004: ldloca.s ev */
+    stack0_3__ = &ev;
+    /* IL_0006: initobj MT3620Blink.epoll_event : Application.cs(82) */
+    memset(stack0_3__, 0x00, sizeof *stack0_3__);
+    /* IL_000c: ldarg.0                         : Application.cs(83) */
     frame__.stack0_0__ = this__;
-    /* IL_000b: call MT3620Blink.Descriptor.get_Identity : Application.cs(83) */
-    stack0_3__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
-    /* IL_0010: ldloca.s ev                     : Application.cs(83) */
-    stack1_0__ = &ev;
-    /* IL_0012: ldc.i4.1                        : Application.cs(83) */
+    /* IL_000d: call MT3620Blink.Descriptor.get_Identity : Application.cs(83) */
+    stack0_2__ = MT3620Blink_Descriptor_get_Identity((MT3620Blink_Descriptor*)frame__.stack0_0__);
+    /* IL_0012: ldloca.s ev                     : Application.cs(83) */
+    stack1_1__ = &ev;
+    /* IL_0014: ldc.i4.1                        : Application.cs(83) */
     stack2_0__ = 1;
-    /* IL_0013: ldc.i4.m1                       : Application.cs(83) */
+    /* IL_0015: ldc.i4.m1                       : Application.cs(83) */
     stack3_0__ = -1;
-    /* IL_0014: call MT3620Blink.Interops.epoll_wait : Application.cs(83) */
-    stack0_3__ = MT3620Blink_Interops_epoll_wait(stack0_3__, stack1_0__, stack2_0__, stack3_0__);
-    /* IL_0019: stloc.1                         : Application.cs(83) */
-    numEventsOccurred = stack0_3__;
-    /* IL_001a: ldloc.1                         : Application.cs(85) */
-    stack0_3__ = numEventsOccurred;
-    /* IL_001b: ldc.i4.m1                       : Application.cs(85) */
-    stack1_1__ = -1;
-    /* IL_001c: beq.s IL_0053                   : Application.cs(85) */
-    if (stack0_3__ == stack1_1__) goto IL_0053;
-    /* IL_001e: ldloc.1                         : Application.cs(89) */
-    stack0_3__ = numEventsOccurred;
-    /* IL_001f: ldc.i4.1                        : Application.cs(89) */
-    stack1_1__ = 1;
-    /* IL_0020: bne.un.s IL_004b                : Application.cs(89) */
-    if (stack0_3__ != stack1_1__) goto IL_004b;
-    /* IL_0022: ldloc.0                         : Application.cs(91) */
+    /* IL_0016: call MT3620Blink.Interops.epoll_wait : Application.cs(83) */
+    stack0_2__ = MT3620Blink_Interops_epoll_wait(stack0_2__, stack1_1__, stack2_0__, stack3_0__);
+    /* IL_001b: stloc.1                         : Application.cs(83) */
+    numEventsOccurred = stack0_2__;
+    /* IL_001c: ldloc.1                         : Application.cs(85) */
+    stack0_2__ = numEventsOccurred;
+    /* IL_001d: ldc.i4.m1                       : Application.cs(85) */
+    stack1_0__ = -1;
+    /* IL_001e: ceq                             : Application.cs(85) */
+    stack0_2__ = (int32_t)stack0_2__ == (int32_t)stack1_0__;
+    /* IL_0020: stloc.2                         : Application.cs(85) */
+    local2__ = (bool)stack0_2__;
+    /* IL_0021: ldloc.2                         : Application.cs(85) */
+    stack0_1__ = local2__;
+    /* IL_0022: brfalse.s IL_0027               : Application.cs(85) */
+    if (stack0_1__ == false) goto IL_0027;
+    /* IL_0024: nop                             : Application.cs(86) */
+    /* IL_0025: br.s IL_006e */
+    goto IL_006e;
+IL_0027:
+    /* IL_0027: ldloc.1                         : Application.cs(89) */
+    stack0_2__ = numEventsOccurred;
+    /* IL_0028: ldc.i4.1                        : Application.cs(89) */
+    stack1_0__ = 1;
+    /* IL_0029: ceq                             : Application.cs(89) */
+    stack0_2__ = (int32_t)stack0_2__ == (int32_t)stack1_0__;
+    /* IL_002b: stloc.3                         : Application.cs(89) */
+    local3__ = (bool)stack0_2__;
+    /* IL_002c: ldloc.3                         : Application.cs(89) */
+    stack0_1__ = local3__;
+    /* IL_002d: brfalse.s IL_005e               : Application.cs(89) */
+    if (stack0_1__ == false) goto IL_005e;
+    /* IL_002f: nop                             : Application.cs(90) */
+    /* IL_0030: ldloc.0  */
     stack0_4__ = ev;
-    /* IL_0023: ldfld MT3620Blink.epoll_event.data : Application.cs(91) */
+    /* IL_0031: ldfld MT3620Blink.epoll_event.data : Application.cs(91) */
     stack0_5__ = stack0_4__.data;
-    /* IL_0028: ldfld MT3620Blink.epoll_data_t.ptr : Application.cs(91) */
+    /* IL_0036: ldfld MT3620Blink.epoll_data_t.ptr : Application.cs(91) */
     stack0_6__ = stack0_5__.ptr;
-    /* IL_002d: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(91) */
+    /* IL_003b: call System.Runtime.InteropServices.NativePointer.op_Implicit : Application.cs(91) */
     stack0_7__ = System_Runtime_InteropServices_NativePointer_op_Implicit_1(stack0_6__);
-    /* IL_0032: call System.Runtime.InteropServices.GCHandle.FromIntPtr : Application.cs(91) */
+    /* IL_0040: call System.Runtime.InteropServices.GCHandle.FromIntPtr : Application.cs(91) */
     stack0_8__ = System_Runtime_InteropServices_GCHandle_FromIntPtr(stack0_7__);
-    /* IL_0037: stloc.2                         : Application.cs(91) */
+    /* IL_0045: stloc.s handle                  : Application.cs(91) */
     handle = stack0_8__;
-    /* IL_0038: ldloca.s handle                 : Application.cs(92) */
+    /* IL_0047: ldloca.s handle                 : Application.cs(92) */
     stack0_9__ = &handle;
-    /* IL_003a: call System.Runtime.InteropServices.GCHandle.get_Target : Application.cs(92) */
+    /* IL_0049: call System.Runtime.InteropServices.GCHandle.get_Target : Application.cs(92) */
     frame__.stack0_10__ = System_Runtime_InteropServices_GCHandle_get_Target(stack0_9__);
-    /* IL_003f: castclass MT3620Blink.IEPollListener : Application.cs(92) */
+    /* IL_004e: castclass MT3620Blink.IEPollListener : Application.cs(92) */
     frame__.stack0_11__ = il2c_castclass(frame__.stack0_10__, MT3620Blink_IEPollListener);
-    /* IL_0044: stloc.3                         : Application.cs(92) */
+    /* IL_0053: stloc.s target                  : Application.cs(92) */
     frame__.target = frame__.stack0_11__;
-    /* IL_0045: ldloc.3                         : Application.cs(93) */
+    /* IL_0055: ldloc.s target                  : Application.cs(93) */
     frame__.stack0_11__ = frame__.target;
-    /* IL_0046: callvirt MT3620Blink.IEPollListener.OnRaised : Application.cs(93) */
+    /* IL_0057: callvirt MT3620Blink.IEPollListener.OnRaised : Application.cs(93) */
     frame__.stack0_11__->vptr0__->OnRaised(il2c_adjusted_reference(frame__.stack0_11__));
-IL_004b:
-    /* IL_004b: ldarg.0                         : Application.cs(80) */
+    /* IL_005c: nop                             : Application.cs(93) */
+    /* IL_005d: nop  */
+IL_005e:
+    /* IL_005e: nop  */
+IL_005f:
+    /* IL_005f: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_004c: ldfld MT3620Blink.Application.abortFlag : Application.cs(80) */
+    /* IL_0060: ldfld MT3620Blink.Application.abortFlag : Application.cs(80) */
     stack0_1__ = frame__.stack0_0__->abortFlag;
-    /* IL_0051: brfalse.s IL_0002               : Application.cs(80) */
-    if (stack0_1__ == false) goto IL_0002;
-IL_0053:
-    /* IL_0053: ret                             : Application.cs(96) */
+    /* IL_0065: ldc.i4.0                        : Application.cs(80) */
+    stack1_0__ = 0;
+    /* IL_0066: ceq                             : Application.cs(80) */
+    stack0_2__ = (int32_t)stack0_1__ == (int32_t)stack1_0__;
+    /* IL_0068: stloc.s local6__                : Application.cs(80) */
+    local6__ = (bool)stack0_2__;
+    /* IL_006a: ldloc.s local6__                : Application.cs(80) */
+    stack0_1__ = local6__;
+    /* IL_006c: brtrue.s IL_0003                : Application.cs(80) */
+    if (stack0_1__ != false) goto IL_0003;
+IL_006e:
+    /* IL_006e: ret                             : Application.cs(96) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -619,13 +680,14 @@ void MT3620Blink_Application_AbortEvent__ctor(MT3620Blink_Application_AbortEvent
     frame__.stack0_0__ = this__;
     /* IL_0001: call MT3620Blink.Event..ctor    : Application.cs(17) */
     MT3620Blink_Event__ctor((MT3620Blink_Event*)frame__.stack0_0__);
-    /* IL_0006: ldarg.0                         : Application.cs(18) */
+    /* IL_0006: nop                             : Application.cs(17) */
+    /* IL_0007: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_0007: ldarg.1                         : Application.cs(18) */
+    /* IL_0008: ldarg.1                         : Application.cs(18) */
     frame__.stack1_0__ = parent;
-    /* IL_0008: stfld MT3620Blink.Application.AbortEvent.parent : Application.cs(18) */
+    /* IL_0009: stfld MT3620Blink.Application.AbortEvent.parent : Application.cs(18) */
     frame__.stack0_0__->parent = frame__.stack1_0__;
-    /* IL_000d: ret                             : Application.cs(18) */
+    /* IL_000e: ret                             : Application.cs(18) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }

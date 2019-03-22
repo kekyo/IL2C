@@ -91,7 +91,7 @@ System_Array* il2c_new_array__(
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-static void System_Array_MarkHandler(System_Array* arr)
+static void System_Array_MarkHandler__(System_Array* arr)
 {
     il2c_assert(arr != NULL);
     il2c_assert(arr->vptr0__ == &System_Array_VTABLE__);
@@ -113,5 +113,12 @@ static void System_Array_MarkHandler(System_Array* arr)
     }
 }
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Array, "System.Array", IL2C_TYPE_VARIABLE, 0, System_Object, System_Array_MarkHandler, 0)
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_Array,
+    "System.Array",
+    IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
+    0,
+    System_Object,
+    System_Array_MarkHandler__,
+    0)
 IL2C_RUNTIME_TYPE_END();

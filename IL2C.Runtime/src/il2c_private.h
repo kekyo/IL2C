@@ -149,10 +149,17 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, ui
 
 extern void il2c_register_fixed_instance__(void* pReference);
 extern void il2c_unregister_fixed_instance__(void* pReference);
+
+extern void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame);
 extern void il2c_default_mark_handler__(void* pReference);
 
-
-
+typedef volatile struct IL2C_THREAD_CONTEXT_DECL
+{
+    IL2C_EXECUTION_FRAME* pFrame__;
+    IL2C_EXCEPTION_FRAME* pUnwindTarget__;
+    intptr_t rawHandle__;
+    int32_t id__;
+} IL2C_THREAD_CONTEXT;
 
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs

@@ -559,7 +559,7 @@ void il2c_initialize(void* imageHandle, void* pSystemTable)
     // Clear screen
     g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
 
-    il2c_initialize__();
+    il2c_initialize__(0);
 }
 
 void il2c_shutdown()

@@ -69,8 +69,8 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     // TODO: InvalidOperationException? (Auto attached managed thread)
     il2c_assert(this__->start__ != NULL);
 
-    // TODO: ThreadStateException
-    il2c_assert(this__->rawHandle__ >= 0);
+    // TODO: ThreadStateException?
+    il2c_assert(this__->rawHandle__ == -1);
 
     // Register into statically resource.
     il2c_register_fixed_instance__(this__);
@@ -125,13 +125,16 @@ void System_Threading_Thread_Sleep(int millisecondsTimeout)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-static void System_Threading_Thread_MarkHandler(System_Threading_Thread* thread)
+static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* thread)
 {
     il2c_assert(thread != NULL);
     il2c_assert(thread->vptr0__ == &System_Threading_Thread_VTABLE__);
 
     // Check start field.
-    il2c_default_mark_handler__(thread->start__);
+    if (thread->start__ != NULL)
+    {
+        il2c_default_mark_handler__(thread->start__);
+    }
 
     ///////////////////////////////////////////////////////////////
     // Check IL2C_EXECUTION_FRAME.
@@ -155,6 +158,6 @@ IL2C_RUNTIME_TYPE_BEGIN(
     IL2C_TYPE_REFERENCE | IL2C_TYPE_WITH_MARK_HANDLER,
     sizeof(System_Threading_Thread),
     System_Object,
-    System_Threading_Thread_MarkHandler,
+    System_Threading_Thread_MarkHandler__,
     0)
 IL2C_RUNTIME_TYPE_END();

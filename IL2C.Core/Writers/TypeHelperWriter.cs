@@ -319,7 +319,7 @@ namespace IL2C.Writers
                     declaredType.FriendlyName, // Type name (UTF-8 string, C compiler embeds into .rdata)
                     declaredType.IsEnum ?      // Type attribute flags
                         (declaredType.ElementType.IsUnsigned ? "IL2C_TYPE_UNSIGNED_INTEGER" : "IL2C_TYPE_INTEGER") :
-                        declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE" :
+                        declaredType.IsDelegate ? "IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER" :
                         declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
                         "IL2C_TYPE_VALUE",
                     declaredType.CLanguageStaticSizeOfExpression,

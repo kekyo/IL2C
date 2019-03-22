@@ -406,17 +406,16 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     if ((pHeader->type->flags & IL2C_TYPE_WITH_MARK_HANDLER) == IL2C_TYPE_WITH_MARK_HANDLER)
     {
         IL2C_MARK_HANDLER pMarkHandler = (IL2C_MARK_HANDLER)(pHeader->type->markTarget);
-        if (pMarkHandler != NULL)
-        {
-            il2c_runtime_debug_log_format(
-                L"il2c_mark_handler_for_objref__ [2]: pAdjustedReference=0x{0:p}, type={1:s}, pMarkHandler=0x{2:p}",
-                pAdjustedReference,
-                pHeader->type->pTypeName,
-                pMarkHandler);
+        il2c_assert(pMarkHandler != NULL);
 
-            // Invoke custom mark handler
-            pMarkHandler(pAdjustedReference);
-        }
+        il2c_runtime_debug_log_format(
+            L"il2c_mark_handler_for_objref__ [2]: pAdjustedReference=0x{0:p}, type={1:s}, pMarkHandler=0x{2:p}",
+            pAdjustedReference,
+            pHeader->type->pTypeName,
+            pMarkHandler);
+
+        // Invoke custom mark handler
+        pMarkHandler(pAdjustedReference);
     }
     // This type doesn't have the custom mark handler, traverser works just now.
     else

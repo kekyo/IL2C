@@ -16,7 +16,7 @@ void System_Runtime_InteropServices_GCHandle_set_Target(System_Runtime_InteropSe
 
     if (value != NULL)
     {
-        il2c_register_fixed_instance__(value);
+        il2c_register_root_reference__(value, true);
     }
 
     *this__ = (intptr_t)value;
@@ -29,7 +29,7 @@ void System_Runtime_InteropServices_GCHandle_Free(System_Runtime_InteropServices
     System_Object* pObject = (System_Object*)*this__;
     if (pObject != NULL)
     {
-        il2c_unregister_fixed_instance__(pObject);
+        il2c_unregister_root_reference__(pObject, true);
     }
 
     *this__ = 0;
@@ -57,7 +57,7 @@ System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_
     {
         if (value != NULL)
         {
-            il2c_register_fixed_instance__(value);
+            il2c_register_root_reference__(value, true);
         }
     }
 

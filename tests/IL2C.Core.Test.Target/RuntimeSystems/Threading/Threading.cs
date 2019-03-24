@@ -58,6 +58,8 @@ namespace IL2C.RuntimeSystems
     [Description("These tests are verified the IL2C can handle threading features.")]
     [TestCase(333, "RunAndFinishInstanceMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(333, "RunAndFinishInstanceWithParameterMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosureWithParameter) })]
+    [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 10, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
+    [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 100, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(true, "WillGetDifferentThreadId", IncludeTypes = new[] { typeof(WillGetDifferentThreadIdClosure) })]
     public sealed class Threading
     {
@@ -79,6 +81,37 @@ namespace IL2C.RuntimeSystems
             thread.Join();
 
             return target.Result;
+        }
+
+        public static bool MultipleRunAndFinishInstanceMethod(int a, int count)
+        {
+            var targets = new RunAndFinishClosure[count];
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                targets[index] = new RunAndFinishClosure(a, index);
+                threads[index] = new Thread(targets[index].Run);
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                if (targets[index].Result != (a + index))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public static bool WillGetDifferentThreadId()

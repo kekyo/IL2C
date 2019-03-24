@@ -147,8 +147,8 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, ui
 extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
 #endif
 
-extern void il2c_register_fixed_instance__(void* pReference);
-extern void il2c_unregister_fixed_instance__(void* pReference);
+extern void il2c_register_root_reference__(void* pReference, bool isFixed);
+extern void il2c_unregister_root_reference__(void* pReference, bool isFixed);
 
 extern void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame);
 extern void il2c_default_mark_handler__(void* pReference);

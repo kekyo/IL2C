@@ -21,11 +21,11 @@ typedef volatile struct IL2C_GC_TRACKING_INFORMATION_DECL
 typedef IL2C_GC_TRACKING_INFORMATION IL2C_EXECUTION_FRAME;
 typedef IL2C_GC_TRACKING_INFORMATION IL2C_STATIC_FIELDS;
 
-typedef volatile struct IL2C_FIXED_INSTANCES_DECL IL2C_FIXED_INSTANCES;
+typedef volatile struct IL2C_ROOT_REFERENCES_DECL IL2C_ROOT_REFERENCES;
 
-struct IL2C_FIXED_INSTANCES_DECL
+struct IL2C_ROOT_REFERENCES_DECL
 {
-    IL2C_FIXED_INSTANCES* pNext;
+    IL2C_ROOT_REFERENCES* pNext;
     volatile void* pReferences[3];
 };
 
@@ -34,7 +34,8 @@ IL2C_TLS_INDEX g_TlsIndex__;
 static IL2C_STATIC_FIELDS* g_pBeginStaticFields__ = NULL;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
-static IL2C_FIXED_INSTANCES* g_pFixedInstances__ = NULL;
+static IL2C_ROOT_REFERENCES* g_pRootReferences__ = NULL;
+static IL2C_ROOT_REFERENCES* g_pFixedReferences__ = NULL;
 static interlock_t g_ExecutingCollection__ = 0;
 
 #if defined(IL2C_USE_LINE_INFORMATION)
@@ -201,11 +202,11 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
         // Save IL2C_THREAD_CONTEXT into tls.
         il2c_set_tls_value(g_TlsIndex__, (void*)pThreadContext);
 
-        // Register into statically resource.
+        // Register GC root reference.
         // NOTE: Auto attached Thread class instances aren't freed when before shutdown.
         //   If we instantiated with Thread.Start(), it's manually allocated and can collect by GC.
         //   (See System_Threading_Thread_InternalEntryPoint())
-        il2c_register_fixed_instance__(pThread);
+        il2c_register_root_reference__(pThread, false);
     }
 
     return pThreadContext;
@@ -265,7 +266,7 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
 }
 
 /////////////////////////////////////////////////////////////
-// Static fields tracing functions
+// Static fields manipulator functions
 
 void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields)
 {
@@ -288,23 +289,26 @@ void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStati
 }
 
 /////////////////////////////////////////////////////////////
-// GC fixed instance manipulator functions
+// GC root reference manipulator functions
 
-void il2c_register_fixed_instance__(void* pReference)
+void il2c_register_root_reference__(void* pReference, bool isFixed)
 {
     il2c_assert(pReference != NULL);
 
     void* pAdjustedReference = il2c_adjusted_reference(pReference);
 
     // TODO: O(n) order
-    IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
+    IL2C_ROOT_REFERENCES** ppRootReferences = isFixed ?
+        &g_pFixedReferences__ :
+        &g_pRootReferences__;
+    IL2C_ROOT_REFERENCES* pCurrentRootReferences = *ppRootReferences;
     volatile void* volatile* ppFreeReference = NULL;
-    while (pCurrentFixedInstances != NULL)
+    while (pCurrentRootReferences != NULL)
     {
         uint8_t index;
         volatile void* volatile* ppReference;
-        for (index = 0, ppReference = &pCurrentFixedInstances->pReferences[0];
-            index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
+        for (index = 0, ppReference = &pCurrentRootReferences->pReferences[0];
+            index < sizeof(pCurrentRootReferences->pReferences) / sizeof(void*);
             index++, ppReference++)
         {
             if (*ppReference == pAdjustedReference)
@@ -318,7 +322,7 @@ void il2c_register_fixed_instance__(void* pReference)
             }
         }
 
-        pCurrentFixedInstances = pCurrentFixedInstances->pNext;
+        pCurrentRootReferences = pCurrentRootReferences->pNext;
     }
 
     if (ppFreeReference != NULL)
@@ -327,36 +331,39 @@ void il2c_register_fixed_instance__(void* pReference)
         return;
     }
 
-    pCurrentFixedInstances = il2c_malloc(sizeof(IL2C_FIXED_INSTANCES));
-    memset((void*)pCurrentFixedInstances, 0, sizeof(IL2C_FIXED_INSTANCES));
+    pCurrentRootReferences = il2c_malloc(sizeof(IL2C_ROOT_REFERENCES));
+    memset((void*)pCurrentRootReferences, 0, sizeof(IL2C_ROOT_REFERENCES));
 
-    pCurrentFixedInstances->pReferences[0] = pAdjustedReference;
+    pCurrentRootReferences->pReferences[0] = pAdjustedReference;
 
     while (1)
     {
-        IL2C_FIXED_INSTANCES* pNext = g_pFixedInstances__;
-        pCurrentFixedInstances->pNext = pNext;
-        if (il2c_icmpxchgptr(&g_pFixedInstances__, pCurrentFixedInstances, pNext) == pNext)
+        IL2C_ROOT_REFERENCES* pNext = *ppRootReferences;
+        pCurrentRootReferences->pNext = pNext;
+        if (il2c_icmpxchgptr(ppRootReferences, pCurrentRootReferences, pNext) == pNext)
         {
             break;
         }
     }
 }
 
-void il2c_unregister_fixed_instance__(void* pReference)
+void il2c_unregister_root_reference__(void* pReference, bool isFixed)
 {
     il2c_assert(pReference != NULL);
 
     void* pAdjustedReference = il2c_adjusted_reference(pReference);
 
     // TODO: O(n) order
-    IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
-    while (pCurrentFixedInstances != NULL)
+    IL2C_ROOT_REFERENCES** ppRootReferences = isFixed ?
+        &g_pFixedReferences__ :
+        &g_pRootReferences__;
+    IL2C_ROOT_REFERENCES* pCurrentRootReferences = *ppRootReferences;
+    while (pCurrentRootReferences != NULL)
     {
         uint8_t index;
         volatile void* volatile* ppReference; 
-        for (index = 0, ppReference = &pCurrentFixedInstances->pReferences[0];
-            index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
+        for (index = 0, ppReference = &pCurrentRootReferences->pReferences[0];
+            index < sizeof(pCurrentRootReferences->pReferences) / sizeof(void*);
             index++, ppReference++)
         {
             if (*ppReference == pAdjustedReference)
@@ -367,22 +374,27 @@ void il2c_unregister_fixed_instance__(void* pReference)
             }
         }
 
-        pCurrentFixedInstances = pCurrentFixedInstances->pNext;
+        pCurrentRootReferences = pCurrentRootReferences->pNext;
     }
 }
 
-static void il2c_unregister_all_fixed_instance_for_final_shutdown__(void)
+static void il2c_unregister_all_root_references_for_final_shutdown__(IL2C_ROOT_REFERENCES** ppRootReferences)
 {
     while (1)
     {
-        IL2C_FIXED_INSTANCES* pCurrent = g_pFixedInstances__;
-        if (pCurrent == NULL)
+        IL2C_ROOT_REFERENCES* pCurrentRootReferences = *ppRootReferences;
+        if (pCurrentRootReferences == NULL)
         {
             break;
         }
 
-        g_pFixedInstances__ = pCurrent->pNext;
-        il2c_free((void*)pCurrent);
+        IL2C_ROOT_REFERENCES* pNext = pCurrentRootReferences->pNext;
+        if (il2c_icmpxchgptr(ppRootReferences, pNext, pCurrentRootReferences) != pCurrentRootReferences)
+        {
+            continue;
+        }
+
+        il2c_free((void*)pCurrentRootReferences);
     }
 }
 
@@ -645,15 +657,14 @@ void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
     }
 }
 
-static void il2c_step2_mark_gcmark_for_fixed__(void)
+static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* pRootReferences)
 {
-    IL2C_FIXED_INSTANCES* pCurrentFixedInstances = g_pFixedInstances__;
-    while (pCurrentFixedInstances != NULL)
+    while (pRootReferences != NULL)
     {
         uint8_t index;
         volatile void* volatile* ppReference;
-        for (index = 0, ppReference = &pCurrentFixedInstances->pReferences[0];
-            index < sizeof(pCurrentFixedInstances->pReferences) / sizeof(void*);
+        for (index = 0, ppReference = &pRootReferences->pReferences[0];
+            index < sizeof(pRootReferences->pReferences) / sizeof(void*);
             index++, ppReference++)
         {
             // This slot is assigned.
@@ -663,8 +674,8 @@ static void il2c_step2_mark_gcmark_for_fixed__(void)
                 TRY_GET_HEADER(pHeader, pReference)
                 {
                     il2c_runtime_debug_log_format(
-                        L"il2c_step2_mark_gcmark_for_fixed__: pCurrentFixedInstances=0x{0:p}, index={1:u}, pReference=0x{2:p}, type={3:s}",
-                        pCurrentFixedInstances,
+                        L"il2c_step2_mark_gcmark_for_fixed__: pRootReferences=0x{0:p}, index={1:u}, pReference=0x{2:p}, type={3:s}",
+                        pRootReferences,
                         index,
                         pReference,
                         pHeader->type->pTypeName);
@@ -675,7 +686,7 @@ static void il2c_step2_mark_gcmark_for_fixed__(void)
             }
         }
 
-        pCurrentFixedInstances = pCurrentFixedInstances->pNext;
+        pRootReferences = pRootReferences->pNext;
     }
 }
 
@@ -793,13 +804,17 @@ static void il2c_collect__(bool finalShutdown)
         il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
         il2c_check_heap();
 
-        il2c_step2_mark_gcmark_for_fixed__();
+        il2c_step2_mark_gcmark_for_root_referfences__(g_pRootReferences__);
+        il2c_check_heap();
+        il2c_step2_mark_gcmark_for_root_referfences__(g_pFixedReferences__);
         il2c_check_heap();
     }
     else
     {
         // (The final collection step has to ignore both static fields and fixed instances.)
-        il2c_unregister_all_fixed_instance_for_final_shutdown__();
+        il2c_unregister_all_root_references_for_final_shutdown__(&g_pRootReferences__);
+        il2c_check_heap();
+        il2c_unregister_all_root_references_for_final_shutdown__(&g_pFixedReferences__);
         il2c_check_heap();
     }
 
@@ -1330,7 +1345,8 @@ void il2c_initialize__(void)
 
     g_pBeginHeader__ = NULL;
     g_pBeginStaticFields__ = NULL;
-    g_pFixedInstances__ = NULL;
+    g_pRootReferences__ = NULL;
+    g_pFixedReferences__ = NULL;
 
 #if defined(_DEBUG)
     g_CollectCount = 0;

@@ -25,6 +25,8 @@ void System_Threading_Thread__ctor_1(System_Threading_Thread* this__, System_Thr
     this__->rawHandle__ = -1;
 }
 
+extern IL2C_TLS_INDEX g_TlsIndex__;
+
 void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
 {
     il2c_assert(this__ != NULL);
@@ -40,8 +42,6 @@ void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
 #endif
     }
 }
-
-extern IL2C_TLS_INDEX g_TlsIndex__;
 
 static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntryPoint(
     IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
@@ -71,8 +71,8 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     il2c_set_tls_value(g_TlsIndex__, NULL);
 #endif
 
-    // Unregister.
-    il2c_unregister_fixed_instance__(pThread);
+    // Unregister GC root tracking.
+    il2c_unregister_root_reference__(pThread, false);
 
     IL2C_THREAD_ENTRY_POINT_RETURN(0);
 }
@@ -105,8 +105,8 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     il2c_set_tls_value(g_TlsIndex__, NULL);
 #endif
 
-    // Unregister.
-    il2c_unregister_fixed_instance__(pThread);
+    // Unregister GC root tracking.
+    il2c_unregister_root_reference__(pThread, false);
 
     IL2C_THREAD_ENTRY_POINT_RETURN(0);
 }
@@ -121,8 +121,8 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     // TODO: ThreadStateException? (Already started)
     il2c_assert(this__->rawHandle__ == -1);
 
-    // Register into statically resource.
-    il2c_register_fixed_instance__(this__);
+    // Register GC root tracking.
+    il2c_register_root_reference__(this__, false);
 
     // Create (suspended if available) thread.
     intptr_t rawHandle = il2c_create_thread__(
@@ -146,8 +146,8 @@ void System_Threading_Thread_Start_2(System_Threading_Thread* this__, System_Obj
     // TODO: ThreadStateException? (Already started)
     il2c_assert(this__->rawHandle__ == -1);
 
-    // Register into statically resource.
-    il2c_register_fixed_instance__(this__);
+    // Register GC root tracking.
+    il2c_register_root_reference__(this__, false);
 
     // Store parameter
     this__->parameter__ = parameter;

@@ -18,6 +18,7 @@ namespace IL2C.RuntimeSystems
 
         public void Run()
         {
+            Thread.Sleep(100);
             this.Result = this.a + this.b;
         }
     }
@@ -34,6 +35,7 @@ namespace IL2C.RuntimeSystems
 
         public void Run(object parameter)
         {
+            Thread.Sleep(100);
             var b = (int)parameter;
             this.Result = this.a + b;
         }
@@ -51,6 +53,7 @@ namespace IL2C.RuntimeSystems
 
         public void Run()
         {
+            Thread.Sleep(100);
             this.RunThreadId = Thread.CurrentThread.ManagedThreadId;
         }
     }

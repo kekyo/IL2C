@@ -105,6 +105,7 @@ IL2C_TLS_INDEX il2c_tls_alloc(void)
     pthread_key_t key;
     int result = pthread_key_create(&key, NULL);
     il2c_assert(result == 0);
+    ((void)result);
 
     return key;
 }
@@ -118,6 +119,7 @@ void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value)
 {
     int result = pthread_setspecific((pthread_key_t)tlsIndex, value);
     il2c_assert(result == 0);
+    ((void)result);
 }
 
 intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
@@ -126,6 +128,7 @@ intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THRE
 
     int result = pthread_create(&handle, NULL, entryPoint, parameter);
     il2c_assert(result == 0);
+    ((void)result);
 
     return (intptr_t)handle;
 }

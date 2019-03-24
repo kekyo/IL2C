@@ -61,9 +61,7 @@ void MT3620Blink_GpioInput__ctor(MT3620Blink_GpioInput* this__, int32_t gpioId)
     stack1_0__ = MT3620Blink_Interops_GPIO_OpenAsInput(stack1_0__);
     /* IL_0007: call MT3620Blink.Descriptor..ctor : GpioInput.cs(6) */
     MT3620Blink_Descriptor__ctor((MT3620Blink_Descriptor*)frame__.stack0_0__, stack1_0__);
-    /* IL_000c: nop                             : GpioInput.cs(6) */
-    /* IL_000d: nop  */
-    /* IL_000e: ret  */
+    /* IL_000c: ret                             : GpioInput.cs(8) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -122,21 +120,21 @@ bool MT3620Blink_GpioInput_get_Value(MT3620Blink_GpioInput* this__)
     stack1_0__ = &value;
     /* IL_0008: call MT3620Blink.Interops.GPIO_GetValue : GpioInput.cs(11) */
     stack0_1__ = MT3620Blink_Interops_GPIO_GetValue(stack0_1__, stack1_0__);
-    /* IL_000d: brfalse.s IL_0012               : GpioInput.cs(11) */
-    if (stack0_1__ == 0) goto IL_0012;
+    /* IL_000d: brfalse.s IL_0011               : GpioInput.cs(11) */
+    if (stack0_1__ == 0) goto IL_0011;
     /* IL_000f: ldc.i4.0                        : GpioInput.cs(11) */
     stack0_1__ = 0;
-    /* IL_0010: br.s IL_0016                    : GpioInput.cs(11) */
-    goto IL_0016;
-IL_0012:
-    /* IL_0012: ldloc.0                         : GpioInput.cs(11) */
+    /* IL_0010: ret                             : GpioInput.cs(11) */
+    il2c_unlink_execution_frame(&frame__);
+    return (bool)stack0_1__;
+IL_0011:
+    /* IL_0011: ldloc.0                         : GpioInput.cs(11) */
     stack0_2__ = value;
-    /* IL_0013: ldc.i4.1                        : GpioInput.cs(11) */
+    /* IL_0012: ldc.i4.1                        : GpioInput.cs(11) */
     stack1_1__ = 1;
-    /* IL_0014: ceq                             : GpioInput.cs(11) */
+    /* IL_0013: ceq                             : GpioInput.cs(11) */
     stack0_1__ = (int32_t)stack0_2__ == (int32_t)stack1_1__;
-IL_0016:
-    /* IL_0016: ret                             : GpioInput.cs(11) */
+    /* IL_0015: ret                             : GpioInput.cs(11) */
     il2c_unlink_execution_frame(&frame__);
     return (bool)stack0_1__;
 }

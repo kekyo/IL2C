@@ -36,8 +36,8 @@ typedef struct MT3620Blink_Descriptor__ctor_EXECUTION_FRAME_DECL
     const uint16_t valueCount__;
     //-------------------- objref
     MT3620Blink_Descriptor* stack0_0__;
-    System_String* stack0_3__;
-    System_Exception* stack0_4__;
+    System_String* stack0_2__;
+    System_Exception* stack0_3__;
     il2c_boxedtype(System_Int32)* stack1_1__;
 } MT3620Blink_Descriptor__ctor_EXECUTION_FRAME__;
 
@@ -49,15 +49,9 @@ void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* this__, int32_t fd)
     il2c_assert(this__ != NULL);
 
     //-------------------
-    // [3-3] Local variables (!objref):
-
-    bool local0__ = false;
-
-    //-------------------
     // [3-4] Evaluation stacks (!objref):
 
     int32_t stack0_1__;
-    bool stack0_2__;
     int32_t stack1_0__;
 
     //-------------------
@@ -74,43 +68,33 @@ void MT3620Blink_Descriptor__ctor(MT3620Blink_Descriptor* this__, int32_t fd)
     frame__.stack0_0__ = this__;
     /* IL_0001: call System.Object..ctor        : Descriptor.cs(7) */
     System_Object__ctor((System_Object*)frame__.stack0_0__);
-    /* IL_0006: nop                             : Descriptor.cs(7) */
-    /* IL_0007: nop  */
-    /* IL_0008: ldarg.1  */
+    /* IL_0006: ldarg.1                         : Descriptor.cs(9) */
     stack0_1__ = fd;
-    /* IL_0009: ldc.i4.0                        : Descriptor.cs(9) */
+    /* IL_0007: ldc.i4.0                        : Descriptor.cs(9) */
     stack1_0__ = 0;
-    /* IL_000a: clt                             : Descriptor.cs(9) */
-    stack0_1__ = (int32_t)stack0_1__ < (int32_t)stack1_0__;
-    /* IL_000c: stloc.0                         : Descriptor.cs(9) */
-    local0__ = (bool)stack0_1__;
-    /* IL_000d: ldloc.0                         : Descriptor.cs(9) */
-    stack0_2__ = local0__;
-    /* IL_000e: brfalse.s IL_0027               : Descriptor.cs(9) */
-    if (stack0_2__ == false) goto IL_0027;
-    /* IL_0010: nop                             : Descriptor.cs(10) */
-    /* IL_0011: ldstr "Invalid descriptor: " */
-    frame__.stack0_3__ = MT3620Blink_string0__;
-    /* IL_0016: ldarg.1                         : Descriptor.cs(11) */
+    /* IL_0008: bge.s IL_0020                   : Descriptor.cs(9) */
+    if (stack0_1__ >= stack1_0__) goto IL_0020;
+    /* IL_000a: ldstr "Invalid descriptor: "    : Descriptor.cs(11) */
+    frame__.stack0_2__ = MT3620Blink_string0__;
+    /* IL_000f: ldarg.1                         : Descriptor.cs(11) */
     stack1_0__ = fd;
-    /* IL_0017: box System.Int32                : Descriptor.cs(11) */
+    /* IL_0010: box System.Int32                : Descriptor.cs(11) */
     frame__.stack1_1__ = il2c_box(&stack1_0__, System_Int32);
-    /* IL_001c: call System.String.Concat       : Descriptor.cs(11) */
-    frame__.stack0_3__ = System_String_Concat_4((System_Object*)frame__.stack0_3__, (System_Object*)frame__.stack1_1__);
-    /* IL_0021: newobj System.Exception..ctor   : Descriptor.cs(11) */
-    frame__.stack0_4__ = il2c_get_uninitialized_object(System_Exception);
-    System_Exception__ctor_1(frame__.stack0_4__, frame__.stack0_3__);
-    /* IL_0026: throw                           : Descriptor.cs(11) */
-    il2c_throw(frame__.stack0_4__);
-IL_0027:
-    /* IL_0027: ldarg.0                         : Descriptor.cs(13) */
+    /* IL_0015: call System.String.Concat       : Descriptor.cs(11) */
+    frame__.stack0_2__ = System_String_Concat_4((System_Object*)frame__.stack0_2__, (System_Object*)frame__.stack1_1__);
+    /* IL_001a: newobj System.Exception..ctor   : Descriptor.cs(11) */
+    frame__.stack0_3__ = il2c_get_uninitialized_object(System_Exception);
+    System_Exception__ctor_1(frame__.stack0_3__, frame__.stack0_2__);
+    /* IL_001f: throw                           : Descriptor.cs(11) */
+    il2c_throw(frame__.stack0_3__);
+IL_0020:
+    /* IL_0020: ldarg.0                         : Descriptor.cs(13) */
     frame__.stack0_0__ = this__;
-    /* IL_0028: ldarg.1                         : Descriptor.cs(13) */
+    /* IL_0021: ldarg.1                         : Descriptor.cs(13) */
     stack1_0__ = fd;
-    /* IL_0029: call MT3620Blink.Descriptor.set_Identity : Descriptor.cs(13) */
+    /* IL_0022: call MT3620Blink.Descriptor.set_Identity : Descriptor.cs(13) */
     MT3620Blink_Descriptor_set_Identity(frame__.stack0_0__, stack1_0__);
-    /* IL_002e: nop                             : Descriptor.cs(13) */
-    /* IL_002f: ret  */
+    /* IL_0027: ret                             : Descriptor.cs(14) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }
@@ -138,15 +122,9 @@ void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__)
     il2c_assert(this__ != NULL);
 
     //-------------------
-    // [3-3] Local variables (!objref):
-
-    bool local0__ = false;
-
-    //-------------------
     // [3-4] Evaluation stacks (!objref):
 
     int32_t stack0_1__;
-    bool stack0_2__;
     int32_t stack1_0__;
 
     //-------------------
@@ -159,43 +137,29 @@ void MT3620Blink_Descriptor_Dispose(MT3620Blink_Descriptor* this__)
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: nop                             : Descriptor.cs(17) */
-    /* IL_0001: ldarg.0  */
+    /* IL_0000: ldarg.0                         : Descriptor.cs(18) */
     frame__.stack0_0__ = this__;
-    /* IL_0002: call MT3620Blink.Descriptor.get_Identity : Descriptor.cs(18) */
+    /* IL_0001: call MT3620Blink.Descriptor.get_Identity : Descriptor.cs(18) */
     stack0_1__ = MT3620Blink_Descriptor_get_Identity(frame__.stack0_0__);
-    /* IL_0007: ldc.i4.0                        : Descriptor.cs(18) */
+    /* IL_0006: ldc.i4.0                        : Descriptor.cs(18) */
     stack1_0__ = 0;
-    /* IL_0008: clt                             : Descriptor.cs(18) */
-    stack0_1__ = (int32_t)stack0_1__ < (int32_t)stack1_0__;
-    /* IL_000a: ldc.i4.0                        : Descriptor.cs(18) */
-    stack1_0__ = 0;
-    /* IL_000b: ceq                             : Descriptor.cs(18) */
-    stack0_1__ = (int32_t)stack0_1__ == (int32_t)stack1_0__;
-    /* IL_000d: stloc.0                         : Descriptor.cs(18) */
-    local0__ = (bool)stack0_1__;
-    /* IL_000e: ldloc.0                         : Descriptor.cs(18) */
-    stack0_2__ = local0__;
-    /* IL_000f: brfalse.s IL_0027               : Descriptor.cs(18) */
-    if (stack0_2__ == false) goto IL_0027;
-    /* IL_0011: nop                             : Descriptor.cs(19) */
-    /* IL_0012: ldarg.0  */
+    /* IL_0007: blt.s IL_001c                   : Descriptor.cs(18) */
+    if (stack0_1__ < stack1_0__) goto IL_001c;
+    /* IL_0009: ldarg.0                         : Descriptor.cs(20) */
     frame__.stack0_0__ = this__;
-    /* IL_0013: call MT3620Blink.Descriptor.get_Identity : Descriptor.cs(20) */
+    /* IL_000a: call MT3620Blink.Descriptor.get_Identity : Descriptor.cs(20) */
     stack0_1__ = MT3620Blink_Descriptor_get_Identity(frame__.stack0_0__);
-    /* IL_0018: call MT3620Blink.Interops.close : Descriptor.cs(20) */
+    /* IL_000f: call MT3620Blink.Interops.close : Descriptor.cs(20) */
     stack0_1__ = MT3620Blink_Interops_close(stack0_1__);
-    /* IL_001d: pop                             : Descriptor.cs(20) */
-    /* IL_001e: ldarg.0  */
+    /* IL_0014: pop                             : Descriptor.cs(20) */
+    /* IL_0015: ldarg.0  */
     frame__.stack0_0__ = this__;
-    /* IL_001f: ldc.i4.m1                       : Descriptor.cs(21) */
+    /* IL_0016: ldc.i4.m1                       : Descriptor.cs(21) */
     stack1_0__ = -1;
-    /* IL_0020: call MT3620Blink.Descriptor.set_Identity : Descriptor.cs(21) */
+    /* IL_0017: call MT3620Blink.Descriptor.set_Identity : Descriptor.cs(21) */
     MT3620Blink_Descriptor_set_Identity(frame__.stack0_0__, stack1_0__);
-    /* IL_0025: nop                             : Descriptor.cs(21) */
-    /* IL_0026: nop  */
-IL_0027:
-    /* IL_0027: ret  */
+IL_001c:
+    /* IL_001c: ret                             : Descriptor.cs(23) */
     il2c_unlink_execution_frame(&frame__);
     return;
 }

@@ -27,6 +27,7 @@ struct System_Threading_Thread
     int32_t id__;
 
     System_Delegate* start__;
+    System_Object* parameter__;
 };
 
 extern System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__;
@@ -34,8 +35,10 @@ extern System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__;
 IL2C_DECLARE_RUNTIME_TYPE(System_Threading_Thread);
 
 extern void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threading_ThreadStart* start);
+extern void System_Threading_Thread__ctor_1(System_Threading_Thread* this__, System_Threading_ParameterizedThreadStart* start);
 extern void System_Threading_Thread_Finalize(System_Threading_Thread* this__);
 extern void System_Threading_Thread_Start(System_Threading_Thread* this__);
+extern void System_Threading_Thread_Start_2(System_Threading_Thread* this__, System_Object* parameter);
 extern void System_Threading_Thread_Join(System_Threading_Thread* this__);
 #define System_Threading_Thread_get_ManagedThreadId(this__) ((int32_t)(this__->id__))
 extern /* static */ System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void);

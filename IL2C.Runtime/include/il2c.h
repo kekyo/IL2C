@@ -252,6 +252,7 @@ typedef void* untyped_ptr;
 #include "System/IDisposable.h"
 #include "System/Threading/Interlocked.h"
 #include "System/Threading/ThreadStart.h"
+#include "System/Threading/ParameterizedThreadStart.h"
 #include "System/Threading/Thread.h"
 
 ///////////////////////////////////////////////////////

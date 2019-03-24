@@ -14,6 +14,17 @@ void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threa
     this__->rawHandle__ = -1;
 }
 
+void System_Threading_Thread__ctor_1(System_Threading_Thread* this__, System_Threading_ParameterizedThreadStart* start)
+{
+    il2c_assert(this__ != NULL);
+
+    // TODO: ArgumentNullException
+    il2c_assert(start != NULL);
+
+    this__->start__ = (System_Delegate*)start;
+    this__->rawHandle__ = -1;
+}
+
 void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
 {
     il2c_assert(this__ != NULL);
@@ -24,6 +35,8 @@ void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
 #if defined(_DEBUG)
         this__->rawHandle__ = -1;
         this__->id__ = 0;
+        this__->start__ = NULL;
+        this__->parameter__ = NULL;
 #endif
     }
 }
@@ -38,6 +51,7 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     System_Threading_Thread* pThread = (System_Threading_Thread*)parameter;
     il2c_assert(pThread->vptr0__ == &System_Threading_Thread_VTABLE__);
     il2c_assert(il2c_isinst(pThread->start__, System_Threading_ThreadStart) != NULL);
+    il2c_assert(pThread->parameter__ == NULL);
 
     // Set real thread id.
     pThread->id__ = il2c_get_current_thread_id__();
@@ -50,7 +64,42 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
 
     // Invoke delegate.
     // TODO: catch exception.
-    System_Threading_ThreadStart_Invoke((System_Threading_ThreadStart*)(pThread->start__));
+    System_Threading_ThreadStart_Invoke(
+        (System_Threading_ThreadStart*)(pThread->start__));
+
+#if defined(_DEBUG)
+    il2c_set_tls_value(g_TlsIndex__, NULL);
+#endif
+
+    // Unregister.
+    il2c_unregister_fixed_instance__(pThread);
+
+    IL2C_THREAD_ENTRY_POINT_RETURN(0);
+}
+
+static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntryPointWithParameter(
+    IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
+{
+    il2c_assert(parameter != NULL);
+
+    System_Threading_Thread* pThread = (System_Threading_Thread*)parameter;
+    il2c_assert(pThread->vptr0__ == &System_Threading_Thread_VTABLE__);
+    il2c_assert(il2c_isinst(pThread->start__, System_Threading_ParameterizedThreadStart) != NULL);
+
+    // Set real thread id.
+    pThread->id__ = il2c_get_current_thread_id__();
+
+    // Save IL2C_THREAD_CONTEXT into tls.
+    il2c_set_tls_value(g_TlsIndex__, (void*)&pThread->pFrame__);
+
+    // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
+    while (pThread->rawHandle__ == -1);
+
+    // Invoke delegate.
+    // TODO: catch exception.
+    System_Threading_ParameterizedThreadStart_Invoke(
+        (System_Threading_ParameterizedThreadStart*)(pThread->start__),
+        pThread->parameter__);
 
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
@@ -78,6 +127,34 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     // Create (suspended if available) thread.
     intptr_t rawHandle = il2c_create_thread__(
         System_Threading_Thread_InternalEntryPoint, this__);
+
+    // TODO: OutOfMemoryException
+    il2c_assert(rawHandle >= 0);
+
+    // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
+    this__->rawHandle__ = rawHandle;
+    il2c_resume_thread__(rawHandle);
+}
+
+void System_Threading_Thread_Start_2(System_Threading_Thread* this__, System_Object* parameter)
+{
+    il2c_assert(this__ != NULL);
+
+    // TODO: InvalidOperationException? (Auto attached managed thread)
+    il2c_assert(this__->start__ != NULL);
+
+    // TODO: ThreadStateException? (Already started)
+    il2c_assert(this__->rawHandle__ == -1);
+
+    // Register into statically resource.
+    il2c_register_fixed_instance__(this__);
+
+    // Store parameter
+    this__->parameter__ = parameter;
+
+    // Create (suspended if available) thread.
+    intptr_t rawHandle = il2c_create_thread__(
+        System_Threading_Thread_InternalEntryPointWithParameter, this__);
 
     // TODO: OutOfMemoryException
     il2c_assert(rawHandle >= 0);
@@ -122,10 +199,14 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     il2c_assert(thread != NULL);
     il2c_assert(thread->vptr0__ == &System_Threading_Thread_VTABLE__);
 
-    // Check start field.
+    // Check start and parameter field.
     if (thread->start__ != NULL)
     {
         il2c_default_mark_handler__(thread->start__);
+    }
+    if (thread->parameter__ != NULL)
+    {
+        il2c_default_mark_handler__(thread->parameter__);
     }
 
     ///////////////////////////////////////////////////////////////

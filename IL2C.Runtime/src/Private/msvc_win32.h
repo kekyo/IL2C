@@ -86,8 +86,7 @@ typedef DWORD IL2C_TLS_INDEX;
 #define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
 typedef unsigned int(__stdcall *IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
 
-// TODO: has to get real handle
-#define il2c_get_current_thread__() ((intptr_t)GetCurrentThread())
+extern intptr_t il2c_get_current_thread__(void);
 #define il2c_get_current_thread_id__() ((int32_t)GetCurrentThreadId())
 #define il2c_create_thread__(entryPoint, parameter) \
     ((intptr_t)_beginthreadex(NULL, 0, entryPoint, parameter, CREATE_SUSPENDED, NULL))

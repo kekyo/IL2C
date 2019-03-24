@@ -90,18 +90,10 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
 void System_Threading_Thread_Join(System_Threading_Thread* this__)
 {
     il2c_assert(this__ != NULL);
-    il2c_assert(this__->rawHandle__ != 0);
+    il2c_assert(this__->rawHandle__ >= 0);
     il2c_assert(this__->start__ != NULL);
 
     il2c_join_thread__(this__->rawHandle__);
-}
-
-int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* this__)
-{
-    il2c_assert(this__ != NULL);
-    il2c_assert(this__->rawHandle__ >= 0);
-
-    return this__->id__;
 }
 
 System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void)
@@ -114,7 +106,7 @@ System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void)
 #endif
 
     // Come from unoffsetted:
-    return (System_Threading_Thread*)((*(uint8_t*)pThreadContext) - offsetof(System_Threading_Thread, pFrame__));
+    return (System_Threading_Thread*)(((uint8_t*)pThreadContext) - offsetof(System_Threading_Thread, pFrame__));
 }
 
 void System_Threading_Thread_Sleep(int millisecondsTimeout)

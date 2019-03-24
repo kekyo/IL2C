@@ -37,8 +37,7 @@ extern void System_Threading_Thread__ctor(System_Threading_Thread* this__, Syste
 extern void System_Threading_Thread_Finalize(System_Threading_Thread* this__);
 extern void System_Threading_Thread_Start(System_Threading_Thread* this__);
 extern void System_Threading_Thread_Join(System_Threading_Thread* this__);
-extern int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* this__);
-
+#define System_Threading_Thread_get_ManagedThreadId(this__) ((int32_t)(this__->id__))
 extern /* static */ System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void);
 extern /* static */ void System_Threading_Thread_Sleep(int millisecondsTimeout);
 

@@ -72,6 +72,23 @@ IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UIN
 IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
 IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
 
+intptr_t il2c_get_current_thread__(void)
+{
+    HANDLE processHandle = GetCurrentProcess();
+    HANDLE handle;
+    BOOL result = DuplicateHandle(
+        processHandle,
+        GetCurrentThread(),
+        processHandle,
+        &handle,
+        0,
+        FALSE,
+        DUPLICATE_SAME_ACCESS);
+    il2c_assert(result == TRUE);
+
+    return (intptr_t)handle;
+}
+
 void il2c_join_thread__(intptr_t handle)
 {
     il2c_assert(handle != 0);

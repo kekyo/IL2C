@@ -240,8 +240,8 @@ static int __wctoint(wchar_t wc)
 long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
 {
     const wchar_t *s;
-    long acc, cutoff;
-    wint_t wc;
+    int32_t acc, cutoff;
+    wchar_t wc;
     int i;
     int neg, any, cutlim;
 
@@ -286,7 +286,7 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
     /*
      * See strtol for comments as to the logic used.
      */
-    cutoff = neg ? LONG_MIN : LONG_MAX;
+    cutoff = neg ? INT32_MIN : INT32_MAX;
     cutlim = (int)(cutoff % base);
     cutoff /= base;
     if (neg) {
@@ -307,7 +307,7 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
         if (neg) {
             if (acc < cutoff || (acc == cutoff && i > cutlim)) {
                 any = -1;
-                acc = LONG_MIN;
+                acc = INT32_MIN;
                 il2c_errno = ERANGE;
             }
             else {
@@ -319,7 +319,7 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
         else {
             if (acc > cutoff || (acc == cutoff && i > cutlim)) {
                 any = -1;
-                acc = LONG_MAX;
+                acc = INT32_MAX;
                 il2c_errno = ERANGE;
             }
             else {
@@ -332,11 +332,6 @@ long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base)
     if (endptr != 0)
         *endptr = (void*)(const void*)(any ? s - 1 : nptr);
     return (acc);
-}
-
-void il2c_sleep(uint32_t milliseconds)
-{
-    // TODO:
 }
 
 #if defined(_DEBUG)
@@ -353,12 +348,102 @@ void il2c_free(void* p)
 }
 #endif
 
+void il2c_sleep(uint32_t milliseconds)
+{
+#if defined(portTICK_RATE_MS)
+    vTaskDelay(milliseconds / portTICK_RATE_MS);
+#else
+    delay(milliseconds);
+#endif
+}
+
+#if defined(portNUM_PROCESSORS)
+
+intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
+{
+    il2c_assert(entryPoint != 0);
+
+    TaskHandle_t handle;
+
+#if defined(tskNO_AFFINITY)
+    // ESP32 related: https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/system/freertos.html
+    BaseType_t result = xTaskCreatePinnedToCore(
+        entryPoint,
+        "IL2C.Thread",
+        8192,
+        parameter,
+        1,
+        &handle,
+        tskNO_AFFINITY);
+#else
+    BaseType_t result = xTaskCreate(
+        entryPoint,
+        "IL2C.Thread",
+        8192,
+        parameter,
+        1,
+        &handle);
+#endif
+    il2c_assert(result == pdPASS);
+
+    return (intptr_t)handle;
+}
+
+void il2c_join_thread__(intptr_t handle)
+{
+    il2c_assert(handle != 0);
+
+    // TODO:
+}
+
+#elif defined(_POSIX_THREADS)
+
+IL2C_TLS_INDEX il2c_tls_alloc(void)
+{
+    pthread_key_t key;
+    int result = pthread_key_create(&key, NULL);
+    il2c_assert(result == 0);
+
+    return key;
+}
+
+void* il2c_get_tls_value(IL2C_TLS_INDEX tlsIndex)
+{
+    return pthread_getspecific((pthread_key_t)tlsIndex);
+}
+
+void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value)
+{
+    int result = pthread_setspecific((pthread_key_t)tlsIndex, value);
+    il2c_assert(result == 0);
+}
+
+intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
+{
+    pthread_t handle;
+
+    int result = pthread_create(&handle, NULL, entryPoint, parameter);
+    il2c_assert(result == 0);
+
+    return (intptr_t)handle;
+}
+
+void il2c_join_thread__(intptr_t handle)
+{
+    il2c_assert(handle != 0);
+
+    void* value;
+    pthread_join((pthread_t)handle, &value);
+}
+
+#endif
+
 void il2c_runtime_debug_log__(const char* message)
 {
     il2c_assert(message != NULL);
 
     int32_t length = il2c_get_utf8_length(message, false);
-    wchar_t* il2c_mcalloc(pBuffer, (length + 3) * sizeof(wchar_t));
+    il2c_mcalloc(wchar_t, pBuffer, (length + 3) * sizeof(wchar_t));
     wchar_t* pLast = il2c_utf16_from_utf8_and_get_last(pBuffer, message);
     *pLast++ = L'\r';
     *pLast++ = L'\n';
@@ -409,7 +494,7 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
 void il2c_initialize()
 {
-    il2c_initialize__();
+    il2c_initialize__(0);
 }
 
 void il2c_shutdown()

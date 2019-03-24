@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,7 +92,18 @@ namespace IL2C
             var uri = new Uri(url, UriKind.RelativeOrAbsolute);
             var path = Path.Combine(basePath, uri.PathAndQuery.Split('/').Last());
 
-            using (var client = new HttpClient())
+            var handler = new HttpClientHandler();
+            var env = Environment.GetEnvironmentVariables();
+            if (env["https_proxy"] is string httpsProxyUrl)
+            {
+                handler.Proxy = new WebProxy(new Uri(httpsProxyUrl, UriKind.RelativeOrAbsolute));
+            }
+            else if (env["http_proxy"] is string httpProxyUrl)
+            {
+                handler.Proxy = new WebProxy(new Uri(httpProxyUrl, UriKind.RelativeOrAbsolute));
+            }
+
+            using (var client = new HttpClient(handler))
             {
                 using (var stream = await client.GetStreamAsync(url).ConfigureAwait(false))
                 {

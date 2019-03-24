@@ -91,7 +91,10 @@ extern void il2c_shutdown(void);
 
 typedef volatile long interlock_t;
 
-typedef volatile struct IL2C_EXECUTION_FRAME_DECL IL2C_EXECUTION_FRAME;
+typedef volatile struct IL2C_GC_TRACKING_INFORMATION_DECL IL2C_GC_TRACKING_INFORMATION;
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_EXECUTION_FRAME;
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_STATIC_FIELDS;
+
 typedef volatile struct IL2C_EXCEPTION_FRAME_DECL IL2C_EXCEPTION_FRAME;
 typedef volatile struct IL2C_REF_HEADER_DECL IL2C_REF_HEADER;
 
@@ -124,11 +127,12 @@ extern const uintptr_t typeName##_RUNTIME_TYPE__[]
 // IL2C_RUNTIME_TYPE_DECL.flags
 #define IL2C_TYPE_REFERENCE 0x00
 #define IL2C_TYPE_VALUE 0x01
-#define IL2C_TYPE_INTEGER 0x03
-#define IL2C_TYPE_VARIABLE 0x04
-#define IL2C_TYPE_UNSIGNED_INTEGER 0x0b
-#define IL2C_TYPE_STATIC 0x10
-#define IL2C_TYPE_INTERFACE 0x20
+#define IL2C_TYPE_INTEGER (0x02 | IL2C_TYPE_VALUE)
+#define IL2C_TYPE_WITH_MARK_HANDLER 0x04
+#define IL2C_TYPE_VARIABLE 0x08
+#define IL2C_TYPE_UNSIGNED_INTEGER (0x10 | IL2C_TYPE_INTEGER)
+#define IL2C_TYPE_STATIC 0x20
+#define IL2C_TYPE_INTERFACE 0x40
 
 #define il2c_typeof(typeName) \
     ((IL2C_RUNTIME_TYPE)&(typeName##_RUNTIME_TYPE__))
@@ -191,7 +195,7 @@ extern void il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile v
 #endif
 
 extern const uintptr_t* il2c_initializer_count;
-extern void il2c_register_static_fields(/* IL2C_EXECUTION_FRAME* */ volatile void* pStaticFields);
+extern void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields);
 
 ///////////////////////////////////////////////////////
 // Basic exceptions
@@ -247,6 +251,8 @@ typedef void* untyped_ptr;
 #include "System/Console.h"
 #include "System/IDisposable.h"
 #include "System/Threading/Interlocked.h"
+#include "System/Threading/ThreadStart.h"
+#include "System/Threading/ParameterizedThreadStart.h"
 #include "System/Threading/Thread.h"
 
 ///////////////////////////////////////////////////////

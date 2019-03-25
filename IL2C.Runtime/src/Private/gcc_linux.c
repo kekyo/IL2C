@@ -144,7 +144,7 @@ void il2c_join_thread__(intptr_t handle)
 // NOT Azure Sphere
 #if !defined(__AZURE_SPHERE__)
 
-void il2c_runtime_debug_log__(const wchar_t* message)
+void il2c_runtime_debug_log(const wchar_t* message)
 {
     // TODO: syslog
     fputws(message, stderr);

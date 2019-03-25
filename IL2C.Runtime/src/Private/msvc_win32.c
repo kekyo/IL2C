@@ -120,7 +120,7 @@ void il2c_join_thread__(intptr_t handle)
     }
 }
 
-void il2c_runtime_debug_log__(const wchar_t* message)
+void il2c_runtime_debug_log(const wchar_t* message)
 {
     OutputDebugStringW(message);
 }

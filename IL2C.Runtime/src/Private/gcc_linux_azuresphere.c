@@ -8,7 +8,7 @@
 
 #include <applibs/log.h>
 
-void il2c_runtime_debug_log__(const wchar_t* message)
+void il2c_runtime_debug_log(const wchar_t* message)
 {
     size_t l = il2c_wcslen(message);
     il2c_mcalloc(char, d, l + 1);

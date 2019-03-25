@@ -96,19 +96,25 @@ static void System_Array_MarkHandler__(System_Array* arr)
     il2c_assert(arr != NULL);
     il2c_assert(arr->vptr0__ == &System_Array_VTABLE__);
 
+    intptr_t index;
     if (arr->elementType__->flags & IL2C_TYPE_VALUE)
     {
-        // TODO: value type requires marking if contains objref inside.
-        return;
-    }
-
-    intptr_t index;
-    for (index = 0; index < arr->Length; index++)
-    {
-        void* pReference = il2c_array_item(arr, void*, index);
-        if (pReference != NULL)
+        for (index = 0; index < arr->Length; index++)
         {
-            il2c_default_mark_handler__(pReference);
+            //void* pValue = il2c_array_itemptr__(arr, arr->elementType__->bodySize, index);
+            //il2c_mark_handler_for_value_type__(pValue, arr->elementType__);
+            return;
+        }
+    }
+    else
+    {
+        for (index = 0; index < arr->Length; index++)
+        {
+            void* pReference = il2c_array_item(arr, void*, index);
+            if (pReference != NULL)
+            {
+                il2c_default_mark_handler__(pReference);
+            }
         }
     }
 }

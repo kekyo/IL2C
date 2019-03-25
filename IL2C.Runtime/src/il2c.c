@@ -468,7 +468,7 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     }
 }
 
-static void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType)
+void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType)
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
@@ -1390,18 +1390,18 @@ void il2c_break__(void)
 
 #if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
 
-typedef struct il2c_runtime_debug_log_FORMAT_STATE
+typedef struct IL2C_RUNTIME_DEBUG_LOG_FORMAT_STATE_DECL
 {
     va_list va;
     uint16_t argumentCount;
     uint16_t length;
     wchar_t* pBuffer;
-} il2c_runtime_debug_log_FORMAT_STATE;
+} IL2C_RUNTIME_DEBUG_LOG_FORMAT_STATE;
 
 static int8_t il2c_runtime_debug_log_format_writer_step1__(
     const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
 {
-    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+    IL2C_RUNTIME_DEBUG_LOG_FORMAT_STATE* p = pState;
 
     p->length = (uint16_t)(p->length + tokenLength);
     return IL2C_STRING_FORMAT_SUCCEEDED;
@@ -1410,7 +1410,7 @@ static int8_t il2c_runtime_debug_log_format_writer_step1__(
 static int8_t il2c_runtime_debug_log_format_argument_writer_step1__(
     uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
 {
-    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+    IL2C_RUNTIME_DEBUG_LOG_FORMAT_STATE* p = pState;
     wchar_t buffer[24];
 
     if ((argumentIndex != (p->argumentCount++)) || (formatLength != 1))
@@ -1485,7 +1485,7 @@ static int8_t il2c_runtime_debug_log_format_argument_writer_step1__(
 static int8_t il2c_runtime_debug_log_format_writer_step2__(
     const wchar_t* pTokenFrom, uint32_t tokenLength, void* pState)
 {
-    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+    IL2C_RUNTIME_DEBUG_LOG_FORMAT_STATE* p = pState;
 
     memcpy(p->pBuffer, pTokenFrom, tokenLength * sizeof(wchar_t));
     p->pBuffer += tokenLength;
@@ -1496,7 +1496,7 @@ static int8_t il2c_runtime_debug_log_format_writer_step2__(
 static int8_t il2c_runtime_debug_log_format_argument_writer_step2__(
     uint16_t argumentIndex, const wchar_t* pFormatFrom, uint32_t formatLength, void* pState)
 {
-    il2c_runtime_debug_log_FORMAT_STATE* p = pState;
+    IL2C_RUNTIME_DEBUG_LOG_FORMAT_STATE* p = pState;
     wchar_t buffer[24];
     uint16_t length;
 
@@ -1572,9 +1572,9 @@ static int8_t il2c_runtime_debug_log_format_argument_writer_step2__(
     return IL2C_STRING_FORMAT_SUCCEEDED;
 }
 
-void il2c_runtime_debug_log_format__(const wchar_t* format, ...)
+void il2c_runtime_debug_log_format(const wchar_t* format, ...)
 {
-    il2c_runtime_debug_log_FORMAT_STATE state = { 0 };
+    IL2C_RUNTIME_DEBUG_LOG_FORMAT_STATE state = { 0 };
 
     va_start(state.va, format);
 
@@ -1585,7 +1585,7 @@ void il2c_runtime_debug_log_format__(const wchar_t* format, ...)
         &state);
     if (result == IL2C_STRING_FORMAT_SUCCEEDED)
     {
-        il2c_mcalloc(wchar_t, pBuffer, (state.length + 1U) * sizeof(wchar_t));
+        il2c_mcalloc(wchar_t, pBuffer, (state.length + 3U) * sizeof(wchar_t));
         state.pBuffer = pBuffer;
 
         va_end(state.va);
@@ -1598,8 +1598,10 @@ void il2c_runtime_debug_log_format__(const wchar_t* format, ...)
             &state);
         if (result == IL2C_STRING_FORMAT_SUCCEEDED)
         {
+            *state.pBuffer++ = L'\r';
+            *state.pBuffer++ = L'\n';
             *state.pBuffer = L'\0';
-            il2c_runtime_debug_log__(pBuffer);
+            il2c_runtime_debug_log(pBuffer);
         }
 
         il2c_mcfree(pBuffer);

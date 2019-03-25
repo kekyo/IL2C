@@ -426,7 +426,7 @@ void il2c_sleep(uint32_t milliseconds)
     g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
 }
 
-void il2c_runtime_debug_log__(const wchar_t* message)
+void il2c_runtime_debug_log(const wchar_t* message)
 {
     g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)message);
 }

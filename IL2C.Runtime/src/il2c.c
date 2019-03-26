@@ -705,8 +705,9 @@ static void il2c_step3_sweep_garbage__(void)
             // Very important unlink step: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
 
-            // Class type overrided the finalizer:
-            if ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize)
+            // Class type overrided the finalizer and not suppressed:
+            if (((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE) == 0) &&
+                ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize))
             {
                 System_Object* pObject = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
                 il2c_assert((void*)pObject->vptr0__ == (void*)pCurrentHeader->type->vptr0);

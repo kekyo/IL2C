@@ -122,6 +122,8 @@ namespace IL2C.RuntimeSystems
     [TestCase("ABCDEF3", "MultipleInsideValueType", 2, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase(1, new[] { "CallFinalizer", "RunCallFinalizer" }, IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(0, new[] { "CallFinalizerWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
+    [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(12345, new[] { "TraceStaticField", "RunTraceStaticField" }, 12345, IncludeTypes = new[] { typeof(StaticFieldTracible), typeof(StaticFieldInstanceType) })]
     [TestCase("ABCDEF", new[] { "ArrayForObjRefElementTracking", "CombineString" }, "ABC", "DEF", IncludeTypes = new[] { typeof(ObjRefElement) })]
     public sealed class GarbageCollection
@@ -152,7 +154,7 @@ namespace IL2C.RuntimeSystems
             RunCallFinalizer(holder);
 
             GC.Collect();
-            Thread.Sleep(1000);
+            GC.WaitForPendingFinalizers();
 
             return holder.Called;
         }
@@ -169,7 +171,42 @@ namespace IL2C.RuntimeSystems
             RunCallFinalizerWithPinned(holder);
 
             GC.Collect();
-            Thread.Sleep(1000);
+            GC.WaitForPendingFinalizers();
+
+            return holder.Called;
+        }
+
+        private static void RunCallFinalizerWithSuppressed(FinalizerCalleeHolder holder)
+        {
+            var implemented = new FinalzerImplemented(holder);
+            GC.SuppressFinalize(implemented);
+        }
+
+        public static int SuppressFinalize()
+        {
+            var holder = new FinalizerCalleeHolder();
+            RunCallFinalizerWithSuppressed(holder);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return holder.Called;
+        }
+
+        private static void RunCallFinalizerWithSuppressedAndReRegistered(FinalizerCalleeHolder holder)
+        {
+            var implemented = new FinalzerImplemented(holder);
+            GC.SuppressFinalize(implemented);
+            GC.ReRegisterForFinalize(implemented);
+        }
+
+        public static int ReRegisterForFinalize()
+        {
+            var holder = new FinalizerCalleeHolder();
+            RunCallFinalizerWithSuppressedAndReRegistered(holder);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             return holder.Called;
         }
@@ -187,7 +224,7 @@ namespace IL2C.RuntimeSystems
             RunTraceStaticField(value);
 
             GC.Collect();
-            Thread.Sleep(1000);
+            GC.WaitForPendingFinalizers();
 
             return StaticFieldTracible.StaticFieldInstance.Value;
         }
@@ -201,7 +238,7 @@ namespace IL2C.RuntimeSystems
             var ea = CombineString(a, b);
 
             GC.Collect();
-            Thread.Sleep(1000);
+            GC.WaitForPendingFinalizers();
 
             return ea[0].Value;
         }

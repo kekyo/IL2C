@@ -20,6 +20,7 @@
         pop
 
         call void [mscorlib]System.GC::Collect()
+        call void [mscorlib]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
         ldfld string IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
@@ -46,6 +47,7 @@
         pop
 
         call void [mscorlib]System.GC::Collect()
+        call void [mscorlib]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
         ldfld string IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
@@ -72,6 +74,7 @@
         pop
 
         call void [mscorlib]System.GC::Collect()
+        call void [mscorlib]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
         ldflda valuetype IL2C.RuntimeSystems.ObjRefInsideValueTypeType IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::Value
@@ -99,6 +102,7 @@
         pop
 
         call void [mscorlib]System.GC::Collect()
+        call void [mscorlib]System.GC::WaitForPendingFinalizers()
 
         ldloca.s 0
         ldfld class IL2C.RuntimeSystems.ObjRefInsideObjRefType IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::Value
@@ -136,6 +140,7 @@
         pop
 
         call void [mscorlib]System.GC::Collect()
+        call void [mscorlib]System.GC::WaitForPendingFinalizers()
 
         ldarg.0
         ldc.i4.0

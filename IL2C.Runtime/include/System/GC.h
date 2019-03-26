@@ -14,6 +14,9 @@ extern "C" {
 
 IL2C_DECLARE_RUNTIME_TYPE(System_GC);
 
+extern /* static */ void System_GC_SuppressFinalize(System_Object* obj);
+extern /* static */ void System_GC_ReRegisterForFinalize(System_Object* obj);
+#define System_GC_WaitForPendingFinalizers() ((void)0)
 extern /* static */ void System_GC_Collect(void);
 
 #ifdef __cplusplus

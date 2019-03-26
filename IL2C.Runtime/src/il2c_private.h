@@ -148,9 +148,9 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, ui
 extern void il2c_register_root_reference__(void* pReference, bool isFixed);
 extern void il2c_unregister_root_reference__(void* pReference, bool isFixed);
 
-extern void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame);
-extern void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType);
-extern void il2c_default_mark_handler__(void* pReference);
+extern void il2c_default_mark_handler_for_objref__(void* pReference);
+extern void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType);
+extern void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFORMATION* pTrackingInformation);
 
 typedef volatile struct IL2C_THREAD_CONTEXT_DECL
 {

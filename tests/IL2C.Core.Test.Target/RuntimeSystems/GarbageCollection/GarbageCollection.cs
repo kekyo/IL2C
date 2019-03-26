@@ -104,6 +104,14 @@ namespace IL2C.RuntimeSystems
         public static StaticFieldInstanceType StaticFieldInstance;
     }
 
+    public struct ObjRefElement
+    {
+        public readonly string Value;
+
+        public ObjRefElement(string value) =>
+            this.Value = value;
+    }
+
     [Description("These tests are verified the IL2C manages tracing the object references and collect garbages from the heap memory.")]
     [TestCase("ABCDEF", "ObjRefInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF", "ObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
@@ -115,6 +123,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(1, new[] { "CallFinalizer", "RunCallFinalizer" }, IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(0, new[] { "CallFinalizerWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
     [TestCase(12345, new[] { "TraceStaticField", "RunTraceStaticField" }, 12345, IncludeTypes = new[] { typeof(StaticFieldTracible), typeof(StaticFieldInstanceType) })]
+    [TestCase("ABCDEF", new[] { "ArrayForObjRefElementTracking", "CombineString" }, "ABC", "DEF", IncludeTypes = new[] { typeof(ObjRefElement) })]
     public sealed class GarbageCollection
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -181,6 +190,20 @@ namespace IL2C.RuntimeSystems
             Thread.Sleep(1000);
 
             return StaticFieldTracible.StaticFieldInstance.Value;
+        }
+
+        private static ObjRefElement[] CombineString(string a, string b) =>
+            new[] { new ObjRefElement(a + b) };
+
+        public static string ArrayForObjRefElementTracking(string a, string b)
+        {
+            // Test for Array_MarkHandler.
+            var ea = CombineString(a, b);
+
+            GC.Collect();
+            Thread.Sleep(1000);
+
+            return ea[0].Value;
         }
     }
 }

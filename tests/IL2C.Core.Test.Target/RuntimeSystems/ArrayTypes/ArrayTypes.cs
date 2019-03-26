@@ -4,14 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace IL2C.RuntimeSystems
 {
-    public struct ObjRefElement
-    {
-        public readonly string Value;
-
-        public ObjRefElement(string value) =>
-            this.Value = value;
-    }
-
     [Description("Array type generates on the runtime. Example: System.Int32[] isn't declared anything assembly. These tests are verified the IL2C can handle runtime array types and initialize array items from resources.")]
     [TestCase(1111111, "FromInt32", 0)]
     [TestCase(2222222, "FromInt32", 1)]
@@ -56,7 +48,6 @@ namespace IL2C.RuntimeSystems
     [TestCase(1, "Length", 1)]
     [TestCase(1000, "Length", 1000)]
     [TestCase(55, "Enumerator")]
-    [TestCase("ABCDEF", new[] { "ObjRefElementTracking", "Combine" }, "ABC", "DEF")]
     public sealed class ArrayTypes
     {
         public static int FromInt32(int index)
@@ -185,17 +176,6 @@ namespace IL2C.RuntimeSystems
             }
 
             return result;
-        }
-
-        private static ObjRefElement[] Combine(string a, string b) =>
-            new[] { new ObjRefElement(a + b) };
-
-        public static string ObjRefElementTracking(string a, string b)
-        {
-            // Test for Array_MarkHandler.
-            var ea = Combine(a, b);
-            GC.Collect();
-            return ea[0].Value;
         }
     }
 }

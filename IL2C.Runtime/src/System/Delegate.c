@@ -232,7 +232,7 @@ void System_Delegate_MarkHandler__(System_Delegate* this__)
             continue;
         }
 
-        il2c_default_mark_handler__(pReference);
+        il2c_default_mark_handler_for_objref__(pReference);
     }
 }
 

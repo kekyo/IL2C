@@ -202,11 +202,11 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     // Check start and parameter field.
     if (thread->start__ != NULL)
     {
-        il2c_default_mark_handler__(thread->start__);
+        il2c_default_mark_handler_for_objref__(thread->start__);
     }
     if (thread->parameter__ != NULL)
     {
-        il2c_default_mark_handler__(thread->parameter__);
+        il2c_default_mark_handler_for_objref__(thread->parameter__);
     }
 
     ///////////////////////////////////////////////////////////////
@@ -214,7 +214,10 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     // It's important step for GC collecting sequence.
     // All method execution frame traversal begins this location.
 
-    il2c_step2_mark_gcmark__(thread->pFrame__);
+    if (thread->pFrame__ != NULL)
+    {
+        il2c_default_mark_handler_for_tracking_information__(thread->pFrame__);
+    }
 }
 
 System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__ = {

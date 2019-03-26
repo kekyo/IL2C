@@ -1,6 +1,6 @@
 # Supported IL opcodes
 
-* Number of opcode implementations: 133 / 219
+* Number of opcode implementations: 135 / 219
 * Number of opcode tests: 661 [66 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
@@ -128,7 +128,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldelem.u1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_u1) | 0x91 | Implemented |  | IL2C.ILConverters.Ldelem_u1Converter |
 | [ldelem.u2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_u2) | 0x93 | Implemented |  | IL2C.ILConverters.Ldelem_u2Converter |
 | [ldelem.u4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelem_u4) | 0x95 | Implemented |  | IL2C.ILConverters.Ldelem_u4Converter |
-| [ldelema](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelema) | 0x8f |  |  |  |
+| [ldelema](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldelema) | 0x8f | Implemented |  | IL2C.ILConverters.LdelemaConverter |
 | [ldfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldfld) | 0x7b | Implemented |  | IL2C.ILConverters.LdfldConverter |
 | [ldflda](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldflda) | 0x7c | Implemented |  | IL2C.ILConverters.LdfldaConverter |
 | [ldftn](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldftn) | 0xfe06 | Implemented |  | IL2C.ILConverters.LdftnConverter |
@@ -187,7 +187,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [sizeof](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sizeof) | 0xfe1c | Implemented |  | IL2C.ILConverters.SizeofConverter |
 | [starg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg) | 0xfe0b |  |  |  |
 | [starg.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg_s) | 0x10 |  |  |  |
-| [stelem.any](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem) | 0xa4 |  |  |  |
+| [stelem.any](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem) | 0xa4 | Implemented |  | IL2C.ILConverters.Stelem_anyConvertersConverter |
 | [stelem.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem_i) | 0x9b |  |  |  |
 | [stelem.i1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem_i1) | 0x9c |  |  |  |
 | [stelem.i2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem_i2) | 0x9d |  |  |  |

@@ -101,9 +101,8 @@ static void System_Array_MarkHandler__(System_Array* arr)
     {
         for (index = 0; index < arr->Length; index++)
         {
-            //void* pValue = il2c_array_itemptr__(arr, arr->elementType__->bodySize, index);
-            //il2c_mark_handler_for_value_type__(pValue, arr->elementType__);
-            return;
+            void* pValue = il2c_array_itemptr__(arr, (uint32_t)(arr->elementType__->bodySize), index);
+            il2c_default_mark_handler_for_value_type__(pValue, arr->elementType__);
         }
     }
     else
@@ -113,7 +112,7 @@ static void System_Array_MarkHandler__(System_Array* arr)
             void* pReference = il2c_array_item(arr, void*, index);
             if (pReference != NULL)
             {
-                il2c_default_mark_handler__(pReference);
+                il2c_default_mark_handler_for_objref__(pReference);
             }
         }
     }

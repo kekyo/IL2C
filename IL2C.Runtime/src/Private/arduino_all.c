@@ -438,7 +438,8 @@ void il2c_join_thread__(intptr_t handle)
 
 #endif
 
-void il2c_runtime_debug_log__(const char* message)
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
+void il2c_runtime_debug_log(const char* message)
 {
     il2c_assert(message != NULL);
 
@@ -454,18 +455,7 @@ void il2c_runtime_debug_log__(const char* message)
 
     il2c_mcfree(pBuffer);
 }
-
-void il2c_runtime_debug_log_format__(const char* format, ...)
-{
-    il2c_assert(format != NULL);
-
-    va_list va;
-
-    va_start(va, format);
-    // TODO: Serial out
-    //g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, pBuffer);
-    va_end(va);
-}
+#endif
 
 void il2c_write(const wchar_t* s)
 {

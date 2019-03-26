@@ -76,6 +76,8 @@ intptr_t il2c_get_current_thread__(void)
 {
     HANDLE processHandle = GetCurrentProcess();
     HANDLE handle;
+
+    // Get real thread handle from pseudo handle.
     BOOL result = DuplicateHandle(
         processHandle,
         GetCurrentThread(),
@@ -85,6 +87,7 @@ intptr_t il2c_get_current_thread__(void)
         FALSE,
         DUPLICATE_SAME_ACCESS);
     il2c_assert(result == TRUE);
+    ((void)result);
 
     return (intptr_t)handle;
 }
@@ -120,10 +123,12 @@ void il2c_join_thread__(intptr_t handle)
     }
 }
 
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
 void il2c_runtime_debug_log(const wchar_t* message)
 {
     OutputDebugStringW(message);
 }
+#endif
 
 void il2c_write(const wchar_t* s)
 {

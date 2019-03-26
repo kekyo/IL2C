@@ -399,9 +399,9 @@ static void il2c_unregister_all_root_references_for_final_shutdown__(IL2C_ROOT_R
 }
 
 /////////////////////////////////////////////////////////////
-// GC Mark handler
+// Internal GC mark handlers
 
-typedef void(*IL2C_MARK_HANDLER)(void* pReference);
+typedef void (*IL2C_MARK_HANDLER)(void* pReference);
 
 // Has to ignore if objref is const.
 // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory (CONST).
@@ -468,7 +468,7 @@ static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
     }
 }
 
-void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType)
+static void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType)
 {
     il2c_assert(pValue != NULL);
     il2c_assert(valueType != NULL);
@@ -558,22 +558,14 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
     }
 }
 
-void il2c_default_mark_handler__(void* pReference)
-{
-    il2c_assert(pReference != NULL);
-
-    void* pAdjustedReference = il2c_adjusted_reference(pReference);
-    TRY_GET_HEADER(pHeader, pAdjustedReference)
-    {
-        il2c_mark_handler_for_objref__(pAdjustedReference);
-    }
-}
-
 /////////////////////////////////////////////////////////////
 // GC processes
 
 static void il2c_step1_clear_gcmark__(void)
 {
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
     // Clear header marks.
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     while (pCurrentHeader != NULL)
@@ -584,8 +576,11 @@ static void il2c_step1_clear_gcmark__(void)
     }
 }
 
-void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
+static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 {
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
     // Mark headers.
     IL2C_GC_TRACKING_INFORMATION* pCurrentFrame = pBeginFrame;
     while (pCurrentFrame != NULL)
@@ -659,6 +654,9 @@ void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 
 static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* pRootReferences)
 {
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
     while (pRootReferences != NULL)
     {
         uint8_t index;
@@ -692,6 +690,9 @@ static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* 
 
 static void il2c_step3_sweep_garbage__(void)
 {
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
     // Sweep garbage if gcmark isn't marked.
     IL2C_REF_HEADER** ppUnlinkTarget = &g_pBeginHeader__;
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
@@ -799,6 +800,7 @@ static void il2c_collect__(bool finalShutdown)
     //////////////////////////////////////
     // GC Step 2:
 
+    // Normal GC step:
     if (!finalShutdown)
     {
         il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
@@ -809,9 +811,11 @@ static void il2c_collect__(bool finalShutdown)
         il2c_step2_mark_gcmark_for_root_referfences__(g_pFixedReferences__);
         il2c_check_heap();
     }
+    // Final GC step:
     else
     {
-        // (The final collection step has to ignore both static fields and fixed instances.)
+        // The final GC step has to ignore both static fields, root references and fixed references.
+        // Step 3 collects all instances if GC doesn't have collecting problems ;)
         il2c_unregister_all_root_references_for_final_shutdown__(&g_pRootReferences__);
         il2c_check_heap();
         il2c_unregister_all_root_references_for_final_shutdown__(&g_pFixedReferences__);
@@ -844,6 +848,48 @@ void il2c_collect(void)
 #else
     il2c_collect__(false);
 #endif
+}
+
+/////////////////////////////////////////////////////////////
+// Default GC mark handlers for using from externals.
+
+void il2c_default_mark_handler_for_objref__(void* pReference)
+{
+    il2c_assert(pReference != NULL);
+
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
+    void* pAdjustedReference = il2c_adjusted_reference(pReference);
+    TRY_GET_HEADER(pHeader, pAdjustedReference)
+    {
+        // Traverse recursively.
+        il2c_mark_handler_for_objref__(pAdjustedReference);
+    }
+}
+
+void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType)
+{
+    il2c_assert(pValue != NULL);
+    il2c_assert(valueType != NULL);
+    il2c_assert((valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
+
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
+    // Traverse recursively.
+    il2c_mark_handler_recursive__(pValue, valueType, 0);
+}
+
+void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFORMATION* pTrackingInformation)
+{
+    il2c_assert(pTrackingInformation != NULL);
+
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
+    // Traverse recursively.
+    il2c_step2_mark_gcmark__(pTrackingInformation);
 }
 
 /////////////////////////////////////////////////////////////

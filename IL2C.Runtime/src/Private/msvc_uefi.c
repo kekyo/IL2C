@@ -426,10 +426,12 @@ void il2c_sleep(uint32_t milliseconds)
     g_pSystemTable->BootServices->WaitForEvent(1, &g_TimerEvent, &index);
 }
 
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
 void il2c_runtime_debug_log(const wchar_t* message)
 {
     g_pSystemTable->StdErr->OutputString(g_pSystemTable->StdErr, (CHAR16*)message);
 }
+#endif
 
 #if defined(_DEBUG)
 void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr)

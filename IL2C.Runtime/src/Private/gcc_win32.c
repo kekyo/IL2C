@@ -120,10 +120,12 @@ void il2c_join_thread__(intptr_t handle)
     }
 }
 
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
 void il2c_runtime_debug_log(const wchar_t* message)
 {
     OutputDebugStringW(message);
 }
+#endif
 
 void il2c_write(const wchar_t* s)
 {

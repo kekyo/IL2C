@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IL2C
@@ -87,6 +89,12 @@ namespace IL2C
             }
         }
 
+        private static string GetEnvironmentValue(this IDictionary dict, string keyName) =>
+            dict.Cast<DictionaryEntry>().
+            Where(entry => StringComparer.InvariantCultureIgnoreCase.Equals(entry.Key, keyName)).
+            Select(entry => (string)entry.Value).
+            FirstOrDefault();
+
         private static async Task<string> DownloadFromUrlAsync(string url, string basePath)
         {
             var uri = new Uri(url, UriKind.RelativeOrAbsolute);
@@ -94,13 +102,25 @@ namespace IL2C
 
             var handler = new HttpClientHandler();
             var env = Environment.GetEnvironmentVariables();
-            if (env["https_proxy"] is string httpsProxyUrl)
+            var proxyUrlString = env.GetEnvironmentValue("https_proxy") ?? env.GetEnvironmentValue("http_proxy");
+
+            if (!string.IsNullOrWhiteSpace(proxyUrlString))
             {
-                handler.Proxy = new WebProxy(new Uri(httpsProxyUrl, UriKind.RelativeOrAbsolute));
-            }
-            else if (env["http_proxy"] is string httpProxyUrl)
-            {
-                handler.Proxy = new WebProxy(new Uri(httpProxyUrl, UriKind.RelativeOrAbsolute));
+                var proxyUrl = new Uri(proxyUrlString, UriKind.RelativeOrAbsolute);
+                handler.Proxy = new WebProxy(proxyUrl.DnsSafeHost, proxyUrl.Port);
+                if (!string.IsNullOrWhiteSpace(proxyUrl.UserInfo))
+                {
+                    var userInfo = proxyUrl.UserInfo.Split(':');
+                    if (userInfo.Length >= 1)
+                    {
+                        var userName = userInfo[0];
+                        if (userInfo.Length >= 2)
+                        {
+                            var password = userInfo[1];
+                            handler.Proxy.Credentials = new NetworkCredential(userName, password);
+                        }
+                    }
+                }
             }
 
             using (var client = new HttpClient(handler))
@@ -202,7 +222,26 @@ namespace IL2C
                 }
                 finally
                 {
-                    await Task.Run(() => Directory.Delete(fetchPath, true));
+                    await Task.Run(() =>
+                    {
+                        var count = 3;
+                        while (true)
+                        {
+                            try
+                            {
+                                Directory.Delete(fetchPath, true);
+                                break;
+                            }
+                            catch
+                            {
+                                if (count-- < 0)
+                                {
+                                    throw;
+                                }
+                                Thread.Sleep(1000);
+                            }
+                        }
+                    });
                 }
             }
             catch

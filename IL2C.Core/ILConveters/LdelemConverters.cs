@@ -12,6 +12,7 @@ namespace IL2C.ILConverters
         public static Func<IExtractContext, string[]> Apply(
             Func<ITypeInformation, bool> validateElementType,
             Func<ITypeInformation, ITypeInformation> extractElementType,
+            bool isByReference,
             DecodeContext decodeContext)
         {
             // ECMA-335 III.4.8 ldelem.<type> - load an element of an array
@@ -43,7 +44,8 @@ namespace IL2C.ILConverters
                 var expression = extractContext.GetRightExpression(
                     elementType,
                     siArray.TargetType.ElementType,
-                    string.Format("il2c_array_item({0}, {1}, {2})",
+                    string.Format("il2c_array_item{0}({1}, {2}, {3})",
+                        isByReference ? "ptr" : string.Empty,
                         extractContext.GetSymbolName(siArray),
                         siArray.TargetType.ElementType.CLanguageTypeName,
                         extractContext.GetSymbolName(siIndex)));
@@ -66,9 +68,10 @@ namespace IL2C.ILConverters
         public static Func<IExtractContext, string[]> Apply(
             Func<ITypeInformation, bool> validateElementType,
             ITypeInformation elementType,
+            bool isByReference,
             DecodeContext decodeContext)
         {
-            return Apply(validateElementType, _ => elementType, decodeContext);
+            return Apply(validateElementType, _ => elementType, isByReference, decodeContext);
         }
     }
 
@@ -81,6 +84,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.SByteType,
+                false,
                 decodeContext);
         }
     }
@@ -94,6 +98,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int16Type,
+                false,
                 decodeContext);
         }
     }
@@ -107,6 +112,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int32Type,
+                false,
                 decodeContext);
         }
     }
@@ -120,6 +126,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsInt64StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int64Type,
+                false,
                 decodeContext);
         }
     }
@@ -133,6 +140,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.ByteType,
+                false,
                 decodeContext);
         }
     }
@@ -146,6 +154,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.UInt16Type,
+                false,
                 decodeContext);
         }
     }
@@ -159,6 +168,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.UInt32Type,
+                false,
                 decodeContext);
         }
     }
@@ -172,6 +182,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsFloatStackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.DoubleType,
+                false,
                 decodeContext);
         }
     }
@@ -185,6 +196,7 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsFloatStackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.SingleType,
+                false,
                 decodeContext);
         }
     }
@@ -198,6 +210,21 @@ namespace IL2C.ILConverters
             return LdelemConverterUtilities.Apply(
                 elementType => elementType.IsReferenceType,
                 arrayType => arrayType.ElementType,
+                false,
+                decodeContext);
+        }
+    }
+
+    internal sealed class LdelemaConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldelema;
+
+        public override Func<IExtractContext, string[]> Apply(ITypeInformation operand, DecodeContext decodeContext)
+        {
+            return LdelemConverterUtilities.Apply(
+                elementType => operand.IsAssignableFrom(elementType),
+                operand.MakeByReference(),
+                true,
                 decodeContext);
         }
     }

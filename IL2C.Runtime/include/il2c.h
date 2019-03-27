@@ -11,9 +11,14 @@
 extern "C" {
 #endif
 
-#if defined(_MSC_VER) && defined(_WIN32)
+#if defined(_MSC_VER)
+
 #include <intrin.h>
 #include <setjmp.h> // TODO:
+
+#define il2c_assume__(expr) __assume(expr)
+#define il2c_likely__(expr) (expr)
+#define il2c_unlikely__(expr) (expr)
 
 #elif defined(__GNUC__)
 
@@ -26,9 +31,18 @@ extern "C" {
 #endif
 
 #include <setjmp.h>
+
+#define il2c_assume__(expr) do { if (!(expr)) __builtin_unreachable(); } while (0)
+#define il2c_likely__(expr) __builtin_expect(!!(expr), 1)
+#define il2c_unlikely__(expr) __builtin_expect(!!(expr), 0)
+
 #else
 
 #include <setjmp.h>
+
+#define il2c_assume__(expr) ((void)0)
+#define il2c_likely__(expr) (expr)
+#define il2c_unlikely__(expr) (expr)
 
 #endif
 
@@ -40,21 +54,32 @@ extern "C" {
 #include <float.h>
 
 #if defined(_MSC_VER) && defined(UEFI)
+
 #if defined(_DEBUG)
 extern void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr);
 #define il2c_cause_assert_(pFile, line, pExpr) il2c_cause_assert__(L##pFile, line, L##pExpr)
 #define il2c_cause_assert(pFile, line, pExpr) il2c_cause_assert_(pFile, line, pExpr)
 #define il2c_assert(expr) do { if (!(expr)) il2c_cause_assert(__FILE__, __LINE__, #expr); } while (0)
 #else
-#define il2c_assert(expr)
+#define il2c_assert(expr) il2c_assume__(expr)
 #endif
+
 extern int32_t* il2c_errno__(void);
 #define il2c_errno (*il2c_errno__())
+
 #else
-#include <assert.h>
+
 #include <errno.h>
-#define il2c_assert assert
+#include <assert.h>
+
 #define il2c_errno errno
+
+#if defined(_DEBUG)
+#define il2c_assert(expr) assert(expr)
+#else
+#define il2c_assert(expr) il2c_assume__(expr)
+#endif
+
 #endif
 
 #define il2c_setjmp setjmp
@@ -146,11 +171,11 @@ extern uint32_t il2c_sizeof__(IL2C_RUNTIME_TYPE type);
 // dynamic cast operator
 extern void* il2c_isinst__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE type);
 #define il2c_isinst(pReference, typeName) \
-    (((pReference) != NULL) ? il2c_isinst__(pReference, il2c_typeof(typeName)) : NULL)
+    (il2c_likely__((pReference) != NULL) ? il2c_isinst__(pReference, il2c_typeof(typeName)) : NULL)
 
 extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIME_TYPE type);
 #define il2c_castclass(pReference, typeName) \
-    (((pReference) != NULL) ? il2c_castclass__(pReference, il2c_typeof(typeName)) : NULL)
+    (il2c_likely__((pReference) != NULL) ? il2c_castclass__(pReference, il2c_typeof(typeName)) : NULL)
 
 // static cast operators
 #define il2c_adjustor_offset(typeName, interfaceTypeName) \
@@ -161,7 +186,7 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 #define il2c_cast_to_interface__(interfaceTypeName, offset, pReference) \
     ((interfaceTypeName*)(((uint8_t*)(pReference)) + (offset)))
 #define il2c_cast_to_interface(interfaceTypeName, typeName, pReference) \
-    ((pReference != NULL) ? \
+    (il2c_likely__((pReference) != NULL) ? \
         il2c_cast_to_interface__(interfaceTypeName, il2c_adjustor_offset(typeName, interfaceTypeName), (pReference)) : \
         NULL)
 
@@ -334,7 +359,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
             {
 
 #define il2c_endfinally(nestedIndex) \
-                if (unwind_target_##nestedIndex##__.ex != NULL) il2c_rethrow(); \
+                if (il2c_unlikely__(unwind_target_##nestedIndex##__.ex != NULL)) il2c_rethrow(); \
                 break
 
 #define il2c_leave_to(nestedIndex) \
@@ -346,10 +371,10 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
             {
 
 #define il2c_leave_bind(nestedIndex, continuationIndex, labelName) \
-                if (continuationIndex_##nestedIndex##__ == continuationIndex) goto labelName
+                if (il2c_unlikely__(continuationIndex_##nestedIndex##__ == continuationIndex)) goto labelName
 
 #define il2c_leave_through(nestedIndex, continuationIndex, parentNestedIndex) \
-                if (continuationIndex_##nestedIndex##__ == continuationIndex) \
+                if (il2c_unlikely__(continuationIndex_##nestedIndex##__ == continuationIndex)) \
                     continuationIndex_##parentNestedIndex##__ = continuationIndex
 
 #define il2c_end_try(nestedIndex) \

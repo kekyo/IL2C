@@ -141,7 +141,7 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
     // Last --> First
     IL2C_METHOD_TABLE* pMethodtblValue = &value->methodtbl__[0];
     intptr_t index;
-    for (index = (intptr_t)(source->count__ - value->count__); index >= 0; index--)
+    for (index = (intptr_t)(source->count__ - value->count__); il2c_likely__(index >= 0); index--)
     {
         IL2C_METHOD_TABLE* pMethodtblSource = &source->methodtbl__[index];
 
@@ -221,7 +221,7 @@ void System_Delegate_MarkHandler__(System_Delegate* this__)
     il2c_assert(this__->count__ >= 1);
 
     uintptr_t index;
-    for (index = 0; index < this__->count__; index++)
+    for (index = 0; il2c_likely__(index < this__->count__); index++)
     {
         il2c_assert(this__->methodtbl__[index].methodPtr != 0);
 

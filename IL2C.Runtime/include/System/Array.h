@@ -51,7 +51,7 @@ static inline void* il2c_array_itemptr__(
     il2c_assert(array->Length >= 0);
     il2c_assert(elementSize == il2c_sizeof__(array->elementType__));
 
-    if ((index < 0) || (index >= array->Length))
+    if (il2c_unlikely__((index < 0) || (index >= array->Length)))
     {
         il2c_throw_indexoutofrangeexception__();
     }

@@ -90,7 +90,7 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
             do { \
                 *pTemp-- = g_pHexChars[v % 16]; \
                 v /= 16; \
-            } while (v); \
+            } while (il2c_likely__(v)); \
             break; \
         default: \
             intOper \
@@ -98,17 +98,17 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
             do { \
                 *pTemp-- = (wchar_t)(v % 10 + L'0'); \
                 v /= 10; \
-            } while (v); \
+            } while (il2c_likely__(v)); \
             break; \
         } \
         do { \
             *pBuffer++ = *++pTemp; \
-        } while (*pTemp); \
+        } while (il2c_likely__(*pTemp)); \
         return buffer; \
     }
 
 #define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
-    if (value == INT32_MIN) { \
+    if (il2c_unlikely__(value == INT32_MIN)) { \
         il2c_wcscpy(buffer, L"-2147483648"); \
         return buffer; \
     } \
@@ -118,7 +118,7 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
     }
 
 #define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
-    if (value == INT64_MIN) { \
+    if (il2c_unlikely__(value == INT64_MIN)) { \
         il2c_wcscpy(buffer, L"-9223372036854775808"); \
         return buffer; \
     } \

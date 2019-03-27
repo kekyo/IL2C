@@ -102,12 +102,12 @@ int32_t il2c_get_utf8_length(const char* pUtf8String, bool detectInvalidChars)
     while (1)
     {
         const char ch0 = *pUtf8String;
-        if (ch0 == '\0')
+        if (il2c_unlikely__(ch0 == '\0'))
         {
             break;
         }
 
-        if (ch0 <= 0x7f)
+        if (il2c_likely__(ch0 <= 0x7f))
         {
             pUtf8String += 1;
             length++;
@@ -165,14 +165,14 @@ wchar_t* il2c_utf16_from_utf8_and_get_last(wchar_t* pDest, const char* pUtf8Stri
     while (1)
     {
         const char ch0 = *pUtf8String++;
-        if (ch0 == '\0')
+        if (il2c_unlikely__(ch0 == '\0'))
         {
             *pDest = L'\0';
             break;
         }
 
         // 2byte page
-        if (ch0 <= 0x7f)
+        if (il2c_likely__(ch0 <= 0x7f))
         {
             *pDest++ = (wchar_t)ch0;
             continue;
@@ -223,7 +223,7 @@ System_String* il2c_new_string_from_utf8__(const char* pUtf8String, const char* 
 System_String* il2c_new_string_from_utf8__(const char* pUtf8String)
 #endif
 {
-    if (pUtf8String == NULL)
+    if (il2c_unlikely__(pUtf8String == NULL))
     {
         return NULL;
     }
@@ -247,7 +247,7 @@ System_String* il2c_new_string_from_utf8__(const char* pUtf8String)
 
 const wchar_t* il2c_c_str(System_String* str)
 {
-    if (str != NULL)
+    if (il2c_likely__(str != NULL))
     {
         il2c_assert(str->string_body__ != NULL);
         return str->string_body__;
@@ -286,14 +286,14 @@ int8_t il2c_format_string__(
         switch (state)
         {
         case state_fetch:
-            if (ch == L'{')
+            if (il2c_unlikely__(ch == L'{'))
             {
                 argumentIndex = 0;
                 state = state_index0;
             }
-            else if (ch == L'\0')
+            else if (il2c_unlikely__(ch == L'\0'))
             {
-                if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
+                if (il2c_likely__((compositeFormatIndex - 1) > compositeFormatStartIndex))
                 {
                     int8_t result = (*pTokenWriter)(
                         pCompositeFormat + compositeFormatStartIndex,
@@ -309,9 +309,9 @@ int8_t il2c_format_string__(
             }
             break;
         case state_index0:
-            if ((ch >= L'0') && (ch <= L'9'))
+            if (il2c_likely__((ch >= L'0') && (ch <= L'9')))
             {
-                if ((compositeFormatIndex - 2) > compositeFormatStartIndex)
+                if (il2c_likely__((compositeFormatIndex - 2) > compositeFormatStartIndex))
                 {
                     int8_t result = (*pTokenWriter)(
                         pCompositeFormat + compositeFormatStartIndex,
@@ -324,7 +324,7 @@ int8_t il2c_format_string__(
                 }
 
                 calculatedArgumentIndex = argumentIndex * 10U + (uint32_t)(ch - L'0');
-                if (calculatedArgumentIndex > UINT16_MAX)
+                if (il2c_unlikely__(calculatedArgumentIndex > UINT16_MAX))
                 {
                     return IL2C_STRING_FORMAT_ARGUMENT_ABSOLUTE_LIMIT;
                 }
@@ -332,9 +332,9 @@ int8_t il2c_format_string__(
                 argumentIndex = (uint16_t)calculatedArgumentIndex;
                 state = state_index;
             }
-            else if (ch == L'{')
+            else if (il2c_unlikely__(ch == L'{'))
             {
-                if ((compositeFormatIndex - 1) > compositeFormatStartIndex)
+                if (il2c_likely__((compositeFormatIndex - 1) > compositeFormatStartIndex))
                 {
                     int8_t result = (*pTokenWriter)(
                         pCompositeFormat + compositeFormatStartIndex,
@@ -349,28 +349,28 @@ int8_t il2c_format_string__(
                 compositeFormatStartIndex = compositeFormatIndex;
                 state = state_fetch;
             }
-            else if (ch != L' ')
+            else if (il2c_likely__(ch != L' '))
             {
                 return IL2C_STRING_FORMAT_INVALID;
             }
             break;
         case state_index:
-            if ((ch >= L'0') && (ch <= L'9'))
+            if (il2c_likely__((ch >= L'0') && (ch <= L'9')))
             {
                 calculatedArgumentIndex = argumentIndex * 10U + (uint32_t)(ch - L'0');
-                if (calculatedArgumentIndex > UINT16_MAX)
+                if (il2c_unlikely__(calculatedArgumentIndex > UINT16_MAX))
                 {
                     return IL2C_STRING_FORMAT_ARGUMENT_ABSOLUTE_LIMIT;
                 }
 
                 argumentIndex = (uint16_t)calculatedArgumentIndex;
             }
-            else if (ch == L':')
+            else if (il2c_unlikely__(ch == L':'))
             {
                 formatStartIndex = compositeFormatIndex;
                 state = state_format;
             }
-            else if (ch == L'}')
+            else if (il2c_unlikely__(ch == L'}'))
             {
                 int8_t result = (*pArgumentWriter)(
                     argumentIndex,
@@ -391,7 +391,7 @@ int8_t il2c_format_string__(
             }
             break;
         case state_format:
-            if (ch == L'}')
+            if (il2c_unlikely__(ch == L'}'))
             {
                 int8_t result = (*pArgumentWriter)(
                     argumentIndex,
@@ -406,7 +406,7 @@ int8_t il2c_format_string__(
                 compositeFormatStartIndex = compositeFormatIndex;
                 state = state_fetch;
             }
-            else if (ch == L'\0')
+            else if (il2c_unlikely__(ch == L'\0'))
             {
                 return IL2C_STRING_FORMAT_INVALID;
             }
@@ -471,7 +471,7 @@ int32_t System_String_GetHashCode(System_String* this__)
     while (1)
     {
         const wchar_t ch = *p;
-        if (*p != L'\0')
+        if (il2c_unlikely__(ch == L'\0'))
         {
             break;
         }
@@ -579,7 +579,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
     // TODO: IndexOutOfRangeException
     il2c_assert(startIndex >= 0);
 
-    if (startIndex == 0)
+    if (il2c_unlikely__(startIndex == 0))
     {
         return this__;
     }
@@ -614,7 +614,7 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
     // TODO: IndexOutOfRangeException
     il2c_assert((startIndex + length) <= thisLength);
 
-    if ((startIndex == 0) && (length == thisLength))
+    if (il2c_unlikely__((startIndex == 0) && (length == thisLength)))
     {
         return this__;
     }
@@ -639,7 +639,7 @@ wchar_t System_String_get_Chars(System_String* this__, int32_t index)
     il2c_assert(this__->string_body__ != NULL);
 
     // TODO: Improvement
-    if ((index < 0) || (index >= (int32_t)il2c_wcslen(this__->string_body__)))
+    if (il2c_unlikely__((index < 0) || (index >= (int32_t)il2c_wcslen(this__->string_body__))))
     {
         il2c_throw_indexoutofrangeexception__();
     }
@@ -764,7 +764,7 @@ static int8_t System_String_InternalFormatStep1ArgumentWriter(
     System_String_InternalFormatState* p = pState;
     il2c_assert(p->pWriteTarget == NULL);
 
-    if (argumentIndex >= p->argumentCount)
+    if (il2c_unlikely__(argumentIndex >= p->argumentCount))
     {
         return IL2C_STRING_FORMAT_ARGUMENT_INDEX_OUT_OF_RANGE;
     }
@@ -809,13 +809,13 @@ static int8_t System_String_InternalFormatStep2ArgumentWriter(
     il2c_assert(*ppFormattedString == NULL);
 
     void* pArg = p->ppArgs[argumentIndex];
-    if (pArg != NULL)
+    if (il2c_likely__(pArg != NULL))
     {
         System_Object* pAdjustedReference = il2c_adjusted_reference(pArg);
         System_IFormattable* pFormattable = il2c_isinst(pArg, System_IFormattable);
         if (pFormattable != NULL)
         {
-            if (formatLength >= 1)
+            if (il2c_unlikely__(formatLength >= 1))
             {
                 il2c_assert(pFormatFrom != NULL);
                 System_String* pFormatString = il2c_new_string_with_length(pFormatFrom, formatLength);
@@ -857,7 +857,7 @@ static int8_t System_String_InternalFormatStep3Writer(
     il2c_assert(p->pWriteTarget != NULL);
     il2c_assert(p->formatItemIndex <= p->formatItemCount);
 
-    while (tokenLength > 0)
+    while (il2c_likely__(tokenLength > 0))
     {
         *(p->pWriteTarget)++ = *pTokenFrom++;
         tokenLength--;
@@ -884,7 +884,7 @@ static int8_t System_String_InternalFormatStep3ArgumentWriter(
     while (1)
     {
         const wchar_t ch = *pFrom++;
-        if (ch == L'\0')
+        if (il2c_unlikely__(ch == L'\0'))
         {
             break;
         }
@@ -919,7 +919,7 @@ static int8_t System_String_InternalFormat(
         System_String_InternalFormatStep1Writer,
         System_String_InternalFormatStep1ArgumentWriter,
         &state);
-    if (result != IL2C_STRING_FORMAT_SUCCEEDED)
+    if (il2c_unlikely__(result != IL2C_STRING_FORMAT_SUCCEEDED))
     {
         return result;
     }
@@ -954,7 +954,7 @@ static int8_t System_String_InternalFormat(
         System_String_InternalFormatStep2Writer,
         System_String_InternalFormatStep2ArgumentWriter,
         &state);
-    if (result != IL2C_STRING_FORMAT_SUCCEEDED)
+    if (il2c_unlikely__(result != IL2C_STRING_FORMAT_SUCCEEDED))
     {
         il2c_unlink_execution_frame(pFrame);
         il2c_mcfree(pFrame);
@@ -1010,8 +1010,8 @@ System_String* System_String_Format(
     il2c_assert(format->string_body__ != NULL);
 
     System_String* pString;
-    if (System_String_InternalFormat(
-        &pString, format, 1, &arg0) != 0)
+    if (il2c_unlikely__(System_String_InternalFormat(
+        &pString, format, 1, &arg0) != 0))
     {
         il2c_throw_formatexception__();
     }
@@ -1031,8 +1031,8 @@ System_String* System_String_Format_1(
     pArgs[1] = arg1;
 
     System_String* pString;
-    if (System_String_InternalFormat(
-        &pString, format, 2, pArgs) != 0)
+    if (il2c_unlikely__(System_String_InternalFormat(
+        &pString, format, 2, pArgs) != 0))
     {
         il2c_throw_formatexception__();
     }
@@ -1053,8 +1053,8 @@ System_String* System_String_Format_3(
     pArgs[2] = arg2;
 
     System_String* pString;
-    if (System_String_InternalFormat(
-        &pString, format, 3, pArgs) != 0)
+    if (il2c_unlikely__(System_String_InternalFormat(
+        &pString, format, 3, pArgs) != 0))
     {
         il2c_throw_formatexception__();
     }
@@ -1070,15 +1070,15 @@ System_String* System_String_Format_6(
     il2c_assert(format->string_body__ != NULL);
     il2c_assert(args != NULL);
 
-    if (args->Length > UINT16_MAX)
+    if (il2c_unlikely__(args->Length > UINT16_MAX))
     {
         il2c_throw_formatexception__();
     }
 
     System_String* pString;
-    if (System_String_InternalFormat(
+    if (il2c_unlikely__(System_String_InternalFormat(
         &pString, format, (uint16_t)args->Length,
-        il2c_array_itemptr(args, System_Object*, 0)) != 0)
+        il2c_array_itemptr(args, System_Object*, 0)) != 0))
     {
         il2c_throw_formatexception__();
     }

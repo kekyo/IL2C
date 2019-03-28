@@ -271,14 +271,15 @@ typedef void* untyped_ptr;
 #include "System/Runtime/InteropServices/GCHandleType.h"
 #include "System/Runtime/InteropServices/GCHandle.h"
 #include "System/Runtime/InteropServices/NativePointer.h"
-
-// Independent types for IL2C core.
-#include "System/Console.h"
 #include "System/IDisposable.h"
 #include "System/Threading/Interlocked.h"
+#include "System/Threading/Monitor.h"
 #include "System/Threading/ThreadStart.h"
 #include "System/Threading/ParameterizedThreadStart.h"
 #include "System/Threading/Thread.h"
+
+// Independent types for IL2C core.
+#include "System/Console.h"
 
 ///////////////////////////////////////////////////////
 // Boxing related declarations

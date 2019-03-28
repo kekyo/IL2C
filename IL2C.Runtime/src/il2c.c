@@ -301,6 +301,7 @@ void il2c_register_root_reference__(void* pReference, bool isFixed)
     IL2C_ROOT_REFERENCES** ppRootReferences = isFixed ?
         &g_pFixedReferences__ :
         &g_pRootReferences__;
+    volatile void* volatile* ppFreeReference = NULL;
     IL2C_ROOT_REFERENCES* pCurrentRootReferences = *ppRootReferences;
     while (il2c_likely__(pCurrentRootReferences != NULL))
     {
@@ -317,18 +318,26 @@ void il2c_register_root_reference__(void* pReference, bool isFixed)
             }
             if (il2c_unlikely__(*ppReference == NULL))
             {
-                // Try store.
-                if (il2c_likely__(il2c_icmpxchgptr(ppReference, pAdjustedReference, NULL) == NULL))
+                // Memoize free position.
+                if (il2c_unlikely__(ppFreeReference == NULL))
                 {
-                    // Success.
-                    return;
+                    ppFreeReference = ppReference;
                 }
-
-                // If failed, ignores the place and continues search next free places.
             }
         }
 
         pCurrentRootReferences = pCurrentRootReferences->pNext;
+    }
+
+    // If detedted free slot.
+    if (il2c_likely__(ppFreeReference != NULL))
+    {
+        // Try store.
+        if (il2c_likely__(il2c_icmpxchgptr(ppFreeReference, pAdjustedReference, NULL) == NULL))
+        {
+            // Success.
+            return;
+        }
     }
 
     // Nothing free place (or failed), append new slots.

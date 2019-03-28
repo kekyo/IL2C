@@ -82,6 +82,12 @@ extern intptr_t il2c_get_current_thread__(void);
 extern void il2c_join_thread__(intptr_t handle);
 #define il2c_close_thread_handle__(handle) CloseHandle((HANDLE)(handle))
 
+typedef CRITICAL_SECTION IL2C_MONITOR_LOCK;
+#define il2c_initialize_monitor_lock__(pLock) InitializeCriticalSection(pLock)
+#define il2c_enter_monitor_lock__(pLock) EnterCriticalSection(pLock)
+#define il2c_exit_monitor_lock__(pLock) LeaveCriticalSection(pLock)
+#define il2c_destroy_monitor_lock__(pLock) DeleteCriticalSection(pLock)
+
 #endif
 
 #ifdef __cplusplus

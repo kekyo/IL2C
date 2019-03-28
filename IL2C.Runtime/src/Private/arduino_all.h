@@ -89,6 +89,12 @@ extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, IL
 extern void il2c_join_thread__(intptr_t handle);
 #define il2c_close_thread_handle__(handle) vTaskDelete((TaskHandle_t)(handle))
 
+typedef xSemaphoreHandle IL2C_MONITOR_LOCK;
+#define il2c_initialize_monitor_lock__(pLock) ((*(pLock)) = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP)
+#define il2c_enter_monitor_lock__(pLock) pthread_mutex_lock(pLock)
+#define il2c_exit_monitor_lock__(pLock) pthread_mutex_unlock(pLock)
+#define il2c_destroy_monitor_lock__(pLock) pthread_mutex_destroy(pLock)
+
 // POSIX threads (pthread)
 #elif defined(_POSIX_THREADS)
 
@@ -112,6 +118,12 @@ extern intptr_t il2c_create_thread__(IL2C_THREAD_ENTRY_POINT_TYPE entryPoint, vo
 extern void il2c_join_thread__(intptr_t handle);
 #define il2c_close_thread_handle__(handle)
 
+typedef pthread_mutex_t IL2C_MONITOR_LOCK;
+#define il2c_initialize_monitor_lock__(pLock) ((*(pLock)) = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP)
+#define il2c_enter_monitor_lock__(pLock) pthread_mutex_lock(pLock)
+#define il2c_exit_monitor_lock__(pLock) pthread_mutex_unlock(pLock)
+#define il2c_destroy_monitor_lock__(pLock) pthread_mutex_destroy(pLock)
+
 // Lack for anything scheduler
 #else
 
@@ -131,6 +143,12 @@ typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C
 #define il2c_create_thread__(entryPoint, parameter) ((intptr_t)-1)
 #define il2c_resume_thread__(handle) ((void)0)
 #define il2c_join_thread__(handle) ((void)0)
+
+typedef uint8_t IL2C_MONITOR_LOCK;
+#define il2c_initialize_monitor_lock__(pLock) ((void)0)
+#define il2c_enter_monitor_lock__(pLock) ((void)0)
+#define il2c_exit_monitor_lock__(pLock) ((void)0)
+#define il2c_destroy_monitor_lock__(pLock) ((void)0)
 
 #endif
 

@@ -58,12 +58,36 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public sealed class RaceFreeWithObjectMonitorLockClosure
+    {
+        private readonly object obj = new Object();
+        public int Value;
+
+        public void Increment()
+        {
+            Monitor.Enter(obj);
+            var v = this.Value;
+            Thread.Sleep(10);
+            this.Value = v + 1;
+            Monitor.Exit(obj);
+        }
+
+        public void Run()
+        {
+            for (var index = 0; index < 10; index++)
+            {
+                this.Increment();
+            }
+        }
+    }
+
     [Description("These tests are verified the IL2C can handle threading features.")]
     [TestCase(333, "RunAndFinishInstanceMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(333, "RunAndFinishInstanceWithParameterMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosureWithParameter) })]
     [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 10, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 100, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(true, "WillGetDifferentThreadId", IncludeTypes = new[] { typeof(WillGetDifferentThreadIdClosure) })]
+    [TestCase(100, "RaceFreeWithObjectMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeWithObjectMonitorLockClosure) })]
     public sealed class Threading
     {
         public static int RunAndFinishInstanceMethod(int a, int b)
@@ -125,6 +149,27 @@ namespace IL2C.RuntimeSystems
             thread.Join();
 
             return target.TestThreadId != target.RunThreadId;
+        }
+
+        public static int RaceFreeWithObjectMonitorLock(int count)
+        {
+            var target = new RaceFreeWithObjectMonitorLockClosure();
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return target.Value;
         }
     }
 }

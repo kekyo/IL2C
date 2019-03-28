@@ -73,11 +73,13 @@ namespace IL2C.Metadata
 
                 if (!x.IsByReference && y.IsByReference)
                 {
-                    return Compare(x.ElementType, y);
+                    var r = Compare(x, y.ElementType);
+                    return (r == 0) ? -1 : r;
                 }
                 if (x.IsByReference && !y.IsByReference)
                 {
-                    return Compare(x, y.ElementType);
+                    var r = Compare(x.ElementType, y);
+                    return (r == 0) ? 1 : r;
                 }
                 if (x.IsByReference && y.IsByReference)
                 {

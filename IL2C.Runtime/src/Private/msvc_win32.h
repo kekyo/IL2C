@@ -29,7 +29,7 @@ extern "C" {
 #include <signal.h>
 
 // Compatibility symbols (required platform depended functions)
-#if 1
+#if defined(IL2C_USE_ITOW)
 extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_u32tow(uint32_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_i64tow(int64_t value, wchar_t* buffer, int radix);

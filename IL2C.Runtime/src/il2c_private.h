@@ -167,6 +167,8 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);
 IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void);
 #endif
 
+IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, bool allocateIfRequired);
+
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs
 

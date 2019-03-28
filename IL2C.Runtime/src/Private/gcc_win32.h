@@ -24,10 +24,17 @@ extern "C" {
 #include <windows.h>
 
 // Compatibility symbols (required platform depended functions)
+#if defined(IL2C_USE_ITOW)
 extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_u32tow(uint32_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_i64tow(int64_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_u64tow(uint64_t value, wchar_t* buffer, int radix);
+#else
+#define il2c_i32tow _itow
+#define il2c_u32tow _ultow
+#define il2c_i64tow _i64tow
+#define il2c_u64tow _ui64tow
+#endif
 #define il2c_snwprintf _snwprintf
 #define il2c_wtoi32 wcstol
 #define il2c_wtou32 wcstoul

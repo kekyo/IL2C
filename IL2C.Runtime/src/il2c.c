@@ -29,26 +29,46 @@ struct IL2C_ROOT_REFERENCES_DECL
     volatile void* pReferences[3];
 };
 
-IL2C_TLS_INDEX g_TlsIndex__;
+typedef struct IL2C_MONITOR_LOCK_BLOCK_DECL IL2C_MONITOR_LOCK_BLOCK;
 
-static IL2C_STATIC_FIELDS* g_pBeginStaticFields__ = NULL;
+struct IL2C_MONITOR_LOCK_BLOCK_DECL
+{
+    IL2C_MONITOR_LOCK_BLOCK* pNext;
+    volatile void* pReferences[4];
+    IL2C_MONITOR_LOCK locks[4];
+};
+
+typedef struct IL2C_MONITOR_LOCK_BLOCK_INFORMATION_DECL IL2C_MONITOR_LOCK_BLOCK_INFORMATION;
+
+struct IL2C_MONITOR_LOCK_BLOCK_INFORMATION_DECL
+{
+    IL2C_MONITOR_LOCK blockLock;
+    IL2C_MONITOR_LOCK_BLOCK block0;
+};
+
+IL2C_TLS_INDEX g_TlsIndex__;
 
 static IL2C_REF_HEADER* g_pBeginHeader__ = NULL;
 static IL2C_ROOT_REFERENCES* g_pRootReferences__ = NULL;
 static IL2C_ROOT_REFERENCES* g_pFixedReferences__ = NULL;
-static interlock_t g_ExecutingCollection__ = 0;
 
-#if defined(IL2C_USE_LINE_INFORMATION)
-static void il2c_collect__(bool finalShutdown, const char* pFile, int line);
-#else
-static void il2c_collect__(bool finalShutdown);
-#endif
+static IL2C_STATIC_FIELDS* g_pBeginStaticFields__ = NULL;
+
+static IL2C_MONITOR_LOCK_BLOCK_INFORMATION* g_MonitorLockBlockInformations[7] = { NULL };
+
+static interlock_t g_ExecutingCollection__ = 0;
 
 // The initializer count produces when works the type initializer.
 // "il2c_initializer_count" will compare the local type counter,
 // the translated code have to initialize first using static members if count value different.
 static uintptr_t g_InitializerCount = 0;
 const uintptr_t* il2c_initializer_count = &g_InitializerCount;
+
+#if defined(IL2C_USE_LINE_INFORMATION)
+static void il2c_collect__(bool finalShutdown, const char* pFile, int line);
+#else
+static void il2c_collect__(bool finalShutdown);
+#endif
 
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
@@ -411,9 +431,151 @@ static void il2c_unregister_all_root_references_for_final_shutdown__(IL2C_ROOT_R
 }
 
 /////////////////////////////////////////////////////////////
-// Internal GC mark handlers
+// Monitor lock functions
 
-typedef void (*IL2C_MARK_HANDLER)(void* pReference);
+IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, bool allocateIfRequired)
+{
+    il2c_assert(pReference != NULL);
+
+    const uint8_t blockIndex =
+        (uint8_t)(((uintptr_t)pReference) %
+        (uint8_t)(sizeof(g_MonitorLockBlockInformations) / sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION*)));
+
+    // Step 1: Get IL2C_MONITOR_LOCK_BLOCK.
+    IL2C_MONITOR_LOCK_BLOCK_INFORMATION* pMonitorBlockInformation = g_MonitorLockBlockInformations[blockIndex];
+    if (il2c_unlikely__(pMonitorBlockInformation == NULL))
+    {
+        if (il2c_unlikely__(!allocateIfRequired))
+        {
+            return NULL;
+        }
+
+        // Allocate new IL2C_MONITOR_LOCK_BLOCK_INFORMATION.
+        pMonitorBlockInformation = il2c_malloc(sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION));
+        memset(pMonitorBlockInformation, 0, sizeof *pMonitorBlockInformation);
+        il2c_initialize_monitor_lock__(&pMonitorBlockInformation->blockLock);
+
+        // TODO: NotEnoughMemoryException
+        il2c_assert(pMonitorBlockInformation != NULL);
+
+        IL2C_MONITOR_LOCK_BLOCK_INFORMATION* p = il2c_icmpxchgptr(&g_MonitorLockBlockInformations[blockIndex], pMonitorBlockInformation, NULL);
+        if (il2c_unlikely__(p != NULL))
+        {
+            il2c_destroy_monitor_lock__(&pMonitorBlockInformation->blockLock);
+            il2c_free(pMonitorBlockInformation);
+
+            pMonitorBlockInformation = p;
+        }
+    }
+
+    // Step 2: Traverse list with list locked.
+    il2c_enter_monitor_lock__(&pMonitorBlockInformation->blockLock);
+
+    IL2C_MONITOR_LOCK_BLOCK* pCurrentBlock = &pMonitorBlockInformation->block0;
+    while (1)
+    {
+        volatile void** ppReference;
+        uint8_t index;
+        for (index = 0, ppReference = pCurrentBlock->pReferences;
+            il2c_likely__(index < (sizeof(pCurrentBlock->pReferences) / sizeof(void*)));
+            index++, ppReference++)
+        {
+            // Already assigned.
+            if (il2c_unlikely__(*ppReference == pReference))
+            {
+                IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
+
+                il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
+                return pLock;
+            }
+            // Found free slot.
+            if (il2c_unlikely__((*ppReference == NULL) && allocateIfRequired))
+            {
+                *ppReference = pReference;
+
+                IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
+                il2c_initialize_monitor_lock__(pLock);
+
+                il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
+                return pLock;
+            }
+        }
+
+        if (il2c_unlikely__(pCurrentBlock->pNext == NULL))
+        {
+            if (il2c_unlikely__(!allocateIfRequired))
+            {
+                return NULL;
+            }
+
+            // TODO: Locking and allocating are a lot of cost.
+            IL2C_MONITOR_LOCK_BLOCK* pNext = il2c_malloc(sizeof(IL2C_MONITOR_LOCK_BLOCK));
+            memset(pNext, 0, sizeof *pNext);
+
+            if (il2c_likely__(il2c_icmpxchgptr(&pCurrentBlock->pNext, pNext, NULL) == NULL))
+            {
+                IL2C_MONITOR_LOCK* pLock = &pNext->locks[index];
+
+                il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
+                return pLock;
+            }
+        }
+
+        pCurrentBlock = pCurrentBlock->pNext;
+    }
+}
+
+static void il2c_release_monitor_lock_from_objref__(void* pReference)
+{
+    il2c_assert(pReference != NULL);
+
+    const uint8_t blockIndex =
+        (uint8_t)(((uintptr_t)pReference) %
+        (uint8_t)(sizeof(g_MonitorLockBlockInformations) / sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION*)));
+
+    IL2C_MONITOR_LOCK_BLOCK_INFORMATION* pMonitorBlockInformation = g_MonitorLockBlockInformations[blockIndex];
+    if (il2c_unlikely__(pMonitorBlockInformation == NULL))
+    {
+        return;
+    }
+
+    il2c_enter_monitor_lock__(&pMonitorBlockInformation->blockLock);
+
+    IL2C_MONITOR_LOCK_BLOCK* pCurrentBlock = &pMonitorBlockInformation->block0;
+    while (1)
+    {
+        volatile void** ppReference;
+        uint8_t index;
+        for (index = 0, ppReference = pCurrentBlock->pReferences;
+            il2c_likely__(index < (sizeof(pCurrentBlock->pReferences) / sizeof(void*)));
+            index++, ppReference++)
+        {
+            // Already assigned.
+            if (il2c_unlikely__(*ppReference == pReference))
+            {
+                *ppReference = NULL;
+
+                IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
+                il2c_destroy_monitor_lock__(pLock);
+
+                il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
+                return;
+            }
+        }
+
+        // Not found.
+        if (il2c_unlikely__(pCurrentBlock->pNext == NULL))
+        {
+            il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
+            return;
+        }
+
+        pCurrentBlock = pCurrentBlock->pNext;
+    }
+}
+
+/////////////////////////////////////////////////////////////
+// Internal GC mark handlers
 
 // Has to ignore if objref is const.
 // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory (CONST).
@@ -422,10 +584,12 @@ typedef void (*IL2C_MARK_HANDLER)(void* pReference);
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pReference); \
     if (il2c_unlikely__((pHeader->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_LIVE)) == 0))
 
-static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const uint8_t offset);
+static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type, const uint8_t offset);
 
 static void il2c_mark_handler_for_objref__(void* pAdjustedReference)
 {
+    typedef void(*IL2C_MARK_HANDLER)(void* pReference);
+
     il2c_assert(pAdjustedReference != NULL);
 
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
@@ -495,9 +659,9 @@ static void il2c_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE v
     il2c_mark_handler_recursive__(pValue, valueType, 0);
 }
 
-static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const uint8_t offset)
+static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type, const uint8_t offset)
 {
-    il2c_assert(p != NULL);
+    il2c_assert(pTarget != NULL);
     il2c_assert(type != NULL);
 
     // Traverse type fields recursivity.
@@ -507,7 +671,7 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
         il2c_likely__(index < type->markTarget);
         index++, pMarkTarget++)
     {
-        void** ppField = (void**)(((uint8_t*)p) + pMarkTarget->offset + offset);
+        void** ppField = (void**)(((uint8_t*)pTarget) + pMarkTarget->offset + offset);
 
         // Is this entry value type?
         if (il2c_unlikely__(pMarkTarget->valueType != NULL))
@@ -515,8 +679,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             il2c_assert((pMarkTarget->valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
             il2c_runtime_debug_log_format(
-                L"il2c_mark_handler_recursive__ [1]: p=0x{0:p}, type={1:s}, index={2:u}, ppField=0x{3:p}, fieldType={4:s}",
-                p,
+                L"il2c_mark_handler_recursive__ [1]: pTarget=0x{0:p}, type={1:s}, index={2:u}, ppField=0x{3:p}, fieldType={4:s}",
+                pTarget,
                 type->pTypeName,
                 index,
                 ppField,
@@ -532,8 +696,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             if (il2c_unlikely__(*ppField == NULL))
             {
                 il2c_runtime_debug_log_format(
-                    L"il2c_mark_handler_recursive__ [2]: p=0x{0:p}, type={1:s}, index={2:u}, *ppField=NULL",
-                    p,
+                    L"il2c_mark_handler_recursive__ [2]: pTarget=0x{0:p}, type={1:s}, index={2:u}, *ppField=NULL",
+                    pTarget,
                     type->pTypeName,
                     index,
                     *ppField);
@@ -545,8 +709,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             TRY_GET_HEADER(pHeaderInner, pAdjustedReferenceInner)
             {
                 il2c_runtime_debug_log_format(
-                    L"il2c_mark_handler_recursive__ [3]: p=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:x}, targetType={4:s}",
-                    p,
+                    L"il2c_mark_handler_recursive__ [3]: pTarget=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:x}, targetType={4:s}",
+                    pTarget,
                     type->pTypeName,
                     index,
                     pAdjustedReferenceInner,
@@ -558,8 +722,8 @@ static void il2c_mark_handler_recursive__(void* p, IL2C_RUNTIME_TYPE type, const
             else
             {
                 il2c_runtime_debug_log_format(
-                    L"il2c_mark_handler_recursive__ [4]: p=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:p}, targetType={4:s}, characteristic=0x{5:x}",
-                    p,
+                    L"il2c_mark_handler_recursive__ [4]: pTarget=0x{0:p}, type={1:s}, index={2:u}, pAdjustedReferenceInner=0x{3:p}, targetType={4:s}, characteristic=0x{5:x}",
+                    pTarget,
                     type->pTypeName,
                     index,
                     pAdjustedReferenceInner,

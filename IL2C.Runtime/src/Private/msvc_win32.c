@@ -13,6 +13,8 @@ double il2c_fmod(double lhs, double rhs)
     return fmod(lhs, rhs);
 }
 
+#if defined(IL2C_USE_ITOW)
+
 static const wchar_t* g_pHexChars = L"0123456789abcdef";
 
 #define IL2C_DECLARE_INTTOW(name, typeName, utypeName, bufferLength, intOper) \
@@ -71,6 +73,8 @@ IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT3
 IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
 IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
 IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+
+#endif
 
 intptr_t il2c_get_current_thread__(void)
 {

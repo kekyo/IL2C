@@ -437,8 +437,10 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
 {
     il2c_assert(pReference != NULL);
 
+    void* pAdjustedReference = il2c_adjusted_reference(pReference);
+
     const uint8_t blockIndex =
-        (uint8_t)(((uintptr_t)pReference) %
+        (uint8_t)(((uintptr_t)pAdjustedReference) %
         (uint8_t)(sizeof(g_MonitorLockBlockInformations) / sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION*)));
 
     // Step 1: Get IL2C_MONITOR_LOCK_BLOCK.
@@ -481,20 +483,31 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
             index++, ppReference++)
         {
             // Already assigned.
-            if (il2c_unlikely__(*ppReference == pReference))
+            if (il2c_unlikely__(*ppReference == pAdjustedReference))
             {
-                IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
-
+                il2c_assert(il2c_get_header__(pAdjustedReference)->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK));
                 il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
+
+                IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
                 return pLock;
             }
+
             // Found free slot.
             if (il2c_unlikely__((*ppReference == NULL) && allocateIfRequired))
             {
-                *ppReference = pReference;
+                // We have to mark acquired to the instance except const instance.
+                // The GC phase, can ignore traversing monitor lock table if doesn't detect this flag.
+                IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
+                if ((pHeader->characteristic & IL2C_CHARACTERISTIC_CONST) == 0)
+                {
+                    const interlock_t c = il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK);
+                    il2c_assert((c & IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK) == 0);
+                }
 
                 IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
                 il2c_initialize_monitor_lock__(pLock);
+
+                *ppReference = pAdjustedReference;
 
                 il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
                 return pLock;
@@ -514,7 +527,19 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
 
             if (il2c_likely__(il2c_icmpxchgptr(&pCurrentBlock->pNext, pNext, NULL) == NULL))
             {
-                IL2C_MONITOR_LOCK* pLock = &pNext->locks[index];
+                // We have to mark acquired to the instance except const instance.
+                // The GC phase, can ignore traversing monitor lock table if doesn't detect this flag.
+                IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
+                if ((pHeader->characteristic & IL2C_CHARACTERISTIC_CONST) == 0)
+                {
+                    const interlock_t c = il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK);
+                    il2c_assert((c & IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK) == 0);
+                }
+
+                IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
+                il2c_initialize_monitor_lock__(pLock);
+
+                *ppReference = pAdjustedReference;
 
                 il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
                 return pLock;
@@ -525,12 +550,15 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
     }
 }
 
-static void il2c_release_monitor_lock_from_objref__(void* pReference)
+static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
 {
-    il2c_assert(pReference != NULL);
+    il2c_assert(pHeader != NULL);
+    il2c_assert((pHeader->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK)));
+
+    void* pAdjustedReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
 
     const uint8_t blockIndex =
-        (uint8_t)(((uintptr_t)pReference) %
+        (uint8_t)(((uintptr_t)pAdjustedReference) %
         (uint8_t)(sizeof(g_MonitorLockBlockInformations) / sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION*)));
 
     IL2C_MONITOR_LOCK_BLOCK_INFORMATION* pMonitorBlockInformation = g_MonitorLockBlockInformations[blockIndex];
@@ -551,7 +579,7 @@ static void il2c_release_monitor_lock_from_objref__(void* pReference)
             index++, ppReference++)
         {
             // Already assigned.
-            if (il2c_unlikely__(*ppReference == pReference))
+            if (il2c_unlikely__(*ppReference == pAdjustedReference))
             {
                 *ppReference = NULL;
 
@@ -915,11 +943,19 @@ static void il2c_step3_sweep_garbage__(void)
         IL2C_REF_HEADER* pNext = pScheduledHeader->pNext;
 
         il2c_runtime_debug_log_format(
-            L"il2c_step3_sweep_garbage__: free: type={0:s}, pObject=0x{0:p}",
+            L"il2c_step3_sweep_garbage__: free: type={0:s}, pObject=0x{1:p}, characteristic=0x{2:x}",
             pScheduledHeader->type->pTypeName,
-            ((uint8_t*)pScheduledHeader) + sizeof(IL2C_REF_HEADER));
+            ((uint8_t*)pScheduledHeader) + sizeof(IL2C_REF_HEADER),
+            pScheduledHeader->characteristic);
 
-        // Heap discarded
+        // Simply ignore if this instance didn't mark ACQUIRED.
+        if (il2c_unlikely__(pScheduledHeader->characteristic & IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK))
+        {
+            // Monitor lock discarded.
+            il2c_release_monitor_lock_from_objref__(pScheduledHeader);
+        }
+
+        // Heap discarded.
         il2c_free((void*)pScheduledHeader);
 
         // Next

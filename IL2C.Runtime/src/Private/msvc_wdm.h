@@ -80,6 +80,7 @@ extern void il2c_join_thread__(intptr_t handle);
 typedef KSPIN_LOCK IL2C_MONITOR_LOCK;
 #define il2c_initialize_monitor_lock__(pLock) InitializeCriticalSection(pLock)
 #define il2c_enter_monitor_lock__(pLock) KeAcquireSpinLock(pLock, pCookie)  // TODO: Spinlock can't nested locking
+#define il2c_try_enter_monitor_lock__(pLock) KeAcquireSpinLock(pLock, pCookie)
 #define il2c_exit_monitor_lock__(pLock) KeReleaseSpinLock(pLock, pCookie)
 #define il2c_destroy_monitor_lock__(pLock) DeleteCriticalSection(pLock)
 

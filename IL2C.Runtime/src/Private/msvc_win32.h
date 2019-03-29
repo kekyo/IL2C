@@ -97,6 +97,7 @@ extern void il2c_join_thread__(intptr_t handle);
 typedef CRITICAL_SECTION IL2C_MONITOR_LOCK;
 #define il2c_initialize_monitor_lock__(pLock) InitializeCriticalSection(pLock)
 #define il2c_enter_monitor_lock__(pLock) EnterCriticalSection(pLock)
+#define il2c_try_enter_monitor_lock__(pLock) (TryEnterCriticalSection(pLock) != FALSE)
 #define il2c_exit_monitor_lock__(pLock) LeaveCriticalSection(pLock)
 #define il2c_destroy_monitor_lock__(pLock) DeleteCriticalSection(pLock)
 

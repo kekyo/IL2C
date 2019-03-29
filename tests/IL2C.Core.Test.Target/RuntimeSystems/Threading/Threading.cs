@@ -58,14 +58,74 @@ namespace IL2C.RuntimeSystems
         }
     }
 
-    public sealed class RaceFreeWithObjectMonitorLockClosure
+    public sealed class RaceFreeMonitorLockClosure
     {
-        private readonly object obj = new Object();
+        private readonly object obj;
         public int Value;
+
+        public RaceFreeMonitorLockClosure(object obj) =>
+            this.obj = obj;
 
         public void Increment()
         {
             Monitor.Enter(obj);
+            var v = this.Value;
+            Thread.Sleep(10);
+            this.Value = v + 1;
+            Monitor.Exit(obj);
+        }
+
+        public void Run()
+        {
+            for (var index = 0; index < 10; index++)
+            {
+                this.Increment();
+            }
+        }
+    }
+
+    public sealed class RaceFreeMonitorLock2Closure
+    {
+        private readonly object obj;
+        public int Value;
+
+        public RaceFreeMonitorLock2Closure(object obj) =>
+            this.obj = obj;
+
+        public void Increment()
+        {
+            while (true)
+            {
+                var lockTaken = false;
+                Monitor.Enter(obj, ref lockTaken);
+                if (lockTaken) break;
+            }
+            var v = this.Value;
+            Thread.Sleep(10);
+            this.Value = v + 1;
+            Monitor.Exit(obj);
+        }
+
+        public void Run()
+        {
+            for (var index = 0; index < 10; index++)
+            {
+                this.Increment();
+            }
+        }
+    }
+
+    public sealed class RaceFreeMonitorTryLockClosure
+    {
+        private readonly object obj;
+        public int Value;
+
+        public RaceFreeMonitorTryLockClosure(object obj) =>
+            this.obj = obj;
+
+        public void Increment()
+        {
+            while (!Monitor.TryEnter(obj));
             var v = this.Value;
             Thread.Sleep(10);
             this.Value = v + 1;
@@ -87,7 +147,12 @@ namespace IL2C.RuntimeSystems
     [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 10, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 100, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(true, "WillGetDifferentThreadId", IncludeTypes = new[] { typeof(WillGetDifferentThreadIdClosure) })]
-    [TestCase(100, "RaceFreeWithObjectMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeWithObjectMonitorLockClosure) })]
+    [TestCase(100, "RaceFreeWithObjectMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLockClosure) })]
+    [TestCase(100, "RaceFreeWithConstStringMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLockClosure) })]
+    [TestCase(100, "RaceFreeWithObjectMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
+    [TestCase(100, "RaceFreeWithConstStringMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
+    [TestCase(100, "RaceFreeWithObjectMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
+    [TestCase(100, "RaceFreeWithConstStringMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
     public sealed class Threading
     {
         public static int RunAndFinishInstanceMethod(int a, int b)
@@ -153,7 +218,112 @@ namespace IL2C.RuntimeSystems
 
         public static int RaceFreeWithObjectMonitorLock(int count)
         {
-            var target = new RaceFreeWithObjectMonitorLockClosure();
+            var target = new RaceFreeMonitorLockClosure(new object());
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return target.Value;
+        }
+
+        public static int RaceFreeWithConstStringMonitorLock(int count)
+        {
+            var target = new RaceFreeMonitorLockClosure("LOCK TARGET");
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return target.Value;
+        }
+
+        public static int RaceFreeWithObjectMonitorLock2(int count)
+        {
+            var target = new RaceFreeMonitorLock2Closure(new object());
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return target.Value;
+        }
+
+        public static int RaceFreeWithConstStringMonitorLock2(int count)
+        {
+            var target = new RaceFreeMonitorLock2Closure("LOCK TARGET");
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return target.Value;
+        }
+
+        public static int RaceFreeWithObjectMonitorTryLock(int count)
+        {
+            var target = new RaceFreeMonitorTryLockClosure(new object());
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return target.Value;
+        }
+
+        public static int RaceFreeWithConstStringMonitorTryLock(int count)
+        {
+            var target = new RaceFreeMonitorTryLockClosure("LOCK TARGET");
 
             var threads = new Thread[count];
             for (var index = 0; index < count; index++)

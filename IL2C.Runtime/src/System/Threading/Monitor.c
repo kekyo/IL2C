@@ -31,6 +31,30 @@ void System_Threading_Monitor_Enter_1(System_Object* obj, bool* lockTaken)
     *lockTaken = true;
 }
 
+bool System_Threading_Monitor_TryEnter(System_Object* obj)
+{
+    // TODO: ArgumentNullException
+    il2c_assert(obj != NULL);
+
+    IL2C_MONITOR_LOCK* pLock = il2c_acquire_monitor_lock_from_objref__(obj, true);
+    il2c_assert(pLock != NULL);
+
+    return il2c_try_enter_monitor_lock__(pLock);
+}
+
+void System_Threading_Monitor_TryEnter_1(System_Object* obj, bool* lockTaken)
+{
+    il2c_assert(lockTaken != NULL);
+
+    // TODO: ArgumentNullException
+    il2c_assert(obj != NULL);
+
+    IL2C_MONITOR_LOCK* pLock = il2c_acquire_monitor_lock_from_objref__(obj, true);
+    il2c_assert(pLock != NULL);
+
+    *lockTaken = il2c_try_enter_monitor_lock__(pLock);
+}
+
 void System_Threading_Monitor_Exit(System_Object* obj)
 {
     // TODO: ArgumentNullException

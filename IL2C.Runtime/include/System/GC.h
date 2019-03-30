@@ -18,6 +18,7 @@ extern /* static */ void System_GC_SuppressFinalize(System_Object* obj);
 extern /* static */ void System_GC_ReRegisterForFinalize(System_Object* obj);
 #define System_GC_WaitForPendingFinalizers() ((void)0)
 extern /* static */ void System_GC_Collect(void);
+#define System_GC_Collect_1(generation) System_GC_Collect()
 
 #ifdef __cplusplus
 }

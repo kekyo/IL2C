@@ -64,12 +64,6 @@ static interlock_t g_ExecutingCollection__ = 0;
 static uintptr_t g_InitializerCount = 0;
 const uintptr_t* il2c_initializer_count = &g_InitializerCount;
 
-#if defined(IL2C_USE_LINE_INFORMATION)
-static void il2c_collect__(bool finalShutdown, const char* pFile, int line);
-#else
-static void il2c_collect__(bool finalShutdown);
-#endif
-
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
 
@@ -83,9 +77,9 @@ void* il2c_get_uninitialized_object_internal__(
 {
     // TODO: always collect
 #if defined(IL2C_USE_LINE_INFORMATION)
-    il2c_collect__(false, pFile, line);
+    il2c_collect__(pFile, line);
 #else
-    il2c_collect__(false);
+    il2c_collect__();
 #endif
 
     // +----------------------+ <-- pHeader
@@ -103,9 +97,9 @@ void* il2c_get_uninitialized_object_internal__(
         {
             // Cannot allocate: force collecting
 #if defined(IL2C_USE_LINE_INFORMATION)
-            il2c_collect__(false, pFile, line);
+            il2c_collect__(pFile, line);
 #else
-            il2c_collect__(false);
+            il2c_collect__();
 #endif
 
             // Retry
@@ -272,9 +266,9 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
 
     // TODO: always collect
 #if defined(IL2C_USE_LINE_INFORMATION)
-    il2c_collect__(false, pFile, line);
+    il2c_collect__(pFile, line);
 #else
-    il2c_collect__(false);
+    il2c_collect__();
 #endif
 
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
@@ -578,7 +572,7 @@ static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
             il2c_likely__(index < (sizeof(pCurrentBlock->pReferences) / sizeof(void*)));
             index++, ppReference++)
         {
-            // Already assigned.
+            // Found this reference.
             if (il2c_unlikely__(*ppReference == pAdjustedReference))
             {
                 *ppReference = NULL;
@@ -599,6 +593,63 @@ static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
         }
 
         pCurrentBlock = pCurrentBlock->pNext;
+    }
+}
+
+static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
+{
+    IL2C_MONITOR_LOCK_BLOCK_INFORMATION** ppMonitorBlockInformation;
+    uint8_t blockIndex;
+    for (blockIndex = 0, ppMonitorBlockInformation = &g_MonitorLockBlockInformations[0];
+        blockIndex < (sizeof(g_MonitorLockBlockInformations) / sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION*));
+        blockIndex++, ppMonitorBlockInformation++)
+    {
+        if (*ppMonitorBlockInformation != NULL)
+        {
+            IL2C_MONITOR_LOCK_BLOCK* pCurrentBlock = &(*ppMonitorBlockInformation)->block0;
+            IL2C_MONITOR_LOCK_BLOCK* pLastBlock = NULL;
+            goto loop;
+
+            do
+            {
+                il2c_assert(pLastBlock != NULL);
+                il2c_free((void*)pLastBlock);
+            loop:
+                {
+                    volatile void** ppReference;
+                    uint8_t index;
+                    for (index = 0, ppReference = pCurrentBlock->pReferences;
+                        il2c_likely__(index < (sizeof(pCurrentBlock->pReferences) / sizeof(void*)));
+                        index++, ppReference++)
+                    {
+                        // Assigned at this lock.
+                        if (il2c_unlikely__(*ppReference != NULL))
+                        {
+#if defined(_DEBUG)
+                            *ppReference = NULL;
+#endif
+                            // Destroy the lock.
+                            IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
+                            il2c_destroy_monitor_lock__(pLock);
+                        }
+                    }
+                }
+
+                pLastBlock = pCurrentBlock;
+                pCurrentBlock = pCurrentBlock->pNext;
+            }
+            while (il2c_unlikely__(pCurrentBlock != NULL));
+
+            // Destroy this block information lock.
+            il2c_destroy_monitor_lock__(&(*ppMonitorBlockInformation)->blockLock);
+
+            // Free this block information.
+            il2c_free(*ppMonitorBlockInformation);
+
+#if defined(_DEBUG)
+            *ppMonitorBlockInformation = NULL;
+#endif
+        }
     }
 }
 
@@ -972,11 +1023,12 @@ int64_t g_CollectCountBreak = -1;
 #endif
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-static void il2c_collect__(bool finalShutdown, const char* pFile, int line)
+void il2c_collect__(const char* pFile, int line)
 #else
-static void il2c_collect__(bool finalShutdown)
+void il2c_collect__(void)
 #endif
 {
+    // Ignores reentrant by the finalizers.
     if (il2c_unlikely__(il2c_iinc(&g_ExecutingCollection__) >= 2))
     {
         il2c_idec(&g_ExecutingCollection__);
@@ -998,6 +1050,12 @@ static void il2c_collect__(bool finalShutdown)
         g_pBeginHeader__,
         g_pBeginStaticFields__,
         pFile, line);
+#elif defined(_DEBUG)
+    il2c_runtime_debug_log(
+        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}",
+        collectCount,
+        g_pBeginHeader__,
+        g_pBeginStaticFields__);
 #else
     il2c_runtime_debug_log(L"il2c_collect__: begin");
 #endif
@@ -1013,27 +1071,13 @@ static void il2c_collect__(bool finalShutdown)
     //////////////////////////////////////
     // GC Step 2:
 
-    // Normal GC step:
-    if (il2c_likely__(!finalShutdown))
-    {
-        il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
-        il2c_check_heap();
+    il2c_step2_mark_gcmark__(g_pBeginStaticFields__);
+    il2c_check_heap();
 
-        il2c_step2_mark_gcmark_for_root_referfences__(g_pRootReferences__);
-        il2c_check_heap();
-        il2c_step2_mark_gcmark_for_root_referfences__(g_pFixedReferences__);
-        il2c_check_heap();
-    }
-    // Final GC step:
-    else
-    {
-        // The final GC step has to ignore both static fields, root references and fixed references.
-        // Step 3 collects all instances if GC doesn't have collecting problems ;)
-        il2c_unregister_all_root_references_for_final_shutdown__(&g_pRootReferences__);
-        il2c_check_heap();
-        il2c_unregister_all_root_references_for_final_shutdown__(&g_pFixedReferences__);
-        il2c_check_heap();
-    }
+    il2c_step2_mark_gcmark_for_root_referfences__(g_pRootReferences__);
+    il2c_check_heap();
+    il2c_step2_mark_gcmark_for_root_referfences__(g_pFixedReferences__);
+    il2c_check_heap();
 
     //////////////////////////////////////////////////
     // GC Step 3:
@@ -1054,13 +1098,66 @@ static void il2c_collect__(bool finalShutdown)
     il2c_idec(&g_ExecutingCollection__);
 }
 
-void il2c_collect(void)
+static void il2c_collect_for_final_shutdown__(void)
 {
-#if defined(IL2C_USE_LINE_INFORMATION)
-    il2c_collect__(false, __FILE__, __LINE__);
-#else
-    il2c_collect__(false);
+    interlock_t executingCollection = il2c_iinc(&g_ExecutingCollection__);
+    il2c_assert(executingCollection == 1);
+
+#if defined(_DEBUG)
+    uint32_t collectCount = g_CollectCount++;
+    if (g_CollectCountBreak != -1)
+    {
+        il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
+    }
 #endif
+
+#if defined(_DEBUG)
+    il2c_runtime_debug_log_format(
+        L"il2c_collect_for_final_shutdown__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}",
+        collectCount,
+        g_pBeginHeader__,
+        g_pBeginStaticFields__);
+#else
+    il2c_runtime_debug_log(
+        L"il2c_collect_for_final_shutdown__: begin");
+#endif
+
+    il2c_check_heap();
+
+    //////////////////////////////////////////////////
+    // GC Step 1:
+
+    il2c_step1_clear_gcmark__();
+    il2c_check_heap();
+
+    //////////////////////////////////////
+    // GC Step 2:
+
+    // The final GC step has to ignore both static fields, root references and fixed references.
+    // Step 3 collects all instances if GC doesn't have collecting problems ;)
+    il2c_unregister_all_root_references_for_final_shutdown__(&g_pRootReferences__);
+    il2c_check_heap();
+    il2c_unregister_all_root_references_for_final_shutdown__(&g_pFixedReferences__);
+    il2c_check_heap();
+
+    //////////////////////////////////////////////////
+    // GC Step 3:
+
+    il2c_step3_sweep_garbage__();
+    il2c_check_heap();
+
+    // Release monitor locks.
+    il2c_release_all_monitor_lock_for_final_shutdown__();
+
+#if defined(_DEBUG)
+    il2c_runtime_debug_log_format(
+        L"il2c_collect_for_final_shutdown__: finished: {0:d}",
+        collectCount);
+#else
+    il2c_runtime_debug_log(L"il2c_collect_for_final_shutdown__: finished");
+#endif
+
+    il2c_idec(&g_ExecutingCollection__);
 }
 
 /////////////////////////////////////////////////////////////
@@ -1607,6 +1704,8 @@ void il2c_initialize__(void)
     g_pRootReferences__ = NULL;
     g_pFixedReferences__ = NULL;
 
+    memset(&g_MonitorLockBlockInformations[0], 0, sizeof g_MonitorLockBlockInformations);
+
 #if defined(_DEBUG)
     g_CollectCount = 0;
     g_CollectCountBreak = -1;
@@ -1619,11 +1718,7 @@ void il2c_initialize__(void)
 
 void il2c_shutdown__(void)
 {
-#if defined(IL2C_USE_LINE_INFORMATION)
-    il2c_collect__(true, __FILE__, __LINE__);
-#else
-    il2c_collect__(true);
-#endif
+    il2c_collect_for_final_shutdown__();
 
     il2c_tls_free(g_TlsIndex__);
 

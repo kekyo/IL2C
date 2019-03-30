@@ -36,6 +36,14 @@ extern void il2c_runtime_debug_log_format(const wchar_t* format, ...);
 extern void il2c_initialize__(void);
 extern void il2c_shutdown__(void);
 
+#if defined(IL2C_USE_LINE_INFORMATION)
+extern void il2c_collect__(const char* pFile, int line);
+#define il2c_collect() il2c_collect__(__FILE__, __LINE__)
+#else
+extern void il2c_collect__(void);
+#define il2c_collect() il2c_collect__()
+#endif
+
 ///////////////////////////////////////////////////
 // il2c.h
 

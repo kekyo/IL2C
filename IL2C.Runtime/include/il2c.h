@@ -197,8 +197,6 @@ extern void* il2c_castclass__(/* System_Object* */ void* pReference, IL2C_RUNTIM
 ///////////////////////////////////////////////////////
 // Garbage collector related declarations
 
-extern void il2c_collect(void);
-
 #if defined(IL2C_USE_LINE_INFORMATION)
 extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type, const char* pFile, int line);
 #define il2c_get_uninitialized_object(typeName) \

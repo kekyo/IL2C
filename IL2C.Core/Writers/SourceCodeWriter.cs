@@ -254,7 +254,7 @@ namespace IL2C.Writers
                                 {
                                     // TODO: Have to guard race condition for the multi threading feature.
                                     twSource.WriteLine(
-                                        "if ({0}_initializerCount__ != *il2c_initializer_count)",
+                                        "if (il2c_unlikely__({0}_initializerCount__ != *il2c_initializer_count))",
                                         staticFieldsName);
                                     twSource.WriteLine("{");
                                     using (var __ = twSource.Shift())

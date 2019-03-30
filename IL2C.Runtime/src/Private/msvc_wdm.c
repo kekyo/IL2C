@@ -13,11 +13,13 @@ double il2c_fmod(double lhs, double rhs)
     return fmod(lhs, rhs);
 }
 
-void il2c_runtime_debug_log__(const wchar_t* message)
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
+void il2c_runtime_debug_log(const wchar_t* message)
 {
     // TODO:
     OutputDebugStringW(message);
 }
+#endif
 
 void il2c_write(const wchar_t* s)
 {

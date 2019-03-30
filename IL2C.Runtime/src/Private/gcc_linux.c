@@ -29,7 +29,7 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
             do { \
                 *pTemp-- = g_pHexChars[v % 16]; \
                 v /= 16; \
-            } while (v); \
+            } while (il2c_likely__(v)); \
             break; \
         default: \
             intOper \
@@ -37,17 +37,17 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
             do { \
                 *pTemp-- = (wchar_t)(v % 10 + L'0'); \
                 v /= 10; \
-            } while (v); \
+            } while (il2c_likely__(v)); \
             break; \
         } \
         do { \
             *pBuffer++ = *++pTemp; \
-        } while (*pTemp); \
+        } while (il2c_likely__(*pTemp)); \
         return buffer; \
     }
 
 #define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
-    if (value == INT32_MIN) { \
+    if (il2c_unlikely__(value == INT32_MIN)) { \
         il2c_wcscpy(buffer, L"-2147483648"); \
         return buffer; \
     } \
@@ -57,7 +57,7 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
     }
 
 #define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
-    if (value == INT64_MIN) { \
+    if (il2c_unlikely__(value == INT64_MIN)) { \
         il2c_wcscpy(buffer, L"-9223372036854775808"); \
         return buffer; \
     } \
@@ -77,7 +77,7 @@ IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UIN
 #include <malloc.h>
 void il2c_free(void* p)
 {
-    if (p)
+    if (il2c_likely__(p))
     {
         // Overwrite invalid signature to target memory.
         // (For debugging purpose same as VC++ runtime.)
@@ -144,11 +144,13 @@ void il2c_join_thread__(intptr_t handle)
 // NOT Azure Sphere
 #if !defined(__AZURE_SPHERE__)
 
-void il2c_runtime_debug_log__(const wchar_t* message)
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
+void il2c_runtime_debug_log(const wchar_t* message)
 {
     // TODO: syslog
     fputws(message, stderr);
 }
+#endif
 
 void il2c_write(const wchar_t* s)
 {

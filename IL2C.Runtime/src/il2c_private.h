@@ -26,10 +26,8 @@ typedef volatile long interlock_t;
 #include "Private/arduino_all.h"
 
 #if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
-extern void il2c_runtime_debug_log__(const wchar_t* message);
-extern void il2c_runtime_debug_log_format__(const wchar_t* format, ...);
-#define il2c_runtime_debug_log(message) il2c_runtime_debug_log__(message L"\r\n")
-#define il2c_runtime_debug_log_format(format, ...) il2c_runtime_debug_log_format__(format L"\r\n", __VA_ARGS__)
+extern void il2c_runtime_debug_log(const wchar_t* message);
+extern void il2c_runtime_debug_log_format(const wchar_t* format, ...);
 #else
 #define il2c_runtime_debug_log(message)
 #define il2c_runtime_debug_log_format(format, ...)
@@ -37,6 +35,14 @@ extern void il2c_runtime_debug_log_format__(const wchar_t* format, ...);
 
 extern void il2c_initialize__(void);
 extern void il2c_shutdown__(void);
+
+#if defined(IL2C_USE_LINE_INFORMATION)
+extern void il2c_collect__(const char* pFile, int line);
+#define il2c_collect() il2c_collect__(__FILE__, __LINE__)
+#else
+extern void il2c_collect__(void);
+#define il2c_collect() il2c_collect__()
+#endif
 
 ///////////////////////////////////////////////////
 // il2c.h
@@ -87,6 +93,8 @@ struct IL2C_RUNTIME_TYPE_DECL
 //};
 
 // IL2C_REF_HEADER_DECL.characteristic
+#define IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK ((interlock_t)0x10000000UL)
+#define IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE ((interlock_t)0x20000000UL)
 #define IL2C_CHARACTERISTIC_LIVE ((interlock_t)0x40000000UL)
 #define IL2C_CHARACTERISTIC_CONST ((interlock_t)0x80000000UL)
 
@@ -150,8 +158,9 @@ extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, ui
 extern void il2c_register_root_reference__(void* pReference, bool isFixed);
 extern void il2c_unregister_root_reference__(void* pReference, bool isFixed);
 
-extern void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame);
-extern void il2c_default_mark_handler__(void* pReference);
+extern void il2c_default_mark_handler_for_objref__(void* pReference);
+extern void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType);
+extern void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFORMATION* pTrackingInformation);
 
 typedef volatile struct IL2C_THREAD_CONTEXT_DECL
 {
@@ -166,6 +175,8 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);
 #else
 IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void);
 #endif
+
+IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, bool allocateIfRequired);
 
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs

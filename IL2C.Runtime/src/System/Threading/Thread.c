@@ -31,7 +31,7 @@ void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
 {
     il2c_assert(this__ != NULL);
 
-    if (this__->rawHandle__ != -1)
+    if (il2c_likely__(this__->rawHandle__ != -1))
     {
         il2c_close_thread_handle__(this__->rawHandle__);
 #if defined(_DEBUG)
@@ -200,13 +200,13 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     il2c_assert(thread->vptr0__ == &System_Threading_Thread_VTABLE__);
 
     // Check start and parameter field.
-    if (thread->start__ != NULL)
+    if (il2c_likely__(thread->start__ != NULL))
     {
-        il2c_default_mark_handler__(thread->start__);
+        il2c_default_mark_handler_for_objref__(thread->start__);
     }
     if (thread->parameter__ != NULL)
     {
-        il2c_default_mark_handler__(thread->parameter__);
+        il2c_default_mark_handler_for_objref__(thread->parameter__);
     }
 
     ///////////////////////////////////////////////////////////////
@@ -214,7 +214,10 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     // It's important step for GC collecting sequence.
     // All method execution frame traversal begins this location.
 
-    il2c_step2_mark_gcmark__(thread->pFrame__);
+    if (il2c_likely__(thread->pFrame__ != NULL))
+    {
+        il2c_default_mark_handler_for_tracking_information__(thread->pFrame__);
+    }
 }
 
 System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__ = {

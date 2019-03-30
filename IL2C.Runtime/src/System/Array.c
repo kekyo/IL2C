@@ -21,7 +21,7 @@ int32_t System_Array_GetLowerBound(System_Array* this__, int32_t dimension)
     il2c_assert(this__->Length >= 0);
 
     // TODO: MD array not implemented.
-    if (dimension != 0)
+    if (il2c_unlikely__(dimension != 0))
     {
         il2c_throw_indexoutofrangeexception__();
     }
@@ -38,7 +38,7 @@ int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension)
     il2c_assert(this__->Length >= 0);
 
     // TODO: MD array not implemented.
-    if (dimension != 0)
+    if (il2c_unlikely__(dimension != 0))
     {
         il2c_throw_indexoutofrangeexception__();
     }
@@ -60,7 +60,7 @@ System_Array* il2c_new_array__(
 {
     il2c_assert(elementType != NULL);
     
-    if (length < 0)
+    if (il2c_unlikely__(length < 0))
     {
         // throw OverflowException
         il2c_assert(0);
@@ -96,19 +96,24 @@ static void System_Array_MarkHandler__(System_Array* arr)
     il2c_assert(arr != NULL);
     il2c_assert(arr->vptr0__ == &System_Array_VTABLE__);
 
+    intptr_t index;
     if (arr->elementType__->flags & IL2C_TYPE_VALUE)
     {
-        // TODO: value type requires marking if contains objref inside.
-        return;
-    }
-
-    intptr_t index;
-    for (index = 0; index < arr->Length; index++)
-    {
-        void* pReference = il2c_array_item(arr, void*, index);
-        if (pReference != NULL)
+        for (index = 0; il2c_likely__(index < arr->Length); index++)
         {
-            il2c_default_mark_handler__(pReference);
+            void* pValue = il2c_array_itemptr__(arr, (uint32_t)(arr->elementType__->bodySize), index);
+            il2c_default_mark_handler_for_value_type__(pValue, arr->elementType__);
+        }
+    }
+    else
+    {
+        for (index = 0; il2c_likely__(index < arr->Length); index++)
+        {
+            void* pReference = il2c_array_item(arr, void*, index);
+            if (pReference != NULL)
+            {
+                il2c_default_mark_handler_for_objref__(pReference);
+            }
         }
     }
 }

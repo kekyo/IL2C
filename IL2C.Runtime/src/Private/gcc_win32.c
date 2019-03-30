@@ -13,6 +13,8 @@ double il2c_fmod(double lhs, double rhs)
     return fmod(lhs, rhs);
 }
 
+#if defined(IL2C_USE_ITOW)
+
 static const wchar_t* g_pHexChars = L"0123456789abcdef";
 
 #define IL2C_DECLARE_INTTOW(name, typeName, utypeName, bufferLength, intOper) \
@@ -28,7 +30,7 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
             do { \
                 *pTemp-- = g_pHexChars[v % 16]; \
                 v /= 16; \
-            } while (v); \
+            } while (il2c_likely__(v)); \
             break; \
         default: \
             intOper \
@@ -36,17 +38,17 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
             do { \
                 *pTemp-- = (wchar_t)(v % 10 + L'0'); \
                 v /= 10; \
-            } while (v); \
+            } while (il2c_likely__(v)); \
             break; \
         } \
         do { \
             *pBuffer++ = *++pTemp; \
-        } while (*pTemp); \
+        } while (il2c_likely__(*pTemp)); \
         return buffer; \
     }
 
 #define IL2C_DECLARE_INTTOW_INT32_OPERATOR \
-    if (value == INT32_MIN) { \
+    if (il2c_unlikely__(value == INT32_MIN)) { \
         il2c_wcscpy(buffer, L"-2147483648"); \
         return buffer; \
     } \
@@ -56,7 +58,7 @@ static const wchar_t* g_pHexChars = L"0123456789abcdef";
     }
 
 #define IL2C_DECLARE_INTTOW_INT64_OPERATOR \
-    if (value == INT64_MIN) { \
+    if (il2c_unlikely__(value == INT64_MIN)) { \
         il2c_wcscpy(buffer, L"-9223372036854775808"); \
         return buffer; \
     } \
@@ -71,6 +73,8 @@ IL2C_DECLARE_INTTOW(il2c_i32tow, int32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_INT3
 IL2C_DECLARE_INTTOW(il2c_u32tow, uint32_t, uint32_t, 14, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
 IL2C_DECLARE_INTTOW(il2c_i64tow, int64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_INT64_OPERATOR)
 IL2C_DECLARE_INTTOW(il2c_u64tow, uint64_t, uint64_t, 24, IL2C_DECLARE_INTTOW_UINT_OPERATOR)
+
+#endif
 
 intptr_t il2c_get_current_thread__(void)
 {
@@ -120,10 +124,12 @@ void il2c_join_thread__(intptr_t handle)
     }
 }
 
-void il2c_runtime_debug_log__(const wchar_t* message)
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
+void il2c_runtime_debug_log(const wchar_t* message)
 {
     OutputDebugStringW(message);
 }
+#endif
 
 void il2c_write(const wchar_t* s)
 {

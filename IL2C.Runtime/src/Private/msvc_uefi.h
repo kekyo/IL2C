@@ -77,6 +77,13 @@ typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C
 #define il2c_resume_thread__(handle) ((void)0)
 #define il2c_join_thread__(handle) ((void)0)
 
+typedef uint8_t IL2C_MONITOR_LOCK;
+#define il2c_initialize_monitor_lock__(pLock) ((void)0)
+#define il2c_enter_monitor_lock__(pLock) ((void)0)
+#define il2c_try_enter_monitor_lock__(pLock) (true)
+#define il2c_exit_monitor_lock__(pLock) ((void)0)
+#define il2c_destroy_monitor_lock__(pLock) ((void)0)
+
 #endif
 
 #ifdef __cplusplus

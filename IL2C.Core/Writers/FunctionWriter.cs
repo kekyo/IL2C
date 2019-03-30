@@ -161,7 +161,7 @@ namespace IL2C.Writers
                         if (catchHandler.CatchHandlerType == ExceptionCatchHandlerTypes.Catch)
                         {
                             tw.WriteLine(
-                                "if (il2c_isinst__(ex, il2c_typeof({0}))) return {1};",
+                                "if (il2c_unlikely__(il2c_isinst__(ex, il2c_typeof({0})))) return {1};",
                                 catchHandler.CatchType.MangledUniqueName,
                                 catchHandlerIndex + 1);
                         }
@@ -816,7 +816,7 @@ namespace IL2C.Writers
                     tw.WriteLine("index++;");
                 }
                 tw.WriteLine("}");
-                tw.WriteLine("while (index < this__->count__);");
+                tw.WriteLine("while (il2c_likely__(index < this__->count__));");
                 tw.SplitLine();
 
                 if (!invokeMethod.ReturnType.IsVoidType)

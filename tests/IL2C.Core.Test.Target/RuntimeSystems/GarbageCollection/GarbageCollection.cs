@@ -104,6 +104,17 @@ namespace IL2C.RuntimeSystems
         public static StaticFieldInstanceType StaticFieldInstance;
     }
 
+    public sealed class DelegateMarkHandlerForObjRef
+    {
+        private readonly string str;
+
+        public DelegateMarkHandlerForObjRef(string str) => this.str = str;
+
+        public string CombineForStrings(string v) => str + v;
+    }
+
+    public delegate string DelegateMarkHandlerForObjRefTestDelegate(string b);
+
     [Description("These tests are verified the IL2C manages tracing the object references and collect garbages from the heap memory.")]
     [TestCase("ABCDEF", "ObjRefInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF", "ObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
@@ -112,9 +123,18 @@ namespace IL2C.RuntimeSystems
     [TestCase("ABCDEF1", "MultipleInsideValueType", 0, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF2", "MultipleInsideValueType", 1, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF3", "MultipleInsideValueType", 2, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
-    [TestCase(1, new[] { "CallFinalizer", "RunCallFinalizer" }, IncludeTypes = new[] {  typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(0, new[] { "CallFinalizerWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
+    [TestCase("ABCDEFABCGHI", new[] { "ArrayForObjRefInsideObjRefTypeTracking", "MakeArrayForObjRefInsideObjRefType" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
+    [TestCase("ABCDEFABCGHI", new[] { "ArrayForObjRefInsideValueTypeTypeTracking", "MakeArrayForObjRefInsideValueTypeType" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
+    [TestCase("ABCDEFGHI", new[] { "DelegateMarkHandlerTracking", "MakeDelegateMarkHandlerForObjRefTestDelegate" }, "ABC", "DEF", IncludeTypes = new[] { typeof(DelegateMarkHandlerForObjRef), typeof(DelegateMarkHandlerForObjRefTestDelegate) })]
+    [TestCase("ABCGHIJKL", new[] { "MulticastDelegateMarkHandlerTracking", "MakeMulticastDelegateMarkHandlerForObjRefTestDelegate" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(DelegateMarkHandlerForObjRef), typeof(DelegateMarkHandlerForObjRefTestDelegate) })]
     [TestCase(12345, new[] { "TraceStaticField", "RunTraceStaticField" }, 12345, IncludeTypes = new[] { typeof(StaticFieldTracible), typeof(StaticFieldInstanceType) })]
+    [TestCase(1, new[] { "CallFinalizerByCollect", "RunCallFinalizer" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 0, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 1, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 2, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(0, new[] { "CallFinalizerByCollectWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
+    [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     public sealed class GarbageCollection
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -132,18 +152,112 @@ namespace IL2C.RuntimeSystems
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string MultipleInsideValueType(int index);
 
+        private static void RunTraceStaticField(int value)
+        {
+            var v = new StaticFieldInstanceType();
+            v.Value = value;
+
+            StaticFieldTracible.StaticFieldInstance = v;
+        }
+
+        private static ObjRefInsideObjRefType[] MakeArrayForObjRefInsideObjRefType(string a, string b, string c) =>
+            new[] { new ObjRefInsideObjRefType(a + b), new ObjRefInsideObjRefType(a + c) };
+
+        public static string ArrayForObjRefInsideObjRefTypeTracking(string a, string b, string c)
+        {
+            // Test for Array_MarkHandler.
+            var ea = MakeArrayForObjRefInsideObjRefType(a, b, c);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return ea[0].Value + ea[1].Value;
+        }
+
+        private static ObjRefInsideValueTypeType[] MakeArrayForObjRefInsideValueTypeType(string a, string b, string c) =>
+            new[] { new ObjRefInsideValueTypeType(a + b), new ObjRefInsideValueTypeType(a + c) };
+
+        public static string ArrayForObjRefInsideValueTypeTypeTracking(string a, string b, string c)
+        {
+            // Test for Array_MarkHandler.
+            var ea = MakeArrayForObjRefInsideValueTypeType(a, b, c);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return ea[0].Value + ea[1].Value;
+        }
+
+        private static DelegateMarkHandlerForObjRefTestDelegate MakeDelegateMarkHandlerForObjRefTestDelegate(string a, string b)
+        {
+            var target = new DelegateMarkHandlerForObjRef(a + b);
+            return new DelegateMarkHandlerForObjRefTestDelegate(target.CombineForStrings);
+        }
+
+        public static string DelegateMarkHandlerTracking(string a, string b)
+        {
+            // Test for Delegate_MarkHandler.
+            var d = MakeDelegateMarkHandlerForObjRefTestDelegate(a, b);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return d("GHI");
+        }
+
+        private static DelegateMarkHandlerForObjRefTestDelegate MakeMulticastDelegateMarkHandlerForObjRefTestDelegate(string a, string b, string c)
+        {
+            var target1 = new DelegateMarkHandlerForObjRef(a + b);
+            var target2 = new DelegateMarkHandlerForObjRef(a + c);
+            return
+                new DelegateMarkHandlerForObjRefTestDelegate(target1.CombineForStrings) +
+                new DelegateMarkHandlerForObjRefTestDelegate(target2.CombineForStrings);
+        }
+
+        public static string MulticastDelegateMarkHandlerTracking(string a, string b, string c)
+        {
+            // Test for Delegate_MarkHandler (tracks each delegate target)
+            var d = MakeMulticastDelegateMarkHandlerForObjRefTestDelegate(a, b, c);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return d("JKL");
+        }
+
+        public static int TraceStaticField(int value)
+        {
+            RunTraceStaticField(value);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return StaticFieldTracible.StaticFieldInstance.Value;
+        }
+
         private static void RunCallFinalizer(FinalizerCalleeHolder holder)
         {
             var implemented = new FinalzerImplemented(holder);
         }
- 
-        public static int CallFinalizer()
+
+        public static int CallFinalizerByCollect()
         {
             var holder = new FinalizerCalleeHolder();
             RunCallFinalizer(holder);
 
             GC.Collect();
-            Thread.Sleep(1000);
+            GC.WaitForPendingFinalizers();
+
+            return holder.Called;
+        }
+
+        public static int CallFinalizerByCollectWithGeneration(int generation)
+        {
+            var holder = new FinalizerCalleeHolder();
+            RunCallFinalizer(holder);
+
+            GC.Collect(generation);
+            GC.WaitForPendingFinalizers();
 
             return holder.Called;
         }
@@ -154,33 +268,50 @@ namespace IL2C.RuntimeSystems
             var handle = GCHandle.Alloc(implemented, GCHandleType.Pinned);
         }
 
-        public static int CallFinalizerWithPinned()
+        public static int CallFinalizerByCollectWithPinned()
         {
             var holder = new FinalizerCalleeHolder();
             RunCallFinalizerWithPinned(holder);
 
             GC.Collect();
-            Thread.Sleep(1000);
+            GC.WaitForPendingFinalizers();
 
             return holder.Called;
         }
 
-        private static void RunTraceStaticField(int value)
+        private static void RunCallFinalizerWithSuppressed(FinalizerCalleeHolder holder)
         {
-            var v = new StaticFieldInstanceType();
-            v.Value = value;
-
-            StaticFieldTracible.StaticFieldInstance = v;
+            var implemented = new FinalzerImplemented(holder);
+            GC.SuppressFinalize(implemented);
         }
 
-        public static int TraceStaticField(int value)
+        public static int SuppressFinalize()
         {
-            RunTraceStaticField(value);
+            var holder = new FinalizerCalleeHolder();
+            RunCallFinalizerWithSuppressed(holder);
 
             GC.Collect();
-            Thread.Sleep(1000);
+            GC.WaitForPendingFinalizers();
 
-            return StaticFieldTracible.StaticFieldInstance.Value;
+            return holder.Called;
+        }
+
+        private static void RunCallFinalizerWithSuppressedAndReRegistered(FinalizerCalleeHolder holder)
+        {
+            var implemented = new FinalzerImplemented(holder);
+            GC.SuppressFinalize(implemented);
+            GC.ReRegisterForFinalize(implemented);
+        }
+
+        public static int ReRegisterForFinalize()
+        {
+            var holder = new FinalizerCalleeHolder();
+            RunCallFinalizerWithSuppressedAndReRegistered(holder);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return holder.Called;
         }
     }
 }

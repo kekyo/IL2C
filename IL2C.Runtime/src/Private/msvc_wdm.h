@@ -69,14 +69,20 @@ typedef DWORD IL2C_TLS_INDEX;
 #define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
 typedef unsigned int (__stdcall *IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
 
-// TODO: has to get real handle
-#define il2c_get_current_thread__() ((intptr_t)GetCurrentThread())
-#define il2c_get_current_thread_id__() ((int32_t)GetCurrentThreadId())
+#define il2c_get_current_thread__() ((intptr_t)PsGetCurrentThread())
+#define il2c_get_current_thread_id__() ((int32_t)PsGetCurrentThreadId())
 #define il2c_create_thread__(entryPoint, parameter) \
-    ((intptr_t)_beginthreadex(NULL, 0, entryPoint, parameter, CREATE_SUSPENDED, NULL))
-#define il2c_resume_thread__(handle) ResumeThread((HANDLE)handle)
+    ((intptr_t)PsCreateSystemThread(NULL, 0, entryPoint, parameter, CREATE_SUSPENDED, NULL))
+#define il2c_resume_thread__(handle)
 extern void il2c_join_thread__(intptr_t handle);
-#define il2c_close_thread_handle__(handle)CloseHandle((HANDLE)(handle))
+#define il2c_close_thread_handle__(handle) NtClose((HANDLE)(handle))
+
+typedef KSPIN_LOCK IL2C_MONITOR_LOCK;
+#define il2c_initialize_monitor_lock__(pLock) InitializeCriticalSection(pLock)
+#define il2c_enter_monitor_lock__(pLock) KeAcquireSpinLock(pLock, pCookie)  // TODO: Spinlock can't nested locking
+#define il2c_try_enter_monitor_lock__(pLock) KeAcquireSpinLock(pLock, pCookie)
+#define il2c_exit_monitor_lock__(pLock) KeReleaseSpinLock(pLock, pCookie)
+#define il2c_destroy_monitor_lock__(pLock) DeleteCriticalSection(pLock)
 
 #endif
 

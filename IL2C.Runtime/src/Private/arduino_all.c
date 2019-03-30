@@ -436,6 +436,15 @@ void il2c_join_thread__(intptr_t handle)
     pthread_join((pthread_t)handle, &value);
 }
 
+void il2c_initialize_monitor_lock__(IL2C_MONITOR_LOCK* pLock)
+{
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+
+    pthread_mutex_init(pLock, &attr);
+}
+
 #endif
 
 #if defined(IL2C_USE_RUNTIME_DEBUG_LOG)

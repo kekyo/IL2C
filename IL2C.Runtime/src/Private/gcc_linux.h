@@ -105,7 +105,7 @@ extern void il2c_join_thread__(intptr_t handle);
 #define il2c_close_thread_handle__(handle)
 
 typedef pthread_mutex_t IL2C_MONITOR_LOCK;
-#define il2c_initialize_monitor_lock__(pLock) ((*(pLock)) = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP)
+extern void il2c_initialize_monitor_lock__(IL2C_MONITOR_LOCK* pLock);
 #define il2c_enter_monitor_lock__(pLock) pthread_mutex_lock(pLock)
 #define il2c_try_enter_monitor_lock__(pLock) (pthread_mutex_trylock(pLock) != EBUSY)
 #define il2c_exit_monitor_lock__(pLock) pthread_mutex_unlock(pLock)

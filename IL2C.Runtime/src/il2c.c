@@ -546,6 +546,9 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
 
 static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
 {
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
     il2c_assert(pHeader != NULL);
     il2c_assert((pHeader->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK)));
 
@@ -575,8 +578,17 @@ static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
             // Found this reference.
             if (il2c_unlikely__(*ppReference == pAdjustedReference))
             {
+                il2c_runtime_debug_log_format(
+                    L"il2c_release_monitor_lock_from_objref__: free lock: blockIndex={0:u}, index={1:u}, *ppReference=0x{2:p}, type={3:s}, characteristic=0x{4:x}",
+                    blockIndex,
+                    index,
+                    *ppReference,
+                    pHeader->type->pTypeName,
+                    pHeader->characteristic);
+
                 *ppReference = NULL;
 
+                // Destroy the lock.
                 IL2C_MONITOR_LOCK* pLock = &pCurrentBlock->locks[index];
                 il2c_destroy_monitor_lock__(pLock);
 
@@ -588,6 +600,9 @@ static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
         // Not found.
         if (il2c_unlikely__(pCurrentBlock->pNext == NULL))
         {
+            // It's only constant.
+            il2c_assert(pHeader->characteristic & IL2C_CHARACTERISTIC_CONST);
+
             il2c_exit_monitor_lock__(&pMonitorBlockInformation->blockLock);
             return;
         }
@@ -598,6 +613,9 @@ static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
 
 static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 {
+    // It has to invoke from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
     IL2C_MONITOR_LOCK_BLOCK_INFORMATION** ppMonitorBlockInformation;
     uint8_t blockIndex;
     for (blockIndex = 0, ppMonitorBlockInformation = &g_MonitorLockBlockInformations[0];
@@ -625,6 +643,16 @@ static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
                         // Assigned at this lock.
                         if (il2c_unlikely__(*ppReference != NULL))
                         {
+#if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
+                            IL2C_REF_HEADER* pHeader = il2c_get_header__(*ppReference);
+                            il2c_runtime_debug_log_format(
+                                L"il2c_release_all_monitor_lock_for_final_shutdown__: free lock: blockIndex={0:u}, index={1:u}, *ppReference=0x{2:p}, type={3:s}, characteristic=0x{4:x}",
+                                blockIndex,
+                                index,
+                                *ppReference,
+                                pHeader->type->pTypeName,
+                                pHeader->characteristic);
+#endif
 #if defined(_DEBUG)
                             *ppReference = NULL;
 #endif
@@ -645,6 +673,10 @@ static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 
             // Free this block information.
             il2c_free(*ppMonitorBlockInformation);
+
+            il2c_runtime_debug_log_format(
+                L"il2c_release_all_monitor_lock_for_final_shutdown__: free lock block: blockIndex={0:u}",
+                blockIndex);
 
 #if defined(_DEBUG)
             *ppMonitorBlockInformation = NULL;

@@ -290,6 +290,7 @@ Toughly you can understand meaning these fields, I'll tell you important fields:
   | IL2C_TYPE_VALUE | A value type. |
   | IL2C_TYPE_INTEGER | A integer (numeric but not floating point) type. The boxing operator uses on bothe narrowing and widing storage size. |
   | IL2C_TYPE_VARIABLE | A variable type, only using with array, string and delegate types. |
+  | IL2C_TYPE_MARK_HANDLER | The GC traverser using custom mark handler for this type. |
   | IL2C_TYPE_UNSIGNED_INTEGER | A unsigned integer (numeric but not floating point) type. The boxing operator uses on bothe narrowing and widing storage size. |
   | IL2C_TYPE_STATIC | A static type (sealed abstract). It doesn't have the VTables. |
   | IL2C_TYPE_INTERFACE | A interface type. [It has lesser fields than another types](https://github.com/kekyo/IL2C/blob/03fe578a5e1aa959a3463a2b6f13491ee0fd042a/IL2C.Runtime/src/il2c_private.h#L67). |
@@ -410,9 +411,17 @@ Helper function: [il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)](https
 
 ### Static instance walking
 
+### Custom mark handler
+
 ### Except constants
 
 ## Exception handling
+
+## Threading
+
+### Monitor locking
+
+### Arbitrary thread handling
 
 ## Interoperabilities
 

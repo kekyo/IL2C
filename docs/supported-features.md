@@ -65,7 +65,9 @@
 | Heap compaction (GC) |
 | Exception throw and handles | Partial supported |
 | Async exception throws | Partial supported |
-| Monitor lock features |
+| Monitor lock features | Supported |
+| Threading features | Supported |
+| Synchronization features |
 | Interop (P/Invoke) | Partial supported |
 | Interop (IL2C/Invoke) | Partial supported |
 | Can handle unsafe pointers |

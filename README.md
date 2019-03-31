@@ -7,11 +7,14 @@
 |AppVeyor|master|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=master&includeBuildsFromPullRequest=false)|
 |AppVeyor|devel|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/devel?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/devel.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=devel&includeBuildsFromPullRequest=false)|
 
-| NuGet | Current |
+| Building package | Current |
+|:---|:---|
+| IL2C.Build | [![NuGet IL2C.Build](https://img.shields.io/nuget/v/IL2C.Build.svg?style=flat)](https://www.nuget.org/packages/IL2C.Build) 
+
+| Library packages | Current |
 |:---|:---|
 | IL2C.Interop | [![NuGet IL2C.Interop](https://img.shields.io/nuget/v/IL2C.Interop.svg?style=flat)](https://www.nuget.org/packages/IL2C.Interop) 
 | IL2C.Core | [![NuGet IL2C.Core](https://img.shields.io/nuget/v/IL2C.Core.svg?style=flat)](https://www.nuget.org/packages/IL2C.Core) 
-| IL2C.Build | [![NuGet IL2C.Build](https://img.shields.io/nuget/v/IL2C.Build.svg?style=flat)](https://www.nuget.org/packages/IL2C.Build) 
 
 ## What's this?
 
@@ -21,9 +24,9 @@
   * **Better predictability of runtime costs**  
   Better human readability of C source code translated by IL2C.
   * **Very tiny footprint requirements**  
-  We are thinking about how to fit from large system with many resources to tiny embedded system.
+  We're thinking about how to fit from large system with many resources to tiny embedded system. (KB order for the non-OSes system)
   * **Better code/runtime portability**  
-  Minimum requirement is only C99 compiler.
+  Minimum requirement is only C99 compiler. The runtime minimum requires only the heap, CAS instructions, (POSIX) signal and setjmp/longjmp. Additional better feature is threading API (Win32, pthreads and FreeRTOS.)
   * **Better interoperabilities for existed C libraries**  
   You can use the standard .NET interop technics (like P/Invoke.)
   * **Containing seamless building systems for major C toolkits**  
@@ -74,9 +77,9 @@ IL2C current status is **experimental**, read a simple ["Getting started"](docs/
 
 And also you can read a blog post using case for the Azure Sphere: ["Try writing code using both the Azure Sphere Development Kit and C#" (My blog)](https://www.kekyo.net/2019/01/04/6917).
 
-### IL2C's core
+### Inside IL2C
 
-See ["Inside IL2C"](docs/inside.md) .
+If you need understanding deep knowledge for IL2C, see ["Inside IL2C"](docs/inside-il2c.md) .
 
 ## Overall status
 

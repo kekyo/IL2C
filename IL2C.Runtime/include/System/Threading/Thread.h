@@ -22,7 +22,7 @@ struct System_Threading_Thread
 
     /* IL2C_THREAD_CONTEXT: Important field order! */
     IL2C_EXECUTION_FRAME* pFrame__;
-    IL2C_EXCEPTION_FRAME* pTopUnwindTarget__;
+    IL2C_EXCEPTION_FRAME* pUnwindTarget__;
     volatile intptr_t rawHandle__;
     int32_t id__;
 

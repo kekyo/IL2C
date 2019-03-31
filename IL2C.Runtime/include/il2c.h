@@ -19,6 +19,7 @@ extern "C" {
 #define il2c_assume__(expr) __assume(expr)
 #define il2c_likely__(expr) (expr)
 #define il2c_unlikely__(expr) (expr)
+#define il2c_noreturn__ __declspec(noreturn)
 
 #elif defined(__GNUC__)
 
@@ -35,6 +36,7 @@ extern "C" {
 #define il2c_assume__(expr) do { if (!(expr)) __builtin_unreachable(); } while (0)
 #define il2c_likely__(expr) __builtin_expect(!!(expr), 1)
 #define il2c_unlikely__(expr) __builtin_expect(!!(expr), 0)
+#define il2c_noreturn__ __attribute__((noreturn))
 
 #else
 
@@ -43,6 +45,7 @@ extern "C" {
 #define il2c_assume__(expr) ((void)0)
 #define il2c_likely__(expr) (expr)
 #define il2c_unlikely__(expr) (expr)
+#define il2c_noreturn__
 
 #endif
 
@@ -223,10 +226,10 @@ extern void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void*
 ///////////////////////////////////////////////////////
 // Basic exceptions
 
-extern void il2c_throw_nullreferenceexception__(void);
-extern void il2c_throw_invalidcastexception__(void);
-extern void il2c_throw_indexoutofrangeexception__(void);
-extern void il2c_throw_formatexception__(void);
+extern il2c_noreturn__ void il2c_throw_nullreferenceexception__(void);
+extern il2c_noreturn__ void il2c_throw_invalidcastexception__(void);
+extern il2c_noreturn__ void il2c_throw_indexoutofrangeexception__(void);
+extern il2c_noreturn__ void il2c_throw_formatexception__(void);
 
 ///////////////////////////////////////////////////////
 // The basis types
@@ -319,11 +322,11 @@ extern void* il2c_unbox__(
 /////////////////////////////////////////////////
 // Exception special functions
 
-extern void il2c_throw__(System_Exception* ex);
+extern il2c_noreturn__ void il2c_throw__(System_Exception* ex);
 #define il2c_throw(ex) \
     il2c_throw__((System_Exception*)ex)
+extern il2c_noreturn__ void il2c_rethrow(void);
 
-extern void il2c_rethrow(void);
 extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter);
 extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 
@@ -350,7 +353,6 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
                 symbolName = unwind_target_##nestedIndex##__.ex;
 
 #define il2c_finally(nestedIndex) \
-                il2c_assert(0); /* reached if don't emit leave. */ \
             } \
             break; \
         } \

@@ -9,18 +9,6 @@ typedef const struct IL2C_VALUE_DESCRIPTOR_DECL
     const void* ptr_value;
 } IL2C_VALUE_DESCRIPTOR;
 
-typedef volatile struct IL2C_GC_TRACKING_INFORMATION_DECL
-{
-    IL2C_GC_TRACKING_INFORMATION* pNext__;
-    const uint16_t objRefCount__;
-    const uint16_t valueCount__;
-    volatile void* pReferences__[1];     // objRefCount__
-    // IL2C_VALUE_DESCRIPTOR valueDescriptors__[];  // valueCount__
-} IL2C_GC_TRACKING_INFORMATION;
-
-typedef IL2C_GC_TRACKING_INFORMATION IL2C_EXECUTION_FRAME;
-typedef IL2C_GC_TRACKING_INFORMATION IL2C_STATIC_FIELDS;
-
 typedef volatile struct IL2C_ROOT_REFERENCES_DECL IL2C_ROOT_REFERENCES;
 
 struct IL2C_ROOT_REFERENCES_DECL
@@ -166,17 +154,19 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     il2c_assert(type != NULL);
     il2c_assert(type->vptr0 != NULL);
 
-    // String, Delegate or Array (IL2C_TYPE_VARIABLE):
+    // String, Delegate, Array and Thread (IL2C_TYPE_VARIABLE):
     // throw new InvalidProgramException();
     il2c_assert((type->flags & IL2C_TYPE_VARIABLE) != IL2C_TYPE_VARIABLE);
     il2c_assert(type->bodySize >= sizeof(void*));   // vptr0
 
-    // Setup vptr0
+    // Allocate heap memory.
 #if defined(IL2C_USE_LINE_INFORMATION)
     uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize, pFile, line);
 #else
     uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
 #endif
+
+    // Setup vptr0.
     *((const void**)pReference) = type->vptr0;
 
     // Setup interface vptrs.
@@ -1578,7 +1568,6 @@ static il2c_noreturn__ void il2c_do_throw__(
 
     // Transision to target handler.
     il2c_longjmp((void*)pTargetFrame->saved, filterNumber);
-    il2c_assert(0);
 }
 
 static il2c_noreturn__ void il2c_throw_internal__(
@@ -1613,14 +1602,12 @@ static il2c_noreturn__ void il2c_throw_internal__(
             {
                 // Send to finally
                 il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY, pThreadContext);
-                il2c_assert(0);
             }
             else
             {
                 // NOTE: This place is the first-chance.
                 // Send to catch
                 il2c_do_throw__(ex, pFrame, filterNumber, pThreadContext);
-                il2c_assert(0);
             }
         }
 
@@ -1633,16 +1620,18 @@ static il2c_noreturn__ void il2c_throw_internal__(
     {
         // Send to finally
         il2c_do_throw__(ex, pFinallyFrame, IL2C_FILTER_FINALLY, pThreadContext);
-        il2c_assert(0);
     }
 
-    // TODO: Unhandled exception
+    // Unhandled exception
     il2c_runtime_debug_log_format(
         L"Throw unhandled exception: type={0:s}, Message=\"{1:S}\"",
         (il2c_get_header__(ex))->type->pTypeName,
         (ex->message__->string_body__ != NULL) ? ex->message__->string_body__ : L"");
 
+    il2c_invoke_unhandled_exception_on_the_current_domain__((System_Object*)ex);
+
     debug_break();
+
     il2c_assert(0);
 }
 
@@ -1661,7 +1650,6 @@ il2c_noreturn__ void il2c_throw__(System_Exception* ex)
         NULL;
 
     il2c_throw_internal__(ex, pFrame, pThreadContext);
-    il2c_assert(0);
 }
 
 il2c_noreturn__ void il2c_rethrow(void)
@@ -1680,7 +1668,6 @@ il2c_noreturn__ void il2c_rethrow(void)
 
         // Throw with this exception
         il2c_throw_internal__(ex, pThreadContext->pUnwindTarget__, pThreadContext);
-        il2c_assert(0);
     }
 
     // Search nearest caught exception
@@ -1693,7 +1680,6 @@ il2c_noreturn__ void il2c_rethrow(void)
         {
             // Throw with this exception (at the current frame)
             il2c_throw_internal__(ex, pThreadContext->pUnwindTarget__, pThreadContext);
-            il2c_assert(0);
         }
         pFrame = pFrame->pNext;
     }
@@ -1736,7 +1722,6 @@ static il2c_noreturn__ void il2c_SIGSEGV_handler(int sig)
     signal(SIGSEGV, il2c_SIGSEGV_handler);
 
     il2c_throw_nullreferenceexception__();
-    il2c_assert(0);
 }
 
 typedef void (*il2c_sighandler)(int sig);

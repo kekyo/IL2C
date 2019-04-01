@@ -19,15 +19,14 @@ typedef System_Object_VTABLE_DECL__ System_Threading_Thread_VTABLE_DECL__;
 struct System_Threading_Thread
 {
     System_Threading_Thread_VTABLE_DECL__* vptr0__;
+    System_Delegate* start__;
+    System_Object* parameter__;
 
     /* IL2C_THREAD_CONTEXT: Important field order! */
     IL2C_EXECUTION_FRAME* pFrame__;
     IL2C_EXCEPTION_FRAME* pUnwindTarget__;
     volatile intptr_t rawHandle__;
     int32_t id__;
-
-    System_Delegate* start__;
-    System_Object* parameter__;
 };
 
 extern System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__;

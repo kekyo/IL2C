@@ -3,6 +3,21 @@
 /////////////////////////////////////////////////////////////
 // System.Threading.Thread
 
+typedef volatile struct IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME /* IL2C_EXECUTION_FRAME */
+{
+    IL2C_EXECUTION_FRAME* pNext__;
+    uint16_t objRefCount__;
+    uint16_t valueCount__;
+    System_Exception* exception__;
+} IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME;
+
+// The real thread structure.
+typedef volatile struct IL2C_RUNTIME_THREAD
+{
+    System_Threading_Thread thread;
+    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame__;
+} IL2C_RUNTIME_THREAD;
+
 void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threading_ThreadStart* start)
 {
     il2c_assert(this__ != NULL);
@@ -10,8 +25,10 @@ void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threa
     // TODO: ArgumentNullException
     il2c_assert(start != NULL);
 
-    this__->start__ = (System_Delegate*)start;
-    this__->rawHandle__ = -1;
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)this__;
+
+    pRuntimeThread->thread.start__ = (System_Delegate*)start;
+    pRuntimeThread->thread.rawHandle__ = -1;
 }
 
 void System_Threading_Thread__ctor_1(System_Threading_Thread* this__, System_Threading_ParameterizedThreadStart* start)
@@ -21,8 +38,10 @@ void System_Threading_Thread__ctor_1(System_Threading_Thread* this__, System_Thr
     // TODO: ArgumentNullException
     il2c_assert(start != NULL);
 
-    this__->start__ = (System_Delegate*)start;
-    this__->rawHandle__ = -1;
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)this__;
+
+    pRuntimeThread->thread.start__ = (System_Delegate*)start;
+    pRuntimeThread->thread.rawHandle__ = -1;
 }
 
 extern IL2C_TLS_INDEX g_TlsIndex__;
@@ -43,36 +62,66 @@ void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
     }
 }
 
+static int16_t System_Threading_Thread_InternalExceptionFilter(System_Exception* ex)
+{
+    il2c_assert(ex != NULL);
+    return 1;
+}
+
 static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntryPoint(
     IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE parameter)
 {
     il2c_assert(parameter != NULL);
 
-    System_Threading_Thread* pThread = (System_Threading_Thread*)parameter;
-    il2c_assert(pThread->vptr0__ == &System_Threading_Thread_VTABLE__);
-    il2c_assert(il2c_isinst(pThread->start__, System_Threading_ThreadStart) != NULL);
-    il2c_assert(pThread->parameter__ == NULL);
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)parameter;
+    il2c_assert(pRuntimeThread->thread.vptr0__ == &System_Threading_Thread_VTABLE__);
+    il2c_assert(il2c_isinst(pRuntimeThread->thread.start__, System_Threading_ThreadStart) != NULL);
+    il2c_assert(pRuntimeThread->thread.parameter__ == NULL);
+    il2c_assert(pRuntimeThread->bottomFrame__.pNext__ == NULL);
+    il2c_assert(pRuntimeThread->bottomFrame__.objRefCount__ == 0);
+    il2c_assert(pRuntimeThread->bottomFrame__.valueCount__ == 0);
+    il2c_assert(pRuntimeThread->bottomFrame__.exception__ == NULL);
 
     // Set real thread id.
-    pThread->id__ = il2c_get_current_thread_id__();
+    pRuntimeThread->thread.id__ = il2c_get_current_thread_id__();
 
     // Save IL2C_THREAD_CONTEXT into tls.
-    il2c_set_tls_value(g_TlsIndex__, (void*)&pThread->pFrame__);
+    il2c_set_tls_value(g_TlsIndex__, (void*)&pRuntimeThread->thread.pFrame__);
 
     // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
-    while (pThread->rawHandle__ == -1);
+    while (pRuntimeThread->thread.rawHandle__ == -1);
 
-    // Invoke delegate.
-    // TODO: catch exception.
-    System_Threading_ThreadStart_Invoke(
-        (System_Threading_ThreadStart*)(pThread->start__));
+    pRuntimeThread->bottomFrame__.objRefCount__ = 1;
+    il2c_link_execution_frame(&pRuntimeThread->bottomFrame__);
+
+    il2c_try(bottomNest, System_Threading_Thread_InternalExceptionFilter)
+    {
+        // Invoke delegate.
+        System_Threading_ThreadStart_Invoke(
+            (System_Threading_ThreadStart*)(pRuntimeThread->thread.start__));
+        il2c_leave(bottomNest, 0);
+    }
+    il2c_catch(bottomNest, 1, pRuntimeThread->bottomFrame__.exception__)
+    {
+        il2c_invoke_unhandled_exception_on_the_current_domain__(
+            (System_Object*)pRuntimeThread->bottomFrame__.exception__);
+        il2c_leave(bottomNest, 0);
+    }
+    il2c_leave_to(bottomNest)
+    {
+        il2c_leave_bind(bottomNest, 0, exit);
+    }
+    il2c_end_try(bottomNest);
+
+exit:
+    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame__);
 
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
 #endif
 
     // Unregister GC root tracking.
-    il2c_unregister_root_reference__(pThread, false);
+    il2c_unregister_root_reference__((void*)pRuntimeThread, false);
 
     IL2C_THREAD_ENTRY_POINT_RETURN(0);
 }
@@ -82,31 +131,54 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
 {
     il2c_assert(parameter != NULL);
 
-    System_Threading_Thread* pThread = (System_Threading_Thread*)parameter;
-    il2c_assert(pThread->vptr0__ == &System_Threading_Thread_VTABLE__);
-    il2c_assert(il2c_isinst(pThread->start__, System_Threading_ParameterizedThreadStart) != NULL);
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)parameter;
+    il2c_assert(pRuntimeThread->thread.vptr0__ == &System_Threading_Thread_VTABLE__);
+    il2c_assert(il2c_isinst(pRuntimeThread->thread.start__, System_Threading_ParameterizedThreadStart) != NULL);
+    il2c_assert(pRuntimeThread->bottomFrame__.pNext__ == NULL);
+    il2c_assert(pRuntimeThread->bottomFrame__.objRefCount__ == 0);
+    il2c_assert(pRuntimeThread->bottomFrame__.valueCount__ == 0);
+    il2c_assert(pRuntimeThread->bottomFrame__.exception__ == NULL);
 
     // Set real thread id.
-    pThread->id__ = il2c_get_current_thread_id__();
+    pRuntimeThread->thread.id__ = il2c_get_current_thread_id__();
 
     // Save IL2C_THREAD_CONTEXT into tls.
-    il2c_set_tls_value(g_TlsIndex__, (void*)&pThread->pFrame__);
+    il2c_set_tls_value(g_TlsIndex__, (void*)&pRuntimeThread->thread.pFrame__);
 
     // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
-    while (pThread->rawHandle__ == -1);
+    while (pRuntimeThread->thread.rawHandle__ == -1);
 
-    // Invoke delegate.
-    // TODO: catch exception.
-    System_Threading_ParameterizedThreadStart_Invoke(
-        (System_Threading_ParameterizedThreadStart*)(pThread->start__),
-        pThread->parameter__);
+    pRuntimeThread->bottomFrame__.objRefCount__ = 1;
+    il2c_link_execution_frame(&pRuntimeThread->bottomFrame__);
+
+    il2c_try(bottomNest, System_Threading_Thread_InternalExceptionFilter)
+    {
+        // Invoke delegate.
+        System_Threading_ParameterizedThreadStart_Invoke(
+            (System_Threading_ParameterizedThreadStart*)(pRuntimeThread->thread.start__), pRuntimeThread->thread.parameter__);
+        il2c_leave(bottomNest, 0);
+    }
+    il2c_catch(bottomNest, 1, pRuntimeThread->bottomFrame__.exception__)
+    {
+        il2c_invoke_unhandled_exception_on_the_current_domain__(
+            (System_Object*)pRuntimeThread->bottomFrame__.exception__);
+        il2c_leave(bottomNest, 0);
+    }
+    il2c_leave_to(bottomNest)
+    {
+        il2c_leave_bind(bottomNest, 0, exit);
+    }
+    il2c_end_try(bottomNest);
+
+exit:
+    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame__);
 
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
 #endif
 
     // Unregister GC root tracking.
-    il2c_unregister_root_reference__(pThread, false);
+    il2c_unregister_root_reference__((void*)pRuntimeThread, false);
 
     IL2C_THREAD_ENTRY_POINT_RETURN(0);
 }
@@ -199,14 +271,16 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     il2c_assert(thread != NULL);
     il2c_assert(thread->vptr0__ == &System_Threading_Thread_VTABLE__);
 
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)thread;
+
     // Check start and parameter field.
-    if (il2c_likely__(thread->start__ != NULL))
+    if (il2c_likely__(pRuntimeThread->thread.start__ != NULL))
     {
-        il2c_default_mark_handler_for_objref__(thread->start__);
+        il2c_default_mark_handler_for_objref__(pRuntimeThread->thread.start__);
     }
-    if (thread->parameter__ != NULL)
+    if (pRuntimeThread->thread.parameter__ != NULL)
     {
-        il2c_default_mark_handler_for_objref__(thread->parameter__);
+        il2c_default_mark_handler_for_objref__(pRuntimeThread->thread.parameter__);
     }
 
     ///////////////////////////////////////////////////////////////
@@ -214,9 +288,9 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     // It's important step for GC collecting sequence.
     // All method execution frame traversal begins this location.
 
-    if (il2c_likely__(thread->pFrame__ != NULL))
+    if (il2c_likely__(pRuntimeThread->thread.pFrame__ != NULL))
     {
-        il2c_default_mark_handler_for_tracking_information__(thread->pFrame__);
+        il2c_default_mark_handler_for_tracking_information__(pRuntimeThread->thread.pFrame__);
     }
 }
 
@@ -228,11 +302,13 @@ System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__ = {
     (System_String* (*)(void*))System_Object_ToString
 };
 
+// If System_Threading_Thread is allocated by il2c_get_uninitialized_object(),
+// the storage space contains additional spaces by IL2C_RUNTIME_THREAD tail fields.
 IL2C_RUNTIME_TYPE_BEGIN(
     System_Threading_Thread,
     "System.Threading.Thread",
     IL2C_TYPE_REFERENCE | IL2C_TYPE_WITH_MARK_HANDLER,
-    sizeof(System_Threading_Thread),
+    sizeof(IL2C_RUNTIME_THREAD),
     System_Object,
     System_Threading_Thread_MarkHandler__,
     0)

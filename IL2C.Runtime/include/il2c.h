@@ -278,6 +278,10 @@ typedef void* untyped_ptr;
 #include "System/Threading/ThreadStart.h"
 #include "System/Threading/ParameterizedThreadStart.h"
 #include "System/Threading/Thread.h"
+#include "System/EventArgs.h"
+#include "System/UnhandledExceptionEventArgs.h"
+#include "System/UnhandledExceptionEventHandler.h"
+#include "System/AppDomain.h"
 
 // Independent types for IL2C core.
 #include "System/Console.h"
@@ -347,7 +351,6 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
                 break
 
 #define il2c_catch(nestedIndex, filteredNumber, symbolName) \
-                il2c_assert(0); /* reached if don't emit leave. */ \
             case filteredNumber : \
                 il2c_assert(unwind_target_##nestedIndex##__.ex != NULL); \
                 symbolName = unwind_target_##nestedIndex##__.ex;

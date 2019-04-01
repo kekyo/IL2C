@@ -1,9 +1,10 @@
 #include "il2c_private.h"
 
 /////////////////////////////////////////////////////////////
-// System.Threading.ThreadStart
+// System.UnhandledExceptionEventHandler
 
-void System_Threading_ThreadStart_Invoke(System_Threading_ThreadStart* this__)
+void System_UnhandledExceptionEventHandler_Invoke(
+    System_UnhandledExceptionEventHandler* this__, System_Object* sender, System_UnhandledExceptionEventArgs* e)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->vptr0__ == &System_Delegate_VTABLE__);
@@ -14,23 +15,23 @@ void System_Threading_ThreadStart_Invoke(System_Threading_ThreadStart* this__)
     {
         IL2C_METHOD_TABLE* pMethodtbl = &this__->methodtbl__[index];
         if (pMethodtbl->target != NULL)
-            ((void (*)(void*))(pMethodtbl->methodPtr))(pMethodtbl->target);
+            ((void (*)(void*, System_Object*, System_UnhandledExceptionEventArgs*))(pMethodtbl->methodPtr))(pMethodtbl->target, sender, e);
         else
-            ((void (*)(void))(pMethodtbl->methodPtr))();
+            ((void (*)(System_Object*, System_UnhandledExceptionEventArgs*))(pMethodtbl->methodPtr))(sender, e);
         index++;
     }
-    while (il2c_unlikely__(index < this__->count__));
+    while (il2c_likely__(index < this__->count__));
 }
 
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
 IL2C_RUNTIME_TYPE_BEGIN(
-    System_Threading_ThreadStart,
-    "System.Threading.ThreadStart",
+    System_UnhandledExceptionEventHandler,
+    "System.UnhandledExceptionEventHandler",
     IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
     0,
-    System_MulticastDelegate,
+    System_Object,
     System_Delegate_MarkHandler__,
     0)
 IL2C_RUNTIME_TYPE_END();

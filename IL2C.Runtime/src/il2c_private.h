@@ -52,6 +52,18 @@ extern void il2c_collect__(void);
 ///////////////////////////////////////////////////
 // Internal runtime definitions
 
+typedef volatile struct IL2C_GC_TRACKING_INFORMATION_DECL
+{
+    IL2C_GC_TRACKING_INFORMATION* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    volatile void* pReferences__[1];     // objRefCount__
+    // IL2C_VALUE_DESCRIPTOR valueDescriptors__[];  // valueCount__
+} IL2C_GC_TRACKING_INFORMATION;
+
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_EXECUTION_FRAME;
+typedef IL2C_GC_TRACKING_INFORMATION IL2C_STATIC_FIELDS;
+
 typedef const struct IL2C_MARK_TARGET_DECL
 {
     const IL2C_RUNTIME_TYPE valueType;

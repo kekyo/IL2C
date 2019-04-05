@@ -53,6 +53,7 @@ extern void il2c_free(void* p);
 
 #define il2c_iand(pDest, newValue) __sync_fetch_and_and((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) __sync_fetch_and_or((interlock_t*)(pDest), (interlock_t)(newValue))
+#define il2c_ixor(pDest, newValue) __sync_fetch_and_xor((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_iinc(pDest) __sync_add_and_fetch((interlock_t*)(pDest), 1)
 #define il2c_idec(pDest) __sync_sub_and_fetch((interlock_t*)(pDest), 1)
 #define il2c_ixchg(pDest, newValue) __sync_lock_test_and_set((interlock_t*)(pDest), (interlock_t)(newValue))

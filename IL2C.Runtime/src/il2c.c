@@ -44,6 +44,7 @@ static IL2C_STATIC_FIELDS* g_pBeginStaticFields__ = NULL;
 
 static IL2C_MONITOR_LOCK_BLOCK_INFORMATION* g_MonitorLockBlockInformations[7] = { NULL };
 
+static interlock_t g_CollectionMarkIndex__ = 0; //  IL2C_CHARACTERISTIC_MARK_INDEX;
 static interlock_t g_ExecutingCollection__ = 0;
 
 // The initializer count produces when works the type initializer.
@@ -106,9 +107,10 @@ void* il2c_get_uninitialized_object_internal__(
     // Guarantee cleared body
     memset(pReference, 0, bodySize);
 
-    pHeader->pNext = NULL;
     pHeader->type = type;
-    pHeader->characteristic = 0;
+
+    // HACK: Current GC mark status is same as g_CollectionMarkIndex__, it means "Marked."
+    pHeader->characteristic = g_CollectionMarkIndex__;
 
     // Safe link both headers.
     while (1)
@@ -679,12 +681,12 @@ static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 /////////////////////////////////////////////////////////////
 // Internal GC mark handlers
 
-// Has to ignore if objref is const.
+// Has to ignore if objref is const.  (NOT const and NOT marked)
 // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory (CONST).
 //   (at x86/x64 cause, another platform may cause)
 #define TRY_GET_HEADER(pHeader, pAdjustedReference) \
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference); \
-    if (il2c_unlikely__((pHeader->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_LIVE)) == 0))
+    if (il2c_unlikely__(((pHeader->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_MARK_INDEX)) ^ IL2C_CHARACTERISTIC_MARK_INDEX) == g_CollectionMarkIndex__))
 
 static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type, const uint8_t offset);
 
@@ -698,14 +700,14 @@ static void il2c_mark_handler_for_objref__(System_Object* pAdjustedReference)
     il2c_assert(pHeader->type != NULL);
     
     // Marking with atomicity.
-    interlock_t characteristic = il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_LIVE);
-    if (il2c_likely__((characteristic & IL2C_CHARACTERISTIC_LIVE) == IL2C_CHARACTERISTIC_LIVE))
+    const interlock_t lastCharacteristic = il2c_ixor(&pHeader->characteristic, IL2C_CHARACTERISTIC_MARK_INDEX);
+    if (il2c_likely__((lastCharacteristic & IL2C_CHARACTERISTIC_MARK_INDEX) == g_CollectionMarkIndex__))
     {
         il2c_runtime_debug_log_format(
-            L"il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x{0:p}, type={1:s}, characteristic=0x{2:x}",
+            L"il2c_mark_handler_for_objref__ [1]: pAdjustedReference=0x{0:p}, type={1:s}, lastCharacteristic=0x{2:x}",
             pAdjustedReference,
             pHeader->type->pTypeName,
-            characteristic);
+            lastCharacteristic);
         // Already marked/fixed/constant
         return;
     }
@@ -842,21 +844,6 @@ static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type,
 /////////////////////////////////////////////////////////////
 // GC processes
 
-static void il2c_step1_clear_gcmark__(void)
-{
-    // It has to invoke from inside for GC process.
-    il2c_assert(g_ExecutingCollection__ >= 1);
-
-    // Clear header marks.
-    IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
-    while (il2c_likely__(pCurrentHeader != NULL))
-    {
-        // Drop live marking.
-        il2c_iand(&pCurrentHeader->characteristic, ~IL2C_CHARACTERISTIC_LIVE);
-        pCurrentHeader = pCurrentHeader->pNext;
-    }
-}
-
 static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 {
     // It has to invoke from inside for GC process.
@@ -981,7 +968,7 @@ static void il2c_step3_sweep_garbage__(void)
     while (il2c_likely__(pCurrentHeader != NULL))
     {
         IL2C_REF_HEADER* pNext = pCurrentHeader->pNext;
-        if (il2c_unlikely__((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_LIVE) == 0))
+        if (il2c_unlikely__((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_MARK_INDEX) != g_CollectionMarkIndex__))
         {
             // Very important unlink step: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
@@ -1091,8 +1078,11 @@ void il2c_collect__(void)
     //////////////////////////////////////////////////
     // GC Step 1:
 
-    il2c_step1_clear_gcmark__();
-    il2c_check_heap();
+    // Note: Traditional mark-sweep GC's first step is clearing markings.
+    //   The IL2C GC skips this step and mark/clear flag indicates with inverse arithmetic
+    //   between g_CollectionMarkIndex__ and characteristic's MARK_INDEX.
+    //   The instances characteristic MARK_INDEX will indicate last stats, so makes NOT MARKED if inversed this flag.
+    il2c_ixor(&g_CollectionMarkIndex__, IL2C_CHARACTERISTIC_MARK_INDEX);
 
     //////////////////////////////////////
     // GC Step 2:
@@ -1157,8 +1147,11 @@ static void il2c_collect_for_final_shutdown__(void)
     //////////////////////////////////////////////////
     // GC Step 1:
 
-    il2c_step1_clear_gcmark__();
-    il2c_check_heap();
+    // Note: Traditional mark-sweep GC's first step is clearing markings.
+    //   The IL2C GC skips this step and mark/clear flag indicates with inverse arithmetic
+    //   between g_CollectionMarkIndex__ and characteristic's MARK_INDEX.
+    //   The instances characteristic MARK_INDEX will indicate last stats, so makes NOT MARKED if inversed this flag.
+    il2c_ixor(&g_CollectionMarkIndex__, IL2C_CHARACTERISTIC_MARK_INDEX);
 
     //////////////////////////////////////
     // GC Step 2:

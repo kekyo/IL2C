@@ -38,10 +38,10 @@ static System_String* new_string_internal__(uintptr_t byteSize, const char* pFil
 static System_String* new_string_internal__(uintptr_t byteSize)
 #endif
 {
-    uintptr_t bodySize = sizeof(System_String) + byteSize;
+    const uintptr_t bodySize = sizeof(System_String) + byteSize;
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-    System_String* pString = il2c_get_uninitialized_object_internal__(
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
         bodySize, pFile, line);
 #else
@@ -50,9 +50,16 @@ static System_String* new_string_internal__(uintptr_t byteSize)
         bodySize);
 #endif
 
-    pString->vptr0__ = &System_String_VTABLE__;
+    System_String* pString = (System_String*)(pHeader + 1);
+
+    il2c_assert(pString->vptr0__ == &System_String_VTABLE__);
+
     wchar_t* string_body = (wchar_t*)(((uint8_t*)pString) + sizeof(System_String));
     pString->string_body__ = string_body;
+
+    // Marked instance is initialized. (and will handle by GC)
+    il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
+
     return pString;
 }
 

@@ -95,7 +95,7 @@ typedef const struct
     // IL2C_REF_HEADER
     void* pNext;                  // Const string will not collect by GC, so this link is always NULL.
     IL2C_RUNTIME_TYPE type;       // Const string always fixed runtime type pointer from "System_String_RUNTIME_TYPE__."
-    interlock_t characteristic;   // Const string always marked (IL2C_CHARACTERISTIC_CONST)
+    interlock_t characteristic;   // Const string always marked (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_INITIALIZED)
 
     // Instance's vptr
     System_String_VTABLE_DECL__* vptr0__;   // Const string always fixed VTable pointer from "System_String_VTABLE__."
@@ -105,7 +105,7 @@ typedef const struct
 
 #define IL2C_CONST_STRING(name, string_body) \
     static IL2C_CONST_STRING_DECL name##_CONST_STRING__ = { \
-        NULL, il2c_typeof(System_String), /* IL2C_CHARACTERISTIC_CONST */ (interlock_t)0x80000000UL, &System_String_VTABLE__, string_body }; \
+        NULL, il2c_typeof(System_String), /* IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_INITIALIZED */ (interlock_t)0xc0000000UL, &System_String_VTABLE__, string_body }; \
     System_String* const name = ((System_String*)&(name##_CONST_STRING__.vptr0__))
 
 #ifdef __cplusplus

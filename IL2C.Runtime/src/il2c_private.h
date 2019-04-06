@@ -105,9 +105,10 @@ struct IL2C_RUNTIME_TYPE_DECL
 //};
 
 // IL2C_REF_HEADER_DECL.characteristic
-#define IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK ((interlock_t)0x10000000UL)
-#define IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE ((interlock_t)0x20000000UL)
-#define IL2C_CHARACTERISTIC_MARK_INDEX ((interlock_t)0x40000000UL)      // Mark index is only 0 or 1.
+#define IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK ((interlock_t)0x08000000UL)
+#define IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE ((interlock_t)0x10000000UL)
+#define IL2C_CHARACTERISTIC_MARK_INDEX ((interlock_t)0x20000000UL)      // Mark index is only 0 or 1.
+#define IL2C_CHARACTERISTIC_INITIALIZED ((interlock_t)0x40000000UL)     // GC will ignore if not initialized
 #define IL2C_CHARACTERISTIC_CONST ((interlock_t)0x80000000UL)
 
 #define il2c_get_header__(pReference) \
@@ -162,9 +163,9 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 // Internal runtime functions
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
 #else
-extern void* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
 #endif
 
 extern void il2c_register_root_reference__(void* pReference, bool isFixed);

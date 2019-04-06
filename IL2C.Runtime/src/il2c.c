@@ -56,76 +56,6 @@ const uintptr_t* il2c_initializer_count = &g_InitializerCount;
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
 
-#if defined(IL2C_USE_LINE_INFORMATION)
-void* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line)
-#else
-void* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
-#endif
-{
-    // TODO: always collect
-#if defined(IL2C_USE_LINE_INFORMATION)
-    il2c_collect__(pFile, line);
-#else
-    il2c_collect__();
-#endif
-
-    // +----------------------+ <-- pHeader
-    // | IL2C_REF_HEADER      |
-    // +----------------------+ <-- pReference   -------
-    // |          :           |                    ^
-    // | (Instance body)      |                    | bodySize
-    // |          :           |                    v
-    // +----------------------+                  -------
-
-    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)il2c_malloc(sizeof(IL2C_REF_HEADER) + bodySize);
-    if (il2c_unlikely__(pHeader == NULL))
-    {
-        while (1)
-        {
-            // Cannot allocate: force collecting
-#if defined(IL2C_USE_LINE_INFORMATION)
-            il2c_collect__(pFile, line);
-#else
-            il2c_collect__();
-#endif
-
-            // Retry
-            pHeader = (IL2C_REF_HEADER*)il2c_malloc(sizeof(IL2C_REF_HEADER) + bodySize);
-            if (il2c_likely__(pHeader != NULL))
-            {
-                break;
-            }
-
-            // throw NotEnoughMemoryException();
-            il2c_assert(0);
-        }
-    }
-
-    void* pReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
-    // Guarantee cleared body
-    memset(pReference, 0, bodySize);
-
-    pHeader->type = type;
-
-    // HACK: Current GC mark status is same as g_CollectionMarkIndex__, it means "Marked."
-    pHeader->characteristic = g_CollectionMarkIndex__;
-
-    // Safe link both headers.
-    while (1)
-    {
-        IL2C_REF_HEADER* pNext = g_pBeginHeader__;
-        pHeader->pNext = pNext;
-        if (il2c_likely__((IL2C_REF_HEADER*)il2c_icmpxchgptr(&g_pBeginHeader__, pHeader, pNext) == pNext))
-        {
-            break;
-        }
-    }
-
-    return pReference;
-}
-
 static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
 {
     il2c_assert(type != NULL);
@@ -148,6 +78,87 @@ static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
 }
 
 #if defined(IL2C_USE_LINE_INFORMATION)
+IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line)
+#else
+IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
+#endif
+{
+    // TODO: always collect
+#if defined(IL2C_USE_LINE_INFORMATION)
+    il2c_collect__(pFile, line);
+#else
+    il2c_collect__();
+#endif
+
+    // +----------------------+ <-- pHeader
+    // | IL2C_REF_HEADER      |
+    // +----------------------+ <-- pReference   -------
+    // |          :           |                    ^
+    // | (Instance body)      |                    | bodySize
+    // |          :           |                    v
+    // +----------------------+                  -------
+
+    const uintptr_t totalSize = sizeof(IL2C_REF_HEADER) + bodySize;
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)il2c_malloc(totalSize);
+    if (il2c_unlikely__(pHeader == NULL))
+    {
+        while (1)
+        {
+            // Cannot allocate: force collecting
+#if defined(IL2C_USE_LINE_INFORMATION)
+            il2c_collect__(pFile, line);
+#else
+            il2c_collect__();
+#endif
+
+            // Retry
+            pHeader = (IL2C_REF_HEADER*)il2c_malloc(totalSize);
+            if (il2c_likely__(pHeader != NULL))
+            {
+                break;
+            }
+
+            // throw NotEnoughMemoryException();
+            il2c_assert(0);
+        }
+    }
+
+    // Guarantee cleared body
+    memset((void*)pHeader, 0, totalSize);
+
+    // Set RTTI.
+    pHeader->type = type;
+
+    // HACK: Current GC mark status is same as g_CollectionMarkIndex__, it means "Marked."
+    pHeader->characteristic = g_CollectionMarkIndex__;
+
+    // Setup vptr0.
+    void* pReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
+    *((const void**)pReference) = type->vptr0;
+
+    // Setup interface vptrs.
+    il2c_setup_interface_vptrs(type, pReference);
+
+    // Safe link both headers.
+    while (1)
+    {
+        IL2C_REF_HEADER* pNext = g_pBeginHeader__;
+        pHeader->pNext = pNext;
+        if (il2c_likely__((IL2C_REF_HEADER*)il2c_icmpxchgptr(&g_pBeginHeader__, pHeader, pNext) == pNext))
+        {
+            break;
+        }
+    }
+
+    // NOTE: Enter critical section for partially construted instance.
+    //   IL2C will make the mark IL2C_CHARACTERISTIC_INITIALIZED.
+
+    return pHeader;
+}
+
+#if defined(IL2C_USE_LINE_INFORMATION)
 void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type, const char* pFile, int line)
 #else
 void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
@@ -163,18 +174,15 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 
     // Allocate heap memory.
 #if defined(IL2C_USE_LINE_INFORMATION)
-    uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize, pFile, line);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(type, type->bodySize, pFile, line);
 #else
-    uint8_t* pReference = il2c_get_uninitialized_object_internal__(type, type->bodySize);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(type, type->bodySize);
 #endif
 
-    // Setup vptr0.
-    *((const void**)pReference) = type->vptr0;
+    // Marked instance is initialized. (and will handle by GC)
+    il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
-    // Setup interface vptrs.
-    il2c_setup_interface_vptrs(type, pReference);
-
-    return pReference;
+    return ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
 }
 
 /////////////////////////////////////////////////////////////
@@ -681,12 +689,17 @@ static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 /////////////////////////////////////////////////////////////
 // Internal GC mark handlers
 
-// Has to ignore if objref is const.  (NOT const and NOT marked)
+// Has to ignore if objref is const.  (NOT const and initialized and NOT marked)
 // HACK: It's shame the icmpxchg may cause system fault if header is placed at read-only memory (CONST).
 //   (at x86/x64 cause, another platform may cause)
+// TODO: Reduce flags calculation.
 #define TRY_GET_HEADER(pHeader, pAdjustedReference) \
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference); \
-    if (il2c_unlikely__(((pHeader->characteristic & (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_MARK_INDEX)) ^ IL2C_CHARACTERISTIC_MARK_INDEX) == g_CollectionMarkIndex__))
+    if (il2c_unlikely__(( \
+        (pHeader->characteristic & \
+            (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) ^ \
+        (IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) == \
+        g_CollectionMarkIndex__))
 
 static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type, const uint8_t offset);
 
@@ -698,6 +711,7 @@ static void il2c_mark_handler_for_objref__(System_Object* pAdjustedReference)
 
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
     il2c_assert(pHeader->type != NULL);
+    il2c_assert(pHeader->characteristic & IL2C_CHARACTERISTIC_INITIALIZED);
     
     // Marking with atomicity.
     const interlock_t lastCharacteristic = il2c_ixor(&pHeader->characteristic, IL2C_CHARACTERISTIC_MARK_INDEX);
@@ -968,7 +982,9 @@ static void il2c_step3_sweep_garbage__(void)
     while (il2c_likely__(pCurrentHeader != NULL))
     {
         IL2C_REF_HEADER* pNext = pCurrentHeader->pNext;
-        if (il2c_unlikely__((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_MARK_INDEX) != g_CollectionMarkIndex__))
+        if (il2c_unlikely__(((pCurrentHeader->characteristic & 
+            (IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) ^
+            IL2C_CHARACTERISTIC_INITIALIZED) != g_CollectionMarkIndex__))
         {
             // Very important unlink step: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
@@ -1333,16 +1349,19 @@ System_ValueType* il2c_box__(
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
 #if defined(IL2C_USE_LINE_INFORMATION)
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize, pFile, line);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(valueType, bodySize, pFile, line);
 #else
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 #endif
 
-    pBoxed->vptr0__ = valueType->vptr0;
+    System_ValueType* pBoxed = (System_ValueType*)(pHeader + 1);
+
+    il2c_assert(pBoxed->vptr0__ == valueType->vptr0);
+
     memcpy(((uint8_t*)pBoxed) + sizeof(System_ValueType), pValue, valueType->bodySize);
 
-    // Setup interface vptrs.
-    il2c_setup_interface_vptrs(valueType, pBoxed);
+    // Marked instance is initialized. (and will handle by GC)
+    il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
     return pBoxed;
 }
@@ -1460,17 +1479,18 @@ System_ValueType* il2c_box2__(
         il2c_throw_invalidcastexception__();
     }
 
-    uintptr_t bodySize = sizeof(System_ValueType) +
+    const uintptr_t bodySize = sizeof(System_ValueType) +
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
 #if defined(IL2C_USE_LINE_INFORMATION)
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize, pFile, line);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(valueType, bodySize, pFile, line);
 #else
-    System_ValueType* pBoxed = il2c_get_uninitialized_object_internal__(valueType, bodySize);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(valueType, bodySize);
 #endif
 
-    // vptr0 setup.
-    pBoxed->vptr0__ = valueType->vptr0;
+    System_ValueType* pBoxed = (System_ValueType*)(pHeader + 1);
+
+    il2c_assert(pBoxed->vptr0__ == valueType->vptr0);
 
     switch (valueType->bodySize)
     {
@@ -1488,8 +1508,8 @@ System_ValueType* il2c_box2__(
         break;
     }
 
-    // Setup interface vptrs.
-    il2c_setup_interface_vptrs(valueType, pBoxed);
+    // Marked instance is initialized. (and will handle by GC)
+    il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
     return pBoxed;
 }

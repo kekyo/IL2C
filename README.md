@@ -1,5 +1,7 @@
 # IL2C - A translator for ECMA-335 CIL/MSIL to C language.
 
+![Intermediate language everywhere!](images/banner.png)
+
 ## Status
 
 |Provider|Branch|Build|

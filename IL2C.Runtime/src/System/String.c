@@ -45,7 +45,7 @@ static System_String* new_string_internal__(uintptr_t byteSize)
         il2c_typeof(System_String),
         bodySize, pFile, line);
 #else
-    System_String* pString = il2c_get_uninitialized_object_internal__(
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
         bodySize);
 #endif

@@ -200,7 +200,7 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     intptr_t rawHandle = il2c_create_thread__(
         System_Threading_Thread_InternalEntryPoint, this__);
 
-    // TODO: OutOfMemoryException
+    // TODO: OutOfMemoryException (have to unlink from root)
     il2c_assert(rawHandle >= 0);
 
     // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
@@ -228,7 +228,7 @@ void System_Threading_Thread_Start_2(System_Threading_Thread* this__, System_Obj
     intptr_t rawHandle = il2c_create_thread__(
         System_Threading_Thread_InternalEntryPointWithParameter, this__);
 
-    // TODO: OutOfMemoryException
+    // TODO: OutOfMemoryException (have to unlink from root)
     il2c_assert(rawHandle >= 0);
 
     // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)

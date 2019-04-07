@@ -163,9 +163,11 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 // Internal runtime functions
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock, const char* pFile, int line);
 #else
-extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock);
 #endif
 
 extern void il2c_register_root_reference__(void* pReference, bool isFixed);
@@ -175,11 +177,27 @@ extern void il2c_default_mark_handler_for_objref__(void* pReference);
 extern void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType);
 extern void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFORMATION* pTrackingInformation);
 
+typedef volatile struct IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME /* IL2C_EXECUTION_FRAME */
+{
+    IL2C_EXECUTION_FRAME* pNext__;
+    uint16_t objRefCount__;
+    uint16_t valueCount__;
+    System_Exception* exception__;
+} IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME;
+
+// The real thread structure.
+typedef volatile struct IL2C_RUNTIME_THREAD
+{
+    System_Threading_Thread thread;
+    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame__;
+} IL2C_RUNTIME_THREAD;
+
 typedef volatile struct IL2C_THREAD_CONTEXT_DECL
 {
     IL2C_EXECUTION_FRAME* pFrame__;
     IL2C_EXCEPTION_FRAME* pUnwindTarget__;
     intptr_t rawHandle__;
+    IL2C_MONITOR_LOCK lockForCollect__;
     int32_t id__;
 } IL2C_THREAD_CONTEXT;
 

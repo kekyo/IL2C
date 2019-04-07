@@ -3,21 +3,6 @@
 /////////////////////////////////////////////////////////////
 // System.Threading.Thread
 
-typedef volatile struct IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME /* IL2C_EXECUTION_FRAME */
-{
-    IL2C_EXECUTION_FRAME* pNext__;
-    uint16_t objRefCount__;
-    uint16_t valueCount__;
-    System_Exception* exception__;
-} IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME;
-
-// The real thread structure.
-typedef volatile struct IL2C_RUNTIME_THREAD
-{
-    System_Threading_Thread thread;
-    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame__;
-} IL2C_RUNTIME_THREAD;
-
 void System_Threading_Thread__ctor(System_Threading_Thread* this__, System_Threading_ThreadStart* start)
 {
     il2c_assert(this__ != NULL);
@@ -50,9 +35,14 @@ void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
 {
     il2c_assert(this__ != NULL);
 
-    if (il2c_likely__(this__->rawHandle__ != -1))
+    const intptr_t rawHandle = (intptr_t)il2c_ixchgptr(&this__->rawHandle__, (intptr_t)-1);
+    if (il2c_likely__(rawHandle != -1))
     {
         il2c_close_thread_handle__(this__->rawHandle__);
+
+        IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)this__;
+        il2c_destroy_monitor_lock__(&pRuntimeThread->thread.lockForCollect__);
+
 #if defined(_DEBUG)
         this__->rawHandle__ = -1;
         this__->id__ = 0;
@@ -203,6 +193,9 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     // TODO: OutOfMemoryException (have to unlink from root)
     il2c_assert(rawHandle >= 0);
 
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)this__;
+    il2c_initialize_monitor_lock__(&pRuntimeThread->thread.lockForCollect__);
+
     // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
     this__->rawHandle__ = rawHandle;
     il2c_resume_thread__(rawHandle);
@@ -230,6 +223,9 @@ void System_Threading_Thread_Start_2(System_Threading_Thread* this__, System_Obj
 
     // TODO: OutOfMemoryException (have to unlink from root)
     il2c_assert(rawHandle >= 0);
+
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)this__;
+    il2c_initialize_monitor_lock__(&pRuntimeThread->thread.lockForCollect__);
 
     // It's naive for passing handle if startup with suspending not implemented. (pthread/FreeRTOS)
     this__->rawHandle__ = rawHandle;

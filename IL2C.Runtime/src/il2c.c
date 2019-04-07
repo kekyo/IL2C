@@ -47,6 +47,9 @@ static IL2C_MONITOR_LOCK_BLOCK_INFORMATION* g_MonitorLockBlockInformations[7] = 
 static interlock_t g_CollectionMarkIndex__ = 0; //  IL2C_CHARACTERISTIC_MARK_INDEX;
 static interlock_t g_ExecutingCollection__ = 0;
 
+// Stop the world global lock.
+static IL2C_MONITOR_LOCK g_GlobalLockForCollect__;
+
 // The initializer count produces when works the type initializer.
 // "il2c_initializer_count" will compare the local type counter,
 // the translated code have to initialize first using static members if count value different.
@@ -79,12 +82,15 @@ static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock, const char* pFile, int line)
 #else
 IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock)
 #endif
 {
+    il2c_assert(type != NULL);
+    il2c_assert(pLock != NULL);
+
     // TODO: always collect
 #if defined(IL2C_USE_LINE_INFORMATION)
     il2c_collect__(pFile, line);
@@ -141,6 +147,9 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     // Setup interface vptrs.
     il2c_setup_interface_vptrs(type, pReference);
 
+    // Touch for lock region.
+    il2c_enter_monitor_lock__(pLock);
+
     // Safe link both headers.
     while (1)
     {
@@ -174,9 +183,14 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 
     // Allocate heap memory.
 #if defined(IL2C_USE_LINE_INFORMATION)
-    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(type, type->bodySize, pFile, line);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
+        pFile, line);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        type, type->bodySize, &pThreadContext->lockForCollect__, pFile, line);
 #else
-    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(type, type->bodySize);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        type, type->bodySize, &pThreadContext->lockForCollect__);
 #endif
 
     // Marked instance is initialized. (and will handle by GC)
@@ -199,19 +213,29 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
     if (il2c_unlikely__(pThreadContext == NULL))
     {
 #if defined(IL2C_USE_LINE_INFORMATION)
-        System_Threading_Thread* pThread = il2c_get_uninitialized_object__(
+        IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
             il2c_typeof(System_Threading_Thread),
+            sizeof(IL2C_RUNTIME_THREAD),
+            &g_GlobalLockForCollect__,
             pFile, line);
 #else
-        System_Threading_Thread* pThread = il2c_get_uninitialized_object__(
-            il2c_typeof(System_Threading_Thread));
+        IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+            il2c_typeof(System_Threading_Thread),
+            sizeof(IL2C_RUNTIME_THREAD),
+            &g_GlobalLockForCollect__);
 #endif
+
+        System_Threading_Thread* pThread = (System_Threading_Thread*)(pHeader + 1);
 
         // Initialize thread context.
         pThreadContext = (IL2C_THREAD_CONTEXT*)&pThread->pFrame__;
 
         pThreadContext->rawHandle__ = il2c_get_current_thread__();
         pThreadContext->id__ = il2c_get_current_thread_id__();
+        il2c_initialize_monitor_lock__(&pThreadContext->lockForCollect__);
+
+        // Marked instance is initialized. (and will handle by GC)
+        il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
         // Save IL2C_THREAD_CONTEXT into tls.
         il2c_set_tls_value(g_TlsIndex__, (void*)pThreadContext);
@@ -245,6 +269,9 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
 
+    // Touch for lock region.
+    il2c_enter_monitor_lock__(&pThreadContext->lockForCollect__);
+
     while (1)
     {
         IL2C_EXECUTION_FRAME* pNext = pThreadContext->pFrame__;
@@ -254,6 +281,9 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
             break;
         }
     }
+
+    // Exit for lock region.
+    il2c_exit_monitor_lock__(&pThreadContext->lockForCollect__);
 }
 
 #if defined(IL2C_USE_LINE_INFORMATION)
@@ -274,7 +304,13 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
     il2c_assert(pThreadContext != NULL);
 
+    // Touch for lock region.
+    il2c_enter_monitor_lock__(&pThreadContext->lockForCollect__);
+
     pThreadContext->pFrame__ = ((IL2C_EXECUTION_FRAME*)pFrame)->pNext__;
+
+    // Exit for lock region.
+    il2c_exit_monitor_lock__(&pThreadContext->lockForCollect__);
 
     // TODO: Remove thread context for the last frame?
 }
@@ -705,7 +741,7 @@ static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type,
 
 static void il2c_mark_handler_for_objref__(System_Object* pAdjustedReference)
 {
-    typedef void(*IL2C_MARK_HANDLER)(void* pReference);
+    typedef void (*IL2C_MARK_HANDLER)(void* pReference);
 
     il2c_assert(pAdjustedReference != NULL);
 
@@ -1072,6 +1108,8 @@ void il2c_collect__(void)
     }
 #endif
 
+    il2c_enter_monitor_lock__(&g_GlobalLockForCollect__);
+
 #if defined(IL2C_USE_LINE_INFORMATION)
     il2c_runtime_debug_log_format(
         L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}, {3:s}({4:d})",
@@ -1130,6 +1168,8 @@ void il2c_collect__(void)
 #else
     il2c_runtime_debug_log(L"il2c_collect__: finished");
 #endif
+
+    il2c_exit_monitor_lock__(&g_GlobalLockForCollect__);
 
     il2c_idec(&g_ExecutingCollection__);
 }
@@ -1758,6 +1798,8 @@ void il2c_initialize__(void)
 
     memset(&g_MonitorLockBlockInformations[0], 0, sizeof g_MonitorLockBlockInformations);
 
+    il2c_initialize_monitor_lock__(&g_GlobalLockForCollect__);
+
 #if defined(_DEBUG)
     g_CollectCount = 0;
     g_CollectCountBreak = -1;
@@ -1772,11 +1814,13 @@ void il2c_shutdown__(void)
 {
     il2c_collect_for_final_shutdown__();
 
-    il2c_tls_free(g_TlsIndex__);
-
 #ifdef IL2C_USE_SIGNAL
     signal(SIGSEGV, g_SIGSEGV_saved);
 #endif
+
+    il2c_destroy_monitor_lock__(&g_GlobalLockForCollect__);
+
+    il2c_tls_free(g_TlsIndex__);
 }
 
 ///////////////////////////////////////////////////////

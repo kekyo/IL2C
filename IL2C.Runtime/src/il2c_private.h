@@ -185,21 +185,22 @@ typedef volatile struct IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME /* IL2C_EXECU
     System_Exception* exception__;
 } IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME;
 
+typedef volatile struct IL2C_THREAD_CONTEXT_DECL
+{
+    IL2C_EXECUTION_FRAME* pFrame;
+    IL2C_EXCEPTION_FRAME* pUnwindTarget;
+    intptr_t rawHandle;
+    IL2C_MONITOR_LOCK lockForCollect;
+    int32_t id;
+} IL2C_THREAD_CONTEXT;
+
 // The real thread structure.
 typedef volatile struct IL2C_RUNTIME_THREAD
 {
     System_Threading_Thread thread;
-    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame__;
+    IL2C_THREAD_CONTEXT context;
+    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame;
 } IL2C_RUNTIME_THREAD;
-
-typedef volatile struct IL2C_THREAD_CONTEXT_DECL
-{
-    IL2C_EXECUTION_FRAME* pFrame__;
-    IL2C_EXCEPTION_FRAME* pUnwindTarget__;
-    intptr_t rawHandle__;
-    IL2C_MONITOR_LOCK lockForCollect__;
-    int32_t id__;
-} IL2C_THREAD_CONTEXT;
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);

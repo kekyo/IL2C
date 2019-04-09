@@ -73,11 +73,14 @@ System_Array* il2c_new_array__(
     const uintptr_t size = (uintptr_t)sizeof(System_Array) + ((uintptr_t)length) * elementSize;
     
 #if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
+        pFile, line);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        il2c_typeof(System_Array), size, pFile, line);
+        il2c_typeof(System_Array), size, (void*)&pThreadContext->lockForCollect, pFile, line);
 #else
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        il2c_typeof(System_Array), size);
+        il2c_typeof(System_Array), size, (void*)&pThreadContext->lockForCollect);
 #endif
 
     System_Array* arr = (System_Array*)(pHeader + 1);

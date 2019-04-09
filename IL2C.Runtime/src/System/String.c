@@ -41,13 +41,16 @@ static System_String* new_string_internal__(uintptr_t byteSize)
     const uintptr_t bodySize = sizeof(System_String) + byteSize;
 
 #if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
+        pFile, line);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize, pFile, line);
+        bodySize, (void*)&pThreadContext->lockForCollect, pFile, line);
 #else
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize);
+        bodySize, (void*)&pThreadContext->lockForCollect);
 #endif
 
     System_String* pString = (System_String*)(pHeader + 1);

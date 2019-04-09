@@ -38,50 +38,38 @@ typedef struct Calculator_AbstractNode__ctor_EXECUTION_FRAME_DECL
 
 void Calculator_AbstractNode__ctor(Calculator_AbstractNode* this__, int32_t nextIndex)
 {
-#line 13 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
-#line 13 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     int32_t stack1_0__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
-#line 13 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_AbstractNode__ctor_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
-#line 13 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0  */
-#line 13 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_0000: ldarg.0                         : PolishNotation.cs(13) */
     frame__.stack0_0__ = this__;
-    /* IL_0001: call System.Object..ctor */
-#line 13 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_0001: call System.Object..ctor        : PolishNotation.cs(13) */
     System_Object__ctor((System_Object*)frame__.stack0_0__);
-    /* IL_0006: nop  */
+    /* IL_0006: nop                             : PolishNotation.cs(13) */
     /* IL_0007: nop  */
     /* IL_0008: ldarg.0  */
-#line 15 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0009: ldarg.1  */
-#line 15 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_0009: ldarg.1                         : PolishNotation.cs(15) */
     stack1_0__ = nextIndex;
-    /* IL_000a: stfld Calculator.AbstractNode.NextIndex */
-#line 15 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_000a: stfld Calculator.AbstractNode.NextIndex : PolishNotation.cs(15) */
     frame__.stack0_0__->NextIndex = stack1_0__;
-    /* IL_000f: ret  */
-#line 16 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_000f: ret                             : PolishNotation.cs(16) */
     il2c_unlink_execution_frame(&frame__);
-#line 16 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     return;
-#line 16 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
 }
 
 //////////////////////

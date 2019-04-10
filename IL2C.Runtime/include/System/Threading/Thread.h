@@ -20,7 +20,6 @@ struct System_Threading_Thread
 {
     System_Threading_Thread_VTABLE_DECL__* vptr0__;
     System_Delegate* start__;
-    System_Object* parameter__;
 };
 
 extern System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__;

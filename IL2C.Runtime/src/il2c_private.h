@@ -5,6 +5,9 @@
 
 #pragma once
 
+// TODO:
+#define IL2C_USE_RUNTIME_GIANT_LOCK
+
 #if defined(_DEBUG)
 #define IL2C_USE_LINE_INFORMATION
 #endif
@@ -199,8 +202,22 @@ typedef volatile struct IL2C_RUNTIME_THREAD
 {
     System_Threading_Thread thread;
     IL2C_THREAD_CONTEXT context;
-    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame;
 } IL2C_RUNTIME_THREAD;
+
+typedef volatile struct IL2C_RUNTIME_CREATED_THREAD
+{
+    System_Threading_Thread thread;
+    IL2C_THREAD_CONTEXT context;
+    System_Object* parameter;
+    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame;
+} IL2C_RUNTIME_CREATED_THREAD;
+
+#if defined(IL2C_USE_RUNTIME_GIANT_LOCK)
+extern IL2C_MONITOR_LOCK g_GlobalLockForCollect__;
+#define IL2C_THREAD_LOCK_TARGET(pThreadContext) (((void)pThreadContext->lockForCollect), (&g_GlobalLockForCollect__))
+#else
+#define IL2C_THREAD_LOCK_TARGET(pThreadContext) (&pThreadContext->lockForCollect)
+#endif
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);

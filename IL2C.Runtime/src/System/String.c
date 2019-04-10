@@ -45,12 +45,12 @@ static System_String* new_string_internal__(uintptr_t byteSize)
         pFile, line);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize, (void*)&pThreadContext->lockForCollect, pFile, line);
+        bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize, (void*)&pThreadContext->lockForCollect);
+        bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
     System_String* pString = (System_String*)(pHeader + 1);
@@ -1110,7 +1110,7 @@ System_String_VTABLE_DECL__ System_String_VTABLE__ = {
 IL2C_RUNTIME_TYPE_BEGIN(
     System_String,
     "System.String",
-    IL2C_TYPE_VARIABLE,
+    IL2C_TYPE_REFERENCE | IL2C_TYPE_VARIABLE,
     0,
     System_Object,
     0, 0)

@@ -92,11 +92,11 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         __FILE__, __LINE__);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        pHeaderA->type, size, (void*)&pThreadContext->lockForCollect, __FILE__, __LINE__);
+        pHeaderA->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), __FILE__, __LINE__);
 #else
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        pHeaderA->type, size, (void*)&pThreadContext->lockForCollect);
+        pHeaderA->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
     System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
@@ -173,11 +173,11 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
             IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
                 __FILE__, __LINE__);
             IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-                pHeaderSource->type, size, (void*)&pThreadContext->lockForCollect, __FILE__, __LINE__);
+                pHeaderSource->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), __FILE__, __LINE__);
 #else
             IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
             IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-                pHeaderSource->type, size, (void*)&pThreadContext->lockForCollect);
+                pHeaderSource->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
             System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
@@ -219,11 +219,11 @@ System_Delegate* il2c_new_delegate__(
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         pFile, line);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        delegateType, sizeof(System_Delegate), (void*)&pThreadContext->lockForCollect, pFile, line);
+        delegateType, sizeof(System_Delegate), (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        delegateType, sizeof(System_Delegate), (void*)&pThreadContext->lockForCollect);
+        delegateType, sizeof(System_Delegate), (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
     System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
@@ -278,7 +278,7 @@ System_Delegate_VTABLE_DECL__ System_Delegate_VTABLE__ = {
 IL2C_RUNTIME_TYPE_BEGIN(
     System_Delegate,
     "System.Delegate",
-    IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
+    IL2C_TYPE_REFERENCE | IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
     0,
     System_Object,
     System_Delegate_MarkHandler__,

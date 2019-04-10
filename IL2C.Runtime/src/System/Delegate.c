@@ -84,22 +84,33 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
         il2c_assert(0);
     }
 
-    uintptr_t count = a->count__ + b->count__;
-    uintptr_t size = sizeof(System_Delegate) +
+    const uintptr_t count = a->count__ + b->count__;
+    const uintptr_t size = sizeof(System_Delegate) +
         (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size, __FILE__, __LINE__);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
+        __FILE__, __LINE__);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        pHeaderA->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), __FILE__, __LINE__);
 #else
-    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderA->type, size);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        pHeaderA->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
-    dlg->vptr0__ = &System_Delegate_VTABLE__;
+    System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
+
+    il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
     
     dlg->count__ = count;
+
     struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
     memcpy(&pMethodtbl[0], &a->methodtbl__[0], a->count__ * sizeof(IL2C_METHOD_TABLE));
     memcpy(&pMethodtbl[a->count__], &b->methodtbl__[0], b->count__ * sizeof(IL2C_METHOD_TABLE));
+
+    // Marked instance is initialized. (and will handle by GC)
+    il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
     return dlg;
 }
@@ -159,18 +170,28 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
                 (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-            System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size, __FILE__, __LINE__);
+            IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
+                __FILE__, __LINE__);
+            IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+                pHeaderSource->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), __FILE__, __LINE__);
 #else
-            System_Delegate* dlg = il2c_get_uninitialized_object_internal__(pHeaderSource->type, size);
+            IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
+            IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+                pHeaderSource->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
-            dlg->vptr0__ = &System_Delegate_VTABLE__;
+            System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
+
+            il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
 
             dlg->count__ = count;
 
             struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
             memcpy(&pMethodtbl[0], &source->methodtbl__[0], ((size_t)index) * sizeof(IL2C_METHOD_TABLE));
             memcpy(&pMethodtbl[index], &source->methodtbl__[((uintptr_t)index) + value->count__], ((size_t)count - (size_t)index) * sizeof(IL2C_METHOD_TABLE));
+
+            // Marked instance is initialized. (and will handle by GC)
+            il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
             return dlg;
         }
@@ -195,18 +216,28 @@ System_Delegate* il2c_new_delegate__(
     il2c_assert(method != 0);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(delegateType, sizeof(System_Delegate), pFile, line);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
+        pFile, line);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        delegateType, sizeof(System_Delegate), (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
-    System_Delegate* dlg = il2c_get_uninitialized_object_internal__(delegateType, sizeof(System_Delegate));
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        delegateType, sizeof(System_Delegate), (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
-    dlg->vptr0__ = &System_Delegate_VTABLE__;
-    
+    System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
+
+    il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
+
     dlg->count__ = 1;
 
     struct IL2C_METHOD_TABLE_DECL* pMethodTbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
     pMethodTbl->target = object;
     pMethodTbl->methodPtr = method;
+
+    // Marked instance is initialized. (and will handle by GC)
+    il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
     return dlg;
 }
@@ -247,7 +278,7 @@ System_Delegate_VTABLE_DECL__ System_Delegate_VTABLE__ = {
 IL2C_RUNTIME_TYPE_BEGIN(
     System_Delegate,
     "System.Delegate",
-    IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
+    IL2C_TYPE_REFERENCE | IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
     0,
     System_Object,
     System_Delegate_MarkHandler__,

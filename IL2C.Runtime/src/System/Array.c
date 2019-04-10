@@ -66,24 +66,32 @@ System_Array* il2c_new_array__(
         il2c_assert(0);
     }
 
-    uintptr_t elementSize = il2c_sizeof__(elementType);
+    const uintptr_t elementSize = il2c_sizeof__(elementType);
     il2c_assert(elementSize >= 1);
 
     // -1 is "uint8_t Item[1]"
-    uintptr_t size = (uintptr_t)sizeof(System_Array) + ((uintptr_t)length) * elementSize;
+    const uintptr_t size = (uintptr_t)sizeof(System_Array) + ((uintptr_t)length) * elementSize;
     
 #if defined(IL2C_USE_LINE_INFORMATION)
-    System_Array* arr = il2c_get_uninitialized_object_internal__(
-        il2c_typeof(System_Array), size, pFile, line);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
+        pFile, line);
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        il2c_typeof(System_Array), size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
-    System_Array* arr = il2c_get_uninitialized_object_internal__(
-        il2c_typeof(System_Array), size);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        il2c_typeof(System_Array), size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
-    arr->vptr0__ = &System_Array_VTABLE__;
+    System_Array* arr = (System_Array*)(pHeader + 1);
+
+    il2c_assert(arr->vptr0__ == &System_Array_VTABLE__);
 
     arr->elementType__ = elementType;
     arr->Length = length;
+
+    // Marked instance is initialized. (and will handle by GC)
+    il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
     return arr;
 }
@@ -121,7 +129,7 @@ static void System_Array_MarkHandler__(System_Array* arr)
 IL2C_RUNTIME_TYPE_BEGIN(
     System_Array,
     "System.Array",
-    IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
+    IL2C_TYPE_REFERENCE | IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
     0,
     System_Object,
     System_Array_MarkHandler__,

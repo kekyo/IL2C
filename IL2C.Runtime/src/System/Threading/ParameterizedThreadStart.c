@@ -19,7 +19,7 @@ void System_Threading_ParameterizedThreadStart_Invoke(System_Threading_Parameter
             ((void (*)(System_Object*))(pMethodtbl->methodPtr))(obj);
         index++;
     }
-    while (index < this__->count__);
+    while (il2c_unlikely__(index < this__->count__));
 }
 
 /////////////////////////////////////////////////
@@ -28,8 +28,9 @@ void System_Threading_ParameterizedThreadStart_Invoke(System_Threading_Parameter
 IL2C_RUNTIME_TYPE_BEGIN(
     System_Threading_ParameterizedThreadStart,
     "System.Threading.ParameterizedThreadStart",
-    IL2C_TYPE_REFERENCE,
-    sizeof(System_Threading_ParameterizedThreadStart),
+    IL2C_TYPE_VARIABLE | IL2C_TYPE_WITH_MARK_HANDLER,
+    0,
     System_MulticastDelegate,
-    0, 0)
+    System_Delegate_MarkHandler__,
+    0)
 IL2C_RUNTIME_TYPE_END();

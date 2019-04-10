@@ -15,6 +15,15 @@ void System_Threading_Thread_Finalize(System_Threading_Thread* this__)
     if (il2c_likely__(rawHandle != -1))
     {
         il2c_close_thread_handle__(pRuntimeThread->context.rawHandle);
+
+#if !defined(IL2C_USE_RUNTIME_GIANT_LOCK)
+        // HACK: The finalizer is called from GC processes,
+        //   so the lock already acquired at beginning collection (il2c_enter_for_collect__).
+        //   And, all instance's lock except thread are freeing at il2c_exit_for_collect__(),
+        //   but the thread instance will free and cannot find in it.
+        il2c_exit_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
+#endif
+
         il2c_destroy_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
 
 #if defined(_DEBUG)

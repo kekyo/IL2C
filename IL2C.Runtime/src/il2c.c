@@ -633,7 +633,7 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
 
 static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     il2c_assert(pHeader != NULL);
@@ -700,7 +700,7 @@ static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
 
 static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     IL2C_MONITOR_LOCK_BLOCK_INFORMATION** ppMonitorBlockInformation;
@@ -946,7 +946,7 @@ static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type,
 
 static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     // Mark headers.
@@ -1022,7 +1022,7 @@ static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 
 static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* pRootReferences)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     while (il2c_likely__(pRootReferences != NULL))
@@ -1058,10 +1058,11 @@ static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* 
 
 static void il2c_step3_sweep_garbage__(void)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
-    // Sweep garbage if gcmark isn't marked.
+    // Step 1: Collect unmarked instances and call finalizers.
+
     IL2C_REF_HEADER** ppUnlinkTarget = &g_pBeginHeader__;
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     IL2C_REF_HEADER* pScheduledHeader = NULL;
@@ -1076,6 +1077,8 @@ static void il2c_step3_sweep_garbage__(void)
             *ppUnlinkTarget = pNext;
 
             // Class type overrided the finalizer and not suppressed:
+
+            // TODO: Do atomic dropping suppress finalize flag and make delay collecting if flag is raised. (Cover resurrecting situation)
             if (il2c_unlikely__(((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE) == 0) &&
                 ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize)))
             {
@@ -1103,6 +1106,8 @@ static void il2c_step3_sweep_garbage__(void)
         // Next
         pCurrentHeader = pNext;
     }
+
+    // Step 2: Free collected instances.
 
     while (il2c_likely__(pScheduledHeader != NULL))
     {
@@ -1137,6 +1142,67 @@ static uint32_t g_CollectCount = 0;
 int64_t g_CollectCountBreak = -1;
 #endif
 
+
+static void il2c_enter_for_collect__(void)
+{
+    // It has to be invoked from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
+#if !defined(IL2C_USE_RUNTIME_GIANT_LOCK)
+    IL2C_ROOT_REFERENCES* pRootReferences = g_pRootReferences__;
+    while (il2c_likely__(pRootReferences != NULL))
+    {
+        uint8_t index;
+        volatile System_Object* volatile* ppReference;
+        for (index = 0, ppReference = &pRootReferences->pReferences[0];
+            il2c_likely__(index < sizeof(pRootReferences->pReferences) / sizeof(void*));
+            index++, ppReference++)
+        {
+            // This slot is assigned.
+            IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)*ppReference;
+            if (il2c_likely__(pRuntimeThread != NULL))
+            {
+                il2c_assert(pRuntimeThread->thread.vptr0__ == &System_Threading_Thread_VTABLE__);
+
+                il2c_enter_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
+            }
+        }
+
+        pRootReferences = pRootReferences->pNext;
+    }
+#endif
+}
+
+static void il2c_exit_for_collect__(void)
+{
+    // It has to be invoked from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
+#if !defined(IL2C_USE_RUNTIME_GIANT_LOCK)
+    IL2C_ROOT_REFERENCES* pRootReferences = g_pRootReferences__;
+    while (il2c_likely__(pRootReferences != NULL))
+    {
+        uint8_t index;
+        volatile System_Object* volatile* ppReference;
+        for (index = 0, ppReference = &pRootReferences->pReferences[0];
+            il2c_likely__(index < sizeof(pRootReferences->pReferences) / sizeof(void*));
+            index++, ppReference++)
+        {
+            // This slot is assigned.
+            IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)*ppReference;
+            if (il2c_likely__(pRuntimeThread != NULL))
+            {
+                il2c_assert(pRuntimeThread->thread.vptr0__ == &System_Threading_Thread_VTABLE__);
+
+                il2c_exit_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
+            }
+        }
+
+        pRootReferences = pRootReferences->pNext;
+    }
+#endif
+}
+
 #if defined(IL2C_USE_LINE_INFORMATION)
 void il2c_collect__(const char* pFile, int line)
 #else
@@ -1151,14 +1217,16 @@ void il2c_collect__(void)
     }
 
 #if defined(_DEBUG)
-    uint32_t collectCount = g_CollectCount++;
+    const uint32_t collectCount = g_CollectCount++;
     if (il2c_unlikely__(g_CollectCountBreak != -1))
     {
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
 #endif
 
+    // Take GC locks.
     il2c_enter_monitor_lock__(&g_GlobalLockForCollect__);
+    il2c_enter_for_collect__();
 
 #if defined(IL2C_USE_LINE_INFORMATION)
     il2c_runtime_debug_log_format(
@@ -1219,6 +1287,8 @@ void il2c_collect__(void)
     il2c_runtime_debug_log(L"il2c_collect__: finished");
 #endif
 
+    // Release GC locks.
+    il2c_exit_for_collect__();
     il2c_exit_monitor_lock__(&g_GlobalLockForCollect__);
 
     il2c_idec(&g_ExecutingCollection__);
@@ -1226,16 +1296,20 @@ void il2c_collect__(void)
 
 static void il2c_collect_for_final_shutdown__(void)
 {
-    interlock_t executingCollection = il2c_iinc(&g_ExecutingCollection__);
+    const interlock_t executingCollection = il2c_iinc(&g_ExecutingCollection__);
     il2c_assert(executingCollection == 1);
 
 #if defined(_DEBUG)
-    uint32_t collectCount = g_CollectCount++;
+    const uint32_t collectCount = g_CollectCount++;
     if (il2c_unlikely__(g_CollectCountBreak != -1))
     {
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
 #endif
+
+    // Take GC locks.
+    il2c_enter_monitor_lock__(&g_GlobalLockForCollect__);
+    il2c_enter_for_collect__();
 
 #if defined(_DEBUG)
     il2c_runtime_debug_log_format(
@@ -1287,6 +1361,10 @@ static void il2c_collect_for_final_shutdown__(void)
         L"il2c_collect_for_final_shutdown__: finished");
 #endif
 
+    // Release GC locks.
+    il2c_exit_for_collect__();
+    il2c_exit_monitor_lock__(&g_GlobalLockForCollect__);
+
     il2c_idec(&g_ExecutingCollection__);
 }
 
@@ -1297,7 +1375,7 @@ void il2c_default_mark_handler_for_objref__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     System_Object* pAdjustedReference = il2c_adjusted_reference(pReference);
@@ -1314,7 +1392,7 @@ void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE 
     il2c_assert(valueType != NULL);
     il2c_assert((valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     // Traverse recursively.
@@ -1325,7 +1403,7 @@ void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFOR
 {
     il2c_assert(pTrackingInformation != NULL);
 
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     // Traverse recursively.

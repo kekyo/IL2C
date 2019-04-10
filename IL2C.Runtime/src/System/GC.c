@@ -10,6 +10,8 @@ void System_GC_SuppressFinalize(System_Object* obj)
     il2c_assert(obj != NULL);
 
     IL2C_REF_HEADER* pHeader = il2c_get_header__(obj);
+
+    // TODO: Check overriding finalizer.
     il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE);
 }
 
@@ -19,6 +21,8 @@ void System_GC_ReRegisterForFinalize(System_Object* obj)
     il2c_assert(obj != NULL);
 
     IL2C_REF_HEADER* pHeader = il2c_get_header__(obj);
+
+    // TODO: Check overriding finalizer.
     il2c_iand(&pHeader->characteristic, ~IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE);
 }
 

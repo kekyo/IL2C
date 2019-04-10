@@ -109,9 +109,9 @@ namespace IL2C.ILConverters
                         type.FriendlyName);
                 }
 
-                if (!(ctor.Parameters.Length == 2) &&
-                    (ctor.Parameters[0].TargetType.IsObjectType) &&
-                    (ctor.Parameters[0].TargetType.IsIntPtrType))
+                if ((ctor.Parameters.Length != 3) ||
+                    !ctor.Parameters[1].TargetType.IsObjectType ||
+                    !ctor.Parameters[2].TargetType.IsIntPtrType)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid delegate constructor: Location={0}, Method={1}",
@@ -130,6 +130,42 @@ namespace IL2C.ILConverters
                             "{0} = il2c_new_delegate({1}, {2})",
                             extractContext.GetSymbolName(thisSymbol),
                             type.MangledUniqueName,
+                            parameterString)
+                    };
+                };
+            }
+
+            // Specialized the thread type:
+            if (type.UniqueName == "System.Threading.Thread")
+            {
+                if (!type.IsClass || !type.IsSealed)
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid thread type: Location={0}, Method={1}",
+                        codeInformation.RawLocation,
+                        type.FriendlyName);
+                }
+
+                if ((ctor.Parameters.Length != 2) ||
+                    ((ctor.Parameters[1].TargetType.UniqueName != "System.Threading.ThreadStart") &&
+                     (ctor.Parameters[1].TargetType.UniqueName != "System.Threading.ParameterizedThreadStart")))
+                {
+                    throw new InvalidProgramSequenceException(
+                        "Invalid thread constructor: Location={0}, Method={1}",
+                        codeInformation.RawLocation,
+                        ctor.FriendlyName);
+                }
+
+                return extractContext =>
+                {
+                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                        pairParameters.Skip(1).ToArray(), extractContext, codeInformation);
+
+                    return new[]
+                    {
+                        string.Format(
+                            "{0} = il2c_new_thread({1})",
+                            extractContext.GetSymbolName(thisSymbol),
                             parameterString)
                     };
                 };

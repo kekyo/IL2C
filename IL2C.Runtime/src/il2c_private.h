@@ -5,6 +5,9 @@
 
 #pragma once
 
+// TODO:
+#define IL2C_USE_RUNTIME_GIANT_LOCK
+
 #if defined(_DEBUG)
 #define IL2C_USE_LINE_INFORMATION
 #endif
@@ -163,9 +166,11 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 // Internal runtime functions
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock, const char* pFile, int line);
 #else
-extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock);
 #endif
 
 extern void il2c_register_root_reference__(void* pReference, bool isFixed);
@@ -175,13 +180,44 @@ extern void il2c_default_mark_handler_for_objref__(void* pReference);
 extern void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType);
 extern void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFORMATION* pTrackingInformation);
 
+typedef volatile struct IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME /* IL2C_EXECUTION_FRAME */
+{
+    IL2C_EXECUTION_FRAME* pNext__;
+    uint16_t objRefCount__;
+    uint16_t valueCount__;
+    System_Exception* exception__;
+} IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME;
+
 typedef volatile struct IL2C_THREAD_CONTEXT_DECL
 {
-    IL2C_EXECUTION_FRAME* pFrame__;
-    IL2C_EXCEPTION_FRAME* pUnwindTarget__;
-    intptr_t rawHandle__;
-    int32_t id__;
+    IL2C_EXECUTION_FRAME* pFrame;
+    IL2C_EXCEPTION_FRAME* pUnwindTarget;
+    intptr_t rawHandle;
+    IL2C_MONITOR_LOCK lockForCollect;
+    int32_t id;
 } IL2C_THREAD_CONTEXT;
+
+// The real thread structure.
+typedef volatile struct IL2C_RUNTIME_THREAD
+{
+    System_Threading_Thread thread;
+    IL2C_THREAD_CONTEXT context;
+} IL2C_RUNTIME_THREAD;
+
+typedef volatile struct IL2C_RUNTIME_CREATED_THREAD
+{
+    System_Threading_Thread thread;
+    IL2C_THREAD_CONTEXT context;
+    System_Object* parameter;
+    IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME bottomFrame;
+} IL2C_RUNTIME_CREATED_THREAD;
+
+#if defined(IL2C_USE_RUNTIME_GIANT_LOCK)
+extern IL2C_MONITOR_LOCK g_GlobalLockForCollect__;
+#define IL2C_THREAD_LOCK_TARGET(pThreadContext) (((void)pThreadContext->lockForCollect), (&g_GlobalLockForCollect__))
+#else
+#define IL2C_THREAD_LOCK_TARGET(pThreadContext) (&pThreadContext->lockForCollect)
+#endif
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);

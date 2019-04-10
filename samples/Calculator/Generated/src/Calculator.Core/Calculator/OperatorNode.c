@@ -38,55 +38,41 @@ typedef struct Calculator_OperatorNode__ctor_EXECUTION_FRAME_DECL
 
 void Calculator_OperatorNode__ctor(Calculator_OperatorNode* this__, wchar_t oper, int32_t nextIndex)
 {
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_assert(this__ != NULL);
 
     //-------------------
     // [3-4] Evaluation stacks (!objref):
 
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     int32_t stack1_0__;
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     wchar_t stack1_1__;
 
     //-------------------
     // [3-5] Setup execution frame:
 
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_OperatorNode__ctor_EXECUTION_FRAME__ frame__ =
         { NULL, 1 };
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_link_execution_frame(&frame__);
 
     //-------------------
     // [3-6] IL body:
 
-    /* IL_0000: ldarg.0  */
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_0000: ldarg.0                         : PolishNotation.cs(23) */
     frame__.stack0_0__ = this__;
-    /* IL_0001: ldarg.2  */
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_0001: ldarg.2                         : PolishNotation.cs(23) */
     stack1_0__ = nextIndex;
-    /* IL_0002: call Calculator.AbstractNode..ctor */
-#line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_0002: call Calculator.AbstractNode..ctor : PolishNotation.cs(23) */
     Calculator_AbstractNode__ctor((Calculator_AbstractNode*)frame__.stack0_0__, stack1_0__);
-    /* IL_0007: nop  */
+    /* IL_0007: nop                             : PolishNotation.cs(23) */
     /* IL_0008: nop  */
     /* IL_0009: ldarg.0  */
-#line 25 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_000a: ldarg.1  */
-#line 25 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_000a: ldarg.1                         : PolishNotation.cs(25) */
     stack1_1__ = oper;
-    /* IL_000b: stfld Calculator.OperatorNode.Operator */
-#line 25 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_000b: stfld Calculator.OperatorNode.Operator : PolishNotation.cs(25) */
     frame__.stack0_0__->Operator = stack1_1__;
-    /* IL_0010: ret  */
-#line 26 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
+    /* IL_0010: ret                             : PolishNotation.cs(26) */
     il2c_unlink_execution_frame(&frame__);
-#line 26 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     return;
-#line 26 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
 }
 
 //////////////////////

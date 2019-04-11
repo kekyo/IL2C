@@ -125,7 +125,7 @@ namespace IL2C.RuntimeSystems
 
         public void Increment()
         {
-            while (!Monitor.TryEnter(obj));
+            while (!Monitor.TryEnter(obj)) ;
             var v = this.Value;
             Thread.Sleep(10);
             this.Value = v + 1;
@@ -141,6 +141,33 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public sealed class ConcurrentCollectClosure
+    {
+        private int count;
+
+        public ConcurrentCollectClosure(int count)
+        {
+            this.count = count;
+        }
+
+        public void Run()
+        {
+            for (var index = 0; index < count; index++)
+            {
+                GC.Collect();
+                Thread.Sleep(100);
+            }
+        }
+    }
+
+    public sealed class ConcurrentCollectValueHolder
+    {
+        public readonly int Value;
+
+        public ConcurrentCollectValueHolder(int value) =>
+            this.Value = value * 2;
+    }
+
     [Description("These tests are verified the IL2C can handle threading features.")]
     [TestCase(333, "RunAndFinishInstanceMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
     [TestCase(333, "RunAndFinishInstanceWithParameterMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosureWithParameter) })]
@@ -153,6 +180,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(100, "RaceFreeWithConstStringMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
     [TestCase(100, "RaceFreeWithObjectMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
     [TestCase(100, "RaceFreeWithConstStringMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
+    [TestCase(2000000, "ConcurrentCollect", 10, 1000, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
     public sealed class Threading
     {
         public static int RunAndFinishInstanceMethod(int a, int b)
@@ -340,6 +368,35 @@ namespace IL2C.RuntimeSystems
             }
 
             return target.Value;
+        }
+
+        public static int ConcurrentCollect(int count, int repeat, int increments)
+        {
+            var target = new ConcurrentCollectClosure(repeat);
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+
+            var result = 0;
+            for (var index = 0; index < increments; index++)
+            {
+                var holder = new ConcurrentCollectValueHolder(1);
+                result += holder.Value;
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return result;
         }
     }
 }

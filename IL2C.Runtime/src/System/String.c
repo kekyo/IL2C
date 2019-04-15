@@ -45,12 +45,18 @@ static System_String* new_string_internal__(uintptr_t byteSize)
         pFile, line);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
+        bodySize,
+        &pThreadContext->pTemporaryReferenceAnchor,
+        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext),
+        pFile,
+        line);
 #else
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        bodySize,
+        &pThreadContext->pTemporaryReferenceAnchor,
+        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 #endif
 
     System_String* pString = (System_String*)(pHeader + 1);

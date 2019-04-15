@@ -275,6 +275,12 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
         }
     }
 
+    // Check temporary reference anchor.
+    if (il2c_likely__(pRuntimeThread->context.pTemporaryReferenceAnchor != NULL))
+    {
+        il2c_default_mark_handler_for_objref__(pRuntimeThread->context.pTemporaryReferenceAnchor);
+    }
+
     ///////////////////////////////////////////////////////////////
     // Check IL2C_EXECUTION_FRAME.
     // It's important step for GC collecting sequence.

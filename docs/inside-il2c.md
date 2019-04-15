@@ -411,6 +411,8 @@ Helper function: [il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)](https
 
 ### Static instance walking
 
+### Temporary refenrece anchor
+
 ### Custom mark handler
 
 ### Except constants

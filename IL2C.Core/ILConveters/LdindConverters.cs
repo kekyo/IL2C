@@ -8,7 +8,7 @@ namespace IL2C.ILConverters
 {
     internal static class LdindConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public static ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
 
@@ -24,7 +24,7 @@ namespace IL2C.ILConverters
             var targetType = siFrom.TargetType.ElementType;
             var symbol = decodeContext.PushStack(targetType);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = *{1}",
                 extractContext.GetSymbolName(symbol),
                 extractContext.GetSymbolName(siFrom)) };
@@ -35,9 +35,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_U1;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -45,9 +45,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_I2;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -55,9 +55,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_I4;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -65,9 +65,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_I8;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -75,9 +75,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_I1;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -85,9 +85,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_U2;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -95,9 +95,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_U4;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -105,9 +105,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_R4;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -115,9 +115,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_R8;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -125,9 +125,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_I;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 
@@ -135,9 +135,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldind_Ref;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdindConverterUtilities.Apply(decodeContext);
+            return LdindConverterUtilities.Prepare(decodeContext);
         }
     }
 }

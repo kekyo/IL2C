@@ -8,13 +8,13 @@ namespace IL2C.ILConverters
 {
     internal abstract class InlineNoneConverter : ILConverter
     {
-        public sealed override Func<IExtractContext, string[]> Apply(object operand, DecodeContext decodeContext)
+        public sealed override ExpressionEmitter Prepare(object operand, DecodeContext decodeContext)
         {
             Debug.Assert(operand == null);
-            return this.Apply(decodeContext);
+            return this.Prepare(decodeContext);
         }
 
-        public abstract Func<IExtractContext, string[]> Apply(DecodeContext decodeContext);
+        public abstract ExpressionEmitter Prepare(DecodeContext decodeContext);
     }
 
     internal abstract class InlineI4Converter : ILConverter<int>

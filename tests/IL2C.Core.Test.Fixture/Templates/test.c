@@ -72,7 +72,7 @@ int main()
     ////////////////////////
     // Destruct frames.
 
-    il2c_unlink_execution_frame(&frame__);
+    il2c_unlink_execution_frame(&frame__, NULL);
 
     ////////////////////////
 

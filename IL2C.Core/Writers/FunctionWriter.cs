@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 using IL2C.Metadata;
 using IL2C.Translators;
+using IL2C.ILConverters;
 
 namespace IL2C.Writers
 {
@@ -343,6 +344,7 @@ namespace IL2C.Writers
                 }
 
                 // Write doing setup execution frame
+                var executionFrameEmitted = false;
                 if ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1))
                 {
                     InternalConvertSetupExecutionFrame(
@@ -352,6 +354,7 @@ namespace IL2C.Writers
                         objRefEntries,
                         valueEntries,
                         debugInformationController);
+                    executionFrameEmitted = true;
                 }
 
                 tw.WriteLine("//-------------------");
@@ -487,6 +490,7 @@ namespace IL2C.Writers
                         });
 
                     // Traverse code fragments.
+                    var emitContext = new ExpressionEmitContext(executionFrameEmitted);
                     foreach (var ci in codeStream)
                     {
                         debugInformationController.SetNextCode(ci);
@@ -508,19 +512,9 @@ namespace IL2C.Writers
                         debugInformationController.WriteCodeComment(tw);
 
                         // 4: Generate source code fragments and write.
-                        var sourceCodes = preparedMethod.Generators[ci.Offset](extractContext);
+                        var sourceCodes = preparedMethod.Emitters[ci.Offset](extractContext, emitContext);
                         foreach (var sourceCode in sourceCodes)
                         {
-                            // DIRTY HACK:
-                            //   Write unlink execution frame code if cause exiting method.
-                            if (sourceCode.StartsWith("return") &&
-                                ((objRefEntries.Length >= 1) || (valueEntries.Length >= 1)))
-                            {
-                                debugInformationController.WriteInformationBeforeCode(tw);
-                                tw.WriteLine(
-                                    "il2c_unlink_execution_frame(&frame__);");
-                            }
-
                             debugInformationController.WriteInformationBeforeCode(tw);
                             tw.WriteLine(
                                 "{0};",
@@ -819,16 +813,19 @@ namespace IL2C.Writers
                 tw.WriteLine("while (il2c_likely__(index < this__->count__));");
                 tw.SplitLine();
 
-                if (!invokeMethod.ReturnType.IsVoidType)
+                if (invokeMethod.ReturnType.IsVoidType)
+                {
+                    tw.WriteLine("il2c_return();");
+                }
+                else
                 {
                     if (invokeMethod.ReturnType.IsReferenceType)
                     {
-                        tw.WriteLine("il2c_unlink_execution_frame(&frame__);");
-                        tw.WriteLine("return frame__.result;");
+                        tw.WriteLine("il2c_return_unlink_with_objref(&frame__, frame__.result);");
                     }
                     else
                     {
-                        tw.WriteLine("return result;");
+                        tw.WriteLine("il2c_return_with_value(result);");
                     }
                 }
             }

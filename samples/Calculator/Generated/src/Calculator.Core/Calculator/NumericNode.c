@@ -70,8 +70,7 @@ void Calculator_NumericNode__ctor(Calculator_NumericNode* this__, int32_t numeri
     /* IL_000b: stfld Calculator.NumericNode.Numeric : PolishNotation.cs(44) */
     frame__.stack0_0__->Numeric = stack1_0__;
     /* IL_0010: ret                             : PolishNotation.cs(45) */
-    il2c_unlink_execution_frame(&frame__);
-    return;
+    il2c_return_unlink(&frame__);
 }
 
 ///////////////////////////////////////
@@ -129,8 +128,7 @@ IL_000a:
     /* IL_000a: ldloc.0                         : PolishNotation.cs(50) */
     stack0_1__ = local0__;
     /* IL_000b: ret                             : PolishNotation.cs(50) */
-    il2c_unlink_execution_frame(&frame__);
-    return stack0_1__;
+    il2c_return_unlink_with_value(&frame__, stack0_1__);
 }
 
 //////////////////////

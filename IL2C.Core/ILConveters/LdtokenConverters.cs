@@ -11,7 +11,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldtoken;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IMemberInformation member, DecodeContext decodeContext)
         {
             // ECMA-335 III.4.17 ldtoken - load the runt ime representat ion of a metadata
@@ -41,7 +41,7 @@ namespace IL2C.ILConverters
                 decodeContext.PrepareContext.RegisterType(field.FieldType, decodeContext.Method);
 
                 // Store into RuntimeFieldHandle structure.
-                return extractContext => new[] {
+                return (extractContext, _) => new[] {
                     string.Format(
                         "{0}.size__ = {1}",
                         extractContext.GetSymbolName(symbol),

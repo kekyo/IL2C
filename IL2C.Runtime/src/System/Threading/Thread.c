@@ -90,7 +90,7 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     il2c_end_try(bottomNest);
 
 exit:
-    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame);
+    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame, NULL);
 
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
@@ -147,7 +147,7 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     il2c_end_try(bottomNest);
 
 exit:
-    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame);
+    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame, NULL);
 
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);

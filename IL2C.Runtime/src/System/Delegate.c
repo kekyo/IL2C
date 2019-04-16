@@ -95,7 +95,6 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
         pHeaderA->type,
         size,
         &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext),
         __FILE__,
         __LINE__);
 #else
@@ -103,8 +102,7 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         pHeaderA->type,
         size,
-        &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
@@ -184,7 +182,6 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
                 pHeaderSource->type,
                 size,
                 &pThreadContext->pTemporaryReferenceAnchor,
-                (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext),
                 __FILE__,
                 __LINE__);
 #else
@@ -192,8 +189,7 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
             IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
                 pHeaderSource->type,
                 size,
-                &pThreadContext->pTemporaryReferenceAnchor,
-                (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+                &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
             System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
@@ -238,7 +234,6 @@ System_Delegate* il2c_new_delegate__(
         delegateType,
         sizeof(System_Delegate),
         &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext),
         pFile,
         line);
 #else
@@ -246,8 +241,7 @@ System_Delegate* il2c_new_delegate__(
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         delegateType,
         sizeof(System_Delegate),
-        &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     System_Delegate* dlg = (System_Delegate*)(pHeader + 1);

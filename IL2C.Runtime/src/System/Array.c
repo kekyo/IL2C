@@ -79,7 +79,6 @@ System_Array* il2c_new_array__(
         il2c_typeof(System_Array),
         size,
         &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext),
         pFile,
         line);
 #else
@@ -87,8 +86,7 @@ System_Array* il2c_new_array__(
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_Array),
         size,
-        &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     System_Array* arr = (System_Array*)(pHeader + 1);

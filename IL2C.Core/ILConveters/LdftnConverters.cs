@@ -12,7 +12,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldftn;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IMethodInformation operand, DecodeContext decodeContext)
         {
             var symbol = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
@@ -20,7 +20,7 @@ namespace IL2C.ILConverters
             // Register callee method declaring type (at the file scope).
             decodeContext.PrepareContext.RegisterType(operand.DeclaringType, decodeContext.Method);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = (intptr_t){1}",
                 extractContext.GetSymbolName(symbol),
                 operand.CLanguageFunctionName) };
@@ -31,7 +31,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldvirtftn;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IMethodInformation method, DecodeContext decodeContext)
         {
             // ECMA-335 III.4.18: ldvirtfn - load a virtual method pointer
@@ -69,7 +69,7 @@ namespace IL2C.ILConverters
 
                 var vptrName = m.GetCLanguageDeclarationName(overloadIndex);
 
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}->vptr0__->{2}",
                     extractContext.GetSymbolName(symbol),
                     extractContext.GetSymbolName(si),
@@ -77,7 +77,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}",
                     extractContext.GetSymbolName(symbol),
                     method.CLanguageFunctionName) };

@@ -8,7 +8,7 @@ namespace IL2C.ILConverters
 {
     internal static class StindConverter_Utilities
     {
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             DecodeContext decodeContext)
         {
             // NOTE: This method's sharing for the stind opcode family.
@@ -41,7 +41,7 @@ namespace IL2C.ILConverters
 
             var codeInformation = decodeContext.CurrentCode;
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var rightExpression = extractContext.GetRightExpression(
                     siReference.TargetType.ElementType, siValue);
@@ -66,10 +66,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stind_I4;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             DecodeContext decodeContext)
         {
-            return StindConverter_Utilities.Apply(decodeContext);
+            return StindConverter_Utilities.Prepare(decodeContext);
         }
     }
 
@@ -77,10 +77,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stind_Ref;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             DecodeContext decodeContext)
         {
-            return StindConverter_Utilities.Apply(decodeContext);
+            return StindConverter_Utilities.Prepare(decodeContext);
         }
     }
 }

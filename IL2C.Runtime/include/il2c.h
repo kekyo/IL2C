@@ -206,19 +206,33 @@ extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type, const char*
     il2c_get_uninitialized_object__(il2c_typeof(typeName), __FILE__, __LINE__)
 
 extern void il2c_link_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame, const char* pFile, int line);
-extern void il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame, const char* pFile, int line);
-#define il2c_link_execution_frame(pNewFrame) il2c_link_execution_frame__(pNewFrame, __FILE__, __LINE__)
-#define il2c_unlink_execution_frame(pFrame) il2c_unlink_execution_frame__(pFrame, __FILE__, __LINE__)
+extern void* il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame, void* pReference, const char* pFile, int line);
+#define il2c_link_execution_frame(pNewFrame) il2c_link_execution_frame__((pNewFrame), __FILE__, __LINE__)
+#define il2c_unlink_execution_frame(pFrame, pReference) il2c_unlink_execution_frame__((pFrame), (pReference), __FILE__, __LINE__)
 #else
 extern void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type);
 #define il2c_get_uninitialized_object(typeName) \
     il2c_get_uninitialized_object__(il2c_typeof(typeName))
 
 extern void il2c_link_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pNewFrame);
-extern void il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame);
+extern void* il2c_unlink_execution_frame__(/* IL2C_EXECUTION_FRAME* */ volatile void* pFrame, void* pReference);
 #define il2c_link_execution_frame(pNewFrame) il2c_link_execution_frame__(pNewFrame)
-#define il2c_unlink_execution_frame(pFrame) il2c_unlink_execution_frame__(pFrame)
+#define il2c_unlink_execution_frame(pFrame, pReference) il2c_unlink_execution_frame__((pFrame), (pReference))
 #endif
+
+extern void* il2c_cleanup_at_return__(void* pReference);
+#define il2c_return() \
+    il2c_cleanup_at_return__(NULL); return
+#define il2c_return_unlink(pFrame) \
+    il2c_unlink_execution_frame((pFrame), NULL); return
+#define il2c_return_with_objref(pReference) \
+    return il2c_cleanup_at_return__(pReference)
+#define il2c_return_with_value(value) \
+    il2c_cleanup_at_return__(NULL); return (value)
+#define il2c_return_unlink_with_objref(pFrame, pReference) \
+    return il2c_unlink_execution_frame((pFrame), (pReference))
+#define il2c_return_unlink_with_value(pFrame, value) \
+    il2c_unlink_execution_frame((pFrame), NULL); return (value)
 
 extern const uintptr_t* il2c_initializer_count;
 extern void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields);

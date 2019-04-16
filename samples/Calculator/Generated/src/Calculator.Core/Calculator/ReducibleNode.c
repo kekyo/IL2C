@@ -62,8 +62,7 @@ void Calculator_ReducibleNode__ctor(Calculator_ReducibleNode* this__, int32_t ne
     /* IL_0007: nop                             : PolishNotation.cs(31) */
     /* IL_0008: nop  */
     /* IL_0009: ret  */
-    il2c_unlink_execution_frame(&frame__);
-    return;
+    il2c_return_unlink(&frame__);
 }
 
 //////////////////////

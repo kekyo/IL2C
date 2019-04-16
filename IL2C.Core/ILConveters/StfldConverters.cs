@@ -10,7 +10,7 @@ namespace IL2C.ILConverters
 {
     internal static class StfldConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext)
         {
             var siValue = decodeContext.PopStack();
@@ -52,7 +52,7 @@ namespace IL2C.ILConverters
             // Register referenced field type (at the file scope).
             decodeContext.PrepareContext.RegisterType(field.FieldType, decodeContext.Method);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var rightExpression = extractContext.GetRightExpression(
                     field.FieldType, siValue);
@@ -78,10 +78,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stfld;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext)
         {
-            return StfldConverterUtilities.Apply(field, decodeContext);
+            return StfldConverterUtilities.Prepare(field, decodeContext);
         }
     }
 
@@ -89,7 +89,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stsfld;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext)
         {
             Debug.Assert(field.IsStatic);
@@ -104,7 +104,7 @@ namespace IL2C.ILConverters
                 if (field.FieldType.IsReferenceType ||
                     (field.FieldType.IsValueType && field.FieldType.IsRequiredTraverse))
                 {
-                    return extractContext => new[] { string.Format(
+                    return (extractContext, _) => new[] { string.Format(
                         "{0}_STATIC_FIELDS__.{1} = {2}",
                         field.DeclaringType.MangledUniqueName,
                         field.MangledName,
@@ -112,7 +112,7 @@ namespace IL2C.ILConverters
                 }
                 else
                 {
-                    return extractContext => new[] { string.Format(
+                    return (extractContext, _) => new[] { string.Format(
                         "{0} = {1}",
                         field.MangledUniqueName,
                         extractContext.GetRightExpression(targetType, symbol)) };
@@ -120,14 +120,14 @@ namespace IL2C.ILConverters
             }
             else if (field.NativeValue != null)
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = {1}",
                     field.MangledUniqueName,
                     extractContext.GetRightExpression(targetType, symbol)) };
             }
             else
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "*{0}_REF__ = {1}",
                     field.MangledUniqueName,
                     extractContext.GetRightExpression(targetType, symbol)) };

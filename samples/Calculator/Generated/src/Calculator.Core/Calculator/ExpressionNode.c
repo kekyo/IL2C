@@ -84,8 +84,7 @@ void Calculator_ExpressionNode__ctor(Calculator_ExpressionNode* this__, Calculat
     /* IL_001a: stfld Calculator.ExpressionNode.Right : PolishNotation.cs(63) */
     frame__.stack0_0__->Right = frame__.stack1_2__;
     /* IL_001f: ret                             : PolishNotation.cs(64) */
-    il2c_unlink_execution_frame(&frame__);
-    return;
+    il2c_return_unlink(&frame__);
 }
 
 ///////////////////////////////////////
@@ -280,8 +279,7 @@ IL_008b:
     /* IL_008b: ldloc.3                         : PolishNotation.cs(89) */
     stack0_2__ = local3__;
     /* IL_008c: ret                             : PolishNotation.cs(89) */
-    il2c_unlink_execution_frame(&frame__);
-    return stack0_2__;
+    il2c_return_unlink_with_value(&frame__, stack0_2__);
 }
 
 //////////////////////

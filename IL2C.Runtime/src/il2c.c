@@ -89,14 +89,13 @@ static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, System_Object* pR
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference, IL2C_MONITOR_LOCK* pLock, const char* pFile, int line)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference, const char* pFile, int line)
 #else
 IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference, IL2C_MONITOR_LOCK* pLock)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference)
 #endif
 {
     il2c_assert(type != NULL);
-    il2c_assert(pLock != NULL);
     il2c_assert(ppReference != NULL);
 
     // TODO: always collect
@@ -158,9 +157,6 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     // Store objref pointer.
     *ppReference = pReference;
 
-    // Touch for lock region.
-    il2c_enter_monitor_lock__(pLock);
-
     // Safe link both headers.
     while (1)
     {
@@ -171,9 +167,6 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
             break;
         }
     }
-
-    // Exit for lock region.
-    il2c_exit_monitor_lock__(pLock);
 
     // NOTE: Enter critical section for partially construted instance.
     //   IL2C will make the mark IL2C_CHARACTERISTIC_INITIALIZED.
@@ -200,11 +193,11 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         pFile, line);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        type, type->bodySize, &pThreadContext->pTemporaryReferenceAnchor, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
+        type, type->bodySize, &pThreadContext->pTemporaryReferenceAnchor, pFile, line);
 #else
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        type, type->bodySize, &pThreadContext->pTemporaryReferenceAnchor, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        type, type->bodySize, &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     // Marked instance is initialized. (and will handle by GC)
@@ -233,14 +226,12 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
             il2c_typeof(System_Threading_Thread),
             sizeof(IL2C_RUNTIME_THREAD),
             &pTemporaryReferenceAnchor,
-            &g_GlobalLockForCollect__,
             pFile, line);
 #else
         IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
             il2c_typeof(System_Threading_Thread),
             sizeof(IL2C_RUNTIME_THREAD),
-            &pTemporaryReferenceAnchor,
-            &g_GlobalLockForCollect__);
+            &pTemporaryReferenceAnchor);
 #endif
 
         IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)(pHeader + 1);
@@ -285,22 +276,20 @@ System_Threading_Thread* il2c_new_thread__(System_Delegate* start)
         il2c_typeof(System_Threading_Thread),
         sizeof(IL2C_RUNTIME_CREATED_THREAD),
         &pThreadContext->pTemporaryReferenceAnchor,
-        &g_GlobalLockForCollect__,
         pFile, line);
 #else
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_Threading_Thread),
         sizeof(IL2C_RUNTIME_CREATED_THREAD),
-        &pThreadContext->pTemporaryReferenceAnchor,
-        &g_GlobalLockForCollect__);
+        &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     IL2C_RUNTIME_CREATED_THREAD* pRuntimeThread = (IL2C_RUNTIME_CREATED_THREAD*)(pHeader + 1);
 
     pRuntimeThread->thread.start__ = start;
     pRuntimeThread->context.rawHandle = -1;
-
+     
     // Initialize thread context.
     pRuntimeThread->context.id = il2c_get_current_thread_id__();
     il2c_initialize_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
@@ -348,9 +337,9 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
 }
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame, const char* pFile, int line)
+void* il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame, void* pReference, const char* pFile, int line)
 #else
-void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame)
+void* il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame, void* pReference)
 #endif
 {
     il2c_assert(pFrame != NULL);
@@ -365,6 +354,9 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
     il2c_assert(pThreadContext != NULL);
 
+    // Save retval into temporary reference anchor.
+    pThreadContext->pTemporaryReferenceAnchor = pReference;
+
     // Touch for lock region.
     il2c_enter_monitor_lock__((void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 
@@ -375,6 +367,18 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     il2c_exit_monitor_lock__((void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 
     // TODO: Remove thread context for the last frame?
+
+    return pReference;
+}
+
+void* il2c_cleanup_at_return__(void* pReference)
+{
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    il2c_assert(pThreadContext != NULL);
+
+    pThreadContext->pTemporaryReferenceAnchor = pReference;
+
+    return pReference;
 }
 
 /////////////////////////////////////////////////////////////
@@ -1535,7 +1539,6 @@ System_ValueType* il2c_box__(
         valueType,
         bodySize,
         &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext),
         pFile,
         line);
 #else
@@ -1543,8 +1546,7 @@ System_ValueType* il2c_box__(
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         valueType,
         bodySize,
-        &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     System_ValueType* pBoxed = (System_ValueType*)(pHeader + 1);
@@ -1682,7 +1684,6 @@ System_ValueType* il2c_box2__(
         valueType,
         bodySize,
         &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext),
         pFile,
         line);
 #else
@@ -1690,8 +1691,7 @@ System_ValueType* il2c_box2__(
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         valueType,
         bodySize,
-        &pThreadContext->pTemporaryReferenceAnchor,
-        (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     System_ValueType* pBoxed = (System_ValueType*)(pHeader + 1);

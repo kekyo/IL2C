@@ -262,14 +262,14 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
         // Save IL2C_THREAD_CONTEXT into tls.
         il2c_set_tls_value(g_TlsIndex__, (void*)pThreadContext);
 
-        // Marked instance is initialized. (and will handle by GC)
-        il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
-
         // Register GC root reference.
         // NOTE: Auto attached Thread class instances aren't freed when before shutdown.
         //   If we instantiated with Thread.Start(), it's manually allocated and can collect by GC.
         //   (See System_Threading_Thread_InternalEntryPoint())
         il2c_register_root_reference__((void*)pRuntimeThread, false);
+
+        // Marked instance is initialized. (and will handle by GC)
+        il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
     }
 
     return pThreadContext;

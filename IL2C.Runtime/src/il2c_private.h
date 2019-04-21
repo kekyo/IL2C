@@ -216,10 +216,10 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference, const char* pFile, int line);
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line);
 #else
 extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference);
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize);
 #endif
 
 extern void il2c_register_root_reference__(void* pReference, bool isFixed);

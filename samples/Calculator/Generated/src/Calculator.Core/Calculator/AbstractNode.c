@@ -68,8 +68,7 @@ void Calculator_AbstractNode__ctor(Calculator_AbstractNode* this__, int32_t next
     /* IL_000a: stfld Calculator.AbstractNode.NextIndex : PolishNotation.cs(15) */
     frame__.stack0_0__->NextIndex = stack1_0__;
     /* IL_000f: ret                             : PolishNotation.cs(16) */
-    il2c_unlink_execution_frame(&frame__);
-    return;
+    il2c_return_unlink(&frame__);
 }
 
 //////////////////////

@@ -90,7 +90,7 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     il2c_end_try(bottomNest);
 
 exit:
-    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame);
+    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame, NULL);
 
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
@@ -147,7 +147,7 @@ static IL2C_THREAD_ENTRY_POINT_RESULT_TYPE System_Threading_Thread_InternalEntry
     il2c_end_try(bottomNest);
 
 exit:
-    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame);
+    il2c_unlink_execution_frame(&pRuntimeThread->bottomFrame, NULL);
 
 #if defined(_DEBUG)
     il2c_set_tls_value(g_TlsIndex__, NULL);
@@ -262,17 +262,24 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
     il2c_assert(thread != NULL);
     il2c_assert(thread->vptr0__ == &System_Threading_Thread_VTABLE__);
 
-    IL2C_RUNTIME_CREATED_THREAD* pRuntimeThread = (IL2C_RUNTIME_CREATED_THREAD*)thread;
+    IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)thread;
 
     // Check start and parameter field.
     if (il2c_likely__(pRuntimeThread->thread.start__ != NULL))
     {
         il2c_default_mark_handler_for_objref__(pRuntimeThread->thread.start__);
 
-        if (pRuntimeThread->parameter != NULL)
+        IL2C_RUNTIME_CREATED_THREAD* pRuntimeCreatedThread = (IL2C_RUNTIME_CREATED_THREAD*)pRuntimeThread;
+        if (pRuntimeCreatedThread->parameter != NULL)
         {
-            il2c_default_mark_handler_for_objref__(pRuntimeThread->parameter);
+            il2c_default_mark_handler_for_objref__(pRuntimeCreatedThread->parameter);
         }
+    }
+
+    // Check temporary reference anchor.
+    if (il2c_likely__(pRuntimeThread->context.pTemporaryReferenceAnchor != NULL))
+    {
+        il2c_default_mark_handler_for_objref__(pRuntimeThread->context.pTemporaryReferenceAnchor);
     }
 
     ///////////////////////////////////////////////////////////////

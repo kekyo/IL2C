@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using IL2C.ILConverters;
 using IL2C.Metadata;
 
 namespace IL2C.Translators
@@ -12,7 +13,7 @@ namespace IL2C.Translators
         public readonly IReadOnlyDictionary<int, string> LabelNames;
         public readonly IReadOnlyDictionary<int, ILocalVariableInformation> CatchVariables;
         public readonly IReadOnlyDictionary<int, (ISet<int> fromOffsets, int targetOffset)> LeaveContinuations;
-        internal readonly IReadOnlyDictionary<int, Func<IExtractContext, string[]>> Generators;
+        internal readonly IReadOnlyDictionary<int, ExpressionEmitter> Emitters;
 
         internal PreparedMethodInformation(
             IMethodInformation method,
@@ -20,14 +21,14 @@ namespace IL2C.Translators
             IReadOnlyDictionary<int, string> labelNames,
             IReadOnlyDictionary<int, ILocalVariableInformation> catchVariables,
             IReadOnlyDictionary<int, (ISet<int> fromOffsets, int targetOffset)> leaveContinuations,
-            IReadOnlyDictionary<int, Func<IExtractContext, string[]>> generators)
+            IReadOnlyDictionary<int, ExpressionEmitter> emitters)
         {
             this.Method = method;
             this.Stacks = stacks;
             this.LabelNames = labelNames;
             this.CatchVariables = catchVariables;
             this.LeaveContinuations = leaveContinuations;
-            this.Generators = generators;
+            this.Emitters = emitters;
         }
     }
 }

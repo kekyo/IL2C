@@ -98,7 +98,7 @@ namespace IL2C.ILConverters
             return (parameter0.TargetType, arg0, "{0}");
         }
 
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             IMethodInformation method,
             DecodeContext decodeContext,
             bool isVirtualCall)
@@ -191,7 +191,7 @@ namespace IL2C.ILConverters
             {
                 result = decodeContext.PushStack(pairParameters[1].variable.TargetType);
 
-                return extractContext =>
+                return (extractContext, _) =>
                 {
                     var parameters = pairParameters.Select(parameter =>
                         new Utilities.RightExpressionGivenParameter(
@@ -241,7 +241,7 @@ namespace IL2C.ILConverters
             // Register callee method declaring type (at the file scope).
             decodeContext.PrepareContext.RegisterType(method.DeclaringType, decodeContext.Method);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var receiveResultExpression = (result != null) ?
                     string.Format("{0} = ", extractContext.GetSymbolName(result)) :
@@ -324,10 +324,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Call;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IMethodInformation method, DecodeContext decodeContext)
         {
-            return CallConverterUtilities.Apply(method, decodeContext, false);
+            return CallConverterUtilities.Prepare(method, decodeContext, false);
         }
     }
 
@@ -335,7 +335,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Callvirt;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IMethodInformation method, DecodeContext decodeContext)
         {
             if (method.IsStatic)
@@ -346,7 +346,7 @@ namespace IL2C.ILConverters
                     method.FriendlyName);
             }
 
-            return CallConverterUtilities.Apply(method, decodeContext, true);
+            return CallConverterUtilities.Prepare(method, decodeContext, true);
         }
     }
 }

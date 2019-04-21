@@ -11,7 +11,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stelem_I4;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             // ECMA-335 III.4.26 stelem.<type> - store element to array
 
@@ -43,7 +43,7 @@ namespace IL2C.ILConverters
                     siArray.TargetType.FriendlyName);
             }
 
-            return extractContext => new[] {
+            return (extractContext, _) => new[] {
                 string.Format("il2c_array_item({0}, {1}, {2}) = {3}",
                     extractContext.GetSymbolName(siArray),
                     siArray.TargetType.ElementType.MangledUniqueName,
@@ -56,7 +56,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stelem_Ref;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             // ECMA-335 III.4.26 stelem.<type> - store element to array
 
@@ -89,7 +89,7 @@ namespace IL2C.ILConverters
                     siValue.TargetType.FriendlyName);
             }
 
-            return extractContext => new[] {
+            return (extractContext, _) => new[] {
                 string.Format("il2c_array_item({0}, {1}, {2}) = {3}",
                     extractContext.GetSymbolName(siArray),
                     siArray.TargetType.ElementType.CLanguageTypeName,
@@ -102,7 +102,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stelem_Any;
 
-        public override Func<IExtractContext, string[]> Apply(ITypeInformation operand, DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(ITypeInformation operand, DecodeContext decodeContext)
         {
             // ECMA-335 III.4.26 stelem.<type> - store element to array
 
@@ -138,7 +138,7 @@ namespace IL2C.ILConverters
                     siValue.TargetType.FriendlyName);
             }
 
-            return extractContext => new[] {
+            return (extractContext, _) => new[] {
                 string.Format("il2c_array_item({0}, {1}, {2}) = {3}",
                     extractContext.GetSymbolName(siArray),
                     operand.CLanguageTypeName,

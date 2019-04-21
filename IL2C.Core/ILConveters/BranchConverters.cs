@@ -13,12 +13,12 @@ namespace IL2C.ILConverters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            return _ => new[] { string.Format("goto {0}", labelName) };
+            return (_, __) => new[] { string.Format("goto {0}", labelName) };
         }
     }
 
@@ -28,18 +28,18 @@ namespace IL2C.ILConverters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            return _ => new[] { string.Format("goto {0}", labelName) };
+            return (_, __) => new[] { string.Format("goto {0}", labelName) };
         }
     }
 
     internal static class BranchExpressionUtilities
     {
-        public static Func<IExtractContext, string[]> ApplyFalse(
+        public static ExpressionEmitter ApplyFalse(
             ICodeInformation operand, string oper, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
@@ -48,7 +48,7 @@ namespace IL2C.ILConverters
 
             if (si.TargetType.IsBooleanType)
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "if ({0} {1} false) goto {2}",
                     extractContext.GetSymbolName(si),
                     oper,
@@ -57,7 +57,7 @@ namespace IL2C.ILConverters
             else if (si.TargetType.IsNumericPrimitive ||
                 si.TargetType.IsEnum)
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "if ({0} {1} 0) goto {2}",
                     extractContext.GetSymbolName(si),
                     oper,
@@ -65,7 +65,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "if ({0} {1} NULL) goto {2}",
                     extractContext.GetSymbolName(si),
                     oper,
@@ -73,7 +73,7 @@ namespace IL2C.ILConverters
             }
         }
 
-        public static Func<IExtractContext, string[]> ApplyBinary(
+        public static ExpressionEmitter ApplyBinary(
             ICodeInformation operand, string oper, DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
@@ -81,7 +81,7 @@ namespace IL2C.ILConverters
 
             var labelName = decodeContext.EnqueueNewPath(operand.Offset);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "if ({0} {1} {2}) goto {3}",
                 extractContext.GetSymbolName(si0),
                 oper,
@@ -94,7 +94,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Brfalse;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyFalse(operand, "==", decodeContext);
@@ -105,7 +105,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Brfalse_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyFalse(operand, "==", decodeContext);
@@ -116,7 +116,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Brtrue;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyFalse(operand, "!=", decodeContext);
@@ -127,7 +127,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Brtrue_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyFalse(operand, "!=", decodeContext);
@@ -138,7 +138,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Beq;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, "==", decodeContext);
@@ -149,7 +149,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Beq_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, "==", decodeContext);
@@ -160,7 +160,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Bne_Un;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, "!=", decodeContext);
@@ -171,7 +171,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Bne_Un_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, "!=", decodeContext);
@@ -182,7 +182,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Blt;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, "<", decodeContext);
@@ -193,7 +193,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Blt_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, "<", decodeContext);
@@ -204,7 +204,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Bgt;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, ">", decodeContext);
@@ -215,7 +215,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Bgt_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, ">", decodeContext);
@@ -226,7 +226,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ble;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, ">", decodeContext);
@@ -237,7 +237,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ble_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, ">", decodeContext);
@@ -248,7 +248,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Bge;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, ">=", decodeContext);
@@ -259,7 +259,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Bge_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             return BranchExpressionUtilities.ApplyBinary(operand, ">=", decodeContext);

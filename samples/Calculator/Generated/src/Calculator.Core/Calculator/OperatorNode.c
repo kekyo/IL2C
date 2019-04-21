@@ -71,8 +71,7 @@ void Calculator_OperatorNode__ctor(Calculator_OperatorNode* this__, wchar_t oper
     /* IL_000b: stfld Calculator.OperatorNode.Operator : PolishNotation.cs(25) */
     frame__.stack0_0__->Operator = stack1_1__;
     /* IL_0010: ret                             : PolishNotation.cs(26) */
-    il2c_unlink_execution_frame(&frame__);
-    return;
+    il2c_return_unlink(&frame__);
 }
 
 //////////////////////

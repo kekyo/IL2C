@@ -9,14 +9,14 @@ namespace IL2C.ILConverters
 {
     internal static class LdlocConverterUtilities
     {
-        private static Func<IExtractContext, string[]> Apply(
+        private static ExpressionEmitter Prepare(
             ILocalVariableInformation target, ITypeInformation targetType, DecodeContext decodeContext, bool isReference)
         {
             targetType = isReference ? targetType.MakeByReference() : targetType;
                 
             var symbol = decodeContext.PushStack(targetType);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = {1}{2}",
                 extractContext.GetSymbolName(symbol),
                 // NOTE: Don't check "targetType.IsByReference" instead "isReference."
@@ -25,18 +25,18 @@ namespace IL2C.ILConverters
                 extractContext.GetSymbolName(target)) };
         }
 
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             int localIndex, DecodeContext decodeContext, bool isReference = false)
         {
             var local = decodeContext.Method.LocalVariables[localIndex];
-            return Apply(local, local.TargetType, decodeContext, isReference);
+            return Prepare(local, local.TargetType, decodeContext, isReference);
         }
 
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             VariableInformation localVariable, DecodeContext decodeContext, bool isReference = false)
         {
             var local = decodeContext.Method.LocalVariables[localVariable.Index];
-            return Apply(local, local.TargetType, decodeContext, isReference);
+            return Prepare(local, local.TargetType, decodeContext, isReference);
         }
     }
 
@@ -44,9 +44,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldloc_0;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(0, decodeContext);
+            return LdlocConverterUtilities.Prepare(0, decodeContext);
         }
     }
 
@@ -54,9 +54,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldloc_1;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(1, decodeContext);
+            return LdlocConverterUtilities.Prepare(1, decodeContext);
         }
     }
 
@@ -64,9 +64,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldloc_2;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(2, decodeContext);
+            return LdlocConverterUtilities.Prepare(2, decodeContext);
         }
     }
 
@@ -74,9 +74,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldloc_3;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(3, decodeContext);
+            return LdlocConverterUtilities.Prepare(3, decodeContext);
         }
     }
 
@@ -84,10 +84,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldloc_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(operand, decodeContext);
+            return LdlocConverterUtilities.Prepare(operand, decodeContext);
         }
     }
 
@@ -95,10 +95,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldloca_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return LdlocConverterUtilities.Apply(operand, decodeContext, true);
+            return LdlocConverterUtilities.Prepare(operand, decodeContext, true);
         }
     }
 }

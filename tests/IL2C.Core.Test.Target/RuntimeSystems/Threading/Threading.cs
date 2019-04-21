@@ -143,19 +143,16 @@ namespace IL2C.RuntimeSystems
 
     public sealed class ConcurrentCollectClosure
     {
-        private int count;
+        private bool abort;
 
-        public ConcurrentCollectClosure(int count)
-        {
-            this.count = count;
-        }
+        public void Abort() =>
+            abort = true;
 
         public void Run()
         {
-            for (var index = 0; index < count; index++)
+            while (!abort)
             {
                 GC.Collect();
-                Thread.Sleep(100);
             }
         }
     }
@@ -180,7 +177,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(100, "RaceFreeWithConstStringMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
     [TestCase(100, "RaceFreeWithObjectMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
     [TestCase(100, "RaceFreeWithConstStringMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
-    [TestCase(2000000, "ConcurrentCollect", 10, 1000, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
+    [TestCase(2000000, "ConcurrentCollect", 10, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
     public sealed class Threading
     {
         public static int RunAndFinishInstanceMethod(int a, int b)
@@ -370,9 +367,9 @@ namespace IL2C.RuntimeSystems
             return target.Value;
         }
 
-        public static int ConcurrentCollect(int count, int repeat, int increments)
+        public static int ConcurrentCollect(int count, int increments)
         {
-            var target = new ConcurrentCollectClosure(repeat);
+            var target = new ConcurrentCollectClosure();
 
             var threads = new Thread[count];
             for (var index = 0; index < count; index++)
@@ -391,6 +388,7 @@ namespace IL2C.RuntimeSystems
                 result += holder.Value;
             }
 
+            target.Abort();
             for (var index = 0; index < count; index++)
             {
                 threads[index].Join();

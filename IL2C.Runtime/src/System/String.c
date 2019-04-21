@@ -45,12 +45,16 @@ static System_String* new_string_internal__(uintptr_t byteSize)
         pFile, line);
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
+        bodySize,
+        &pThreadContext->pTemporaryReferenceAnchor,
+        pFile,
+        line);
 #else
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_String),
-        bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        bodySize,
+        &pThreadContext->pTemporaryReferenceAnchor);
 #endif
 
     System_String* pString = (System_String*)(pHeader + 1);
@@ -549,8 +553,8 @@ System_String* System_String_Concat_4(System_Object* arg0, System_Object* arg1)
     frame__.str1 = arg1->vptr0__->ToString(arg1);
 
     frame__.str0 = System_String_Concat_3(frame__.str0, frame__.str1);
-    il2c_unlink_execution_frame(&frame__);
-    return frame__.str0;
+
+     il2c_return_unlink_with_objref(&frame__, frame__.str0);
 }
 
 System_String* System_String_Concat_5(System_String* str0, System_String* str1, System_String* str2)
@@ -578,7 +582,7 @@ System_String* System_String_Concat_5(System_String* str0, System_String* str1, 
     memcpy(((uint8_t*)(pString->string_body__)) + str0Size, str1->string_body__, str1Size);
     memcpy(((uint8_t*)(pString->string_body__)) + str0Size + str1Size, str2->string_body__, str2Size + sizeof(wchar_t));
 
-    return pString;
+    il2c_return_with_objref(pString);
 }
 
 System_String* System_String_Substring(System_String* this__, int32_t startIndex)
@@ -608,7 +612,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
 
     memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
 
-    return pString;
+    il2c_return_with_objref(pString);
 }
 
 System_String* System_String_Substring_1(System_String* this__, int32_t startIndex, int32_t length)
@@ -640,7 +644,7 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
     memcpy((wchar_t*)(pString->string_body__), this__->string_body__ + startIndex, newSize);
     ((wchar_t*)(pString->string_body__))[length] = L'\0';
 
-    return pString;
+    il2c_return_with_objref(pString);
 }
 
 wchar_t System_String_get_Chars(System_String* this__, int32_t index)
@@ -966,7 +970,7 @@ static int8_t System_String_InternalFormat(
         &state);
     if (il2c_unlikely__(result != IL2C_STRING_FORMAT_SUCCEEDED))
     {
-        il2c_unlink_execution_frame(pFrame);
+        il2c_unlink_execution_frame(pFrame, NULL);
         il2c_mcfree(pFrame);
         return result;
     }
@@ -1003,7 +1007,7 @@ static int8_t System_String_InternalFormat(
 
     *ppString = pFrame->pString;
 
-    il2c_unlink_execution_frame(pFrame);
+    il2c_unlink_execution_frame(pFrame, pFrame->pString);
     il2c_mcfree(pFrame);
 
     return result;

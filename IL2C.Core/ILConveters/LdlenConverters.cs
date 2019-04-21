@@ -10,7 +10,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldlen;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             // ECMA-335 III.4.12 ldlen - load the length of an array
 
@@ -27,7 +27,7 @@ namespace IL2C.ILConverters
             var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UIntPtrType);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = (uintptr_t){1}->Length",
                 extractContext.GetSymbolName(symbol),
                 extractContext.GetSymbolName(siArray)) };

@@ -10,6 +10,7 @@
 
 #if defined(_DEBUG)
 #define IL2C_USE_LINE_INFORMATION
+#define IL2C_USE_DEBUG_HEAP
 #endif
 
 #ifdef __cplusplus
@@ -111,7 +112,7 @@ struct IL2C_RUNTIME_TYPE_DECL
 #define IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK ((interlock_t)0x08000000UL)
 #define IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE ((interlock_t)0x10000000UL)
 #define IL2C_CHARACTERISTIC_MARK_INDEX ((interlock_t)0x20000000UL)      // Mark index is only 0 or 1.
-#define IL2C_CHARACTERISTIC_INITIALIZED ((interlock_t)0x40000000UL)     // GC will ignore if not initialized
+#define IL2C_CHARACTERISTIC_INITIALIZED ((interlock_t)0x40000000UL)     // GC will ignore sweeping if not initialized
 #define IL2C_CHARACTERISTIC_CONST ((interlock_t)0x80000000UL)
 
 #define il2c_get_header__(pReference) \
@@ -165,21 +166,6 @@ typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
 ///////////////////////////////////////////////////
 // Internal runtime functions
 
-#if defined(IL2C_USE_LINE_INFORMATION)
-extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock, const char* pFile, int line);
-#else
-extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock);
-#endif
-
-extern void il2c_register_root_reference__(void* pReference, bool isFixed);
-extern void il2c_unregister_root_reference__(void* pReference, bool isFixed);
-
-extern void il2c_default_mark_handler_for_objref__(void* pReference);
-extern void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType);
-extern void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFORMATION* pTrackingInformation);
-
 typedef volatile struct IL2C_RUNTIME_THREAD_BOTTOM_EXECUTION_FRAME /* IL2C_EXECUTION_FRAME */
 {
     IL2C_EXECUTION_FRAME* pNext__;
@@ -193,6 +179,7 @@ typedef volatile struct IL2C_THREAD_CONTEXT_DECL
     IL2C_EXECUTION_FRAME* pFrame;
     IL2C_EXCEPTION_FRAME* pUnwindTarget;
     intptr_t rawHandle;
+    System_Object* pTemporaryReferenceAnchor;
     IL2C_MONITOR_LOCK lockForCollect;
     int32_t id;
 } IL2C_THREAD_CONTEXT;
@@ -226,6 +213,21 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void);
 #endif
 
 IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, bool allocateIfRequired);
+
+#if defined(IL2C_USE_LINE_INFORMATION)
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference, const char* pFile, int line);
+#else
+extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, System_Object* volatile* ppReference);
+#endif
+
+extern void il2c_register_root_reference__(void* pReference, bool isFixed);
+extern void il2c_unregister_root_reference__(void* pReference, bool isFixed);
+
+extern void il2c_default_mark_handler_for_objref__(void* pReference);
+extern void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE valueType);
+extern void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFORMATION* pTrackingInformation);
 
 ///////////////////////////////////////////////////////////////////
 // TODO: move defs

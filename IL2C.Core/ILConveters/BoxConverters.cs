@@ -12,7 +12,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Box;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
@@ -50,7 +50,7 @@ namespace IL2C.ILConverters
             //     box [mscorlib]System.Byte    // int32_t --> objref(uint8_t)   // size[4] --> size[1]
             if (operand.InternalStaticSizeOfValue == si.TargetType.InternalStaticSizeOfValue)
             {
-                return extractContext =>
+                return (extractContext, _) =>
                 {
                     return new[] { string.Format(
                         "{0} = il2c_box(&{1}, {2})",
@@ -61,7 +61,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                return extractContext =>
+                return (extractContext, _) =>
                 {
                     return new[] { string.Format(
                         "{0} = il2c_box2(&{1}, {2}, {3})",
@@ -78,7 +78,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Unbox_Any;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation operand, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
@@ -94,7 +94,7 @@ namespace IL2C.ILConverters
 
             var symbol = decodeContext.PushStack(operand);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 return new[] { string.Format(
                     "{0} = *il2c_unbox({1}, {2})",

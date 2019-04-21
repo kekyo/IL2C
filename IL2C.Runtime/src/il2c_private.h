@@ -10,6 +10,7 @@
 
 #if defined(_DEBUG)
 #define IL2C_USE_LINE_INFORMATION
+#define IL2C_USE_DEBUG_HEAP
 #endif
 
 #ifdef __cplusplus
@@ -111,7 +112,7 @@ struct IL2C_RUNTIME_TYPE_DECL
 #define IL2C_CHARACTERISTIC_ACQUIRED_MONITOR_LOCK ((interlock_t)0x08000000UL)
 #define IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE ((interlock_t)0x10000000UL)
 #define IL2C_CHARACTERISTIC_MARK_INDEX ((interlock_t)0x20000000UL)      // Mark index is only 0 or 1.
-#define IL2C_CHARACTERISTIC_INITIALIZED ((interlock_t)0x40000000UL)     // GC will ignore if not initialized
+#define IL2C_CHARACTERISTIC_INITIALIZED ((interlock_t)0x40000000UL)     // GC will ignore sweeping if not initialized
 #define IL2C_CHARACTERISTIC_CONST ((interlock_t)0x80000000UL)
 
 #define il2c_get_header__(pReference) \

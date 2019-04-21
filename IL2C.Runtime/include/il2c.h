@@ -62,8 +62,10 @@ extern "C" {
 extern void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr);
 #define il2c_cause_assert_(pFile, line, pExpr) il2c_cause_assert__(L##pFile, line, L##pExpr)
 #define il2c_cause_assert(pFile, line, pExpr) il2c_cause_assert_(pFile, line, pExpr)
-#define il2c_assert(expr) do { if (!(expr)) il2c_cause_assert(__FILE__, __LINE__, #expr); } while (0)
+#define il2c_assert__(expr, pFile, line) do { if (!(expr)) il2c_cause_assert(pFile, line, #expr); } while (0)
+#define il2c_assert(expr) il2c_assert__(expr, __FILE__, __LINE__)
 #else
+#define il2c_assert__(expr, pFile, line) il2c_assume__(expr)
 #define il2c_assert(expr) il2c_assume__(expr)
 #endif
 
@@ -78,8 +80,10 @@ extern int32_t* il2c_errno__(void);
 #define il2c_errno errno
 
 #if defined(_DEBUG)
+#define il2c_assert__(expr, pFile, line) assert(expr)
 #define il2c_assert(expr) assert(expr)
 #else
+#define il2c_assert__(expr, pFile, line) il2c_assume__(expr)
 #define il2c_assert(expr) il2c_assume__(expr)
 #endif
 

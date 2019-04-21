@@ -66,27 +66,6 @@ const uintptr_t* il2c_initializer_count = &g_InitializerCount;
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
 
-static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, System_Object* pReference)
-{
-    il2c_assert(type != NULL);
-    il2c_assert(pReference != NULL);
-
-    // Setup interface vptrs.
-    IL2C_IMPLEMENTED_INTERFACE* pInterface =
-        (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(type + 1)) + type->markTarget);
-    uintptr_t index;
-    for (index = 0;
-        il2c_likely__(index < type->interfaceCount);
-        index++, pInterface++)
-    {
-        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
-
-        // The interface vptr offset placed at vptr[0].
-        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
-        *((const void**)(((uint8_t*)pReference) + offset)) = pInterface->vptr0;
-    }
-}
-
 #if defined(IL2C_USE_LINE_INFORMATION)
 IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line)
@@ -156,7 +135,19 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     *((const void**)pReference) = type->vptr0;
 
     // Setup interface vptrs.
-    il2c_setup_interface_vptrs(type, pReference);
+    IL2C_IMPLEMENTED_INTERFACE* pInterface =
+        (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(type + 1)) + type->markTarget);
+    uintptr_t index;
+    for (index = 0;
+        il2c_likely__(index < type->interfaceCount);
+        index++, pInterface++)
+    {
+        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
+
+        // The interface vptr offset placed at vptr[0].
+        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
+        *((const void**)(((uint8_t*)pReference) + offset)) = pInterface->vptr0;
+    }
 
     // FOR GC TEST.
     //il2c_sleep(100);

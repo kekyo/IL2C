@@ -177,7 +177,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(100, "RaceFreeWithConstStringMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
     [TestCase(100, "RaceFreeWithObjectMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
     [TestCase(100, "RaceFreeWithConstStringMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
-    [TestCase(200, "ConcurrentCollect", 10, 100, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
+    [TestCase(2000000, "ConcurrentCollect", 10, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
     public sealed class Threading
     {
         public static int RunAndFinishInstanceMethod(int a, int b)

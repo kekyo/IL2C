@@ -163,7 +163,7 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     *ppReference = pReference;
 
     // FOR GC TEST.
-    il2c_sleep(100);
+    //il2c_sleep(100);
 
     // Safe link both headers.
     while (1)
@@ -184,7 +184,7 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     pHeader->characteristic = g_CollectionMarkIndex__;
 
     // FOR GC TEST.
-    il2c_sleep(100);
+    //il2c_sleep(100);
 
     return pHeader;
 }

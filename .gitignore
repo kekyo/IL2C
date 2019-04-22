@@ -487,3 +487,6 @@ artifacts/
 
 .sonarqube/
 .sonarlint/
+
+toolchain/
+**/build.*

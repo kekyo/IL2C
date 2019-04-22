@@ -257,12 +257,11 @@ namespace IL2C
             string scriptTemplateName,
             bool optimize, string sourcePath, string includePath)
         {
-            Debug.Assert(Directory.Exists(gccBasePath));
-
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "out");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
             var libPath = Path.GetFullPath(Path.Combine(gccBasePath, ".."));
+            var configuration = optimize ? "release" : "debug";
             var optimizeFlag = optimize ? "-Ofast -DNDEBUG" : "-O0 -D_DEBUG -DIL2C_USE_RUNTIME_DEBUG_LOG";
             var disableObjDump = optimize ? "rem " : string.Empty;
 
@@ -284,6 +283,7 @@ namespace IL2C
                     { "gccBinPath", gccBinPath },
                     { "includePath", includePath },
                     { "libPath", libPath },
+                    { "configuration", configuration },
                     { "optimizeFlag", optimizeFlag },
                     { "disableObjDump", disableObjDump },
                     { "sourcePath", string.Join(" ", sourcePath) }

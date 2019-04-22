@@ -207,12 +207,12 @@ extern IL2C_MONITOR_LOCK g_GlobalLockForCollect__;
 #endif
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);
+extern IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line);
 #else
-IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void);
+extern IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void);
 #endif
 
-IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, bool allocateIfRequired);
+extern IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, bool allocateIfRequired);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(

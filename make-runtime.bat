@@ -91,7 +91,7 @@ echo.
 mkdir build.gcc4-mingw32-debug
 cd build.gcc4-mingw32-debug
 
-cmake.exe -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-mingw.cmake ..
+cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-mingw.cmake ..
 mingw32-make.exe -j
 
 cd ..
@@ -106,7 +106,7 @@ echo.
 mkdir build.gcc4-mingw32-release
 cd build.gcc4-mingw32-release
 
-cmake.exe -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-mingw.cmake ..
+cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-mingw.cmake ..
 mingw32-make.exe -j
 
 cd ..

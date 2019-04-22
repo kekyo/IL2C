@@ -39,8 +39,9 @@ echo // Build Arduino library
 echo.
 
 mkdir artifacts\Arduino
-xcopy /s IL2C.Runtime\include\*.* artifacts\Arduino\src\
-xcopy /s IL2C.Runtime\src\*.* artifacts\Arduino\src\
+xcopy /s IL2C.Runtime\include\*.h artifacts\Arduino\src\
+xcopy /s IL2C.Runtime\src\*.h artifacts\Arduino\src\
+xcopy /s IL2C.Runtime\src\*.c artifacts\Arduino\src\
 
 for /f "delims=" %%a in (Arduino.properties) do (
   set line=%%a

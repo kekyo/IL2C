@@ -87,7 +87,7 @@
             <MapExports>true</MapExports>
             <OptimizeReferences>true</OptimizeReferences>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
-            <AdditionalDependencies>..\..\..\..\..\..\..\..\IL2C.Runtime\build.msvc-$(Platform)-$(Configuration)\libs\$(Configuration)\il2c.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>..\..\..\..\..\..\..\..\IL2C.Runtime\build.msvc-win-$(Platform)-$(Configuration)\libs\$(Configuration)\il2c.lib;%(AdditionalDependencies)</AdditionalDependencies>
         </Link>
         <Link Condition="'$(Configuration)'=='Release'">
             <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>

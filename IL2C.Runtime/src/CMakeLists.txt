@@ -1,6 +1,11 @@
 cmake_minimum_required (VERSION 3.8)
 
-file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c")
+if(DEFINED BUILD_UEFI)
+    enable_language(ASM_MASM)
+    file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c" "*.asm")
+else()
+    file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c")
+endif()
 
 add_library(il2c STATIC ${IL2C_RUNTIME_SRCS})
 

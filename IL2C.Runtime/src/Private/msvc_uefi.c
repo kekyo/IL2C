@@ -4,7 +4,7 @@
 // UEFI
 #if defined(_MSC_VER) && defined(UEFI)
 
-#if defined(DEBUG)
+#if defined(_DEBUG)
 #define EFI_DEBUG 1
 #else
 #undef EFI_DEBUG
@@ -434,7 +434,7 @@ void* il2c_malloc(size_t size, const char* pFile, int32_t line)
 void* il2c_malloc(size_t size)
 #endif
 {
-#if defined(_MSC_VER) && defined(IL2C_USE_LINE_INFORMATION)
+#if defined(_MSC_VER) && defined(_WIN32) && defined(IL2C_USE_LINE_INFORMATION)
     IL2C_DEBUG_HEAP* p0 = _malloc_dbg(sizeof(IL2C_DEBUG_HEAP) + size + sizeof(uintptr_t), _NORMAL_BLOCK, pFile, line);
 #else
     IL2C_DEBUG_HEAP* p0 = malloc(sizeof(IL2C_DEBUG_HEAP) + size + sizeof(uintptr_t));
@@ -660,7 +660,7 @@ void il2c_initialize(void* imageHandle, void* pSystemTable)
     // Clear screen
     g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
 
-    il2c_initialize__(0);
+    il2c_initialize__();
 }
 
 void il2c_shutdown()

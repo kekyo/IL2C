@@ -95,17 +95,21 @@ extern int32_t* il2c_errno__(void);
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime
 
-#if defined(_WIN32)
 #if defined(UEFI)
+#undef _WIN32
 extern void il2c_initialize(void* imageHandle, void* pSystemTable);
 extern void il2c_shutdown();
-#elif defined(_WDM)
-extern void il2c_initialize(void);  // TODO:
-extern void il2c_shutdown(void);
-#else
+#endif
+
+#if defined(_WDM)
+#undef _WIN32
 extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
 #endif
+
+#if defined(_WIN32)
+extern void il2c_initialize(void);
+extern void il2c_shutdown(void);
 #endif
 
 #if defined(__linux__)

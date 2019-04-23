@@ -94,7 +94,8 @@
     <Link>
       <SubSystem>EFI Application</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies />
+      <AdditionalLibraryDirectories>../../../IL2C.Runtime/build.msvc-uefi-$(Platform)-$(Configuration)/libs/$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>il2c.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SetChecksum>true</SetChecksum>
       <EntryPointSymbol>efi_main</EntryPointSymbol>
@@ -109,10 +110,5 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IL2C.Runtime.UEFI\IL2C.Runtime.UEFI.vcxproj">
-      <Project>{4a3bf87a-c826-450f-93bf-09313917964a}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

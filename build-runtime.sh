@@ -17,7 +17,7 @@ echo.
 mkdir build.gcc-linux-debug
 cd build.gcc-linux-debug
 
-cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-linux.cmake ..
+cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../include/cmake/gcc-linux.cmake ..
 cmake --build . -j
 
 cd ..
@@ -32,7 +32,7 @@ echo.
 mkdir build.gcc-linux-release
 cd build.gcc-linux-release
 
-cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../cmake/gcc-linux.cmake ..
+cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../include/cmake/gcc-linux.cmake ..
 cmake --build . -j
 
 cd ..

@@ -26,6 +26,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Remove="Templates\CMakeLists.txt" />
         <None Remove="Templates\launch.json" />
         <None Remove="Templates\make.bat" />
         <None Remove="Templates\test_void.c" />
@@ -34,6 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="Templates\CMakeLists.txt" />
         <EmbeddedResource Include="Templates\launch.json" />
         <EmbeddedResource Include="Templates\make.bat" />
         <EmbeddedResource Include="Templates\test_void.c" />

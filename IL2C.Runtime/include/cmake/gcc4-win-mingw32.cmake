@@ -8,4 +8,5 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -g2 -fdata-sections -ffunction-section
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -D_DEBUG")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Ofast -fomit-frame-pointer -DNDEBUG")
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libil2c-gcc4-win-mingw32.a)

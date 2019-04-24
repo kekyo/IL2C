@@ -24,9 +24,6 @@ if exist lib (
     rmdir /s /q lib
 )
 
-rem goto msvc-uefi-x64
-rem goto gcc4-win-mingw32
-
 rem ================================================================================
 
 :msvc-win-win32
@@ -39,8 +36,8 @@ echo.
 mkdir msvc-win-win32-debug
 cd msvc-win-win32-debug
 
-cmake.exe -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Debug ../..
-cmake.exe --build . -j
+cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DCONFIGURATION=Debug ../..
+cmake --build . -j --config Debug
 
 cd ..
 
@@ -54,8 +51,8 @@ echo.
 mkdir msvc-win-win32-release
 cd msvc-win-win32-release
 
-cmake.exe -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Release ../..
-cmake.exe --build . -j
+cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DCONFIGURATION=Release ../..
+cmake --build . -j --config Release
 
 cd ..
 
@@ -71,8 +68,8 @@ echo.
 mkdir msvc-win-x64-debug
 cd msvc-win-x64-debug
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Debug ../..
-cmake.exe --build . -j
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DCONFIGURATION=Debug ../..
+cmake --build . -j --config Debug
 
 cd ..
 
@@ -86,8 +83,8 @@ echo.
 mkdir msvc-win-x64-release
 cd msvc-win-x64-release
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Release ../..
-cmake.exe --build . -j
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DCONFIGURATION=Release ../..
+cmake --build . -j --config Release
 
 cd ..
 
@@ -103,8 +100,8 @@ echo.
 mkdir msvc-uefi-x64-debug
 cd msvc-uefi-x64-debug
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DCMAKE_CONFIGURATION_TYPES=Debug ../..
-cmake.exe --build . -j
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=x64 -DCONFIGURATION=Debug ../..
+cmake --build . -j --config Debug
 
 cd ..
 
@@ -118,8 +115,8 @@ echo.
 mkdir msvc-uefi-x64-release
 cd msvc-uefi-x64-release
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DCMAKE_CONFIGURATION_TYPES=Release ../..
-cmake.exe --build . -j
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=x64 -DCONFIGURATION=Release ../..
+cmake --build . -j --config Release
 
 cd ..
 
@@ -135,8 +132,9 @@ echo.
 mkdir gcc4-win-mingw32-debug
 cd gcc4-win-mingw32-debug
 
-cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DCMAKE_BUILD_TYPE=Debug ../..
-cmake.exe --build . -j
+cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=Debug ../..
+cmake --build . -j
+move ..\..\lib\libil2c-gcc4-win-mingw32-Debug.a ..\..\lib\Debug\libil2c-gcc4-win-mingw32.a
 
 cd ..
 
@@ -150,8 +148,9 @@ echo.
 mkdir gcc4-win-mingw32-release
 cd gcc4-win-mingw32-release
 
-cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DCMAKE_BUILD_TYPE=Release ../..
-cmake.exe --build . -j
+cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=Release ../..
+cmake --build . -j
+move ..\..\lib\libil2c-gcc4-win-mingw32-Release.a ..\..\lib\Release\libil2c-gcc4-win-mingw32.a
 
 cd ..
 

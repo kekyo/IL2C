@@ -9,7 +9,7 @@ else()
     file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c")
 endif()
 
-add_library(${TARGET_LIBRARY_NAME} STATIC ${IL2C_RUNTIME_SRCS})
+add_library(${IL2C_LIBRARY_NAME} STATIC ${IL2C_RUNTIME_SRCS})
 
-target_include_directories(${TARGET_LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${TARGET_LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_include_directories(${IL2C_LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${IL2C_LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)

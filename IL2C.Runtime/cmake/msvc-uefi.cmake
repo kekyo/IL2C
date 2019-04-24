@@ -1,14 +1,13 @@
 cmake_minimum_required (VERSION 3.8)
 
-set(BUILD_UEFI true)
+set(CMAKE_CONFIGURATION_TYPES, "${CONFIGURATION}")
+set(CMAKE_BUILD_TYPE, "${CONFIGURATION}")
 
 set(CMAKE_C_COMPILER_WORKS 1)
+set(BUILD_UEFI true)
 
 add_definitions(-DUEFI)
 add_definitions(-D_LIB)
-add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-add_definitions(-D_CRT_SECURE_NO_WARNINGS_GLOBALS)
 
 include(ProcessorCount)
 ProcessorCount(pc)
@@ -27,7 +26,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/RELEASE /LTCG")
 set(CMAKE_SHARED_LINKER_FLAGS "/OPT:ICF /OPT:REF /INCREMENTAL:NO /DEBUG /MAP /SAFESEH /MERGE:.rdata=.text /NODEFAULTLIB /SUBSYSTEM:EFI_APPLICATION")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/RELEASE /LTCG")
 
-set(TARGET_LIBRARY_NAME "libil2c-msvc-uefi-${PLATFORM_NAME}-${CMAKE_BUILD_TYPE}")
+set(IL2C_LIBRARY_NAME "libil2c-msvc-uefi-${PLATFORM}")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${TARGET_LIBRARY_NAME}.lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/${CONFIGURATION}/${IL2C_LIBRARY_NAME}.lib)

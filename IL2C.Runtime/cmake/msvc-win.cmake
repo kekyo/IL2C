@@ -1,5 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 
+set(CMAKE_CONFIGURATION_TYPES, "${CONFIGURATION}")
+set(CMAKE_BUILD_TYPE, "${CONFIGURATION}")
+
 add_definitions(-DWIN32)
 add_definitions(-D_LIB)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
@@ -24,13 +27,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/RELEASE /LTCG")
 set(CMAKE_SHARED_LINKER_FLAGS "/OPT:ICF /OPT:REF /INCREMENTAL:NO /DEBUG /MAP /MERGE:.rdata=.text")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/RELEASE /LTCG")
 
-if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(PLATFORM_NAME "win32")
-else()
-    set(PLATFORM_NAME "x64")
-endif()
+set(IL2C_LIBRARY_NAME "libil2c-msvc-win-${PLATFORM}")
 
-set(TARGET_LIBRARY_NAME "libil2c-msvc-win-${PLATFORM_NAME}-${CMAKE_BUILD_TYPE}")
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${TARGET_LIBRARY_NAME}.lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/${CONFIGURATION}/${IL2C_LIBRARY_NAME}.lib)

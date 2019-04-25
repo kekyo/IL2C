@@ -1,7 +1,7 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IL2C Test: {testName}
 
-#if defined(_MSC_VER) && defined(_WIN32)
+#if defined(_MSC_VER) && defined(WIN32)
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRTDBG_MAP_ALLOC 1
@@ -19,7 +19,7 @@
 
 int main()
 {
-#if defined(_MSC_VER) && defined(_WIN32)
+#if defined(_MSC_VER) && defined(WIN32)
     _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
     _CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);

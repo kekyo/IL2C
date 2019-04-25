@@ -489,4 +489,3 @@ artifacts/
 .sonarlint/
 
 toolchain/
-**/build.*

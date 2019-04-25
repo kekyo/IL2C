@@ -13,8 +13,15 @@ set PATH=%TOOLCHAINPATH%\bin;%PATH%
 
 cd IL2C.Runtime
 
-for /d %%f in (build.*) do (
-    rmdir /s /q %%f
+if exist build (
+    rmdir /s /q build
+)
+
+mkdir build
+cd build
+
+if exist lib (
+    rmdir /s /q lib
 )
 
 rem goto msvc-uefi-x64
@@ -29,11 +36,11 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (msvc-win-win32-debug)
 echo.
 
-mkdir build.msvc-win-win32-debug
-cd build.msvc-win-win32-debug
+mkdir msvc-win-win32-debug
+cd msvc-win-win32-debug
 
-cmake.exe -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../include/cmake/msvc-win.cmake ..
-cmake.exe --build . --config Debug
+cmake.exe -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Debug ../..
+cmake.exe --build . -j
 
 cd ..
 
@@ -44,11 +51,11 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (msvc-win-win32-release)
 echo.
 
-mkdir build.msvc-win-win32-release
-cd build.msvc-win-win32-release
+mkdir msvc-win-win32-release
+cd msvc-win-win32-release
 
-cmake.exe -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../include/cmake/msvc-win.cmake ..
-cmake.exe --build . --config Release
+cmake.exe -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Release ../..
+cmake.exe --build . -j
 
 cd ..
 
@@ -61,11 +68,11 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (msvc-win-x64-debug)
 echo.
 
-mkdir build.msvc-win-x64-debug
-cd build.msvc-win-x64-debug
+mkdir msvc-win-x64-debug
+cd msvc-win-x64-debug
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../include/cmake/msvc-win.cmake ..
-cmake.exe --build . --config Debug
+cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Debug ../..
+cmake.exe --build . -j
 
 cd ..
 
@@ -76,11 +83,11 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (msvc-win-x64-release)
 echo.
 
-mkdir build.msvc-win-x64-release
-cd build.msvc-win-x64-release
+mkdir msvc-win-x64-release
+cd msvc-win-x64-release
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../include/cmake/msvc-win.cmake ..
-cmake.exe --build . --config Release
+cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DCMAKE_CONFIGURATION_TYPES=Release ../..
+cmake.exe --build . -j
 
 cd ..
 
@@ -93,11 +100,11 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (msvc-uefi-x64-debug)
 echo.
 
-mkdir build.msvc-uefi-x64-debug
-cd build.msvc-uefi-x64-debug
+mkdir msvc-uefi-x64-debug
+cd msvc-uefi-x64-debug
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../include/cmake/msvc-uefi.cmake ..
-cmake.exe --build . --config Debug
+cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DCMAKE_CONFIGURATION_TYPES=Debug ../..
+cmake.exe --build . -j
 
 cd ..
 
@@ -108,11 +115,11 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (msvc-uefi-x64-release)
 echo.
 
-mkdir build.msvc-uefi-x64-release
-cd build.msvc-uefi-x64-release
+mkdir msvc-uefi-x64-release
+cd msvc-uefi-x64-release
 
-cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../include/cmake/msvc-uefi.cmake ..
-cmake.exe --build . --config Release
+cmake.exe -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DCMAKE_CONFIGURATION_TYPES=Release ../..
+cmake.exe --build . -j
 
 cd ..
 
@@ -125,10 +132,10 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (gcc4-win-mingw32-debug)
 echo.
 
-mkdir build.gcc4-win-mingw32-debug
-cd build.gcc4-win-mingw32-debug
+mkdir gcc4-win-mingw32-debug
+cd gcc4-win-mingw32-debug
 
-cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../include/cmake/gcc4-win-mingw32.cmake ..
+cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DCMAKE_BUILD_TYPE=Debug ../..
 cmake.exe --build . -j
 
 cd ..
@@ -140,14 +147,15 @@ echo ///////////////////////////////////////////////
 echo // Build IL2C.Runtime (gcc4-win-mingw32-release)
 echo.
 
-mkdir build.gcc4-win-mingw32-release
-cd build.gcc4-win-mingw32-release
+mkdir gcc4-win-mingw32-release
+cd gcc4-win-mingw32-release
 
-cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../include/cmake/gcc4-win-mingw32.cmake ..
+cmake.exe -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DCMAKE_BUILD_TYPE=Release ../..
 cmake.exe --build . -j
 
 cd ..
 
+cd ..
 cd ..
 
 :exit

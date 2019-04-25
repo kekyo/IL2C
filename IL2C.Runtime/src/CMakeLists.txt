@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
 if(DEFINED BUILD_UEFI)
     enable_language(ASM_MASM)
     file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c" "*.asm")
@@ -7,7 +9,7 @@ else()
     file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c")
 endif()
 
-add_library(il2c STATIC ${IL2C_RUNTIME_SRCS})
+add_library(${TARGET_LIBRARY_NAME} STATIC ${IL2C_RUNTIME_SRCS})
 
-target_include_directories(il2c PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(il2c PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_include_directories(${TARGET_LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${TARGET_LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)

@@ -4,8 +4,6 @@ set(BUILD_UEFI true)
 
 set(CMAKE_C_COMPILER_WORKS 1)
 
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
-
 add_definitions(-DUEFI)
 add_definitions(-D_LIB)
 add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
@@ -29,5 +27,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/RELEASE /LTCG")
 set(CMAKE_SHARED_LINKER_FLAGS "/OPT:ICF /OPT:REF /INCREMENTAL:NO /DEBUG /MAP /SAFESEH /MERGE:.rdata=.text /NODEFAULTLIB /SUBSYSTEM:EFI_APPLICATION")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/RELEASE /LTCG")
 
+set(TARGET_LIBRARY_NAME "libil2c-msvc-uefi-${PLATFORM_NAME}-${CMAKE_BUILD_TYPE}")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libil2c-msvc-uefi-x64.a)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/${TARGET_LIBRARY_NAME}.lib)

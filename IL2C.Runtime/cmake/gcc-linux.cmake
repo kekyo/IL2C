@@ -6,5 +6,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -g2 -fdata-sections -ffunction-section
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -D_DEBUG")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Ofast -fomit-frame-pointer -DNDEBUG")
 
+set(TARGET_LIBRARY_NAME "il2c-gcc-linux-${CMAKE_BUILD_TYPE}")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libil2c-gcc-linux.a)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../lib/lib${TARGET_LIBRARY_NAME}.a)

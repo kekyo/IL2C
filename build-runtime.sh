@@ -2,41 +2,44 @@
 
 cd IL2C.Runtime
 
-rmdir /s /q build.gcc-linux-debug
-rmdir /s /q build.gcc-linux-release
+rm -rf build
+
+mkdir build
+cd build
 
 rem ================================================================================
 
 :gcc
 
-echo.
-echo ///////////////////////////////////////////////
-echo // Build IL2C.Runtime (gcc-linux-debug)
-echo.
+echo ""
+echo "///////////////////////////////////////////////"
+echo "// Build IL2C.Runtime (gcc-linux-debug)"
+echo ""
 
-mkdir build.gcc-linux-debug
-cd build.gcc-linux-debug
+mkdir gcc-linux-debug
+cd gcc-linux-debug
 
-cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../include/cmake/gcc-linux.cmake ..
+cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-linux.cmake ../..
 cmake --build . -j
 
 cd ..
 
 rem ===============================================
 
-echo.
-echo ///////////////////////////////////////////////
-echo // Build IL2C.Runtime (gcc-linux-release)
-echo.
+echo ""
+echo "///////////////////////////////////////////////"
+echo "// Build IL2C.Runtime (gcc-linux-release)"
+echo ""
 
-mkdir build.gcc-linux-release
-cd build.gcc-linux-release
+mkdir gcc-linux-release
+cd gcc-linux-release
 
-cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../include/cmake/gcc-linux.cmake ..
+cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-linux.cmake ../..
 cmake --build . -j
 
 cd ..
 
+cd ..
 cd ..
 
 :exit

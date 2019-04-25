@@ -12,7 +12,7 @@ extern "C" {
 ///////////////////////////////////////////////////
 // Visual C++ (User mode Win32)
 
-#if defined(_MSC_VER) && defined(_WIN32) && !defined(UEFI) && !defined(WDM)
+#if defined(_MSC_VER) && defined(WIN32) && !defined(UEFI) && !defined(WDM)
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRTDBG_MAP_ALLOC 1

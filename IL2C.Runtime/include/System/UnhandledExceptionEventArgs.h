@@ -13,7 +13,7 @@ extern "C" {
 // System.UnhandledExceptionEventArgs
 
 typedef struct System_UnhandledExceptionEventArgs System_UnhandledExceptionEventArgs;
-typedef struct System_EventArgs_VTABLE_DECL__ System_UnhandledExceptionEventArgs_VTABLE_DECL__;
+typedef System_EventArgs_VTABLE_DECL__ System_UnhandledExceptionEventArgs_VTABLE_DECL__;
 
 struct System_UnhandledExceptionEventArgs
 {

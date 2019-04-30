@@ -177,7 +177,11 @@ int main()
 
 ### 1-5. Finished Hello world
 
-Run the project and got result (Note: you maybe fail if you forget setting the startup project.)
+Run the project and got result.
+
+* Note: you maybe fail if you forget setting the startup project.
+* This step causes warning C4197 but can ignore.
+
 
 ![Finished Hello world](../images/tutorial15.png)
 

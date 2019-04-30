@@ -17,7 +17,7 @@ namespace IL2C.ILConverters
             Rem
         }
 
-        public static Func<IExtractContext, string[]> Apply(BinaryOperators binaryOperator, DecodeContext decodeContext)
+        public static ExpressionEmitter Prepare(BinaryOperators binaryOperator, DecodeContext decodeContext)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -39,7 +39,7 @@ namespace IL2C.ILConverters
             if (si0.TargetType.IsInt32StackFriendlyType && si1.TargetType.IsInt32StackFriendlyType)
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = {1} {2} {3}",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
@@ -51,7 +51,7 @@ namespace IL2C.ILConverters
             if (si0.TargetType.IsInt64StackFriendlyType && si1.TargetType.IsInt64StackFriendlyType)
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = {1} {2} {3}",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
@@ -66,7 +66,7 @@ namespace IL2C.ILConverters
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
 
                 // Use special runtime function.
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = il2c_fmod({1}, {2})",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
@@ -77,7 +77,7 @@ namespace IL2C.ILConverters
             if (si0.TargetType.IsFloatStackFriendlyType && si1.TargetType.IsFloatStackFriendlyType)
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = (double){1} {2} (double){3}",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
@@ -90,7 +90,7 @@ namespace IL2C.ILConverters
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = ({1})((intptr_t){2} + (intptr_t){3})",
                     extractContext.GetSymbolName(result),
                     si1.TargetType.CLanguageTypeName,
@@ -103,7 +103,7 @@ namespace IL2C.ILConverters
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = ({1})((intptr_t){2} + (intptr_t){3})",
                     extractContext.GetSymbolName(result),
                     si1.TargetType.CLanguageTypeName,
@@ -117,7 +117,7 @@ namespace IL2C.ILConverters
                 ((binaryOperator == BinaryOperators.Add) || (binaryOperator == BinaryOperators.Sub)))
             {
                 var result = decodeContext.PushStack(si0.TargetType);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = ({1})((intptr_t){2} {3} (intptr_t){4})",
                     extractContext.GetSymbolName(result),
                     si0.TargetType.CLanguageTypeName,
@@ -131,7 +131,7 @@ namespace IL2C.ILConverters
                 (binaryOperator == BinaryOperators.Sub))
             {
                 var result = decodeContext.PushStack(si0.TargetType);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = ({1})((intptr_t){2} - (intptr_t){3})",
                     extractContext.GetSymbolName(result),
                     si0.TargetType.CLanguageTypeName,
@@ -144,7 +144,7 @@ namespace IL2C.ILConverters
                 (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType))
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.IntPtrType);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1} {2} (intptr_t){3}",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
@@ -165,9 +165,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Add;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ArithmeticalConverterUtilities.Apply(
+            return ArithmeticalConverterUtilities.Prepare(
                 ArithmeticalConverterUtilities.BinaryOperators.Add, decodeContext);
         }
     }
@@ -176,9 +176,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Sub;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ArithmeticalConverterUtilities.Apply(
+            return ArithmeticalConverterUtilities.Prepare(
                 ArithmeticalConverterUtilities.BinaryOperators.Sub, decodeContext);
         }
     }
@@ -187,9 +187,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Mul;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ArithmeticalConverterUtilities.Apply(
+            return ArithmeticalConverterUtilities.Prepare(
                 ArithmeticalConverterUtilities.BinaryOperators.Mul, decodeContext);
         }
     }
@@ -198,9 +198,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Div;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ArithmeticalConverterUtilities.Apply(
+            return ArithmeticalConverterUtilities.Prepare(
                 ArithmeticalConverterUtilities.BinaryOperators.Div, decodeContext);
         }
     }
@@ -209,9 +209,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Rem;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ArithmeticalConverterUtilities.Apply(
+            return ArithmeticalConverterUtilities.Prepare(
                 ArithmeticalConverterUtilities.BinaryOperators.Rem, decodeContext);
         }
     }

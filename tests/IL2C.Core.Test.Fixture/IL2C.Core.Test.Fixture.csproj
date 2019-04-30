@@ -19,25 +19,25 @@
         <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-        <LangVersion>7.1</LangVersion>
+        <LangVersion>7.3</LangVersion>
         <DebugType>full</DebugType>
         <DebugSymbols>true</DebugSymbols>
         <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
+        <None Remove="Templates\CMakeLists.txt" />
         <None Remove="Templates\launch.json" />
         <None Remove="Templates\make.bat" />
-        <None Remove="Templates\make_libil2c.bat" />
         <None Remove="Templates\test_void.c" />
         <None Remove="Templates\test.c" />
         <None Remove="Templates\test.vcxproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="Templates\CMakeLists.txt" />
         <EmbeddedResource Include="Templates\launch.json" />
         <EmbeddedResource Include="Templates\make.bat" />
-        <EmbeddedResource Include="Templates\make_libil2c.bat" />
         <EmbeddedResource Include="Templates\test_void.c" />
         <EmbeddedResource Include="Templates\test.c" />
         <EmbeddedResource Include="Templates\test.vcxproj" />

@@ -12,12 +12,12 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Constrained;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation type, DecodeContext decodeContext)
         {
             decodeContext.SetPrefixCode();
 
-            return emptyFunc;
+            return emptyEmitter;
         }
     }
 }

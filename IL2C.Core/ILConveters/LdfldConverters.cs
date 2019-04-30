@@ -10,7 +10,7 @@ namespace IL2C.ILConverters
 {
     internal static class LdfldConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext, bool requestPointer)
         {
             var siReference = decodeContext.PopStack();
@@ -74,7 +74,7 @@ namespace IL2C.ILConverters
             {
                 var result = decodeContext.PushStack(field.FieldType.MakeByReference());
 
-                return extractContext =>
+                return (extractContext, _) =>
                 {
                     return new[] { string.Format(
                     "{0} = &{1}",
@@ -86,7 +86,7 @@ namespace IL2C.ILConverters
             {
                 var result = decodeContext.PushStack(field.FieldType);
 
-                return extractContext =>
+                return (extractContext, _) =>
                 {
                     return new[] { string.Format(
                     "{0} = {1}",
@@ -96,7 +96,7 @@ namespace IL2C.ILConverters
             }
         }
 
-        public static Func<IExtractContext, string[]> ApplyStatic(
+        public static ExpressionEmitter ApplyStatic(
             IFieldInformation field, DecodeContext decodeContext, bool requestPointer)
         {
             Debug.Assert(field.IsStatic);
@@ -112,7 +112,7 @@ namespace IL2C.ILConverters
                 if (field.FieldType.IsReferenceType ||
                     (field.FieldType.IsValueType && field.FieldType.IsRequiredTraverse))
                 {
-                    return extractContext => new[] { string.Format(
+                    return (extractContext, _) => new[] { string.Format(
                         "{0} = {1}{2}_STATIC_FIELDS__.{3}",
                         extractContext.GetSymbolName(symbol),
                         requestPointer ? "&" : string.Empty,
@@ -121,7 +121,7 @@ namespace IL2C.ILConverters
                 }
                 else
                 {
-                    return extractContext => new[] { string.Format(
+                    return (extractContext, _) => new[] { string.Format(
                         "{0} = {1}{2}",
                         extractContext.GetSymbolName(symbol),
                         requestPointer ? "&" : string.Empty,
@@ -130,7 +130,7 @@ namespace IL2C.ILConverters
             }
             else if (field.NativeValue != null)
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                         "{0} = {1}{2}",
                         extractContext.GetSymbolName(symbol),
                         requestPointer ? "&" : string.Empty,
@@ -138,7 +138,7 @@ namespace IL2C.ILConverters
             }
             else
             {
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                 "{0} = {1}{2}_REF__",
                 extractContext.GetSymbolName(symbol),
                 requestPointer ? string.Empty : "*",
@@ -151,10 +151,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldfld;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext)
         {
-            return LdfldConverterUtilities.Apply(field, decodeContext, false);
+            return LdfldConverterUtilities.Prepare(field, decodeContext, false);
         }
     }
 
@@ -162,10 +162,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldflda;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext)
         {
-            return LdfldConverterUtilities.Apply(field, decodeContext, true);
+            return LdfldConverterUtilities.Prepare(field, decodeContext, true);
         }
     }
 
@@ -173,7 +173,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldsfld;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext)
         {
             return LdfldConverterUtilities.ApplyStatic(field, decodeContext, false);
@@ -184,7 +184,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldsflda;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IFieldInformation field, DecodeContext decodeContext)
         {
             return LdfldConverterUtilities.ApplyStatic(field, decodeContext, true);

@@ -35,21 +35,40 @@ extern long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_check_heap()
+#define il2c_alloca alloca
 
-#define il2c_malloc malloc
-
-#if defined(_DEBUG)
+#if defined(IL2C_USE_DEBUG_HEAP)
+extern int64_t g_HeapBreakAlloc__;
+#if defined(IL2C_USE_LINE_INFORMATION)
+extern void* il2c_malloc(size_t size, const char* pFile, int line);
+#else
+extern void* il2c_malloc(size_t size);
+#endif
 extern void il2c_free(void* p);
 #else
+#if defined(IL2C_USE_LINE_INFORMATION)
+#define il2c_malloc(size, pFile, line) malloc(size)
+#else
+#define il2c_malloc malloc
+#endif
 #define il2c_free free
 #endif
 
+#if defined(IL2C_USE_LINE_INFORMATION)
 #define il2c_mcalloc(elementType, name, size) \
     const uint32_t name_csize__ = (uint32_t)(size); \
-    const bool is_name_heaped__ = name_csize__ >= 32U; \
-    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__) : alloca(name_csize__)
+    const bool is_name_heaped__ = name_csize__ >= 256U; \
+    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__, __FILE__, __LINE__) : il2c_alloca(name_csize__)
 #define il2c_mcfree(name) \
     do { if (is_name_heaped__) il2c_free(name); } while (0)
+#else
+#define il2c_mcalloc(elementType, name, size) \
+    const uint32_t name_csize__ = (uint32_t)(size); \
+    const bool is_name_heaped__ = name_csize__ >= 256U; \
+    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__) : _alloca(name_csize__)
+#define il2c_mcfree(name) \
+    do { if (is_name_heaped__) il2c_free(name); } while (0)
+#endif
 
 #define il2c_iand(pDest, newValue) __sync_fetch_and_and((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) __sync_fetch_and_or((interlock_t*)(pDest), (interlock_t)(newValue))

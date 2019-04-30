@@ -14,7 +14,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Initobj;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation type, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
@@ -30,7 +30,7 @@ namespace IL2C.ILConverters
             // Register target type (at the file scope).
             decodeContext.PrepareContext.RegisterType(type, decodeContext.Method);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 // IL2C can't understand the native type size.
                 // So, the expression will make calculation at the C compiler.
@@ -51,7 +51,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Newobj;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             IMethodInformation ctor, DecodeContext decodeContext)
         {
             if (!ctor.IsConstructor)
@@ -119,7 +119,7 @@ namespace IL2C.ILConverters
                         ctor.FriendlyName);
                 }
 
-                return extractContext =>
+                return (extractContext, _) =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters.Skip(1).ToArray(), extractContext, codeInformation);
@@ -156,7 +156,7 @@ namespace IL2C.ILConverters
                         ctor.FriendlyName);
                 }
 
-                return extractContext =>
+                return (extractContext, _) =>
                 {
                     var parameterString = Utilities.GetGivenParameterDeclaration(
                         pairParameters.Skip(1).ToArray(), extractContext, codeInformation);
@@ -173,7 +173,7 @@ namespace IL2C.ILConverters
 
             var overloadIndex = ctor.OverloadIndex;
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var parameterString = Utilities.GetGivenParameterDeclaration(
                     pairParameters.ToArray(), extractContext, codeInformation);
@@ -255,7 +255,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Newarr;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation elementType, DecodeContext decodeContext)
         {
             var siCount = decodeContext.PopStack();
@@ -269,7 +269,7 @@ namespace IL2C.ILConverters
 
             var symbol = decodeContext.PushStack(elementType.MakeArray());
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = il2c_new_array({1}, {2})",
                 extractContext.GetSymbolName(symbol),
                 elementType.MangledUniqueName,

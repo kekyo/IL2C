@@ -150,8 +150,7 @@ IL_003c:
     /* IL_003c: ldloc.s local4__                : PolishNotation.cs(108) */
     stack0_0__ = local4__;
     /* IL_003e: ret                             : PolishNotation.cs(108) */
-    il2c_unlink_execution_frame(&frame__);
-    return stack0_0__;
+    il2c_return_unlink_with_value(&frame__, stack0_0__);
 }
 
 ///////////////////////////////////////
@@ -322,8 +321,7 @@ IL_005b:
     /* IL_005b: ldloc.3                         : PolishNotation.cs(127) */
     frame__.stack0_5__ = frame__.local3__;
     /* IL_005c: ret                             : PolishNotation.cs(127) */
-    il2c_unlink_execution_frame(&frame__);
-    return frame__.stack0_5__;
+    il2c_return_unlink_with_objref(&frame__, frame__.stack0_5__);
 }
 
 ///////////////////////////////////////
@@ -549,8 +547,7 @@ IL_008d:
     /* IL_008d: ldloc.s local4__                : PolishNotation.cs(160) */
     frame__.stack0_3__ = frame__.local4__;
     /* IL_008f: ret                             : PolishNotation.cs(160) */
-    il2c_unlink_execution_frame(&frame__);
-    return frame__.stack0_3__;
+    il2c_return_unlink_with_objref(&frame__, frame__.stack0_3__);
 }
 
 ///////////////////////////////////////
@@ -810,8 +807,7 @@ IL_00bd:
     /* IL_00bd: ldloc.s local5__                : PolishNotation.cs(197) */
     frame__.stack0_5__ = frame__.local5__;
     /* IL_00bf: ret                             : PolishNotation.cs(197) */
-    il2c_unlink_execution_frame(&frame__);
-    return frame__.stack0_5__;
+    il2c_return_unlink_with_objref(&frame__, frame__.stack0_5__);
 }
 
 ///////////////////////////////////////
@@ -1003,8 +999,7 @@ IL_00c0:
     goto IL_004b;
 IL_00c5:
     /* IL_00c5: ret                             : PolishNotation.cs(234) */
-    il2c_unlink_execution_frame(&frame__);
-    return;
+    il2c_return_unlink(&frame__);
 }
 
 ///////////////////////////////////////
@@ -1045,8 +1040,7 @@ void Calculator_PolishNotation__ctor(Calculator_PolishNotation* this__)
     System_Object__ctor((System_Object*)frame__.stack0_0__);
     /* IL_0006: nop  */
     /* IL_0007: ret  */
-    il2c_unlink_execution_frame(&frame__);
-    return;
+    il2c_return_unlink(&frame__);
 }
 
 //////////////////////

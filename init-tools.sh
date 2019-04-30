@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "Setup native binary toolchain ..."
+
+apt-get update -y
+apt-get install build-essential cmake -y

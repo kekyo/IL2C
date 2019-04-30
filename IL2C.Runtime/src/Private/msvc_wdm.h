@@ -15,6 +15,9 @@ extern "C" {
 #if defined(_MSC_VER) && defined(_WDM)
 
 #include <intrin.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <wchar.h>
 #include <wdm.h>
 #include <malloc.h>
 
@@ -35,13 +38,15 @@ extern "C" {
 #define il2c_wcsicmp wcsicmp
 #define il2c_wcslen wcslen
 #define il2c_check_heap()
-#define il2c_malloc(size) ExAllocatePoolWithTag(NonPagedPool, size, 0x11231123UL)
+#define il2c_alloca _alloca
+
+#define il2c_malloc(size, pFile, line) ExAllocatePoolWithTag(NonPagedPool, (size), 0x11231123UL)
 #define il2c_free(p) ExFreePoolWithTag(p, 0x11231123UL)
 
 #define il2c_mcalloc(elementType, name, size) \
     const uint32_t name_csize__ = (uint32_t)(size); \
     const bool is_name_heaped__ = name_csize__ >= 256U; \
-    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__) : _alloca(name_csize__)
+    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__, __FILE__, __LINE__) : il2c_alloca(name_csize__)
 #define il2c_mcfree(name) \
     do { if (is_name_heaped__) il2c_free(name); } while (0)
 

@@ -16,6 +16,7 @@ extern "C" {
 
 #include <intrin.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <wchar.h>
 #include <malloc.h>
 
@@ -37,13 +38,35 @@ extern long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_wcslen wcslen
 #define il2c_check_heap()
 
+#if defined(IL2C_USE_DEBUG_HEAP)
+extern int64_t g_HeapBreakAlloc__;
+#if defined(IL2C_USE_LINE_INFORMATION)
+extern void* il2c_malloc(size_t size, const char* pFile, int line);
+#else
 extern void* il2c_malloc(size_t size);
+#endif
 extern void il2c_free(void* p);
+#else
+extern void* il2c_malloc__(size_t size);
+#if defined(IL2C_USE_LINE_INFORMATION)
+#define il2c_malloc(size, pFile, line) il2c_malloc__(size)
+#else
+#define il2c_malloc il2c_malloc__
+#endif
+extern void il2c_free(void* p);
+#endif
 
+#if defined(IL2C_USE_LINE_INFORMATION)
 #define il2c_mcalloc(elementType, name, size) \
-    elementType* name = il2c_malloc(size)
+    elementType* name = il2c_malloc((size), __FILE__, __LINE__)
 #define il2c_mcfree(name) \
     il2c_free(name)
+#else
+#define il2c_mcalloc(elementType, name, size) \
+    elementType* name = il2c_malloc((size))
+#define il2c_mcfree(name) \
+    il2c_free(name)
+#endif
 
 #define il2c_iand(pDest, newValue) _InterlockedAnd((interlock_t*)(pDest), (interlock_t)(newValue))
 #define il2c_ior(pDest, newValue) _InterlockedOr((interlock_t*)(pDest), (interlock_t)(newValue))

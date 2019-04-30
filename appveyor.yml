@@ -5,8 +5,10 @@ environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 shallow_clone: true
 before_build:
+  - cmd: init-tools.bat
   - nuget restore il2c.sln
 build_script:
+  - cmd: build-runtime.bat
   - msbuild /t:clean;rebuild /p:Configuration=Release;Platform="Any Cpu" il2c.sln
   - cmd: pack.bat
 artifacts:

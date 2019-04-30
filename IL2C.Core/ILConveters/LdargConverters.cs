@@ -9,14 +9,14 @@ namespace IL2C.ILConverters
 {
     internal static class LdargConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             int parameterIndex, DecodeContext decodeContext, bool isReference)
         {
             var parameter = decodeContext.Method.Parameters[parameterIndex];
             var targetType = isReference ? parameter.TargetType.MakeByReference() : parameter.TargetType;
             var symbol = decodeContext.PushStack(targetType);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = {1}{2}",
                 extractContext.GetSymbolName(symbol),
                 // NOTE: Don't check "targetType.IsByReference" instead "isReference."
@@ -30,9 +30,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldarg_0;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(0, decodeContext, false);
+            return LdargConverterUtilities.Prepare(0, decodeContext, false);
         }
     }
 
@@ -40,9 +40,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldarg_1;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(1, decodeContext, false);
+            return LdargConverterUtilities.Prepare(1, decodeContext, false);
         }
     }
 
@@ -50,9 +50,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldarg_2;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(2, decodeContext, false);
+            return LdargConverterUtilities.Prepare(2, decodeContext, false);
         }
     }
 
@@ -60,9 +60,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldarg_3;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(3, decodeContext, false);
+            return LdargConverterUtilities.Prepare(3, decodeContext, false);
         }
     }
 
@@ -70,10 +70,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldarg_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(operand.Index, decodeContext, false);
+            return LdargConverterUtilities.Prepare(operand.Index, decodeContext, false);
         }
     }
 
@@ -81,10 +81,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldarg;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(operand.Index, decodeContext, false);
+            return LdargConverterUtilities.Prepare(operand.Index, decodeContext, false);
         }
     }
 
@@ -92,10 +92,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldarga_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return LdargConverterUtilities.Apply(operand.Index, decodeContext, true);
+            return LdargConverterUtilities.Prepare(operand.Index, decodeContext, true);
         }
     }
 }

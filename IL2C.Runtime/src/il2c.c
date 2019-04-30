@@ -66,37 +66,15 @@ const uintptr_t* il2c_initializer_count = &g_InitializerCount;
 /////////////////////////////////////////////////////////////
 // Instance allocator functions
 
-static void il2c_setup_interface_vptrs(IL2C_RUNTIME_TYPE type, void* pReference)
-{
-    il2c_assert(type != NULL);
-    il2c_assert(pReference != NULL);
-
-    // Setup interface vptrs.
-    IL2C_IMPLEMENTED_INTERFACE* pInterface =
-        (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(type + 1)) + type->markTarget);
-    uintptr_t index;
-    for (index = 0;
-        il2c_likely__(index < type->interfaceCount);
-        index++, pInterface++)
-    {
-        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
-
-        // The interface vptr offset placed at vptr[0].
-        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
-        *((const void**)(((uint8_t*)pReference) + offset)) = pInterface->vptr0;
-    }
-}
-
 #if defined(IL2C_USE_LINE_INFORMATION)
 IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock, const char* pFile, int line)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, const char* pFile, int line)
 #else
 IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
-    IL2C_RUNTIME_TYPE type, uintptr_t bodySize, IL2C_MONITOR_LOCK* pLock)
+    IL2C_RUNTIME_TYPE type, uintptr_t bodySize)
 #endif
 {
     il2c_assert(type != NULL);
-    il2c_assert(pLock != NULL);
 
     // TODO: always collect
 #if defined(IL2C_USE_LINE_INFORMATION)
@@ -114,7 +92,11 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     // +----------------------+                  -------
 
     const uintptr_t totalSize = sizeof(IL2C_REF_HEADER) + bodySize;
+#if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)il2c_malloc(totalSize, pFile, line);
+#else
     IL2C_REF_HEADER* pHeader = (IL2C_REF_HEADER*)il2c_malloc(totalSize);
+#endif
     if (il2c_unlikely__(pHeader == NULL))
     {
         while (1)
@@ -127,7 +109,11 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
 #endif
 
             // Retry
+#if defined(IL2C_USE_LINE_INFORMATION)
+            pHeader = (IL2C_REF_HEADER*)il2c_malloc(totalSize, pFile, line);
+#else
             pHeader = (IL2C_REF_HEADER*)il2c_malloc(totalSize);
+#endif
             if (il2c_likely__(pHeader != NULL))
             {
                 break;
@@ -144,18 +130,27 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
     // Set RTTI.
     pHeader->type = type;
 
-    // HACK: Current GC mark status is same as g_CollectionMarkIndex__, it means "Marked."
-    pHeader->characteristic = g_CollectionMarkIndex__;
-
     // Setup vptr0.
-    void* pReference = ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
+    System_Object* pReference = (System_Object*)(((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER));
     *((const void**)pReference) = type->vptr0;
 
     // Setup interface vptrs.
-    il2c_setup_interface_vptrs(type, pReference);
+    IL2C_IMPLEMENTED_INTERFACE* pInterface =
+        (IL2C_IMPLEMENTED_INTERFACE*)(((IL2C_MARK_TARGET*)(type + 1)) + type->markTarget);
+    uintptr_t index;
+    for (index = 0;
+        il2c_likely__(index < type->interfaceCount);
+        index++, pInterface++)
+    {
+        il2c_assert((pInterface->type->flags & IL2C_TYPE_INTERFACE) == IL2C_TYPE_INTERFACE);
 
-    // Touch for lock region.
-    il2c_enter_monitor_lock__(pLock);
+        // The interface vptr offset placed at vptr[0].
+        uintptr_t offset = *(const uintptr_t*)(pInterface->vptr0);
+        *((const void**)(((uint8_t*)pReference) + offset)) = pInterface->vptr0;
+    }
+
+    // FOR GC TEST.
+    //il2c_sleep(100);
 
     // Safe link both headers.
     while (1)
@@ -168,11 +163,15 @@ IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(
         }
     }
 
-    // Exit for lock region.
-    il2c_exit_monitor_lock__(pLock);
+    // NOTE: Entered critical section for partially construted instance.
+    //   IL2C will make the mark INITIALIZED.
 
-    // NOTE: Enter critical section for partially construted instance.
-    //   IL2C will make the mark IL2C_CHARACTERISTIC_INITIALIZED.
+    // HACK: Current GC mark status is same as g_CollectionMarkIndex__,
+    // it means MARKED but NOT INITIALIZED.
+    pHeader->characteristic = g_CollectionMarkIndex__;
+
+    // FOR GC TEST.
+    //il2c_sleep(100);
 
     return pHeader;
 }
@@ -193,20 +192,23 @@ void* il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)
 
     // Allocate heap memory.
 #if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        type, type->bodySize, pFile, line);
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         pFile, line);
-    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        type, type->bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
-    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        type, type->bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        type, type->bodySize);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
+
+    System_Object* pReference = (System_Object*)(pHeader + 1);
+    pThreadContext->pTemporaryReferenceAnchor = pReference;
 
     // Marked instance is initialized. (and will handle by GC)
     il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
 
-    return ((uint8_t*)pHeader) + sizeof(IL2C_REF_HEADER);
+    return pReference;
 }
 
 /////////////////////////////////////////////////////////////
@@ -226,13 +228,11 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
         IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
             il2c_typeof(System_Threading_Thread),
             sizeof(IL2C_RUNTIME_THREAD),
-            &g_GlobalLockForCollect__,
             pFile, line);
 #else
         IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
             il2c_typeof(System_Threading_Thread),
-            sizeof(IL2C_RUNTIME_THREAD),
-            &g_GlobalLockForCollect__);
+            sizeof(IL2C_RUNTIME_THREAD));
 #endif
 
         IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)(pHeader + 1);
@@ -247,14 +247,14 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
         // Save IL2C_THREAD_CONTEXT into tls.
         il2c_set_tls_value(g_TlsIndex__, (void*)pThreadContext);
 
-        // Marked instance is initialized. (and will handle by GC)
-        il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
-
         // Register GC root reference.
         // NOTE: Auto attached Thread class instances aren't freed when before shutdown.
         //   If we instantiated with Thread.Start(), it's manually allocated and can collect by GC.
         //   (See System_Threading_Thread_InternalEntryPoint())
         il2c_register_root_reference__((void*)pRuntimeThread, false);
+
+        // Marked instance is initialized. (and will handle by GC)
+        il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
     }
 
     return pThreadContext;
@@ -273,25 +273,25 @@ System_Threading_Thread* il2c_new_thread__(System_Delegate* start)
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_Threading_Thread),
         sizeof(IL2C_RUNTIME_CREATED_THREAD),
-        &g_GlobalLockForCollect__,
+        pFile, line);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         pFile, line);
 #else
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
         il2c_typeof(System_Threading_Thread),
-        sizeof(IL2C_RUNTIME_CREATED_THREAD),
-        &g_GlobalLockForCollect__);
+        sizeof(IL2C_RUNTIME_CREATED_THREAD));
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
 
     IL2C_RUNTIME_CREATED_THREAD* pRuntimeThread = (IL2C_RUNTIME_CREATED_THREAD*)(pHeader + 1);
+    pThreadContext->pTemporaryReferenceAnchor = (System_Object*)&pRuntimeThread->thread;
 
     pRuntimeThread->thread.start__ = start;
     pRuntimeThread->context.rawHandle = -1;
-
+     
     // Initialize thread context.
-    IL2C_THREAD_CONTEXT* pThreadContext = &pRuntimeThread->context;
-
-    pThreadContext->id = il2c_get_current_thread_id__();
-    il2c_initialize_monitor_lock__((void*)&pThreadContext->lockForCollect);
+    pRuntimeThread->context.id = il2c_get_current_thread_id__();
+    il2c_initialize_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
 
     // Marked instance is initialized. (and will handle by GC)
     il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
@@ -336,9 +336,9 @@ void il2c_link_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pNewFra
 }
 
 #if defined(IL2C_USE_LINE_INFORMATION)
-void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame, const char* pFile, int line)
+void* il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame, void* pReference, const char* pFile, int line)
 #else
-void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame)
+void* il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFrame, void* pReference)
 #endif
 {
     il2c_assert(pFrame != NULL);
@@ -353,6 +353,9 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
     il2c_assert(pThreadContext != NULL);
 
+    // Save retval into temporary reference anchor.
+    pThreadContext->pTemporaryReferenceAnchor = pReference;
+
     // Touch for lock region.
     il2c_enter_monitor_lock__((void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 
@@ -363,6 +366,18 @@ void il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFram
     il2c_exit_monitor_lock__((void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
 
     // TODO: Remove thread context for the last frame?
+
+    return pReference;
+}
+
+void* il2c_cleanup_at_return__(void* pReference)
+{
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
+    il2c_assert(pThreadContext != NULL);
+
+    pThreadContext->pTemporaryReferenceAnchor = pReference;
+
+    return pReference;
 }
 
 /////////////////////////////////////////////////////////////
@@ -443,7 +458,11 @@ void il2c_register_root_reference__(void* pReference, bool isFixed)
     // Nothing free place (or failed), append new slots.
     // It's safe for duplicates new slots rarely critical timing...
 
+#if defined(IL2C_USE_LINE_INFORMATION)
+    pCurrentRootReferences = il2c_malloc(sizeof(IL2C_ROOT_REFERENCES), __FILE__, __LINE__);
+#else
     pCurrentRootReferences = il2c_malloc(sizeof(IL2C_ROOT_REFERENCES));
+#endif
     memset((void*)pCurrentRootReferences, 0, sizeof(IL2C_ROOT_REFERENCES));
 
     pCurrentRootReferences->pReferences[0] = pAdjustedReference;
@@ -533,7 +552,11 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
         }
 
         // Allocate new IL2C_MONITOR_LOCK_BLOCK_INFORMATION.
+#if defined(IL2C_USE_LINE_INFORMATION)
+        pMonitorBlockInformation = il2c_malloc(sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION), __FILE__, __LINE__);
+#else
         pMonitorBlockInformation = il2c_malloc(sizeof(IL2C_MONITOR_LOCK_BLOCK_INFORMATION));
+#endif
         memset(pMonitorBlockInformation, 0, sizeof *pMonitorBlockInformation);
         il2c_initialize_monitor_lock__(&pMonitorBlockInformation->blockLock);
 
@@ -603,7 +626,11 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
             }
 
             // TODO: Locking and allocating are a lot of cost.
+#if defined(IL2C_USE_LINE_INFORMATION)
+            IL2C_MONITOR_LOCK_BLOCK* pNext = il2c_malloc(sizeof(IL2C_MONITOR_LOCK_BLOCK), __FILE__, __LINE__);
+#else
             IL2C_MONITOR_LOCK_BLOCK* pNext = il2c_malloc(sizeof(IL2C_MONITOR_LOCK_BLOCK));
+#endif
             memset(pNext, 0, sizeof *pNext);
 
             IL2C_MONITOR_LOCK_BLOCK* pLast = il2c_icmpxchgptr(&pCurrentBlock->pNext, pNext, NULL);
@@ -633,7 +660,7 @@ IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, boo
 
 static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     il2c_assert(pHeader != NULL);
@@ -700,7 +727,7 @@ static void il2c_release_monitor_lock_from_objref__(IL2C_REF_HEADER* pHeader)
 
 static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     IL2C_MONITOR_LOCK_BLOCK_INFORMATION** ppMonitorBlockInformation;
@@ -781,10 +808,8 @@ static void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 // TODO: Reduce flags calculation.
 #define TRY_GET_HEADER(pHeader, pAdjustedReference) \
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference); \
-    if (il2c_unlikely__(( \
-        (pHeader->characteristic & \
-            (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) ^ \
-        (IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) == \
+    if (il2c_unlikely__(((pHeader->characteristic & \
+        (IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_MARK_INDEX)) ^ IL2C_CHARACTERISTIC_MARK_INDEX) == \
         g_CollectionMarkIndex__))
 
 static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type, const uint8_t offset);
@@ -797,7 +822,6 @@ static void il2c_mark_handler_for_objref__(System_Object* pAdjustedReference)
 
     IL2C_REF_HEADER* pHeader = il2c_get_header__(pAdjustedReference);
     il2c_assert(pHeader->type != NULL);
-    il2c_assert(pHeader->characteristic & IL2C_CHARACTERISTIC_INITIALIZED);
     
     // Marking with atomicity.
     const interlock_t lastCharacteristic = il2c_ixor(&pHeader->characteristic, IL2C_CHARACTERISTIC_MARK_INDEX);
@@ -946,7 +970,7 @@ static void il2c_mark_handler_recursive__(void* pTarget, IL2C_RUNTIME_TYPE type,
 
 static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     // Mark headers.
@@ -972,12 +996,13 @@ static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
             TRY_GET_HEADER(pHeader, pAdjustedReference)
             {
                 il2c_runtime_debug_log_format(
-                    L"il2c_step2_mark_gcmark__ [3]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=0x{2:p}, pAdjustedReference=0x{3:p}, type={4:s}",
+                    L"il2c_step2_mark_gcmark__ [3]: pCurrentFrame=0x{0:p}, index={1:u}, *ppReference=0x{2:p}, pAdjustedReference=0x{3:p}, type={4:s}, characteristic=0x{5:x}",
                     pCurrentFrame,
                     index,
                     *ppReference,
                     pAdjustedReference,
-                    pHeader->type->pTypeName);
+                    pHeader->type->pTypeName,
+                    pHeader->characteristic);
 
                 // Mark for this objref.
                 il2c_mark_handler_for_objref__(pAdjustedReference);
@@ -1022,7 +1047,7 @@ static void il2c_step2_mark_gcmark__(IL2C_GC_TRACKING_INFORMATION* pBeginFrame)
 
 static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* pRootReferences)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     while (il2c_likely__(pRootReferences != NULL))
@@ -1034,20 +1059,31 @@ static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* 
             index++, ppReference++)
         {
             // This slot is assigned.
-            System_Object* pReference = (System_Object*)*ppReference;
-            if (il2c_likely__(pReference != NULL))
+            System_Object* pAdjustedReference = (System_Object*)*ppReference;
+            if (il2c_likely__(pAdjustedReference != NULL))
             {
-                TRY_GET_HEADER(pHeader, pReference)
+                TRY_GET_HEADER(pHeader, pAdjustedReference)
                 {
                     il2c_runtime_debug_log_format(
-                        L"il2c_step2_mark_gcmark_for_root_referfences__: pRootReferences=0x{0:p}, index={1:u}, pReference=0x{2:p}, type={3:s}",
+                        L"il2c_step2_mark_gcmark_for_root_referfences__ [1]: pRootReferences=0x{0:p}, index={1:u}, pAdjustedReference=0x{2:p}, type={3:s}, characteristic=0x{4:x}",
                         pRootReferences,
                         index,
-                        pReference,
-                        pHeader->type->pTypeName);
+                        pAdjustedReference,
+                        pHeader->type->pTypeName,
+                        pHeader->characteristic);
 
                     // Mark for this objref.
-                    il2c_mark_handler_for_objref__(pReference);
+                    il2c_mark_handler_for_objref__(pAdjustedReference);
+                }
+                else
+                {
+                    il2c_runtime_debug_log_format(
+                        L"il2c_step2_mark_gcmark_for_root_referfences__ [2]: pRootReferences=0x{0:p}, index={1:u}, pAdjustedReference=0x{2:p}, type={3:s}, characteristic=0x{4:x}",
+                        pRootReferences,
+                        index,
+                        pAdjustedReference,
+                        pHeader->type->pTypeName,
+                        pHeader->characteristic);
                 }
             }
         }
@@ -1058,24 +1094,28 @@ static void il2c_step2_mark_gcmark_for_root_referfences__(IL2C_ROOT_REFERENCES* 
 
 static void il2c_step3_sweep_garbage__(void)
 {
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
-    // Sweep garbage if gcmark isn't marked.
+    // Step 1: Collect unmarked instances and call finalizers.
+
     IL2C_REF_HEADER** ppUnlinkTarget = &g_pBeginHeader__;
     IL2C_REF_HEADER* pCurrentHeader = g_pBeginHeader__;
     IL2C_REF_HEADER* pScheduledHeader = NULL;
     while (il2c_likely__(pCurrentHeader != NULL))
     {
         IL2C_REF_HEADER* pNext = pCurrentHeader->pNext;
-        if (il2c_unlikely__(((pCurrentHeader->characteristic & 
+        if (il2c_unlikely__(((pCurrentHeader->characteristic &
             (IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) ^
-            IL2C_CHARACTERISTIC_INITIALIZED) != g_CollectionMarkIndex__))
+            (IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) ==
+            g_CollectionMarkIndex__))
         {
             // Very important unlink step: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
 
             // Class type overrided the finalizer and not suppressed:
+
+            // TODO: Do atomic dropping suppress finalize flag and make delay collecting if flag is raised. (Cover resurrecting situation)
             if (il2c_unlikely__(((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE) == 0) &&
                 ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize)))
             {
@@ -1103,6 +1143,8 @@ static void il2c_step3_sweep_garbage__(void)
         // Next
         pCurrentHeader = pNext;
     }
+
+    // Step 2: Free collected instances.
 
     while (il2c_likely__(pScheduledHeader != NULL))
     {
@@ -1137,6 +1179,66 @@ static uint32_t g_CollectCount = 0;
 int64_t g_CollectCountBreak = -1;
 #endif
 
+static void il2c_enter_for_collect__(void)
+{
+    // It has to be invoked from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
+#if !defined(IL2C_USE_RUNTIME_GIANT_LOCK)
+    IL2C_ROOT_REFERENCES* pRootReferences = g_pRootReferences__;
+    while (il2c_likely__(pRootReferences != NULL))
+    {
+        uint8_t index;
+        volatile System_Object* volatile* ppReference;
+        for (index = 0, ppReference = &pRootReferences->pReferences[0];
+            il2c_likely__(index < sizeof(pRootReferences->pReferences) / sizeof(void*));
+            index++, ppReference++)
+        {
+            // This slot is assigned.
+            IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)*ppReference;
+            if (il2c_likely__(pRuntimeThread != NULL))
+            {
+                il2c_assert(pRuntimeThread->thread.vptr0__ == &System_Threading_Thread_VTABLE__);
+
+                il2c_enter_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
+            }
+        }
+
+        pRootReferences = pRootReferences->pNext;
+    }
+#endif
+}
+
+static void il2c_exit_for_collect__(void)
+{
+    // It has to be invoked from inside for GC process.
+    il2c_assert(g_ExecutingCollection__ >= 1);
+
+#if !defined(IL2C_USE_RUNTIME_GIANT_LOCK)
+    IL2C_ROOT_REFERENCES* pRootReferences = g_pRootReferences__;
+    while (il2c_likely__(pRootReferences != NULL))
+    {
+        uint8_t index;
+        volatile System_Object* volatile* ppReference;
+        for (index = 0, ppReference = &pRootReferences->pReferences[0];
+            il2c_likely__(index < sizeof(pRootReferences->pReferences) / sizeof(void*));
+            index++, ppReference++)
+        {
+            // This slot is assigned.
+            IL2C_RUNTIME_THREAD* pRuntimeThread = (IL2C_RUNTIME_THREAD*)*ppReference;
+            if (il2c_likely__(pRuntimeThread != NULL))
+            {
+                il2c_assert(pRuntimeThread->thread.vptr0__ == &System_Threading_Thread_VTABLE__);
+
+                il2c_exit_monitor_lock__((void*)&pRuntimeThread->context.lockForCollect);
+            }
+        }
+
+        pRootReferences = pRootReferences->pNext;
+    }
+#endif
+}
+
 #if defined(IL2C_USE_LINE_INFORMATION)
 void il2c_collect__(const char* pFile, int line)
 #else
@@ -1151,33 +1253,16 @@ void il2c_collect__(void)
     }
 
 #if defined(_DEBUG)
-    uint32_t collectCount = g_CollectCount++;
+    const uint32_t collectCount = g_CollectCount++;
     if (il2c_unlikely__(g_CollectCountBreak != -1))
     {
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
 #endif
 
+    // Take GC locks.
     il2c_enter_monitor_lock__(&g_GlobalLockForCollect__);
-
-#if defined(IL2C_USE_LINE_INFORMATION)
-    il2c_runtime_debug_log_format(
-        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}, {3:s}({4:d})",
-        collectCount,
-        g_pBeginHeader__,
-        g_pBeginStaticFields__,
-        pFile, line);
-#elif defined(_DEBUG)
-    il2c_runtime_debug_log(
-        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}",
-        collectCount,
-        g_pBeginHeader__,
-        g_pBeginStaticFields__);
-#else
-    il2c_runtime_debug_log(L"il2c_collect__: begin");
-#endif
-
-    il2c_check_heap();
+    il2c_enter_for_collect__();
 
     //////////////////////////////////////////////////
     // GC Step 1:
@@ -1186,7 +1271,29 @@ void il2c_collect__(void)
     //   The IL2C GC skips this step and mark/clear flag indicates with inverse arithmetic
     //   between g_CollectionMarkIndex__ and characteristic's MARK_INDEX.
     //   The instances characteristic MARK_INDEX will indicate last stats, so makes NOT MARKED if inversed this flag.
-    il2c_ixor(&g_CollectionMarkIndex__, IL2C_CHARACTERISTIC_MARK_INDEX);
+    const interlock_t markIndex = il2c_ixor(&g_CollectionMarkIndex__, IL2C_CHARACTERISTIC_MARK_INDEX);
+    (void)markIndex;
+
+#if defined(IL2C_USE_LINE_INFORMATION)
+    il2c_runtime_debug_log_format(
+        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}, markIndex={3:x}, {4:s}({5:d})",
+        collectCount,
+        g_pBeginHeader__,
+        g_pBeginStaticFields__,
+        markIndex ^ IL2C_CHARACTERISTIC_MARK_INDEX,
+        pFile, line);
+#elif defined(_DEBUG)
+    il2c_runtime_debug_log(
+        L"il2c_collect__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}, markIndex={3:x}",
+        collectCount,
+        g_pBeginHeader__,
+        g_pBeginStaticFields__,
+        markIndex ^ IL2C_CHARACTERISTIC_MARK_INDEX);
+#else
+    il2c_runtime_debug_log(L"il2c_collect__: begin");
+#endif
+
+    il2c_check_heap();
 
     //////////////////////////////////////
     // GC Step 2:
@@ -1219,6 +1326,8 @@ void il2c_collect__(void)
     il2c_runtime_debug_log(L"il2c_collect__: finished");
 #endif
 
+    // Release GC locks.
+    il2c_exit_for_collect__();
     il2c_exit_monitor_lock__(&g_GlobalLockForCollect__);
 
     il2c_idec(&g_ExecutingCollection__);
@@ -1226,27 +1335,20 @@ void il2c_collect__(void)
 
 static void il2c_collect_for_final_shutdown__(void)
 {
-    interlock_t executingCollection = il2c_iinc(&g_ExecutingCollection__);
+    const interlock_t executingCollection = il2c_iinc(&g_ExecutingCollection__);
     il2c_assert(executingCollection == 1);
 
 #if defined(_DEBUG)
-    uint32_t collectCount = g_CollectCount++;
+    const uint32_t collectCount = g_CollectCount++;
     if (il2c_unlikely__(g_CollectCountBreak != -1))
     {
         il2c_assert(collectCount != (uint32_t)g_CollectCountBreak);
     }
 #endif
 
-#if defined(_DEBUG)
-    il2c_runtime_debug_log_format(
-        L"il2c_collect_for_final_shutdown__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}",
-        collectCount,
-        g_pBeginHeader__,
-        g_pBeginStaticFields__);
-#else
-    il2c_runtime_debug_log(
-        L"il2c_collect_for_final_shutdown__: begin");
-#endif
+    // Take GC locks.
+    il2c_enter_monitor_lock__(&g_GlobalLockForCollect__);
+    il2c_enter_for_collect__();
 
     il2c_check_heap();
 
@@ -1257,7 +1359,20 @@ static void il2c_collect_for_final_shutdown__(void)
     //   The IL2C GC skips this step and mark/clear flag indicates with inverse arithmetic
     //   between g_CollectionMarkIndex__ and characteristic's MARK_INDEX.
     //   The instances characteristic MARK_INDEX will indicate last stats, so makes NOT MARKED if inversed this flag.
-    il2c_ixor(&g_CollectionMarkIndex__, IL2C_CHARACTERISTIC_MARK_INDEX);
+    const interlock_t markIndex = il2c_ixor(&g_CollectionMarkIndex__, IL2C_CHARACTERISTIC_MARK_INDEX);
+    (void)markIndex;
+
+#if defined(_DEBUG)
+    il2c_runtime_debug_log_format(
+        L"il2c_collect_for_final_shutdown__: begin: {0:d}: Header=0x{1:p}, StaticFields=0x{2:p}, markIndex={3:x}",
+        collectCount,
+        g_pBeginHeader__,
+        g_pBeginStaticFields__,
+        markIndex ^ IL2C_CHARACTERISTIC_MARK_INDEX);
+#else
+    il2c_runtime_debug_log(
+        L"il2c_collect_for_final_shutdown__: begin");
+#endif
 
     //////////////////////////////////////
     // GC Step 2:
@@ -1287,6 +1402,10 @@ static void il2c_collect_for_final_shutdown__(void)
         L"il2c_collect_for_final_shutdown__: finished");
 #endif
 
+    // Release GC locks.
+    il2c_exit_for_collect__();
+    il2c_exit_monitor_lock__(&g_GlobalLockForCollect__);
+
     il2c_idec(&g_ExecutingCollection__);
 }
 
@@ -1297,14 +1416,30 @@ void il2c_default_mark_handler_for_objref__(void* pReference)
 {
     il2c_assert(pReference != NULL);
 
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
-    System_Object* pAdjustedReference = il2c_adjusted_reference(pReference);
+    System_Object * pAdjustedReference = il2c_adjusted_reference(pReference);
     TRY_GET_HEADER(pHeader, pAdjustedReference)
     {
+        il2c_runtime_debug_log_format(
+            L"il2c_default_mark_handler_for_objref__ [1]: pReference=0x{0:p}, pAdjustedReference=0x{1:p}, type={2:s}, characteristic=0x{3:x}",
+            pReference,
+            pAdjustedReference,
+            pHeader->type->pTypeName,
+            pHeader->characteristic);
+
         // Traverse recursively.
         il2c_mark_handler_for_objref__(pAdjustedReference);
+    }
+    else
+    {
+        il2c_runtime_debug_log_format(
+            L"il2c_default_mark_handler_for_objref__ [2]: pReference=0x{0:p}, pAdjustedReference=0x{1:p}, type={2:s}, characteristic=0x{3:x}",
+            pReference,
+            pAdjustedReference,
+            pHeader->type->pTypeName,
+            pHeader->characteristic);
     }
 }
 
@@ -1314,7 +1449,7 @@ void il2c_default_mark_handler_for_value_type__(void* pValue, IL2C_RUNTIME_TYPE 
     il2c_assert(valueType != NULL);
     il2c_assert((valueType->flags & IL2C_TYPE_VALUE) == IL2C_TYPE_VALUE);
 
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     // Traverse recursively.
@@ -1325,7 +1460,7 @@ void il2c_default_mark_handler_for_tracking_information__(IL2C_GC_TRACKING_INFOR
 {
     il2c_assert(pTrackingInformation != NULL);
 
-    // It has to invoke from inside for GC process.
+    // It has to be invoked from inside for GC process.
     il2c_assert(g_ExecutingCollection__ >= 1);
 
     // Traverse recursively.
@@ -1439,17 +1574,22 @@ System_ValueType* il2c_box__(
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
 #if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        valueType,
+        bodySize,
+        pFile,
+        line);
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         pFile, line);
-    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        valueType, bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
-    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        valueType, bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        valueType,
+        bodySize);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
 
     System_ValueType* pBoxed = (System_ValueType*)(pHeader + 1);
+    pThreadContext->pTemporaryReferenceAnchor = (System_Object*)pBoxed;
 
     il2c_assert(pBoxed->vptr0__ == valueType->vptr0);
 
@@ -1578,17 +1718,22 @@ System_ValueType* il2c_box2__(
         valueType->bodySize +
         valueType->interfaceCount * sizeof(void*);  // interface vptrs
 #if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        valueType,
+        bodySize,
+        pFile,
+        line);
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         pFile, line);
-    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        valueType, bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
-    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        valueType, bodySize, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        valueType,
+        bodySize);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
 
     System_ValueType* pBoxed = (System_ValueType*)(pHeader + 1);
+    pThreadContext->pTemporaryReferenceAnchor = (System_Object*)pBoxed;
 
     il2c_assert(pBoxed->vptr0__ == valueType->vptr0);
 

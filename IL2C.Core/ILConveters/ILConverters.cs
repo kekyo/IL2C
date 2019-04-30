@@ -12,9 +12,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Nop;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return emptyFunc;
+            return emptyEmitter;
         }
     }
 
@@ -22,9 +22,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Break;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return _ => new[] { "il2c_break()" };
+            return (_, __) => new[] { "il2c_break()" };
         }
     }
 
@@ -34,11 +34,21 @@ namespace IL2C.ILConverters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             if (decodeContext.Method.ReturnType.IsVoidType)
             {
-                return _ => new[] { "return" };
+                return (_, emitContext) =>
+                {
+                    if (emitContext.ExecutionFrameEmitted)
+                    {
+                        return new[] { "il2c_return_unlink(&frame__)" };
+                    }
+                    else
+                    {
+                        return new[] { "il2c_return()" };
+                    }
+                };
             }
 
             var si = decodeContext.PopStack();
@@ -46,7 +56,7 @@ namespace IL2C.ILConverters
 
             var codeInformation = decodeContext.CurrentCode;
 
-            return extractContext =>
+            return (extractContext, emitContext) =>
             {
                 var rightExpression = extractContext.GetRightExpression(returnType, si);
                 if (rightExpression == null)
@@ -58,9 +68,36 @@ namespace IL2C.ILConverters
                         returnType.FriendlyName);
                 }
 
-                return new[] { string.Format(
-                    "return {0}",
-                    rightExpression) };
+                if (emitContext.ExecutionFrameEmitted)
+                {
+                    if (returnType.IsReferenceType)
+                    {
+                        return new[] { string.Format(
+                            "il2c_return_unlink_with_objref(&frame__, {0})",
+                            rightExpression) };
+                    }
+                    else
+                    {
+                        return new[] { string.Format(
+                            "il2c_return_unlink_with_value(&frame__, {0})",
+                            rightExpression) };
+                    }
+                }
+                else
+                {
+                    if (returnType.IsReferenceType)
+                    {
+                        return new[] { string.Format(
+                            "il2c_return_with_objref({0})",
+                            rightExpression) };
+                    }
+                    else
+                    {
+                        return new[] { string.Format(
+                            "il2c_return_with_value({0})",
+                            rightExpression) };
+                    }
+                }
             };
         }
     }
@@ -71,7 +108,7 @@ namespace IL2C.ILConverters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
             if (!si.TargetType.IsException)
@@ -82,7 +119,7 @@ namespace IL2C.ILConverters
                     si.TargetType.FriendlyName);
             }
 
-            return extractContext => new[] {
+            return (extractContext, _) => new[] {
                 string.Format(
                     "il2c_throw({0})",
                     extractContext.GetSymbolName(si)) };
@@ -95,9 +132,9 @@ namespace IL2C.ILConverters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return _ => new[] { "il2c_rethrow()" };
+            return (_, __) => new[] { "il2c_rethrow()" };
         }
     }
 
@@ -107,7 +144,7 @@ namespace IL2C.ILConverters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ICodeInformation operand, DecodeContext decodeContext)
         {
             // Strategy:
@@ -120,7 +157,7 @@ namespace IL2C.ILConverters
             var continuationIndex = decodeContext.RegisterLeaveContinuation(
                 decodeContext.CurrentCode.Offset, operand.Offset);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var nestedIndexName = extractContext.GetExceptionNestedFrameIndexName();
 
@@ -138,10 +175,10 @@ namespace IL2C.ILConverters
 
         public override bool IsEndOfPath => true;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             // Finally exit block fragment totally will write by AssemblyWriter.
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var nestedIndexName = extractContext.GetExceptionNestedFrameIndexName();
 
@@ -156,7 +193,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldstr;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             string operand, DecodeContext decodeContext)
         {
             var symbol = decodeContext.PushStack(
@@ -164,7 +201,7 @@ namespace IL2C.ILConverters
             var constStringName = decodeContext.PrepareContext.
                 RegisterConstString(operand);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 return new[] { string.Format(
                     "{0} = {1}",
@@ -178,7 +215,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldnull;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             DecodeContext decodeContext)
         {
             // NOTE: ldnull pushes the "UntypedReferenceType."
@@ -188,7 +225,7 @@ namespace IL2C.ILConverters
             var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UntypedReferenceType);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = NULL",
                 extractContext.GetSymbolName(symbol)) };
         }
@@ -198,7 +235,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Dup;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
@@ -209,7 +246,7 @@ namespace IL2C.ILConverters
             var symbol1 = decodeContext.PushStack(
                 si.TargetType);
 
-            return extractContext => new[] { string.Format(
+            return (extractContext, _) => new[] { string.Format(
                 "{0} = {1}",
                 extractContext.GetSymbolName(symbol1),
                 extractContext.GetSymbolName(si)) };
@@ -220,17 +257,17 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Pop;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
-            return _ => new string[0];
+            return (_, __) => new string[0];
         }
     }
 
     internal static class IsinstConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             ITypeInformation operand, DecodeContext decodeContext, bool check)
         {
             var si = decodeContext.PopStack();
@@ -255,7 +292,7 @@ namespace IL2C.ILConverters
                 // To interface type
                 if (operand.IsInterface)
                 {
-                    return extractContext =>
+                    return (extractContext, _) =>
                     {
                         return new[] { string.Format(
                         "{0} = il2c_cast_to_interface({1}, {2}, {3})",
@@ -267,7 +304,7 @@ namespace IL2C.ILConverters
                 }
                 else
                 {
-                    return extractContext =>
+                    return (extractContext, _) =>
                     {
                         return new[] { string.Format(
                         "{0} = ({1}){2}",
@@ -278,7 +315,7 @@ namespace IL2C.ILConverters
                 }
             }
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 return new[] { string.Format(
                     "{0} = {1}({2}, {3})",
@@ -294,10 +331,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Isinst;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation operand, DecodeContext decodeContext)
         {
-            return IsinstConverterUtilities.Apply(
+            return IsinstConverterUtilities.Prepare(
                 operand, decodeContext, false);
         }
     }
@@ -306,10 +343,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Castclass;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation operand, DecodeContext decodeContext)
         {
-            return IsinstConverterUtilities.Apply(
+            return IsinstConverterUtilities.Prepare(
                 operand, decodeContext, true);
         }
     }
@@ -318,7 +355,7 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Sizeof;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             ITypeInformation operand, DecodeContext decodeContext)
         {
             // ECMA-335 III.4.25 sizeof - load the size, in bytes,of a type 
@@ -326,7 +363,7 @@ namespace IL2C.ILConverters
             var symbol = decodeContext.PushStack(
                 decodeContext.PrepareContext.MetadataContext.UInt32Type);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 return new[] { string.Format(
                     "{0} = il2c_sizeof({1})",

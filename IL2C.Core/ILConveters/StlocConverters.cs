@@ -9,7 +9,7 @@ namespace IL2C.ILConverters
 {
     internal static class StlocConverterUtilities
     {
-        private static Func<IExtractContext, string[]> Apply(
+        private static ExpressionEmitter Prepare(
             ILocalVariableInformation target,
             ITypeInformation targetType,
             DecodeContext decodeContext)
@@ -18,7 +18,7 @@ namespace IL2C.ILConverters
 
             var codeInformation = decodeContext.CurrentCode;
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var rightExpression = extractContext.GetRightExpression(targetType, si);
                 if (rightExpression == null)
@@ -38,20 +38,20 @@ namespace IL2C.ILConverters
             };
         }
 
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             int localIndex,
             DecodeContext decodeContext)
         {
             var local = decodeContext.Method.LocalVariables[localIndex];
-            return Apply(local, local.TargetType, decodeContext);
+            return Prepare(local, local.TargetType, decodeContext);
         }
 
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             VariableInformation localVariable,
             DecodeContext decodeContext)
         {
             var local = decodeContext.Method.LocalVariables[localVariable.Index];
-            return Apply(local, local.TargetType, decodeContext);
+            return Prepare(local, local.TargetType, decodeContext);
         }
     }
 
@@ -59,9 +59,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stloc_0;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(0, decodeContext);
+            return StlocConverterUtilities.Prepare(0, decodeContext);
         }
     }
 
@@ -69,9 +69,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stloc_1;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(1, decodeContext);
+            return StlocConverterUtilities.Prepare(1, decodeContext);
         }
     }
 
@@ -79,9 +79,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stloc_2;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(2, decodeContext);
+            return StlocConverterUtilities.Prepare(2, decodeContext);
         }
     }
 
@@ -89,9 +89,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stloc_3;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(3, decodeContext);
+            return StlocConverterUtilities.Prepare(3, decodeContext);
         }
     }
 
@@ -99,10 +99,10 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Stloc_S;
 
-        public override Func<IExtractContext, string[]> Apply(
+        public override ExpressionEmitter Prepare(
             VariableInformation operand, DecodeContext decodeContext)
         {
-            return StlocConverterUtilities.Apply(operand, decodeContext);
+            return StlocConverterUtilities.Prepare(operand, decodeContext);
         }
     }
 }

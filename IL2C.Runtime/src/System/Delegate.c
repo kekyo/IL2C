@@ -89,17 +89,22 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
         (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        pHeaderA->type,
+        size,
+        __FILE__,
+        __LINE__);
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         __FILE__, __LINE__);
-    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        pHeaderA->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), __FILE__, __LINE__);
 #else
-    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        pHeaderA->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        pHeaderA->type,
+        size);
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
 
     System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
+    pThreadContext->pTemporaryReferenceAnchor = (System_Object*)dlg;
 
     il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
     
@@ -170,17 +175,22 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
                 (uintptr_t)(count - 1 /* included System_Delegate */) * sizeof(IL2C_METHOD_TABLE);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
+            IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+                pHeaderSource->type,
+                size,
+                __FILE__,
+                __LINE__);
             IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
                 __FILE__, __LINE__);
-            IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-                pHeaderSource->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), __FILE__, __LINE__);
 #else
-            IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
             IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-                pHeaderSource->type, size, (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+                pHeaderSource->type,
+                size);
+            IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
 
             System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
+            pThreadContext->pTemporaryReferenceAnchor = (System_Object*)dlg;
 
             il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
 
@@ -216,17 +226,22 @@ System_Delegate* il2c_new_delegate__(
     il2c_assert(method != 0);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
+    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
+        delegateType,
+        sizeof(System_Delegate),
+        pFile,
+        line);
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__(
         pFile, line);
-    IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        delegateType, sizeof(System_Delegate), (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext), pFile, line);
 #else
-    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
     IL2C_REF_HEADER* pHeader = il2c_get_uninitialized_object_internal__(
-        delegateType, sizeof(System_Delegate), (void*)IL2C_THREAD_LOCK_TARGET(pThreadContext));
+        delegateType,
+        sizeof(System_Delegate));
+    IL2C_THREAD_CONTEXT* pThreadContext = il2c_acquire_thread_context__();
 #endif
 
     System_Delegate* dlg = (System_Delegate*)(pHeader + 1);
+    pThreadContext->pTemporaryReferenceAnchor = (System_Object*)dlg;
 
     il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
 

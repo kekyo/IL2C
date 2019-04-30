@@ -9,7 +9,7 @@ namespace IL2C.ILConverters
 {
     internal static class LdelemConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             Func<ITypeInformation, bool> validateElementType,
             Func<ITypeInformation, ITypeInformation> extractElementType,
             bool isByReference,
@@ -39,7 +39,7 @@ namespace IL2C.ILConverters
             var elementType = extractElementType(siArray.TargetType);
             var symbol = decodeContext.PushStack(elementType);
 
-            return extractContext =>
+            return (extractContext, _) =>
             {
                 var expression = extractContext.GetRightExpression(
                     elementType,
@@ -65,13 +65,13 @@ namespace IL2C.ILConverters
             };
         }
 
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             Func<ITypeInformation, bool> validateElementType,
             ITypeInformation elementType,
             bool isByReference,
             DecodeContext decodeContext)
         {
-            return Apply(validateElementType, _ => elementType, isByReference, decodeContext);
+            return Prepare(validateElementType, _ => elementType, isByReference, decodeContext);
         }
     }
 
@@ -79,9 +79,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_I1;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.SByteType,
                 false,
@@ -93,9 +93,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_I2;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int16Type,
                 false,
@@ -107,9 +107,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_I4;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int32Type,
                 false,
@@ -121,9 +121,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_I8;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsInt64StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.Int64Type,
                 false,
@@ -135,9 +135,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_U1;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.ByteType,
                 false,
@@ -149,9 +149,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_U2;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.UInt16Type,
                 false,
@@ -163,9 +163,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_U4;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsInt32StackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.UInt32Type,
                 false,
@@ -177,9 +177,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_R8;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsFloatStackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.DoubleType,
                 false,
@@ -191,9 +191,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_R4;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsFloatStackFriendlyType,
                 decodeContext.PrepareContext.MetadataContext.SingleType,
                 false,
@@ -205,9 +205,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelem_Ref;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => elementType.IsReferenceType,
                 arrayType => arrayType.ElementType,
                 false,
@@ -219,9 +219,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ldelema;
 
-        public override Func<IExtractContext, string[]> Apply(ITypeInformation operand, DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(ITypeInformation operand, DecodeContext decodeContext)
         {
-            return LdelemConverterUtilities.Apply(
+            return LdelemConverterUtilities.Prepare(
                 elementType => operand.IsAssignableFrom(elementType),
                 operand.MakeByReference(),
                 true,

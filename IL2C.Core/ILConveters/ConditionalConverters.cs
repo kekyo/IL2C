@@ -8,7 +8,7 @@ namespace IL2C.ILConverters
 {
     internal static class ConditionalConverterUtilities
     {
-        public static Func<IExtractContext, string[]> Apply(
+        public static ExpressionEmitter Prepare(
             string oper,
             bool isUnsigned,
             DecodeContext decodeContext)
@@ -36,7 +36,7 @@ namespace IL2C.ILConverters
                 si1.TargetType.IsInt32StackFriendlyType)
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{1} = ({0}int32_t){2} {3} ({0}int32_t){4}",
                     isUnsigned ? "u" : string.Empty,
                     extractContext.GetSymbolName(result),
@@ -49,7 +49,7 @@ namespace IL2C.ILConverters
                 si1.TargetType.IsInt64StackFriendlyType)
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{1} = ({0}int64_t){2} {3} ({0}int64_t){4}",
                     isUnsigned ? "u" : string.Empty,
                     extractContext.GetSymbolName(result),
@@ -62,7 +62,7 @@ namespace IL2C.ILConverters
                 (si1.TargetType.IsIntPtrStackFriendlyType || !si1.TargetType.IsValueType || si1.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType))
             {
                 var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return extractContext => new[] { string.Format(
+                return (extractContext, _) => new[] { string.Format(
                     "{1} = ({0}intptr_t){2} {3} ({0}intptr_t){4}",
                     isUnsigned ? "u" : string.Empty,
                     extractContext.GetSymbolName(result),
@@ -83,9 +83,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Cgt;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ConditionalConverterUtilities.Apply(
+            return ConditionalConverterUtilities.Prepare(
                 ">", false, decodeContext);
         }
     }
@@ -94,9 +94,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Cgt_Un;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ConditionalConverterUtilities.Apply(
+            return ConditionalConverterUtilities.Prepare(
                 ">", true, decodeContext);
         }
     }
@@ -105,9 +105,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Clt;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ConditionalConverterUtilities.Apply(
+            return ConditionalConverterUtilities.Prepare(
                 "<", false, decodeContext);
         }
     }
@@ -116,9 +116,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Clt_Un;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ConditionalConverterUtilities.Apply(
+            return ConditionalConverterUtilities.Prepare(
                 "<", true, decodeContext);
         }
     }
@@ -127,9 +127,9 @@ namespace IL2C.ILConverters
     {
         public override OpCode OpCode => OpCodes.Ceq;
 
-        public override Func<IExtractContext, string[]> Apply(DecodeContext decodeContext)
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
-            return ConditionalConverterUtilities.Apply(
+            return ConditionalConverterUtilities.Prepare(
                 "==", false, decodeContext);
         }
     }

@@ -1,5 +1,8 @@
 ﻿using System;
+
+using IL2C.ILConverters;
 using IL2C.Metadata;
+
 using Mono.Cecil.Cil;
 
 namespace IL2C.Translators
@@ -7,7 +10,7 @@ namespace IL2C.Translators
     public struct PreparedILBody
     {
         public readonly Label Label;
-        internal readonly Func<IExtractContext, string[]> Generator;
+        internal readonly ExpressionEmitter Emitter;
         public readonly int UniqueCodeBlockIndex;
         public readonly ICodeInformation Code;
 
@@ -15,13 +18,13 @@ namespace IL2C.Translators
 
         internal PreparedILBody(
             Label label,
-            Func<IExtractContext, string[]> generator,
+            ExpressionEmitter emitter,
             int uniqueCodeBlockIndex,
             ICodeInformation code,
             int decodingPathNumber)
         {
             this.Label = label;
-            this.Generator = generator;
+            this.Emitter = emitter;
             this.UniqueCodeBlockIndex = uniqueCodeBlockIndex;
             this.Code = code;
 

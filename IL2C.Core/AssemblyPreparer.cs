@@ -111,20 +111,20 @@ namespace IL2C
             //   The flow analysis can't predict by sequential path.
             //   So, it reorders by IL offset.
 
-            var generators = decodeContext.
+            var emitters = decodeContext.
                 Traverse(dc => dc.TryDequeueNextPath() ? dc : null, true).
                 SelectMany(dc =>
                     from ilBody in DecodeAndEnumerateILBodies(dc)
-                    let generator = ilBody.ILConverter.Apply(ilBody.Code.Operand, dc)
+                    let emitter = ilBody.ILConverter.Prepare(ilBody.Code.Operand, dc)
                     select new PreparedILBody(
                         ilBody.Label,
-                        generator,
+                        emitter,
                         dc.UniqueCodeBlockIndex,
                         ilBody.Code,
                         dc.DecodingPathNumber)).
                 OrderBy(ilb => ilb.UniqueCodeBlockIndex).
                 ThenBy(ilb => ilb.Label.Offset).
-                ToDictionary(ilb => ilb.Label.Offset, ilb => ilb.Generator);
+                ToDictionary(ilb => ilb.Label.Offset, ilb => ilb.Emitter);
 
             //////////////////////////////////////////////////////////////////////////////
 
@@ -147,7 +147,7 @@ namespace IL2C
                 labelNames,
                 catchVariables,
                 leaveContinuations,
-                generators);
+                emitters);
         }
 
         private static PreparedMethodInformation PrepareMethod(

@@ -273,7 +273,7 @@ struct IL2C_RUNTIME_TYPE_DECL
     const uintptr_t bodySize;       // uint32_t
     const IL2C_RUNTIME_TYPE baseType;
     const void* vptr0;
-    const uintptr_t markTarget;     // mark target count / custom mark handler (only variable type)
+    const uintptr_t markTarget;     // mark target count / custom mark handler
     const uintptr_t interfaceCount;
     //IL2C_MARK_TARGET markTargets[markTarget];
     //IL2C_IMPLEMENTED_INTERFACE interfaces[interfaceCount];
@@ -282,14 +282,14 @@ struct IL2C_RUNTIME_TYPE_DECL
 
 Toughly you can understand meaning these fields, I'll tell you important fields:
 
-* flags: The field contains [flag values declared here](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/include/il2c.h#L113). It's characteristics for the type. For example, "IL2C_TYPE_REFERENCE" is a object reference (objref) type, "IL2C_TYPE_VARIABLE" is a variable storage type (only array, string and delegate types).
+* flags: The field contains [flag values declared here](https://github.com/kekyo/IL2C/blob/e2e222f935a8217bcff7da464b0c372ae1b90c65/IL2C.Runtime/include/il2c.h#L113). It's characteristics for the type. For example, "IL2C_TYPE_REFERENCE" is a object reference (objref) type, "IL2C_TYPE_VARIABLE" is a variable storage type (only array, string, delegate and thread types).
 
   | Symbol | Description |
   |---|---|
   | IL2C_TYPE_REFERENCE | A objref type. |
   | IL2C_TYPE_VALUE | A value type. |
   | IL2C_TYPE_INTEGER | A integer (numeric but not floating point) type. The boxing operator uses on bothe narrowing and widing storage size. |
-  | IL2C_TYPE_VARIABLE | A variable type, only using with array, string and delegate types. |
+  | IL2C_TYPE_VARIABLE | A variable type, only using with array, string, delegate and thread types. |
   | IL2C_TYPE_MARK_HANDLER | The GC traverser using custom mark handler for this type. |
   | IL2C_TYPE_UNSIGNED_INTEGER | A unsigned integer (numeric but not floating point) type. The boxing operator uses on bothe narrowing and widing storage size. |
   | IL2C_TYPE_STATIC | A static type (sealed abstract). It doesn't have the VTables. |
@@ -410,6 +410,8 @@ Helper function: [il2c_get_uninitialized_object__(IL2C_RUNTIME_TYPE type)](https
 ### Stack walking
 
 ### Static instance walking
+
+### Temporary refenrece anchor
 
 ### Custom mark handler
 

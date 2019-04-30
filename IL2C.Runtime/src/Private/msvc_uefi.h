@@ -20,6 +20,13 @@ extern "C" {
 #include <wchar.h>
 #include <malloc.h>
 
+// Can't enable intrinsic inlined memcpy/memset/memcmp with VC++'s /GL and /LTCG options in uefi release build.
+// So these are simple implementations for thiers.
+#pragma function(memcpy, memset, memcmp)
+extern void* __cdecl memcpy(void* to, const void* from, size_t n);
+extern void* __cdecl memset(void* target, int ch, size_t n);
+extern int __cdecl memcmp(const void *buffer1, const void *buffer2, size_t count);
+
 // Compatibility symbols (required platform depended functions)
 extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_u32tow(uint32_t value, wchar_t* buffer, int radix);
@@ -53,7 +60,8 @@ extern void* il2c_malloc__(size_t size);
 #else
 #define il2c_malloc il2c_malloc__
 #endif
-extern void il2c_free(void* p);
+extern void il2c_free__(void* p);
+#define il2c_free il2c_free__
 #endif
 
 #if defined(IL2C_USE_LINE_INFORMATION)
@@ -94,12 +102,12 @@ typedef intptr_t IL2C_TLS_INDEX;
 #define IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE void*
 typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
 
-// TODO: has to get real handle
 #define il2c_get_current_thread__() ((intptr_t)0)
 #define il2c_get_current_thread_id__() ((int32_t)0)
 #define il2c_create_thread__(entryPoint, parameter) ((intptr_t)-1)
 #define il2c_resume_thread__(handle) ((void)0)
 #define il2c_join_thread__(handle) ((void)0)
+#define il2c_close_thread_handle__(handle) ((void)0)
 
 typedef uint8_t IL2C_MONITOR_LOCK;
 #define il2c_initialize_monitor_lock__(pLock) ((void)0)

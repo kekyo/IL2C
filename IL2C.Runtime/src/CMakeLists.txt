@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.7)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
+add_definitions(-D_LIB)
+
 if(DEFINED BUILD_UEFI)
     enable_language(ASM_MASM)
     file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c" "*_${PLATFORM}.asm")

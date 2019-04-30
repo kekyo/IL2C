@@ -4,7 +4,6 @@ set(CMAKE_CONFIGURATION_TYPES, "${CONFIGURATION}")
 set(CMAKE_BUILD_TYPE, "${CONFIGURATION}")
 
 add_definitions(-DWIN32)
-add_definitions(-D_LIB)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
 add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)

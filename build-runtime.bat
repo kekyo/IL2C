@@ -2,6 +2,7 @@
 setlocal enabledelayedexpansion
 
 set TOOLCHAINPATH=%~dp0toolchain\gcc4
+set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.12
 
 if not exist %TOOLCHAINPATH% (
     echo Native toolchain not found.

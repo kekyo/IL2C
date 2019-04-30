@@ -20,11 +20,7 @@
 
 int _fltused = 1;
 
-#if defined(NDEBUG)
-// Can't enable intrinsic inlined memcpy/memset with VC++'s /GL and /LTCG options in release build.
-// So these are simple implementations for thiers.
-#pragma function(memcpy, memset)
-void* memcpy(void* to, const void* from, size_t n)
+void* __cdecl memcpy(void* to, const void* from, size_t n)
 {
     uint8_t* t = to;
     const uint8_t* f = from;
@@ -34,7 +30,7 @@ void* memcpy(void* to, const void* from, size_t n)
     return to;
 }
 
-void* memset(void* target, int ch, size_t n)
+void* __cdecl memset(void* target, int ch, size_t n)
 {
     uint8_t* p = target;
     n++;
@@ -42,7 +38,21 @@ void* memset(void* target, int ch, size_t n)
         *p++ = (uint8_t)ch;
     return target;
 }
-#endif
+
+int __cdecl memcmp(const void *buffer1, const void *buffer2, size_t count)
+{
+    const uint8_t* p1 = buffer1;
+    const uint8_t* p2 = buffer2;
+    count++;
+    while (--count >= 1)
+    {
+        const uint8_t v1 = *p1++;
+        const uint8_t v2 = *p2++;
+        if (v1 > v2) return v1 - v2;
+        if (v1 < v2) return v1 - v2;
+    }
+    return 0;
+}
 
 // From musl: http://git.musl-libc.org/cgit/musl/tree/src/math/fmod.c
 double il2c_fmod(double x, double y)
@@ -437,7 +447,7 @@ void* il2c_malloc(size_t size)
 #if defined(_MSC_VER) && defined(WIN32) && defined(IL2C_USE_LINE_INFORMATION)
     IL2C_DEBUG_HEAP* p0 = _malloc_dbg(sizeof(IL2C_DEBUG_HEAP) + size + sizeof(uintptr_t), _NORMAL_BLOCK, pFile, line);
 #else
-    IL2C_DEBUG_HEAP* p0 = malloc(sizeof(IL2C_DEBUG_HEAP) + size + sizeof(uintptr_t));
+    IL2C_DEBUG_HEAP* p0 = il2c_malloc__(sizeof(IL2C_DEBUG_HEAP) + size + sizeof(uintptr_t));
 #endif
 
     if (p0 == NULL)
@@ -501,7 +511,7 @@ void il2c_free(void* p)
         // (For debugging purpose same as VC++ runtime.)
         memset(p, 0xdd, p0->Size);
 
-        free((void*)p0);
+        il2c_free__((void*)p0);
     }
 }
 #endif

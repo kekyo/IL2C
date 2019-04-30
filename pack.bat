@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set VERSION=0.4.41
+set VERSION=0.4.50
 
 if exist artifacts (
     ren artifacts artifacts_

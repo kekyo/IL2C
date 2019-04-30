@@ -87,7 +87,7 @@ extern void il2c_free(void* p);
 #define il2c_mcalloc(elementType, name, size) \
     const uint32_t name_csize__ = (uint32_t)(size); \
     const bool is_name_heaped__ = name_csize__ >= 256U; \
-    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__) : _alloca(name_csize__)
+    elementType* name = is_name_heaped__ ? il2c_malloc(name_csize__) : il2c_alloca(name_csize__)
 #define il2c_mcfree(name) \
     do { if (is_name_heaped__) il2c_free(name); } while (0)
 #endif

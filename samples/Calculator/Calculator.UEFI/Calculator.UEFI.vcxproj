@@ -88,14 +88,11 @@
       <OmitFramePointers>true</OmitFramePointers>
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
-    <Bscmake>
-      <PreserveSbr>true</PreserveSbr>
-    </Bscmake>
     <Link>
       <SubSystem>EFI Application</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../../IL2C.Runtime/build.msvc-uefi-$(Platform)-$(Configuration)/libs/$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>il2c.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../IL2C.Runtime/lib/$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libil2c-msvc-uefi-$(Platform).lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SetChecksum>true</SetChecksum>
       <EntryPointSymbol>efi_main</EntryPointSymbol>

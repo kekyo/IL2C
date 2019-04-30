@@ -5,7 +5,6 @@
 
 #pragma once
 
-// TODO:
 //#define IL2C_USE_RUNTIME_GIANT_LOCK
 
 #if defined(_DEBUG)

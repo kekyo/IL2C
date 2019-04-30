@@ -14,15 +14,17 @@ set PATH=%TOOLCHAINPATH%\bin;%PATH%
 cd IL2C.Runtime
 
 if exist build (
-    rmdir /s /q build
+    move build build.old
+    rmdir /s /q build.old
+)
+
+if exist lib (
+   move lib lib.old
+   rmdir /s /q lib.old
 )
 
 mkdir build
 cd build
-
-if exist lib (
-    rmdir /s /q lib
-)
 
 rem ================================================================================
 

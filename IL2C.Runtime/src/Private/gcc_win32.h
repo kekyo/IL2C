@@ -16,6 +16,8 @@ extern "C" {
 
 #include <x86intrin.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include <wchar.h>
 #include <malloc.h>
 #define IL2C_USE_SIGNAL

@@ -16,6 +16,7 @@ extern "C" {
 
 #include <intrin.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <wchar.h>
 #include <malloc.h>
 

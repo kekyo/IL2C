@@ -4,7 +4,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
 if(DEFINED BUILD_UEFI)
     enable_language(ASM_MASM)
-    file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c" "*.asm")
+    file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c" "*_${PLATFORM}.asm")
 else()
     file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c")
 endif()

@@ -22,6 +22,7 @@ extern "C" {
 #include <windows.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <wchar.h>
 #include <malloc.h>
 #include <process.h>

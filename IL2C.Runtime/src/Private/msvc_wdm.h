@@ -15,6 +15,9 @@ extern "C" {
 #if defined(_MSC_VER) && defined(_WDM)
 
 #include <intrin.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <wchar.h>
 #include <wdm.h>
 #include <malloc.h>
 

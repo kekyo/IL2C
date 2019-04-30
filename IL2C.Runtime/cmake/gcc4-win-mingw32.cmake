@@ -9,9 +9,9 @@ add_definitions(-DWIN32_LEAN_AND_MEAN)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -g2 -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias")
 
 if("${CONFIGURATION}" STREQUAL "Release")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -D_DEBUG")
-else()
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -fomit-frame-pointer -DNDEBUG")
+else()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -D_DEBUG")
 endif()
 
 set(IL2C_LIBRARY_NAME_BASE "il2c-gcc4-win-${PLATFORM}")

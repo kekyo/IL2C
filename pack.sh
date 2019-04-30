@@ -30,5 +30,17 @@ dotnet pack --configuration Release --include-symbols -p:VersionPrefix=${VERSION
 cp IL2C.Tasks/bin/Release/IL2C.Build.${VERSION}.symbols.nupkg artifacts/IL2C.Build.${VERSION}.nupkg
 
 echo ""
+echo "///////////////////////////////////////////////"
+echo "// Build Arduino library"
+echo ""
+
+mkdir artifacts/Arduino
+cp /R IL2C.Runtime/include/*.h artifacts/Arduino/src/
+cp /R IL2C.Runtime/src/*.h artifacts/Arduino/src/
+cp /R IL2C.Runtime/src/*.c artifacts/Arduino/src/
+
+sed 's/{version}/${VERSION}/g' Arduino.properties > artifacts/Arduino/library.properties
+
+echo ""
 echo "Done."
 echo ""

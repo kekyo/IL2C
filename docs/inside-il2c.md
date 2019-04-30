@@ -6,11 +6,14 @@
 
 ### Summarized lazy steps
 
-1. Open il2c.sln by Visual Studio 2017. Your environment requires enabling C#, VC++ and NUnit3 vsix addin.
-2. Build with "Debug - AnyCPU" configuration.
-3. If this don't show any errors, kick starts unit tests at the Test Explorer (Run All).
-4. The unit tests need a long time for the first execution. It's because these tests automatically download mingw platform and run on it.
-5. After all tests passed, you are ready to hack!
+* Sorry, currently IL2C developing environment supports on Visual Studio 2017 only. If you installed 2017, you can use side-by-side installed Visual Studio 2019.
+
+1. Run "init-tools.bat", then run "build-runtime.bat".
+2. Open il2c.sln by Visual Studio. Your environment requires enabling C#, VC++ and NUnit3 vsix addin.
+3. Build with "Debug - AnyCPU" configuration.
+4. If this don't show any errors, kick starts unit tests at the Test Explorer (Run All).
+5. The unit tests need a long time for the first execution. It's because these tests automatically download mingw platform and run on it.
+6. After all tests passed, you are ready to hack!
 
 ### Core implementation note
 

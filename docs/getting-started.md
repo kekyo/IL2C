@@ -195,6 +195,14 @@ And check it up for success building the entire solution at the "Configuration M
 
 ![Configuration manager dialog](../images/tutorial17.png)
 
+## 2-0. Build runtime library using the scripts
+
+I showed you how to build runtime in manually. Now, you understand it and can use runtime library building scripts named "build-runtime".
+It'll generate libs (libil2c*.lib/libil2c*.a) into "IL2C.Runtime/lib" directory. Please build it before doing next step.
+
+1. Run "init-tools.bat" or "init-tools.sh" only first time. It'll setup developing tools. (It'll download mingw toolchain from GitHub if you use Windows environment.)
+2. Run "buil-runtime.bat" or "build-runtime.sh".
+
 ## 2. Trying sample for the polish notation calculator
 
 If you understand how to use the IL2C from scratch, you go to the next step. What are we thinking about using the IL2C? A topic is we can apply for OOP design with C# language different the C language.

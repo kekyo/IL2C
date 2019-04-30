@@ -13,7 +13,7 @@ extern "C" {
 // System.EventArgs
 
 typedef struct System_EventArgs System_EventArgs;
-typedef struct System_Object_VTABLE_DECL__ System_EventArgs_VTABLE_DECL__;
+typedef System_Object_VTABLE_DECL__ System_EventArgs_VTABLE_DECL__;
 
 struct System_EventArgs
 {

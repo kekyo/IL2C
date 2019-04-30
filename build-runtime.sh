@@ -20,7 +20,7 @@ mkdir gcc-linux-debug
 cd gcc-linux-debug
 
 cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-linux.cmake -DPLATFORM=${PLATFORM} -DCONFIGURATION=Debug ../..
-cmake --build . -j
+cmake --build .
 
 cd ..
 
@@ -35,7 +35,7 @@ mkdir gcc-linux-release
 cd gcc-linux-release
 
 cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-linux.cmake -DPLATFORM=${PLATFORM} -DCONFIGURATION=Release ../..
-cmake --build . -j
+cmake --build .
 
 cd ..
 

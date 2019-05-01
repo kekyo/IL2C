@@ -70,16 +70,18 @@ void Calculator_OperatorNode__ctor(Calculator_OperatorNode* this__, wchar_t oper
     /* IL_0002: call Calculator.AbstractNode..ctor */
 #line 23 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     Calculator_AbstractNode__ctor((Calculator_AbstractNode*)frame__.stack0_0__, stack1_0__);
-    /* IL_0007: ldarg.0  */
+    /* IL_0007: nop  */
+    /* IL_0008: nop  */
+    /* IL_0009: ldarg.0  */
 #line 25 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__ = this__;
-    /* IL_0008: ldarg.1  */
+    /* IL_000a: ldarg.1  */
 #line 25 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     stack1_1__ = oper;
-    /* IL_0009: stfld Calculator.OperatorNode.Operator */
+    /* IL_000b: stfld Calculator.OperatorNode.Operator */
 #line 25 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     frame__.stack0_0__->Operator = stack1_1__;
-    /* IL_000e: ret  */
+    /* IL_0010: ret  */
 #line 26 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"
     il2c_return_unlink(&frame__);
 #line 26 "D:\\PROJECT\\IL2C\\samples\\Calculator\\Calculator.Core\\PolishNotation.cs"

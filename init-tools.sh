@@ -3,4 +3,4 @@
 echo "Setup native binary toolchain ..."
 
 apt-get update -y
-apt-get install build-essential cmake -y
+apt-get install build-essential cmake ninja-build -y

@@ -24,8 +24,14 @@ if exist lib (
    rmdir /s /q lib.old
 )
 
+mkdir lib
+mkdir lib\Debug
+mkdir lib\Release
+
 mkdir build
 cd build
+
+rem goto gcc-azuresphere-arm
 
 rem ================================================================================
 
@@ -135,7 +141,7 @@ echo.
 mkdir gcc4-win-mingw32-debug
 cd gcc4-win-mingw32-debug
 
-cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=Debug ../..
+cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=Debug ../..
 cmake --build . -j
 move ..\..\lib\libil2c-gcc4-win-mingw32-Debug.a ..\..\lib\Debug\libil2c-gcc4-win-mingw32.a
 
@@ -151,7 +157,7 @@ echo.
 mkdir gcc4-win-mingw32-release
 cd gcc4-win-mingw32-release
 
-cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=Release ../..
+cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=Release ../..
 cmake --build . -j
 move ..\..\lib\libil2c-gcc4-win-mingw32-Release.a ..\..\lib\Release\libil2c-gcc4-win-mingw32.a
 

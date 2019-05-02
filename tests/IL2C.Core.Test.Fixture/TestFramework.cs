@@ -376,13 +376,13 @@ namespace IL2C
             try
             {
 #if DEBUG
-                var executedResult = await GccDriver.CompileAndRunAsync(
+                var executedResult = await CMakeDriver.BuildAsync(
                     binPath,
                     false,
                     sourcePath,
                     Path.Combine(il2cRuntimePath, "include"));
 #else
-                var executedResult = await GccDriver.CompileAndRunAsync(
+                var executedResult = await CMakeDriver.CompileAndRunAsync(
                     binPath,
                     true,
                     sourcePath,

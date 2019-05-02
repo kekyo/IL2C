@@ -16,7 +16,9 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -D_DEBUG")
 endif()
 
 set(IL2C_LIBRARY_NAME_BASE "il2c-gcc-azuresphere-${PLATFORM}")
-set(IL2C_LIBRARY_NAME "${IL2C_LIBRARY_NAME_BASE}-${CONFIGURATION}")
+set(IL2C_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}.a")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/lib${IL2C_LIBRARY_NAME}.a)
+set(TARGET_LIBRARY_NAME "${IL2C_LIBRARY_NAME_BASE}-${CONFIGURATION}")
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
+link_directories(${CMAKE_CURRENT_LIST_DIR}/../lib/${CONFIGURATION})

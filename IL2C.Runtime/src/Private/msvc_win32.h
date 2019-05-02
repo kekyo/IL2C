@@ -14,6 +14,7 @@ extern "C" {
 
 #if defined(_MSC_VER) && defined(WIN32) && !defined(UEFI) && !defined(WDM)
 
+#define WIN32_LEAN_AND_MEAN
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRTDBG_MAP_ALLOC 1
 #include <crtdbg.h>

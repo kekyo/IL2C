@@ -14,6 +14,8 @@ extern "C" {
 
 #if defined(__GNUC__) && defined(WIN32)
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <x86intrin.h>
 #include <stdio.h>
 #include <stdint.h>

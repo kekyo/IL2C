@@ -129,6 +129,51 @@ cmake --build . -j --config Release
 
 cd ..
 
+goto gcc4-win-mingw32
+
+rem ================================================================================
+
+rem TEMPORARY DISABLED:
+rem 1. gcc-azuresphere-arm has a problem by cmake's generated rules.ninja.
+rem    It contains the executable path translated to short path form.
+rem    Will cause not found error at the ninja.
+rem 2. Azure Sphere toolchain can't fit CI process because it has to install by vsix.
+
+:gcc-azuresphere-arm
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Runtime (gcc-azuresphere-arm-debug)
+echo.
+
+mkdir gcc-azuresphere-arm-debug
+cd gcc-azuresphere-arm-debug
+
+cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-azuresphere.cmake -DPLATFORM=arm -DCONFIGURATION=Debug ../..
+cmake --build . -j
+
+if not exist ()
+
+move ..\..\lib\libil2c-gcc-azuresphere-arm-Debug.a ..\..\lib\Debug\libil2c-gcc-azuresphere-arm.a
+
+cd ..
+
+rem ===============================================
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Runtime (gcc-azuresphere-arm-release)
+echo.
+
+mkdir gcc-azuresphere-arm-release
+cd gcc-azuresphere-arm-release
+
+cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-azuresphere.cmake -DPLATFORM=arm -DCONFIGURATION=Release ../..
+cmake --build . -j
+move ..\..\lib\libil2c-gcc-azuresphere-arm-Release.a ..\..\lib\Release\libil2c-gcc-azuresphere-arm.a
+
+cd ..
+
 rem ================================================================================
 
 :gcc4-win-mingw32

@@ -4,7 +4,7 @@
 // GCC
 
 // Azure Sphere
-#if defined(__GNUC__) && defined(__linux__) && defined(__AZURE_SPHERE__)
+#if defined(__AZURE_SPHERE__)
 
 #include <applibs/log.h>
 

@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
-include(${CMAKE_BINARY_DIR}/../../../../../../../../../IL2C.Runtime/cmake/gcc4-win-mingw32.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../../../../IL2C.Runtime/cmake/gcc4-win-mingw32.cmake)
 
 project(test C)
 

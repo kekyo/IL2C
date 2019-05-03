@@ -242,6 +242,7 @@ _Pvt_Extensions
 .build/
 
 artifacts/
+test-artifacts/
 toolchain/
 
 *.vcxproj.filters

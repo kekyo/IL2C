@@ -7,10 +7,9 @@ namespace IL2C
     internal static class CMakeDriver
     {
         public static async Task<string> BuildAsync(
-            string binPath, bool optimize, string sourcePath, string includePath)
+            string binPath, string configuration, string sourcePath, string includePath)
         {
             var basePath = Path.GetDirectoryName(sourcePath);
-            var configuration = optimize ? "Release" : "Debug";
             var outPath = Path.Combine(basePath, "build");
             var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
 

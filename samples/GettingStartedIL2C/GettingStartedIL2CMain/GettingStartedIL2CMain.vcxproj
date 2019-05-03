@@ -150,6 +150,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -176,18 +177,20 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/include/**/*.h" />
     <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.h" />
-    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/include/**/*.h" />
-    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.h" />
+    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/include/**/*.h" />
+    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src/**/*.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GettingStartedIL2CMain.c" />
     <ClCompile Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.c" />
-    <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.c" />
+    <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src/GettingStartedIL2C_internal.c" />
+    <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src/GettingStartedIL2C/GettingStartedIL2C/Program.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

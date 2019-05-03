@@ -192,9 +192,19 @@ namespace IL2C
                         Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
                         "..", "..", "..", "..", "..",
                         "test-artifacts", configuration));
-            if (!Directory.Exists(basePath))
+            while (true)
             {
-                Directory.CreateDirectory(basePath);
+                try
+                {
+                    if (!Directory.Exists(basePath))
+                    {
+                        Directory.CreateDirectory(basePath);
+                    }
+                    break;
+                }
+                catch
+                {
+                }
             }
 
             // Step 1-4: Translate caseInfo.Method bodies.

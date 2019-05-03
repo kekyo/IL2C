@@ -181,13 +181,13 @@
   <ItemGroup>
     <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/include/**/*.h" />
     <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.h" />
-    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/include/**/*.h" />
-    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src/**/*.h" />
+    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/include/**/*.h" />
+    <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GettingStartedIL2CMain.c" />
     <ClCompile Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.c" />
-    <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src/**/*.c" />
+    <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

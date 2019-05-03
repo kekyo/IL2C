@@ -1,0 +1,24 @@
+trigger:
+    branches:
+        include:
+            - '*'
+    tags:
+        include:
+            - '*'
+jobs:
+  - job: Windows
+    pool:
+      vmImage: 'vs2017-win2016'
+    steps:
+    - script: |
+        init-tools.bat
+      displayName: init-tools
+    - script: |
+        nuget restore il2c.sln
+      displayName: nuget restore il2c.sln
+    - script: |
+        build-runtime.bat
+      displayName: build-runtime
+    - script: |
+        pack.bat
+      displayName: pack

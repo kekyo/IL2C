@@ -115,6 +115,30 @@ namespace IL2C.RuntimeSystems
 
     public delegate string DelegateMarkHandlerForObjRefTestDelegate(string b);
 
+    public sealed class ConcurrentCollectClosure
+    {
+        private bool abort;
+
+        public void Abort() =>
+            abort = true;
+
+        public void Run()
+        {
+            while (!abort)
+            {
+                GC.Collect();
+            }
+        }
+    }
+
+    public sealed class ConcurrentCollectValueHolder
+    {
+        public readonly int Value;
+
+        public ConcurrentCollectValueHolder(int value) =>
+            this.Value = value * 2;
+    }
+
     [Description("These tests are verified the IL2C manages tracing the object references and collect garbages from the heap memory.")]
     [TestCase("ABCDEF", "ObjRefInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
     [TestCase("ABCDEF", "ObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
@@ -135,6 +159,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(0, new[] { "CallFinalizerByCollectWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
     [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+    [TestCase(2000000, "ConcurrentCollect", 10, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
     public sealed class GarbageCollection
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -312,6 +337,36 @@ namespace IL2C.RuntimeSystems
             GC.WaitForPendingFinalizers();
 
             return holder.Called;
+        }
+
+        public static int ConcurrentCollect(int count, int increments)
+        {
+            var target = new ConcurrentCollectClosure();
+
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                threads[index] = new Thread(target.Run);
+            }
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+
+            var result = 0;
+            for (var index = 0; index < increments; index++)
+            {
+                var holder = new ConcurrentCollectValueHolder(1);
+                result += holder.Value;
+            }
+
+            target.Abort();
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            return result;
         }
     }
 }

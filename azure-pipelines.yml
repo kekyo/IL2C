@@ -1,3 +1,7 @@
+trigger:
+    branches:
+        include:
+            - "$(Build.SourceBranchName)"
 jobs:
   - job: Windows
     pool:

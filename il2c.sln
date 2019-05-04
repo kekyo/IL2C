@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		Arduino.properties = Arduino.properties
-		azure-pipelines.yml = azure-pipelines.yml
 		build-runtime.bat = build-runtime.bat
 		build-runtime.sh = build-runtime.sh
 		init-tools.bat = init-tools.bat
@@ -45,6 +44,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3EBFA913-C
 		docs\supported-basic-types.md = docs\supported-basic-types.md
 		docs\supported-opcodes.md = docs\supported-opcodes.md
 		docs\supported-runtime-system-features.md = docs\supported-runtime-system-features.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure-pipelines", "azure-pipelines", "{61073883-92B6-4942-A1C2-0BB3B7737A37}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines\common.yml = azure-pipelines\common.yml
+		azure-pipelines\devel.yml = azure-pipelines\devel.yml
+		azure-pipelines\master.yml = azure-pipelines\master.yml
 	EndProjectSection
 EndProject
 Global
@@ -149,6 +155,7 @@ Global
 		{ACE3F9B1-0A92-4F1F-B817-7A74114030E5} = {5710A57F-57F8-4D50-8C78-82E2DFDCB613}
 		{B0F1010D-8B73-46F7-AF8E-E3C58F68525F} = {5710A57F-57F8-4D50-8C78-82E2DFDCB613}
 		{3EBFA913-CF51-4A28-9E4D-73CB5AE27D2F} = {D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}
+		{61073883-92B6-4942-A1C2-0BB3B7737A37} = {D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

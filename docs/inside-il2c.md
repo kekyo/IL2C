@@ -8,7 +8,7 @@
 
 * Sorry, currently IL2C developing environment supports on Visual Studio 2017 only. If you installed 2017, you can use side-by-side installed Visual Studio 2019.
 
-1. Run "init-tools.bat", then run "build-runtime.bat".
+1. Run "init-tools.bat", then run "build-runtime.bat". "build-runtime" can take a argument for configuration name both "Debug" and "Release", will implicit apply "Debug" if you don't give it. (The names are important case sensitive.)
 2. Open il2c.sln by Visual Studio. Your environment requires enabling C#, VC++ and NUnit3 vsix addin.
 3. Build with "Debug - AnyCPU" configuration.
 4. If this don't show any errors, kick starts unit tests at the Test Explorer (Run All).
@@ -19,7 +19,7 @@
 
 * Essentially, the unit tests compare and verify results executed on .NET CLR with results executed by the native code gcc compiled.
 * You can see ["tests/IL2C.Core.Test.Target project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Target). The translated code:  ["tests/IL2C.Core.Test.Fixture project"](https://github.com/kekyo/IL2C/tree/master/tests/IL2C.Core.Test.Fixture) of subfolder "bin/Debug/net462."
-* About the CI engineering, you can get more information: ["appveyor.yml"](appveyor.yml) file.
+* About the CI engineering, you can get more information: ["azure-pipelines.yml"](azure-pipelines.yml) file.
 * Currently IL2C contains the VC++ project file because it's better for debugging mates. You don't need this because "IL2C.Runtime.vcxproj" project file DOESN'T REQUIRE for any building (manually and CI buildings.)
 * If you want to see internal IL2C, I think these slides help you: [Making archive IL2C #6-55: dotNET 600 2018 session slide](https://www.slideshare.net/kekyo/making-archive-il2c-655-dotnet600-2018)
 

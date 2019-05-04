@@ -35,12 +35,13 @@ rem     //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32
 rem     mingwBaseUrl + "/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma",
 rem     mingwBaseUrl + "/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
 rem     "https://cmake.org/files/v3.12/cmake-3.12.3-win32-x86.zip",
+rem     "https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip"
 
 rem It zipped by 7z sfx.
-curl -L -O https://github.com/kekyo/IL2C/releases/download/IL2C-toolchain-gcc4-mingw32/IL2C-toolchain-gcc4-mingw32.exe
-IL2C-toolchain-gcc4-mingw32.exe
+curl -L -O https://github.com/kekyo/IL2C/releases/download/IL2C-toolchain-gcc4-mingw32-2/IL2C-toolchain-gcc4-mingw32-2.exe
+IL2C-toolchain-gcc4-mingw32-2.exe
 
-del /q IL2C-toolchain-gcc4-mingw32.exe
+del /q IL2C-toolchain-gcc4-mingw32-2.exe
 
 rem ========================================================
 

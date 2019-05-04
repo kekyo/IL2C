@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -300,6 +301,48 @@ namespace IL2C
         public static Task CopyResourceToTextFileAsync(
             string path, string resourceName) =>
             CopyResourceToTextFileAsync(path, resourceName, empty);
+
+        public static async Task<(int, string)> ExecuteAsync(
+            string workingPath, string[] searchPaths, string executablePath, params object[] args)
+        {
+            using (var p = new Process())
+            {
+                p.StartInfo.FileName = executablePath;
+                p.StartInfo.Arguments = string.Join(" ", args);
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.ErrorDialog = false;
+                p.StartInfo.WorkingDirectory = workingPath;
+
+                var pathEnv = p.StartInfo.Environment["PATH"];
+                p.StartInfo.Environment["PATH"] = string.Join(";", searchPaths) + ";" + pathEnv;
+
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+
+                var sb = new StringBuilder();
+                p.OutputDataReceived += (sender, e) => { if (e.Data != null) lock (sb) sb.AppendLine(e.Data); };
+                p.ErrorDataReceived += (sender, e) => { if (e.Data != null) lock (sb) sb.AppendLine(e.Data); };
+
+                var tcs = new TaskCompletionSource<int>();
+                p.Exited += (sender, e) => tcs.SetResult(p.ExitCode);
+                p.EnableRaisingEvents = true;
+
+                await RetryIfStrangeProblemAsync(() => p.Start());
+
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+
+                var exitCode = await tcs.Task;
+
+                p.WaitForExit();
+
+                p.CancelOutputRead();
+                p.CancelErrorRead();
+
+                return (exitCode, sb.ToString());
+            }
+        }
         #endregion
     }
 }

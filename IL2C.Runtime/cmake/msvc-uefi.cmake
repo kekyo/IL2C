@@ -29,7 +29,10 @@ set(CMAKE_EXE_LINKER_FLAGS "/SAFESEH")
 set(CMAKE_SHARED_LINKER_FLAGS "/SAFESEH")
 endif()
 
-set(IL2C_LIBRARY_NAME "libil2c-msvc-uefi-${PLATFORM}")
+set(IL2C_LIBRARY_NAME_BASE "il2c-msvc-uefi-${PLATFORM}")
+set(IL2C_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}.lib")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/${CONFIGURATION}/${IL2C_LIBRARY_NAME}.lib)
+set(TARGET_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}")
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
+link_directories(${CMAKE_CURRENT_LIST_DIR}/../lib/${CONFIGURATION}/)

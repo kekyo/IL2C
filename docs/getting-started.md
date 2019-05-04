@@ -108,7 +108,7 @@ This is the second half stage. For example, this project named "GettingStartedIL
 
 Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (because it's easy way):
 
-1. Add "AdditionalIncludeDirectories" property each descendant ItemDefinitionGroup/ClCompile elements. We have to do it because the VC++ compiler requires referring both IL2C runtime header files and translated header files.
+1. Add "AdditionalIncludeDirectories" and "PrecompiledHeader" property each descendant ItemDefinitionGroup/ClCompile elements. We have to do it because the VC++ compiler requires referring both IL2C runtime header files and translated header files. The "PrecompiledHeader" property requires because the translated files target to the "C language" and the feature can use only C++ language. (It's Visual C++ limitation.)
 
 ```xml
 <ItemDefinitionGroup Condition="..."> <!-- each conditions --> 
@@ -116,47 +116,45 @@ Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (beca
     <!-- ... -->
     <!-- Added below -->
     <AdditionalIncludeDirectories>$(ProjectDir)../../../IL2C.Runtime/include;$(ProjectDir)../../../IL2C.Runtime/src;$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/include;$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    <PrecompiledHeader>NotUsing</PrecompiledHeader>
   </ClCompile>
   <!-- ... -->
 </ItemDefinitionGroup>
 ```
 
-You have to adjust valid paths for your environments. You see a bit detail, the name "netcoreapp2.0" is perhaps different in your environment.
+You have to adjust valid paths for your environments. You'll see trivial path for `$(Configuration)/**`, it expands to flexible searching both target configuration (ex: Debug) and target framework moniker (ex: netstandard2.0).
 
 2. Add referring the IL2C runtime and translated files nearly exist "ClInclude" and "ClCompile" elements:
 
 ```xml
 <ItemGroup>
+  <!-- Removed pre-compiled header element
   <ClInclude Include="pch.h" />
+  -->
   <!-- Added below -->
   <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/include/**/*.h" />
   <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.h" />
-  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/include/**/*.h" />
-  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src/**/*.h" />
+  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/include/**/*.h" />
+  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.h" />
 </ItemGroup>
 <ItemGroup>
-  <ClCompile Include="GettingStartedIL2CMain.cpp" />
+  <!-- Changed extension .cpp to .c -->
+  <ClCompile Include="GettingStartedIL2CMain.c" />
+  <!-- Removed pre-compiled header element
   <ClCompile Include="pch.cpp">
-    <!-- ... -->
   </ClCompile>
+  -->
   <!-- Added below -->
-  <ClCompile Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.c">
-    <PrecompiledHeader>NotUsing</PrecompiledHeader>
-  </ClCompile>
-  <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src/**/*.c">
-    <PrecompiledHeader>NotUsing</PrecompiledHeader>
-  </ClCompile>
+  <ClCompile Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.c" />
+  <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.c" />
 </ItemGroup>
 ```
 
-You have to adjust valid paths for your environments too. The "PrecompiledHeader" property requires because the translated files target to the "C language" and the feature can use only C++ language. (It's Visual C++ limitation.)
+You have to adjust valid paths for your environments too.
 
 3. Write (modify) C main function body (GettingStartedIL2CMain.cpp):
 
 ```c++
-#include "pch.h"
-#include <iostream>
-
 // Referrer translated code.
 #include <GettingStartedIL2C.h>
 

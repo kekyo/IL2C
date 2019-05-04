@@ -4,11 +4,6 @@
 
 ## Status
 
-|Provider|Branch|Build|
-|:--|:--|:--|
-|AppVeyor|master|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/master?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=master&includeBuildsFromPullRequest=false)|
-|AppVeyor|devel|[![AppVeyor (.NET 4.5 / .NET Core 2.0)](https://ci.appveyor.com/api/projects/status/bwqk4p8x05vckl0x/branch/devel?svg=true)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel) [![AppVeyor tests](https://img.shields.io/appveyor/tests/kekyo/il2c/devel.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel/tests)<br>![Build Stats](https://buildstats.info/appveyor/chart/kekyo/il2c?branch=devel&includeBuildsFromPullRequest=false)|
-
 | Building package | Current |
 |:---|:---|
 | IL2C.Build | [![NuGet IL2C.Build](https://img.shields.io/nuget/v/IL2C.Build.svg?style=flat)](https://www.nuget.org/packages/IL2C.Build) 
@@ -17,6 +12,13 @@
 |:---|:---|
 | IL2C.Interop | [![NuGet IL2C.Interop](https://img.shields.io/nuget/v/IL2C.Interop.svg?style=flat)](https://www.nuget.org/packages/IL2C.Interop) 
 | IL2C.Core | [![NuGet IL2C.Core](https://img.shields.io/nuget/v/IL2C.Core.svg?style=flat)](https://www.nuget.org/packages/IL2C.Core) 
+
+|Branch|Configuration|Build|
+|:--|:--|:--|:--|
+|master|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Debug)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/1/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)
+|master|Release|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Release)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/2/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)
+|devel|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-devel-Debug)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/3/devel.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel/tests)<br>![Build Stats](https://buildstats.info/azurepipelines/chart/kekyo/IL2C-devel-Debug?branch=devel&includeBuildsFromPullRequest=false)|
+|devel|Release|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-devel-Release)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/4/devel.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel/tests)<br>![Build Stats](https://buildstats.info/azurepipelines/chart/kekyo/IL2C-devel-Release?branch=devel&includeBuildsFromPullRequest=false)|
 
 ## What's this?
 

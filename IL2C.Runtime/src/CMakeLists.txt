@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../lib)
 
 add_definitions(-D_LIB)
 
@@ -11,7 +11,7 @@ else()
     file(GLOB_RECURSE IL2C_RUNTIME_SRCS "*.c")
 endif()
 
-add_library(${IL2C_LIBRARY_NAME} STATIC ${IL2C_RUNTIME_SRCS})
+add_library(${TARGET_LIBRARY_NAME} STATIC ${IL2C_RUNTIME_SRCS})
 
-target_include_directories(${IL2C_LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${IL2C_LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_include_directories(${TARGET_LIBRARY_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(${TARGET_LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../include)

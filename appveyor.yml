@@ -7,13 +7,23 @@ shallow_clone: true
 before_build:
   - cmd: init-tools.bat
   - nuget restore il2c.sln
+  - nuget restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
+  - nuget restore samples\Calculator\Calculator.sln
 build_script:
   - cmd: build-runtime.bat
+  - msbuild /t:clean;rebuild /p:Configuration=Debug;Platform="Any Cpu" il2c.sln
   - msbuild /t:clean;rebuild /p:Configuration=Release;Platform="Any Cpu" il2c.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Debug;Platform="x86" samples\GettingStartedIL2C\GettingStartedIL2C.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Release;Platform="x86" samples\GettingStartedIL2C\GettingStartedIL2C.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Debug;Platform="x64" samples\GettingStartedIL2C\GettingStartedIL2C.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Release;Platform="x64" samples\GettingStartedIL2C\GettingStartedIL2C.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Debug;Platform="x86" samples\Calculator\Calculator.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Release;Platform="x86" samples\Calculator\Calculator.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Debug;Platform="x64" samples\Calculator\Calculator.sln
+  - msbuild /t:clean;rebuild /p:Configuration=Release;Platform="x64" samples\Calculator\Calculator.sln
   - cmd: pack.bat
 artifacts:
   - path: artifacts
 #  - path: tests/IL2C.Core.Test.Fixture/bin/Release/net462/ILConverters
 #  - path: tests/IL2C.Core.Test.Fixture/bin/Release/net462/BasicTypes
 #  - path: tests/IL2C.Core.Test.Fixture/bin/Release/net462/RuntimeSystems
-  

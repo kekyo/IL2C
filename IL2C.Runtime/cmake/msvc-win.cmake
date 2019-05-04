@@ -4,7 +4,6 @@ set(CMAKE_CONFIGURATION_TYPES, "${CONFIGURATION}")
 set(CMAKE_BUILD_TYPE, "${CONFIGURATION}")
 
 add_definitions(-DWIN32)
-add_definitions(-DWIN32_LEAN_AND_MEAN)
 add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS_GLOBALS)
@@ -31,7 +30,10 @@ set(CMAKE_EXE_LINKER_FLAGS "/SAFESEH")
 set(CMAKE_SHARED_LINKER_FLAGS "/SAFESEH")
 endif()
 
-set(IL2C_LIBRARY_NAME "libil2c-msvc-win-${PLATFORM}")
+set(IL2C_LIBRARY_NAME_BASE "il2c-msvc-win-${PLATFORM}")
+set(IL2C_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}.lib")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/${CONFIGURATION}/${IL2C_LIBRARY_NAME}.lib)
+set(TARGET_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}")
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
+link_directories(${CMAKE_CURRENT_LIST_DIR}/../lib/${CONFIGURATION})

@@ -137,21 +137,14 @@ namespace IL2C
         {
             Assert.IsTrue(caseInfo.Method.IsPublic && caseInfo.Method.IsStatic);
 
-            // TODO:
-            var path = Path.GetFullPath(Path.Combine(
-                caseInfo.Method.DeclaringType.Assembly.Location,
-                "..", "..", "..", "..", "..",
-                "IL2C.Core.Test.Target",
-                caseInfo.CategoryName,
-                caseInfo.Id,
-                caseInfo.Id + ".cs"));
-            if (File.Exists(path))
-            {
-                TestContext.AddTestAttachment(path, "Test case");
-            }
-
             // Split current thread context.
-            await Task.Yield();
+            await Task.Delay(1);
+
+#if DEBUG
+            const string configuration = "Debug";
+#else
+            const string configuration = "Release";
+#endif
 
             ///////////////////////////////////////////////
 
@@ -191,10 +184,33 @@ namespace IL2C
                 .Where(m => (caseInfo.AdditionalMethods.FirstOrDefault(am => m.Name == am.Name) != null))
                 .ToArray();
 
+            // Step 1-4: Create storing director for test artifacts
+            //   HACK: It's reliability for Windows MAX_PATH limitation.
+            var basePath =
+                Path.GetFullPath(
+                    Path.Combine(
+                        Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
+                        "..", "..", "..", "..", "..",
+                        "test-artifacts", configuration));
+            while (true)
+            {
+                try
+                {
+                    if (!Directory.Exists(basePath))
+                    {
+                        Directory.CreateDirectory(basePath);
+                    }
+                    break;
+                }
+                catch
+                {
+                }
+            }
+
             // Step 1-4: Translate caseInfo.Method bodies.
             var translatedPath =
                 Path.Combine(
-                    Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
+                    basePath,
                     caseInfo.CategoryName,
                     caseInfo.Id,
                     caseInfo.UniqueName);
@@ -375,19 +391,11 @@ namespace IL2C
             string sanitized = null;
             try
             {
-#if DEBUG
-                var executedResult = await GccDriver.CompileAndRunAsync(
+                var executedResult = await CMakeDriver.BuildAsync(
                     binPath,
-                    false,
+                    configuration,
                     sourcePath,
                     Path.Combine(il2cRuntimePath, "include"));
-#else
-                var executedResult = await GccDriver.CompileAndRunAsync(
-                    binPath,
-                    true,
-                    sourcePath,
-                    Path.Combine(il2cRuntimePath, "include"));
-#endif
 
                 sanitized = executedResult.Trim(' ', '\r', '\n');
             }

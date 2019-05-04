@@ -55,6 +55,7 @@ extern "C" {
 #include <string.h>
 #include <wchar.h>
 #include <float.h>
+#include <math.h>
 
 #if defined(_MSC_VER) && defined(UEFI)
 
@@ -64,9 +65,11 @@ extern void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* p
 #define il2c_cause_assert(pFile, line, pExpr) il2c_cause_assert_(pFile, line, pExpr)
 #define il2c_assert__(expr, pFile, line) do { if (!(expr)) il2c_cause_assert(pFile, line, #expr); } while (0)
 #define il2c_assert(expr) il2c_assert__(expr, __FILE__, __LINE__)
+extern double il2c_fmod(double x, double y);
 #else
 #define il2c_assert__(expr, pFile, line) il2c_assume__(expr)
 #define il2c_assert(expr) il2c_assume__(expr)
+#define il2c_fmod fmod
 #endif
 
 extern int32_t* il2c_errno__(void);
@@ -86,6 +89,8 @@ extern int32_t* il2c_errno__(void);
 #define il2c_assert__(expr, pFile, line) il2c_assume__(expr)
 #define il2c_assert(expr) il2c_assume__(expr)
 #endif
+
+#define il2c_fmod fmod
 
 #endif
 

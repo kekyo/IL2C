@@ -90,6 +90,23 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class FinalzerImplementedWithResurrect
+    {
+        public static FinalzerImplementedWithResurrect Instance;
+        public int Value;
+
+        public FinalzerImplementedWithResurrect(int value)
+        {
+            Instance = null;
+            this.Value = value;
+        }
+
+        ~FinalzerImplementedWithResurrect()
+        {
+            Instance = this;
+        }
+    }
+
     public class StaticFieldInstanceType
     {
         public StaticFieldInstanceType()
@@ -156,7 +173,8 @@ namespace IL2C.RuntimeSystems
     [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 0, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 1, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 2, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(0, new[] { "CallFinalizerByCollectWithPinned", "RunCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
+    [TestCase(0, new[] { "DontCallFinalizerByCollectWithPinned", "RunDontCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
+    [TestCase(123, new[] { "DontCollectWithResurrect", "RunDontCollectWithResurrect" }, 123, IncludeTypes = new[] { typeof(FinalzerImplementedWithResurrect) })]
     [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(2000000, "ConcurrentCollect", 10, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
@@ -287,21 +305,36 @@ namespace IL2C.RuntimeSystems
             return holder.Called;
         }
 
-        private static void RunCallFinalizerWithPinned(FinalizerCalleeHolder holder)
+        private static void RunDontCallFinalizerWithPinned(FinalizerCalleeHolder holder)
         {
             var implemented = new FinalzerImplementedWithPinned(holder);
             var handle = GCHandle.Alloc(implemented, GCHandleType.Pinned);
         }
 
-        public static int CallFinalizerByCollectWithPinned()
+        public static int DontCallFinalizerByCollectWithPinned()
         {
             var holder = new FinalizerCalleeHolder();
-            RunCallFinalizerWithPinned(holder);
+            RunDontCallFinalizerWithPinned(holder);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
             return holder.Called;
+        }
+
+        private static void RunDontCollectWithResurrect(int value)
+        {
+            var implemented = new FinalzerImplementedWithResurrect(value);
+        }
+
+        public static int DontCollectWithResurrect(int value)
+        {
+            RunDontCollectWithResurrect(value);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return FinalzerImplementedWithResurrect.Instance.Value;
         }
 
         private static void RunCallFinalizerWithSuppressed(FinalizerCalleeHolder holder)

@@ -1113,27 +1113,40 @@ static void il2c_step3_sweep_garbage__(void)
             // Very important unlink step: because cause misread on purpose this__ instance is living.
             *ppUnlinkTarget = pNext;
 
-            // Class type overrided the finalizer and not suppressed:
-
-            // TODO: Do atomic dropping suppress finalize flag and make delay collecting if flag is raised. (Cover resurrecting situation)
-            if (il2c_unlikely__(((pCurrentHeader->characteristic & IL2C_CHARACTERISTIC_SUPPRESS_FINALIZE) == 0) &&
-                ((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize)))
+            // Class type overrided the finalizer:
+            if (il2c_unlikely__((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize))
             {
-                System_Object* pAdjustedReference = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
-                il2c_assert((void*)pAdjustedReference->vptr0__ == (void*)pCurrentHeader->type->vptr0);
+                // Do atomic set finalized flag
+                interlock_t characteristic = il2c_ior(&pCurrentHeader->characteristic, IL2C_CHARACTERISTIC_FINALIZER_CALLED);
+                if (il2c_likely__((characteristic & IL2C_CHARACTERISTIC_FINALIZER_CALLED) == 0))
+                {
+                    // Finalizer didn't call or reregistered (GC.ReRegisterForFinalize())
+                    System_Object* pAdjustedReference = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
+                    il2c_assert((void*)pAdjustedReference->vptr0__ == (void*)pCurrentHeader->type->vptr0);
 
-                il2c_runtime_debug_log_format(
-                    L"il2c_step3_sweep_garbage__ [1]: call finalizer: type={0:s}, pAdjustedReference=0x{0:p}",
-                    pCurrentHeader->type->pTypeName,
-                    pAdjustedReference);
+                    il2c_runtime_debug_log_format(
+                        L"il2c_step3_sweep_garbage__ [1]: call finalizer: type={0:s}, pAdjustedReference=0x{0:p}",
+                        pCurrentHeader->type->pTypeName,
+                        pAdjustedReference);
 
-                // Call finalizer.
-                pAdjustedReference->vptr0__->Finalize(pAdjustedReference);
+                    // Call finalizer.
+                    pAdjustedReference->vptr0__->Finalize(pAdjustedReference);
+
+                    // GC don't collect current situation because finalizer perhaps made resurrection.
+                }
+                else
+                {
+                    // Insert to free list.
+                    pCurrentHeader->pNext = pScheduledHeader;
+                    pScheduledHeader = pCurrentHeader;
+                }
             }
-
-            // Insert to free list.
-            pCurrentHeader->pNext = pScheduledHeader;
-            pScheduledHeader = pCurrentHeader;
+            else
+            {
+                // Insert to free list.
+                pCurrentHeader->pNext = pScheduledHeader;
+                pScheduledHeader = pCurrentHeader;
+            }
         }
         else
         {

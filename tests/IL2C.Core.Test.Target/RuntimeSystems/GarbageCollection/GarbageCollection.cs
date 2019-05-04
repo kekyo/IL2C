@@ -107,6 +107,25 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class FinalzerImplementedWithReRegister
+    {
+        private FinalizerCalleeHolder holder;
+
+        public FinalzerImplementedWithReRegister(FinalizerCalleeHolder holder)
+        {
+            this.holder = holder;
+        }
+
+        ~FinalzerImplementedWithReRegister()
+        {
+            if (holder.Called == 0)
+            {
+                GC.ReRegisterForFinalize(this);
+            }
+            holder.Called++;
+        }
+    }
+
     public class StaticFieldInstanceType
     {
         public StaticFieldInstanceType()
@@ -175,6 +194,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 2, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(0, new[] { "DontCallFinalizerByCollectWithPinned", "RunDontCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
     [TestCase(123, new[] { "DontCollectWithResurrect", "RunDontCollectWithResurrect" }, 123, IncludeTypes = new[] { typeof(FinalzerImplementedWithResurrect) })]
+    [TestCase(2, new[] { "CallFinalizerByCollectWithReRegister", "RunCallFinalizerWithReRegister" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithReRegister), typeof(FinalizerCalleeHolder) })]
     [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(2000000, "ConcurrentCollect", 10, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
@@ -335,6 +355,30 @@ namespace IL2C.RuntimeSystems
             GC.WaitForPendingFinalizers();
 
             return FinalzerImplementedWithResurrect.Instance.Value;
+        }
+
+        private static void RunCallFinalizerWithReRegister(FinalizerCalleeHolder holder)
+        {
+            var implemented = new FinalzerImplementedWithReRegister(holder);
+        }
+
+        public static int CallFinalizerByCollectWithReRegister()
+        {
+            var holder = new FinalizerCalleeHolder();
+            RunCallFinalizerWithReRegister(holder);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            if (holder.Called != 1)
+            {
+                return holder.Called;
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            return holder.Called;
         }
 
         private static void RunCallFinalizerWithSuppressed(FinalizerCalleeHolder holder)

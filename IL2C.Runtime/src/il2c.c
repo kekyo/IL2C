@@ -1110,9 +1110,6 @@ static void il2c_step3_sweep_garbage__(void)
             (IL2C_CHARACTERISTIC_INITIALIZED | IL2C_CHARACTERISTIC_MARK_INDEX)) ==
             g_CollectionMarkIndex__))
         {
-            // Very important unlink step: because cause misread on purpose this__ instance is living.
-            *ppUnlinkTarget = pNext;
-
             // Class type overrided the finalizer:
             if (il2c_unlikely__((void*)((System_Object_VTABLE_DECL__*)(pCurrentHeader->type->vptr0))->Finalize != (void*)System_Object_Finalize))
             {
@@ -1121,6 +1118,10 @@ static void il2c_step3_sweep_garbage__(void)
                 if (il2c_likely__((characteristic & IL2C_CHARACTERISTIC_FINALIZER_CALLED) == 0))
                 {
                     // Finalizer didn't call or reregistered (GC.ReRegisterForFinalize())
+
+                    // Temporary marked (reserving resurrection)
+                    il2c_ixor(&pCurrentHeader->characteristic, IL2C_CHARACTERISTIC_MARK_INDEX);
+
                     System_Object* pAdjustedReference = (System_Object*)(((uint8_t*)pCurrentHeader) + sizeof(IL2C_REF_HEADER));
                     il2c_assert((void*)pAdjustedReference->vptr0__ == (void*)pCurrentHeader->type->vptr0);
 
@@ -1133,9 +1134,13 @@ static void il2c_step3_sweep_garbage__(void)
                     pAdjustedReference->vptr0__->Finalize(pAdjustedReference);
 
                     // GC don't collect current situation because finalizer perhaps made resurrection.
+                    ppUnlinkTarget = (void*)&pCurrentHeader->pNext;
                 }
                 else
                 {
+                    // Very important unlink step: because cause misread on purpose this__ instance is living.
+                    *ppUnlinkTarget = pNext;
+
                     // Insert to free list.
                     pCurrentHeader->pNext = pScheduledHeader;
                     pScheduledHeader = pCurrentHeader;
@@ -1143,6 +1148,9 @@ static void il2c_step3_sweep_garbage__(void)
             }
             else
             {
+                // Very important unlink step: because cause misread on purpose this__ instance is living.
+                *ppUnlinkTarget = pNext;
+
                 // Insert to free list.
                 pCurrentHeader->pNext = pScheduledHeader;
                 pScheduledHeader = pCurrentHeader;

@@ -122,7 +122,7 @@ Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (beca
 </ItemDefinitionGroup>
 ```
 
-You have to adjust valid paths for your environments. You'll see trivial path for `$(Configuration)/**`, it expands to flexible searching both target configuration (ex: Debug) and target framework moniker (ex: netstandard2.0).
+You have to adjust valid paths for your environments. You'll see trivial path for `$(Configuration)`, it expands to flexible searching both target configuration (ex: Debug). `netstandard2.0` is target framework moniker, you have to replace it your environment.
 
 2. Add referring the IL2C runtime and translated files nearly exist "ClInclude" and "ClCompile" elements:
 
@@ -134,8 +134,8 @@ You have to adjust valid paths for your environments. You'll see trivial path fo
   <!-- Added below -->
   <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/include/**/*.h" />
   <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.h" />
-  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/include/**/*.h" />
-  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.h" />
+  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netstandard2.0/IL2C/include/**/*.h" />
+  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netstandard2.0/IL2C/src/**/*.h" />
 </ItemGroup>
 <ItemGroup>
   <!-- Changed extension .cpp to .c -->
@@ -146,7 +146,7 @@ You have to adjust valid paths for your environments. You'll see trivial path fo
   -->
   <!-- Added below -->
   <ClCompile Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.c" />
-  <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/**/IL2C/src/**/*.c" />
+  <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netstandard2.0/IL2C/src/**/*.c" />
 </ItemGroup>
 ```
 
@@ -193,12 +193,12 @@ And check it up for success building the entire solution at the "Configuration M
 
 ![Configuration manager dialog](../images/tutorial17.png)
 
-## 2-0. Build runtime library using the scripts
+## 2-0. [Prebuild] runtime library using the scripts
 
 I showed you how to build runtime in manually. Now, you understand it and can use runtime library building scripts named "build-runtime".
 It'll generate libs (libil2c*.lib/libil2c*.a) into "IL2C.Runtime/lib" directory. Please build it before doing next step.
 
-1. Run "init-tools.bat" or "init-tools.sh" only first time. It'll setup developing tools. (It'll download mingw toolchain from GitHub if you use Windows environment.)
+1. Run "init-tools.bat" or "init-tools.sh" only first time. It'll setup developing tools. (It'll download mingw toolchain from GitHub if you use Windows environment.) We can give a argument for configuration name both "Debug" and "Release", will implicit apply "Debug" if you don't give it. (The names are important case sensitive.)
 2. Run "buil-runtime.bat" or "build-runtime.sh".
 
 ## 2. Trying sample for the polish notation calculator

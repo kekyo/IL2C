@@ -14,7 +14,7 @@
 | IL2C.Core | [![NuGet IL2C.Core](https://img.shields.io/nuget/v/IL2C.Core.svg?style=flat)](https://www.nuget.org/packages/IL2C.Core) 
 
 |Branch|Configuration|Build|
-|:--|:--|:--|:--|
+|:--|:--|:--|
 |master|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Debug)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/1/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)
 |master|Release|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Release)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/2/master.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/master/tests)
 |devel|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-devel-Debug)](https://ci.appveyor.com/project/kekyo/il2c/branch/master) [![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/3/devel.svg)](https://ci.appveyor.com/project/kekyo/il2c/branch/devel/tests)<br>![Build Stats](https://buildstats.info/azurepipelines/chart/kekyo/IL2C-devel-Debug?branch=devel&includeBuildsFromPullRequest=false)|

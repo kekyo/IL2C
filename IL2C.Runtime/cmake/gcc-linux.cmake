@@ -7,9 +7,9 @@ set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -g2 -fdata-sections -ffunction-sections -Wl,--gc-sections")
 
 if("${CONFIGURATION}" STREQUAL "Release")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -flto -fomit-frame-pointer -march=native -DNDEBUG")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -flto -fomit-frame-pointer -march=native -DNDEBUG")
 else()
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -D_DEBUG")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -D_DEBUG")
 endif()
 
 set(IL2C_LIBRARY_NAME_BASE "il2c-gcc-linux-${PLATFORM}")

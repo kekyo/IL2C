@@ -37,7 +37,6 @@ extern "C" {
 #include "no-threading.h"
 
 extern void il2c_sleep(uint32_t milliseconds);
-#define il2c_longjmp longjmp
 
 #endif
 

@@ -27,7 +27,6 @@ extern "C" {
 #include "strings.h"
     
 extern void il2c_sleep(uint32_t milliseconds);
-#define il2c_longjmp longjmp
 
 typedef DWORD IL2C_TLS_INDEX;
 #define il2c_tls_alloc() ((IL2C_TLS_INDEX)TlsAlloc())

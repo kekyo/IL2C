@@ -1,5 +1,5 @@
-#ifndef __IL2C_H__
-#define __IL2C_H__
+#ifndef IL2C_H__
+#define IL2C_H__
 
 #pragma once
 
@@ -14,7 +14,6 @@ extern "C" {
 #if defined(_MSC_VER)
 
 #include <intrin.h>
-#include <setjmp.h> // TODO:
 
 #define il2c_assume__(expr) __assume(expr)
 #define il2c_likely__(expr) (expr)
@@ -31,16 +30,12 @@ extern "C" {
 #include <arm_neon.h>
 #endif
 
-#include <setjmp.h>
-
 #define il2c_assume__(expr) do { if (!(expr)) __builtin_unreachable(); } while (0)
 #define il2c_likely__(expr) __builtin_expect(!!(expr), 1)
 #define il2c_unlikely__(expr) __builtin_expect(!!(expr), 0)
 #define il2c_noreturn__ __attribute__((noreturn))
 
 #else
-
-#include <setjmp.h>
 
 #define il2c_assume__(expr) ((void)0)
 #define il2c_likely__(expr) (expr)
@@ -49,15 +44,64 @@ extern "C" {
 
 #endif
 
-#include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-#include <wchar.h>
-#include <float.h>
-#include <math.h>
 
-#if defined(_MSC_VER) && defined(UEFI)
+#if defined(UEFI)
+
+#if defined(_M_IX86)
+
+typedef struct il2c_jmp_buf_t
+{
+    uint32_t Edx;
+    uint32_t Ebx;
+    uint32_t Esp;
+    uint32_t Ebp;
+    uint32_t Esi;
+    uint32_t Edi;
+    uint32_t Eip;
+} *il2c_jmp_buf;
+
+extern int __fastcall il2c_setjmp(il2c_jmp_buf jb);
+extern void __fastcall il2c_longjmp(il2c_jmp_buf jb, int retval);
+
+#elif defined(_M_X64)
+
+typedef unsigned __int64 uint128_t[2];
+
+typedef struct il2c_jmp_buf_t
+{
+    uint64_t Frame;
+    uint64_t Rbx;
+    uint64_t Rsp;
+    uint64_t Rbp;
+    uint64_t Rsi;
+    uint64_t Rdi;
+    uint64_t R12;
+    uint64_t R13;
+    uint64_t R14;
+    uint64_t R15;
+    uint64_t Rip;
+    uint32_t MxCsr;
+    uint16_t FpCsr;
+    uint16_t Spare;
+    uint128_t Xmm6;
+    uint128_t Xmm7;
+    uint128_t Xmm8;
+    uint128_t Xmm9;
+    uint128_t Xmm10;
+    uint128_t Xmm11;
+    uint128_t Xmm12;
+    uint128_t Xmm13;
+    uint128_t Xmm14;
+    uint128_t Xmm15;
+} *il2c_jmp_buf;
+
+extern int il2c_setjmp(il2c_jmp_buf jb);
+extern void il2c_longjmp(il2c_jmp_buf jb, int retval);
+
+#endif
+
+#define IL2C_JUMP_BUFFER il2c_jmp_buf
 
 #if defined(_DEBUG)
 extern void il2c_cause_assert__(const wchar_t* pFile, int line, const wchar_t* pExpr);
@@ -77,10 +121,15 @@ extern int32_t* il2c_errno__(void);
 
 #else
 
+#include <setjmp.h>
 #include <errno.h>
 #include <assert.h>
 
+#define IL2C_JUMP_BUFFER jmp_buf
+#define il2c_setjmp setjmp
+#define il2c_longjmp longjmp
 #define il2c_errno errno
+#define il2c_fmod fmod
 
 #if defined(_DEBUG)
 #define il2c_assert__(expr, pFile, line) assert(expr)
@@ -90,12 +139,14 @@ extern int32_t* il2c_errno__(void);
 #define il2c_assert(expr) il2c_assume__(expr)
 #endif
 
-#define il2c_fmod fmod
-
 #endif
 
-#define il2c_setjmp setjmp
-#define IL2C_JUMP_BUFFER jmp_buf
+#include <stddef.h>
+#include <stdbool.h>
+#include <string.h>
+#include <wchar.h>
+#include <float.h>
+#include <math.h>
 
 ///////////////////////////////////////////////////////
 // Initialize / shutdown runtime

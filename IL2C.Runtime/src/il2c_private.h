@@ -1,7 +1,7 @@
 // It uses for internal purpose only.
 
-#ifndef __IL2C_PRIVATE_H__
-#define __IL2C_PRIVATE_H__
+#ifndef IL2C_PRIVATE_H__
+#define IL2C_PRIVATE_H__
 
 #pragma once
 

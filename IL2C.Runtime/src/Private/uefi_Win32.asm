@@ -2,8 +2,8 @@
 
 _text segment
 
-.safeseh @il2c_setjmp@4
-.safeseh @il2c_longjmp@8
+; .safeseh @il2c_setjmp@4
+; .safeseh @il2c_longjmp@8
 
 ; typedef struct il2c_jmp_buf_t
 ; {
@@ -49,9 +49,9 @@ _text segment
 ; Ported 64bit calculations from:
 ;   https://gist.github.com/mmozeiko/6a365d6c483fc721b63a#file-win32_crt_math-cpp
 
-.safeseh __allmul
-.safeseh __aulldiv
-.safeseh __aullrem
+; .safeseh __allmul
+; .safeseh __aulldiv
+; .safeseh __aullrem
 
 ; -----------------------------------------------
 ; _allmul()

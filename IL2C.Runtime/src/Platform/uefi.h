@@ -50,7 +50,6 @@ extern long il2c_wtoi32(const wchar_t *nptr, wchar_t **endptr, int base);
 #define il2c_wcslen wcslen
 
 extern void il2c_sleep(uint32_t milliseconds);
-#define il2c_longjmp longjmp
 
 #endif
 

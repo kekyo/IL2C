@@ -17,6 +17,27 @@
 
 #include "efi/efi.h"
 
+static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
+
+void il2c_initialize(void* imageHandle, void* pSystemTable)
+{
+    // Setup interop pointer
+    g_pSystemTable = pSystemTable;
+
+    // Disable default auto-reset watchdog timer
+    g_pSystemTable->BootServices->SetWatchdogTimer(0, 0, 0, NULL);
+
+    // Clear screen
+    g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
+
+    il2c_initialize__();
+}
+
+void il2c_shutdown()
+{
+    il2c_shutdown__();
+}
+
 #if defined(_MSC_VER)
 int _fltused = 1;
 #endif
@@ -63,8 +84,6 @@ int32_t* il2c_errno__(void)
 
 //////////////////////////////////////////////////////////
 // These functions use the UEFI services.
-
-static EFI_SYSTEM_TABLE* g_pSystemTable = NULL;
 
 void* il2c_malloc__(size_t _Size)
 {
@@ -169,7 +188,7 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
     int32_t index = 0;
     while ((index + 1) < length)
     {
-        unsigned long long waitIndex;
+        UINTN waitIndex;
 
         tempBuffer[0] = L'_';
         tempBuffer[1] = CHAR_NULL;
@@ -234,25 +253,6 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
     g_pSystemTable->ConOut->OutputString(g_pSystemTable->ConOut, tempBuffer);
 
     return true;
-}
-
-void il2c_initialize(void* imageHandle, void* pSystemTable)
-{
-    // Setup interop pointer
-    g_pSystemTable = pSystemTable;
-
-    // Disable default auto-reset watchdog timer
-    g_pSystemTable->BootServices->SetWatchdogTimer(0, 0, 0, NULL);
-
-    // Clear screen
-    g_pSystemTable->ConOut->ClearScreen(g_pSystemTable->ConOut);
-
-    il2c_initialize__();
-}
-
-void il2c_shutdown()
-{
-    il2c_shutdown__();
 }
 
 #endif

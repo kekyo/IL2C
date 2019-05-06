@@ -1,6 +1,8 @@
 .code
 
-; struct
+_text segment
+
+; typedef struct il2c_jmp_buf_t
 ; {
 ;     uint64_t Frame;
 ;     uint64_t Rbx;
@@ -26,10 +28,10 @@
 ;     uint128_t Xmm13;
 ;     uint128_t Xmm14;
 ;     uint128_t Xmm15;
-; } *jmp_buf;
+; } *il2c_jmp_buf;
 
-; int setjmp(jmp_buf env);   // setjmp(rcx)
-setjmp proc
+; int il2c_setjmp(il2c_jmp_buf jb);   // il2c_setjmp(rcx)
+il2c_setjmp proc
     mov [rcx], rdx      ; Frame
     mov [rcx+8], rbx
     lea r8, [rsp+8]
@@ -57,10 +59,10 @@ setjmp proc
     movdqa [rcx+0f0h], xmm15
     xor eax, eax    ; first phase: 0
     ret  
-setjmp endp
+il2c_setjmp endp
 
-; void longjmp(jmp_buf env, int retval);   // longjmp(rcx, edx)
-longjmp proc
+; void il2c_longjmp(il2c_jmp_buf jb, int retval);   // il2c_longjmp(rcx, edx)
+il2c_longjmp proc
     mov eax, edx
     mov rdx, [rcx]      ; Frame
     mov rbx, [rcx+8]
@@ -84,6 +86,7 @@ longjmp proc
     movdqa xmm14, [rcx+0e0h]
     movdqa xmm15, [rcx+0f0h]
     jmp r8
-longjmp endp
+il2c_longjmp endp
 
+_text ends
 end

@@ -23,6 +23,12 @@
 * Currently IL2C contains the VC++ project file because it's better for debugging mates. You don't need this because "IL2C.Runtime.vcxproj" project file DOESN'T REQUIRE for any building (manually and CI buildings.)
 * If you want to see internal IL2C, I think these slides help you: [Making archive IL2C #6-55: dotNET 600 2018 session slide](https://www.slideshare.net/kekyo/making-archive-il2c-655-dotnet600-2018)
 
+### Debug runtime code when unit test results
+
+We can use VC++ debugger from the failed unit test item. It illustrated below:
+
+![Debug runtime code when unit test results](../images/debug-runtime.png)
+
 ## Basis types
 
 // TODO: details

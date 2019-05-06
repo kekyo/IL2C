@@ -37,7 +37,6 @@ extern "C" {
 #include "strings.h"
 
 #define il2c_sleep(milliseconds) Sleep((DWORD)milliseconds)
-#define il2c_longjmp longjmp
 
 //////////////////////////////////////////////////
 // Win32 API threading support

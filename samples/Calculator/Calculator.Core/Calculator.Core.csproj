@@ -4,6 +4,7 @@
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
 
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <AssemblyName>Calculator.Core</AssemblyName>

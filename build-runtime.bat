@@ -76,6 +76,23 @@ cd ..
 
 rem ================================================================================
 
+:msvc-uefi-win32
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Runtime (msvc-uefi-win32-%Configuration%)
+echo.
+
+mkdir msvc-uefi-win32-%Configuration%
+cd msvc-uefi-win32-%Configuration%
+
+cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=Win32 -DCONFIGURATION=%Configuration% ../..
+cmake --build . -j --config %Configuration%
+
+cd ..
+
+rem ================================================================================
+
 :msvc-uefi-x64
 
 echo.
@@ -88,35 +105,6 @@ cd msvc-uefi-x64-%Configuration%
 
 cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=x64 -DCONFIGURATION=%Configuration% ../..
 cmake --build . -j --config %Configuration%
-
-cd ..
-
-goto gcc4-win-mingw32
-
-rem ================================================================================
-
-rem TEMPORARY DISABLED:
-rem 1. gcc-azuresphere-arm has a problem by cmake's generated rules.ninja.
-rem    It contains the executable path translated to short path form.
-rem    Will cause not found error at the ninja.
-rem 2. Azure Sphere toolchain can't fit CI process because it has to install by vsix.
-
-:gcc-azuresphere-arm
-
-echo.
-echo ///////////////////////////////////////////////
-echo // Build IL2C.Runtime (gcc-azuresphere-arm-%Configuration%)
-echo.
-
-mkdir gcc-azuresphere-arm-%Configuration%
-cd gcc-azuresphere-arm-%Configuration%
-
-cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-azuresphere.cmake -DPLATFORM=arm -DCONFIGURATION=%Configuration% ../..
-cmake --build . -j
-
-if not exist ()
-
-move ..\..\lib\libil2c-gcc-azuresphere-arm-Debug.a ..\..\lib\%Configuration%\libil2c-gcc-azuresphere-arm.a
 
 cd ..
 

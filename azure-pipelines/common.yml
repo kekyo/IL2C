@@ -32,21 +32,30 @@ jobs:
           solution: "il2c.sln"
           configuration: "$(buildConfiguration)"
           platform: "Any Cpu"
-          clean: true
       - task: MSBuild@1
         displayName: "build GettingStartedIL2C-x86"
         inputs:
           solution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
           configuration: "$(buildConfiguration)"
           platform: "x86"
-          clean: true
       - task: MSBuild@1
         displayName: "build GettingStartedIL2C-x64"
         inputs:
           solution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
           configuration: "$(buildConfiguration)"
           platform: "x64"
-          clean: true
+      - task: MSBuild@1
+        displayName: "build Calculator-x86"
+        inputs:
+          solution: "samples/Calculator/Calculator.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x86"
+      - task: MSBuild@1
+        displayName: "build Calculator-x64"
+        inputs:
+          solution: "samples/Calculator/Calculator.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x64"
       - task: VSTest@2
         displayName: "test il2c"
         inputs:

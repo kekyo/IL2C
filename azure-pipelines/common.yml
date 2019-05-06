@@ -47,6 +47,20 @@ jobs:
           configuration: "$(buildConfiguration)"
           platform: "x64"
           clean: true
+      - task: MSBuild@1
+        displayName: "build Calculator-x86"
+        inputs:
+          solution: "samples/Calculator/Calculator.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x86"
+          clean: true
+      - task: MSBuild@1
+        displayName: "build Calculator-x64"
+        inputs:
+          solution: "samples/Calculator/Calculator.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x64"
+          clean: true
       - task: VSTest@2
         displayName: "test il2c"
         inputs:

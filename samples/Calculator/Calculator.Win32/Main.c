@@ -113,8 +113,18 @@ void SendExternalTicker(const wchar_t* message)
 
 IL2C_CONST_STRING(hoge, L"Hoge\r\n");
 
+_ACRTIMP int*  __cdecl __p__crtDbgFlag(void);
+_ACRTIMP long* __cdecl __p__crtBreakAlloc(void);
+
+#define _crtDbgFlag    (*__p__crtDbgFlag())
+#define _crtBreakAlloc (*__p__crtBreakAlloc())
+
 int main()
 {
+#if defined(_DEBUG)
+    _crtBreakAlloc = 84;
+#endif
+
     il2c_initialize();
 
     Calculator_PolishNotation_Main();

@@ -22,11 +22,11 @@ typedef volatile long interlock_t;
 ///////////////////////////////////////////////////
 // Internal depended definitions
 
-#include "Private/windows.h"
-#include "Private/uefi.h"
-#include "Private/wdm.h"
-#include "Private/linux.h"
-#include "Private/arduino.h"
+#include "Platform/windows.h"
+#include "Platform/uefi.h"
+#include "Platform/wdm.h"
+#include "Platform/linux.h"
+#include "Platform/arduino.h"
 
 #if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
 extern void il2c_runtime_debug_log(const wchar_t* message);
@@ -54,6 +54,20 @@ extern void il2c_collect__(void);
 
 ///////////////////////////////////////////////////
 // Internal runtime definitions
+
+typedef const struct IL2C_VALUE_DESCRIPTOR_DECL
+{
+    const IL2C_RUNTIME_TYPE type_value;
+    const void* ptr_value;
+} IL2C_VALUE_DESCRIPTOR;
+
+typedef volatile struct IL2C_ROOT_REFERENCES_DECL IL2C_ROOT_REFERENCES;
+
+struct IL2C_ROOT_REFERENCES_DECL
+{
+    IL2C_ROOT_REFERENCES* pNext;
+    volatile System_Object* pReferences[3];
+};
 
 typedef volatile struct IL2C_GC_TRACKING_INFORMATION_DECL
 {
@@ -210,8 +224,6 @@ extern IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int
 #else
 extern IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void);
 #endif
-
-extern IL2C_MONITOR_LOCK* il2c_acquire_monitor_lock_from_objref__(void* pReference, bool allocateIfRequired);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 extern IL2C_REF_HEADER* il2c_get_uninitialized_object_internal__(

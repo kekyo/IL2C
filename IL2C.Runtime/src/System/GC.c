@@ -1,6 +1,8 @@
 #include "il2c_private.h"
 #include <System/GC.h>
 
+extern volatile uint32_t g_PendingRemains__;
+
 /////////////////////////////////////////////////////////////
 // System.GC
 
@@ -29,6 +31,14 @@ void System_GC_ReRegisterForFinalize(System_Object* obj)
 void System_GC_Collect(void)
 {
     il2c_collect();
+}
+
+void System_GC_WaitForPendingFinalizers(void)
+{
+    while (g_PendingRemains__ >= 1)
+    {
+        il2c_collect();
+    }
 }
 
 /////////////////////////////////////////////////

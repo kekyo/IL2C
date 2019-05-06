@@ -5,6 +5,7 @@
 
         <OutputType>Library</OutputType>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <AssemblyName>IL2C.Core.Test.Target</AssemblyName>
         <RootNamespace>IL2C</RootNamespace>

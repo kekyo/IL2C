@@ -5,6 +5,7 @@
 
         <OutputType>Library</OutputType>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <AssemblyName>IL2C.Core</AssemblyName>

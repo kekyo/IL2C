@@ -5,6 +5,7 @@
 
         <OutputType>Library</OutputType>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <AssemblyName>IL2C.Core.Test.Fixture</AssemblyName>
@@ -50,6 +51,7 @@
         <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
         <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+        <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>

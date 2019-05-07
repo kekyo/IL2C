@@ -7,7 +7,7 @@ set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.12
 if not exist %TOOLCHAINPATH% (
     echo Native toolchain not found.
     echo Execute "init-tools.bat" if build runtime at first time.
-    goto exit
+    exit /b 1
 )
 
 set PATH=%TOOLCHAINPATH%\bin;%PATH%
@@ -53,7 +53,13 @@ mkdir msvc-win-win32-%Configuration%
 cd msvc-win-win32-%Configuration%
 
 cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DCONFIGURATION=%Configuration% ../..
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 cmake --build . -j --config %Configuration%
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 
 cd ..
 
@@ -70,7 +76,13 @@ mkdir msvc-win-x64-%Configuration%
 cd msvc-win-x64-%Configuration%
 
 cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DCONFIGURATION=%Configuration% ../..
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 cmake --build . -j --config %Configuration%
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 
 cd ..
 
@@ -87,7 +99,13 @@ mkdir msvc-uefi-win32-%Configuration%
 cd msvc-uefi-win32-%Configuration%
 
 cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=Win32 -DCONFIGURATION=%Configuration% ../..
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 cmake --build . -j --config %Configuration%
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 
 cd ..
 
@@ -104,7 +122,13 @@ mkdir msvc-uefi-x64-%Configuration%
 cd msvc-uefi-x64-%Configuration%
 
 cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=x64 -DCONFIGURATION=%Configuration% ../..
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 cmake --build . -j --config %Configuration%
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 
 cd ..
 
@@ -121,8 +145,17 @@ mkdir gcc4-win-mingw32-%Configuration%
 cd gcc4-win-mingw32-%Configuration%
 
 cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=%Configuration% ../..
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 cmake --build . -j
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 move ..\..\lib\libil2c-gcc4-win-mingw32-%Configuration%.a ..\..\lib\%Configuration%\libil2c-gcc4-win-mingw32.a
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 
 cd ..
 

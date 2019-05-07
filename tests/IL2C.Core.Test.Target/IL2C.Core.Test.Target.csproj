@@ -10,10 +10,9 @@
         <AssemblyName>IL2C.Core.Test.Target</AssemblyName>
         <RootNamespace>IL2C</RootNamespace>
         <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-        <VersionPrefix>0.3.1</VersionPrefix>
         <Product>IL2C</Product>
         <Trademark>IL2C</Trademark>
-        <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
+        <Copyright>Copyright (c) 2019 Kouji Matsui</Copyright>
         <Description>A translator implementation of .NET intermediate language to C language.</Description>
         <Company>Kouji Matsui (@kozy_kekyo)</Company>
         <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
@@ -36,6 +35,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\IL2C.Interop\IL2C.Interop.csproj" />
+        <ProjectReference Include="..\IL2C.Core.Test.Attributes\IL2C.Core.Test.Attributes.csproj" />
     </ItemGroup>
 
     <!-- IL Support -->

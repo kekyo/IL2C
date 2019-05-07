@@ -314,6 +314,7 @@ namespace IL2C
                     "_actual";
             var replaceValues = new Dictionary<string, object>
             {
+                { "assemblyName", targetMethod.DeclaringType.DeclaringModule.DeclaringAssembly.Name},
                 { "testName", targetMethod.FriendlyName},
                 { "type", targetMethod.ReturnType.CLanguageTypeName},
                 { "constants", string.Join(" ", constants.

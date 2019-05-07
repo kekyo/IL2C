@@ -9,8 +9,8 @@
 
 #endif
 
-#include "IL2C.Core.Test.Target.h"
-#include "IL2C.Core.Test.Target_bundle.c"
+#include "{assemblyName}.h"
+#include "{assemblyName}_bundle.c"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Main

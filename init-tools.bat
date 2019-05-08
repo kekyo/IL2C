@@ -37,11 +37,21 @@ rem     mingwBaseUrl + "/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.l
 rem     "https://cmake.org/files/v3.12/cmake-3.12.3-win32-x86.zip",
 rem     "https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip"
 
-rem It zipped by 7z sfx.
 curl -L -O https://github.com/kekyo/IL2C/releases/download/IL2C-toolchain-gcc4-mingw32-2/IL2C-toolchain-gcc4-mingw32-2.exe
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
+
+rem It zipped by 7z sfx.
 IL2C-toolchain-gcc4-mingw32-2.exe
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 
 del /q IL2C-toolchain-gcc4-mingw32-2.exe
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
 
 rem ========================================================
 

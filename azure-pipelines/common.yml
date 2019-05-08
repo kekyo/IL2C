@@ -56,6 +56,10 @@ jobs:
           solution: "samples/Calculator/Calculator.sln"
           configuration: "$(buildConfiguration)"
           platform: "x64"
+      - script: |
+          build.bat $(buildConfiguration)
+        displayName: "build Calculator-CMake-mingw32"
+        workingDirectory: "samples/Calculator/Generated"
       - task: VSTest@2
         displayName: "test il2c"
         inputs:

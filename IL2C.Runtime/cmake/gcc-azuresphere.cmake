@@ -5,7 +5,7 @@ set(AZURE_SPHERE_TARGET_APPLICATION_RUNTIME_VERSION 1)
 set(CMAKE_TOOLCHAIN_FILE "$ENV{ProgramFiles\(x86\)}/Microsoft Azure Sphere SDK/CMakeFiles/AzureSphereToolchain.cmake")
 include(${CMAKE_TOOLCHAIN_FILE})
 
-set(CMAKE_BUILD_TYPE, "${CONFIGURATION}")
+set(CMAKE_BUILD_TYPE "${CONFIGURATION}")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -g2 -fdata-sections -ffunction-sections -Wl,--gc-sections")
 

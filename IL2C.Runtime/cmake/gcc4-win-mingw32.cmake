@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7)
 
-set(CMAKE_BUILD_TYPE, "${CONFIGURATION}")
+set(CMAKE_BUILD_TYPE "${CONFIGURATION}")
 
 add_definitions(-DWIN32)
 

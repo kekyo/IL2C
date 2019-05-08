@@ -314,6 +314,7 @@ namespace IL2C
                     "_actual";
             var replaceValues = new Dictionary<string, object>
             {
+                { "assemblyName", targetMethod.DeclaringType.DeclaringModule.DeclaringAssembly.Name},
                 { "testName", targetMethod.FriendlyName},
                 { "type", targetMethod.ReturnType.CLanguageTypeName},
                 { "constants", string.Join(" ", constants.
@@ -391,11 +392,11 @@ namespace IL2C
             string sanitized = null;
             try
             {
-                var executedResult = await CMakeDriver.BuildAsync(
+                var executedResult = await CMakeDriver.BuildDirectlyAsync(
                     binPath,
                     configuration,
                     sourcePath,
-                    Path.Combine(il2cRuntimePath, "include"));
+                    il2cRuntimePath);
 
                 sanitized = executedResult.Trim(' ', '\r', '\n');
             }

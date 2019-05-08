@@ -64,7 +64,9 @@ namespace IL2C
         }
 
         public static IReadOnlyDictionary<string, IReadOnlyDictionary<Type, TestCaseInformation[]>> ExtractTestCasesFromCoreTestTarget() =>
-            typeof(TestCaseAttribute).Assembly.GetTypes().
+            typeof(BasicTypes.System_Boolean).Assembly.GetTypes().          // BasicTypes
+            Concat(typeof(ILConverters.Add).Assembly.GetTypes()).           // ILConverters
+            Concat(typeof(RuntimeSystems.ArrayTypes).Assembly.GetTypes()).  // RuntimeSystems
             Where(type => type.IsPublic && type.IsClass && !type.IsAbstract && type.IsDefined(typeof(TestCaseAttribute))).
             GroupBy(type => type.Namespace).
             ToDictionary(

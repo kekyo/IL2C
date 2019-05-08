@@ -22,6 +22,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generated", "Generated", "{51D4E42A-82E9-436C-BB94-1143DC140A40}"
+	ProjectSection(SolutionItems) = preProject
+		Generated\.gitignore = Generated\.gitignore
+		Generated\build.bat = Generated\build.bat
+		Generated\CMakeLists.txt = Generated\CMakeLists.txt
+		Generated\main.c = Generated\main.c
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -65,6 +73,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{51D4E42A-82E9-436C-BB94-1143DC140A40} = {043B61D4-4009-455C-8D70-DCD2A50BA920}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {740853F2-042F-4244-A0A1-D41746959DB2}

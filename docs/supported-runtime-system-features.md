@@ -9,6 +9,7 @@ Feature | Test | Descrition
 | ExceptionHandling | [Test [31]](../tests/IL2C.Core.Test.Target/RuntimeSystems/ExceptionHandling) | These tests are verified the IL2C translates with simple and/or complext exception handling. |
 | ExceptionThrownByCLI | [Test [33]](../tests/IL2C.Core.Test.Target/RuntimeSystems/ExceptionThrownByCLI) | These tests are verified the IL2C throw some exceptions from the internal runtimes by ECMA-335 I.12.4.2.1. |
 | GarbageCollection | [Test [22]](../tests/IL2C.Core.Test.Target/RuntimeSystems/GarbageCollection) | These tests are verified the IL2C manages tracing the object references and collect garbages from the heap memory. |
+| GenericTypes | [Test [1]](../tests/IL2C.Core.Test.Target/RuntimeSystems/GenericTypes) | These tests are verified the IL2C can handle closed generic types. |
 | Interoperability | [Test [4]](../tests/IL2C.Core.Test.Target/RuntimeSystems/Interoperability) | These tests are verified the IL2C manages interoperability with the P/Invoke adn IL2C/Invoke method and internalcall method. |
 | Threading | [Test [11]](../tests/IL2C.Core.Test.Target/RuntimeSystems/Threading) | These tests are verified the IL2C can handle threading features. |
 | TypeInitializer | [Test [15]](../tests/IL2C.Core.Test.Target/RuntimeSystems/TypeInitializer) | These tests are verified the IL2C can handle the type initializer special translation cases. |

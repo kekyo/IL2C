@@ -10,7 +10,7 @@ using IL2C.Metadata.Attributes;
 
 namespace IL2C.Metadata
 {
-    public interface ITypeInformation : IMemberInformation
+    public interface ITypeInformation : IMemberInformation, IGenericMemberAttributes
     {
         string ScopeName { get; }
 
@@ -201,14 +201,18 @@ namespace IL2C.Metadata
             }
         }
 
-        public bool IsPublic => (this.Definition as TypeDefinition)?.IsPublic ?? false;
-        public bool IsNotPublic => (this.Definition as TypeDefinition)?.IsNotPublic ?? false;
-        public bool IsNestedPublic => (this.Definition as TypeDefinition)?.IsNestedPublic ?? false;
-        public bool IsNestedPrivate => (this.Definition as TypeDefinition)?.IsNestedPrivate ?? false;
-        public bool IsNestedFamily => (this.Definition as TypeDefinition)?.IsNestedFamily ?? false;
-        public bool IsNestedFamilyOrAssembly => (this.Definition as TypeDefinition)?.IsNestedFamilyOrAssembly ?? false;
-        public bool IsNestedFamilyAndAssembly => (this.Definition as TypeDefinition)?.IsNestedFamilyAndAssembly ?? false;
-        public bool IsAbstract => (this.Definition as TypeDefinition)?.IsAbstract ?? false;
+        private new TypeDefinition Definition =>
+            (base.Definition as TypeDefinition) ??
+            (base.Definition as GenericInstanceType)?.ElementType.Resolve();
+
+        public bool IsPublic => this.Definition?.IsPublic ?? false;
+        public bool IsNotPublic => this.Definition?.IsNotPublic ?? false;
+        public bool IsNestedPublic => this.Definition?.IsNestedPublic ?? false;
+        public bool IsNestedPrivate => this.Definition?.IsNestedPrivate ?? false;
+        public bool IsNestedFamily => this.Definition?.IsNestedFamily ?? false;
+        public bool IsNestedFamilyOrAssembly => this.Definition?.IsNestedFamilyOrAssembly ?? false;
+        public bool IsNestedFamilyAndAssembly => this.Definition?.IsNestedFamilyAndAssembly ?? false;
+        public bool IsAbstract => this.Definition?.IsAbstract ?? false;
 
         public bool IsStatic
         {
@@ -253,15 +257,14 @@ namespace IL2C.Metadata
         }
         public bool IsClass =>
             !this.Member.IsValueType &&
-            ((this.Definition as TypeDefinition)?.IsClass ?? false);
+            (this.Definition?.IsClass ?? false);
         public bool IsInterface =>
             !this.Member.IsValueType &&
-            ((this.Definition as TypeDefinition)?.IsInterface ?? false);
-        public bool IsEnum => (this.Definition as TypeDefinition)?.IsEnum ?? false;
+            (this.Definition?.IsInterface ?? false);
+        public bool IsEnum => this.Definition?.IsEnum ?? false;
         public bool IsArray => this.Member.IsArray;
         public bool IsDelegate => !this.Member.IsValueType && this.MetadataContext.DelegateType.IsAssignableFrom(this);
         public bool IsException => !this.Member.IsValueType && this.MetadataContext.ExceptionType.IsAssignableFrom(this);
-
         public bool IsByReference => this.Member.IsByReference;
         public bool IsPointer => this.Member.IsPointer;
         public bool IsPrimitive => this.Member.IsPrimitive;
@@ -288,6 +291,38 @@ namespace IL2C.Metadata
              this.Equals(this.MetadataContext.UInt64Type) ||
              this.Equals(this.MetadataContext.UIntPtrType) ||
              this.Equals(this.MetadataContext.CharType));
+
+        public GenericMemberTypes GenericMemberType
+        {
+            get
+            {
+                if (!this.Member.ContainsGenericParameter)
+                {
+                    return GenericMemberTypes.NonGeneric;
+                }
+                else if (this.Member.IsGenericInstance)
+                {
+                    return GenericMemberTypes.GenericInstance;
+                }
+                else if (this.Member.IsGenericParameter)
+                {
+                    return GenericMemberTypes.GenericParameter;
+                }
+                else
+                {
+                    return GenericMemberTypes.GenericDefinition;
+                }
+            }
+        }
+        public ITypeInformation[] GenericParameters
+        {
+            get
+            {
+                return this.Member.GenericParameters.
+                    Select(parameter => this.MetadataContext.GetOrAddType(parameter)).
+                    ToArray();
+            }
+        }
 
         public bool IsInt32StackFriendlyType =>
             (this.IsIntegerPrimitive || this.IsBooleanType || this.IsEnum) &&
@@ -375,10 +410,10 @@ namespace IL2C.Metadata
         }
 
         public ITypeInformation BaseType =>
-            (this.Definition is ArrayType) ?
+            (base.Definition is ArrayType) ?
                 this.MetadataContext.ArrayType :
                 this.MetadataContext.GetOrAddType(
-                    (this.Definition as TypeDefinition)?.BaseType);
+                    this.Definition?.BaseType);
         public ITypeInformation ElementType
         {
             get
@@ -748,7 +783,7 @@ namespace IL2C.Metadata
         }
 
         public NativeTypeAttributeInformation NativeType =>
-            (this.Definition as TypeDefinition)?.CustomAttributes.
+            this.Definition?.CustomAttributes.
                 Where(ca => ca.AttributeType.FullName == NativeTypeAttributeInformation.FullName).
                 Select(ca => new NativeTypeAttributeInformation(ca)).
                 FirstOrDefault();

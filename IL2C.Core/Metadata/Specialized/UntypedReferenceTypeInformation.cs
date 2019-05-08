@@ -50,6 +50,9 @@ namespace IL2C.Metadata.Specialized
         public bool IsNumericPrimitive => false;
         public bool IsUnsigned => false;
 
+        public GenericMemberTypes GenericMemberType => throw new NotImplementedException();
+        public ITypeInformation[] GenericParameters => throw new NotImplementedException();
+
         public bool IsInt32StackFriendlyType => false;
         public bool IsInt64StackFriendlyType => false;
         public bool IsFloatStackFriendlyType => false;

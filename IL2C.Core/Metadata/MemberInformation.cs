@@ -24,6 +24,21 @@ namespace IL2C.Metadata
         MemberScopes CLanguageMemberScope { get; }
     }
 
+    public enum GenericMemberTypes
+    {
+        NonGeneric,
+        GenericInstance,
+        GenericDefinition,
+        GenericParameter
+    }
+
+    public interface IGenericMemberAttributes
+    {
+        GenericMemberTypes GenericMemberType { get; }
+
+        ITypeInformation[] GenericParameters { get; }
+    }
+
     internal abstract class MemberInformation<TReference, TDefinition>
         : MetadataInformation<TReference, TDefinition>, IMemberInformation, IOperandPrintable
         where TReference : MemberReference
@@ -36,7 +51,7 @@ namespace IL2C.Metadata
         }
 
         public override string UniqueName =>
-            this.Member.FullName;
+            this.Member.GetUniqueName();
         public override string Name =>
             this.Member.Name;
         public override string FriendlyName =>

@@ -6,6 +6,7 @@ using System.Linq;
 using Mono.Cecil;
 
 using IL2C.Metadata.Specialized;
+using System.Diagnostics;
 
 namespace IL2C.Metadata
 {

@@ -26,6 +26,12 @@
 
 ![Calculator.Win32](../../images/Calculator.Win32.png)
 
+### CMake (MinGW32)
+
+* This is sample structure for building with CMake.
+* Ready to build using CMake if you already build "Calculator.Core" and stored translated code into "Generated" directory.
+* "Generated/CMakeLists.txt" is CMake script and you can build using "build.bat".
+
 ### UEFI
 
 * "Calculator.UEFI" can execute directly on UEFI platform.

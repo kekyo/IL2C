@@ -31,7 +31,7 @@ void* il2c_malloc(size_t size, const char* pFile, int32_t line)
 void* il2c_malloc(size_t size)
 #endif
 {
-#if defined(_MSC_VER) && defined(WIN32) && defined(_DEBUG) && defined(IL2C_USE_LINE_INFORMATION)
+#if defined(_MSC_VER) && defined(_WIN32) && defined(_DEBUG) && defined(IL2C_USE_LINE_INFORMATION)
     IL2C_DEBUG_HEAP* p0 = _malloc_dbg(sizeof(IL2C_DEBUG_HEAP) + size + sizeof(uintptr_t), _NORMAL_BLOCK, pFile, line);
 #else
     IL2C_DEBUG_HEAP* p0 = il2c_malloc__(sizeof(IL2C_DEBUG_HEAP) + size + sizeof(uintptr_t));

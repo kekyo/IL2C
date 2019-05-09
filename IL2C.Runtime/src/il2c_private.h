@@ -13,6 +13,10 @@
 #define IL2C_USE_DEBUG_HEAP
 #endif
 
+#if defined(_WDM) || defined(UEFI)
+#undef _WIN32
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

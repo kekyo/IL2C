@@ -18,7 +18,7 @@ extern "C" {
 #include <string.h>
 #include <wchar.h>
 
-#if defined(WIN32)
+#if defined(_WIN32)
 #define il2c_snwprintf _snwprintf
 #define il2c_wtoi32 wcstol
 #define il2c_wtou32 wcstoul
@@ -49,7 +49,7 @@ extern wchar_t* il2c_i32tow(int32_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_u32tow(uint32_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_i64tow(int64_t value, wchar_t* buffer, int radix);
 extern wchar_t* il2c_u64tow(uint64_t value, wchar_t* buffer, int radix);
-#elif defined(WIN32)
+#elif defined(_WIN32)
 #define il2c_i32tow _itow
 #define il2c_u32tow _ultow
 #define il2c_i64tow _i64tow

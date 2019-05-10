@@ -12,7 +12,13 @@ namespace IL2C.Metadata
         public static string GetLabelName(int offset) =>
             string.Format("IL_{0:x4}", offset);
 
-        public static string GetFriendlyName(this MemberReference member)
+        private static string TrimGenericShortIdentifier(string memberName)
+        {
+            var index = memberName.LastIndexOf('`');
+            return (index >= 0) ? memberName.Substring(0, index) : memberName;
+        }
+
+        private static string GetMemberName(this MemberReference member)
         {
             var declaringTypes = member.DeclaringType.
                 Traverse(current => current.DeclaringType).
@@ -25,9 +31,52 @@ namespace IL2C.Metadata
             return string.Join(
                 ".",
                 new[] { namespaceName }.
-                    Concat(declaringTypes.Select(type => type.Name)).
-                    Concat(new[] { member.Name }));
+                    Concat(declaringTypes.Select(type => TrimGenericShortIdentifier(type.Name))).
+                    Concat(new[] { TrimGenericShortIdentifier(member.Name) }));
         }
+
+        public static string GetUniqueName(this MemberReference member)
+        {
+            var typeReference = member as TypeReference;
+            if (typeReference?.IsGenericParameter ?? false)
+            {
+                return member.Name;
+            }
+
+            var memberName = GetMemberName(member);
+
+            if (typeReference?.HasGenericParameters ?? false)
+            {
+                return memberName +
+                    "<" + string.Join(",", typeReference.GenericParameters.Select(parameter => parameter.GetUniqueName())) + ">";
+            }
+
+            if (member is GenericInstanceType genericInstanceType &&
+                genericInstanceType.HasGenericArguments)
+            {
+                return memberName +
+                    "<" + string.Join(",", genericInstanceType.GenericArguments.Select(argument => argument.GetUniqueName())) + ">";
+            }
+
+            if (member is MethodReference methodReference &&
+                methodReference.HasGenericParameters)
+            {
+                return memberName +
+                    "<" + string.Join(",", methodReference.GenericParameters.Select(parameter => parameter.GetUniqueName())) + ">";
+            }
+
+            if (member is GenericInstanceMethod genericInstanceMethod &&
+                genericInstanceMethod.HasGenericArguments)
+            {
+                return memberName +
+                    "<" + string.Join(",", genericInstanceMethod.GenericArguments.Select(argument => argument.GetUniqueName())) + ">";
+            }
+
+            return memberName;
+        }
+
+        public static string GetFriendlyName(this MemberReference member) =>
+            GetUniqueName(member);
 
         public static ITypeInformation UnwrapCoveredType(this ITypeInformation type)
         {

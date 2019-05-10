@@ -420,7 +420,7 @@ namespace IL2C.Metadata
                     ", ",
                     this.Parameters.Select((parameter, index) =>
                         ((this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName) +
-                        (isPrototype ? parameter.ParameterName : string.Empty))) :
+                        (isPrototype ? (" " + parameter.ParameterName) : string.Empty))) :
                 "void";
 
             var returnTypeName = this.ReturnType.CLanguageTypeName;

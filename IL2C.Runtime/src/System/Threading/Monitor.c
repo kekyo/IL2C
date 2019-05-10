@@ -296,7 +296,7 @@ void System_Threading_Monitor_Enter__System_Object(System_Object* obj)
     il2c_enter_monitor_lock__(pLock);
 }
 
-void System_Threading_Monitor_Enter__System_Object_System_Boolean(System_Object* obj, bool* lockTaken)
+void System_Threading_Monitor_Enter__System_Object_System_Boolean_REF(System_Object* obj, bool* lockTaken)
 {
     il2c_assert(lockTaken != NULL);
 

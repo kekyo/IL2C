@@ -105,6 +105,13 @@ namespace IL2C.Metadata
                 return parameter.Name;
             }
 
+            if (type.IsArray)
+            {
+                // System.Array<int>
+                return "System" + memberFormat.NameSeparator + "Array" +
+                    memberFormat.PrefixForGeneric + ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + memberFormat.PostfixForGeneric;
+            }
+
             if (memberFormat.IsMangledName)
             {
                 if (type.IsByReference)

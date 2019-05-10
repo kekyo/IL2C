@@ -271,7 +271,7 @@ namespace IL2C.ILConverters
                         "{0}{1}->vptr0__->{2}({3})",
                         receiveResultExpression,
                         extractContext.GetSymbolName(pairParameters[0].variable),
-                        method.GetCLanguageDeclarationName(overloadIndex),
+                        method.CLanguageFunctionDeclarationName,   // TODO: (overloadIndex)
                         parameterString);
                 }
                 else

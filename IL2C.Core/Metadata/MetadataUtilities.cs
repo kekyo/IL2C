@@ -12,71 +12,203 @@ namespace IL2C.Metadata
         public static string GetLabelName(int offset) =>
             string.Format("IL_{0:x4}", offset);
 
-        private static string TrimGenericShortIdentifier(string memberName)
+        public static string TrimGenericIdentifier(string memberName)
         {
+            // Foo`1 --> Foo
             var index = memberName.LastIndexOf('`');
             return (index >= 0) ? memberName.Substring(0, index) : memberName;
         }
 
-        private static string GetMemberName(this MemberReference member)
+        #region GetUniqueName
+        private sealed class MemberElementFormats
         {
-            var declaringTypes = member.DeclaringType.
-                Traverse(current => current.DeclaringType).
-                Reverse().
+            public readonly string NameSeparator;       // Foo.Bar.Baz
+            public readonly string MemberItemSeparator; // Foo,Bar,Baz
+            public readonly string PrefixForGeneric;    // Foo<Bar ...
+            public readonly string PostfixForGeneric;   // ... Bar>
+            public readonly string PrefixForArgument;   // Foo( ...
+            public readonly string PostfixForArgument;  // ... )
+            public readonly bool IsMakeEmptyArgument;   // Foo() / Foo
+            public readonly bool IsMangledName;
+
+            public MemberElementFormats(
+                string nameSeparator,
+                string memberItemSeparator,
+                string prefixForGeneric,
+                string postfixForGeneric,
+                string prefixForArgument,
+                string postfixForArgument,
+                bool isMakeEmptyArgument,
+                bool isMangledName)
+            {
+                this.NameSeparator = nameSeparator;
+                this.MemberItemSeparator = memberItemSeparator;
+                this.PrefixForGeneric = prefixForGeneric;
+                this.PostfixForGeneric = postfixForGeneric;
+                this.PrefixForArgument = prefixForArgument;
+                this.PostfixForArgument = postfixForArgument;
+                this.IsMakeEmptyArgument = isMakeEmptyArgument;
+                this.IsMangledName = isMangledName;
+            }
+        }
+
+        private static readonly MemberElementFormats uniqueNameMemberFormat =
+            new MemberElementFormats(".", ",", "<", ">", "(", ")", true, false);
+        private static readonly MemberElementFormats mangledUniqueNameMemberFormat =
+            new MemberElementFormats("_", "_", "__", string.Empty, "__", string.Empty, false, true);
+
+        private static string GetMemberName(
+            MemberReference member, bool onlyMemberName, MemberElementFormats memberFormat)
+        {
+            var memberName = memberFormat.IsMangledName ?
+                Utilities.GetMangledName(TrimGenericIdentifier(member.Name)) :
+                TrimGenericIdentifier(member.Name);
+
+            if (onlyMemberName)
+            {
+                // namespace    typename   result
+                // Foo.Bar.Baz  Bebe       Bebe
+                // Foo.Bar.Baz  Bebe+Momo  Momo
+                return memberName;
+            }
+            else
+            {
+                // namespace    typename   result
+                // Foo.Bar.Baz  Bebe       Foo.Bar.Baz.Bebe
+                // Foo.Bar.Baz  Bebe+Momo  Foo.Bar.Baz.Bebe.Momo
+
+                var declaringTypes = member.DeclaringType.
+                    Traverse(current => current.DeclaringType).
+                    Reverse().
+                    ToArray();
+                var namespaceName = declaringTypes.FirstOrDefault()?.Namespace ??
+                    (member as TypeReference)?.Namespace;
+                if (memberFormat.IsMangledName && (namespaceName != null))
+                {
+                    namespaceName = Utilities.GetMangledName(namespaceName);
+                }
+
+                return string.Join(
+                    memberFormat.NameSeparator,
+                    ((namespaceName != null) ? new[] { namespaceName } : new string[0]).
+                        Concat(declaringTypes.Select(type => ConstructUniqueName(type, true, memberFormat))).  // Made inner types.
+                        Concat(new[] { memberName }));
+            }
+        }
+
+        private static string ConstructUniqueName(
+            TypeReference type, bool onlyMemberName, MemberElementFormats memberFormat)
+        {
+            if (type is GenericParameter parameter)
+            {
+                // T
+                return parameter.Name;
+            }
+
+            if (memberFormat.IsMangledName)
+            {
+                if (type.IsByReference)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "_REF";
+                }
+                if (type.IsPointer)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "_PTR";
+                }
+            }
+
+            var typeName = GetMemberName(type, onlyMemberName, memberFormat);
+
+            if (type is GenericInstanceType genericInstanceType)
+            {
+                // FooType<int,T,long>
+                return typeName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, genericInstanceType.GenericArguments.
+                        Select(a => ConstructUniqueName(a, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+
+            if (type.HasGenericParameters)
+            {
+                // FooType<T,U,V>      ; GenericDefinition
+                return typeName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, type.GenericParameters.
+                        Select(p => ConstructUniqueName(p, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+
+            // FooType
+            return typeName;
+        }
+
+        private static string ConstructUniqueName(
+            MethodReference method, bool onlyMemberName, bool containsArgument, MemberElementFormats memberFormat)
+        {
+            var methodName = GetMemberName(method, onlyMemberName, memberFormat);
+
+            string firstElement;
+            if (method is GenericInstanceMethod genericInstanceMethod)
+            {
+                // BarMethod<int,T,long>
+                firstElement = methodName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, genericInstanceMethod.GenericArguments.
+                        Select(a => ConstructUniqueName(a, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+            else if (method.HasGenericParameters)
+            {
+                // BarMethod<T,U,V>      ; GenericDefinition
+                firstElement = methodName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, method.GenericParameters.
+                        Select(p => ConstructUniqueName(p, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+            else
+            {
+                // BarMethod
+                firstElement = methodName;
+            }
+
+            var parameters = method.Parameters.
+                Select(p => ConstructUniqueName(p.ParameterType, false, memberFormat)).
                 ToArray();
-            var namespaceName = declaringTypes.FirstOrDefault()
-                ?.Namespace
-                ?? (member as TypeReference)?.Namespace;
 
-            return string.Join(
-                ".",
-                new[] { namespaceName }.
-                    Concat(declaringTypes.Select(type => TrimGenericShortIdentifier(type.Name))).
-                    Concat(new[] { TrimGenericShortIdentifier(member.Name) }));
+            if (memberFormat.IsMakeEmptyArgument || (parameters.Length >= 1))
+            {
+                // BarMethod(float,byte,bool)
+                return firstElement + memberFormat.PrefixForArgument +
+                    string.Join(memberFormat.MemberItemSeparator, parameters) +
+                    memberFormat.PostfixForArgument;
+            }
+            else
+            {
+                // BarMethod
+                return firstElement;
+            }
         }
 
-        public static string GetUniqueName(this MemberReference member)
+        private static string ConstructUniqueName(
+            MemberReference member, bool onlyMemberName, bool containsArgumentIfMemberIsMethod, MemberElementFormats memberFormat)
         {
-            var typeReference = member as TypeReference;
-            if (typeReference?.IsGenericParameter ?? false)
+            if (member is TypeReference type)
             {
-                return member.Name;
+                return ConstructUniqueName(type, onlyMemberName, memberFormat);
             }
 
-            var memberName = GetMemberName(member);
-
-            if (typeReference?.HasGenericParameters ?? false)
+            if (member is MethodReference method)
             {
-                return memberName +
-                    "<" + string.Join(",", typeReference.GenericParameters.Select(parameter => parameter.GetUniqueName())) + ">";
+                return ConstructUniqueName(method, onlyMemberName, containsArgumentIfMemberIsMethod, memberFormat);
             }
 
-            if (member is GenericInstanceType genericInstanceType &&
-                genericInstanceType.HasGenericArguments)
-            {
-                return memberName +
-                    "<" + string.Join(",", genericInstanceType.GenericArguments.Select(argument => argument.GetUniqueName())) + ">";
-            }
-
-            if (member is MethodReference methodReference &&
-                methodReference.HasGenericParameters)
-            {
-                return memberName +
-                    "<" + string.Join(",", methodReference.GenericParameters.Select(parameter => parameter.GetUniqueName())) + ">";
-            }
-
-            if (member is GenericInstanceMethod genericInstanceMethod &&
-                genericInstanceMethod.HasGenericArguments)
-            {
-                return memberName +
-                    "<" + string.Join(",", genericInstanceMethod.GenericArguments.Select(argument => argument.GetUniqueName())) + ">";
-            }
-
-            return memberName;
+            return GetMemberName(member, onlyMemberName, memberFormat);
         }
 
-        public static string GetFriendlyName(this MemberReference member) =>
-            GetUniqueName(member);
+        public static string GetUniqueName(this MemberReference member, bool onlyMemberName = false, bool containsArgumentIfMemberIsMethod = true) =>
+            ConstructUniqueName(member, onlyMemberName, containsArgumentIfMemberIsMethod, uniqueNameMemberFormat);
+
+        public static string GetMangledUniqueName(this MemberReference member, bool onlyMemberName = false) =>
+            ConstructUniqueName(member, onlyMemberName, true, mangledUniqueNameMemberFormat);
+        #endregion
 
         public static ITypeInformation UnwrapCoveredType(this ITypeInformation type)
         {

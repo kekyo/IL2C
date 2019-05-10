@@ -28,11 +28,11 @@ IL2C_DECLARE_RUNTIME_TYPE(System_Threading_Thread);
 
 extern void System_Threading_Thread_Finalize(System_Threading_Thread* this__);
 extern void System_Threading_Thread_Start(System_Threading_Thread* this__);
-extern void System_Threading_Thread_Start_2(System_Threading_Thread* this__, System_Object* parameter);
+extern void System_Threading_Thread_Start__System_Object(System_Threading_Thread* this__, System_Object* parameter);
 extern void System_Threading_Thread_Join(System_Threading_Thread* this__);
 extern int32_t System_Threading_Thread_get_ManagedThreadId(System_Threading_Thread* this__);
 extern /* static */ System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void);
-extern /* static */ void System_Threading_Thread_Sleep(int millisecondsTimeout);
+extern /* static */ void System_Threading_Thread_Sleep__System_Int32(int millisecondsTimeout);
 
 #if defined(IL2C_USE_LINE_INFORMATION)
 extern System_Threading_Thread* il2c_new_thread__(System_Delegate* start, const char* pFile, int line);

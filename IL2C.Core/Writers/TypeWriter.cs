@@ -98,7 +98,7 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "{0};",
-                            method.GetCLanguageFunctionPrototype(overloadIndex));
+                            method.CLanguageFunctionTypePrototype); // TODO: (overloadIndex)
                     }
                 }
 

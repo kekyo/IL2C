@@ -135,7 +135,7 @@ struct IL2C_RUNTIME_TYPE_DECL
 // These are using the unsafe_unbox. Because we can understand what type the this__ pointer,
 // these function only invoke from the (known value type) trampoline vtable.
 #define IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(typeName) \
-static System_String* typeName##_ToString_Trampoline_VFunc__(System_ValueType* this__) \
+static System_String* typeName##_ToString__Trampoline_VFunc__(System_ValueType* this__) \
 { \
     il2c_assert(this__ != NULL); \
  \
@@ -143,7 +143,7 @@ static System_String* typeName##_ToString_Trampoline_VFunc__(System_ValueType* t
     return typeName##_ToString(pValue); \
 } \
  \
-static int32_t typeName##_GetHashCode_Trampoline_VFunc__(System_ValueType* this__) \
+static int32_t typeName##_GetHashCode__Trampoline_VFunc__(System_ValueType* this__) \
 { \
     il2c_assert(this__ != NULL); \
  \
@@ -151,22 +151,22 @@ static int32_t typeName##_GetHashCode_Trampoline_VFunc__(System_ValueType* this_
     return typeName##_GetHashCode(pValue); \
 } \
  \
-static bool typeName##_Equals_1_Trampoline_VFunc__(System_ValueType* this__, System_Object* obj) \
+static bool typeName##_Equals__System_Object__Trampoline_VFunc__(System_ValueType* this__, System_Object* obj) \
 { \
     il2c_assert(this__ != NULL); \
  \
     typeName* pValue = il2c_unsafe_unbox__(this__, typeName); \
-    return typeName##_Equals_1(pValue, obj); \
+    return typeName##_Equals__System_Object(pValue, obj); \
 }
 
 // Generator macro for the trampoline virtual function table using the value type.
 #define IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(typeName) \
 typeName##_VTABLE_DECL__ typeName##_VTABLE__ = { \
     0, \
-    (bool(*)(void*, System_Object*))typeName##_Equals_1_Trampoline_VFunc__, \
+    (bool(*)(void*, System_Object*))typeName##_Equals__System_Object__Trampoline_VFunc__, \
     (void(*)(void*))System_Object_Finalize, \
-    (int32_t(*)(void*))typeName##_GetHashCode_Trampoline_VFunc__, \
-    (System_String* (*)(void*))typeName##_ToString_Trampoline_VFunc__ \
+    (int32_t(*)(void*))typeName##_GetHashCode__Trampoline_VFunc__, \
+    (System_String* (*)(void*))typeName##_ToString__Trampoline_VFunc__ \
 }
 
 ///////////////////////////////////////////////////

@@ -10,7 +10,7 @@ System_Object* System_Runtime_InteropServices_GCHandle_get_Target(System_Runtime
     return (System_Object*)*this__;
 }
 
-void System_Runtime_InteropServices_GCHandle_set_Target(System_Runtime_InteropServices_GCHandle* this__, System_Object* value)
+void System_Runtime_InteropServices_GCHandle_set_Target__System_Object(System_Runtime_InteropServices_GCHandle* this__, System_Object* value)
 {
     System_Runtime_InteropServices_GCHandle_Free(this__);
 
@@ -43,13 +43,13 @@ intptr_t System_Runtime_InteropServices_GCHandle_AddrOfPinnedObject(System_Runti
     return (intptr_t)*this__;
 }
 
-System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc(System_Object* value)
+System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc__System_Object(System_Object* value)
 {
     // intptr_t aliased
     return (System_Runtime_InteropServices_GCHandle)value;
 }
 
-System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc_1(
+System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_Alloc__System_Object_System_Runtime_InteropServices_GCHandleType(
     System_Object* value, System_Runtime_InteropServices_GCHandleType type)
 {
     if ((type == System_Runtime_InteropServices_GCHandleType_Normal) ||
@@ -72,7 +72,7 @@ int32_t System_Runtime_InteropServices_GCHandle_GetHashCode(System_Runtime_Inter
     return (int32_t)(intptr_t)this__;
 }
 
-bool System_Runtime_InteropServices_GCHandle_Equals(System_Runtime_InteropServices_GCHandle* this__, System_Object* obj)
+bool System_Runtime_InteropServices_GCHandle_Equals__System_Object(System_Runtime_InteropServices_GCHandle* this__, System_Object* obj)
 {
     // TODO:
     il2c_assert(0);
@@ -82,7 +82,7 @@ bool System_Runtime_InteropServices_GCHandle_Equals(System_Runtime_InteropServic
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-static int32_t System_Runtime_InteropServices_GCHandle_GetHashCode_Trampoline_VFunc__(System_ValueType* this__)
+static int32_t System_Runtime_InteropServices_GCHandle_GetHashCode__Trampoline_VFunc__(System_ValueType* this__)
 {
     il2c_assert(this__ != NULL);
 
@@ -90,19 +90,19 @@ static int32_t System_Runtime_InteropServices_GCHandle_GetHashCode_Trampoline_VF
     return System_Runtime_InteropServices_GCHandle_GetHashCode(pValue);
 }
 
-static bool System_Runtime_InteropServices_GCHandle_Equals_Trampoline_VFunc__(System_ValueType* this__, System_Object* obj)
+static bool System_Runtime_InteropServices_GCHandle_Equals__System_Object__Trampoline_VFunc__(System_ValueType* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
 
     System_Runtime_InteropServices_GCHandle* pValue = il2c_unsafe_unbox__(this__, System_Runtime_InteropServices_GCHandle);
-    return System_Runtime_InteropServices_GCHandle_Equals(pValue, obj);
+    return System_Runtime_InteropServices_GCHandle_Equals__System_Object(pValue, obj);
 }
 
 System_Runtime_InteropServices_GCHandle_VTABLE_DECL__ System_Runtime_InteropServices_GCHandle_VTABLE__ = {
     0, // Adjustor offset
-    (bool(*)(void*, System_Object*))System_Runtime_InteropServices_GCHandle_Equals_Trampoline_VFunc__,
+    (bool(*)(void*, System_Object*))System_Runtime_InteropServices_GCHandle_Equals__System_Object__Trampoline_VFunc__,
     (void(*)(void*))System_Object_Finalize,
-    (int32_t(*)(void*))System_Runtime_InteropServices_GCHandle_GetHashCode_Trampoline_VFunc__,
+    (int32_t(*)(void*))System_Runtime_InteropServices_GCHandle_GetHashCode__Trampoline_VFunc__,
     (System_String* (*)(void*))System_Object_ToString
 };
 

@@ -10,18 +10,6 @@ using IL2C.Metadata.Attributes;
 
 namespace IL2C.Metadata
 {
-    [Flags]
-    public enum FriendlyNameTypes
-    {
-        Less = 0x00,
-        FullName = 0x01,
-        ArgumentTypes = 0x02,
-        ArgumentNames = 0x03,
-        Index = 0x08,
-        Full = 0x0f,
-        Mangled = 0x10,
-    }
-
     public interface IMethodInformation : IMemberInformation
     {
         bool IsPublic { get; }
@@ -52,18 +40,16 @@ namespace IL2C.Metadata
         ICodeStream CodeStream { get; }
         int OverloadIndex { get; }
 
-        string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full);
         IParameterInformation[] GetParameters(ITypeInformation thisType);
 
         PInvokeInfo PInvokeInformation { get; }
         NativeMethodAttributeInformation NativeMethod { get; }
 
         string CLanguageFunctionName { get; }
+        string CLanguageFunctionDeclarationName { get; }
         string CLanguageFunctionPrototype { get; }
+        string CLanguageFunctionType { get; }
         string CLanguageFunctionTypePrototype { get; }
-
-        string GetCLanguageDeclarationName(int overloadIndex);
-        string GetCLanguageFunctionPrototype(int overloadIndex);
     }
 
     internal sealed class MethodInformation
@@ -139,12 +125,6 @@ namespace IL2C.Metadata
                 parameter.Resolve().CustomAttributes.ToArray());
 
         public override string MetadataTypeName => "Method";
-
-        public override string FriendlyName =>
-            this.GetFriendlyName(FriendlyNameTypes.ArgumentTypes | FriendlyNameTypes.ArgumentNames);
-
-        public override string MangledUniqueName =>
-            this.GetFriendlyName(FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
 
         public bool IsPublic =>
             this.Definition.IsPublic;
@@ -355,53 +335,6 @@ namespace IL2C.Metadata
             }
         }
 
-        private static bool FullName(FriendlyNameTypes type) =>
-            (type & FriendlyNameTypes.FullName) == FriendlyNameTypes.FullName;
-
-        private static bool IncludeNames(FriendlyNameTypes type) =>
-            (type & FriendlyNameTypes.ArgumentNames) == FriendlyNameTypes.ArgumentNames;
-
-        private static bool IncludeTypes(FriendlyNameTypes type) =>
-            (type & FriendlyNameTypes.ArgumentTypes) == FriendlyNameTypes.ArgumentTypes;
-
-        private static bool IncludeIndex(FriendlyNameTypes type) =>
-            (type & FriendlyNameTypes.Index) == FriendlyNameTypes.Index;
-
-        private static bool Mangled(FriendlyNameTypes type) =>
-            (type & FriendlyNameTypes.Mangled) == FriendlyNameTypes.Mangled;
-
-        public string GetFriendlyName(FriendlyNameTypes type = FriendlyNameTypes.Full)
-        {
-            // Apply index number if NOT default method (method have no arguments)
-            var index = (IncludeIndex(type) && (this.OverloadIndex >= 1))
-                ? string.Format("@{0}", this.OverloadIndex)
-                : string.Empty;
-
-            var arguments = (IncludeNames(type) || IncludeTypes(type))
-                ? string.Format(
-                    "({0})",
-                    string.Join(
-                        ", ",
-                        this.Parameters.Select(parameter =>
-                            (IncludeNames(type) && IncludeTypes(type))
-                                ? string.Format(
-                                    "{0} {1}",
-                                    parameter.TargetType.FriendlyName,
-                                    parameter.ParameterName)
-                                : IncludeTypes(type)
-                                    ? parameter.TargetType.FriendlyName
-                                    : parameter.ParameterName)))
-                : string.Empty;
-
-            var name = string.Format(
-                "{0}{1}{2}",
-                FullName(type) ? this.Member.GetFriendlyName() : this.Member.Name,
-                index,
-                arguments);
-
-            return Mangled(type) ? Utilities.GetMangledName(name) : name;
-        }
-
         public IParameterInformation[] GetParameters(ITypeInformation thisType)
         {
             Debug.Assert(this.Member.HasThis);
@@ -469,10 +402,47 @@ namespace IL2C.Metadata
         }
 
         public string CLanguageFunctionName =>
-            this.GetFriendlyName(FriendlyNameTypes.FullName | FriendlyNameTypes.Index | FriendlyNameTypes.Mangled);
+            // System_Int32 Foo.Bar.Baz.MooMethod(System.String name) --> Foo_Bar_Baz_MooMethod__System_String
+            this.MangledUniqueName;
+
+        public string CLanguageFunctionDeclarationName =>
+            // System_Int32 Foo.Bar.Baz.MooMethod(System.String) --> MooMethod__System_String   (Will use vptr name)
+            this.Member.GetMangledUniqueName(true);
+
+        private string GetCLanguageFunctionType(bool isPrototype)
+        {
+            // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*."
+            //   non virtual : int32_t (*DoThat)(System_String* this__)
+            //   virtual     : int32_t (*DoThat)(void* this__)
+
+            var parametersString = (this.Parameters.Length >= 1) ?
+                string.Join(
+                    ", ",
+                    this.Parameters.Select((parameter, index) =>
+                        ((this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName) +
+                        (isPrototype ? parameter.ParameterName : string.Empty))) :
+                "void";
+
+            var returnTypeName = this.ReturnType.CLanguageTypeName;
+
+            return string.Format(
+                "{0} (*{1})({2})",
+                returnTypeName,
+                isPrototype ? this.CLanguageFunctionDeclarationName : string.Empty,
+                parametersString);
+        }
+
+        public string CLanguageFunctionType =>
+            // System_Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*)(System_String*)
+            this.GetCLanguageFunctionType(false);
+
+        public string CLanguageFunctionTypePrototype =>
+            // System_Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*MooMethod__System_String)(System_String* this__)
+            this.GetCLanguageFunctionType(true);
 
         public string CLanguageFunctionPrototype
         {
+            // System_Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t Foo_Bar_Baz_MooMethod__System_String(System_String* name)
             get
             {
                 var parametersString = (this.Parameters.Length >= 1) ?
@@ -493,45 +463,6 @@ namespace IL2C.Metadata
                     this.CLanguageFunctionName,
                     parametersString);
             }
-        }
-
-        public string CLanguageFunctionTypePrototype =>
-            this.GetCLanguageFunctionPrototype(-1);
-
-        public string GetCLanguageDeclarationName(int overloadIndex) =>
-            (overloadIndex == 0) ? this.Name :
-            (overloadIndex == -1) ? string.Empty :
-            string.Format("{0}_{1}", this.Name, overloadIndex);
-
-        public string GetCLanguageFunctionPrototype(int overloadIndex)
-        {
-            // Generate function type prototype if overloadIndex == -1.
-            //   [0] : int32_t (*GetHashCode)(void* this__)
-            //   [1] : int32_t (*GetHashCode_1)(void* this__)
-            //   [2] : int32_t (*GetHashCode_2)(void* this__)
-            //   [-1]: int32_t (*)(void*)
-
-            // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*."
-            //   non virtual : int32_t (*DoThat)(System_String* this__)
-            //   virtual     : int32_t (*DoThat)(void* this__)
-
-            var parametersString = (this.Parameters.Length >= 1) ?
-                string.Join(
-                    ", ",
-                    this.Parameters.Select((parameter, index) => string.Format(
-                        "{0}{1}",
-                        (this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName,
-                        (overloadIndex == -1) ? string.Empty : (" " + parameter.ParameterName)))) :
-                "void";
-
-            var returnTypeName = this.ReturnType.CLanguageTypeName;
-            var name = this.GetCLanguageDeclarationName(overloadIndex);
-
-            return string.Format(
-                "{0} (*{1})({2})",
-                returnTypeName,
-                name,
-                parametersString);
         }
 
         protected override MethodDefinition OnResolve(MethodReference member) =>

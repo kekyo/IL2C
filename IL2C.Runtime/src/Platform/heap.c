@@ -1,5 +1,10 @@
 #include <il2c_private.h>
 
+#if defined(_MSC_VER)
+// cast truncates constant value (IL2C_HEAP_GUARD_BYTES)
+#pragma warning (disable:4310)
+#endif
+
 //////////////////////////////////////////////////
 // Heap compatibility
 

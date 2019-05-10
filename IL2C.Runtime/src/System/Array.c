@@ -13,7 +13,7 @@ int32_t System_Array_getLength(System_Array* this__)
     return (int32_t)(this__->Length);
 }
 
-int32_t System_Array_GetLowerBound(System_Array* this__, int32_t dimension)
+int32_t System_Array_GetLowerBound__System_Int32(System_Array* this__, int32_t dimension)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->vptr0__ == &System_Array_VTABLE__);
@@ -30,7 +30,7 @@ int32_t System_Array_GetLowerBound(System_Array* this__, int32_t dimension)
     return 0;
 }
 
-int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension)
+int32_t System_Array_GetUpperBound__System_Int32(System_Array* this__, int32_t dimension)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->vptr0__ == &System_Array_VTABLE__);

@@ -17,7 +17,7 @@ namespace IL2C.Writers
                 "// [7-12] Trampoline virtual function: {0}",
                 method.FriendlyName);
             tw.WriteLine(
-                "static {0} {1}_Trampoline_VFunc__(System_ValueType* this__{2})",
+                "static {0} {1}__Trampoline_VFunc__(System_ValueType* this__{2})",
                 method.ReturnType.CLanguageTypeName,
                 method.CLanguageFunctionName,
                 string.Concat(method.Parameters.
@@ -221,9 +221,9 @@ namespace IL2C.Writers
                             //   The trampoline will unbox from objref to target value type.
                             tw.WriteLine(
                                 "({0}){1}{2},",
-                                method.CLanguageFunctionTypePrototype,
+                                method.CLanguageFunctionType,
                                 method.CLanguageFunctionName,
-                                trampolineVirtualMethods.Contains(method) ? "_Trampoline_VFunc__" : string.Empty);
+                                trampolineVirtualMethods.Contains(method) ? "__Trampoline_VFunc__" : string.Empty);
                         }
                     }
 
@@ -288,9 +288,9 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "({0}){1}{2},",
-                            entry.interfaceMethod.CLanguageFunctionTypePrototype,
+                            entry.interfaceMethod.CLanguageFunctionType,
                             entry.targetMethod.CLanguageFunctionName,
-                            trampolineVirtualMethods.Contains(entry.targetMethod) ? "_Trampoline_VFunc__" : string.Empty);
+                            trampolineVirtualMethods.Contains(entry.targetMethod) ? "__Trampoline_VFunc__" : string.Empty);
                     }
                 }
 

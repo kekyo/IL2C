@@ -50,6 +50,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <StringPooling>true</StringPooling>
@@ -60,7 +61,6 @@
       <DisableSpecificWarnings>4100;4197;4206</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>AssemblyCode</AssemblerOutput>
-      <!-- <TreatWarningAsError>true</TreatWarningAsError> -->
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BrowseInformation>true</BrowseInformation>

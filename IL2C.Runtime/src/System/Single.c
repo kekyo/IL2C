@@ -19,14 +19,14 @@ int32_t System_Single_GetHashCode(float* this__)
     return *(int32_t*)this__;
 }
 
-bool System_Single_Equals(float* this__, float obj)
+bool System_Single_Equals__System_Single(float* this__, float obj)
 {
     il2c_assert(this__ != NULL);
 
     return *this__ == obj;
 }
 
-bool System_Single_Equals_1(float* this__, System_Object* obj)
+bool System_Single_Equals__System_Object(float* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
 
@@ -39,7 +39,7 @@ bool System_Single_Equals_1(float* this__, System_Object* obj)
     return *this__ == rhs;
 }
 
-bool System_Single_TryParse(System_String* s, float* result)
+bool System_Single_TryParse__System_String_System_Single_REF(System_String* s, float* result)
 {
     // TODO: NullReferenceException
     il2c_assert(s != NULL);
@@ -67,5 +67,11 @@ bool System_Single_TryParse(System_String* s, float* result)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Single);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Single);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Single, "System.Single", IL2C_TYPE_VALUE, sizeof(System_Single), System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_Single,
+    "System.Single",
+    IL2C_TYPE_VALUE,
+    sizeof(System_Single),
+    System_ValueType,
+    0, 0)
 IL2C_RUNTIME_TYPE_END();

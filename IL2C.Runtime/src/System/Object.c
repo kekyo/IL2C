@@ -36,14 +36,14 @@ void System_Object_Finalize(System_Object* this__)
     //   Because we can't understand what's this__ pointer at here, the pointer came from objref [O] or byref [&].
 }
 
-bool System_Object_Equals(System_Object* this__, System_Object* obj)
+bool System_Object_Equals__System_Object(System_Object* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
 
     return ((intptr_t)this__) == ((intptr_t)obj);
 }
 
-bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB)
+bool System_Object_ReferenceEquals__System_Object_System_Object(System_Object* objA, System_Object* objB)
 {
     return ((intptr_t)objA) == ((intptr_t)objB);
 }
@@ -53,7 +53,7 @@ bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB)
 
 System_Object_VTABLE_DECL__ System_Object_VTABLE__ = {
     0, // Adjustor offset
-    (bool(*)(void*, System_Object*))System_Object_Equals,
+    (bool(*)(void*, System_Object*))System_Object_Equals__System_Object,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Object_GetHashCode,
     (System_String* (*)(void*))System_Object_ToString

@@ -156,7 +156,7 @@ il2c_noreturn__ void il2c_rethrow(void)
     {
         // Unwind one frame.
         System_Exception* ex = pThreadContext->pUnwindTarget->ex;
-        il2c_ixchgptr(&pThreadContext->pUnwindTarget, pThreadContext->pUnwindTarget->pNext);
+        (void)il2c_ixchgptr(&pThreadContext->pUnwindTarget, pThreadContext->pUnwindTarget->pNext);
 
         // Throw with this exception
         il2c_throw_internal__(ex, pThreadContext->pUnwindTarget, pThreadContext);
@@ -230,7 +230,7 @@ il2c_noreturn__ void il2c_throw_nullreferenceexception__(void)
 {
     // TODO: can turn to static allocate for NullReferenceException?
     System_NullReferenceException* ex = il2c_get_uninitialized_object(System_NullReferenceException);
-    System_NullReferenceException__ctor_1(ex, il2c_null_reference_message);
+    System_NullReferenceException__ctor__System_String(ex, il2c_null_reference_message);
     il2c_throw(ex);
 }
 
@@ -242,7 +242,7 @@ IL2C_CONST_STRING(il2c_invalid_cast_message, L"Specified cast is not valid.");
 il2c_noreturn__ void il2c_throw_invalidcastexception__(void)
 {
     System_InvalidCastException* ex = il2c_get_uninitialized_object(System_InvalidCastException);
-    System_InvalidCastException__ctor_1(ex, il2c_invalid_cast_message);
+    System_InvalidCastException__ctor__System_String(ex, il2c_invalid_cast_message);
     il2c_throw(ex);
 }
 
@@ -251,7 +251,7 @@ IL2C_CONST_STRING(il2c_index_out_of_range_message, L"Index was outside the bound
 il2c_noreturn__ void il2c_throw_indexoutofrangeexception__(void)
 {
     System_IndexOutOfRangeException* ex = il2c_get_uninitialized_object(System_IndexOutOfRangeException);
-    System_IndexOutOfRangeException__ctor_1(ex, il2c_index_out_of_range_message);
+    System_IndexOutOfRangeException__ctor__System_String(ex, il2c_index_out_of_range_message);
     il2c_throw(ex);
 }
 
@@ -260,6 +260,6 @@ IL2C_CONST_STRING(il2c_format_message, L"Input string was not in a correct forma
 il2c_noreturn__ void il2c_throw_formatexception__(void)
 {
     System_FormatException* ex = il2c_get_uninitialized_object(System_FormatException);
-    System_FormatException__ctor_1(ex, il2c_format_message);
+    System_FormatException__ctor__System_String(ex, il2c_format_message);
     il2c_throw(ex);
 }

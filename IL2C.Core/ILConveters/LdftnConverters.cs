@@ -67,7 +67,7 @@ namespace IL2C.ILConverters
                 var (m, overloadIndex) =
                     virtualMethods.First(entry => entry.method.Equals(method));
 
-                var vptrName = m.GetCLanguageDeclarationName(overloadIndex);
+                var vptrName = m.CLanguageFunctionDeclarationName;   // TODO: (overloadIndex);
 
                 return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}->vptr0__->{2}",

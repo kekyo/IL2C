@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE "${CONFIGURATION}")
 
 add_definitions(-DWIN32)
 
-set(CMAKE_C_FLAGS "-pipe -g2 -march=pentium4 -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias")
+set(CMAKE_C_FLAGS "-pipe -g2 -march=pentium4 -Wall -Werror -Wstrict-prototypes -Wno-unused -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias")
 
 if("${CONFIGURATION}" STREQUAL "Release")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -fomit-frame-pointer -DNDEBUG")

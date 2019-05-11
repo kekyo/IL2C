@@ -66,7 +66,7 @@ namespace IL2C.Writers
             {
                 // (The typedef alias contains into prototype definitions.)
             }
-            // Require new vtable layout.
+            // Require new VTable layout.
             else
             {
                 if (declaredType.IsInterface)
@@ -93,12 +93,23 @@ namespace IL2C.Writers
                     tw.WriteLine("intptr_t offset__; // Adjustor offset");
 
                     // Write only visible methods because virtual method collection contains the explicitly implementation methods.
-                    foreach (var (method, overloadIndex) in virtualMethods.
-                        Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
+                    var vtableMethods = virtualMethods.
+                        Select(entry => entry.method).
+                        Where(method => method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly);
+
+                    // Rename function name if the method declareted NOT top of override.
+                    var functionDeclarationNames = new HashSet<string>();
+                    var vtableRenamedMethods = vtableMethods.
+                        Reverse().
+                        Select(method => functionDeclarationNames.Add(method.CLanguageFunctionName) ?
+                            method.CLanguageFunctionNamedType :
+                            method.CLanguageFunctionFullNamedType).
+                        Reverse();
+
+                    // Write VTable layout.
+                    foreach (var methodName in vtableRenamedMethods)
                     {
-                        tw.WriteLine(
-                            "{0};",
-                            method.CLanguageFunctionTypePrototype); // TODO: (overloadIndex)
+                        tw.WriteLine("{0};", methodName);
                     }
                 }
 

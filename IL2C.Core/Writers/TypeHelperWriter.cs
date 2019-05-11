@@ -19,7 +19,7 @@ namespace IL2C.Writers
             tw.WriteLine(
                 "static {0} {1}__Trampoline_VFunc__(System_ValueType* this__{2})",
                 method.ReturnType.CLanguageTypeName,
-                method.CLanguageFunctionName,
+                method.CLanguageFunctionFullName,
                 string.Concat(method.Parameters.
                     Skip(1).
                     Select(p => string.Format(", {0} {1}", p.TargetType.CLanguageTypeName, p.ParameterName))));
@@ -48,7 +48,7 @@ namespace IL2C.Writers
 
                     tw.WriteLine(
                         "return {0}(pUnboxedValue__{1});",
-                        method.CLanguageFunctionName,
+                        method.CLanguageFunctionFullName,
                         string.Concat(method.Parameters.
                             Skip(1).
                             Select(p => string.Format(", {0}", p.ParameterName))));    // These aren't required expression evaluation.
@@ -72,7 +72,7 @@ namespace IL2C.Writers
 
                     tw.WriteLine(
                         "return {0}(&unboxedValue__{1});",
-                        method.CLanguageFunctionName,
+                        method.CLanguageFunctionFullName,
                         string.Concat(method.Parameters.
                             Skip(1).
                             Select(p => string.Format(", {0}", p.ParameterName))));    // These aren't required expression evaluation.
@@ -222,7 +222,7 @@ namespace IL2C.Writers
                             tw.WriteLine(
                                 "({0}){1}{2},",
                                 method.CLanguageFunctionType,
-                                method.CLanguageFunctionName,
+                                method.CLanguageFunctionFullName,
                                 trampolineVirtualMethods.Contains(method) ? "__Trampoline_VFunc__" : string.Empty);
                         }
                     }
@@ -289,7 +289,7 @@ namespace IL2C.Writers
                         tw.WriteLine(
                             "({0}){1}{2},",
                             entry.interfaceMethod.CLanguageFunctionType,
-                            entry.targetMethod.CLanguageFunctionName,
+                            entry.targetMethod.CLanguageFunctionFullName,
                             trampolineVirtualMethods.Contains(entry.targetMethod) ? "__Trampoline_VFunc__" : string.Empty);
                     }
                 }

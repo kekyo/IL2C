@@ -200,7 +200,7 @@ namespace IL2C.ILConverters
                                 type.CLanguageStaticSizeOfExpression),
                             string.Format(
                                 "{0}(&{1})",
-                                ctor.CLanguageFunctionName,
+                                ctor.CLanguageFunctionFullName,
                                 parameterString)
                         };
                     }
@@ -228,7 +228,7 @@ namespace IL2C.ILConverters
                     {
                         string.Format(
                             "{0}({1})",
-                            ctor.CLanguageFunctionName,
+                            ctor.CLanguageFunctionFullName,
                             parameterString)
                     };
 

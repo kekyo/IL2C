@@ -45,11 +45,12 @@ namespace IL2C.Metadata
         PInvokeInfo PInvokeInformation { get; }
         NativeMethodAttributeInformation NativeMethod { get; }
 
+        string CLanguageFunctionFullName { get; }
         string CLanguageFunctionName { get; }
-        string CLanguageFunctionDeclarationName { get; }
         string CLanguageFunctionPrototype { get; }
         string CLanguageFunctionType { get; }
-        string CLanguageFunctionTypePrototype { get; }
+        string CLanguageFunctionNamedType { get; }
+        string CLanguageFunctionFullNamedType { get; }
     }
 
     internal sealed class MethodInformation
@@ -401,48 +402,17 @@ namespace IL2C.Metadata
             }
         }
 
-        public string CLanguageFunctionName =>
-            // System_Int32 Foo.Bar.Baz.MooMethod(System.String name) --> Foo_Bar_Baz_MooMethod__System_String
+        public string CLanguageFunctionFullName =>
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> Foo_Bar_Baz_MooMethod__System_String
             this.MangledUniqueName;
 
-        public string CLanguageFunctionDeclarationName =>
-            // System_Int32 Foo.Bar.Baz.MooMethod(System.String) --> MooMethod__System_String   (Will use vptr name)
+        public string CLanguageFunctionName =>
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> MooMethod__System_String   (Will use vptr name)
             this.Member.GetMangledUniqueName(true);
-
-        private string GetCLanguageFunctionType(bool isPrototype)
-        {
-            // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*."
-            //   non virtual : int32_t (*DoThat)(System_String* this__)
-            //   virtual     : int32_t (*DoThat)(void* this__)
-
-            var parametersString = (this.Parameters.Length >= 1) ?
-                string.Join(
-                    ", ",
-                    this.Parameters.Select((parameter, index) =>
-                        ((this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName) +
-                        (isPrototype ? (" " + parameter.ParameterName) : string.Empty))) :
-                "void";
-
-            var returnTypeName = this.ReturnType.CLanguageTypeName;
-
-            return string.Format(
-                "{0} (*{1})({2})",
-                returnTypeName,
-                isPrototype ? this.CLanguageFunctionDeclarationName : string.Empty,
-                parametersString);
-        }
-
-        public string CLanguageFunctionType =>
-            // System_Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*)(System_String*)
-            this.GetCLanguageFunctionType(false);
-
-        public string CLanguageFunctionTypePrototype =>
-            // System_Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*MooMethod__System_String)(System_String* this__)
-            this.GetCLanguageFunctionType(true);
 
         public string CLanguageFunctionPrototype
         {
-            // System_Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t Foo_Bar_Baz_MooMethod__System_String(System_String* name)
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t Foo_Bar_Baz_MooMethod__System_String(System_String* name)
             get
             {
                 var parametersString = (this.Parameters.Length >= 1) ?
@@ -460,10 +430,58 @@ namespace IL2C.Metadata
                 return string.Format(
                     "{0} {1}({2})",
                     returnTypeName,
-                    this.CLanguageFunctionName,
+                    this.CLanguageFunctionFullName,
                     parametersString);
             }
         }
+
+        private enum CLanguageFunctionTypeFormats
+        {
+            Type,
+            NamedType,
+            FullNamedType
+        }
+
+        private string GetCLanguageFunctionType(CLanguageFunctionTypeFormats format)
+        {
+            // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*."
+            //   non virtual : int32_t (*DoThat)(System_String* this__)
+            //   virtual     : int32_t (*DoThat)(void* this__)
+
+            var parametersString = (this.Parameters.Length >= 1) ?
+                string.Join(
+                    ", ",
+                    this.Parameters.Select((parameter, index) =>
+                        ((this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName) +
+                        ((format == CLanguageFunctionTypeFormats.Type) ? string.Empty : (" " + parameter.ParameterName)))) :
+                "void";
+
+            var returnTypeName = this.ReturnType.CLanguageTypeName;
+
+            var name = (format == CLanguageFunctionTypeFormats.FullNamedType) ?
+                this.CLanguageFunctionFullName :
+                (format == CLanguageFunctionTypeFormats.NamedType) ?
+                this.CLanguageFunctionName :
+                string.Empty;
+
+            return string.Format(
+                "{0} (*{1})({2})",
+                returnTypeName,
+                name,
+                parametersString);
+        }
+
+        public string CLanguageFunctionType =>
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*)(System_String*)
+            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.Type);
+
+        public string CLanguageFunctionNamedType =>
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*MooMethod__System_String)(System_String* this__)
+            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.NamedType);
+
+        public string CLanguageFunctionFullNamedType =>
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*Foo_Bar_Baz_MooMethod__System_String)(System_String* this__)
+            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.FullNamedType);
 
         protected override MethodDefinition OnResolve(MethodReference member) =>
             member.Resolve();

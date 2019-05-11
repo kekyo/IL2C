@@ -271,7 +271,7 @@ namespace IL2C.ILConverters
                         "{0}{1}->vptr0__->{2}({3})",
                         receiveResultExpression,
                         extractContext.GetSymbolName(pairParameters[0].variable),
-                        method.CLanguageFunctionDeclarationName,   // TODO: (overloadIndex)
+                        method.CLanguageFunctionName,   // TODO: (overloadIndex)
                         parameterString);
                 }
                 else
@@ -279,7 +279,7 @@ namespace IL2C.ILConverters
                     callExpression = string.Format(
                         "{0}{1}({2})",
                         receiveResultExpression,
-                        method.CLanguageFunctionName,
+                        method.CLanguageFunctionFullName,
                         parameterString);
                 }
 

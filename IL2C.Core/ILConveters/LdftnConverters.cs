@@ -23,7 +23,7 @@ namespace IL2C.ILConverters
             return (extractContext, _) => new[] { string.Format(
                 "{0} = (intptr_t){1}",
                 extractContext.GetSymbolName(symbol),
-                operand.CLanguageFunctionName) };
+                operand.CLanguageFunctionFullName) };
         }
     }
 
@@ -67,7 +67,7 @@ namespace IL2C.ILConverters
                 var (m, overloadIndex) =
                     virtualMethods.First(entry => entry.method.Equals(method));
 
-                var vptrName = m.CLanguageFunctionDeclarationName;   // TODO: (overloadIndex);
+                var vptrName = m.CLanguageFunctionName;   // TODO: (overloadIndex);
 
                 return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}->vptr0__->{2}",
@@ -80,7 +80,7 @@ namespace IL2C.ILConverters
                 return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}",
                     extractContext.GetSymbolName(symbol),
-                    method.CLanguageFunctionName) };
+                    method.CLanguageFunctionFullName) };
             }
         }
     }

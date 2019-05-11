@@ -22,7 +22,7 @@ namespace IL2C.Writers
 
             tw.WriteLine(
                 "typedef struct {0}_EXECUTION_FRAME_DECL",
-                preparedMethod.Method.CLanguageFunctionName);
+                preparedMethod.Method.CLanguageFunctionFullName);
             tw.WriteLine("{");
 
             using (var _ = tw.Shift())
@@ -62,7 +62,7 @@ namespace IL2C.Writers
 
             tw.WriteLine(
                 "}} {0}_EXECUTION_FRAME__;",
-                preparedMethod.Method.CLanguageFunctionName);
+                preparedMethod.Method.CLanguageFunctionFullName);
             tw.SplitLine();
         }
 
@@ -84,7 +84,7 @@ namespace IL2C.Writers
             debugInformationController.WriteInformationBeforeCode(tw);
             tw.WriteLine(
                 "{0}_EXECUTION_FRAME__ frame__ =",
-                preparedMethod.Method.CLanguageFunctionName);
+                preparedMethod.Method.CLanguageFunctionFullName);
             using (var __ = tw.Shift())
             {
                 if (valueEntries.Length >= 1)
@@ -143,7 +143,7 @@ namespace IL2C.Writers
 
                 var filterName = string.Format(
                     "{0}_ExceptionFilter{1}__",
-                    preparedMethod.Method.CLanguageFunctionName,
+                    preparedMethod.Method.CLanguageFunctionFullName,
                     handlerIndex);
                 tw.WriteLine(
                     "static int16_t {0}(System_Exception* ex)",
@@ -376,7 +376,7 @@ namespace IL2C.Writers
                             // Reached try block:
                             var filterName = string.Format(
                                 "{0}_ExceptionFilter{1}__",
-                                preparedMethod.Method.CLanguageFunctionName,
+                                preparedMethod.Method.CLanguageFunctionFullName,
                                 handlerIndex);
 
                             debugInformationController.WriteInformationBeforeCode(tw);
@@ -715,7 +715,7 @@ namespace IL2C.Writers
                     {
                         tw.WriteLine(
                             "volatile struct {0}_EXECUTION_FRAME_DECL",
-                            invokeMethod.CLanguageFunctionName);
+                            invokeMethod.CLanguageFunctionFullName);
                         tw.WriteLine("{");
                         using (var __ = tw.Shift())
                         {

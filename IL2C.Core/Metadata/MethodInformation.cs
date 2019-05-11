@@ -328,7 +328,7 @@ namespace IL2C.Metadata
             get
             {
                 var dict = this.DeclaringType.DeclaredMethods.
-                    CalculateOverloadMethods();
+                    OrderByOverloadPriority();
                 var found = dict[this.Member.Name].
                     Select((m, i) => new { m, i }).
                     First(e => this.Equals(e.m));

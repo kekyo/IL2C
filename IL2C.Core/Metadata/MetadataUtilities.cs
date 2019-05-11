@@ -455,7 +455,7 @@ namespace IL2C.Metadata
             new MethodSignatureComparerImpl(true);
         #endregion
 
-        public static IDictionary<string, IMethodInformation[]> CalculateOverloadMethods(
+        public static IDictionary<string, IMethodInformation[]> OrderByOverloadPriority(
             this IEnumerable<IMethodInformation> methods)
         {
             // Aggregate overloads and overrides.
@@ -475,7 +475,36 @@ namespace IL2C.Metadata
             return dict;
         }
 
-        public static IEnumerable<(IMethodInformation method, int overloadIndex)> CalculateVirtualMethods(
+        public static IEnumerable<IMethodInformation> FilterByNewSlots(
+            this IEnumerable<IMethodInformation> methods) =>
+            methods.Where(method => method.IsVirtual && method.IsNewSlot);
+
+        public static IEnumerable<IMethodInformation> FilterAndOrderByMostOverrides(
+            this IEnumerable<IMethodInformation> methods)
+        {
+            var list = new List<IMethodInformation>();
+            foreach (var method in methods.Where(method => method.IsVirtual))
+            {
+                if (method.IsNewSlot)
+                {
+                    list.Add(method);
+                }
+                else if (method.IsReuseSlot)
+                {
+                    var index = list.FindLastIndex(m => m.CLanguageFunctionName == method.CLanguageFunctionName);
+                    Debug.Assert(index >= 0);
+                    list[index] = method;
+                }
+                else
+                {
+                    Debug.Assert(false);
+                }
+            }
+            return list;
+        }
+
+        //[Obsolete]
+        public static IEnumerable<(IMethodInformation method, int overloadIndex)> OrderByNewSlotVirtuals(
             this IEnumerable<IMethodInformation> methods)
         {
             // Calculate overrided virtual methods using NewSlot attribute.

@@ -84,7 +84,10 @@ namespace IL2C.Metadata
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
         IMethodInformation[] AllInheritedDeclaredMethods { get; }
+
+        //[Obsolete]
         (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods { get; }
+
         IMethodInformation[] OverrideMethods { get; }
         IMethodInformation[] NewSlotMethods { get; }
         IMethodInformation[] OverrideBaseMethods { get; }
@@ -447,38 +450,59 @@ namespace IL2C.Metadata
             Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
             ToArray();
 
+        //[Obsolete]
         private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods() =>
             ((ITypeInformation)this).
                 Traverse(type => type.BaseType).
                 Reverse().
-                SelectMany(type => type.DeclaredMethods.CalculateOverloadMethods().SelectMany(entry => entry.Value)).
-                CalculateVirtualMethods();
+                SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
+                OrderByNewSlotVirtuals();
 
+        private IEnumerable<IMethodInformation> EnumerateNewSlotMethods() =>
+            ((ITypeInformation)this).
+                Traverse(type => type.BaseType).
+                Reverse().
+                SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
+                FilterByNewSlots();
+
+        private IEnumerable<IMethodInformation> EnumerateMostOverrideMethods() =>
+            ((ITypeInformation)this).
+                Traverse(type => type.BaseType).
+                Reverse().
+                SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
+                FilterAndOrderByMostOverrides();
+
+        //[Obsolete]
         public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods =>
             this.EnumerateCalculatedVirtualMethods().
             ToArray();
+
         public IMethodInformation[] OverrideMethods =>
-            this.EnumerateCalculatedVirtualMethods().
-                Select(entry => entry.method).
-                Where(method =>
-                    method.IsReuseSlot &&
-                    method.DeclaringType.Equals(this)).
-                ToArray();
+            EnumerateMostOverrideMethods().
+            //this.EnumerateCalculatedVirtualMethods().
+            //    Select(entry => entry.method).
+            //    Where(method =>
+            //        method.IsReuseSlot &&
+            //        method.DeclaringType.Equals(this)).
+            ToArray();
+
         public IMethodInformation[] NewSlotMethods =>
-            this.EnumerateCalculatedVirtualMethods().
-                Select(entry => entry.method).
-                Where(method =>
-                    (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
-                    method.IsNewSlot &&
-                    method.DeclaringType.IsAssignableFrom(this)).
-                ToArray();
+            EnumerateNewSlotMethods().
+            //this.EnumerateCalculatedVirtualMethods().
+            //    Select(entry => entry.method).
+            //    Where(method =>
+            //        (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
+            //        method.IsNewSlot &&
+            //        method.DeclaringType.IsAssignableFrom(this)).
+            ToArray();
+
         public IMethodInformation[] OverrideBaseMethods =>
             ((ITypeInformation)this).
                 Traverse(type => type.BaseType).
                 Reverse().
                 SelectMany(type => type.DeclaredMethods.
                     Where(method => method.IsVirtual).
-                    CalculateOverloadMethods().
+                    OrderByOverloadPriority().
                     SelectMany(entry => entry.Value)).
                 Where(method =>
                     !method.DeclaringType.Equals(this) &&

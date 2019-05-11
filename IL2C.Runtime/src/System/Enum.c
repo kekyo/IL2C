@@ -12,14 +12,14 @@ System_String* System_Enum_ToString(System_Enum* this__)
 int32_t System_Enum_GetHashCode(System_Enum* this__)
 {
     // TODO:
-    il2c_assert(0);
+    //il2c_assert(0);
     return (int32_t)(intptr_t)this__;
 }
 
 bool System_Enum_Equals__System_Object(System_Enum* this__, System_Object* obj)
 {
     // TODO:
-    il2c_assert(0);
+    //il2c_assert(0);
     return false;
 }
 

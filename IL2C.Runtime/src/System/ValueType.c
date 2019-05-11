@@ -11,14 +11,14 @@ System_String* System_ValueType_ToString(System_ValueType* this__)
 int32_t System_ValueType_GetHashCode(System_ValueType* this__)
 {
     // TODO:
-    il2c_assert(0);
+    //il2c_assert(0);
     return (int32_t)(intptr_t)this__;
 }
 
 bool System_ValueType_Equals__System_Object(System_ValueType* this__, System_Object* obj)
 {
     // TODO:
-    il2c_assert(0);
+    //il2c_assert(0);
     return false;
 }
 

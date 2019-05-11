@@ -68,14 +68,14 @@ System_Runtime_InteropServices_GCHandle System_Runtime_InteropServices_GCHandle_
 int32_t System_Runtime_InteropServices_GCHandle_GetHashCode(System_Runtime_InteropServices_GCHandle* this__)
 {
     // TODO:
-    il2c_assert(0);
+    //il2c_assert(0);
     return (int32_t)(intptr_t)this__;
 }
 
 bool System_Runtime_InteropServices_GCHandle_Equals__System_Object(System_Runtime_InteropServices_GCHandle* this__, System_Object* obj)
 {
     // TODO:
-    il2c_assert(0);
+    //il2c_assert(0);
     return false;
 }
 

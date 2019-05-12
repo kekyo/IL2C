@@ -74,7 +74,7 @@ namespace IL2C.ILConverters
                     method.DeclaringType.IsAssignableFrom(arg0.TargetType))
                 {
                     // All declared methods from derived to base types.
-                    var allDeclaredMethods = arg0.TargetType.AllInheritedDeclaredMethods;
+                    var allDeclaredMethods = arg0.TargetType.DeclaredAllInheritedMethods;
 
                     var m = method;
                     var implementationMethod = allDeclaredMethods.First(
@@ -131,7 +131,7 @@ namespace IL2C.ILConverters
                 if (constrainedType.IsValueType)
                 {
                     // All declared methods from derived to base types.
-                    var allDeclaredMethods = constrainedType.AllInheritedDeclaredMethods;
+                    var allDeclaredMethods = constrainedType.DeclaredAllInheritedMethods;
 
                     // '...and thisType implements method then'
                     var implementationMethod = allDeclaredMethods.First(
@@ -263,15 +263,19 @@ namespace IL2C.ILConverters
                 string callExpression;
                 if (isVirtualCall && method.IsVirtual && !method.IsSealed)
                 {
-                    var overloadIndex = method.DeclaringType.CalculatedVirtualMethods.
-                        First(entry => entry.method.Equals(method)).
-                        overloadIndex;
+                    // Last newslot method is short named function: "ToString",
+                    // But have to apply full named function when NOT equals last newslot method: "System_Object_ToString"
+                    var methodsBySlot = pairParameters[0].variable.TargetType.AllCombinedMethods.
+                        Last(entry => entry.Item1.CLanguageFunctionName == method.CLanguageFunctionName).
+                        Item2;
 
                     callExpression = string.Format(
                         "{0}{1}->vptr0__->{2}({3})",
                         receiveResultExpression,
                         extractContext.GetSymbolName(pairParameters[0].variable),
-                        method.CLanguageFunctionName,   // TODO: (overloadIndex)
+                        methodsBySlot.Any(m => m.Equals(method)) ?
+                            method.CLanguageFunctionName :
+                            method.CLanguageFunctionFullName,
                         parameterString);
                 }
                 else

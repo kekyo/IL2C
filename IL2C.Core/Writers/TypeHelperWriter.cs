@@ -168,10 +168,10 @@ namespace IL2C.Writers
             tw.SplitLine();
 
             // Get virtual methods.
-            var virtualMethods = declaredType.CalculatedVirtualMethods;
+            var allOverrideMethods = declaredType.AllOverrideMethods;
 
             // All declared methods from derived to base types.
-            var allDeclaredMethods = declaredType.AllInheritedDeclaredMethods;
+            var allDeclaredMethods = declaredType.DeclaredAllInheritedMethods;
 
             // Write trampoline virtual functions if type is value type.
             var trampolineVirtualMethods = allDeclaredMethods.
@@ -183,11 +183,10 @@ namespace IL2C.Writers
             }
 
             // Write vtable excepts abstract types.
-            if (virtualMethods.All(entry => !entry.method.IsAbstract))
+            if (allOverrideMethods.All(method => !method.IsAbstract))
             {
-                var overrideMethods = declaredType.OverrideMethods;
-                var newSlotMethods = declaredType.NewSlotMethods;
-                var overrideBaseMethods = declaredType.OverrideBaseMethods;
+                var overrideMethods = declaredType.DeclaredOverrideMethods;
+                var newSlotMethods = declaredType.DeclaredNewslotMethods;
 
                 // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
                 if (!overrideMethods.Any() &&
@@ -213,8 +212,8 @@ namespace IL2C.Writers
                         tw.WriteLine("0, // Adjustor offset");
 
                         // Write only visible methods because virtual method collection contains the explicitly implementation methods.
-                        foreach (var (method, _) in virtualMethods.
-                            Where(entry => entry.method.IsPublic || entry.method.IsFamily || entry.method.IsFamilyOrAssembly))
+                        foreach (var method in allOverrideMethods.
+                            Where(method => method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly))
                         {
                             // NOTE: Transfer trampoline virtual function if declared type is value type.
                             //   Because arg0 type is native value type pointer, but the virtual function requires boxed objref.
@@ -310,7 +309,8 @@ namespace IL2C.Writers
                     field.FieldType.Fields.Length >= 1)).
                 ToArray();
 
-            if (virtualMethods.All(entry => !entry.method.IsAbstract))
+            // All virtual methods are implemented.
+            if (allOverrideMethods.All(method => !method.IsAbstract))
             {
                 // ex: IL2C_RUNTIME_TYPE_BEGIN(Foo_Bar, "Foo.Bar", IL2C_TYPE_REFERENCE, sizeof(Foo_Bar), System_Object, 0, 0)
                 tw.WriteLine(

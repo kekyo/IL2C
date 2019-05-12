@@ -475,33 +475,38 @@ namespace IL2C.Metadata
             return dict;
         }
 
-        public static IEnumerable<IMethodInformation> FilterByNewSlots(
+        public static IEnumerable<IMethodInformation> FilterByNewslots(
             this IEnumerable<IMethodInformation> methods) =>
             methods.Where(method => method.IsVirtual && method.IsNewSlot);
 
-        public static IEnumerable<IMethodInformation> FilterAndOrderByMostOverrides(
+        public static IEnumerable<(IMethodInformation newslotMethod, IMethodInformation[] reuseslotMethods)> OrderByMostOverrides(
             this IEnumerable<IMethodInformation> methods)
         {
-            var list = new List<IMethodInformation>();
+            var list = new List<Tuple<IMethodInformation, List<IMethodInformation>>>();
             foreach (var method in methods.Where(method => method.IsVirtual))
             {
                 if (method.IsNewSlot)
                 {
-                    list.Add(method);
+                    list.Add(Tuple.Create(method, new List<IMethodInformation> { method }));
                 }
                 else if (method.IsReuseSlot)
                 {
-                    var index = list.FindLastIndex(m => m.CLanguageFunctionName == method.CLanguageFunctionName);
+                    var index = list.FindLastIndex(entry => entry.Item1.CLanguageFunctionName == method.CLanguageFunctionName);
                     Debug.Assert(index >= 0);
-                    list[index] = method;
+                    list[index].Item2.Add(method);
                 }
                 else
                 {
                     Debug.Assert(false);
                 }
             }
-            return list;
+            return list.
+                Select(entry => (entry.Item1, entry.Item2.ToArray()));
         }
+
+        public static IEnumerable<IMethodInformation> FilterAndOrderByMostOverrides(
+            this IEnumerable<IMethodInformation> methods) =>
+            OrderByMostOverrides(methods).Select(entry => entry.reuseslotMethods.Last());
 
         //[Obsolete]
         public static IEnumerable<(IMethodInformation method, int overloadIndex)> OrderByNewSlotVirtuals(

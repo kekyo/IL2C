@@ -93,11 +93,13 @@ namespace IL2C.Metadata.Specialized
 
         public IFieldInformation[] Fields => throw new NotImplementedException();
         public IMethodInformation[] DeclaredMethods => throw new NotImplementedException();
-        public IMethodInformation[] AllInheritedDeclaredMethods => throw new NotImplementedException();
+        public IMethodInformation[] DeclaredAllInheritedMethods => throw new NotImplementedException();
         public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods => throw new NotImplementedException();
-        public IMethodInformation[] OverrideMethods => throw new NotImplementedException();
-        public IMethodInformation[] NewSlotMethods => throw new NotImplementedException();
-        public IMethodInformation[] OverrideBaseMethods => throw new NotImplementedException();
+        public IMethodInformation[] DeclaredOverrideMethods => throw new NotImplementedException();
+        public IMethodInformation[] DeclaredNewslotMethods => throw new NotImplementedException();
+        public IMethodInformation[] AllOverrideMethods => throw new NotImplementedException();
+        public IMethodInformation[] AllNewslotMethods => throw new NotImplementedException();
+        public (IMethodInformation, IMethodInformation[])[] AllCombinedMethods => throw new NotImplementedException();
 
         public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false) =>
             "untyped_ptr" + ((symbolName != null) ? (" " + symbolName) : string.Empty);

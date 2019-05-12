@@ -62,12 +62,7 @@ namespace IL2C.ILConverters
             if (method.IsVirtual && !method.IsSealed)
             {
                 // TODO: interface member vptr
-                var virtualMethods =
-                    method.DeclaringType.CalculatedVirtualMethods;
-                var (m, overloadIndex) =
-                    virtualMethods.First(entry => entry.method.Equals(method));
-
-                var vptrName = m.CLanguageFunctionName;   // TODO: (overloadIndex);
+                var vptrName = method.CLanguageFunctionName;
 
                 return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}->vptr0__->{2}",

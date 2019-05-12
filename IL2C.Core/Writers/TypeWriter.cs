@@ -56,13 +56,12 @@ namespace IL2C.Writers
             //                                         | Calc()             |
             //                                         +--------------------+
 
-            var virtualMethods = declaredType.CalculatedVirtualMethods;
-            var overrideMethods = declaredType.OverrideMethods;
-            var newSlotMethods = declaredType.NewSlotMethods;
-            var overrideBaseMethods = declaredType.OverrideBaseMethods;
+            var declaredOverrideMethods = declaredType.DeclaredOverrideMethods;
+            var declaredNewslotMethods = declaredType.DeclaredNewslotMethods;
+            var allNewslotMethods = declaredType.AllNewslotMethods;
 
             // If virtual method collection doesn't contain newslot method at this declared type:
-            if (!newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+            if (!declaredNewslotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
             {
                 // (The typedef alias contains into prototype definitions.)
             }
@@ -93,8 +92,7 @@ namespace IL2C.Writers
                     tw.WriteLine("intptr_t offset__; // Adjustor offset");
 
                     // Write only visible methods because virtual method collection contains the explicitly implementation methods.
-                    var vtableMethods = virtualMethods.
-                        Select(entry => entry.method).
+                    var vtableMethods = allNewslotMethods.
                         Where(method => method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly);
 
                     // Rename function name if the method declareted NOT top of override.
@@ -255,8 +253,7 @@ namespace IL2C.Writers
             if (!declaredType.IsInterface)
             {
                 // If virtual method collection doesn't contain reuseslot and newslot method at declared types:
-                if (!overrideMethods.Any() &&
-                    !newSlotMethods.Any(method => method.DeclaringType.Equals(declaredType)))
+                if (!declaredOverrideMethods.Any() && !declaredNewslotMethods.Any())
                 {
                     tw.WriteLine(
                         "// [1-5-1] VTable (Same as {0})",
@@ -267,7 +264,7 @@ namespace IL2C.Writers
                         declaredType.BaseType.MangledUniqueName);
                 }
                 // Require new vtable
-                else if (declaredType.CalculatedVirtualMethods.All(entry => !entry.method.IsAbstract))
+                else if (declaredType.AllOverrideMethods.All(method => !method.IsAbstract))
                 {
                     tw.WriteLine(
                         "// [1-5-2] VTable (Derived from {0})",

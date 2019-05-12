@@ -94,7 +94,6 @@ namespace IL2C.Metadata.Specialized
         public IFieldInformation[] Fields => throw new NotImplementedException();
         public IMethodInformation[] DeclaredMethods => throw new NotImplementedException();
         public IMethodInformation[] DeclaredAllInheritedMethods => throw new NotImplementedException();
-        public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods => throw new NotImplementedException();
         public IMethodInformation[] DeclaredOverrideMethods => throw new NotImplementedException();
         public IMethodInformation[] DeclaredNewslotMethods => throw new NotImplementedException();
         public IMethodInformation[] AllOverrideMethods => throw new NotImplementedException();
@@ -113,9 +112,6 @@ namespace IL2C.Metadata.Specialized
         public ITypeInformation DeclaringType => throw new NotImplementedException();
 
         public MemberScopes CLanguageMemberScope => MemberScopes.HiddenOrUnknown;
-        public bool IsCLanguagePublicScope => false;
-        public bool IsCLanguageLinkageScope => false;
-        public bool IsCLanguageFileScope => false;
 
         public string UniqueName => string.Format("boxedtype<{0}>", boxedType.MangledUniqueName);
         public string Name => this.UniqueName;

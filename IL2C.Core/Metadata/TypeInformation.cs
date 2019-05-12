@@ -85,15 +85,12 @@ namespace IL2C.Metadata
         IMethodInformation[] DeclaredMethods { get; }
         IMethodInformation[] DeclaredAllInheritedMethods { get; }
 
-        //[Obsolete]
-        (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods { get; }
-
         IMethodInformation[] DeclaredOverrideMethods { get; }
         IMethodInformation[] DeclaredNewslotMethods { get; }
+
         IMethodInformation[] AllOverrideMethods { get; }
         IMethodInformation[] AllNewslotMethods { get; }
         (IMethodInformation, IMethodInformation[])[] AllCombinedMethods { get; }
-
 
         string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false);
 
@@ -453,14 +450,6 @@ namespace IL2C.Metadata
             Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
             ToArray();
 
-        //[Obsolete]
-        private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods() =>
-            ((ITypeInformation)this).
-                Traverse(type => type.BaseType).
-                Reverse().
-                SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
-                OrderByNewSlotVirtuals();
-
         private IEnumerable<IMethodInformation> EnumerateNewslotMethods() =>
             ((ITypeInformation)this).
                 Traverse(type => type.BaseType).
@@ -480,11 +469,6 @@ namespace IL2C.Metadata
                 SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
                 OrderByMostOverrides();
 
-        //[Obsolete]
-        public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods =>
-            this.EnumerateCalculatedVirtualMethods().
-            ToArray();
-
         public IMethodInformation[] DeclaredOverrideMethods =>
             EnumerateMostOverrideMethods().
             // Only declared in this type.
@@ -495,6 +479,7 @@ namespace IL2C.Metadata
             // Only declared in this type.
             Where(method => method.DeclaringType.Equals(this)).
             ToArray();
+
         public IMethodInformation[] AllOverrideMethods =>
             EnumerateMostOverrideMethods().
             ToArray();

@@ -265,17 +265,21 @@ namespace IL2C.ILConverters
                 {
                     // Last newslot method is short named function: "ToString",
                     // But have to apply full named function when NOT equals last newslot method: "System_Object_ToString"
-                    var methodsBySlot = pairParameters[0].variable.TargetType.AllCombinedMethods.
-                        Last(entry => entry.Item1.CLanguageFunctionName == method.CLanguageFunctionName).
-                        Item2;
+                    var methodsBySlots = pairParameters[0].variable.TargetType.AllCombinedMethods.
+                        Where(entry => entry.Item1.CLanguageFunctionName == method.CLanguageFunctionName).
+                        ToArray();
+                    var slotIndex = methodsBySlots.
+                        Select((entry, index) => entry.Item2.Any(m => m.Equals(method)) ? index : -1).
+                        First(index => index >= 0);
+                    var newslotMethod = methodsBySlots[slotIndex].Item1;
 
                     callExpression = string.Format(
                         "{0}{1}->vptr0__->{2}({3})",
                         receiveResultExpression,
                         extractContext.GetSymbolName(pairParameters[0].variable),
-                        methodsBySlot.Any(m => m.Equals(method)) ?
-                            method.CLanguageFunctionName :
-                            method.CLanguageFunctionFullName,
+                        (slotIndex == (methodsBySlots.Length - 1)) ?
+                            newslotMethod.CLanguageFunctionName :
+                            newslotMethod.CLanguageFunctionFullName,
                         parameterString);
                 }
                 else

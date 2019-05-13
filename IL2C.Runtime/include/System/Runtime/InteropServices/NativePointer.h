@@ -20,8 +20,8 @@ typedef System_IntPtr_VTABLE_DECL__ System_Runtime_InteropServices_NativePointer
 
 IL2C_DECLARE_RUNTIME_TYPE(System_Runtime_InteropServices_NativePointer);
 
-#define System_Runtime_InteropServices_NativePointer_op_Implicit(value) ((void*)(value))
-#define System_Runtime_InteropServices_NativePointer_op_Implicit_1(value) ((intptr_t)(value))
+#define System_Runtime_InteropServices_NativePointer_op_Implicit__System_IntPtr(value) ((System_Runtime_InteropServices_NativePointer)(value))
+#define System_Runtime_InteropServices_NativePointer_op_Implicit__System_Runtime_InteropServices_NativePointer(value) ((intptr_t)(value))
 
 #ifdef __cplusplus
 }

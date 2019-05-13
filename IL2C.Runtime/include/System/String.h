@@ -31,24 +31,24 @@ extern System_String** System_String_Empty_REF__;
 typedef struct System_IFormatProvider System_IFormatProvider;
 
 extern /* virtual */ System_String* System_String_ToString(System_String* this__);
-extern bool System_String_Equals(System_String* this__, System_String* obj);
-extern /* virtual */ bool System_String_Equals_1(System_String* this__, System_Object* obj);
+extern bool System_String_Equals__System_String(System_String* this__, System_String* obj);
+extern /* virtual */ bool System_String_Equals__System_Object(System_String* this__, System_Object* obj);
 extern /* virtual */ int32_t System_String_GetHashCode(System_String* this__);
-extern /* static */ System_String* System_String_Concat_3(System_String* str0, System_String* str1);
-extern /* static */ System_String* System_String_Concat_4(System_Object* arg0, System_Object* arg1);
-extern /* static */ System_String* System_String_Concat_5(System_String* str0, System_String* str1, System_String* str2);
-extern System_String* System_String_Substring(System_String* this__, int32_t startIndex);
-extern System_String* System_String_Substring_1(System_String* this__, int32_t startIndex, int32_t length);
-extern wchar_t System_String_get_Chars(System_String* this__, int32_t index);
+extern /* static */ System_String* System_String_Concat__System_String_System_String(System_String* str0, System_String* str1);
+extern /* static */ System_String* System_String_Concat__System_Object_System_Object(System_Object* arg0, System_Object* arg1);
+extern /* static */ System_String* System_String_Concat__System_String_System_String_System_String(System_String* str0, System_String* str1, System_String* str2);
+extern System_String* System_String_Substring__System_Int32(System_String* this__, int32_t startIndex);
+extern System_String* System_String_Substring__System_Int32_System_Int32(System_String* this__, int32_t startIndex, int32_t length);
+extern wchar_t System_String_get_Chars__System_Int32(System_String* this__, int32_t index);
 extern int32_t System_String_get_Length(System_String* this__);
-extern /* static */ bool System_String_IsNullOrWhiteSpace(System_String* value);
-extern /* static */ System_String* System_String_Format(System_String* format, System_Object* arg0);
-extern /* static */ System_String* System_String_Format_1(System_String* format, System_Object* arg0, System_Object* arg1);
-extern /* static */ System_String* System_String_Format_3(System_String* format, System_Object* arg0, System_Object* arg1, System_Object* arg2);
-extern System_String* System_String_Format_6(System_String* format, /* params */ il2c_arraytype(System_Object)* args);
+extern /* static */ bool System_String_IsNullOrWhiteSpace__System_String(System_String* value);
+extern /* static */ System_String* System_String_Format__System_String_System_Object(System_String* format, System_Object* arg0);
+extern /* static */ System_String* System_String_Format__System_String_System_Object_System_Object(System_String* format, System_Object* arg0, System_Object* arg1);
+extern /* static */ System_String* System_String_Format__System_String_System_Object_System_Object_System_Object(System_String* format, System_Object* arg0, System_Object* arg1, System_Object* arg2);
+extern System_String* System_String_Format__System_String_System_Array__System_Object(System_String* format, /* params */ il2c_arraytype(System_Object)* args);
     
-extern /* static */ bool System_String_op_Equality(System_String* lhs, System_String* rhs);
-extern /* static */ bool System_String_op_Inequality(System_String* lhs, System_String* rhs);
+extern /* static */ bool System_String_op_Equality__System_String_System_String(System_String* lhs, System_String* rhs);
+extern /* static */ bool System_String_op_Inequality__System_String_System_String(System_String* lhs, System_String* rhs);
 
 /////////////////////////////////////////////////
 // String special functions

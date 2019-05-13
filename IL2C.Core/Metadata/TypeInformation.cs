@@ -83,11 +83,14 @@ namespace IL2C.Metadata
 
         IFieldInformation[] Fields { get; }
         IMethodInformation[] DeclaredMethods { get; }
-        IMethodInformation[] AllInheritedDeclaredMethods { get; }
-        (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods { get; }
-        IMethodInformation[] OverrideMethods { get; }
-        IMethodInformation[] NewSlotMethods { get; }
-        IMethodInformation[] OverrideBaseMethods { get; }
+        IMethodInformation[] DeclaredAllInheritedMethods { get; }
+
+        IMethodInformation[] DeclaredOverrideMethods { get; }
+        IMethodInformation[] DeclaredNewslotMethods { get; }
+
+        IMethodInformation[] AllOverrideMethods { get; }
+        IMethodInformation[] AllNewslotMethods { get; }
+        (IMethodInformation, IMethodInformation[])[] AllCombinedMethods { get; }
 
         string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false);
 
@@ -436,7 +439,7 @@ namespace IL2C.Metadata
                     emptyMethods;
             }
         }
-        public IMethodInformation[] AllInheritedDeclaredMethods =>
+        public IMethodInformation[] DeclaredAllInheritedMethods =>
             ((ITypeInformation)this).
             Traverse(type => type.BaseType).
             SelectMany(type => type.DeclaredMethods).
@@ -447,43 +450,45 @@ namespace IL2C.Metadata
             Distinct(MetadataUtilities.VirtualMethodSignatureComparer).
             ToArray();
 
-        private IEnumerable<(IMethodInformation method, int overloadIndex)> EnumerateCalculatedVirtualMethods() =>
+        private IEnumerable<IMethodInformation> EnumerateNewslotMethods() =>
             ((ITypeInformation)this).
                 Traverse(type => type.BaseType).
                 Reverse().
-                SelectMany(type => type.DeclaredMethods.CalculateOverloadMethods().SelectMany(entry => entry.Value)).
-                CalculateVirtualMethods();
+                SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
+                FilterByNewslots();
+        private IEnumerable<IMethodInformation> EnumerateMostOverrideMethods() =>
+            ((ITypeInformation)this).
+                Traverse(type => type.BaseType).
+                Reverse().
+                SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
+                FilterAndOrderByMostOverrides();
+        private IEnumerable<(IMethodInformation newslotMethod, IMethodInformation[] reuseslotMethods)> EnumerateCombinedMethods() =>
+            ((ITypeInformation)this).
+                Traverse(type => type.BaseType).
+                Reverse().
+                SelectMany(type => type.DeclaredMethods.OrderByOverloadPriority().SelectMany(entry => entry.Value)).
+                OrderByMostOverrides();
 
-        public (IMethodInformation method, int overloadIndex)[] CalculatedVirtualMethods =>
-            this.EnumerateCalculatedVirtualMethods().
+        public IMethodInformation[] DeclaredOverrideMethods =>
+            EnumerateMostOverrideMethods().
+            // Only declared in this type.
+            Where(method =>method.DeclaringType.Equals(this)).
             ToArray();
-        public IMethodInformation[] OverrideMethods =>
-            this.EnumerateCalculatedVirtualMethods().
-                Select(entry => entry.method).
-                Where(method =>
-                    method.IsReuseSlot &&
-                    method.DeclaringType.Equals(this)).
-                ToArray();
-        public IMethodInformation[] NewSlotMethods =>
-            this.EnumerateCalculatedVirtualMethods().
-                Select(entry => entry.method).
-                Where(method =>
-                    (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly) &&
-                    method.IsNewSlot &&
-                    method.DeclaringType.IsAssignableFrom(this)).
-                ToArray();
-        public IMethodInformation[] OverrideBaseMethods =>
-            ((ITypeInformation)this).
-                Traverse(type => type.BaseType).
-                Reverse().
-                SelectMany(type => type.DeclaredMethods.
-                    Where(method => method.IsVirtual).
-                    CalculateOverloadMethods().
-                    SelectMany(entry => entry.Value)).
-                Where(method =>
-                    !method.DeclaringType.Equals(this) &&
-                    method.DeclaringType.IsAssignableFrom(this)).
-                ToArray();
+        public IMethodInformation[] DeclaredNewslotMethods =>
+            EnumerateNewslotMethods().
+            // Only declared in this type.
+            Where(method => method.DeclaringType.Equals(this)).
+            ToArray();
+
+        public IMethodInformation[] AllOverrideMethods =>
+            EnumerateMostOverrideMethods().
+            ToArray();
+        public IMethodInformation[] AllNewslotMethods =>
+            EnumerateNewslotMethods().
+            ToArray();
+        public (IMethodInformation, IMethodInformation[])[] AllCombinedMethods =>
+            EnumerateCombinedMethods().
+            ToArray();
 
         public override MemberScopes CLanguageMemberScope
         {

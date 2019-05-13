@@ -186,7 +186,7 @@ void System_Threading_Thread_Start(System_Threading_Thread* this__)
     il2c_resume_thread__(rawHandle);
 }
 
-void System_Threading_Thread_Start_2(System_Threading_Thread* this__, System_Object* parameter)
+void System_Threading_Thread_Start__System_Object(System_Threading_Thread* this__, System_Object* parameter)
 {
     il2c_assert(this__ != NULL);
 
@@ -249,7 +249,7 @@ System_Threading_Thread* System_Threading_Thread_get_CurrentThread(void)
     return (System_Threading_Thread*)(((uint8_t*)pThreadContext) - offsetof(IL2C_RUNTIME_THREAD, context));
 }
 
-void System_Threading_Thread_Sleep(int millisecondsTimeout)
+void System_Threading_Thread_Sleep__System_Int32(int millisecondsTimeout)
 {
     il2c_sleep((uint32_t)millisecondsTimeout);
 }
@@ -295,7 +295,7 @@ static void System_Threading_Thread_MarkHandler__(System_Threading_Thread* threa
 
 System_Threading_Thread_VTABLE_DECL__ System_Threading_Thread_VTABLE__ = {
     0, // Adjustor offset
-    (bool(*)(void*, System_Object*))System_Object_Equals,
+    (bool(*)(void*, System_Object*))System_Object_Equals__System_Object,
     (void(*)(void*))System_Threading_Thread_Finalize,
     (int32_t(*)(void*))System_Object_GetHashCode,
     (System_String* (*)(void*))System_Object_ToString

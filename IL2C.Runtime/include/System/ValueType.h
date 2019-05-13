@@ -27,7 +27,7 @@ IL2C_DECLARE_RUNTIME_TYPE(System_ValueType);
 
 extern /* virtual */ System_String* System_ValueType_ToString(System_ValueType* this__);
 extern /* virtual */ int32_t System_ValueType_GetHashCode(System_ValueType* this__);
-extern /* virtual */ bool System_ValueType_Equals(System_ValueType* this__, System_Object* obj);
+extern /* virtual */ bool System_ValueType_Equals__System_Object(System_ValueType* this__, System_Object* obj);
 
 #ifdef __cplusplus
 }

@@ -20,14 +20,14 @@ int32_t System_UInt64_GetHashCode(uint64_t* this__)
     return (int32_t)*this__ ^ (int32_t)(*this__ >> 32);
 }
 
-bool System_UInt64_Equals(uint64_t* this__, uint64_t obj)
+bool System_UInt64_Equals__System_UInt64(uint64_t* this__, uint64_t obj)
 {
     il2c_assert(this__ != NULL);
 
     return *this__ == obj;
 }
 
-bool System_UInt64_Equals_1(uint64_t* this__, System_Object* obj)
+bool System_UInt64_Equals__System_Object(uint64_t* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
 
@@ -40,7 +40,7 @@ bool System_UInt64_Equals_1(uint64_t* this__, System_Object* obj)
     return *this__ == rhs;
 }
 
-bool System_UInt64_TryParse(System_String* s, uint64_t* result)
+bool System_UInt64_TryParse__System_String_System_UInt64_REF(System_String* s, uint64_t* result)
 {
     // TODO: NullReferenceException
     il2c_assert(s != NULL);
@@ -60,5 +60,11 @@ bool System_UInt64_TryParse(System_String* s, uint64_t* result)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_UInt64);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_UInt64);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_UInt64, "System.UInt64", IL2C_TYPE_UNSIGNED_INTEGER, sizeof(System_UInt64), System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_UInt64,
+    "System.UInt64",
+    IL2C_TYPE_UNSIGNED_INTEGER,
+    sizeof(System_UInt64),
+    System_ValueType,
+    0, 0)
 IL2C_RUNTIME_TYPE_END();

@@ -19,8 +19,11 @@
 #include <float.h>
 #include <math.h>
 
-int main()
+int main(int argc__, char** argv__)
 {
+    ((void)argc__);
+    ((void)argv__);
+
 #if defined(_MSC_VER) && defined(_WIN32) && defined(_DEBUG)
     _crtBreakAlloc = -1;
 #endif

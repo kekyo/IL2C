@@ -26,7 +26,7 @@ struct System_UnhandledExceptionEventArgs
 
 IL2C_DECLARE_RUNTIME_TYPE(System_UnhandledExceptionEventArgs);
 
-extern void System_UnhandledExceptionEventArgs__ctor(
+extern void System_UnhandledExceptionEventArgs__ctor__System_Object_System_Boolean(
     System_UnhandledExceptionEventArgs* this__, System_Object* exception, bool isTerminating);
 
 extern System_Object* System_UnhandledExceptionEventArgs_get_ExceptionObject(System_UnhandledExceptionEventArgs* this__);

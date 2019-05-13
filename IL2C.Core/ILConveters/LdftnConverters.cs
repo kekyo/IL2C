@@ -23,7 +23,7 @@ namespace IL2C.ILConverters
             return (extractContext, _) => new[] { string.Format(
                 "{0} = (intptr_t){1}",
                 extractContext.GetSymbolName(symbol),
-                operand.CLanguageFunctionName) };
+                operand.CLanguageFunctionFullName) };
         }
     }
 
@@ -61,26 +61,30 @@ namespace IL2C.ILConverters
 
             if (method.IsVirtual && !method.IsSealed)
             {
-                // TODO: interface member vptr
-                var virtualMethods =
-                    method.DeclaringType.CalculatedVirtualMethods;
-                var (m, overloadIndex) =
-                    virtualMethods.First(entry => entry.method.Equals(method));
-
-                var vptrName = m.GetCLanguageDeclarationName(overloadIndex);
+                // Last newslot method is short named function: "ToString",
+                // But have to apply full named function when NOT equals last newslot method: "System_Object_ToString"
+                var methodsBySlots = method.DeclaringType.AllCombinedMethods.
+                    Where(entry => entry.Item1.CLanguageFunctionName == method.CLanguageFunctionName).
+                    ToArray();
+                var slotIndex = methodsBySlots.
+                    Select((entry, index) => entry.Item2.Any(m => m.Equals(method)) ? index : -1).
+                    First(index => index >= 0);
+                var newslotMethod = methodsBySlots[slotIndex].Item1;
 
                 return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}->vptr0__->{2}",
                     extractContext.GetSymbolName(symbol),
                     extractContext.GetSymbolName(si),
-                    vptrName) };
+                    (slotIndex == (methodsBySlots.Length - 1)) ?
+                        newslotMethod.CLanguageFunctionName :
+                        newslotMethod.CLanguageFunctionFullName) };
             }
             else
             {
                 return (extractContext, _) => new[] { string.Format(
                     "{0} = (intptr_t){1}",
                     extractContext.GetSymbolName(symbol),
-                    method.CLanguageFunctionName) };
+                    method.CLanguageFunctionFullName) };
             }
         }
     }

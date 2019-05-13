@@ -441,7 +441,7 @@ System_String* System_String_ToString(System_String* this__)
     return this__;
 }
 
-bool System_String_Equals(System_String* this__, System_String* obj)
+bool System_String_Equals__System_String(System_String* this__, System_String* obj)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->string_body__ != NULL);
@@ -462,13 +462,13 @@ bool System_String_Equals(System_String* this__, System_String* obj)
         (il2c_wcscmp(this__->string_body__, obj->string_body__) == 0);
 }
 
-bool System_String_Equals_1(System_String* this__, System_Object* obj)
+bool System_String_Equals__System_Object(System_String* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->string_body__ != NULL);
 
     System_String* pString = il2c_castclass(obj, System_String);
-    return System_String_Equals(this__, pString);
+    return System_String_Equals__System_String(this__, pString);
 }
 
 int32_t System_String_GetHashCode(System_String* this__)
@@ -494,7 +494,7 @@ int32_t System_String_GetHashCode(System_String* this__)
     return (int32_t)value;
 }
 
-System_String* System_String_Concat_3(System_String* str0, System_String* str1)
+System_String* System_String_Concat__System_String_System_String(System_String* str0, System_String* str1)
 {
     // TODO: IsNullOrEmpty()
     if (str0 == NULL)
@@ -532,7 +532,7 @@ System_String* System_String_Concat_3(System_String* str0, System_String* str1)
     return pString;
 }
 
-System_String* System_String_Concat_4(System_Object* arg0, System_Object* arg1)
+System_String* System_String_Concat__System_Object_System_Object(System_Object* arg0, System_Object* arg1)
 {
     // TODO: NullReferenceException
     il2c_assert(arg0 != NULL);
@@ -551,12 +551,12 @@ System_String* System_String_Concat_4(System_Object* arg0, System_Object* arg1)
     frame__.str0 = arg0->vptr0__->ToString(arg0);
     frame__.str1 = arg1->vptr0__->ToString(arg1);
 
-    frame__.str0 = System_String_Concat_3(frame__.str0, frame__.str1);
+    frame__.str0 = System_String_Concat__System_String_System_String(frame__.str0, frame__.str1);
 
      il2c_return_unlink_with_objref(&frame__, frame__.str0);
 }
 
-System_String* System_String_Concat_5(System_String* str0, System_String* str1, System_String* str2)
+System_String* System_String_Concat__System_String_System_String_System_String(System_String* str0, System_String* str1, System_String* str2)
 {
     // TODO: NullReferenceException
     il2c_assert(str0 != NULL);
@@ -584,7 +584,7 @@ System_String* System_String_Concat_5(System_String* str0, System_String* str1, 
     il2c_return_with_objref(pString);
 }
 
-System_String* System_String_Substring(System_String* this__, int32_t startIndex)
+System_String* System_String_Substring__System_Int32(System_String* this__, int32_t startIndex)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->string_body__ != NULL);
@@ -614,7 +614,7 @@ System_String* System_String_Substring(System_String* this__, int32_t startIndex
     il2c_return_with_objref(pString);
 }
 
-System_String* System_String_Substring_1(System_String* this__, int32_t startIndex, int32_t length)
+System_String* System_String_Substring__System_Int32_System_Int32(System_String* this__, int32_t startIndex, int32_t length)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->string_body__ != NULL);
@@ -646,7 +646,7 @@ System_String* System_String_Substring_1(System_String* this__, int32_t startInd
     il2c_return_with_objref(pString);
 }
 
-wchar_t System_String_get_Chars(System_String* this__, int32_t index)
+wchar_t System_String_get_Chars__System_Int32(System_String* this__, int32_t index)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->string_body__ != NULL);
@@ -668,7 +668,7 @@ int32_t System_String_get_Length(System_String* this__)
     return (int32_t)il2c_wcslen(this__->string_body__);
 }
 
-bool System_String_IsNullOrWhiteSpace(System_String* value)
+bool System_String_IsNullOrWhiteSpace__System_String(System_String* value)
 {
     if (value == NULL)
     {
@@ -696,7 +696,7 @@ bool System_String_IsNullOrWhiteSpace(System_String* value)
     }
 }
 
-bool System_String_op_Equality(System_String* lhs, System_String* rhs)
+bool System_String_op_Equality__System_String_System_String(System_String* lhs, System_String* rhs)
 {
     if ((lhs == NULL) && (rhs == NULL))
     {
@@ -714,7 +714,7 @@ bool System_String_op_Equality(System_String* lhs, System_String* rhs)
     return il2c_wcscmp(lhs->string_body__, rhs->string_body__) == 0;
 }
 
-bool System_String_op_Inequality(System_String* lhs, System_String* rhs)
+bool System_String_op_Inequality__System_String_System_String(System_String* lhs, System_String* rhs)
 {
     if ((lhs == NULL) && (rhs == NULL))
     {
@@ -833,12 +833,12 @@ static int8_t System_String_InternalFormatStep2ArgumentWriter(
                 il2c_assert(pFormatFrom != NULL);
                 System_String* pFormatString = il2c_new_string_with_length(pFormatFrom, formatLength);
                 // TODO: formatProvider
-                *ppFormattedString = pFormattable->vptr0__->ToString(pAdjustedReference, pFormatString, NULL);
+                *ppFormattedString = pFormattable->vptr0__->ToString__System_String_System_IFormatProvider(pAdjustedReference, pFormatString, NULL);
             }
             else
             {
                 // TODO: formatProvider
-                *ppFormattedString = pFormattable->vptr0__->ToString(pAdjustedReference, NULL, NULL);
+                *ppFormattedString = pFormattable->vptr0__->ToString__System_String_System_IFormatProvider(pAdjustedReference, NULL, NULL);
             }
         }
         else
@@ -1015,7 +1015,7 @@ static int8_t System_String_InternalFormat(
 ////////////////////////////////////////////////////////
 // System.String.Format()
 
-System_String* System_String_Format(
+System_String* System_String_Format__System_String_System_Object(
     System_String* format, System_Object* arg0)
 {
     // TODO: ArgumentNullException
@@ -1032,7 +1032,7 @@ System_String* System_String_Format(
     return pString;
 }
 
-System_String* System_String_Format_1(
+System_String* System_String_Format__System_String_System_Object_System_Object(
     System_String* format, System_Object* arg0, System_Object* arg1)
 {
     // TODO: ArgumentNullException
@@ -1053,7 +1053,7 @@ System_String* System_String_Format_1(
     return pString;
 }
 
-System_String* System_String_Format_3(
+System_String* System_String_Format__System_String_System_Object_System_Object_System_Object(
     System_String* format, System_Object* arg0, System_Object* arg1, System_Object* arg2)
 {
     // TODO: ArgumentNullException
@@ -1075,7 +1075,7 @@ System_String* System_String_Format_3(
     return pString;
 }
 
-System_String* System_String_Format_6(
+System_String* System_String_Format__System_String_System_Array__System_Object(
     System_String* format, il2c_arraytype(System_Object)* args)
 {
     // TODO: ArgumentNullException
@@ -1104,7 +1104,7 @@ System_String* System_String_Format_6(
 
 System_String_VTABLE_DECL__ System_String_VTABLE__ = {
     0, // Adjustor offset
-    (bool(*)(void*, System_Object*))System_String_Equals_1,
+    (bool(*)(void*, System_Object*))System_String_Equals__System_Object,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_String_GetHashCode,
     (System_String* (*)(void*))System_String_ToString,

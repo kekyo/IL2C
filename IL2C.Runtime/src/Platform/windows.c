@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////
 // Windows Win32 API related
 
-#if defined(WIN32)
+#if defined(_WIN32)
 
 void il2c_initialize(void)
 {

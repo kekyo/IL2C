@@ -17,7 +17,7 @@ typedef struct System_Exception System_Exception;
 typedef const struct
 {
     intptr_t offset__; // Adjustor offset
-    bool(*Equals)(void* this__, System_Object* obj);
+    bool(*Equals__System_Object)(void* this__, System_Object* obj);
     void(*Finalize)(void* this__);
     int32_t(*GetHashCode)(void* this__);
     System_String* (*ToString)(void* this__);
@@ -35,7 +35,7 @@ extern System_Exception_VTABLE_DECL__ System_Exception_VTABLE__;
 IL2C_DECLARE_RUNTIME_TYPE(System_Exception);
 
 extern void System_Exception__ctor(System_Exception* this__);
-extern void System_Exception__ctor_1(System_Exception* this__, System_String* message);
+extern void System_Exception__ctor__System_String(System_Exception* this__, System_String* message);
 
 extern System_String* System_Exception_get_Message(System_Exception* this__);
 

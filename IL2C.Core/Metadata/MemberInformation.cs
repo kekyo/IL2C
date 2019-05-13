@@ -53,9 +53,13 @@ namespace IL2C.Metadata
         public override string UniqueName =>
             this.Member.GetUniqueName();
         public override string Name =>
-            this.Member.Name;
+            MetadataUtilities.TrimGenericIdentifier(this.Member.Name);
+        public override string MangledUniqueName =>
+            this.Member.GetMangledUniqueName();
+        public override string MangledName =>
+            Utilities.GetMangledName(this.Name);
         public override string FriendlyName =>
-            this.Member.GetFriendlyName();
+            this.UniqueName;
 
         public abstract string MemberTypeName { get; }
         public abstract string AttributeDescription { get; }
@@ -73,6 +77,6 @@ namespace IL2C.Metadata
             string.Format("{0}: {1}", this.MemberTypeName, this.FriendlyName);
 
         string IOperandPrintable.PrintableString =>
-            this.Member.GetFriendlyName();
+            this.Member.GetUniqueName();
     }
 }

@@ -34,9 +34,9 @@ static inline int32_t System_MulticastDelegate_GetHashCode(System_MulticastDeleg
     return System_Delegate_GetHashCode((System_Delegate*)this__);
 }
 
-static inline bool System_MulticastDelegate_Equals(System_MulticastDelegate* this__, System_Object* obj)
+static inline bool System_MulticastDelegate_Equals__System_Object(System_MulticastDelegate* this__, System_Object* obj)
 {
-    return System_Delegate_Equals((System_Delegate*)this__, obj);
+    return System_Delegate_Equals__System_Object((System_Delegate*)this__, obj);
 }
 
 #ifdef __cplusplus

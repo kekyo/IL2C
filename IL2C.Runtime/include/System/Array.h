@@ -29,8 +29,8 @@ struct System_Array
 IL2C_DECLARE_RUNTIME_TYPE(System_Array);
 
 extern int32_t System_Array_getLength(System_Array* this__);
-extern int32_t System_Array_GetLowerBound(System_Array* this__, int32_t dimension);
-extern int32_t System_Array_GetUpperBound(System_Array* this__, int32_t dimension);
+extern int32_t System_Array_GetLowerBound__System_Int32(System_Array* this__, int32_t dimension);
+extern int32_t System_Array_GetUpperBound__System_Int32(System_Array* this__, int32_t dimension);
 
 /////////////////////////////////////////////////
 // Array special functions

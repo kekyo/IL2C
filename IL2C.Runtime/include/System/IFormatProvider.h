@@ -17,7 +17,7 @@ typedef struct System_IFormatProvider System_IFormatProvider;
 typedef const struct
 {
     intptr_t offset__; // Adjustor offset
-    System_Object* (*GetFormat)(void* this__, System_Type* formatType);
+    System_Object* (*GetFormat__System_Type)(void* this__, System_Type* formatType);
 } System_IFormatProvider_VTABLE_DECL__;
 
 struct System_IFormatProvider

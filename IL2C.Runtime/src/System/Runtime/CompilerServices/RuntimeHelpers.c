@@ -3,13 +3,13 @@
 /////////////////////////////////////////////////////////////
 // System.Runtime.CompilerServices.RuntimeHelpers
 
-int32_t System_Runtime_CompilerServices_RuntimeHelpers_GetHashCode(
+int32_t System_Runtime_CompilerServices_RuntimeHelpers_GetHashCode__System_Object(
     System_Object* o)
 {
     return System_Object_GetHashCode(o);
 }
 
-void System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray(
+void System_Runtime_CompilerServices_RuntimeHelpers_InitializeArray__System_Array_System_RuntimeFieldHandle(
     System_Array* array, System_RuntimeFieldHandle fldHandle)
 {
     il2c_assert(array != NULL);

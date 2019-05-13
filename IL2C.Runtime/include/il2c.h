@@ -13,6 +13,10 @@ extern "C" {
 
 #if defined(_MSC_VER)
 
+#if defined(_WDM) || defined(UEFI)
+#undef _WIN32
+#endif
+
 #include <intrin.h>
 
 #define il2c_assume__(expr) __assume(expr)
@@ -163,7 +167,7 @@ extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
 #endif
 
-#if defined(WIN32)
+#if defined(_WIN32)
 extern void il2c_initialize(void);
 extern void il2c_shutdown(void);
 #endif

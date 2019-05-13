@@ -99,7 +99,7 @@ namespace IL2C.Writers
                         }
 
                         // If virtual method collection doesn't contain newslot method at this declared type:
-                        if (!type.NewSlotMethods.Any(method => method.DeclaringType.Equals(type)))
+                        if (!type.DeclaredNewslotMethods.Any(method => method.DeclaringType.Equals(type)))
                         {
                             twHeader.WriteLine(
                                 "typedef {0}_VTABLE_DECL__ {1}_VTABLE_DECL__;",

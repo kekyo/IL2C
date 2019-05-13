@@ -6,7 +6,7 @@ extern volatile uint32_t g_PendingRemains__;
 /////////////////////////////////////////////////////////////
 // System.GC
 
-void System_GC_SuppressFinalize(System_Object* obj)
+void System_GC_SuppressFinalize__System_Object(System_Object* obj)
 {
     // TODO: ArgumentNullException
     il2c_assert(obj != NULL);
@@ -17,7 +17,7 @@ void System_GC_SuppressFinalize(System_Object* obj)
     il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_FINALIZER_CALLED);
 }
 
-void System_GC_ReRegisterForFinalize(System_Object* obj)
+void System_GC_ReRegisterForFinalize__System_Object(System_Object* obj)
 {
     // TODO: ArgumentNullException
     il2c_assert(obj != NULL);
@@ -44,4 +44,7 @@ void System_GC_WaitForPendingFinalizers(void)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_RUNTIME_TYPE_STATIC(System_GC, "System.GC", System_Object);
+IL2C_RUNTIME_TYPE_STATIC(
+    System_GC,
+    "System.GC",
+    System_Object);

@@ -19,14 +19,14 @@ int32_t System_Double_GetHashCode(double* this__)
     return (int32_t)*(int64_t*)this__ ^ (int32_t)(*(int64_t*)this__ >> 32);
 }
 
-bool System_Double_Equals(double* this__, double obj)
+bool System_Double_Equals__System_Double(double* this__, double obj)
 {
     il2c_assert(this__ != NULL);
 
     return *this__ == obj;
 }
 
-bool System_Double_Equals_1(double* this__, System_Object* obj)
+bool System_Double_Equals__System_Object(double* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
 
@@ -39,7 +39,7 @@ bool System_Double_Equals_1(double* this__, System_Object* obj)
     return *this__ == rhs;
 }
 
-bool System_Double_TryParse(System_String* s, double* result)
+bool System_Double_TryParse__System_String_System_Double_REF(System_String* s, double* result)
 {
     // TODO: NullReferenceException
     il2c_assert(s != NULL);
@@ -67,5 +67,11 @@ bool System_Double_TryParse(System_String* s, double* result)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Double);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Double);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Double, "System.Double", IL2C_TYPE_VALUE, sizeof(System_Double), System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_Double,
+    "System.Double",
+    IL2C_TYPE_VALUE,
+    sizeof(System_Double),
+    System_ValueType,
+    0, 0)
 IL2C_RUNTIME_TYPE_END();

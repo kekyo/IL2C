@@ -341,7 +341,7 @@ namespace IL2C
                         entry.SymbolName,
                         entry.Expression))) },
                 { "actual", actualSymbolName },
-                { "function", targetMethod.CLanguageFunctionName },
+                { "function", targetMethod.CLanguageFunctionFullName },
                 { "argumentList", string.Join(", ", argumentList.
                     Select(arg => string.Format(
                         "{0}{1}",

@@ -26,8 +26,8 @@ struct System_AppDomain
 
 IL2C_DECLARE_RUNTIME_TYPE(System_AppDomain);
 
-extern void System_AppDomain_add_UnhandledException(System_AppDomain* this__, System_UnhandledExceptionEventHandler* value);
-extern void System_AppDomain_remove_UnhandledException(System_AppDomain* this__, System_UnhandledExceptionEventHandler* value);
+extern void System_AppDomain_add_UnhandledException__System_UnhandledExceptionEventHandler(System_AppDomain* this__, System_UnhandledExceptionEventHandler* value);
+extern void System_AppDomain_remove_UnhandledException__System_UnhandledExceptionEventHandler(System_AppDomain* this__, System_UnhandledExceptionEventHandler* value);
 extern /* static */ System_AppDomain* System_AppDomain_get_CurrentDomain(void);
 
 extern void il2c_invoke_unhandled_exception_on_the_current_domain__(System_Object* exception);

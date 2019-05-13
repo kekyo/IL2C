@@ -272,7 +272,7 @@ namespace IL2C.Writers
                                         {
                                             twSource.WriteLine(
                                                 "{0}();",
-                                                typeInitializer.CLanguageFunctionName);
+                                                typeInitializer.CLanguageFunctionFullName);
                                         }
                                     }
                                     twSource.WriteLine("}");

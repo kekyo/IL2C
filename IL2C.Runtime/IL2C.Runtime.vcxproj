@@ -50,6 +50,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <StringPooling>true</StringPooling>
@@ -60,19 +61,18 @@
       <DisableSpecificWarnings>4100;4197;4206</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <AssemblerOutput>AssemblyCode</AssemblerOutput>
-      <!-- <TreatWarningAsError>true</TreatWarningAsError> -->
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Release'">
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WIN32;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS_GLOBALS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

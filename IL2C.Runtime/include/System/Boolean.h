@@ -22,9 +22,9 @@ IL2C_DECLARE_RUNTIME_TYPE(System_Boolean);
 
 extern /* virtual */ System_String* System_Boolean_ToString(bool* this__);
 extern /* virtual */ int32_t System_Boolean_GetHashCode(bool* this__);
-extern bool System_Boolean_Equals(bool* this__, bool obj);
-extern /* virtual */ bool System_Boolean_Equals_1(bool* this__, System_Object* obj);
-extern /* static */ bool System_Boolean_TryParse(System_String* s, bool* result);
+extern bool System_Boolean_Equals__System_Boolean(bool* this__, bool obj);
+extern /* virtual */ bool System_Boolean_Equals__System_Object(bool* this__, System_Object* obj);
+extern /* static */ bool System_Boolean_TryParse__System_String_System_Boolean_REF(System_String* s, bool* result);
 
 #ifdef __cplusplus
 }

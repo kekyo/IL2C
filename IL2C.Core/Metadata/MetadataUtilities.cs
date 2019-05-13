@@ -123,6 +123,17 @@ namespace IL2C.Metadata
                     return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "_PTR";
                 }
             }
+            else
+            {
+                if (type.IsByReference)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "&";
+                }
+                if (type.IsPointer)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "*";
+                }
+            }
 
             var typeName = GetMemberName(type, onlyMemberName, memberFormat);
 

@@ -186,8 +186,7 @@ namespace IL2C.ILConverters
             //   Roslyn will generate implementation for the event member with using for
             //   "System.Threading.Interlocked.CompareExchange<T>(...)" method.
             //   It's special resolver for event member.
-            if ((method.UniqueName == "T System.Threading.Interlocked::CompareExchange(T&,T,T)") &&
-                pairParameters[1].variable.TargetType.IsReferenceType)
+            if ((method.UniqueName == "System.Threading.Interlocked.CompareExchange<T>(T&,T,T)"))
             {
                 result = decodeContext.PushStack(pairParameters[1].variable.TargetType);
 

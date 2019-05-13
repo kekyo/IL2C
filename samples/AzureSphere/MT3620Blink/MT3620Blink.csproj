@@ -31,6 +31,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="IL2C.Build" Version="0.4.50" />
+      <PackageReference Include="IL2C.Build" Version="0.4.60" />
     </ItemGroup>
 </Project>

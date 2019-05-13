@@ -14,10 +14,10 @@ extern "C" {
 
 IL2C_DECLARE_RUNTIME_TYPE(System_Console);
 
-extern /* static */ void System_Console_Write_9(System_String* value);
+extern /* static */ void System_Console_Write__System_String(System_String* value);
 extern /* static */ void System_Console_WriteLine(void);
-extern /* static */ void System_Console_WriteLine_6(int32_t value);
-extern /* static */ void System_Console_WriteLine_10(System_String* value);
+extern /* static */ void System_Console_WriteLine__System_Int32(int32_t value);
+extern /* static */ void System_Console_WriteLine__System_String(System_String* value);
 
 extern /* static */ System_String* System_Console_ReadLine(void);
 

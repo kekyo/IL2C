@@ -23,14 +23,14 @@ int32_t System_UIntPtr_GetHashCode(uintptr_t* this__)
     return (int32_t)value ^ (int32_t)(value >> 32);
 }
 
-bool System_UIntPtr_Equals(uintptr_t* this__, uintptr_t obj)
+bool System_UIntPtr_Equals__System_UIntPtr(uintptr_t* this__, uintptr_t obj)
 {
     il2c_assert(this__ != NULL);
 
     return *this__ == obj;
 }
 
-bool System_UIntPtr_Equals_1(uintptr_t* this__, System_Object* obj)
+bool System_UIntPtr_Equals__System_Object(uintptr_t* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
 
@@ -49,5 +49,11 @@ bool System_UIntPtr_Equals_1(uintptr_t* this__, System_Object* obj)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_UIntPtr);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_UIntPtr);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_UIntPtr, "System.UIntPtr", IL2C_TYPE_UNSIGNED_INTEGER, sizeof(System_UIntPtr), System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_UIntPtr,
+    "System.UIntPtr",
+    IL2C_TYPE_UNSIGNED_INTEGER,
+    sizeof(System_UIntPtr),
+    System_ValueType,
+    0, 0)
 IL2C_RUNTIME_TYPE_END();

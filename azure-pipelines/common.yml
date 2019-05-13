@@ -59,7 +59,7 @@ jobs:
       - script: |
           build.bat $(buildConfiguration)
         displayName: "build Calculator-CMake-mingw32"
-        workingDirectory: "samples/Calculator/Generated"
+        workingDirectory: "samples/Calculator/Calculator.CMake"
       - task: VSTest@2
         displayName: "test il2c"
         inputs:

@@ -1,7 +1,7 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IL2C Test: {testName}
 
-#if defined(_MSC_VER) && defined(WIN32)
+#if defined(_MSC_VER) && defined(_WIN32)
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRTDBG_MAP_ALLOC 1
@@ -19,9 +19,12 @@
 #include <float.h>
 #include <math.h>
 
-int main()
+int main(int argc__, char** argv__)
 {
-#if defined(_MSC_VER) && defined(WIN32) && defined(_DEBUG)
+    ((void)argc__);
+    ((void)argv__);
+
+#if defined(_MSC_VER) && defined(_WIN32) && defined(_DEBUG)
     _crtBreakAlloc = -1;
 #endif
 

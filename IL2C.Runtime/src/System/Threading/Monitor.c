@@ -285,7 +285,7 @@ void il2c_release_all_monitor_lock_for_final_shutdown__(void)
 /////////////////////////////////////////////////////////////
 // System.Threading.Monitor
 
-void System_Threading_Monitor_Enter(System_Object* obj)
+void System_Threading_Monitor_Enter__System_Object(System_Object* obj)
 {
     // TODO: ArgumentNullException
     il2c_assert(obj != NULL);
@@ -296,7 +296,7 @@ void System_Threading_Monitor_Enter(System_Object* obj)
     il2c_enter_monitor_lock__(pLock);
 }
 
-void System_Threading_Monitor_Enter_1(System_Object* obj, bool* lockTaken)
+void System_Threading_Monitor_Enter__System_Object_System_Boolean_REF(System_Object* obj, bool* lockTaken)
 {
     il2c_assert(lockTaken != NULL);
 
@@ -313,7 +313,7 @@ void System_Threading_Monitor_Enter_1(System_Object* obj, bool* lockTaken)
     *lockTaken = true;
 }
 
-bool System_Threading_Monitor_TryEnter(System_Object* obj)
+bool System_Threading_Monitor_TryEnter__System_Object(System_Object* obj)
 {
     // TODO: ArgumentNullException
     il2c_assert(obj != NULL);
@@ -324,7 +324,7 @@ bool System_Threading_Monitor_TryEnter(System_Object* obj)
     return il2c_try_enter_monitor_lock__(pLock);
 }
 
-void System_Threading_Monitor_TryEnter_1(System_Object* obj, bool* lockTaken)
+void System_Threading_Monitor_TryEnter__System_Object_System_Boolean_REF(System_Object* obj, bool* lockTaken)
 {
     il2c_assert(lockTaken != NULL);
 
@@ -337,7 +337,7 @@ void System_Threading_Monitor_TryEnter_1(System_Object* obj, bool* lockTaken)
     *lockTaken = il2c_try_enter_monitor_lock__(pLock);
 }
 
-void System_Threading_Monitor_Exit(System_Object* obj)
+void System_Threading_Monitor_Exit__System_Object(System_Object* obj)
 {
     // TODO: ArgumentNullException
     il2c_assert(obj != NULL);

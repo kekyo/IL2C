@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////////
 // System.Console
 
-void System_Console_Write_9(System_String* value)
+void System_Console_Write__System_String(System_String* value)
 {
     if (value != NULL)
     {
@@ -17,14 +17,14 @@ void System_Console_WriteLine(void)
     il2c_writeline(L"");
 }
 
-void System_Console_WriteLine_6(int32_t value)
+void System_Console_WriteLine__System_Int32(int32_t value)
 {
     wchar_t buffer[14];
     il2c_i32tow(value, buffer, 10);
     il2c_writeline(buffer);
 }
 
-void System_Console_WriteLine_10(System_String* value)
+void System_Console_WriteLine__System_String(System_String* value)
 {
     if (value != NULL)
     {
@@ -53,4 +53,7 @@ System_String* System_Console_ReadLine(void)
 /////////////////////////////////////////////////
 // VTable and runtime type info declarations
 
-IL2C_RUNTIME_TYPE_STATIC(System_Console, "System.Console", System_Object);
+IL2C_RUNTIME_TYPE_STATIC(
+    System_Console,
+    "System.Console",
+    System_Object);

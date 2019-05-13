@@ -109,38 +109,30 @@ namespace IL2C
             }
 
             // Step1: Execute gcc
-            var cmakeLog = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
+            var (gccExitCode, gccLog) = await TestUtilities.ExecuteAsync(
+                outPath, new[] { binPath },
+                Path.Combine(binPath, "gcc.exe"),
+                $"-I{basePath}",
+                incDir,
+                libDir,
+                cdefs,
+                ccflags,
+                "-o",
+                executablePath,
+                sourcePath,
+                libs);
+            if (gccExitCode != 0)
             {
-                var (exitCode, log) = await TestUtilities.ExecuteAsync(
-                    outPath, new[] { binPath },
-                    Path.Combine(binPath, "gcc.exe"),
-                    $"-I{basePath}",
-                    incDir,
-                    libDir,
-                    cdefs,
-                    ccflags,
-                    "-o",
-                    executablePath,
-                    sourcePath,
-                    libs);
-                if (exitCode != 0)
-                {
-                    throw new Exception("gcc [ExitCode=" + exitCode + "]: " + log);
-                }
-                return log;
-            });
+                throw new Exception("gcc [ExitCode=" + gccExitCode + "]: " + gccLog);
+            }
 
             // Step2: Execute native binary
-            var testLog = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
+            var (testExitCode, testLog) = await TestUtilities.ExecuteAsync(
+                outPath, new[] { outPath }, executablePath);
+            if (testExitCode != 0)
             {
-                var (exitCode, log) = await TestUtilities.ExecuteAsync(
-                    outPath, new[] { outPath }, executablePath);
-                if (exitCode != 0)
-                {
-                    throw new Exception("test [ExitCode=" + exitCode + "]: " + log);
-                }
-                return log;
-            });
+                throw new Exception("test [ExitCode=" + testExitCode + "]: " + testLog);
+            }
 
             return testLog;
         }

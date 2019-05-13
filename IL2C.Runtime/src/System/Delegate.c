@@ -13,13 +13,13 @@ int32_t System_Delegate_GetHashCode(System_Delegate* this__)
     return pType->vptr0__->GetHashCode(pType);
 }
 
-bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj)
+bool System_Delegate_Equals__System_Object(System_Delegate* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->vptr0__ == &System_Delegate_VTABLE__);
     il2c_assert(this__->count__ >= 1);
 
-    if (System_Object_ReferenceEquals((System_Object*)this__, obj))
+    if (System_Object_ReferenceEquals__System_Object_System_Object((System_Object*)this__, obj))
     {
         return true;
     }
@@ -44,7 +44,7 @@ bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj)
         this__->count__ * sizeof(IL2C_METHOD_TABLE)) == 0;
 }
 
-System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
+System_Delegate* System_Delegate_Combine__System_Delegate_System_Delegate(System_Delegate* a, System_Delegate* b)
 {
     if (a == NULL)
     {
@@ -107,12 +107,12 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     pThreadContext->pTemporaryReferenceAnchor = (System_Object*)dlg;
 
     il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
-    
-    dlg->count__ = count;
 
     struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
     memcpy(&pMethodtbl[0], &a->methodtbl__[0], a->count__ * sizeof(IL2C_METHOD_TABLE));
     memcpy(&pMethodtbl[a->count__], &b->methodtbl__[0], b->count__ * sizeof(IL2C_METHOD_TABLE));
+    
+    dlg->count__ = count;
 
     // Marked instance is initialized. (and will handle by GC)
     il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
@@ -120,7 +120,7 @@ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b)
     return dlg;
 }
 
-System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate* value)
+System_Delegate* System_Delegate_Remove__System_Delegate_System_Delegate(System_Delegate* source, System_Delegate* value)
 {
     if (source == NULL)
     {
@@ -194,11 +194,11 @@ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate
 
             il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
 
-            dlg->count__ = count;
-
             struct IL2C_METHOD_TABLE_DECL* pMethodtbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
             memcpy(&pMethodtbl[0], &source->methodtbl__[0], ((size_t)index) * sizeof(IL2C_METHOD_TABLE));
             memcpy(&pMethodtbl[index], &source->methodtbl__[((uintptr_t)index) + value->count__], ((size_t)count - (size_t)index) * sizeof(IL2C_METHOD_TABLE));
+
+            dlg->count__ = count;
 
             // Marked instance is initialized. (and will handle by GC)
             il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
@@ -245,11 +245,11 @@ System_Delegate* il2c_new_delegate__(
 
     il2c_assert(dlg->vptr0__ == &System_Delegate_VTABLE__);
 
-    dlg->count__ = 1;
-
     struct IL2C_METHOD_TABLE_DECL* pMethodTbl = (struct IL2C_METHOD_TABLE_DECL*)&dlg->methodtbl__[0];
     pMethodTbl->target = object;
     pMethodTbl->methodPtr = method;
+
+    dlg->count__ = 1;
 
     // Marked instance is initialized. (and will handle by GC)
     il2c_ior(&pHeader->characteristic, IL2C_CHARACTERISTIC_INITIALIZED);
@@ -284,7 +284,7 @@ void System_Delegate_MarkHandler__(System_Delegate* this__)
 
 System_Delegate_VTABLE_DECL__ System_Delegate_VTABLE__ = {
     0, // Adjustor offset
-    (bool(*)(void*, System_Object*))System_Delegate_Equals,
+    (bool(*)(void*, System_Object*))System_Delegate_Equals__System_Object,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Delegate_GetHashCode,
     (System_String* (*)(void*))System_Object_ToString

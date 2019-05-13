@@ -19,7 +19,7 @@ typedef struct System_Type System_Type;
 typedef const struct
 {
     intptr_t offset__; // Adjustor offset
-    bool(*Equals)(void* this__, System_Object* obj);
+    bool(*Equals__System_Object)(void* this__, System_Object* obj);
     void(*Finalize)(void* this__);
     int32_t(*GetHashCode)(void* this__);
     System_String* (*ToString)(void* this__);
@@ -42,9 +42,9 @@ extern /* virtual */ System_String* System_Object_ToString(System_Object* this__
 extern /* virtual */ int32_t System_Object_GetHashCode(System_Object* this__);
 extern System_Type* System_Object_GetType(System_Object* this__);
 extern /* virtual */ void System_Object_Finalize(System_Object* this__);
-extern /* virtual */ bool System_Object_Equals(System_Object* this__, System_Object* obj);
+extern /* virtual */ bool System_Object_Equals__System_Object(System_Object* this__, System_Object* obj);
 
-extern /* static */ bool System_Object_ReferenceEquals(System_Object* objA, System_Object* objB);
+extern /* static */ bool System_Object_ReferenceEquals__System_Object_System_Object(System_Object* objA, System_Object* objB);
 
 #ifdef __cplusplus
 }

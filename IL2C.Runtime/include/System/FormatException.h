@@ -25,9 +25,9 @@ static inline void System_FormatException__ctor(System_FormatException* this__)
     System_Exception__ctor((System_Exception*)this__);
 }
 
-static inline void System_FormatException__ctor_1(System_FormatException* this__, System_String* message)
+static inline void System_FormatException__ctor__System_String(System_FormatException* this__, System_String* message)
 {
-    System_Exception__ctor_1((System_Exception*)this__, message);
+    System_Exception__ctor__System_String((System_Exception*)this__, message);
 }
 
 #ifdef __cplusplus

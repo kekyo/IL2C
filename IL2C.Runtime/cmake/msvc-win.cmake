@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.7)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
 set(CMAKE_BUILD_TYPE "${CONFIGURATION}")
 
-add_definitions(-DWIN32)
+add_definitions(-D_WIN32)
 add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-D_CRT_SECURE_NO_WARNINGS_GLOBALS)
@@ -12,7 +12,7 @@ include(ProcessorCount)
 ProcessorCount(pc)
 math(EXPR pc2 "${pc}*2")
 
-set(CMAKE_C_FLAGS "/EHa /GF /Gy /Zi /utf-8 /wd4100 /wd4197 /wd4206 /MP${pc2}")
+set(CMAKE_C_FLAGS "/EHa /GF /Gy /Zi /utf-8 /W4 /WX /wd4100 /wd4197 /wd4206 /wd4127 /MP${pc2}")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /Oi /RTC1 /GR /sdl /MTd -D_DEBUG")
 set(CMAKE_C_FLAGS_RELEASE "/Ox /Ot /Ob2 /Oi /Oy /GL /GS /sdl- /MT -DNDEBUG")
 

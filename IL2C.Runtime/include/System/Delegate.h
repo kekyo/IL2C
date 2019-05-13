@@ -37,9 +37,9 @@ extern System_Delegate_VTABLE_DECL__ System_Delegate_VTABLE__;
 IL2C_DECLARE_RUNTIME_TYPE(System_Delegate);
 
 extern /* virtual */ int32_t System_Delegate_GetHashCode(System_Delegate* this__);
-extern /* virtual */ bool System_Delegate_Equals(System_Delegate* this__, System_Object* obj);
-extern /* static */ System_Delegate* System_Delegate_Combine(System_Delegate* a, System_Delegate* b);
-extern /* static */ System_Delegate* System_Delegate_Remove(System_Delegate* source, System_Delegate* value);
+extern /* virtual */ bool System_Delegate_Equals__System_Object(System_Delegate* this__, System_Object* obj);
+extern /* static */ System_Delegate* System_Delegate_Combine__System_Delegate_System_Delegate(System_Delegate* a, System_Delegate* b);
+extern /* static */ System_Delegate* System_Delegate_Remove__System_Delegate_System_Delegate(System_Delegate* source, System_Delegate* value);
 
 /////////////////////////////////////////////////
 // Delegate special functions

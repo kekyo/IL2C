@@ -30,7 +30,7 @@
 
 * This is sample structure for building with CMake.
 * Ready to build using CMake if you already build "Calculator.Core" and stored translated code into "Generated" directory.
-* "Generated/CMakeLists.txt" is CMake script and you can build using "build.bat".
+* "Calculator.CMake/CMakeLists.txt" is CMake script and you can build using "build.bat".
 
 ### UEFI
 

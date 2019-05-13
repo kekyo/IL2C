@@ -14,7 +14,7 @@ extern "C" {
 
 #if defined(_MSC_VER)
 
-#if defined(WIN32)
+#if defined(_WIN32)
 
 #define _CRTDBG_MAP_ALLOC 1
 #include <crtdbg.h>
@@ -57,7 +57,7 @@ extern void il2c_free__(void* p);
 #include <stdint.h>
 #include <wchar.h>
 #include <malloc.h>
-#if !defined(WIN32)
+#if !defined(_WIN32)
 #include <alloca.h>
 #endif
 

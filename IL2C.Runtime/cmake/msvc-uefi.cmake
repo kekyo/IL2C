@@ -7,12 +7,15 @@ set(CMAKE_C_COMPILER_WORKS 1)
 set(BUILD_UEFI true)
 
 add_definitions(-DUEFI)
+add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+add_definitions(-D_CRT_SECURE_NO_WARNINGS_GLOBALS)
 
 include(ProcessorCount)
 ProcessorCount(pc)
 math(EXPR pc2 "${pc}*2")
 
-set(CMAKE_C_FLAGS "/EHa /GF /Gy /GS- /Zi /utf-8 /wd4100 /wd4197 /wd4206 /MP${pc2}")
+set(CMAKE_C_FLAGS "/EHa /GF /Gy /GS- /Zi /utf-8 /W4 /WX /wd4100 /wd4197 /wd4206 /wd4127 /MP${pc2}")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /Oi /GR -D_DEBUG")
 set(CMAKE_C_FLAGS_RELEASE "/Ox /Ot /Ob2 /Oi /Oy -DNDEBUG")
 

@@ -24,7 +24,7 @@ int32_t System_Type_GetHashCode(System_Type* this__)
     return (int32_t)(intptr_t)(this__->type__);
 }
 
-bool System_Type_Equals(System_Type* this__, System_Type* obj)
+bool System_Type_Equals__System_Type(System_Type* this__, System_Type* obj)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->type__ != NULL);
@@ -37,7 +37,7 @@ bool System_Type_Equals(System_Type* this__, System_Type* obj)
     return this__->type__ == obj->type__;
 }
 
-bool System_Type_Equals_1(System_Type* this__, System_Object* obj)
+bool System_Type_Equals__System_Object(System_Type* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
     il2c_assert(this__->type__ != NULL);
@@ -81,7 +81,7 @@ System_Type* System_Type_get_BaseType(System_Type* this__)
 
 System_Type_VTABLE_DECL__ System_Type_VTABLE__ = {
     0, // Adjustor offset
-    (bool(*)(void*, System_Object*))System_Type_Equals_1,
+    (bool(*)(void*, System_Object*))System_Type_Equals__System_Object,
     (void(*)(void*))System_Object_Finalize,
     (int32_t(*)(void*))System_Type_GetHashCode,
     (System_String* (*)(void*))System_Type_ToString,
@@ -89,5 +89,11 @@ System_Type_VTABLE_DECL__ System_Type_VTABLE__ = {
     (System_String*(*)(void*))System_Type_get_FullName,
 };
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Type, "System.Type", IL2C_TYPE_REFERENCE, sizeof(System_Type), System_Object, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_Type,
+    "System.Type",
+    IL2C_TYPE_REFERENCE,
+    sizeof(System_Type),
+    System_Object,
+    0, 0)
 IL2C_RUNTIME_TYPE_END();

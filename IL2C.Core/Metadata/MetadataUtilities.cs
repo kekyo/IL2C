@@ -12,22 +12,221 @@ namespace IL2C.Metadata
         public static string GetLabelName(int offset) =>
             string.Format("IL_{0:x4}", offset);
 
-        public static string GetFriendlyName(this MemberReference member)
+        public static string TrimGenericIdentifier(string memberName)
         {
-            var declaringTypes = member.DeclaringType.
-                Traverse(current => current.DeclaringType).
-                Reverse().
-                ToArray();
-            var namespaceName = declaringTypes.FirstOrDefault()
-                ?.Namespace
-                ?? (member as TypeReference)?.Namespace;
-
-            return string.Join(
-                ".",
-                new[] { namespaceName }.
-                    Concat(declaringTypes.Select(type => type.Name)).
-                    Concat(new[] { member.Name }));
+            // Foo`1 --> Foo
+            var index = memberName.LastIndexOf('`');
+            return (index >= 0) ? memberName.Substring(0, index) : memberName;
         }
+
+        #region GetUniqueName
+        private sealed class MemberElementFormats
+        {
+            public readonly string NameSeparator;       // Foo.Bar.Baz
+            public readonly string MemberItemSeparator; // Foo,Bar,Baz
+            public readonly string PrefixForGeneric;    // Foo<Bar ...
+            public readonly string PostfixForGeneric;   // ... Bar>
+            public readonly string PrefixForArgument;   // Foo( ...
+            public readonly string PostfixForArgument;  // ... )
+            public readonly bool IsMakeEmptyArgument;   // Foo() / Foo
+            public readonly bool IsMangledName;
+
+            public MemberElementFormats(
+                string nameSeparator,
+                string memberItemSeparator,
+                string prefixForGeneric,
+                string postfixForGeneric,
+                string prefixForArgument,
+                string postfixForArgument,
+                bool isMakeEmptyArgument,
+                bool isMangledName)
+            {
+                this.NameSeparator = nameSeparator;
+                this.MemberItemSeparator = memberItemSeparator;
+                this.PrefixForGeneric = prefixForGeneric;
+                this.PostfixForGeneric = postfixForGeneric;
+                this.PrefixForArgument = prefixForArgument;
+                this.PostfixForArgument = postfixForArgument;
+                this.IsMakeEmptyArgument = isMakeEmptyArgument;
+                this.IsMangledName = isMangledName;
+            }
+        }
+
+        private static readonly MemberElementFormats uniqueNameMemberFormat =
+            new MemberElementFormats(".", ",", "<", ">", "(", ")", true, false);
+        private static readonly MemberElementFormats mangledUniqueNameMemberFormat =
+            new MemberElementFormats("_", "_", "__", string.Empty, "__", string.Empty, false, true);
+
+        private static string GetMemberName(
+            MemberReference member, bool onlyMemberName, MemberElementFormats memberFormat)
+        {
+            var memberName = memberFormat.IsMangledName ?
+                Utilities.GetMangledName(TrimGenericIdentifier(member.Name)) :
+                TrimGenericIdentifier(member.Name);
+
+            if (onlyMemberName)
+            {
+                // namespace    typename   result
+                // Foo.Bar.Baz  Bebe       Bebe
+                // Foo.Bar.Baz  Bebe+Momo  Momo
+                return memberName;
+            }
+            else
+            {
+                // namespace    typename   result
+                // Foo.Bar.Baz  Bebe       Foo.Bar.Baz.Bebe
+                // Foo.Bar.Baz  Bebe+Momo  Foo.Bar.Baz.Bebe.Momo
+
+                var declaringTypes = member.DeclaringType.
+                    Traverse(current => current.DeclaringType).
+                    Reverse().
+                    ToArray();
+                var namespaceName = declaringTypes.FirstOrDefault()?.Namespace ??
+                    (member as TypeReference)?.Namespace;
+                if (memberFormat.IsMangledName && (namespaceName != null))
+                {
+                    namespaceName = Utilities.GetMangledName(namespaceName);
+                }
+
+                return string.Join(
+                    memberFormat.NameSeparator,
+                    ((namespaceName != null) ? new[] { namespaceName } : new string[0]).
+                        Concat(declaringTypes.Select(type => ConstructUniqueName(type, true, memberFormat))).  // Made inner types.
+                        Concat(new[] { memberName }));
+            }
+        }
+
+        private static string ConstructUniqueName(
+            TypeReference type, bool onlyMemberName, MemberElementFormats memberFormat)
+        {
+            if (type is GenericParameter parameter)
+            {
+                // T
+                return parameter.Name;
+            }
+
+            if (type.IsArray)
+            {
+                // System.Array<int>
+                return "System" + memberFormat.NameSeparator + "Array" +
+                    memberFormat.PrefixForGeneric + ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + memberFormat.PostfixForGeneric;
+            }
+
+            if (memberFormat.IsMangledName)
+            {
+                if (type.IsByReference)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "_REF";
+                }
+                if (type.IsPointer)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "_PTR";
+                }
+            }
+            else
+            {
+                if (type.IsByReference)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "&";
+                }
+                if (type.IsPointer)
+                {
+                    return ConstructUniqueName(type.GetElementType(), onlyMemberName, memberFormat) + "*";
+                }
+            }
+
+            var typeName = GetMemberName(type, onlyMemberName, memberFormat);
+
+            if (type is GenericInstanceType genericInstanceType)
+            {
+                // FooType<int,T,long>
+                return typeName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, genericInstanceType.GenericArguments.
+                        Select(a => ConstructUniqueName(a, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+
+            if (type.HasGenericParameters)
+            {
+                // FooType<T,U,V>      ; GenericDefinition
+                return typeName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, type.GenericParameters.
+                        Select(p => ConstructUniqueName(p, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+
+            // FooType
+            return typeName;
+        }
+
+        private static string ConstructUniqueName(
+            MethodReference method, bool onlyMemberName, bool containsArgument, MemberElementFormats memberFormat)
+        {
+            var methodName = GetMemberName(method, onlyMemberName, memberFormat);
+
+            string firstElement;
+            if (method is GenericInstanceMethod genericInstanceMethod)
+            {
+                // BarMethod<int,T,long>
+                firstElement = methodName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, genericInstanceMethod.GenericArguments.
+                        Select(a => ConstructUniqueName(a, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+            else if (method.HasGenericParameters)
+            {
+                // BarMethod<T,U,V>      ; GenericDefinition
+                firstElement = methodName + memberFormat.PrefixForGeneric +
+                    string.Join(memberFormat.MemberItemSeparator, method.GenericParameters.
+                        Select(p => ConstructUniqueName(p, false, memberFormat))) +
+                    memberFormat.PostfixForGeneric;
+            }
+            else
+            {
+                // BarMethod
+                firstElement = methodName;
+            }
+
+            var parameters = method.Parameters.
+                Select(p => ConstructUniqueName(p.ParameterType, false, memberFormat)).
+                ToArray();
+
+            if (memberFormat.IsMakeEmptyArgument || (parameters.Length >= 1))
+            {
+                // BarMethod(float,byte,bool)
+                return firstElement + memberFormat.PrefixForArgument +
+                    string.Join(memberFormat.MemberItemSeparator, parameters) +
+                    memberFormat.PostfixForArgument;
+            }
+            else
+            {
+                // BarMethod
+                return firstElement;
+            }
+        }
+
+        private static string ConstructUniqueName(
+            MemberReference member, bool onlyMemberName, bool containsArgumentIfMemberIsMethod, MemberElementFormats memberFormat)
+        {
+            if (member is TypeReference type)
+            {
+                return ConstructUniqueName(type, onlyMemberName, memberFormat);
+            }
+
+            if (member is MethodReference method)
+            {
+                return ConstructUniqueName(method, onlyMemberName, containsArgumentIfMemberIsMethod, memberFormat);
+            }
+
+            return GetMemberName(member, onlyMemberName, memberFormat);
+        }
+
+        public static string GetUniqueName(this MemberReference member, bool onlyMemberName = false, bool containsArgumentIfMemberIsMethod = true) =>
+            ConstructUniqueName(member, onlyMemberName, containsArgumentIfMemberIsMethod, uniqueNameMemberFormat);
+
+        public static string GetMangledUniqueName(this MemberReference member, bool onlyMemberName = false) =>
+            ConstructUniqueName(member, onlyMemberName, true, mangledUniqueNameMemberFormat);
+        #endregion
 
         public static ITypeInformation UnwrapCoveredType(this ITypeInformation type)
         {
@@ -267,7 +466,7 @@ namespace IL2C.Metadata
             new MethodSignatureComparerImpl(true);
         #endregion
 
-        public static IDictionary<string, IMethodInformation[]> CalculateOverloadMethods(
+        public static IDictionary<string, IMethodInformation[]> OrderByOverloadPriority(
             this IEnumerable<IMethodInformation> methods)
         {
             // Aggregate overloads and overrides.
@@ -287,7 +486,41 @@ namespace IL2C.Metadata
             return dict;
         }
 
-        public static IEnumerable<(IMethodInformation method, int overloadIndex)> CalculateVirtualMethods(
+        public static IEnumerable<IMethodInformation> FilterByNewslots(
+            this IEnumerable<IMethodInformation> methods) =>
+            methods.Where(method => method.IsVirtual && method.IsNewSlot);
+
+        public static IEnumerable<(IMethodInformation newslotMethod, IMethodInformation[] reuseslotMethods)> OrderByMostOverrides(
+            this IEnumerable<IMethodInformation> methods)
+        {
+            var list = new List<Tuple<IMethodInformation, List<IMethodInformation>>>();
+            foreach (var method in methods.Where(method => method.IsVirtual))
+            {
+                if (method.IsNewSlot)
+                {
+                    list.Add(Tuple.Create(method, new List<IMethodInformation> { method }));
+                }
+                else if (method.IsReuseSlot)
+                {
+                    var index = list.FindLastIndex(entry => entry.Item1.CLanguageFunctionName == method.CLanguageFunctionName);
+                    Debug.Assert(index >= 0);
+                    list[index].Item2.Add(method);
+                }
+                else
+                {
+                    Debug.Assert(false);
+                }
+            }
+            return list.
+                Select(entry => (entry.Item1, entry.Item2.ToArray()));
+        }
+
+        public static IEnumerable<IMethodInformation> FilterAndOrderByMostOverrides(
+            this IEnumerable<IMethodInformation> methods) =>
+            OrderByMostOverrides(methods).Select(entry => entry.reuseslotMethods.Last());
+
+        //[Obsolete]
+        public static IEnumerable<(IMethodInformation method, int overloadIndex)> OrderByNewSlotVirtuals(
             this IEnumerable<IMethodInformation> methods)
         {
             // Calculate overrided virtual methods using NewSlot attribute.

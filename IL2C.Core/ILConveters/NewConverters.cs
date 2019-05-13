@@ -171,6 +171,7 @@ namespace IL2C.ILConverters
                 };
             }
 
+            // TODO: overloadIndex
             var overloadIndex = ctor.OverloadIndex;
 
             return (extractContext, _) =>
@@ -197,16 +198,10 @@ namespace IL2C.ILConverters
                                 memsetExpression,
                                 extractContext.GetSymbolName(thisSymbol),
                                 type.CLanguageStaticSizeOfExpression),
-                            (overloadIndex >= 1) ?
-                                string.Format(
-                                    "{0}__ctor_{1}(&{2})",
-                                    typeName,
-                                    overloadIndex,
-                                    parameterString) :
-                                string.Format(
-                                    "{0}__ctor(&{1})",
-                                    typeName,
-                                    parameterString)
+                            string.Format(
+                                "{0}(&{1})",
+                                ctor.CLanguageFunctionFullName,
+                                parameterString)
                         };
                     }
                     else
@@ -231,16 +226,10 @@ namespace IL2C.ILConverters
 
                     var callCtor = new[]
                     {
-                        (overloadIndex >= 1) ?
-                            string.Format(
-                                "{0}__ctor_{1}({2})",
-                                type.MangledUniqueName,
-                                overloadIndex,
-                                parameterString) :
-                            string.Format(
-                                "{0}__ctor({1})",
-                                type.MangledUniqueName,
-                                parameterString)
+                        string.Format(
+                            "{0}({1})",
+                            ctor.CLanguageFunctionFullName,
+                            parameterString)
                     };
 
                     return get.

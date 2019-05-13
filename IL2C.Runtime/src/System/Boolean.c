@@ -17,14 +17,14 @@ int32_t System_Boolean_GetHashCode(bool* this__)
     return *this__;
 }
 
-bool System_Boolean_Equals(bool* this__, bool obj)
+bool System_Boolean_Equals__System_Boolean(bool* this__, bool obj)
 {
     il2c_assert(this__ != NULL);
 
     return *this__ == obj;
 }
 
-bool System_Boolean_Equals_1(bool* this__, System_Object* obj)
+bool System_Boolean_Equals__System_Object(bool* this__, System_Object* obj)
 {
     il2c_assert(this__ != NULL);
 
@@ -37,7 +37,7 @@ bool System_Boolean_Equals_1(bool* this__, System_Object* obj)
     return *this__ == rhs;
 }
 
-bool System_Boolean_TryParse(System_String* s, bool* result)
+bool System_Boolean_TryParse__System_String_System_Boolean_REF(System_String* s, bool* result)
 {
     // TODO: NullReferenceException
     il2c_assert(s != NULL);
@@ -66,5 +66,11 @@ bool System_Boolean_TryParse(System_String* s, bool* result)
 IL2C_DECLARE_TRAMPOLINE_VFUNC_FOR_VALUE_TYPE(System_Boolean);
 IL2C_DECLARE_TRAMPOLINE_VTABLE_FOR_VALUE_TYPE(System_Boolean);
 
-IL2C_RUNTIME_TYPE_BEGIN(System_Boolean, "System.Boolean", IL2C_TYPE_UNSIGNED_INTEGER, sizeof(System_Boolean), System_ValueType, 0, 0)
+IL2C_RUNTIME_TYPE_BEGIN(
+    System_Boolean,
+    "System.Boolean",
+    IL2C_TYPE_UNSIGNED_INTEGER,
+    sizeof(System_Boolean),
+    System_ValueType,
+    0, 0)
 IL2C_RUNTIME_TYPE_END();

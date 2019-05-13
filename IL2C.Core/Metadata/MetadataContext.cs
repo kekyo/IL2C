@@ -231,13 +231,19 @@ namespace IL2C.Metadata
                 typeReference,
                 () =>
                 {
+                    var module = this.GetOrAddModule(typeReference.Module);
+
+                    if (typeReference.IsGenericParameter)
+                    {
+                        return new TypeInformation(typeReference, module);
+                    }
+
                     // Ignore global namespace
                     if (typeReference.FullName.Split('.').Length == 1)
                     {
                         return default(TypeInformation);
                     }
 
-                    var module = this.GetOrAddModule(typeReference.Module);
                     if (typeReference.Module.Equals(resolvedCoreModule) &&
                         validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
                     {

@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 set VERSION=0.4.60
 
 if exist artifacts (
-    ren artifacts artifacts_
+    move artifacts artifacts_
     rmdir /s /q artifacts_
 )
 mkdir artifacts
@@ -24,6 +24,20 @@ echo.
 
 dotnet pack --configuration Release --include-symbols -p:VersionPrefix=%VERSION% IL2C.Core\IL2C.Core.csproj
 copy IL2C.Core\bin\Release\IL2C.Core.%VERSION%.symbols.nupkg artifacts\IL2C.Core.%VERSION%.nupkg
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Runtime
+echo.
+
+.nuget\nuget pack -Prop version=%VERSION% -OutputDirectory artifacts IL2C.Runtime\IL2C.Runtime.nuspec 
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Runtime.msvc
+echo.
+
+.nuget\nuget pack -Prop version=%VERSION% -OutputDirectory artifacts IL2C.Runtime\IL2C.Runtime.msvc.nuspec 
 
 echo.
 echo ///////////////////////////////////////////////

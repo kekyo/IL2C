@@ -35,8 +35,8 @@ if exist lib\%Configuration% (
 
 mkdir lib\%Configuration%
 
-mkdir build
-cd build
+mkdir build.cmake
+cd build.cmake
 
 rem ================================================================================
 

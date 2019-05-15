@@ -9,8 +9,8 @@ rm -rf build
 
 mkdir lib
 
-mkdir build
-cd build
+mkdir build.cmake
+cd build.cmake
 
 # ================================================================================
 

@@ -23,6 +23,13 @@ cp IL2C.Core/bin/Release/IL2C.Core.${VERSION}.symbols.nupkg artifacts/IL2C.Core.
 
 echo ""
 echo "///////////////////////////////////////////////"
+echo "// Build IL2C.Runtime"
+echo ""
+
+.nuget/nuget pack -Prop version=${VERSION} -OutputDirectory artifacts IL2C.Runtime/IL2C.Runtime.nuspec 
+
+echo ""
+echo "///////////////////////////////////////////////"
 echo "// Build IL2C.Build"
 echo ""
 

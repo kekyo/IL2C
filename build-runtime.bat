@@ -19,9 +19,9 @@ if "%Configuration%" == "" (
 
 cd IL2C.Runtime
 
-if exist build (
-    move build build.old
-    rmdir /s /q build.old
+if exist build.cmake (
+    move build.cmake build.cmake.old
+    rmdir /s /q build.cmake.old
 )
 
 if not exist lib (

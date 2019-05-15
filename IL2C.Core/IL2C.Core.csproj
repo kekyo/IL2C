@@ -24,11 +24,16 @@
         <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
         <DebugType>pdbonly</DebugType>
         <DebugSymbols>true</DebugSymbols>
-        <LangVersion>7.3</LangVersion>
         <Platforms>AnyCPU</Platforms>
+        <LangVersion>7.3</LangVersion>
+        <NoWarn>NU5105</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="System.ValueTuple" Version="4.5.0" />
         <PackageReference Include="Mono.Cecil" Version="0.10.3" />
     </ItemGroup>

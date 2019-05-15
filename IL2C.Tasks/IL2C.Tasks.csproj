@@ -25,6 +25,8 @@
         <LangVersion>7.3</LangVersion>
         <DebugType>portable</DebugType>
         <DebugSymbols>true</DebugSymbols>
+        <Platforms>AnyCPU</Platforms>
+        <NoWarn>NU5105</NoWarn>
 
         <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
         <NoPackageAnalysis>true</NoPackageAnalysis>
@@ -32,7 +34,6 @@
         <!-- <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder> -->
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
-        <Platforms>AnyCPU</Platforms>
         <!-- <TaskPublishOutput>D:\PROJECT\IL2C\IL2C.Tasks\bin\Debug\netstandard1.6\publish</TaskPublishOutput> -->
     </PropertyGroup>
 
@@ -45,6 +46,10 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
+        <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../IL2C.Interop/IL2C.Interop.csproj" PrivateAssets="None" />

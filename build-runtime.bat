@@ -38,8 +38,6 @@ mkdir lib\%Configuration%
 mkdir build
 cd build
 
-rem goto gcc-azuresphere-arm
-
 rem ================================================================================
 
 :msvc-win-win32

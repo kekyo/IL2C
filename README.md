@@ -81,8 +81,6 @@ void HelloWorld_Main()
 
 IL2C current status is **experimental**, read a simple ["Getting started"](docs/getting-started.md) for first step.
 
-And also you can read a blog post using case for the Azure Sphere: ["Try writing code using both the Azure Sphere Development Kit and C#" (My blog)](https://www.kekyo.net/2019/01/04/6917).
-
 ### Inside IL2C
 
 If you need understanding deep knowledge for IL2C, see ["Inside IL2C"](docs/inside-il2c.md) .

@@ -30,9 +30,7 @@ extern "C" {
 
 #include <unistd.h>
 #include <sys/types.h>
-#if !defined(__AZURE_SPHERE__)
 #include <sys/syscall.h>
-#endif
 
 #include "gcc.h"
 #include "strings.h"

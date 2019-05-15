@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PLATFORM=`arch`; export PLATFORM
+Platform=`arch`; export Platform
 
 cd IL2C.Runtime
 
@@ -16,28 +16,13 @@ cd build
 
 echo ""
 echo "///////////////////////////////////////////////"
-echo '// Build IL2C.Runtime (gcc-linux-$PLATFORM-debug)'
+echo '// Build IL2C.Runtime (gcc-linux-$Platform-$Configuration)'
 echo ""
 
-mkdir gcc-linux-$PLATFORM-debug
-cd gcc-linux-$PLATFORM-debug
+mkdir gcc-linux-$Platform-$Configuration
+cd gcc-linux-$Platform-$Configuration
 
-cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-linux.cmake -DPLATFORM=$PLATFORM -DCONFIGURATION=Debug ../..
-cmake --build .
-
-cd ..
-
-# ===============================================
-
-echo ""
-echo "///////////////////////////////////////////////"
-echo '// Build IL2C.Runtime (gcc-linux-$(PLATFORM)-release)'
-echo ""
-
-mkdir gcc-linux-$PLATFORM-release
-cd gcc-linux-$PLATFORM-release
-
-cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-linux.cmake -DPLATFORM=$PLATFORM -DCONFIGURATION=Release ../..
+cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc-linux.cmake -DPLATFORM=$Platform -DCONFIGURATION=$Configuration ../..
 cmake --build .
 
 cd ..

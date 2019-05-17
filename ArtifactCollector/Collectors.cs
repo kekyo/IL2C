@@ -49,14 +49,14 @@ namespace IL2C.ArtifactCollector
             });
         }
 
-        private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath, bool includeCommitId)
+        private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath)
         {
             // 0.4.70-beta+e458a2c794 --> 0.4.70-beta.e458a2c794
             var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
             var semver2Id = string.Join(".", semver2Ids);
 
             var nupkgPaths = Directory.GetFiles(targetDirectoryPath, "*.nupkg", SearchOption.AllDirectories).
-                Where(p => !includeCommitId || p.Contains(semver2Id)).    // HACK: Check contains current semver2 id
+                Where(p => p.Contains(semver2Id)).    // HACK: Check contains current semver2 id
                 GroupBy(p => p.Replace(".symbols", string.Empty)).
                 Select(g => Tuple.Create(g.Key, g.OrderByDescending(p => p.Length).ToArray())).
                 ToDictionary(entry => entry.Item1, entry => entry.Item2);
@@ -110,12 +110,14 @@ namespace IL2C.ArtifactCollector
             await Task.WhenAll(csprojPaths.
                 Select(path => Path.GetDirectoryName(Path.GetFullPath(path))).
                 Distinct().
-                Select(path => CopyArtifactsAsync(artifactsDir, path, true)));
+                Select(path => CopyArtifactsAsync(artifactsDir, path)));
         }
 
         public static async Task BuildNuspecAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> nuspecPaths)
         {
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
+            var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
+            var semver2Id = string.Join(".", semver2Ids);
 
             foreach (var path in nuspecPaths)
             {
@@ -126,9 +128,9 @@ namespace IL2C.ArtifactCollector
                     new string[0],
                     nugetPath,
                     "pack",
-                    "-Version", ThisAssembly.AssemblyInformationalVersion,
+                    "-Version", semver2Id,
                     "-NoPackageAnalysis",
-                    "-Prop", $"Configuration=Release;version={ThisAssembly.AssemblyInformationalVersion}",
+                    "-Prop", $"Configuration=Release",
                     "-OutputDirectory", $"\"{outputDirectory}\"",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);
@@ -141,7 +143,7 @@ namespace IL2C.ArtifactCollector
             await Task.WhenAll(nuspecPaths.
                 Select(path => Path.GetDirectoryName(Path.GetFullPath(path))).
                 Distinct().
-                Select(path => CopyArtifactsAsync(artifactsDir, path, false)));
+                Select(path => CopyArtifactsAsync(artifactsDir, path)));
         }
 
         private static async Task CopyResourceWithReplacementsAsync(string resourceName, string path, IReadOnlyDictionary<string, string> replacements)

@@ -28,3 +28,9 @@ jobs:
       - script: |
           ArtifactCollector\ArtifactCollector.exe . $(Build.ArtifactStagingDirectory) IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime
         displayName: "ArtifactCollector"
+      - task: NuGetCommand@2
+        displayName: "nuget push"
+        inputs:
+          command: push
+          nuGetFeedType: external
+          publishFeedCredentials: $(NuGet.PushName)

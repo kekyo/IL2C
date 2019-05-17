@@ -94,7 +94,12 @@ namespace IL2C.ArtifactCollector
                     workingPath,
                     new string[0],
                     "dotnet",
-                    "pack", "--no-build", "--configuration", "Release", "--include-symbols", "/p:NoPackageAnalysis=true", $"\"{path}\"");
+                    "pack",
+                    "--no-build",
+                    "--configuration", "Release",
+                    "--include-symbols",
+                    "/p:NoPackageAnalysis=true",
+                    $"\"{path}\"");
                 Program.WriteLine(result.Item2);
                 if (result.Item1 != 0)
                 {
@@ -120,7 +125,12 @@ namespace IL2C.ArtifactCollector
                     workingPath,
                     new string[0],
                     nugetPath,
-                    "pack", "-Version", ThisAssembly.AssemblyInformationalVersion, "-NoPackageAnalysis", "-Prop", "Configuration=Release", "-OutputDirectory", $"\"{outputDirectory}\"", $"\"{path}\"");
+                    "pack",
+                    "-Version", ThisAssembly.AssemblyInformationalVersion,
+                    "-NoPackageAnalysis",
+                    "-Prop", $"Configuration=Release;version={ThisAssembly.AssemblyInformationalVersion}",
+                    "-OutputDirectory", $"\"{outputDirectory}\"",
+                    $"\"{path}\"");
                 Program.WriteLine(result.Item2);
                 if (result.Item1 != 0)
                 {

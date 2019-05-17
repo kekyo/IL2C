@@ -47,9 +47,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3EBFA913-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure-pipelines", "azure-pipelines", "{61073883-92B6-4942-A1C2-0BB3B7737A37}"
 	ProjectSection(SolutionItems) = preProject
-		azure-pipelines\common.yml = azure-pipelines\common.yml
-		azure-pipelines\devel.yml = azure-pipelines\devel.yml
-		azure-pipelines\master.yml = azure-pipelines\master.yml
+		azure-pipelines\build-devel.yml = azure-pipelines\build-devel.yml
+		azure-pipelines\build-master.yml = azure-pipelines\build-master.yml
+		azure-pipelines\build.yml = azure-pipelines\build.yml
+		azure-pipelines\publish-devel.yml = azure-pipelines\publish-devel.yml
+		azure-pipelines\publish-master.yml = azure-pipelines\publish-master.yml
+		azure-pipelines\publish.yml = azure-pipelines\publish.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core.Test.BasicTypes", "tests\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj", "{A6072CD1-A526-45F2-BB88-D1040AC3A7E8}"

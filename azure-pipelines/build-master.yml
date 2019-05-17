@@ -1,6 +1,6 @@
 trigger:
     branches:
         include:
-            - devel
+            - master
 jobs:
-  - template: common.yml
+  - template:  build.yml

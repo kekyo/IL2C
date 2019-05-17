@@ -3,4 +3,4 @@ trigger:
         include:
             - master
 jobs:
-  - template: common.yml
+  - template:  publish.yml

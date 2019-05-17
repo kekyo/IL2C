@@ -67,6 +67,3 @@ jobs:
           platform: "Any Cpu"
           runInParallel: true
           testAssemblyVer2: "tests/IL2C.Core.Test.Fixture/bin/$(buildConfiguration)/**/IL2C.Core.Test.Fixture.dll"
-      - script: |
-          pack.bat
-        displayName: "pack"

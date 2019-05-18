@@ -1,6 +1,6 @@
 trigger:
-    branches:
-        include:
-            - refs/tags/[0-9]+\.[0-9]+\.[0-9]+
+  tags:
+    include:
+      - 0.*
 jobs:
-  - template:  publish.yml
+  - template: publish.yml

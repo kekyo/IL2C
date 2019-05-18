@@ -1,0 +1,69 @@
+jobs:
+  - job: Windows
+    pool:
+      vmImage: "vs2017-win2016"
+#   variables:
+#     buildConfiguration: "Debug"
+    steps:
+      - script: |
+          init-tools.bat
+        displayName: "init-tools"
+      - task: DotNetCoreCLI@1
+        displayName: "nuget restore il2c.sln"
+        inputs:
+          command: "restore"
+          projects: "il2c.sln"
+      - task: DotNetCoreCLI@1
+        displayName: "nuget restore GettingStartedIL2C.sln"
+        inputs:
+          command: "restore"
+          projects: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
+      - task: DotNetCoreCLI@1
+        displayName: "nuget restore Calculator.sln"
+        inputs:
+          command: "restore"
+          projects: "samples/Calculator/Calculator.sln"
+      - script: |
+          build-runtime.bat $(buildConfiguration)
+        displayName: "build-runtime"
+      - task: MSBuild@1
+        displayName: "build il2c"
+        inputs:
+          solution: "il2c.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "Any Cpu"
+      - task: MSBuild@1
+        displayName: "build GettingStartedIL2C-x86"
+        inputs:
+          solution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x86"
+      - task: MSBuild@1
+        displayName: "build GettingStartedIL2C-x64"
+        inputs:
+          solution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x64"
+      - task: MSBuild@1
+        displayName: "build Calculator-x86"
+        inputs:
+          solution: "samples/Calculator/Calculator.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x86"
+      - task: MSBuild@1
+        displayName: "build Calculator-x64"
+        inputs:
+          solution: "samples/Calculator/Calculator.sln"
+          configuration: "$(buildConfiguration)"
+          platform: "x64"
+      - script: |
+          build.bat $(buildConfiguration)
+        displayName: "build Calculator-CMake-mingw32"
+        workingDirectory: "samples/Calculator/Calculator.CMake"
+      - task: VSTest@2
+        displayName: "test il2c"
+        inputs:
+          configuration: "$(buildConfiguration)"
+          platform: "Any Cpu"
+          runInParallel: true
+          testAssemblyVer2: "tests/IL2C.Core.Test.Fixture/bin/$(buildConfiguration)/**/IL2C.Core.Test.Fixture.dll"

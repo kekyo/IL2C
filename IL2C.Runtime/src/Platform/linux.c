@@ -28,9 +28,6 @@ void il2c_sleep(uint32_t milliseconds)
     }
 }
 
-// NOT Azure Sphere
-#if !defined(__AZURE_SPHERE__)
-
 #if defined(IL2C_USE_RUNTIME_DEBUG_LOG)
 void il2c_runtime_debug_log(const wchar_t* message)
 {
@@ -84,7 +81,5 @@ bool il2c_readline(wchar_t* buffer, int32_t length)
 
     return false;
 }
-
-#endif
 
 #endif

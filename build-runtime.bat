@@ -19,9 +19,9 @@ if "%Configuration%" == "" (
 
 cd IL2C.Runtime
 
-if exist build (
-    move build build.old
-    rmdir /s /q build.old
+if exist build.cmake (
+    move build.cmake build.cmake.old
+    rmdir /s /q build.cmake.old
 )
 
 if not exist lib (
@@ -35,10 +35,8 @@ if exist lib\%Configuration% (
 
 mkdir lib\%Configuration%
 
-mkdir build
-cd build
-
-rem goto gcc-azuresphere-arm
+mkdir build.cmake
+cd build.cmake
 
 rem ================================================================================
 

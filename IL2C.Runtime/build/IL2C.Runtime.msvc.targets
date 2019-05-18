@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <IL2CRuntimeMSVCTargetPlatform Condition="'%(Link.SubSystem)'=='EFI Application'">uefi</IL2CRuntimeMSVCTargetPlatform>
+    <IL2CRuntimeMSVCTargetPlatform Condition="'%(Link.SubSystem)'==''">win</IL2CRuntimeMSVCTargetPlatform>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(IL2CRuntimeBasePath)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(IL2CRuntimeMSVCBasePath)\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libil2c-msvc-$(IL2CRuntimeMSVCTargetPlatform)-$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

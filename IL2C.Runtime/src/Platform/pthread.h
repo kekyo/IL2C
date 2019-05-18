@@ -28,7 +28,8 @@ extern void il2c_set_tls_value(IL2C_TLS_INDEX tlsIndex, void* value);
 typedef IL2C_THREAD_ENTRY_POINT_RESULT_TYPE (*IL2C_THREAD_ENTRY_POINT_TYPE)(IL2C_THREAD_ENTRY_POINT_PARAMETER_TYPE);
 
 #define il2c_get_current_thread__() ((intptr_t)pthread_self())
-#if !defined(__AZURE_SPHERE__)
+#if defined(__linux__)
+// Native thread id on the Linux
 #define il2c_get_current_thread_id__() ((int32_t)syscall(SYS_gettid))
 #else
 #define il2c_get_current_thread_id__() ((int32_t)pthread_self())

@@ -1,0 +1,6 @@
+trigger:
+    branches:
+        include:
+            - devel
+jobs:
+  - template: publish.yml

@@ -1,6 +1,0 @@
-trigger:
-    branches:
-        include:
-            - master
-jobs:
-  - template: common.yml

@@ -3,7 +3,7 @@
     "version": "0.4.70",
     "publicReleaseRefSpec": [
         "^refs/heads/master$",
-        "^refs/heads/\\d+(?:\\.\\d.\\d+)?$"
+        "^refs/tags/[0-9]+\\.[0-9]+\\.[0-9]+$"
     ],
     "nugetPackageVersion": {
         "semVer": 2

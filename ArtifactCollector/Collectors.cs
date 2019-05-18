@@ -9,6 +9,17 @@ namespace IL2C.ArtifactCollector
 {
     internal static class Collectors
     {
+        public static async Task<string> GetVersionStringAsync(string solutionDir)
+        {
+            var result = await Executor.ExecuteAsync(
+                solutionDir,
+                new string[0],
+                "nbgv",
+                "get-version",
+                "-v", "NuGetPackageVersion");
+            return result.Item2.Trim('\r', '\n', ' ', '\t');
+        }
+
         public static Task RecreateDirectoryAsync(string path)
         {
             return Task.Run(() =>
@@ -49,16 +60,21 @@ namespace IL2C.ArtifactCollector
             });
         }
 
-        private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath)
+        private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath, string versionString)
         {
             // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
-            var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
+            var semver2Ids = versionString.Split('+');
             var semver2Id = string.Join("-", semver2Ids);
 
             var nupkgPaths = Directory.GetFiles(targetDirectoryPath, "*.nupkg", SearchOption.AllDirectories).
-                Where(p => p.Contains(semver2Id)).    // HACK: Check contains current semver2 id
+                Where(p =>
+                    p.EndsWith(semver2Id + ".nupkg") ||
+                    p.EndsWith(semver2Id + ".symbols.nupkg")).    // HACK: Check contains current semver2 id
                 GroupBy(p => p.Replace(".symbols", string.Empty)).
-                Select(g => Tuple.Create(g.Key, g.OrderByDescending(p => p.Length).ToArray())).
+                Select(g => Tuple.Create(
+                    g.Key, g.
+                        OrderByDescending(p => p.Contains(".symbols") ? 1 : 0).
+                        ThenByDescending(p => p.Length).ToArray())).
                 ToDictionary(entry => entry.Item1, entry => entry.Item2);
 
             foreach (var nupkgPath in nupkgPaths.Select(entry => entry.Value.First()))
@@ -85,7 +101,7 @@ namespace IL2C.ArtifactCollector
             }
         }
 
-        public static async Task BuildCsprojAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> csprojPaths)
+        public static async Task BuildCsprojAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> csprojPaths, string versionString)
         {
             foreach (var path in csprojPaths)
             {
@@ -110,16 +126,12 @@ namespace IL2C.ArtifactCollector
             await Task.WhenAll(csprojPaths.
                 Select(path => Path.GetDirectoryName(Path.GetFullPath(path))).
                 Distinct().
-                Select(path => CopyArtifactsAsync(artifactsDir, path)));
+                Select(path => CopyArtifactsAsync(artifactsDir, path, versionString)));
         }
 
-        public static async Task BuildNuspecAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> nuspecPaths)
+        public static async Task BuildNuspecAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> nuspecPaths, string versionString)
         {
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
-
-            // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
-            var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
-            var semver2Id = string.Join("-", semver2Ids);
 
             foreach (var path in nuspecPaths)
             {
@@ -130,7 +142,7 @@ namespace IL2C.ArtifactCollector
                     new string[0],
                     nugetPath,
                     "pack",
-                    "-Version", semver2Id,
+                    "-Version", versionString,
                     "-NoPackageAnalysis",
                     "-Prop", $"Configuration=Release",
                     "-OutputDirectory", $"\"{outputDirectory}\"",
@@ -145,7 +157,7 @@ namespace IL2C.ArtifactCollector
             await Task.WhenAll(nuspecPaths.
                 Select(path => Path.GetDirectoryName(Path.GetFullPath(path))).
                 Distinct().
-                Select(path => CopyArtifactsAsync(artifactsDir, path)));
+                Select(path => CopyArtifactsAsync(artifactsDir, path, versionString)));
         }
 
         private static async Task CopyResourceWithReplacementsAsync(string resourceName, string path, IReadOnlyDictionary<string, string> replacements)
@@ -163,7 +175,7 @@ namespace IL2C.ArtifactCollector
             }
         }
 
-        public static async Task CollectArduinoArtifactsAsync(string solutionDir, string artifactsDir)
+        public static async Task CollectArduinoArtifactsAsync(string solutionDir, string artifactsDir, string versionString)
         {
             var arduinoBasePath = Path.Combine(artifactsDir, "Arduino");
             await RecreateDirectoryAsync(arduinoBasePath);
@@ -173,8 +185,7 @@ namespace IL2C.ArtifactCollector
                 Path.Combine(arduinoBasePath, "library.properties"),
                 new Dictionary<string, string>
                 {
-                    { "{version}", ThisAssembly.AssemblyFileVersion },
-                    { "{semver2}", ThisAssembly.AssemblyInformationalVersion }
+                    { "{version}", versionString }
                 });
  
             var fromIncludeDir = Path.Combine(solutionDir, "IL2C.Runtime", "include");

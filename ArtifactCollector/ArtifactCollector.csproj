@@ -32,12 +32,6 @@
     <ItemGroup>
       <EmbeddedResource Include="Arduino.properties" />
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      </PackageReference>
-    </ItemGroup>
     <Target Name="CopyArtifactCollector" AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).exe" DestinationFolder="$(ProjectDir)" />
     </Target>

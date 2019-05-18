@@ -29,13 +29,15 @@ namespace IL2C.ArtifactCollector
                 var artifactsDir = Path.GetFullPath(args[1]);
                 var dirNames = args.Skip(2).ToArray();
 
-                WriteLine("/////////////////////////////////////////////////////\r\nIL2C artifact collector");
+                var versionString = await Collectors.GetVersionStringAsync(solutionDir);
+
+                WriteLine("\r\n/////////////////////////////////////////////////////\r\nIL2C artifact collector\r\n");
                 WriteLine("SolutionDir={0}",
                     solutionDir);
                 WriteLine("ArtifactsDir={0}",
                     artifactsDir);
                 WriteLine("Target version={0}",
-                    ThisAssembly.AssemblyInformationalVersion);
+                    versionString);
 
                 await Collectors.RecreateDirectoryAsync(artifactsDir);
 
@@ -46,7 +48,7 @@ namespace IL2C.ArtifactCollector
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     string.Join(", ", csprojPaths.Select(p => Path.GetFileName(p))));
 
-                await Collectors.BuildCsprojAndCollectArtifactsAsync(solutionDir, artifactsDir, csprojPaths);
+                await Collectors.BuildCsprojAndCollectArtifactsAsync(solutionDir, artifactsDir, csprojPaths, versionString);
 
                 var nuspecPaths = dirNames.
                     SelectMany(p => Directory.GetFiles(Path.Combine(solutionDir, p), "*.nuspec")).
@@ -55,12 +57,12 @@ namespace IL2C.ArtifactCollector
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     string.Join(", ", nuspecPaths.Select(p => Path.GetFileName(p))));
 
-                await Collectors.BuildNuspecAndCollectArtifactsAsync(solutionDir, artifactsDir, nuspecPaths);
+                await Collectors.BuildNuspecAndCollectArtifactsAsync(solutionDir, artifactsDir, nuspecPaths, versionString);
 
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     "Arduino library");
 
-                await Collectors.CollectArduinoArtifactsAsync(solutionDir, artifactsDir);
+                await Collectors.CollectArduinoArtifactsAsync(solutionDir, artifactsDir, versionString);
             }
             catch (Exception ex)
             {

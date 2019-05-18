@@ -2,7 +2,7 @@
   "profiles": {
     "ArtifactCollector": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\PROJECT\\IL2C IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime"
+      "commandLineArgs": "D:\\PROJECT\\IL2C artifacts IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime"
     }
   }
 }

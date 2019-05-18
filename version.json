@@ -1,5 +1,10 @@
 {
-    "version": "0.4.70-beta",
+    "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
+    "version": "0.4.70",
+    "publicReleaseRefSpec": [
+        "^refs/heads/master$",
+        "^refs/heads/\\d+(?:\\.\\d.\\d+)?$"
+    ],
     "nugetPackageVersion": {
         "semVer": 2
     }

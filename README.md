@@ -2,25 +2,38 @@
 
 ![Intermediate language everywhere!](images/banner.png)
 
+## Packages
+
+| Packages | master |
+|:---|:---|
+| IL2C.Build | [![NuGet IL2C.Build](https://img.shields.io/nuget/v/IL2C.Build.svg?style=flat)](https://www.nuget.org/packages/IL2C.Build) |
+| IL2C.Interop | [![NuGet IL2C.Interop](https://img.shields.io/nuget/v/IL2C.Interop.svg?style=flat)](https://www.nuget.org/packages/IL2C.Interop) |
+| IL2C.Core | [![NuGet IL2C.Core](https://img.shields.io/nuget/v/IL2C.Core.svg?style=flat)](https://www.nuget.org/packages/IL2C.Core) |
+| IL2C.Runtime | [![NuGet IL2C.Runtime](https://img.shields.io/nuget/v/IL2C.Runtime.svg?style=flat)](https://www.nuget.org/packages/IL2C.Runtime) |
+| IL2C.Runtime.msvc | [![NuGet IL2C.Runtime.msvc](https://img.shields.io/nuget/v/IL2C.Runtime.msvc.svg?style=flat)](https://www.nuget.org/packages/IL2C.Runtime.msvc) |
+
+| Packages | devel |
+|:---|:---|
+| IL2C.Build | [![MyGet IL2C.Build](https://img.shields.io/myget/il2c/v/IL2C.Core.svg?style=flat&label=myget)](https://www.myget.org/feed/il2c/package/nuget/IL2C.Build) |
+| IL2C.Interop | [![MyGet IL2C.Interop](https://img.shields.io/myget/il2c/v/IL2C.Interop.svg?style=flat&label=myget)](https://www.myget.org/feed/il2c/package/nuget/IL2C.Interop) |
+| IL2C.Core | [![MyGet IL2C.Core](https://img.shields.io/myget/il2c/v/IL2C.Core.svg?style=flat&label=myget)](https://www.myget.org/feed/il2c/package/nuget/IL2C.Core) |
+| IL2C.Runtime | [![MyGet IL2C.Runtime](https://img.shields.io/myget/il2c/v/IL2C.Runtime.svg?style=flat&label=myget)](https://www.myget.org/feed/il2c/package/nuget/IL2C.Runtime) |
+| IL2C.Runtime.msvc | [![MyGet IL2C.Runtime.msvc](https://img.shields.io/myget/il2c/v/IL2C.Runtime.msvc.svg?style=flat&label=myget)](https://www.myget.org/feed/il2c/package/nuget/IL2C.Runtime.msvc) |
+
 ## Status
 
-| Building package | Current |
-|:---|:---|
-| IL2C.Build | [![NuGet IL2C.Build](https://img.shields.io/nuget/v/IL2C.Build.svg?style=flat)](https://www.nuget.org/packages/IL2C.Build) 
+|Configuration|master|
+|:--|:--|
+|Publish|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-publish-master)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=6)
+|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Debug) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/2.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=2)
+|Release|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Release) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/3.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=3)
 
-| Library packages | Current |
-|:---|:---|
-| IL2C.Interop | [![NuGet IL2C.Interop](https://img.shields.io/nuget/v/IL2C.Interop.svg?style=flat)](https://www.nuget.org/packages/IL2C.Interop) 
-| IL2C.Core | [![NuGet IL2C.Core](https://img.shields.io/nuget/v/IL2C.Core.svg?style=flat)](https://www.nuget.org/packages/IL2C.Core) 
 
------
-
-|Branch|Configuration|Build|
-|:--|:--|:--|
-|master|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Debug) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/2.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=2)
-|master|Release|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-master-Release) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/3.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=3)
-|devel|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-devel-Debug) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/4.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=4)<br>![Build Stats](https://buildstats.info/azurepipelines/chart/kekyo/IL2C/4?includeBuildsFromPullRequest=false)|
-|devel|Release|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-devel-Release) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/5.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=5)<br>![Build Stats](https://buildstats.info/azurepipelines/chart/kekyo/IL2C/5?includeBuildsFromPullRequest=false)|
+|Configuration|devel|
+|:--|:--|
+|Publish|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-publish-devel)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=6)
+|Debug|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-devel-Debug) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/4.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=4)<br>![Build Stats](https://buildstats.info/azurepipelines/chart/kekyo/IL2C/4?includeBuildsFromPullRequest=false)|
+|Release|[![Azure pipelines (.NET 4.5 / .NET Core 2.0)](https://kekyo.visualstudio.com/IL2C/_apis/build/status/IL2C-devel-Release) ![Azure pipelines tests](https://img.shields.io/azure-devops/tests/kekyo/IL2C/5.svg)](https://kekyo.visualstudio.com/IL2C/_build?definitionId=5)<br>![Build Stats](https://buildstats.info/azurepipelines/chart/kekyo/IL2C/5?includeBuildsFromPullRequest=false)|
 
 ## What's this?
 

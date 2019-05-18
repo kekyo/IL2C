@@ -51,9 +51,9 @@ namespace IL2C.ArtifactCollector
 
         private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath)
         {
-            // 0.4.70-beta+e458a2c794 --> 0.4.70-beta.e458a2c794
+            // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
             var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
-            var semver2Id = string.Join(".", semver2Ids);
+            var semver2Id = string.Join("-", semver2Ids);
 
             var nupkgPaths = Directory.GetFiles(targetDirectoryPath, "*.nupkg", SearchOption.AllDirectories).
                 Where(p => p.Contains(semver2Id)).    // HACK: Check contains current semver2 id
@@ -116,8 +116,10 @@ namespace IL2C.ArtifactCollector
         public static async Task BuildNuspecAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> nuspecPaths)
         {
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
+
+            // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
             var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
-            var semver2Id = string.Join(".", semver2Ids);
+            var semver2Id = string.Join("-", semver2Ids);
 
             foreach (var path in nuspecPaths)
             {

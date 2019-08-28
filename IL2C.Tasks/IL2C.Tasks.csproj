@@ -1,64 +1,64 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>net46;netcoreapp2.0</TargetFrameworks>
+  <PropertyGroup>
+    <TargetFrameworks>net46;netcoreapp2.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <LangVersion>7.3</LangVersion>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Platforms>AnyCPU</Platforms>
+    <NoWarn>NU5105</NoWarn>
+    <AssemblyName>IL2C.Tasks</AssemblyName>
+    <RootNamespace>IL2C</RootNamespace>
+    <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
 
-        <OutputType>Library</OutputType>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
-        <AssemblyName>IL2C.Tasks</AssemblyName>
-        <RootNamespace>IL2C</RootNamespace>
-        <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-        <Product>IL2C</Product>
-        <Trademark>IL2C</Trademark>
-        <Copyright>Copyright (c) 2017-2019 Kouji Matsui</Copyright>
-        <Description>A translator implementation of .NET intermediate language to C language.</Description>
-        <Company>Kouji Matsui (@kozy_kekyo)</Company>
-        <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-        <RepositoryType>git</RepositoryType>
-        <PackageId>IL2C.Build</PackageId>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-        <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
-        <LangVersion>7.3</LangVersion>
-        <DebugType>portable</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <Platforms>AnyCPU</Platforms>
-        <NoWarn>NU5105</NoWarn>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 
-        <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
-        <NoPackageAnalysis>true</NoPackageAnalysis>
-        <!-- Change the default location where NuGet will put the build output -->
-        <!-- <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder> -->
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
-        <!-- <TaskPublishOutput>D:\PROJECT\IL2C\IL2C.Tasks\bin\Debug\netstandard1.6\publish</TaskPublishOutput> -->
-    </PropertyGroup>
+    <Product>IL2C</Product>
+    <Trademark>IL2C</Trademark>
+    <Copyright>Copyright (c) 2017-2019 Kouji Matsui</Copyright>
+    <Description>A translator implementation of .NET intermediate language to C language.</Description>
+    <Company>Kouji Matsui (@kozy_kekyo)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+    <RepositoryType>git</RepositoryType>
+    <PackageId>IL2C.Build</PackageId>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+    <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
 
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <!-- Change the default location where NuGet will put the build output -->
+    <!-- <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder> -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
+    <!-- <TaskPublishOutput>D:\PROJECT\IL2C\IL2C.Tasks\bin\Debug\netstandard1.6\publish</TaskPublishOutput> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build/IL2C.Build.props" PackagePath="build/" />
+    <Content Include="build/IL2C.Build.targets" PackagePath="build/" />
+    <Content Include="buildMultiTargeting/IL2C.Build.props" PackagePath="buildMultiTargeting/" />
+    <Content Include="buildMultiTargeting/IL2C.Build.targets" PackagePath="buildMultiTargeting/" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.67" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="../IL2C.Interop/IL2C.Interop.csproj" PrivateAssets="None" />
+    <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" PrivateAssets="All" />
+  </ItemGroup>
+
+  <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
     <ItemGroup>
-        <Content Include="build/IL2C.Build.props" PackagePath="build/" />
-        <Content Include="build/IL2C.Build.targets" PackagePath="build/" />
-        <Content Include="buildMultiTargeting/IL2C.Build.props" PackagePath="buildMultiTargeting/" />
-        <Content Include="buildMultiTargeting/IL2C.Build.targets" PackagePath="buildMultiTargeting/" />
+      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
-        <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="../IL2C.Interop/IL2C.Interop.csproj" PrivateAssets="None" />
-        <ProjectReference Include="../IL2C.Core/IL2C.Core.csproj" PrivateAssets="All" />
-    </ItemGroup>
-
-    <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
-        <ItemGroup>
-            <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
-        </ItemGroup>
-    </Target>
+  </Target>
 </Project>

@@ -1,41 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>net45;netstandard2.0;netcoreapp2.0</TargetFrameworks>
+  <PropertyGroup>
+    <TargetFrameworks>net45;netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Platforms>AnyCPU</Platforms>
+    <LangVersion>7.3</LangVersion>
+    <NoWarn>NU5105</NoWarn>
 
-        <OutputType>Library</OutputType>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
-        <AssemblyName>IL2C.Core</AssemblyName>
-        <RootNamespace>IL2C</RootNamespace>
-        <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-        <Product>IL2C</Product>
-        <Trademark>IL2C</Trademark>
-        <Copyright>Copyright (c) 2017-2019 Kouji Matsui</Copyright>
-        <Description>A translator implementation of .NET intermediate language to C language.</Description>
-        <Company>Kouji Matsui (@kozy_kekyo)</Company>
-        <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-        <RepositoryType>git</RepositoryType>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-        <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
-        <DebugType>pdbonly</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <Platforms>AnyCPU</Platforms>
-        <LangVersion>7.3</LangVersion>
-        <NoWarn>NU5105</NoWarn>
-    </PropertyGroup>
+    <AssemblyName>IL2C.Core</AssemblyName>
+    <RootNamespace>IL2C</RootNamespace>
+    <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
 
-    <ItemGroup>
-        <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-        <PackageReference Include="Mono.Cecil" Version="0.10.3" />
-    </ItemGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    
+    <Product>IL2C</Product>
+    <Trademark>IL2C</Trademark>
+    <Copyright>Copyright (c) 2017-2019 Kouji Matsui</Copyright>
+    <Description>A translator implementation of .NET intermediate language to C language.</Description>
+    <Company>Kouji Matsui (@kozy_kekyo)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+    <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.67" PrivateAssets="All" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.10.3" />
+  </ItemGroup>
 
 </Project>

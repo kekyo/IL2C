@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,7 +53,7 @@ namespace IL2C.ArtifactCollector
         private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath)
         {
             // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
-            var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
+            var semver2Ids = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+');
             var semver2Id = string.Join("-", semver2Ids);
 
             var nupkgPaths = Directory.GetFiles(targetDirectoryPath, "*.nupkg", SearchOption.AllDirectories).
@@ -118,7 +119,7 @@ namespace IL2C.ArtifactCollector
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
 
             // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
-            var semver2Ids = ThisAssembly.AssemblyInformationalVersion.Split('+');
+            var semver2Ids = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+');
             var semver2Id = string.Join("-", semver2Ids);
 
             foreach (var path in nuspecPaths)
@@ -173,8 +174,8 @@ namespace IL2C.ArtifactCollector
                 Path.Combine(arduinoBasePath, "library.properties"),
                 new Dictionary<string, string>
                 {
-                    { "{version}", ThisAssembly.AssemblyFileVersion },
-                    { "{semver2}", ThisAssembly.AssemblyInformationalVersion }
+                    { "{version}", typeof(Program).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version },
+                    { "{semver2}", typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion }
                 });
  
             var fromIncludeDir = Path.Combine(solutionDir, "IL2C.Runtime", "include");

@@ -1,49 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
+  <PropertyGroup>
+    <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <LangVersion>7.3</LangVersion>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Platforms>AnyCPU</Platforms>
+    <NoWarn>NU5105</NoWarn>
 
-        <OutputType>Exe</OutputType>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
-        <AssemblyName>IL2C</AssemblyName>
-        <RootNamespace>IL2C</RootNamespace>
-        <StartupObject>IL2C.Program</StartupObject>
-        <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-        <Product>IL2C</Product>
-        <Trademark>IL2C</Trademark>
-        <Copyright>Copyright (c) 2017-2019 Kouji Matsui</Copyright>
-        <Description>A translator implementation of .NET intermediate language to C language.</Description>
-        <Company>Kouji Matsui (@kozy_kekyo)</Company>
-        <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-        <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
-        <LangVersion>7.3</LangVersion>
-        <DebugType>portable</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <Platforms>AnyCPU</Platforms>
-        <NoWarn>NU5105</NoWarn>
-    </PropertyGroup>
+    <AssemblyName>IL2C</AssemblyName>
+    <RootNamespace>IL2C</RootNamespace>
+    <StartupObject>IL2C.Program</StartupObject>
+    <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
 
-    <ItemGroup>
-        <Reference Include="System.ComponentModel.DataAnnotations" />
-    </ItemGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    
+    <Product>IL2C</Product>
+    <Trademark>IL2C</Trademark>
+    <Copyright>Copyright (c) 2017-2019 Kouji Matsui</Copyright>
+    <Description>A translator implementation of .NET intermediate language to C language.</Description>
+    <Company>Kouji Matsui (@kozy_kekyo)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+    <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Mono.Cecil" Version="0.10.3" />
-        <PackageReference Include="Mono.Options" Version="5.3.0.1" />
-        <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.10.3" />
+    <PackageReference Include="Mono.Options" Version="5.3.0.1" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.67" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj" />
+  </ItemGroup>
 
 </Project>

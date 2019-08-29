@@ -48,7 +48,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.67" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.69" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>

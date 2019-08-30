@@ -29,6 +29,8 @@
     <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
     <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
     <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
+
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>

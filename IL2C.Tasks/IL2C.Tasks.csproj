@@ -34,6 +34,7 @@
     <!-- Change the default location where NuGet will put the build output -->
     <!-- <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder> -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
     <!-- <TaskPublishOutput>D:\PROJECT\IL2C\IL2C.Tasks\bin\Debug\netstandard1.6\publish</TaskPublishOutput> -->
   </PropertyGroup>

@@ -52,23 +52,18 @@ namespace IL2C.ArtifactCollector
 
         private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath)
         {
-            // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
-            var semver2Ids = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+');
-            var semver2Id = string.Join("-", semver2Ids);
+            var version = typeof(Collectors).Assembly.GetName().Version;
+            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
 
             var nupkgPaths = Directory.GetFiles(targetDirectoryPath, "*.nupkg", SearchOption.AllDirectories).
-                Where(p => p.Contains(semver2Id)).    // HACK: Check contains current semver2 id
-                GroupBy(p => p.Replace(".symbols", string.Empty)).
+                Where(p => p.Contains(versionString)).
+                GroupBy(p => p).
                 Select(g => Tuple.Create(g.Key, g.OrderByDescending(p => p.Length).ToArray())).
                 ToDictionary(entry => entry.Item1, entry => entry.Item2);
 
             foreach (var nupkgPath in nupkgPaths.Select(entry => entry.Value.First()))
             {
-                var sanitized = nupkgPath.Replace(".symbols", string.Empty);
-                sanitized = (semver2Ids.Length >= 2) ?
-                    sanitized.Replace("." + semver2Ids[1], string.Empty) :    // HACK: Drop semver2 id
-                    sanitized;
-                var targetNupkgFileName = Path.GetFileName(sanitized);
+                var targetNupkgFileName = Path.GetFileName(nupkgPath);
                 var targetPath = Path.Combine(artifactsDir, targetNupkgFileName);
 
                 if (File.Exists(targetPath))
@@ -96,10 +91,7 @@ namespace IL2C.ArtifactCollector
                     new string[0],
                     "dotnet",
                     "pack",
-                    "--no-build",
                     "--configuration", "Release",
-                    "--include-symbols",
-                    "/p:NoPackageAnalysis=true",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);
                 if (result.Item1 != 0)
@@ -118,9 +110,8 @@ namespace IL2C.ArtifactCollector
         {
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
 
-            // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
-            var semver2Ids = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+');
-            var semver2Id = string.Join("-", semver2Ids);
+            var version = typeof(Collectors).Assembly.GetName().Version;
+            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
 
             foreach (var path in nuspecPaths)
             {
@@ -131,7 +122,7 @@ namespace IL2C.ArtifactCollector
                     new string[0],
                     nugetPath,
                     "pack",
-                    "-Version", semver2Id,
+                    "-Version", versionString,
                     "-NoPackageAnalysis",
                     "-Prop", $"Configuration=Release",
                     "-OutputDirectory", $"\"{outputDirectory}\"",

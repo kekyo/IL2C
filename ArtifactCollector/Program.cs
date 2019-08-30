@@ -28,13 +28,16 @@ namespace IL2C.ArtifactCollector
             {
                 var solutionDir = Path.GetFullPath(args[0]);
                 var artifactsDir = Path.GetFullPath(args[1]);
-                var dirNames = args.Skip(2).ToArray();
+                var buildIdentifier = args[2];
+                var dirNames = args.Skip(3).ToArray();
 
                 WriteLine("/////////////////////////////////////////////////////\r\nIL2C artifact collector");
                 WriteLine("SolutionDir={0}",
                     solutionDir);
                 WriteLine("ArtifactsDir={0}",
                     artifactsDir);
+                WriteLine("Build identifier={0}",
+                    buildIdentifier);
                 WriteLine("Target version={0}",
                     typeof(Program).Assembly.GetName().Version);
 
@@ -47,7 +50,8 @@ namespace IL2C.ArtifactCollector
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     string.Join(", ", csprojPaths.Select(p => Path.GetFileName(p))));
 
-                await Collectors.BuildCsprojAndCollectArtifactsAsync(solutionDir, artifactsDir, csprojPaths);
+                await Collectors.BuildCsprojAndCollectArtifactsAsync(
+                    solutionDir, artifactsDir, buildIdentifier, csprojPaths);
 
                 var nuspecPaths = dirNames.
                     SelectMany(p => Directory.GetFiles(Path.Combine(solutionDir, p), "*.nuspec")).
@@ -56,7 +60,8 @@ namespace IL2C.ArtifactCollector
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     string.Join(", ", nuspecPaths.Select(p => Path.GetFileName(p))));
 
-                await Collectors.BuildNuspecAndCollectArtifactsAsync(solutionDir, artifactsDir, nuspecPaths);
+                await Collectors.BuildNuspecAndCollectArtifactsAsync(
+                    solutionDir, artifactsDir, buildIdentifier, nuspecPaths);
 
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     "Arduino library");

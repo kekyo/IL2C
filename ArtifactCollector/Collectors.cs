@@ -81,7 +81,8 @@ namespace IL2C.ArtifactCollector
             }
         }
 
-        public static async Task BuildCsprojAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> csprojPaths)
+        public static async Task BuildCsprojAndCollectArtifactsAsync(
+            string solutionDir, string artifactsDir, string buildIdentifier, IEnumerable<string> csprojPaths)
         {
             foreach (var path in csprojPaths)
             {
@@ -93,6 +94,7 @@ namespace IL2C.ArtifactCollector
                     "pack",
                     "--no-build",
                     "--configuration", "Release",
+                    $"-p:BuildIdentifier={buildIdentifier}",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);
                 if (result.Item1 != 0)
@@ -107,7 +109,8 @@ namespace IL2C.ArtifactCollector
                 Select(path => CopyArtifactsAsync(artifactsDir, path)));
         }
 
-        public static async Task BuildNuspecAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> nuspecPaths)
+        public static async Task BuildNuspecAndCollectArtifactsAsync(
+            string solutionDir, string artifactsDir, string buildIdentifier, IEnumerable<string> nuspecPaths)
         {
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
 
@@ -141,7 +144,8 @@ namespace IL2C.ArtifactCollector
                 Select(path => CopyArtifactsAsync(artifactsDir, path)));
         }
 
-        private static async Task CopyResourceWithReplacementsAsync(string resourceName, string path, IReadOnlyDictionary<string, string> replacements)
+        private static async Task CopyResourceWithReplacementsAsync(
+            string resourceName, string path, IReadOnlyDictionary<string, string> replacements)
         {
             using (var sr = new StreamReader(
                 typeof(Collectors).Assembly.GetManifestResourceStream(resourceName),

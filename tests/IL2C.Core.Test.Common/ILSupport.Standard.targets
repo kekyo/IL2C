@@ -34,6 +34,18 @@
         <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.6.2 Tools\ildasm.exe' ) ">
             <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.6.2 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
         </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7.1 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7.1 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7.2 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7.2 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.8 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.8 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
         <Exec Command="$(ILDasm)" />
         <ItemGroup>
             <FileWrites Include="$(ILFile)" />

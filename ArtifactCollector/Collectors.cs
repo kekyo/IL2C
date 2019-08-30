@@ -91,6 +91,7 @@ namespace IL2C.ArtifactCollector
                     new string[0],
                     "dotnet",
                     "pack",
+                    "--no-build",
                     "--configuration", "Release",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);

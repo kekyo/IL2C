@@ -36,7 +36,7 @@ namespace IL2C.ArtifactCollector
                 WriteLine("ArtifactsDir={0}",
                     artifactsDir);
                 WriteLine("Target version={0}",
-                    typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
+                    typeof(Program).Assembly.GetName().Version);
 
                 await Collectors.RecreateDirectoryAsync(artifactsDir);
 

@@ -34,7 +34,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.69" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Mono.Cecil" Version="0.10.3" />
   </ItemGroup>

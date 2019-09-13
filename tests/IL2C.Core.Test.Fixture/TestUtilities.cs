@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using IL2C.Internal;
+
 namespace IL2C
 {
     internal static class TestUtilities

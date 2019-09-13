@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 
 using IL2C.Metadata;
+using IL2C.Internal;
 
 namespace IL2C
 {

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This is workaround rule set for RelaxVersioner, will remove when fix issue.
+    https://github.com/kekyo/CenterCLR.RelaxVersioner/issues/8
+-->
+<RelaxVersioner version="1.0">
+  <WriterRules>
+    <Language>C#</Language>
+    <Language>F#</Language>
+    <Language>VB</Language>
+    <Language>C++/CLI</Language>
+
+    <Import>System.Reflection</Import>
+
+    <Rule name="AssemblyVersionAttribute">{versionLabel}</Rule>
+    <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
+    <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
+
+    <Rule name="AssemblyMetadataAttribute" key="Date">{committer.When:R}</Rule>
+    <Rule name="AssemblyMetadataAttribute" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyMetadataAttribute" key="Tags">{tags}</Rule>
+    <Rule name="AssemblyMetadataAttribute" key="Author">{author}</Rule>
+    <Rule name="AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
+    <Rule name="AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyMetadataAttribute" key="Build">{buildIdentifier}</Rule>
+    <Rule name="AssemblyMetadataAttribute" key="Generated">{generated:R}</Rule>
+  </WriterRules>
+</RelaxVersioner>

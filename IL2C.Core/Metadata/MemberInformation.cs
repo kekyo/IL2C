@@ -1,5 +1,5 @@
 ﻿using System;
-
+using IL2C.Internal;
 using Mono.Cecil;
 
 namespace IL2C.Metadata

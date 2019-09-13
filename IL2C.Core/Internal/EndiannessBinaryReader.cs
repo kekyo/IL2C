@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace IL2C
+namespace IL2C.Internal
 {
     internal enum EndianSpecific
     {

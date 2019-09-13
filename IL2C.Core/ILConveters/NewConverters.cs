@@ -7,6 +7,7 @@ using Mono.Cecil.Cil;
 
 using IL2C.Translators;
 using IL2C.Metadata;
+using IL2C.Internal;
 
 namespace IL2C.ILConverters
 {

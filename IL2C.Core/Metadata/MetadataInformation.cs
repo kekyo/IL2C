@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IL2C.Internal;
+using System;
 using System.Diagnostics;
 using System.Text;
 

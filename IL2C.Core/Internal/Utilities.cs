@@ -14,7 +14,7 @@ using IL2C.ILConverters;
 using IL2C.Translators;
 using IL2C.Metadata;
 
-namespace IL2C
+namespace IL2C.Internal
 {
     internal static class Utilities
     {

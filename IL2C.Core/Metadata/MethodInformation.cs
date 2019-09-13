@@ -7,6 +7,7 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Metadata.Attributes;
+using IL2C.Internal;
 
 namespace IL2C.Metadata
 {

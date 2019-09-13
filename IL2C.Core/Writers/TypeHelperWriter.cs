@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-
+using IL2C.Internal;
 using IL2C.Metadata;
 
 namespace IL2C.Writers

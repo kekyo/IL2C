@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
+using IL2C.Internal;
 using Mono.Cecil;
 
 namespace IL2C.Metadata

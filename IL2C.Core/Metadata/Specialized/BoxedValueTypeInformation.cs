@@ -1,5 +1,5 @@
 ﻿using System;
-
+using IL2C.Internal;
 using IL2C.Metadata.Attributes;
 
 namespace IL2C.Metadata.Specialized

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.props" Condition="Exists('..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -23,9 +22,6 @@
     <ClCompile Include="src/**/*.c" />
     <ClInclude Include="include/**/*.h" />
     <ClInclude Include="src/**/*.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -93,13 +89,5 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
-    <Import Project="..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.targets" Condition="Exists('..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.props'))" />
-    <Error Condition="!Exists('..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CenterCLR.RelaxVersioner.1.0.0\build\CenterCLR.RelaxVersioner.targets'))" />
-  </Target>
 </Project>

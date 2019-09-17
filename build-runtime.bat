@@ -40,17 +40,17 @@ cd build.cmake
 
 rem ================================================================================
 
-:msvc-win-win32
+:msvc-win-win32-rts
 
 echo.
 echo ///////////////////////////////////////////////
-echo // Build IL2C.Runtime (msvc-win-win32-%Configuration%)
+echo // Build IL2C.Runtime (msvc-win-win32-rts-%Configuration%)
 echo.
 
-mkdir msvc-win-win32-%Configuration%
-cd msvc-win-win32-%Configuration%
+mkdir msvc-win-win32-rts-%Configuration%
+cd msvc-win-win32-rts-%Configuration%
 
-cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DRUNTIMELIB=rts -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )
@@ -63,17 +63,63 @@ cd ..
 
 rem ================================================================================
 
-:msvc-win-x64
+:msvc-win-x64-rts
 
 echo.
 echo ///////////////////////////////////////////////
-echo // Build IL2C.Runtime (msvc-win-x64-%Configuration%)
+echo // Build IL2C.Runtime (msvc-win-x64-rts-%Configuration%)
 echo.
 
-mkdir msvc-win-x64-%Configuration%
-cd msvc-win-x64-%Configuration%
+mkdir msvc-win-x64-rts-%Configuration%
+cd msvc-win-x64-rts-%Configuration%
 
-cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DRUNTIMELIB=rts -DCONFIGURATION=%Configuration% ../..
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
+cmake --build . -j --config %Configuration%
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
+
+cd ..
+
+rem ================================================================================
+
+:msvc-win-win32-rtd
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Runtime (msvc-win-win32-rtd-%Configuration%)
+echo.
+
+mkdir msvc-win-win32-rtd-%Configuration%
+cd msvc-win-win32-rtd-%Configuration%
+
+cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DRUNTIMELIB=rtd -DCONFIGURATION=%Configuration% ../..
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
+cmake --build . -j --config %Configuration%
+if errorlevel 1 (
+    exit /b %errorlevel%
+)
+
+cd ..
+
+rem ================================================================================
+
+:msvc-win-x64-rtd
+
+echo.
+echo ///////////////////////////////////////////////
+echo // Build IL2C.Runtime (msvc-win-x64-rtd-%Configuration%)
+echo.
+
+mkdir msvc-win-x64-rtd-%Configuration%
+cd msvc-win-x64-rtd-%Configuration%
+
+cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DRUNTIMELIB=rtd -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )

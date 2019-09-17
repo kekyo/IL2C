@@ -28,7 +28,7 @@ echo ///////////////////////////////////////////////
 echo // Build entire IL2C.pack.sln
 echo.
 
-dotnet build --configuration Release il2c.pack.sln
+dotnet build --configuration Release -p:BuildIdentifier="%1" il2c.pack.sln
 
 rem =========================================
 
@@ -37,7 +37,7 @@ echo ///////////////////////////////////////////////
 echo // Collects artifacts.
 echo.
 
-ArtifactCollector\ArtifactCollector.exe . .\artifacts IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime
+ArtifactCollector\ArtifactCollector.exe . .\artifacts "%1" IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime
 
 rem =========================================
 

@@ -9,7 +9,7 @@ jobs:
           init-tools.bat
         displayName: "init-tools"
       - script: |
-          pack.bat
+          pack.bat "$(Build.BuildId)"
         displayName: "pack"
 #      - task: NuGetCommand@2
 #        displayName: "nuget push"

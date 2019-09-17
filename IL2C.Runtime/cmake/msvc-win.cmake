@@ -13,8 +13,14 @@ ProcessorCount(pc)
 math(EXPR pc2 "${pc}*2")
 
 set(CMAKE_C_FLAGS "/EHa /GF /Gy /Zi /utf-8 /W4 /WX /wd4100 /wd4197 /wd4206 /wd4127 /MP${pc2}")
-set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /Oi /RTC1 /GR /sdl /MTd -D_DEBUG")
-set(CMAKE_C_FLAGS_RELEASE "/Ox /Ot /Ob2 /Oi /Oy /GL /GS /sdl- /MT -DNDEBUG")
+
+if("${RUNTIMELIB}" STREQUAL "rts")
+    set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /Oi /RTC1 /GR /sdl /MTd -D_DEBUG")           # MTd - Multi threaded debug (static)
+    set(CMAKE_C_FLAGS_RELEASE "/Ox /Ot /Ob2 /Oi /Oy /GL /GS /sdl- /MT -DNDEBUG")   # MT  - Multi threaded (static)
+else()
+    set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /Oi /RTC1 /GR /sdl /MDd -D_DEBUG")           # MDd - Multi threaded debug DLL
+    set(CMAKE_C_FLAGS_RELEASE "/Ox /Ot /Ob2 /Oi /Oy /GL /GS /sdl- /MD -DNDEBUG")   # MD  - Multi threaded DLL
+endif()
 
 set(CMAKE_STATIC_LINKER_FLAGS "/ignore:4221")
 set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "/LTCG")
@@ -31,7 +37,7 @@ if("${PLATFORM}" STREQUAL "Win32")
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /SAFESEH")
 endif()
 
-set(IL2C_LIBRARY_NAME_BASE "il2c-msvc-win-${PLATFORM}")
+set(IL2C_LIBRARY_NAME_BASE "il2c-msvc-win-${PLATFORM}-${RUNTIMELIB}")
 set(IL2C_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}.lib")
 
 set(TARGET_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}")

@@ -57,6 +57,11 @@ namespace IL2C
             get; set;
         }
 
+        public string TargetPlatform
+        {
+            get; set;
+        }
+
         public string DebugInformation
         {
             get; set;
@@ -68,6 +73,10 @@ namespace IL2C
             var debugInformation = string.IsNullOrWhiteSpace(this.DebugInformation)
                 ? DebugInformationOptions.CommentOnly
                 : (DebugInformationOptions)Enum.Parse(typeof(DebugInformationOptions), this.DebugInformation);
+            var targetPlatform = !string.IsNullOrWhiteSpace(this.TargetPlatform) ?
+                (Enum.TryParse<TargetPlatforms>(this.TargetPlatform, true, out var t) ?
+                    t : TargetPlatforms.Generic) :
+                    TargetPlatforms.Generic;
 
             var logw = new LogWriter(message =>
                 this.Log.LogMessage(
@@ -80,6 +89,7 @@ namespace IL2C
                 this.ReadSymbols,
                 this.EnableCpp,
                 this.EnableBundler,
+                targetPlatform,
                 debugInformation,
                 this.AssemblyPaths.
                     Select(path => path.ItemSpec.Trim()).

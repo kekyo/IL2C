@@ -36,8 +36,9 @@ namespace IL2C
             {
                 var debugInformationOptions = DebugInformationOptions.None;
                 var readSymbols = true;
-                var enableBundler = false;
                 var enableCpp = false;
+                var enableBundler = false;
+                var targetPlatform = TargetPlatforms.Generic;
                 var help = false;
 
                 var options = new OptionSet()
@@ -47,6 +48,7 @@ namespace IL2C
                     { "no-read-symbols", "NO read symbol files", _ => readSymbols = false },
                     { "cpp", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", _ => enableCpp = true },
                     { "bundler", "Produce bundler source file", _ => enableBundler = true },
+                    { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var t) ? t : TargetPlatforms.Generic },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -67,6 +69,7 @@ namespace IL2C
                         readSymbols,
                         enableCpp,
                         enableBundler,
+                        targetPlatform,
                         debugInformationOptions,
                         assemblyPaths);
                 }

@@ -29,6 +29,12 @@ using IL2C.Internal;
 
 namespace IL2C
 {
+    public enum TargetPlatforms
+    {
+        Generic,
+        UE4         // Unreal Engine 4
+    }
+
     public sealed class TranslateContext
         : IPrepareContext, IExtractContextHost
     {
@@ -49,22 +55,25 @@ namespace IL2C
         #endregion
 
         #region Constructors
-        public TranslateContext(Assembly assembly, bool readSymbols)
-            : this(assembly.Location, readSymbols)
+        public TranslateContext(Assembly assembly, bool readSymbols, TargetPlatforms targetPlatform)
+            : this(assembly.Location, readSymbols, targetPlatform)
         {
         }
 
-        public TranslateContext(string assemblyPath, bool readSymbols)
+        public TranslateContext(string assemblyPath, bool readSymbols, TargetPlatforms targetPlatform)
         {
             var context = new MetadataContext(assemblyPath, readSymbols);
             this.MetadataContext = context;
             this.Assembly = context.MainAssembly;
+            this.TargetPlatform = targetPlatform;
         }
         #endregion
 
         public IMetadataContext MetadataContext { get; }
 
         public IAssemblyInformation Assembly { get; }
+
+        public TargetPlatforms TargetPlatform { get; }
 
         #region IPrepareContext
         void IPrepareContext.RegisterImportIncludeFile(string includeFileName) =>

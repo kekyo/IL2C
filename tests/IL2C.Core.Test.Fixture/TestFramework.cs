@@ -171,7 +171,8 @@ namespace IL2C
             // Step 1-1: Create translation context.
             var translateContext = new TranslateContext(
                 caseInfo.Method.DeclaringType.Assembly.Location,
-                true);
+                true,
+                TargetPlatforms.Generic);
 
             // Step 1-2: Prepare target methods.
             var targetTypes = new HashSet<string>(

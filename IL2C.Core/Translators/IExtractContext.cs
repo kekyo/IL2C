@@ -45,6 +45,7 @@ namespace IL2C.Translators
     {
         IMetadataContext MetadataContext { get; }
         IAssemblyInformation Assembly { get; }
+        TargetPlatforms TargetPlatform { get; }
 
         string GetExceptionNestedFrameIndexName();
 

@@ -2,7 +2,10 @@
 <Project ToolVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <IL2CRuntimeMSVCTargetPlatform Condition="'%(Link.SubSystem)'=='EFI Application'">uefi</IL2CRuntimeMSVCTargetPlatform>
-    <IL2CRuntimeMSVCTargetPlatform Condition="'%(Link.SubSystem)'==''">win</IL2CRuntimeMSVCTargetPlatform>
+    <IL2CRuntimeMSVCTargetPlatform Condition="'$(IL2CRuntimeMSVCTargetPlatform)'==''">win</IL2CRuntimeMSVCTargetPlatform>
+    <IL2CRuntimeMSVCTargetRuntime Condition="'%(ClCompile.RuntimeLibrary)'=='MultiThreadedDebugDLL'">rtd</IL2CRuntimeMSVCTargetRuntime>
+    <IL2CRuntimeMSVCTargetRuntime Condition="'%(ClCompile.RuntimeLibrary)'=='MultiThreadedDLL'">rtd</IL2CRuntimeMSVCTargetRuntime>
+    <IL2CRuntimeMSVCTargetRuntime Condition="'$(IL2CRuntimeMSVCTargetRuntime)'==''">rts</IL2CRuntimeMSVCTargetRuntime>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -10,8 +13,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(IL2CRuntimeMSVCBasePath)\lib\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libil2c-msvc-$(IL2CRuntimeMSVCTargetPlatform)-$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libil2c-msvc-$(IL2CRuntimeMSVCTargetPlatform)-$(Platform)-$(IL2CRuntimeMSVCTargetRuntime).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup />
 </Project>

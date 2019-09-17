@@ -13,7 +13,7 @@ IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(const char* pFile, int line)
 IL2C_THREAD_CONTEXT* il2c_acquire_thread_context__(void)
 #endif
 {
-    // First arrived arbitary native thread: Auto attaching managed thread.
+    // First arrived arbitrary native thread: Auto attaching managed thread.
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
     if (il2c_unlikely__(pThreadContext == NULL))
     {

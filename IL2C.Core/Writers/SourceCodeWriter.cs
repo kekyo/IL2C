@@ -375,6 +375,15 @@ namespace IL2C.Writers
                 {
                     using (var twSource = storage.CreateSourceCodeWriter(targetType.Name))
                     {
+                        // HACK: Unreal Engine 4 needs include directive with same file name as header extension (ex: foo.c --> foo.h) at first line.
+                        if (extractContext.TargetPlatform == TargetPlatforms.UE4)
+                        {
+                            twSource.WriteLine(
+                                "#include \"{0}.h\"   // [16-1] Needs for Unreal Engine 4.",
+                                targetType.Name);
+                            twSource.SplitLine();
+                        }
+
                         twSource.WriteLine(
                             "// [15-2] This is {0} native code translated by IL2C, do not edit.",
                             assemblyName);
@@ -416,6 +425,22 @@ namespace IL2C.Writers
                         twSource.Flush();
 
                         sourceFiles.Add(twSource.RelatedPath);
+                    }
+
+                    // HACK: Unreal Engine 4 needs include directive with same file name as header extension (ex: foo.c --> foo.h) at first line.
+                    if (extractContext.TargetPlatform == TargetPlatforms.UE4)
+                    {
+                        using (var twUE4Header = storage.CreateHeaderWriter(targetType.Name))
+                        {
+                            twUE4Header.WriteLine(
+                                "// [16-2] This is {0} native code translated by IL2C, do not edit.",
+                                assemblyName);
+                            twUE4Header.WriteLine(
+                                "// It's a dummy header file for helping and using only Unreal Engine 4.",
+                                assemblyName);
+
+                            twUE4Header.Flush();
+                        }
                     }
                 }
             }

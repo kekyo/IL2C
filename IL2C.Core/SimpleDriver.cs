@@ -29,12 +29,13 @@ namespace IL2C
             CodeTextStorage storage,
             bool readSymbols,
             bool enableBundler,
+            TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOptions,
             string assemblyPath)
         {
             logw.Write("IL2C: Preparing assembly: \"{0}\" ...", Path.GetFullPath(assemblyPath));
 
-            var translateContext = new TranslateContext(assemblyPath, readSymbols);
+            var translateContext = new TranslateContext(assemblyPath, readSymbols, targetPlatform);
             var preparedFunctions = AssemblyPreparer.Prepare(translateContext);
 
             logw.WriteLine(" done.");
@@ -63,6 +64,7 @@ namespace IL2C
             CodeTextStorage storage,
             bool readSymbols,
             bool enableBundler,
+            TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOptions,
             IEnumerable<string> assemblyPaths)
         {
@@ -73,6 +75,7 @@ namespace IL2C
                     storage,
                     readSymbols,
                     enableBundler,
+                    targetPlatform,
                     debugInformationOptions,
                     aseemblyPath);
             }
@@ -83,6 +86,7 @@ namespace IL2C
             CodeTextStorage storage,
             bool readSymbols,
             bool enableBundler,
+            TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOptions,
             params string[] assemblyPaths)
         {
@@ -91,6 +95,7 @@ namespace IL2C
                 storage,
                 readSymbols,
                 enableBundler,
+                targetPlatform,
                 debugInformationOptions,
                 (IEnumerable<string>)assemblyPaths);
         }
@@ -101,6 +106,7 @@ namespace IL2C
             bool readSymbols,
             bool enableCpp,
             bool enableBundler,
+            TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOptions,
             IEnumerable<string> assemblyPaths)
         {
@@ -117,6 +123,7 @@ namespace IL2C
                     storage,
                     readSymbols,
                     enableBundler,
+                    targetPlatform,
                     debugInformationOptions,
                     aseemblyPath);
             }
@@ -128,6 +135,7 @@ namespace IL2C
             bool readSymbols,
             bool enableCpp,
             bool enableBundler,
+            TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOptions,
             params string[] assemblyPaths)
         {
@@ -137,6 +145,7 @@ namespace IL2C
                 readSymbols,
                 enableCpp,
                 enableBundler,
+                targetPlatform,
                 debugInformationOptions,
                 (IEnumerable<string>)assemblyPaths);
         }

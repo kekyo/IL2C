@@ -212,7 +212,7 @@ void* il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFra
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
     il2c_assert(pThreadContext != NULL);
 
-    // Save retval into temporary reference anchor.
+    // IMPORTANT: Save retval into temporary reference anchor.
     pThreadContext->pTemporaryReferenceAnchor = pReference;
 
     // Touch for lock region.
@@ -232,9 +232,14 @@ void* il2c_unlink_execution_frame__(/* EXECUTION_FRAME__* */ volatile void* pFra
 void* il2c_cleanup_at_return__(void* pReference)
 {
     IL2C_THREAD_CONTEXT* pThreadContext = il2c_get_tls_value(g_TlsIndex__);
-    il2c_assert(pThreadContext != NULL);
 
-    pThreadContext->pTemporaryReferenceAnchor = pReference;
+    // The thread context will not allocate if arrives here with arbitrary thread context
+    // and didn't construct execution frames.
+    if (il2c_likely__(pThreadContext != NULL))
+    {
+        // IMPORTANT: Save retval into temporary reference anchor.
+        pThreadContext->pTemporaryReferenceAnchor = pReference;
+    }
 
     return pReference;
 }

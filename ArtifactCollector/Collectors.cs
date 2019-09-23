@@ -20,10 +20,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace IL2C.ArtifactCollector
 {
@@ -148,6 +150,7 @@ namespace IL2C.ArtifactCollector
                     "-Version", versionString,
                     "-NoPackageAnalysis",
                     "-Prop", $"Configuration=Release",
+                    "-Prop", $"BuildIdentifier={buildIdentifier}",
                     "-OutputDirectory", $"\"{outputDirectory}\"",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);
@@ -161,6 +164,44 @@ namespace IL2C.ArtifactCollector
                 Select(path => Path.GetDirectoryName(Path.GetFullPath(path))).
                 Distinct().
                 Select(path => CopyArtifactsAsync(artifactsDir, path)));
+        }
+
+        public static async Task BuildZipFromCollectArtifactsAsync(
+            string artifactsDir, IEnumerable<string> zipArtifactsPaths)
+        {
+            var version = typeof(Collectors).Assembly.GetName().Version;
+            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
+
+            await Task.WhenAll(zipArtifactsPaths.Select(zipArtifactsPath => Task.Run(() =>
+            {
+                var zipArtifactsName = Path.GetFileNameWithoutExtension(zipArtifactsPath);
+                var zipArtifactsFullPath = Path.Combine(artifactsDir, $"{zipArtifactsName}.{versionString}.zip");
+                var zipArtifactsBasePath = Path.GetDirectoryName(Path.GetFullPath(zipArtifactsPath));
+                var zipArtifactsDocument = XDocument.Load(zipArtifactsPath);
+
+                var filePaths =
+                    zipArtifactsDocument.Root.Elements("file").
+                    Where(file => !string.IsNullOrWhiteSpace((string)file.Attribute("src"))).
+                    Select(file => Path.Combine(zipArtifactsBasePath, (string)file.Attribute("src"))).
+                    ToArray();
+
+                if (File.Exists(zipArtifactsFullPath))
+                {
+                    File.Move(zipArtifactsFullPath, zipArtifactsFullPath + ".tmp");
+                    File.Delete(zipArtifactsFullPath);
+                }
+
+                using (var zip = ZipFile.Open(zipArtifactsFullPath, ZipArchiveMode.Create))
+                {
+                    foreach (var filePath in filePaths.
+                        SelectMany(path => Directory.EnumerateFiles(Path.GetDirectoryName(path), Path.GetFileName(path), SearchOption.AllDirectories)))
+                    {
+                        var entry = zip.CreateEntryFromFile(filePath, filePath.Substring(zipArtifactsBasePath.Length + 1));
+                    }
+                }
+
+                Program.WriteLine(zipArtifactsFullPath);
+            })));
         }
 
         private static async Task CopyResourceWithReplacementsAsync(

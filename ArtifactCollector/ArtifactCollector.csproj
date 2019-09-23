@@ -38,6 +38,10 @@
     <EmbeddedResource Include="Arduino.properties" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Reference Include="System.IO.Compression" />
+  </ItemGroup>
+  
   <Target Name="CopyArtifactCollector" AfterTargets="Build">
     <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).exe" DestinationFolder="$(ProjectDir)" />
   </Target>

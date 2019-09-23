@@ -82,6 +82,16 @@ namespace IL2C.ArtifactCollector
                 await Collectors.BuildNuspecAndCollectArtifactsAsync(
                     solutionDir, artifactsDir, buildIdentifier, nuspecPaths);
 
+                var zipArtifactsPaths = dirNames.
+                    SelectMany(p => Directory.GetFiles(Path.Combine(solutionDir, p), "*.zaspec")).
+                    ToArray();
+
+                WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
+                    string.Join(", ", zipArtifactsPaths.Select(p => Path.GetFileName(p))));
+
+                await Collectors.BuildZipFromCollectArtifactsAsync(
+                    artifactsDir, zipArtifactsPaths);
+
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     "Arduino library");
 

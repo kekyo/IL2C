@@ -1,6 +1,2 @@
-trigger:
-    branches:
-        include:
-            - master
 jobs:
   - template:  publish.yml

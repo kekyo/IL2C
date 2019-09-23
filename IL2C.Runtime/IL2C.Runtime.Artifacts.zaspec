@@ -4,7 +4,7 @@
   <file src="src\*" />
   <file src="lib\*" />
   <file src="cmake\*" />
-  <file src="CMakefile.txt" />
+  <file src="CMakeLists.txt" />
   <file src="README.md" />
   <file src="LICENSE" />
 </zipArtifacts>

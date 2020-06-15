@@ -26,6 +26,9 @@ namespace IL2C.BasicTypes
     [TestCase(4, "SizeOf", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]    // Unit test environment is unknown, gcc is 32bit
     [TestCase("2147483647", "ToString", int.MaxValue)]
     [TestCase("-2147483648", "ToString", int.MinValue)]
+    [TestCase(true, "Zero", 0)]
+    [TestCase(true, "Equality", 0)]
+    [TestCase(false, "NonEquality", 0)]
     public sealed class System_IntPtr
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -37,6 +40,21 @@ namespace IL2C.BasicTypes
         public static string ToString(IntPtr value)
         {
             return value.ToString();
+        }
+
+        public static bool Zero(IntPtr v)
+        {
+            return v == IntPtr.Zero;
+        }
+
+        public static bool Equality(IntPtr v)
+        {
+            return v == IntPtr.Zero;
+        }
+
+        public static bool NonEquality(IntPtr v)
+        {
+            return v != IntPtr.Zero;
         }
     }
 }

@@ -5,6 +5,8 @@
 
 const intptr_t System_IntPtr_Zero = (intptr_t)0;
 
+intptr_t* System_IntPtr_Zero_REF__ = (intptr_t*)&System_IntPtr_Zero;
+
 System_String* System_IntPtr_ToString(intptr_t* this__)
 {
     il2c_assert(this__ != NULL);

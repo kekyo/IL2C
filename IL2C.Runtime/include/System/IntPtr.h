@@ -46,9 +46,12 @@ extern /* virtual */ bool System_IntPtr_Equals__System_Object(intptr_t* this__, 
 
 extern const intptr_t System_IntPtr_Zero;
 
+extern intptr_t* System_IntPtr_Zero_REF__;
+
 #define System_IntPtr_op_Explicit__System_Int32(value) ((intptr_t)(value))
 #define System_IntPtr_op_Explicit__System_Int64(value) ((intptr_t)(value))
 #define System_IntPtr_op_Addition__System_IntPtr_System_Int32(lhs, rhs) (((intptr_t)(lhs)) + ((intptr_t)(rhs)))
+#define System_IntPtr_op_Equality__System_IntPtr_System_IntPtr(lhs, rhs) (((intptr_t)(lhs)) == ((intptr_t)(rhs)))
 #define System_IntPtr_op_Inequality__System_IntPtr_System_IntPtr(lhs, rhs) (((intptr_t)(lhs)) != ((intptr_t)(rhs)))
 
 #ifdef __cplusplus

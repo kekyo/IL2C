@@ -180,7 +180,29 @@ Run the GettingStartedIL2CMain project and get result.
 * Note: You need to set or choice startup project on GettingStartedIL2CMain (C project) instead C# project.
 * This step causes warning C4197 but can ignore.
 
-![Finished Hello world](../images/tutorial15.png)
+![Finished Hello world](../images/tutorial151.png)
+
+For additional things when you will be interesting about:
+
+```csharp
+using System;
+using System.Runtime.InteropServices;
+
+namespace GettingStartedIL2C
+{
+    public static class Program
+    {
+        [DllImport("user32.dll")]
+        public static extern int MessageBoxW(
+           IntPtr hWnd, string text, string caption, int options);
+        
+        public static void Main() =>
+            MessageBoxW(IntPtr.Zero, "Hello world with IL2C!", "Getting started IL2C", 1);
+    }
+}
+```
+
+![Finished Hello world](../images/tutorial152.png)
 
 ### 1-6. Visual C++ related hints
 

@@ -18,11 +18,14 @@ This document introduces generally usage for the IL2C. Try it!
 
 We know about better first step, it's the "Hello world." [(The completed projects contain the IL2C repository. You can refer it.)](https://github.com/kekyo/IL2C/tree/master/samples/GettingStartedIL2C)
 
-### 1-1. Create new C# library project with "net46" or "netcoreapp2.0" platform using Visual Studio 2017.
+Note: Chapter 1 is absolutely basic topics for how to enable IL2C from scratch (and I recommend you know about it). But if you want to only simple way, go to chapter 2 (2-0).
 
-You can choice ether old (.NET Framework style) project or new (.NET Core/Standard style) project. For example, this project named "GettingStartedIL2C".
+### 1-1. Create new C# library project with "net46" or "netcoreapp3.1" platform using Visual Studio 2019.
 
-![.NET Core console app](../images/tutorial11.png)
+You can choice ether old (.NET Framework style) project or new (.NET Core/Standard style) project. For example, this project named "GettingStartedIL2C" on .NET Core 3.1:
+
+![.NET Core console app](../images/tutorial111.png)
+![.NET Core console app](../images/tutorial112.png)
 
 ### 1-2. Add the [IL2C.Build NuGet package](https://www.nuget.org/packages/IL2C.Build) using the "Package Manager Console" or "NuGet package manager dialog."
 
@@ -34,10 +37,10 @@ Shows example csproj file:
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IL2C.Build" Version="0.4.35" />
+    <PackageReference Include="IL2C.Build" Version="0.4.70" />
   </ItemGroup>
 </Project>
 ```
@@ -70,12 +73,14 @@ You'll see print it inside the console window and you'll definitely say: "Is not
 |   Program.cs
 \---bin
     \---Debug
-        \---netcoreapp2.0
+        \---netcoreapp3.1
             |   GettingStartedIL2C.deps.json
             |   GettingStartedIL2C.dll           // It's standard .NET executable assembly (we saw results)
+            |   GettingStartedIL2C.exe           // .NET Core 3.1 bootstrapper
             |   GettingStartedIL2C.pdb
             |   GettingStartedIL2C.runtimeconfig.dev.json
             |   GettingStartedIL2C.runtimeconfig.json
+            |   IL2C.Interop.dll                 // (doesn't use it now)
             \---IL2C                             // The IL2C translated C language source codes
                 +---include
                 |   |   GettingStartedIL2C.h
@@ -102,11 +107,12 @@ The "src" directory contains translated method body code, and the "include" dire
 
 This is the second half stage. For example, this project named "GettingStartedIL2CMain".
 
-![Add the Visual C++ project](../images/tutorial14.png)
+![Add the Visual C++ project](../images/tutorial141.png)
+![Add the Visual C++ project](../images/tutorial142.png)
 
-(The Visual C++ wizard generates a lot of helper code fragemnts. We can remove it, but I don't it in this tutorial because I'll focus for the IL2C usage.)
+(The Visual C++ wizard generates a lot of helper code fragments. We can remove it, but I don't it in this tutorial because I'll focus for the IL2C usage.)
 
-Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (because it's easy way):
+Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (because it's easy way. Edit after exit Visual Studio):
 
 1. Add "AdditionalIncludeDirectories" and "PrecompiledHeader" property each descendant ItemDefinitionGroup/ClCompile elements. We have to do it because the VC++ compiler requires referring both IL2C runtime header files and translated header files. The "PrecompiledHeader" property requires because the translated files target to the "C language" and the feature can use only C++ language. (It's Visual C++ limitation.)
 
@@ -115,44 +121,38 @@ Open project file (GettingStartedIL2CMain.vcxproj) and edit directly below (beca
   <ClCompile>
     <!-- ... -->
     <!-- Added below -->
-    <AdditionalIncludeDirectories>$(ProjectDir)../../../IL2C.Runtime/include;$(ProjectDir)../../../IL2C.Runtime/src;$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/include;$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp2.0/IL2C/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    <AdditionalIncludeDirectories>$(ProjectDir)../../../IL2C.Runtime/include;$(ProjectDir)../../../IL2C.Runtime/src;$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp3.1/IL2C/include;$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp3.1/IL2C/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     <PrecompiledHeader>NotUsing</PrecompiledHeader>
   </ClCompile>
   <!-- ... -->
 </ItemDefinitionGroup>
 ```
 
-You have to adjust valid paths for your environments. You'll see trivial path for `$(Configuration)`, it expands to flexible searching both target configuration (ex: Debug). `netstandard2.0` is target framework moniker, you have to replace it your environment.
+You have to adjust valid directory paths for your environments. You see trivial path for `$(Configuration)`, it expands to flexible searching both target configuration (ex: Debug). `netcoreapp3.1` is target framework moniker, you have to replace it your environment.
 
-2. Add referring the IL2C runtime and translated files nearly exist "ClInclude" and "ClCompile" elements:
+2. Add referring the IL2C runtime and translated files nearly exist "ClCompile" ItemGroup element:
 
 ```xml
+<!-- Added this ItemGroup below -->
 <ItemGroup>
-  <!-- Removed pre-compiled header element
-  <ClInclude Include="pch.h" />
-  -->
-  <!-- Added below -->
   <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/include/**/*.h" />
   <ClInclude Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.h" />
-  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netstandard2.0/IL2C/include/**/*.h" />
-  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netstandard2.0/IL2C/src/**/*.h" />
+  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp3.1/IL2C/include/**/*.h" />
+  <ClInclude Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp3.1/IL2C/src/**/*.h" />
 </ItemGroup>
+
 <ItemGroup>
   <!-- Changed extension .cpp to .c -->
   <ClCompile Include="GettingStartedIL2CMain.c" />
-  <!-- Removed pre-compiled header element
-  <ClCompile Include="pch.cpp">
-  </ClCompile>
-  -->
   <!-- Added below -->
   <ClCompile Include="$(ProjectDir)../../../IL2C.Runtime/src/**/*.c" />
-  <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netstandard2.0/IL2C/src/**/*.c" />
+  <ClCompile Include="$(ProjectDir)../GettingStartedIL2C/bin/$(Configuration)/netcoreapp3.1/IL2C/src/**/*.c" />
 </ItemGroup>
 ```
 
 You have to adjust valid paths for your environments too.
 
-3. Write (modify) C main function body (GettingStartedIL2CMain.cpp):
+3. Rename a file "GettingStartedIL2CMain.cpp" to "GettingStartedIL2CMain.c", and write (modify) C main function body:
 
 ```c++
 // Referrer translated code.
@@ -175,11 +175,10 @@ int main()
 
 ### 1-5. Finished Hello world
 
-Run the project and got result.
+Run the GettingStartedIL2CMain project and get result.
 
-* Note: you maybe fail if you forget setting the startup project.
+* Note: You need to set or choice startup project on GettingStartedIL2CMain (C project) instead C# project.
 * This step causes warning C4197 but can ignore.
-
 
 ![Finished Hello world](../images/tutorial15.png)
 
@@ -195,10 +194,10 @@ And check it up for success building the entire solution at the "Configuration M
 
 ## 2-0. [Prebuild] runtime library using the scripts
 
-I showed you how to build runtime in manually. Now, you understand it and can use runtime library building scripts named "build-runtime".
+I showed up you how to build both app code and runtime manually. Now, you understand it and can use runtime library building scripts named "build-runtime".
 It'll generate libs (libil2c*.lib/libil2c*.a) into "IL2C.Runtime/lib" directory. Please build it before doing next step.
 
-1. Run "init-tools.bat" or "init-tools.sh" only first time. It'll setup developing tools. (It'll download mingw toolchain from GitHub if you use Windows environment.) We can give a argument for configuration name both "Debug" and "Release", will implicit apply "Debug" if you don't give it. (The names are important case sensitive.)
+1. Run "init-tools.bat" or "init-tools.sh" only first time. It'll setup developing tools. (It'll download mingw toolchain from GitHub if you use Windows environment.) We can give a argument for configuration name both "Debug" and "Release", will implicit apply "Debug" when you don't give it. (The names are important case sensitive.)
 2. Run "buil-runtime.bat" or "build-runtime.sh".
 
 ## 2. Trying sample for the polish notation calculator

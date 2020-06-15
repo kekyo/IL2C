@@ -38,6 +38,9 @@ extern "C" {
 
 #include <intrin.h>
 
+#define IL2C_DLLIMPORT_PREFIX __declspec(dllimport)
+#define IL2C_DLLIMPORT_POSTFIX __stdcall
+
 #define il2c_assume__(expr) __assume(expr)
 #define il2c_likely__(expr) (expr)
 #define il2c_unlikely__(expr) (expr)
@@ -53,12 +56,18 @@ extern "C" {
 #include <arm_neon.h>
 #endif
 
+#define IL2C_DLLIMPORT_PREFIX
+#define IL2C_DLLIMPORT_POSTFIX
+
 #define il2c_assume__(expr) do { if (!(expr)) __builtin_unreachable(); } while (0)
 #define il2c_likely__(expr) __builtin_expect(!!(expr), 1)
 #define il2c_unlikely__(expr) __builtin_expect(!!(expr), 0)
 #define il2c_noreturn__ __attribute__((noreturn))
 
 #else
+
+#define IL2C_DLLIMPORT_PREFIX
+#define IL2C_DLLIMPORT_POSTFIX
 
 #define il2c_assume__(expr) ((void)0)
 #define il2c_likely__(expr) (expr)

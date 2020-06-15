@@ -119,10 +119,13 @@ namespace IL2C.Metadata.Specialized
         public IMethodInformation[] AllNewslotMethods => throw new NotImplementedException();
         public (IMethodInformation, IMethodInformation[])[] AllCombinedMethods => throw new NotImplementedException();
 
-        public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false) =>
-            string.Format("{0}{1}", this.CLanguageTypeName, (symbolName != null) ? (" " + symbolName) : string.Empty);
+        public string GetCLanguageTypeName(
+            string symbolName = null, bool cArrayExpression = false, bool nativeType = false, bool isInterop = false) =>
+            string.Format("{0}{1}",
+                isInterop ? this.CLanguageInteropTypeName : this.CLanguageTypeName, (symbolName != null) ? (" " + symbolName) : string.Empty);
 
         public string CLanguageTypeName => string.Format("il2c_boxedtype({0})*", boxedType.MangledUniqueName);
+        public string CLanguageInteropTypeName => string.Format("il2c_boxedtype({0})*", boxedType.MangledUniqueName);
         public string CLanguageThisTypeName => throw new NotImplementedException();
         public string CLanguageStaticSizeOfExpression => string.Format("sizeof({0})", this.CLanguageTypeName);
 

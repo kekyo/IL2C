@@ -112,9 +112,14 @@ namespace IL2C.Metadata
         IMethodInformation[] AllNewslotMethods { get; }
         (IMethodInformation, IMethodInformation[])[] AllCombinedMethods { get; }
 
-        string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false);
+        string GetCLanguageTypeName(
+            string symbolName = null,
+            bool cArrayExpression = false,
+            bool nativeType = false,
+            bool isInterop = false);
 
         string CLanguageTypeName { get; }
+        string CLanguageInteropTypeName { get; }
         string CLanguageThisTypeName { get; }
         string CLanguageStaticSizeOfExpression { get; }
 
@@ -539,7 +544,11 @@ namespace IL2C.Metadata
             }
         }
 
-        public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false)
+        public string GetCLanguageTypeName(
+            string symbolName = null,
+            bool cArrayExpression = false,
+            bool isNativeType = false,
+            bool isInterop = false)
         {
             var sn = (symbolName != null) ? (" " + symbolName) : string.Empty;
 
@@ -547,7 +556,7 @@ namespace IL2C.Metadata
             {
                 return string.Format(
                     "{0}*{1}",
-                    this.ElementType.GetCLanguageTypeName(null, false, nativeType),
+                    this.ElementType.GetCLanguageTypeName(null, false, isNativeType, isInterop),
                     sn);
             }
 
@@ -557,7 +566,7 @@ namespace IL2C.Metadata
                 {
                     return string.Format(
                         "{0}{1}[]",
-                        this.ElementType.GetCLanguageTypeName(null, true, nativeType),
+                        this.ElementType.GetCLanguageTypeName(null, true, isNativeType, isInterop),
                         sn);
                 }
                 else
@@ -633,9 +642,13 @@ namespace IL2C.Metadata
             {
                 typeName = "void";
             }
+            else if (isInterop && this.IsStringType)
+            {
+                typeName = "const wchar_t*";
+            }
             else
             {
-                typeName = nativeType ?
+                typeName = isNativeType ?
                     (this.NativeType?.SymbolName ?? this.Name) :
                     this.MangledUniqueName;
                 if (this.IsReferenceType)
@@ -651,6 +664,9 @@ namespace IL2C.Metadata
 
         public string CLanguageTypeName =>
             this.GetCLanguageTypeName();
+
+        public string CLanguageInteropTypeName =>
+            this.GetCLanguageTypeName(null, false, false, true);
 
         public string CLanguageThisTypeName =>
             this.IsValueType ? (this.CLanguageTypeName + "*") : this.CLanguageTypeName;

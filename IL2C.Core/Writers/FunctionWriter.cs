@@ -659,10 +659,6 @@ namespace IL2C.Writers
                 var arguments = string.Join(
                     ", ",
                     method.Parameters.Select(GetMarshaledInExpression));
-                var entryPointName =
-                    method.PInvokeInformation?.EntryPoint ??
-                    method.NativeMethod?.SymbolName ??
-                    method.Name;
 
                 // P/Invoke linkage doesn't verify the C header declarations.
                 // It will lookp up by the library symbol name.
@@ -670,19 +666,22 @@ namespace IL2C.Writers
                 {
                     tw.WriteLine(
                         "extern {0};",
-                        method.CLanguageFunctionPrototype);
+                        method.CLanguageInteropPrototype);
                 }
 
                 if (method.ReturnType.IsVoidType)
                 {
                     tw.WriteLine(
                         "{0}({1});",
-                        entryPointName,
+                        method.CLanguageInteropName,
                         arguments);
                 }
                 else
                 {
-                    tw.WriteLine("return {0}({1});", entryPointName, arguments);
+                    tw.WriteLine(
+                        "return {0}({1});",
+                        method.CLanguageInteropName,
+                        arguments);
                 }
             }
 

@@ -119,10 +119,12 @@ namespace IL2C.Metadata.Specialized
         public IMethodInformation[] AllNewslotMethods => throw new NotImplementedException();
         public (IMethodInformation, IMethodInformation[])[] AllCombinedMethods => throw new NotImplementedException();
 
-        public string GetCLanguageTypeName(string symbolName = null, bool cArrayExpression = false, bool nativeType = false) =>
-            "untyped_ptr" + ((symbolName != null) ? (" " + symbolName) : string.Empty);
+        public string GetCLanguageTypeName(
+            string symbolName = null, bool cArrayExpression = false, bool nativeType = false, bool isInterop = false) =>
+            (isInterop ? "void*" : "untyped_ptr") + ((symbolName != null) ? (" " + symbolName) : string.Empty);
 
         public string CLanguageTypeName => "untyped_ptr";
+        public string CLanguageInteropTypeName => "void*";
         public string CLanguageThisTypeName => throw new NotImplementedException();
         public string CLanguageStaticSizeOfExpression => "sizeof(untyped_ptr)";
 

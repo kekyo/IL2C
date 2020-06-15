@@ -33,6 +33,7 @@ namespace IL2C.RuntimeSystems
 
     [Description("These tests are verified the IL2C manages interoperability with the P/Invoke adn IL2C/Invoke method and internalcall method.")]
     [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(null, new[] { "DllImportWithUnicodeStringArgument", "OutputDebugStringW" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     [TestCase(12345678, "TransparencyForNativePointer", 12345678)]
     [TestCase(12345678, "TransparencyForNativePointerInsideNativeType", 12345678, IncludeTypes = new[] { typeof(NativePointerInside) })]
     [TestCase("ABCDEF", new[] { "BypassObjRefWithObjRefHandle", "ConcatAndToObjRefHandle" }, "ABC", "DEF")]
@@ -45,6 +46,14 @@ namespace IL2C.RuntimeSystems
         public static void InternalCallWithUnicodeStringArgument(string message)
         {
             OutputDebugString(message);
+        }
+
+        [DllImport("kernel32")]
+        private static extern void OutputDebugStringW(string message);
+
+        public static void DllImportWithUnicodeStringArgument(string message)
+        {
+            OutputDebugStringW(message);
         }
 
         public static IntPtr TransparencyForNativePointer(IntPtr value)

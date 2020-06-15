@@ -67,7 +67,9 @@ namespace IL2C.Metadata
 
         string CLanguageFunctionFullName { get; }
         string CLanguageFunctionName { get; }
+        string CLanguageInteropName { get; }
         string CLanguageFunctionPrototype { get; }
+        string CLanguageInteropPrototype { get; }
         string CLanguageFunctionType { get; }
         string CLanguageFunctionNamedType { get; }
         string CLanguageFunctionFullNamedType { get; }
@@ -430,6 +432,12 @@ namespace IL2C.Metadata
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> MooMethod__System_String   (Will use vptr name)
             this.Member.GetMangledUniqueName(true);
 
+        public string CLanguageInteropName =>
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> MooMethod
+            this.PInvokeInformation?.EntryPoint ??
+            this.NativeMethod?.SymbolName ??
+            this.Name;
+
         public string CLanguageFunctionPrototype
         {
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t Foo_Bar_Baz_MooMethod__System_String(System_String* name)
@@ -451,6 +459,31 @@ namespace IL2C.Metadata
                     "{0} {1}({2})",
                     returnTypeName,
                     this.CLanguageFunctionFullName,
+                    parametersString);
+            }
+        }
+
+        public string CLanguageInteropPrototype
+        {
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t MooMethod(const wchar_t* name)
+            get
+            {
+                var parametersString = (this.Parameters.Length >= 1) ?
+                    string.Join(
+                        ", ",
+                        this.Parameters.Select(parameter => string.Format(
+                            "{0} {1}",
+                            parameter.TargetType.CLanguageInteropTypeName,
+                            parameter.ParameterName))) :
+                    "void";
+
+                var returnTypeName =
+                    this.ReturnType.CLanguageInteropTypeName;
+
+                return string.Format(
+                    "IL2C_DLLIMPORT_PREFIX {0} IL2C_DLLIMPORT_POSTFIX {1}({2})",
+                    returnTypeName,
+                    this.Definition.PInvokeInfo.EntryPoint,
                     parametersString);
             }
         }

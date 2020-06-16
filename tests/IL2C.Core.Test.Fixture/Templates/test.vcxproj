@@ -31,7 +31,7 @@
         <RootNamespace>IL2CRuntime</RootNamespace>
         <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
         <ConfigurationType>Application</ConfigurationType>
-        <PlatformToolset>v141</PlatformToolset>
+        <PlatformToolset>v142</PlatformToolset>
         <LinkIncremental>false</LinkIncremental>
         <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
         <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>

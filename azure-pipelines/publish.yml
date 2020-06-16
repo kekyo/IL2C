@@ -2,7 +2,7 @@ jobs:
   - job: Windows
     condition: and(succeeded(), in(variables['Build.Reason'], 'BuildCompletion'))
     pool:
-      vmImage: "vs2017-win2016"
+      vmImage: "windows-latest"
 #   variables:
 #     buildConfiguration: "Release"
     steps:

@@ -5,7 +5,7 @@ rem =================================================
 rem Setup mingw gcc environments.
 
 set TOOLCHAINPATH=%~dp0..\..\..\toolchain\gcc4
-set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.12
+set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.17
 
 if not exist %TOOLCHAINPATH% (
     echo Native toolchain not found.

@@ -5,6 +5,8 @@
 
 System_String* System_Char_ToString(wchar_t* this__)
 {
+    il2c_assert(this__ != NULL);
+
     wchar_t buffer[2];
 
     buffer[0] = *this__;
@@ -43,8 +45,8 @@ bool System_Char_TryParse__System_String_System_Char_REF(System_String* s, wchar
 {
     // TODO: NullReferenceException
     il2c_assert(s != NULL);
-
     il2c_assert(result != NULL);
+
     il2c_assert(s->string_body__ != NULL);
 
     wchar_t ch = *(s->string_body__);

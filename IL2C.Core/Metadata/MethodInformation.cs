@@ -69,7 +69,7 @@ namespace IL2C.Metadata
         string CLanguageFunctionName { get; }
         string CLanguageInteropName { get; }
         string CLanguageFunctionPrototype { get; }
-        string CLanguageInteropPrototype { get; }
+        string CLanguagePInvokePrototype { get; }
         string CLanguageFunctionType { get; }
         string CLanguageFunctionNamedType { get; }
         string CLanguageFunctionFullNamedType { get; }
@@ -119,10 +119,10 @@ namespace IL2C.Metadata
                     this.IsVirtual ?
                     (this.IsReuseSlot ? "override" : "virtual") :
                     string.Empty;
-                var attribute2 = this.IsSealed ?
-                    "sealed" :
-                    this.IsExtern ?
+                var attribute2 = this.IsExtern ?
                     "extern" :
+                    this.IsSealed ?
+                    "sealed" :
                     string.Empty;
 
                 return string.Join(" ",
@@ -463,7 +463,7 @@ namespace IL2C.Metadata
             }
         }
 
-        public string CLanguageInteropPrototype
+        public string CLanguagePInvokePrototype
         {
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t MooMethod(const wchar_t* name)
             get
@@ -480,9 +480,14 @@ namespace IL2C.Metadata
                 var returnTypeName =
                     this.ReturnType.CLanguageInteropTypeName;
 
+                var stdcallPostfix =
+                    (this.PInvokeInformation is PInvokeInfo pi && (pi.IsCallConvStdCall || pi.IsCallConvWinapi)) ?
+                        "IL2C_DLLIMPORT_STDCALL " : " ";
+
                 return string.Format(
-                    "IL2C_DLLIMPORT_PREFIX {0} IL2C_DLLIMPORT_POSTFIX {1}({2})",
+                    "IL2C_DLLIMPORT_PREFIX {0} {1}{2}({3})",
                     returnTypeName,
+                    stdcallPostfix,
                     this.Definition.PInvokeInfo.EntryPoint,
                     parametersString);
             }

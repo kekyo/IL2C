@@ -32,8 +32,8 @@ namespace IL2C.RuntimeSystems
     }
 
     [Description("These tests are verified the IL2C manages interoperability with the P/Invoke adn IL2C/Invoke method and internalcall method.")]
-    [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(null, new[] { "DllImportWithUnicodeStringArgument", "OutputDebugStringW" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString1" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(null, new[] { "DllImportWithUnicodeStringArgument", "OutputDebugString2" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     [TestCase(12345678, "TransparencyForNativePointer", 12345678)]
     [TestCase(12345678, "TransparencyForNativePointerInsideNativeType", 12345678, IncludeTypes = new[] { typeof(NativePointerInside) })]
     [TestCase("ABCDEF", new[] { "BypassObjRefWithObjRefHandle", "ConcatAndToObjRefHandle" }, "ABC", "DEF")]
@@ -41,19 +41,19 @@ namespace IL2C.RuntimeSystems
     {
         [NativeMethod("windows.h", SymbolName = "OutputDebugStringW", CharSet = NativeCharSet.Unicode)]
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void OutputDebugString(string message);
+        private static extern void OutputDebugString1(string message);
 
         public static void InternalCallWithUnicodeStringArgument(string message)
         {
-            OutputDebugString(message);
+            OutputDebugString1(message);
         }
 
-        [DllImport("kernel32")]
-        private static extern void OutputDebugStringW(string message);
+        [DllImport("kernel32", EntryPoint = "OutputDebugStringW")]
+        private static extern void OutputDebugString2(string message);
 
         public static void DllImportWithUnicodeStringArgument(string message)
         {
-            OutputDebugStringW(message);
+            OutputDebugString2(message);
         }
 
         public static IntPtr TransparencyForNativePointer(IntPtr value)

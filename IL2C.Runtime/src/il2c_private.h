@@ -28,7 +28,7 @@
 
 #if defined(_DEBUG)
 #define IL2C_USE_LINE_INFORMATION
-#define IL2C_USE_RUNTIME_DEBUG_LOG
+//#define IL2C_USE_RUNTIME_DEBUG_LOG
 #define IL2C_USE_DEBUG_HEAP
 #endif
 

@@ -382,8 +382,8 @@ namespace IL2C.Writers
                         type,
                         field => true,
                         method =>
-                            // Except type initializer
-                            !(method.IsConstructor && method.IsStatic) &&
+                            // Except type initializer and private externs.
+                            !((method.IsConstructor && method.IsStatic) || (method.IsExtern && method.IsPrivate)) &&
                             prepared.Functions.ContainsKey(method));
 
                         // TODO: The internal or private members can separate into the internal headers.

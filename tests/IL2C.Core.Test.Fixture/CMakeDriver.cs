@@ -1,4 +1,4 @@
-﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // IL2C - A translator for ECMA-335 CIL/MSIL to C language.
 // Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
@@ -96,6 +96,7 @@ namespace IL2C
             return testLog;
         }
 
+        // FASTER than cmake: It's direct gcc driver with self-parsing cmake configuration.
         public static async Task<string> BuildDirectlyAsync(
             string binPath, string configuration, string sourcePath, string il2cRuntimePath)
         {

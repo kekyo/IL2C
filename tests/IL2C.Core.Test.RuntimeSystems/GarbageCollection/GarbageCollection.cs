@@ -216,7 +216,7 @@ namespace IL2C.RuntimeSystems
     [TestCase(2, new[] { "CallFinalizerByCollectWithReRegister", "RunCallFinalizerWithReRegister" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithReRegister), typeof(FinalizerCalleeHolder) })]
     [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
     [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(2000000, "ConcurrentCollect", 10, 1000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
+    [TestCase(200000, "ConcurrentCollect", 10, 100000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
     public sealed class GarbageCollection
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -68,7 +68,10 @@ jobs:
       - task: VSTest@2
         displayName: "test il2c"
         inputs:
+          testSelector: 'testAssemblies'
+          vsTestVersion: '16.0'
           configuration: "$(buildConfiguration)"
-          platform: "Any Cpu"
+          # http://hermit.no/how-to-resolve-cases-of-visual-studio-no-tests-appearing/
+          platform: "x64"
           runInParallel: true
           testAssemblyVer2: "tests/IL2C.Core.Test.Fixture/bin/$(buildConfiguration)/**/IL2C.Core.Test.Fixture.dll"

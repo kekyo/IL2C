@@ -115,6 +115,7 @@ namespace IL2C.ArtifactCollector
                     "pack",
                     "--no-build",
                     "--configuration", "Release",
+                    "-p:Platform=",   // BUG WORKAROUND: dotnet pack is misunderstanding Platform variable sets to "Any CPU", so have to set blank.
                     $"-p:BuildIdentifier={buildIdentifier}",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);

@@ -2,12 +2,17 @@
 setlocal enabledelayedexpansion
 
 set TOOLCHAINPATH=%~dp0toolchain\gcc4
-set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.12
+set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.17
 
 if not exist %TOOLCHAINPATH% (
     echo Native toolchain not found.
     echo Execute "init-tools.bat" if build runtime at first time.
     exit /b 1
+)
+
+set BuildIdentifier=%1
+if "%BuildIdentifier%" == "" (
+    set BuildIdentifier=manually
 )
 
 rem if not exist ArtifactCollector\ArtifactCollector.exe (
@@ -28,7 +33,7 @@ echo ///////////////////////////////////////////////
 echo // Build entire IL2C.pack.sln
 echo.
 
-dotnet build --configuration Release -p:BuildIdentifier="%1" il2c.pack.sln
+dotnet build --configuration Release -p:Platform="Any CPU" -p:BuildIdentifier="%BuildIdentifier%" il2c.pack.sln
 
 rem =========================================
 
@@ -37,7 +42,7 @@ echo ///////////////////////////////////////////////
 echo // Collects artifacts.
 echo.
 
-ArtifactCollector\ArtifactCollector.exe . .\artifacts "%1" IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime
+ArtifactCollector\ArtifactCollector.exe . .\artifacts "%BuildIdentifier%" IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime
 
 rem =========================================
 

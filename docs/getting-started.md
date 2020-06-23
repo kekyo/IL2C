@@ -178,7 +178,6 @@ int main()
 Run the GettingStartedIL2CMain project and get result.
 
 * Note: You need to set or choice startup project on GettingStartedIL2CMain (C project) instead C# project.
-* This step causes warning C4197 but can ignore.
 
 ![Finished Hello world](../images/tutorial151.png)
 

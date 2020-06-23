@@ -127,6 +127,11 @@ typedef const struct
         NULL, il2c_typeof(System_String), /* IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_INITIALIZED */ (interlock_t)0xc0000000UL, &System_String_VTABLE__, string_body }; \
     System_String* const name = ((System_String*)&(name##_CONST_STRING__.vptr0__))
 
+// C4197: "top-level volatile in cast is ignored" is caused by IL2C_CONST_STRING()
+#if defined(_MSC_VER)
+#pragma warning(disable:4197)
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -13,14 +13,20 @@ jobs:
       - task: NuGetCommand@2
         displayName: "nuget restore il2c.sln"
         inputs:
+          feedsToUse: "config"
+          nugetConfigPath: "NuGet.config"
           restoreSolution: "il2c.sln"
       - task: NuGetCommand@2
         displayName: "nuget restore GettingStartedIL2C.sln"
         inputs:
+          feedsToUse: "config"
+          nugetConfigPath: "NuGet.config"
           restoreSolution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
       - task: NuGetCommand@2
         displayName: "nuget restore Calculator.sln"
         inputs:
+          feedsToUse: "config"
+          nugetConfigPath: "NuGet.config"
           restoreSolution: "samples/Calculator/Calculator.sln"
       - script: |
           build-runtime.bat $(buildConfiguration)

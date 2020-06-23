@@ -8,21 +8,20 @@ jobs:
       - script: |
           init-tools.bat
         displayName: "init-tools"
-      - task: DotNetCoreCLI@1
+      - task: NuGetToolInstaller@0
+        displayName: "Use nuget"
+      - task: NuGetCommand@2
         displayName: "nuget restore il2c.sln"
         inputs:
-          command: "restore"
-          projects: "il2c.sln"
-      - task: DotNetCoreCLI@1
+          restoreSolution: "il2c.sln"
+      - task: NuGetCommand@2
         displayName: "nuget restore GettingStartedIL2C.sln"
         inputs:
-          command: "restore"
-          projects: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
-      - task: DotNetCoreCLI@1
+          restoreSolution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
+      - task: NuGetCommand@2
         displayName: "nuget restore Calculator.sln"
         inputs:
-          command: "restore"
-          projects: "samples/Calculator/Calculator.sln"
+          restoreSolution: "samples/Calculator/Calculator.sln"
       - script: |
           build-runtime.bat $(buildConfiguration)
         displayName: "build-runtime"

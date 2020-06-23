@@ -1,3 +1,22 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef IL2C_H__
 #define IL2C_H__
 
@@ -19,6 +38,9 @@ extern "C" {
 
 #include <intrin.h>
 
+#define IL2C_DLLIMPORT_PREFIX __declspec(dllimport)
+#define IL2C_DLLIMPORT_STDCALL __stdcall
+
 #define il2c_assume__(expr) __assume(expr)
 #define il2c_likely__(expr) (expr)
 #define il2c_unlikely__(expr) (expr)
@@ -34,12 +56,23 @@ extern "C" {
 #include <arm_neon.h>
 #endif
 
+#define IL2C_DLLIMPORT_PREFIX
+
+#if defined(_WIN32)
+#define IL2C_DLLIMPORT_STDCALL __stdcall
+#else
+#define IL2C_DLLIMPORT_STDCALL
+#endif
+
 #define il2c_assume__(expr) do { if (!(expr)) __builtin_unreachable(); } while (0)
 #define il2c_likely__(expr) __builtin_expect(!!(expr), 1)
 #define il2c_unlikely__(expr) __builtin_expect(!!(expr), 0)
 #define il2c_noreturn__ __attribute__((noreturn))
 
 #else
+
+#define IL2C_DLLIMPORT_PREFIX
+#define IL2C_DLLIMPORT_STDCALL
 
 #define il2c_assume__(expr) ((void)0)
 #define il2c_likely__(expr) (expr)

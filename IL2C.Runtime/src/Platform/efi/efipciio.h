@@ -1,18 +1,21 @@
-/* $FreeBSD: releng/11.1/sys/boot/efi/include/efipciio.h 293724 2016-01-12 02:17:39Z smh $ */
-/** @file
-  EFI PCI I/O Protocol provides the basic Memory, I/O, PCI configuration, 
-  and DMA interfaces that a driver uses to access its PCI controller.
-
-  Copyright (c) 2006 - 2010, Intel Corporation. All rights reserved.<BR>
-  This program and the accompanying materials                          
-  are licensed and made available under the terms and conditions of the BSD License         
-  which accompanies this distribution.  The full text of the license may be found at        
-  http://opensource.org/licenses/bsd-license.php                                            
-
-  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
-  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
-
-**/
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifndef __PCI_IO_H__
 #define __PCI_IO_H__

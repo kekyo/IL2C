@@ -1,3 +1,22 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef System_String_H__
 #define System_String_H__
 
@@ -107,6 +126,11 @@ typedef const struct
     static IL2C_CONST_STRING_DECL name##_CONST_STRING__ = { \
         NULL, il2c_typeof(System_String), /* IL2C_CHARACTERISTIC_CONST | IL2C_CHARACTERISTIC_INITIALIZED */ (interlock_t)0xc0000000UL, &System_String_VTABLE__, string_body }; \
     System_String* const name = ((System_String*)&(name##_CONST_STRING__.vptr0__))
+
+// C4197: "top-level volatile in cast is ignored" is caused by IL2C_CONST_STRING()
+#if defined(_MSC_VER)
+#pragma warning(disable:4197)
+#endif
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,23 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -17,8 +36,9 @@ namespace IL2C
             {
                 var debugInformationOptions = DebugInformationOptions.None;
                 var readSymbols = true;
-                var enableBundler = false;
                 var enableCpp = false;
+                var enableBundler = false;
+                var targetPlatform = TargetPlatforms.Generic;
                 var help = false;
 
                 var options = new OptionSet()
@@ -28,6 +48,7 @@ namespace IL2C
                     { "no-read-symbols", "NO read symbol files", _ => readSymbols = false },
                     { "cpp", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", _ => enableCpp = true },
                     { "bundler", "Produce bundler source file", _ => enableBundler = true },
+                    { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var t) ? t : TargetPlatforms.Generic },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -48,6 +69,7 @@ namespace IL2C
                         readSymbols,
                         enableCpp,
                         enableBundler,
+                        targetPlatform,
                         debugInformationOptions,
                         assemblyPaths);
                 }

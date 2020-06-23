@@ -1,4 +1,23 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,9 +25,16 @@ using System.Reflection;
 
 using IL2C.Translators;
 using IL2C.Metadata;
+using IL2C.Internal;
 
 namespace IL2C
 {
+    public enum TargetPlatforms
+    {
+        Generic,
+        UE4         // Unreal Engine 4
+    }
+
     public sealed class TranslateContext
         : IPrepareContext, IExtractContextHost
     {
@@ -29,22 +55,25 @@ namespace IL2C
         #endregion
 
         #region Constructors
-        public TranslateContext(Assembly assembly, bool readSymbols)
-            : this(assembly.Location, readSymbols)
+        public TranslateContext(Assembly assembly, bool readSymbols, TargetPlatforms targetPlatform)
+            : this(assembly.Location, readSymbols, targetPlatform)
         {
         }
 
-        public TranslateContext(string assemblyPath, bool readSymbols)
+        public TranslateContext(string assemblyPath, bool readSymbols, TargetPlatforms targetPlatform)
         {
             var context = new MetadataContext(assemblyPath, readSymbols);
             this.MetadataContext = context;
             this.Assembly = context.MainAssembly;
+            this.TargetPlatform = targetPlatform;
         }
         #endregion
 
         public IMetadataContext MetadataContext { get; }
 
         public IAssemblyInformation Assembly { get; }
+
+        public TargetPlatforms TargetPlatform { get; }
 
         #region IPrepareContext
         void IPrepareContext.RegisterImportIncludeFile(string includeFileName) =>

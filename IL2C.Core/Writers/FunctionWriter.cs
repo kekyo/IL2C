@@ -1,9 +1,29 @@
-﻿using System.Linq;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System.Linq;
 using System.Diagnostics;
 
 using IL2C.Metadata;
 using IL2C.Translators;
 using IL2C.ILConverters;
+using IL2C.Internal;
 
 namespace IL2C.Writers
 {
@@ -624,6 +644,8 @@ namespace IL2C.Writers
             CodeTextWriter tw,
             IMethodInformation method)
         {
+            Debug.Assert(method.IsExtern);
+
             tw.WriteLine("///////////////////////////////////////");
             tw.WriteLine(
                 "// [6] {0}: {1}",
@@ -631,7 +653,25 @@ namespace IL2C.Writers
                 method.FriendlyName);
             tw.SplitLine();
 
-            tw.WriteLine(method.CLanguageFunctionPrototype);
+            // P/Invoke linkage doesn't verify the C header declarations.
+            // It will lookp up by the library symbol name.
+            if (method.PInvokeInformation != null)
+            {
+                tw.WriteLine(
+                    "extern {0};",
+                    method.CLanguagePInvokePrototype);
+                tw.SplitLine();
+            }
+
+            if (method.IsPrivate)
+            {
+                tw.WriteLine("static inline {0}", method.CLanguageFunctionPrototype);
+            }
+            else
+            {
+                tw.WriteLine(method.CLanguageFunctionPrototype);
+            }
+
             tw.WriteLine("{");
 
             using (var _ = tw.Shift())
@@ -639,30 +679,20 @@ namespace IL2C.Writers
                 var arguments = string.Join(
                     ", ",
                     method.Parameters.Select(GetMarshaledInExpression));
-                var entryPointName =
-                    method.PInvokeInformation?.EntryPoint ??
-                    method.NativeMethod?.SymbolName ??
-                    method.Name;
-
-                // P/Invoke linkage doesn't verify the C header declarations.
-                // It will lookp up by the library symbol name.
-                if (method.PInvokeInformation != null)
-                {
-                    tw.WriteLine(
-                        "extern {0};",
-                        method.CLanguageFunctionPrototype);
-                }
 
                 if (method.ReturnType.IsVoidType)
                 {
                     tw.WriteLine(
                         "{0}({1});",
-                        entryPointName,
+                        method.CLanguageInteropName,
                         arguments);
                 }
                 else
                 {
-                    tw.WriteLine("return {0}({1});", entryPointName, arguments);
+                    tw.WriteLine(
+                        "return {0}({1});",
+                        method.CLanguageInteropName,
+                        arguments);
                 }
             }
 

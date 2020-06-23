@@ -1,41 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net45</TargetFramework>
+      <TargetFramework>net45</TargetFramework>
 
-        <OutputType>Library</OutputType>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
-        <AssemblyName>IL2C.Core.Test.BasicTypes</AssemblyName>
-        <RootNamespace>IL2C.BasicTypes</RootNamespace>
-        <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-        <Product>IL2C</Product>
-        <Trademark>IL2C</Trademark>
-        <Copyright>Copyright (c) 2019 Kouji Matsui</Copyright>
-        <Description>A translator implementation of .NET intermediate language to C language.</Description>
-        <Company>Kouji Matsui (@kozy_kekyo)</Company>
-        <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-        <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-        <LangVersion>7.3</LangVersion>
-        <DebugType>full</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <Platforms>AnyCPU</Platforms>
+      <OutputType>Library</OutputType>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+      <GenerateDocumentationFile>false</GenerateDocumentationFile>
+      <AssemblyName>IL2C.Core.Test.BasicTypes</AssemblyName>
+      <RootNamespace>IL2C.BasicTypes</RootNamespace>
+      <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
+      <Product>IL2C</Product>
+      <Trademark>IL2C</Trademark>
+      <Copyright>Copyright (c) 2019 Kouji Matsui</Copyright>
+      <Description>A translator implementation of .NET intermediate language to C language.</Description>
+      <Company>Kouji Matsui (@kozy_kekyo)</Company>
+      <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
+      <RepositoryType>git</RepositoryType>
+      <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
+      <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+      <LangVersion>7.3</LangVersion>
+      <DebugType>full</DebugType>
+      <DebugSymbols>true</DebugSymbols>
+      <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
-        <IL Include="**/*.il" Exclude="obj/**/*.il;bin/**/*.il" />
+      <IL Include="**/*.il" Exclude="obj/**/*.il;bin/**/*.il" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+      <PackageReference Include="CenterCLR.RelaxVersioner" Version="1.0.5" PrivateAssets="All" />
+      <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\IL2C.Interop\IL2C.Interop.csproj" />
-        <ProjectReference Include="..\IL2C.Core.Test.Common\IL2C.Core.Test.Common.csproj" />
+      <ProjectReference Include="..\..\IL2C.Interop\IL2C.Interop.csproj" />
+      <ProjectReference Include="..\IL2C.Core.Test.Common\IL2C.Core.Test.Common.csproj" />
     </ItemGroup>
 
     <!-- IL Support -->

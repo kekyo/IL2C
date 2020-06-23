@@ -1,28 +1,33 @@
 jobs:
   - job: Windows
     pool:
-      vmImage: "vs2017-win2016"
+      vmImage: "windows-latest"
 #   variables:
 #     buildConfiguration: "Debug"
     steps:
       - script: |
           init-tools.bat
         displayName: "init-tools"
-      - task: DotNetCoreCLI@1
+      - task: NuGetToolInstaller@0
+        displayName: "Use nuget"
+      - task: NuGetCommand@2
         displayName: "nuget restore il2c.sln"
         inputs:
-          command: "restore"
-          projects: "il2c.sln"
-      - task: DotNetCoreCLI@1
+          feedsToUse: "config"
+          nugetConfigPath: "NuGet.config"
+          restoreSolution: "il2c.sln"
+      - task: NuGetCommand@2
         displayName: "nuget restore GettingStartedIL2C.sln"
         inputs:
-          command: "restore"
-          projects: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
-      - task: DotNetCoreCLI@1
+          feedsToUse: "config"
+          nugetConfigPath: "NuGet.config"
+          restoreSolution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
+      - task: NuGetCommand@2
         displayName: "nuget restore Calculator.sln"
         inputs:
-          command: "restore"
-          projects: "samples/Calculator/Calculator.sln"
+          feedsToUse: "config"
+          nugetConfigPath: "NuGet.config"
+          restoreSolution: "samples/Calculator/Calculator.sln"
       - script: |
           build-runtime.bat $(buildConfiguration)
         displayName: "build-runtime"
@@ -32,30 +37,35 @@ jobs:
           solution: "il2c.sln"
           configuration: "$(buildConfiguration)"
           platform: "Any Cpu"
+          msbuildArguments: -p:BuildIdentifier="$(Build.BuildId)"
       - task: MSBuild@1
         displayName: "build GettingStartedIL2C-x86"
         inputs:
           solution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
           configuration: "$(buildConfiguration)"
           platform: "x86"
+          msbuildArguments: -p:BuildIdentifier="$(Build.BuildId)"
       - task: MSBuild@1
         displayName: "build GettingStartedIL2C-x64"
         inputs:
           solution: "samples/GettingStartedIL2C/GettingStartedIL2C.sln"
           configuration: "$(buildConfiguration)"
           platform: "x64"
+          msbuildArguments: -p:BuildIdentifier="$(Build.BuildId)"
       - task: MSBuild@1
         displayName: "build Calculator-x86"
         inputs:
           solution: "samples/Calculator/Calculator.sln"
           configuration: "$(buildConfiguration)"
           platform: "x86"
+          msbuildArguments: -p:BuildIdentifier="$(Build.BuildId)"
       - task: MSBuild@1
         displayName: "build Calculator-x64"
         inputs:
           solution: "samples/Calculator/Calculator.sln"
           configuration: "$(buildConfiguration)"
           platform: "x64"
+          msbuildArguments: -p:BuildIdentifier="$(Build.BuildId)"
       - script: |
           build.bat $(buildConfiguration)
         displayName: "build Calculator-CMake-mingw32"
@@ -63,7 +73,10 @@ jobs:
       - task: VSTest@2
         displayName: "test il2c"
         inputs:
+          testSelector: 'testAssemblies'
+          vsTestVersion: '16.0'
           configuration: "$(buildConfiguration)"
-          platform: "Any Cpu"
+          # http://hermit.no/how-to-resolve-cases-of-visual-studio-no-tests-appearing/
+          platform: "x64"
           runInParallel: true
           testAssemblyVer2: "tests/IL2C.Core.Test.Fixture/bin/$(buildConfiguration)/**/IL2C.Core.Test.Fixture.dll"

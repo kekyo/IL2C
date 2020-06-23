@@ -1,4 +1,23 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +26,7 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using IL2C.Metadata.Attributes;
+using IL2C.Internal;
 
 namespace IL2C.Metadata
 {
@@ -47,7 +67,9 @@ namespace IL2C.Metadata
 
         string CLanguageFunctionFullName { get; }
         string CLanguageFunctionName { get; }
+        string CLanguageInteropName { get; }
         string CLanguageFunctionPrototype { get; }
+        string CLanguagePInvokePrototype { get; }
         string CLanguageFunctionType { get; }
         string CLanguageFunctionNamedType { get; }
         string CLanguageFunctionFullNamedType { get; }
@@ -97,10 +119,10 @@ namespace IL2C.Metadata
                     this.IsVirtual ?
                     (this.IsReuseSlot ? "override" : "virtual") :
                     string.Empty;
-                var attribute2 = this.IsSealed ?
-                    "sealed" :
-                    this.IsExtern ?
+                var attribute2 = this.IsExtern ?
                     "extern" :
+                    this.IsSealed ?
+                    "sealed" :
                     string.Empty;
 
                 return string.Join(" ",
@@ -410,6 +432,12 @@ namespace IL2C.Metadata
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> MooMethod__System_String   (Will use vptr name)
             this.Member.GetMangledUniqueName(true);
 
+        public string CLanguageInteropName =>
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> MooMethod
+            this.PInvokeInformation?.EntryPoint ??
+            this.NativeMethod?.SymbolName ??
+            this.Name;
+
         public string CLanguageFunctionPrototype
         {
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t Foo_Bar_Baz_MooMethod__System_String(System_String* name)
@@ -431,6 +459,36 @@ namespace IL2C.Metadata
                     "{0} {1}({2})",
                     returnTypeName,
                     this.CLanguageFunctionFullName,
+                    parametersString);
+            }
+        }
+
+        public string CLanguagePInvokePrototype
+        {
+            // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t MooMethod(const wchar_t* name)
+            get
+            {
+                var parametersString = (this.Parameters.Length >= 1) ?
+                    string.Join(
+                        ", ",
+                        this.Parameters.Select(parameter => string.Format(
+                            "{0} {1}",
+                            parameter.TargetType.CLanguageInteropTypeName,
+                            parameter.ParameterName))) :
+                    "void";
+
+                var returnTypeName =
+                    this.ReturnType.CLanguageInteropTypeName;
+
+                var stdcallPostfix =
+                    (this.PInvokeInformation is PInvokeInfo pi && (pi.IsCallConvStdCall || pi.IsCallConvWinapi)) ?
+                        "IL2C_DLLIMPORT_STDCALL " : " ";
+
+                return string.Format(
+                    "IL2C_DLLIMPORT_PREFIX {0} {1}{2}({3})",
+                    returnTypeName,
+                    stdcallPostfix,
+                    this.Definition.PInvokeInfo.EntryPoint,
                     parametersString);
             }
         }

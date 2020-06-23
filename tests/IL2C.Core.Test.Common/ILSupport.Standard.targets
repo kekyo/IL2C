@@ -16,6 +16,7 @@
         <GetFrameworkSdkPath>
             <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
         </GetFrameworkSdkPath>
+        <Message Importance="high" Text="ILSupport: FrameworkSdkPath = $(FrameworkSdkPath)" />
         <PropertyGroup>
             <ILDasm>"$(FrameworkSdkPath)bin\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
         </PropertyGroup>
@@ -34,6 +35,19 @@
         <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.6.2 Tools\ildasm.exe' ) ">
             <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.6.2 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
         </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7.1 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7.1 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7.2 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7.2 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.8 Tools\ildasm.exe' ) ">
+            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.8 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+        </PropertyGroup>
+        <Message Importance="high" Text="ILSupport: ILDasm = $(ILDasm)" />
         <Exec Command="$(ILDasm)" />
         <ItemGroup>
             <FileWrites Include="$(ILFile)" />
@@ -57,6 +71,7 @@
         <GetFrameworkPath>
             <Output TaskParameter="Path" PropertyName="FrameworkPath" />
         </GetFrameworkPath>
+        <Message Importance="high" Text="ILSupport: FrameworkPath = $(FrameworkPath)" />
         <PropertyGroup>
             <ILAsm>"$(FrameworkPath)\ilasm.exe" /nologo /quiet /output:@(IntermediateAssembly->'"%(FullPath)"', ' ')</ILAsm>
         </PropertyGroup>
@@ -94,6 +109,7 @@
             <Output TaskParameter="Lines" ItemName="ILLines" />
         </ReadLinesFromFile>
         <WriteLinesToFile File="obj\Merged.il" Lines="@(ILLines)" Overwrite="true" />
+        <Message Importance="high" Text="ILSupport: ILAsm = $(ILAsm)" />
         <Exec Command="$(ILAsm) obj\Merged.il" />
         <ItemGroup>
             <FileWrites Include="@(IntermediateAssembly->'%(RootDir)%(Directory)DesignTimeResolveAssemblyReferencesInput.cache', ' ')" />

@@ -25,4 +25,8 @@
         <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="CenterCLR.RelaxVersioner" Version="1.0.5" PrivateAssets="All" />
+    </ItemGroup>
+
 </Project>

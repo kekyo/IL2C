@@ -23,6 +23,16 @@
     <ClInclude Include="include/**/*.h" />
     <ClInclude Include="src/**/*.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE">
+      <DeploymentContent>false</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="README.md">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{182A62A4-47AC-4290-8EA5-250AE8131613}</ProjectGuid>
@@ -30,7 +40,7 @@
     <RootNamespace>IL2CRuntime</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>

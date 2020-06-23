@@ -31,7 +31,7 @@
         <RootNamespace>IL2CRuntime</RootNamespace>
         <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
         <ConfigurationType>Application</ConfigurationType>
-        <PlatformToolset>v141</PlatformToolset>
+        <PlatformToolset>v142</PlatformToolset>
         <LinkIncremental>false</LinkIncremental>
         <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
         <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
@@ -87,7 +87,7 @@
             <MapExports>true</MapExports>
             <OptimizeReferences>true</OptimizeReferences>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
-            <AdditionalDependencies>..\..\..\..\..\IL2C.Runtime\lib\$(Configuration)\libil2c-msvc-win-$(Platform).lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>..\..\..\..\..\IL2C.Runtime\lib\$(Configuration)\libil2c-msvc-win-$(Platform)-rts.lib;%(AdditionalDependencies)</AdditionalDependencies>
         </Link>
         <Link Condition="'$(Configuration)'=='Release'">
             <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>

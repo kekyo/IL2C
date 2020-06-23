@@ -1,25 +1,36 @@
-﻿using System;
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace IL2C.ArtifactCollector
 {
     internal static class Collectors
     {
-        public static async Task<string> GetVersionStringAsync(string solutionDir)
-        {
-            var result = await Executor.ExecuteAsync(
-                solutionDir,
-                new string[0],
-                "nbgv",
-                "get-version",
-                "-v", "NuGetPackageVersion");
-            return result.Item2.Trim('\r', '\n', ' ', '\t');
-        }
-
         public static Task RecreateDirectoryAsync(string path)
         {
             return Task.Run(() =>
@@ -60,30 +71,20 @@ namespace IL2C.ArtifactCollector
             });
         }
 
-        private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath, string versionString)
+        private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath)
         {
-            // 0.4.70-beta+e458a2c794 --> 0.4.70-beta-e458a2c794
-            var semver2Ids = versionString.Split('+');
-            var semver2Id = string.Join("-", semver2Ids);
+            var version = typeof(Collectors).Assembly.GetName().Version;
+            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
 
             var nupkgPaths = Directory.GetFiles(targetDirectoryPath, "*.nupkg", SearchOption.AllDirectories).
-                Where(p =>
-                    p.EndsWith(semver2Id + ".nupkg") ||
-                    p.EndsWith(semver2Id + ".symbols.nupkg")).    // HACK: Check contains current semver2 id
-                GroupBy(p => p.Replace(".symbols", string.Empty)).
-                Select(g => Tuple.Create(
-                    g.Key, g.
-                        OrderByDescending(p => p.Contains(".symbols") ? 1 : 0).
-                        ThenByDescending(p => p.Length).ToArray())).
+                Where(p => p.Contains(versionString)).
+                GroupBy(p => p).
+                Select(g => Tuple.Create(g.Key, g.OrderByDescending(p => p.Length).ToArray())).
                 ToDictionary(entry => entry.Item1, entry => entry.Item2);
 
             foreach (var nupkgPath in nupkgPaths.Select(entry => entry.Value.First()))
             {
-                var sanitized = nupkgPath.Replace(".symbols", string.Empty);
-                sanitized = (semver2Ids.Length >= 2) ?
-                    sanitized.Replace("." + semver2Ids[1], string.Empty) :    // HACK: Drop semver2 id
-                    sanitized;
-                var targetNupkgFileName = Path.GetFileName(sanitized);
+                var targetNupkgFileName = Path.GetFileName(nupkgPath);
                 var targetPath = Path.Combine(artifactsDir, targetNupkgFileName);
 
                 if (File.Exists(targetPath))
@@ -101,7 +102,8 @@ namespace IL2C.ArtifactCollector
             }
         }
 
-        public static async Task BuildCsprojAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> csprojPaths, string versionString)
+        public static async Task BuildCsprojAndCollectArtifactsAsync(
+            string solutionDir, string artifactsDir, string buildIdentifier, IEnumerable<string> csprojPaths)
         {
             foreach (var path in csprojPaths)
             {
@@ -113,8 +115,8 @@ namespace IL2C.ArtifactCollector
                     "pack",
                     "--no-build",
                     "--configuration", "Release",
-                    "--include-symbols",
-                    "/p:NoPackageAnalysis=true",
+                    "-p:Platform=",   // BUG WORKAROUND: dotnet pack is misunderstanding Platform variable sets to "Any CPU", so have to set blank.
+                    $"-p:BuildIdentifier={buildIdentifier}",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);
                 if (result.Item1 != 0)
@@ -126,12 +128,16 @@ namespace IL2C.ArtifactCollector
             await Task.WhenAll(csprojPaths.
                 Select(path => Path.GetDirectoryName(Path.GetFullPath(path))).
                 Distinct().
-                Select(path => CopyArtifactsAsync(artifactsDir, path, versionString)));
+                Select(path => CopyArtifactsAsync(artifactsDir, path)));
         }
 
-        public static async Task BuildNuspecAndCollectArtifactsAsync(string solutionDir, string artifactsDir, IEnumerable<string> nuspecPaths, string versionString)
+        public static async Task BuildNuspecAndCollectArtifactsAsync(
+            string solutionDir, string artifactsDir, string buildIdentifier, IEnumerable<string> nuspecPaths)
         {
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
+
+            var version = typeof(Collectors).Assembly.GetName().Version;
+            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
 
             foreach (var path in nuspecPaths)
             {
@@ -145,6 +151,7 @@ namespace IL2C.ArtifactCollector
                     "-Version", versionString,
                     "-NoPackageAnalysis",
                     "-Prop", $"Configuration=Release",
+                    "-Prop", $"BuildIdentifier={buildIdentifier}",
                     "-OutputDirectory", $"\"{outputDirectory}\"",
                     $"\"{path}\"");
                 Program.WriteLine(result.Item2);
@@ -157,10 +164,49 @@ namespace IL2C.ArtifactCollector
             await Task.WhenAll(nuspecPaths.
                 Select(path => Path.GetDirectoryName(Path.GetFullPath(path))).
                 Distinct().
-                Select(path => CopyArtifactsAsync(artifactsDir, path, versionString)));
+                Select(path => CopyArtifactsAsync(artifactsDir, path)));
         }
 
-        private static async Task CopyResourceWithReplacementsAsync(string resourceName, string path, IReadOnlyDictionary<string, string> replacements)
+        public static async Task BuildZipFromCollectArtifactsAsync(
+            string artifactsDir, IEnumerable<string> zipArtifactsPaths)
+        {
+            var version = typeof(Collectors).Assembly.GetName().Version;
+            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
+
+            await Task.WhenAll(zipArtifactsPaths.Select(zipArtifactsPath => Task.Run(() =>
+            {
+                var zipArtifactsName = Path.GetFileNameWithoutExtension(zipArtifactsPath);
+                var zipArtifactsFullPath = Path.Combine(artifactsDir, $"{zipArtifactsName}.{versionString}.zip");
+                var zipArtifactsBasePath = Path.GetDirectoryName(Path.GetFullPath(zipArtifactsPath));
+                var zipArtifactsDocument = XDocument.Load(zipArtifactsPath);
+
+                var filePaths =
+                    zipArtifactsDocument.Root.Elements("file").
+                    Where(file => !string.IsNullOrWhiteSpace((string)file.Attribute("src"))).
+                    Select(file => Path.Combine(zipArtifactsBasePath, (string)file.Attribute("src"))).
+                    ToArray();
+
+                if (File.Exists(zipArtifactsFullPath))
+                {
+                    File.Move(zipArtifactsFullPath, zipArtifactsFullPath + ".tmp");
+                    File.Delete(zipArtifactsFullPath);
+                }
+
+                using (var zip = ZipFile.Open(zipArtifactsFullPath, ZipArchiveMode.Create))
+                {
+                    foreach (var filePath in filePaths.
+                        SelectMany(path => Directory.EnumerateFiles(Path.GetDirectoryName(path), Path.GetFileName(path), SearchOption.AllDirectories)))
+                    {
+                        var entry = zip.CreateEntryFromFile(filePath, filePath.Substring(zipArtifactsBasePath.Length + 1));
+                    }
+                }
+
+                Program.WriteLine(zipArtifactsFullPath);
+            })));
+        }
+
+        private static async Task CopyResourceWithReplacementsAsync(
+            string resourceName, string path, IReadOnlyDictionary<string, string> replacements)
         {
             using (var sr = new StreamReader(
                 typeof(Collectors).Assembly.GetManifestResourceStream(resourceName),
@@ -175,7 +221,7 @@ namespace IL2C.ArtifactCollector
             }
         }
 
-        public static async Task CollectArduinoArtifactsAsync(string solutionDir, string artifactsDir, string versionString)
+        public static async Task CollectArduinoArtifactsAsync(string solutionDir, string artifactsDir)
         {
             var arduinoBasePath = Path.Combine(artifactsDir, "Arduino");
             await RecreateDirectoryAsync(arduinoBasePath);
@@ -185,9 +231,10 @@ namespace IL2C.ArtifactCollector
                 Path.Combine(arduinoBasePath, "library.properties"),
                 new Dictionary<string, string>
                 {
-                    { "{version}", versionString }
+                    { "{version}", typeof(Program).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version },
+                    { "{semver2}", typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion }
                 });
- 
+
             var fromIncludeDir = Path.Combine(solutionDir, "IL2C.Runtime", "include");
             var toIncludeDir = Path.Combine(arduinoBasePath, "include");
             await Task.WhenAll(

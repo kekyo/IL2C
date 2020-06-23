@@ -24,7 +24,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="IL2C.Build" Version="0.4.60" />
+        <PackageReference Include="IL2C.Build" Version="0.4.102" />
     </ItemGroup>
 
 </Project>

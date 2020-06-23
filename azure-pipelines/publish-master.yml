@@ -1,6 +1,6 @@
 trigger:
-  tags:
+  branches:
     include:
-      - 0.*
+      - master
 jobs:
   - template: publish.yml

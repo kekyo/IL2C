@@ -742,10 +742,10 @@ namespace IL2C.Internal
                 {
                     return x.Equals(y);
                 }
-                if (x is IEnumerable)
+                if ((x is IEnumerable) && (y is IEnumerable))
                 {
                     var ex = ((IEnumerable)x).RuntimeCast<object>();
-                    var ey = ((IEnumerable)x).RuntimeCast<object>();
+                    var ey = ((IEnumerable)y).RuntimeCast<object>();
                     return ex.SequenceEqual(ey, this);
                 }
 

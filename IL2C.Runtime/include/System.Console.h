@@ -17,8 +17,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef System_Runtime_dll_H__
-#define System_Runtime_dll_H__
+#ifndef System_Console_dll_H__
+#define System_Console_dll_H__
 
 #pragma once
 

@@ -17,8 +17,8 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef System_Runtime_dll_H__
-#define System_Runtime_dll_H__
+#ifndef System_Private_CoreLib_dll_H__
+#define System_Private_CoreLib_dll_H__
 
 #pragma once
 

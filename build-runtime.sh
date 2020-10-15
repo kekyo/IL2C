@@ -1,13 +1,20 @@
 #!/bin/sh
 
-Platform=`arch`; export Platform
+Platform=`uname -m`; export Platform
+
+if [ $# != 1 ]; then
+  Configuration=Debug
+else
+  Configuration=$1
+fi
 
 cd IL2C.Runtime
 
-rm -rf lib
-rm -rf build
+rm -rf build.cmake
 
-mkdir lib
+if [ ! -d lib ]; then
+  mkdir lib
+fi
 
 mkdir build.cmake
 cd build.cmake

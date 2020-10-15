@@ -39,10 +39,10 @@ mkdir %Configuration%
 cd %Configuration%
 
 rem For use GNU make
-cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DPLATFORM=mingw32 -DCONFIGURATION=%Configuration% ../..
+cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=mingw32-make.exe -DARCHITECTURE=gcc4-win-mingw32 -DPLATFORM=mingw32 -DCONFIGURATION=%Configuration% ../..
 
 rem For use Ninja
-rem cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DPLATFORM=mingw32 -DCONFIGURATION=%Configuration% ../..
+rem cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DARCHITECTURE=gcc4-win-mingw32 -DPLATFORM=mingw32 -DCONFIGURATION=%Configuration% ../..
 
 if errorlevel 1 (
     exit /b %errorlevel%

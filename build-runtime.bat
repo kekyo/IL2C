@@ -188,7 +188,7 @@ echo.
 mkdir gcc4-win-mingw32-%Configuration%
 cd gcc4-win-mingw32-%Configuration%
 
-cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DPLATFORM=mingw32 -DCONFIGURATION=%Configuration% ../..
+cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE=../../cmake/gcc4-win-mingw32.cmake -DBUILDER=gcc4-win-mingw32 -DPLATFORM=mingw32 -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )

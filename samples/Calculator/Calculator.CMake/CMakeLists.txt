@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.7)
 
 project(Calculator.CMake C)
 
-include(${CMAKE_CURRENT_LIST_DIR}/../../../IL2C.Runtime/cmake/${ARCHITECTURE}.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../../IL2C.Runtime/cmake/${BUILDER}.cmake)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../Generated/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../Generated/src)

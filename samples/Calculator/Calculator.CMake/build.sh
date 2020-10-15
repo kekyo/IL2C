@@ -6,7 +6,7 @@ else
   Configuration=$1
 fi
 
-PLATFORM=`uname -m`
+Platform=`uname -m`
 
 # =================================================
 # Generate building scripts by CMake
@@ -23,7 +23,8 @@ rm -rf $Configuration
 mkdir $Configuration
 cd $Configuration
 
-cmake -DARCHITECTURE=gcc-linux -DPLATFORM=$PLATFORM -DCONFIGURATION=$Configuration ../..
+cmake -G "Ninja" -DCMAKE_MAKE_PROGRAM=ninja -DBUILDER=gcc-linux -DPLATFORM=$Platform -DCONFIGURATION=$Configuration ../..
+#cmake -DBUILDER=gcc-linux -DPLATFORM=$Platform -DCONFIGURATION=$Configuration ../..
 
 if [ $? != 0 ]; then
     exit $?

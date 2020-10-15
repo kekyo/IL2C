@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.7)
 
 project(Calculator.CMake C)
 
+#include(${CMAKE_CURRENT_LIST_DIR}/../../../IL2C.Runtime/cmake/gcc-linux.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/../../../IL2C.Runtime/cmake/gcc4-win-mingw32.cmake)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../Generated/include)

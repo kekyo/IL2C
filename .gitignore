@@ -245,3 +245,6 @@ test-artifacts/
 toolchain/
 
 *.vcxproj.filters
+
+.idea/
+

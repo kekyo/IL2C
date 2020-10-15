@@ -10,4 +10,9 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/../Generated/src)
 file(GLOB_RECURSE SRCS "${CMAKE_CURRENT_LIST_DIR}/../Generated/src/*.c")
 
 add_executable(Calculator ${SRCS} main.c)
+
+if("${BUILDER}" STREQUAL "gcc4-win-mingw32")
 target_link_libraries(Calculator ${IL2C_LIBRARY_NAME})
+else()
+target_link_libraries(Calculator ${IL2C_LIBRARY_NAME} pthread)
+endif()

@@ -13,9 +13,9 @@ else()
 endif()
 
 set(IL2C_LIBRARY_NAME_BASE "il2c-gcc-linux-${PLATFORM}")
-set(IL2C_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}.a")
+set(IL2C_LIBRARY_NAME "lib${IL2C_LIBRARY_NAME_BASE}-${CONFIGURATION}.a")
 
 set(TARGET_LIBRARY_NAME "${IL2C_LIBRARY_NAME_BASE}-${CONFIGURATION}")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
-link_directories(${CMAKE_CURRENT_LIST_DIR}/../lib/${CONFIGURATION})
+link_directories(${CMAKE_CURRENT_LIST_DIR}/../lib)

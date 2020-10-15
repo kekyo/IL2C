@@ -1,4 +1,4 @@
-#include <il2c_private.H>
+#include <il2c_private.h>
 
 ///////////////////////////////////////////////////
 // Lack for threading support

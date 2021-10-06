@@ -89,17 +89,18 @@ namespace IL2C.Metadata
             new Dictionary<ModuleReference, AssemblyDefinition>(ModuleReferenceComparer.Instance);
         private readonly Dictionary<MemberReference, IMemberInformation> members =
             new Dictionary<MemberReference, IMemberInformation>(MemberReferenceComparer.Instance);
+        private readonly BasePathAssemblyResolver resolver;
 
         internal MetadataContext(string assemblyPath, bool readSymbols)
         {
-            var resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
-            var parameter = new ReaderParameters
+            resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
+            var assemblyReaderParameter = new ReaderParameters
             {
                 AssemblyResolver = resolver,
                 ReadSymbols = readSymbols
             };
 
-            var mainAssembly = AssemblyDefinition.ReadAssembly(assemblyPath, parameter);
+            var mainAssembly = AssemblyDefinition.ReadAssembly(assemblyPath, assemblyReaderParameter);
             var mainAssemblyInformation = new AssemblyInformation(mainAssembly, this);
 
             resolvedCoreModule = mainAssembly.MainModule.TypeSystem.Object.Resolve().Module;
@@ -188,6 +189,24 @@ namespace IL2C.Metadata
 
         #region IModuleInformation
         internal ModuleInformation GetOrAddModule(
+            TypeReference typeReference)
+        {
+            if (typeReference == null)
+            {
+                return default(ModuleInformation);
+            }
+            var moduleReference = typeReference.Module;
+            
+            if (typeReference.Scope.MetadataScopeType == MetadataScopeType.AssemblyNameReference)
+            {
+                var assembly = resolver.Resolve(typeReference.Scope as AssemblyNameReference);
+                var typeDeclaration = assembly.MainModule.Types.Where(e => e.FullName == typeReference.FullName).FirstOrDefault();
+                if (typeDeclaration != null) moduleReference = assembly.MainModule;
+            }
+            return GetOrAddModule(moduleReference);
+        }
+
+        internal ModuleInformation GetOrAddModule(
             ModuleReference moduleReference)
         {
             if (moduleReference == null)
@@ -255,7 +274,7 @@ namespace IL2C.Metadata
                         return default(TypeInformation);
                     }
 
-                    var module = this.GetOrAddModule(typeReference.Module);
+                    var module = this.GetOrAddModule(typeReference);
                     if (typeReference.Module.Equals(resolvedCoreModule) &&
                         validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
                     {
@@ -289,6 +308,11 @@ namespace IL2C.Metadata
                         !typeReference.IsByReference && !typeReference.IsPointer)
                     {
                         var typeDefinition = typeReference.Resolve();
+                        // TODO: try to resolve typeDefinition from mscorelib
+                        if (typeDefinition == null)
+                            throw new InvalidProgramSequenceException(
+                                $"cannot resolve type {typeReference.FullName}"
+                                );
                         if (typeDefinition.IsClass && !typeDefinition.IsAbstract &&
                             MemberReferenceComparer.Instance.Equals(
                                 typeDefinition.BaseType, ((TypeInformation)MulticastDelegateType).Member))
@@ -317,7 +341,7 @@ namespace IL2C.Metadata
         {
             return this.GetOrAddMember(
                 fieldReference,
-                () => new FieldInformation(fieldReference, this.GetOrAddModule(fieldReference.Module)));
+                () => new FieldInformation(fieldReference, this.GetOrAddModule(fieldReference.DeclaringType)));
         }
 
         internal FieldInformation[] GetOrAddFields(
@@ -336,7 +360,7 @@ namespace IL2C.Metadata
         {
             return this.GetOrAddMember(
                 methodReference,
-                () => new MethodInformation(methodReference, this.GetOrAddModule(methodReference.Module)));
+                () => new MethodInformation(methodReference, this.GetOrAddModule(methodReference.DeclaringType)));
         }
 
         internal MethodInformation[] GetOrAddMethods(

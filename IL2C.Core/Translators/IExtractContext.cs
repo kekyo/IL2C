@@ -56,6 +56,7 @@ namespace IL2C.Translators
 
         IReadOnlyDictionary<MemberScopes, IEnumerable<ITypeInformation>> EnumerateRegisteredTypes();
         IEnumerable<ITypeInformation> EnumerateRegisteredTypesByDeclaringType(ITypeInformation declaringType);
+        IEnumerable<ITypeInformation> EnumerateDeclaredTypes();
         IEnumerable<string> EnumerateRequiredImportIncludeFileNames();
         IEnumerable<(string symbolName, string value)> ExtractConstStrings();
         IEnumerable<DeclaredValuesInformation> ExtractDeclaredValues();

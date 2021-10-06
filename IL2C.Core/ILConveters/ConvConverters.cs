@@ -282,7 +282,7 @@ namespace IL2C.ILConverters
         public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (!(siFrom.TargetType.IsSingleType || siFrom.TargetType.IsDoubleType))
+            if (!siFrom.TargetType.IsNumericPrimitive)
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to floating point type: Location={0}, FromType={1}",
@@ -305,7 +305,7 @@ namespace IL2C.ILConverters
         public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             var siFrom = decodeContext.PopStack();
-            if (!(siFrom.TargetType.IsSingleType || siFrom.TargetType.IsDoubleType))
+            if (!siFrom.TargetType.IsNumericPrimitive)
             {
                 throw new InvalidProgramSequenceException(
                     "Cannot convert to floating point type: Location={0}, FromType={1}",

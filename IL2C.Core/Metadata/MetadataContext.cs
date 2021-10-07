@@ -310,9 +310,9 @@ namespace IL2C.Metadata
                         var typeDefinition = typeReference.Resolve();
                         // TODO: try to resolve typeDefinition from mscorelib
                         if (typeDefinition == null)
-                            throw new InvalidProgramSequenceException(
-                                $"cannot resolve type {typeReference.FullName}"
-                                );
+                        {
+                            throw new InvalidProgramSequenceException($"cannot resolve type {typeReference.FullName}");
+                        }
                         if (typeDefinition.IsClass && !typeDefinition.IsAbstract &&
                             MemberReferenceComparer.Instance.Equals(
                                 typeDefinition.BaseType, ((TypeInformation)MulticastDelegateType).Member))

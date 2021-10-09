@@ -114,8 +114,8 @@ namespace IL2C
                 (type.IsInt16Type) ? "%d" :
                 (type.IsUInt32Type) ? "%u" :
                 (type.IsInt32Type) ? "%d" :
-                (type.IsUInt64Type) ? "%lld" :
-                (type.IsInt64Type) ? "%llu" :
+                (type.IsUInt64Type) ? "%llu" :
+                (type.IsInt64Type) ? "%lld" :
                 (type.IsSingleType) ? "%f" :
                 (type.IsDoubleType) ? "%lf" :
                 (type.IsIntPtrType) ? "0x%08x" :

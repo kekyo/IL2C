@@ -1,7 +1,7 @@
 # Supported IL opcodes
 
 * Number of opcode implementations: 140 / 219
-* Number of opcode tests: 909 [80 / 219]
+* Number of opcode tests: 928 [81 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
 |:---|:---|:---|:---|:---|
@@ -49,7 +49,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [clt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.clt) | 0xfe04 | Implemented |  | IL2C.ILConverters.CltConverter |
 | [clt.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.clt_un) | 0xfe05 | Implemented |  | IL2C.ILConverters.Clt_unConverter |
 | [constrained](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.constrained) | 0xfe16 | Implemented |  | IL2C.ILConverters.ConstrainedConverter |
-| [conv.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i) | 0xd3 | Implemented | [Test [5]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_I) | IL2C.ILConverters.Conv_iConverter |
+| [conv.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i) | 0xd3 | Implemented | [Test [12]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_I) | IL2C.ILConverters.Conv_iConverter |
 | [conv.i1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i1) | 0x67 | Implemented | [Test [23]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_I1) | IL2C.ILConverters.Conv_i1Converter |
 | [conv.i2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i2) | 0x68 | Implemented | [Test [22]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_I2) | IL2C.ILConverters.Conv_i2Converter |
 | [conv.i4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_i4) | 0x69 | Implemented | [Test [20]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_I4) | IL2C.ILConverters.Conv_i4Converter |
@@ -77,7 +77,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [conv.r.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_r_un) | 0x76 |  |  |  |
 | [conv.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_r4) | 0x6b | Implemented | [Test [19]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_R4) | IL2C.ILConverters.Conv_r4Converter |
 | [conv.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_r8) | 0x6c | Implemented | [Test [19]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_R8) | IL2C.ILConverters.Conv_r8Converter |
-| [conv.u](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u) | 0xe0 | Implemented |  | IL2C.ILConverters.Conv_uConverter |
+| [conv.u](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u) | 0xe0 | Implemented | [Test [12]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_U) | IL2C.ILConverters.Conv_uConverter |
 | [conv.u1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u1) | 0xd2 | Implemented | [Test [22]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_U1) | IL2C.ILConverters.Conv_u1Converter |
 | [conv.u2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u2) | 0xd1 | Implemented | [Test [21]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_U2) | IL2C.ILConverters.Conv_u2Converter |
 | [conv.u4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.conv_u4) | 0x6d | Implemented | [Test [19]](../tests/IL2C.Core.Test.Target/ILConverters/Conv_U4) | IL2C.ILConverters.Conv_u4Converter |

@@ -10,6 +10,7 @@
     <Platforms>AnyCPU</Platforms>
     <LangVersion>7.3</LangVersion>
     <NoWarn>NU5105</NoWarn>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
     <AssemblyName>IL2C.Interop</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>
@@ -53,6 +54,7 @@
   <ItemGroup>
     <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

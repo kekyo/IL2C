@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net45</TargetFramework>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
         <OutputType>Library</OutputType>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -26,7 +27,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
+        <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

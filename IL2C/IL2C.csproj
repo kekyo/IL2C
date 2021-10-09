@@ -10,6 +10,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Platforms>AnyCPU</Platforms>
     <NoWarn>NU5105</NoWarn>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
     <AssemblyName>IL2C</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>
@@ -54,6 +55,7 @@
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
     <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

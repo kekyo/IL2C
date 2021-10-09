@@ -9,6 +9,8 @@
     <DebugSymbols>true</DebugSymbols>
     <Platforms>AnyCPU</Platforms>
     <NoWarn>NU5105</NoWarn>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+
     <AssemblyName>IL2C.Tasks</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>
     <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
@@ -62,6 +64,7 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>

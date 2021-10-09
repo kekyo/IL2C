@@ -8,6 +8,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
     <AssemblyName>ArtifactCollector</AssemblyName>
     <RootNamespace>IL2C.ArtifactCollector</RootNamespace>
@@ -49,6 +50,7 @@
   <ItemGroup>
     <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>

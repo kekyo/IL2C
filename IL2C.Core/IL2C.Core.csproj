@@ -10,7 +10,8 @@
     <Platforms>AnyCPU</Platforms>
     <LangVersion>7.3</LangVersion>
     <NoWarn>NU5105</NoWarn>
-
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+      
     <AssemblyName>IL2C.Core</AssemblyName>
     <RootNamespace>IL2C</RootNamespace>
     <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
@@ -47,6 +48,7 @@
   <ItemGroup>
     <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
     <PackageReference Include="Mono.Cecil" Version="0.11.2" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>

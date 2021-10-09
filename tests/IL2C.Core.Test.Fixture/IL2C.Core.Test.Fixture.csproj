@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net462</TargetFramework>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
         <OutputType>Library</OutputType>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -53,6 +54,7 @@
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
         <PackageReference Include="System.ValueTuple" Version="4.5.0" />
         <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>

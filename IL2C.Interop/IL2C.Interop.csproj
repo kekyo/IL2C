@@ -6,7 +6,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Platforms>AnyCPU</Platforms>
     <LangVersion>7.3</LangVersion>
@@ -31,6 +30,18 @@
     <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
 
     <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>embedded</DebugType>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40-client'">
@@ -41,6 +52,7 @@
 
   <ItemGroup>
     <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

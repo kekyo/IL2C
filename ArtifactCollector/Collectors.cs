@@ -73,8 +73,7 @@ namespace IL2C.ArtifactCollector
 
         private static async Task CopyArtifactsAsync(string artifactsDir, string targetDirectoryPath)
         {
-            var version = typeof(Collectors).Assembly.GetName().Version;
-            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
+            var versionString = ThisAssembly.AssemblyVersion;
 
             var nupkgPaths = Directory.GetFiles(targetDirectoryPath, "*.nupkg", SearchOption.AllDirectories).
                 Where(p => p.Contains(versionString)).
@@ -136,8 +135,7 @@ namespace IL2C.ArtifactCollector
         {
             var nugetPath = Path.Combine(solutionDir, ".nuget", "nuget.exe");
 
-            var version = typeof(Collectors).Assembly.GetName().Version;
-            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
+            var versionString = ThisAssembly.AssemblyVersion;
 
             foreach (var path in nuspecPaths)
             {
@@ -170,8 +168,7 @@ namespace IL2C.ArtifactCollector
         public static async Task BuildZipFromCollectArtifactsAsync(
             string artifactsDir, IEnumerable<string> zipArtifactsPaths)
         {
-            var version = typeof(Collectors).Assembly.GetName().Version;
-            var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
+            var versionString = ThisAssembly.AssemblyVersion;
 
             await Task.WhenAll(zipArtifactsPaths.Select(zipArtifactsPath => Task.Run(() =>
             {

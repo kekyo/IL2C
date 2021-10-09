@@ -58,7 +58,7 @@ namespace IL2C.ArtifactCollector
                 WriteLine("Build identifier={0}",
                     buildIdentifier);
                 WriteLine("Target version={0}",
-                    typeof(Program).Assembly.GetName().Version);
+                    ThisAssembly.AssemblyVersion);
 
                 await Collectors.RecreateDirectoryAsync(artifactsDir);
 

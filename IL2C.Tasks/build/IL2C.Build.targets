@@ -2,8 +2,8 @@
   <PropertyGroup>
     <IL2CTargetAssemblyFileName Condition="'$(IL2CTargetAssemblyFileName)' == ''">$([System.String]::Concat('$(AssemblyName)','$(TargetExt)'))</IL2CTargetAssemblyFileName>
     <IL2CTargetAssemblyPath Condition="'$(IL2CTargetAssemblyPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2CTargetAssemblyFileName)'))</IL2CTargetAssemblyPath>
-    <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' == ''">$(IL2CTargetAssemblyPath)</IL2CAssemblyPaths>
     <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' != ''">$([System.String]::Concat('$(IL2CAssemblyPaths)',';','$(IL2CTargetAssemblyPath)').split(';'))</IL2CAssemblyPaths>
+    <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' == ''">$(IL2CTargetAssemblyPath)</IL2CAssemblyPaths>
     <IL2COutputPath Condition="'$(IL2COutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','IL2C'))</IL2COutputPath>
     <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
     <IL2CReadSymbols Condition="'$(IL2CReadSymbols)' == ''">true</IL2CReadSymbols>

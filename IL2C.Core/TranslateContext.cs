@@ -167,7 +167,7 @@ namespace IL2C
 
         IEnumerable<ITypeInformation> IExtractContext.EnumerateDeclaredTypes()
         {
-            return registeredTypesByDeclaringType.Values.SelectMany(typeInfo => typeInfo.ToList()).Distinct();
+            return registeredTypesByDeclaringType.Values.SelectMany(typeInfo => typeInfo).Distinct();
         }
 
         IEnumerable<string> IExtractContext.EnumerateRequiredImportIncludeFileNames() =>

@@ -32,6 +32,15 @@ namespace IL2C.ILConverters
     [TestCase(unchecked((sbyte)456), "Int64", 456L)]
     [TestCase((sbyte)123, "IntPtr", 123)]
     [TestCase(unchecked((sbyte)456), "IntPtr", 456)]
+    [TestCase((sbyte)123, "Byte", (byte)123)]
+    [TestCase(unchecked((sbyte)0x80), "Byte", (byte)0x80)]
+    [TestCase(unchecked((sbyte)12345), "UInt16", (ushort)12345)]
+    [TestCase(unchecked((sbyte)0x8000), "UInt16", (ushort)0x8000)]
+    [TestCase(unchecked((sbyte)456789012), "UInt32", (uint)456789012)]
+    [TestCase(unchecked((sbyte)0x80000000), "UInt32", (uint)0x80000000)]
+    [TestCase(unchecked((sbyte)456789012), "UInt64", 456789012UL)]
+    [TestCase(unchecked((sbyte)0x8000000000000000UL), "UInt64", 0x8000000000000000UL)]
+    [TestCase(unchecked((sbyte)456789012), "UIntPtr", (uint)456789012)]
     [TestCase((sbyte)123, "Single", 123.45f)]
     [TestCase(unchecked((sbyte)456), "Single", 456.78f)]
     [TestCase((sbyte)123, "Double", 123.45)]
@@ -52,6 +61,21 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern sbyte IntPtr(IntPtr value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte Byte(byte value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte UInt16(ushort value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte UInt32(uint value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte UInt64(ulong value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte UIntPtr(UIntPtr value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern sbyte Single(float value);

@@ -25,12 +25,21 @@ namespace IL2C.ILConverters
     [TestCase((byte)123, "Byte", (byte)123)]
     [TestCase((byte)123, "Int16", (short)123)]
     [TestCase(unchecked((byte)456), "Int16", (short)456)]
+    [TestCase(unchecked((byte)-456), "Int16", (short)-456)]
     [TestCase((byte)123, "Int32", 123)]
-    [TestCase(unchecked ((byte)456), "Int32", 456)]
-    [TestCase((byte)123, "Int64", 123L)]
-    [TestCase(unchecked((byte)456), "Int64", 456L)]
+    [TestCase(unchecked((byte)456), "Int32", 456)]
+    [TestCase(unchecked((byte)-456), "Int32", -456)]
+    [TestCase((byte)123L, "Int64", 123L)]
+    [TestCase(unchecked((byte)456L), "Int64", 456L)]
+    [TestCase(unchecked((byte)-456L), "Int64", -456L)]
     [TestCase((byte)123, "IntPtr", 123)]
     [TestCase(unchecked((byte)456), "IntPtr", 456)]
+    [TestCase((byte)123, "SByte", (sbyte)123)]
+    [TestCase(unchecked((byte)-123), "SByte", (sbyte)-123)]
+    [TestCase((byte)123, "UInt16", (ushort)123)]
+    [TestCase((byte)123, "UInt32", (uint)123)]
+    [TestCase((byte)123, "UInt64", (ulong)123)]
+    [TestCase((byte)123, "UIntPtr", (uint)123)]
     [TestCase((byte)123, "Single", 123.45f)]
     [TestCase(unchecked((byte)456), "Single", 456.78f)]
     [TestCase((byte)123, "Double", 123.45)]
@@ -51,6 +60,21 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte IntPtr(IntPtr value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern byte SByte(sbyte value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern byte UInt16(ushort value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern byte UInt32(uint value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern byte UInt64(ulong value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern byte UIntPtr(UIntPtr value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte Single(float value);

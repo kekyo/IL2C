@@ -8,6 +8,14 @@
         ret
     }
 
+    .method public static uint64 SByte(int8 v) cil managed
+    {
+        .maxstack 1
+        ldarg.0
+        conv.u8
+        ret
+    }
+
     .method public static uint64 Int16(int16 v) cil managed
     {
         .maxstack 1

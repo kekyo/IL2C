@@ -44,6 +44,9 @@ namespace IL2C
                 "..",
                 "docs"));
 
+        private static string GetOpCodeDirectoryName(string name) =>
+            name[0] + name.ToLowerInvariant().Substring(1);
+
         [Test]
         public static async Task DumpSupportedOpCodes()
         {
@@ -123,7 +126,7 @@ namespace IL2C
                             (ushort)opCode.Value,
                             (ilConverter != null) ? "Implemented" : string.Empty,
                             ilConverterTests.TryGetValue(name, out var count) ?
-                                string.Format("[Test [{0}]](../tests/IL2C.Core.Test.Target/ILConverters/{1})", count, name) :
+                                string.Format("[Test [{0}]](../tests/IL2C.Core.Test.ILConverters/{1})", count, GetOpCodeDirectoryName(name)) :
                                 string.Empty,
                             ilConverter?.GetType().FullName ?? string.Empty));
                 }
@@ -202,7 +205,7 @@ namespace IL2C
                             type.FullName.ToLowerInvariant(),
                             (entry != null) ?
                                 ((entry.Count >= 1) ?
-                                    string.Format("[Test [{0}]](../tests/IL2C.Core.Test.Target/BasicTypes/{1})", entry.Count, entry.Name) :
+                                    string.Format("[Test [{0}]](../tests/IL2C.Core.Test.BasicTypes/{1})", entry.Count, entry.Name) :
                                     string.Empty) :
                                 string.Empty));
                 }
@@ -248,7 +251,7 @@ namespace IL2C
                 foreach (var typeSystemTest in typeSystemsTests.OrderBy(entry => entry.Key))
                 {
                     await tw.WriteLineAsync(
-                        string.Format("| {0} | [Test [{1}]](../tests/IL2C.Core.Test.Target/RuntimeSystems/{0}) | {2} |",
+                        string.Format("| {0} | [Test [{1}]](../tests/IL2C.Core.Test.RuntimeSystems/{0}) | {2} |",
                         typeSystemTest.Key,
                         typeSystemTest.Value.Count,
                         typeSystemTest.Value.Description));

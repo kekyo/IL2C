@@ -22,6 +22,10 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
+    [TestCase((sbyte)123, "SByte", (sbyte)123)]
+    [TestCase((sbyte)-123, "SByte", (sbyte)-123)]
+    [TestCase((sbyte)123, "Int16", (short)123)]
+    [TestCase(unchecked((sbyte)12345), "Int16", (short)12345)]
     [TestCase((sbyte)123, "Int32", 123)]
     [TestCase(unchecked ((sbyte)456), "Int32", 456)]
     [TestCase((sbyte)123, "Int64", 123L)]
@@ -34,6 +38,12 @@ namespace IL2C.ILConverters
     [TestCase(unchecked((sbyte)456), "Double", 456.78)]
     public sealed class Conv_i1
     {
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte SByte(sbyte value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern sbyte Int16(short value);
+
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern sbyte Int32(int value);
 

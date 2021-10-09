@@ -1,5 +1,21 @@
 ﻿.class public IL2C.ILConverters.Conv_i1
 {
+    .method public static int8 SByte(int8 v) cil managed
+    {
+        .maxstack 1
+        ldarg.0
+        conv.i1
+        ret
+    }
+
+    .method public static int8 Int16(int16 v) cil managed
+    {
+        .maxstack 1
+        ldarg.0
+        conv.i1
+        ret
+    }
+
     .method public static int8 Int32(int32 v) cil managed
     {
         .maxstack 1

@@ -22,40 +22,41 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase((byte)123, "Byte", (byte)123)]
-    [TestCase((byte)123, "Int16", (short)123)]
-    [TestCase(unchecked((byte)456), "Int16", (short)456)]
-    [TestCase((byte)123, "Int32", 123)]
-    [TestCase(unchecked ((byte)456), "Int32", 456)]
-    [TestCase((byte)123, "Int64", 123L)]
-    [TestCase(unchecked((byte)456), "Int64", 456L)]
-    [TestCase((byte)123, "IntPtr", 123)]
-    [TestCase(unchecked((byte)456), "IntPtr", 456)]
-    [TestCase((byte)123, "Single", 123.45f)]
-    [TestCase(unchecked((byte)456), "Single", 456.78f)]
-    [TestCase((byte)123, "Double", 123.45)]
-    [TestCase(unchecked((byte)456), "Double", 456.78)]
-    public sealed class Conv_u1
+    [TestCase(123, "SByte", (sbyte)123)]
+    [TestCase(-123, "SByte", (sbyte)-123)]
+    [TestCase(12345, "Int16", (short)12345)]
+    [TestCase(-12345, "Int16", (short)-12345)]
+    [TestCase(456789012, "Int32", 456789012)]
+    [TestCase(-456789012, "Int32", -456789012)]
+    [TestCase(456789012, "Int64", 456789012L)]
+    [TestCase(unchecked((int)4567890123L), "Int64", 4567890123L)]
+    [TestCase(456789012, "IntPtr", 456789012)]
+    //[TestCase(unchecked((int)4567890123L), "IntPtr", 4567890123L)]  // Will cause overflow on 32bit test environment (IntPtr.Size == 4)
+    [TestCase(456789, "Single", 456789.012f)]
+    [TestCase(unchecked((int)456789.012f), "Single", 456789.012f)]
+    [TestCase(456789, "Double", 456789.012)]
+    [TestCase(unchecked((int)456789.012), "Double", 456789.012)]
+    public sealed class Conv_i4
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte Byte(byte value);
+        public static extern int SByte(sbyte value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte Int16(short value);
+        public static extern int Int16(short value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte Int32(int value);
+        public static extern int Int32(int value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte Int64(long value);
+        public static extern int Int64(long value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte IntPtr(IntPtr value);
+        public static extern int IntPtr(IntPtr value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte Single(float value);
+        public static extern int Single(float value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte Double(double value);
+        public static extern int Double(double value);
     }
 }

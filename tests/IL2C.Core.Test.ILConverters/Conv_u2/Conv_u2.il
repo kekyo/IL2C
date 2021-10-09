@@ -1,5 +1,21 @@
 ﻿.class public IL2C.ILConverters.Conv_u2
 {
+    .method public static uint16 Byte(uint8 v) cil managed
+    {
+        .maxstack 1
+        ldarg.0
+        conv.u2
+        ret
+    }
+
+    .method public static uint16 Int16(int16 v) cil managed
+    {
+        .maxstack 1
+        ldarg.0
+        conv.u2
+        ret
+    }
+
     .method public static uint16 Int32(int32 v) cil managed
     {
         .maxstack 1

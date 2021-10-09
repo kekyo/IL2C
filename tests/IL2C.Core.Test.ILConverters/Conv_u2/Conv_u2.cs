@@ -22,6 +22,9 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
+    [TestCase((ushort)123, "Byte", (byte)123)]
+    [TestCase((ushort)12345, "Int16", (short)12345)]
+    [TestCase(unchecked((ushort)-12345), "Int16", (short)-12345)]
     [TestCase((ushort)12345, "Int32", 12345)]
     [TestCase(unchecked ((ushort)45678), "Int32", 45678)]
     [TestCase((ushort)12345, "Int64", 12345L)]
@@ -34,6 +37,12 @@ namespace IL2C.ILConverters
     [TestCase(unchecked((ushort)45678), "Double", 45678.91)]
     public sealed class Conv_u2
     {
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ushort Byte(byte value);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ushort Int16(short value);
+
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ushort Int32(int value);
 

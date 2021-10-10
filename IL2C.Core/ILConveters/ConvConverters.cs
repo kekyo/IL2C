@@ -222,10 +222,22 @@ namespace IL2C.ILConverters
             }
 
             var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.UInt32Type);
-            return (extractContext, _) => new[] { string.Format(
-                "{0} = (uint32_t){1}",
-                extractContext.GetSymbolName(result),
-                extractContext.GetSymbolName(siFrom)) };
+
+            // Will dodge conversion directly on float32 value.
+            if (siFrom.TargetType.IsSingleType)
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = (uint32_t)(int64_t){1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(siFrom)) };
+            }
+            else
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = (uint32_t){1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(siFrom)) };
+            }
         }
     }
 
@@ -246,14 +258,22 @@ namespace IL2C.ILConverters
 
             var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.UInt64Type);
 
-            // Will dodge conversion directly on signed ingeger value.
-            if (siFrom.TargetType.IsSByteType || 
+            // Will dodge conversion directly on signed ingeger or float32 value.
+            if (siFrom.TargetType.IsSByteType ||
                 siFrom.TargetType.IsInt16Type ||
                 siFrom.TargetType.IsInt32Type ||
                 siFrom.TargetType.IsIntPtrType)
             {
                 return (extractContext, _) => new[] { string.Format(
                     "{0} = (uint64_t)(uint32_t){1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(siFrom)) };
+            }
+            // Will dodge conversion directly on float32 value.
+            else if (siFrom.TargetType.IsSingleType)
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = (uint64_t)(int64_t){1}",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(siFrom)) };
             }

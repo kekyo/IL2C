@@ -21,28 +21,18 @@ using Mono.Cecil;
 
 namespace IL2C.Metadata
 {
-    internal sealed class BasePathAssemblyResolver : IAssemblyResolver
+    internal sealed class BasePathAssemblyResolver : DefaultAssemblyResolver
     {
-        private readonly DefaultAssemblyResolver resolver = new DefaultAssemblyResolver();
-
         public BasePathAssemblyResolver(string basePath)
         {
-            resolver.AddSearchDirectory(basePath);
+            this.AddSearchDirectory(basePath);
         }
 
-        public void Dispose()
+        public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
-            resolver.Dispose();
-        }
-
-        public AssemblyDefinition Resolve(AssemblyNameReference name)
-        {
-            return resolver.Resolve(name);
-        }
-
-        public AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
-        {
-            return resolver.Resolve(name, parameters);
+            var definition = base.Resolve(name);
+            this.RegisterAssembly(definition);
+            return definition;
         }
     }
 }

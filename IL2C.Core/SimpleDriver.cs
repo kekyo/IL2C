@@ -68,7 +68,7 @@ namespace IL2C
             DebugInformationOptions debugInformationOptions,
             IEnumerable<string> assemblyPaths)
         {
-            foreach (var aseemblyPath in assemblyPaths)
+            foreach (var assemblyPath in assemblyPaths)
             {
                 Translate(
                     logw,
@@ -77,7 +77,7 @@ namespace IL2C
                     enableBundler,
                     targetPlatform,
                     debugInformationOptions,
-                    aseemblyPath);
+                    assemblyPath);
             }
         }
 
@@ -116,7 +116,7 @@ namespace IL2C
                 enableCpp,
                 "    ");
 
-            foreach (var aseemblyPath in assemblyPaths)
+            foreach (var assemblyPath in assemblyPaths)
             {
                 Translate(
                     logw,
@@ -125,7 +125,7 @@ namespace IL2C
                     enableBundler,
                     targetPlatform,
                     debugInformationOptions,
-                    aseemblyPath);
+                    assemblyPath);
             }
         }
 

@@ -258,8 +258,8 @@ namespace IL2C.ILConverters
 
             var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.UInt64Type);
 
-            // Will dodge conversion directly on signed ingeger or float32 value.
-            if (siFrom.TargetType.IsSByteType ||
+            // Will dodge conversion directly on signed ingeger value.
+            if (siFrom.TargetType.IsSByteType || 
                 siFrom.TargetType.IsInt16Type ||
                 siFrom.TargetType.IsInt32Type ||
                 siFrom.TargetType.IsIntPtrType)

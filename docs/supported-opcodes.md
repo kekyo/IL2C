@@ -1,7 +1,7 @@
 # Supported IL opcodes
 
 * Number of opcode implementations: 140 / 219
-* Number of opcode tests: 928 [81 / 219]
+* Number of opcode tests: 930 [81 / 219]
 
 OpCode | Binary | Implement | Test | ILConverter
 |:---|:---|:---|:---|:---|
@@ -212,7 +212,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [stloc.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_3) | 0xd | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Stloc_3) | IL2C.ILConverters.Stloc_3Converter |
 | [stloc.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_s) | 0x13 | Implemented | [Test [17]](../tests/IL2C.Core.Test.ILConverters/Stloc_s) | IL2C.ILConverters.Stloc_SConverter |
 | [stobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stobj) | 0x81 |  |  |  |
-| [stsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stsfld) | 0x80 | Implemented | [Test [14]](../tests/IL2C.Core.Test.ILConverters/Stsfld) | IL2C.ILConverters.StsfldConverter |
+| [stsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stsfld) | 0x80 | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Stsfld) | IL2C.ILConverters.StsfldConverter |
 | [sub](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub) | 0x59 | Implemented | [Test [11]](../tests/IL2C.Core.Test.ILConverters/Sub) | IL2C.ILConverters.SubConverter |
 | [sub.ovf](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub_ovf) | 0xda |  |  |  |
 | [sub.ovf.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub_ovf_un) | 0xdb |  |  |  |

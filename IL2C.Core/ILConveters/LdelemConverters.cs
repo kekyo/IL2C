@@ -46,8 +46,7 @@ namespace IL2C.ILConverters
             }
 
             var siArray = decodeContext.PopStack();
-            if (!(siArray.TargetType.IsArray &&
-                validateElementType(siArray.TargetType.ElementType)))
+            if (!(siArray.TargetType.IsArray && validateElementType(siArray.TargetType.ElementType)))
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid array element type: Location={0}, StackType={1}",

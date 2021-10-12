@@ -424,10 +424,27 @@ namespace IL2C.Metadata
 
             public int Compare(IMethodInformation x, IMethodInformation y)
             {
-                var rn = x.Name.CompareTo(y.Name);
+                var xname = x.Name;
+                var yname = y.Name;
+
+                var rn = xname.CompareTo(yname);
                 if (rn != 0)
                 {
-                    return rn;
+                    // If it is an explicit interface implementation, we need to compare with it's full name
+                    if (x.DeclaringType.IsInterface)
+                    {
+                        xname = $"{x.DeclaringType.FriendlyName}.{xname}";
+                    }
+                    if (y.DeclaringType.IsInterface)
+                    {
+                        yname = $"{y.DeclaringType.FriendlyName}.{yname}";
+                    }
+
+                    rn = xname.CompareTo(yname);
+                    if (rn != 0)
+                    {
+                        return rn;
+                    }
                 }
 
                 var xps = x.Parameters;
@@ -449,9 +466,25 @@ namespace IL2C.Metadata
 
             public bool Equals(IMethodInformation x, IMethodInformation y)
             {
-                if (x.Name != y.Name)
+                var xname = x.Name;
+                var yname = y.Name;
+
+                if (xname != yname)
                 {
-                    return false;
+                    // If it is an explicit interface implementation, we need to compare with it's full name
+                    if (x.DeclaringType.IsInterface)
+                    {
+                        xname = $"{x.DeclaringType.FriendlyName}.{xname}";
+                    }
+                    if (y.DeclaringType.IsInterface)
+                    {
+                        yname = $"{y.DeclaringType.FriendlyName}.{yname}";
+                    }
+                    
+                    if (xname != yname)
+                    {
+                        return false;
+                    }
                 }
 
                 var xps = x.Parameters;

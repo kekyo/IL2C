@@ -112,9 +112,12 @@ namespace IL2C.Metadata
 
             this.MainAssembly = mainAssemblyInformation;
             assemblies.Add(mainAssembly, mainAssemblyInformation);
-            assemblies.Add(resolvedCoreAssembly, resolvedCoreAssemblyInformation);
-            modules.Add(resolvedCoreModule, resolvedCoreModuleInformation);
-            assemblyByModule.Add(resolvedCoreModule, resolvedCoreAssembly);
+            if (!assemblies.ContainsKey(resolvedCoreAssembly))
+            {
+                assemblies.Add(resolvedCoreAssembly, resolvedCoreAssemblyInformation);
+                modules.Add(resolvedCoreModule, resolvedCoreModuleInformation);
+                assemblyByModule.Add(resolvedCoreModule, resolvedCoreAssembly);
+            }
 
             this.VoidType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Void);
             this.ObjectType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Object);

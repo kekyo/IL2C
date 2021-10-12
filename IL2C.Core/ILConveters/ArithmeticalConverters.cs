@@ -242,6 +242,7 @@ namespace IL2C.ILConverters
         public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
             var si0 = decodeContext.PopStack();
+            Metadata.ILocalVariableInformation result;
 
             if (si0.TargetType.IsFloatStackFriendlyType || si0.TargetType.IsByReference)
                 throw new InvalidProgramSequenceException(
@@ -251,20 +252,62 @@ namespace IL2C.ILConverters
 
             if (si0.TargetType.IsInt32StackFriendlyType)
             {
-                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
-                return (extractContext, _) => new[] { string.Format(
-                    "{0} = ~{1}",
-                    extractContext.GetSymbolName(result),
-                    extractContext.GetSymbolName(si0)) };
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
             }
             else
             {   // Int64 = ~(Int64)
-                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
-                return (extractContext, _) => new[] { string.Format(
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
+            }
+            
+            return (extractContext, _) => new[] { string.Format(
                     "{0} = ~{1}",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0)) };
-            }
         }
+    }
+
+    internal enum ShiftDirection
+    {
+        Left, Right
+    }
+
+    internal abstract class ShiftConverter : InlineNoneConverter
+    {
+        public abstract ShiftDirection Direction { get; }
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            var si1 = decodeContext.PopStack();
+            var si0 = decodeContext.PopStack();
+
+            if (si0.TargetType.IsFloatStackFriendlyType || si0.TargetType.IsByReference || !si1.TargetType.IsInt32Type)
+                throw new InvalidProgramSequenceException(
+                    "Invalid arithmetical NOT operation: Location={0}, Type0={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si0.TargetType.FriendlyName);
+
+            var result = decodeContext.PushStack(si0.TargetType);
+            
+            return (extractContext, _) => new[] { string.Format(
+                    "{0} = {1} {2} {3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    Direction == ShiftDirection.Left ? "<<" : ">>",
+                    extractContext.GetSymbolName(si1)) };
+        }
+    }
+
+    internal sealed class ShiftRightConverter : ShiftConverter
+    {
+        public override OpCode OpCode => OpCodes.Shr;
+
+        public override ShiftDirection Direction => ShiftDirection.Right;
+    }
+    
+    internal sealed class ShiftLeftConverter : ShiftConverter
+    {
+        public override OpCode OpCode => OpCodes.Shl;
+
+        public override ShiftDirection Direction => ShiftDirection.Left;
     }
 }

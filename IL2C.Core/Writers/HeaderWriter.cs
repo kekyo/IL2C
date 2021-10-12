@@ -177,6 +177,8 @@ namespace IL2C.Writers
                 twHeader.SplitLine();
                 twHeader.WriteLine("#pragma once");
                 twHeader.SplitLine();
+                twHeader.WriteLine("#include <il2c.h>");
+                twHeader.SplitLine();
 
                 // Write assembly references.
                 var assemblies = extractContext.EnumerateDeclaredTypes().

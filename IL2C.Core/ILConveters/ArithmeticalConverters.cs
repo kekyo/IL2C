@@ -234,4 +234,37 @@ namespace IL2C.ILConverters
                 ArithmeticalConverterUtilities.BinaryOperators.Rem, decodeContext);
         }
     }
+
+    internal sealed class NotConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Not;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            var si0 = decodeContext.PopStack();
+
+            if (si0.TargetType.IsFloatStackFriendlyType || si0.TargetType.IsByReference)
+                throw new InvalidProgramSequenceException(
+                    "Invalid arithmetical NOT operation: Location={0}, Type0={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si0.TargetType.FriendlyName);
+
+            if (si0.TargetType.IsInt32StackFriendlyType)
+            {
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = ~{1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0)) };
+            }
+            else
+            {   // Int64 = ~(Int64)
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = ~{1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0)) };
+            }
+        }
+    }
 }

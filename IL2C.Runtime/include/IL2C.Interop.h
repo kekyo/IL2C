@@ -1,4 +1,4 @@
-﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // IL2C - A translator for ECMA-335 CIL/MSIL to C language.
 // Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
@@ -17,22 +17,13 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using Mono.Cecil;
+#ifndef IL2C_Interop_dll_H__
+#define IL2C_Interop_dll_H__
 
-namespace IL2C.Metadata
-{
-    internal sealed class BasePathAssemblyResolver : DefaultAssemblyResolver
-    {
-        public BasePathAssemblyResolver(string basePath)
-        {
-            this.AddSearchDirectory(basePath);
-        }
+#pragma once
 
-        public override AssemblyDefinition Resolve(AssemblyNameReference name)
-        {
-            var definition = base.Resolve(name);
-            this.RegisterAssembly(definition);
-            return definition;
-        }
-    }
-}
+// IL2C.Interop.dll contains mostly usable IL2C/Invoke definitions
+// with private knowledge.
+#include <il2c.h>
+
+#endif

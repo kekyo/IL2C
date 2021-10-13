@@ -31,9 +31,11 @@ namespace IL2C.ILConverters
         public static ExpressionEmitter Prepare(
             int parameterIndex, DecodeContext decodeContext, bool isReference)
         {
+            var si = decodeContext.PopStack();
             var parameter = decodeContext.Method.Parameters[parameterIndex];
             var targetType = isReference ? parameter.TargetType.MakeByReference() : parameter.TargetType;
-            var symbol = decodeContext.PushStack(targetType);
+
+            // TODO: check target and source type
 
             return (extractContext, _) => new[] { string.Format(
                 "{0} = {1}{2}",
@@ -41,7 +43,7 @@ namespace IL2C.ILConverters
                 // NOTE: Don't check "targetType.IsByReference" instead "isReference."
                 //   Because it's maybe double encoded byref type.
                 isReference ? "&" : string.Empty,
-                extractContext.GetSymbolName(symbol)) };
+                extractContext.GetSymbolName(si)) };
         }
     }
 

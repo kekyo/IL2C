@@ -77,6 +77,18 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(si1)) };
             }
 
+            if (si0.TargetType.IsFloatStackFriendlyType &&
+                si1.TargetType.IsFloatStackFriendlyType)
+            {
+                var result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = (double){1} {2} (double){3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    oper,
+                    extractContext.GetSymbolName(si1)) };
+            }
+
             if ((si0.TargetType.IsIntPtrStackFriendlyType || !si0.TargetType.IsValueType || si0.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType) &&
                 (si1.TargetType.IsIntPtrStackFriendlyType || !si1.TargetType.IsValueType || si1.TargetType.IsByReference || si0.TargetType.IsUntypedReferenceType))
             {

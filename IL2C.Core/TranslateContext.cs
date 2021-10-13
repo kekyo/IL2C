@@ -282,6 +282,17 @@ namespace IL2C
                         rhsExpression);
                 }
             }
+            else if (rhsType.IsEnum)
+            {
+                // intValue = (int)enumValue
+                if (lhsType.IsNumericPrimitive)
+                {
+                    return string.Format(
+                        "({0}){1}",
+                        lhsType.CLanguageTypeName,
+                        rhsExpression);
+                }
+            }
             else if (rhsType.IsBooleanType)
             {
                 // intValue = boolValue  (implicitly conversion)

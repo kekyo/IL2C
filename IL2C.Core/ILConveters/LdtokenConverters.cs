@@ -33,7 +33,7 @@ namespace IL2C.ILConverters
         public override ExpressionEmitter Prepare(
             IMemberInformation member, DecodeContext decodeContext)
         {
-            // ECMA-335 III.4.17 ldtoken - load the runt ime representat ion of a metadata
+            // ECMA-335 III.4.17 ldtoken - load the runtime representation of a metadata
 
             var field = member as IFieldInformation;
             if (field != null)

@@ -360,7 +360,7 @@ namespace IL2C.Metadata
         public bool IsRequiredTraverse =>
             (this.Member.IsValueType &&
              !this.Member.IsPrimitive && !this.Member.IsPointer && !this.IsByReference && !this.IsEnum &&
-             this.Fields.Any(f => f.FieldType.IsRequiredTraverse)) ||
+             this.Fields.Where(f => f.FieldType.FriendlyName != this.Member.FullName).Any(f => f.FieldType.IsRequiredTraverse)) ||
             this.IsReferenceType;
 
         private static int InternalGetStaticSizeOfValue(ITypeInformation type) =>

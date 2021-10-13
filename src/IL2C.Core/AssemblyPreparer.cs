@@ -310,7 +310,7 @@ namespace IL2C
                 // All types
                 type => !type.IsIgnoreTranslation,
                 // The methods except type initializer.
-                method => !(method.IsConstructor && method.IsStatic));
+                method => true);
         }
     }
 }

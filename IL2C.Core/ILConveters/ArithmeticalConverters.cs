@@ -310,4 +310,46 @@ namespace IL2C.ILConverters
 
         public override ShiftDirection Direction => ShiftDirection.Left;
     }
+
+    internal sealed class ShiftRightUnConverter : ShiftConverter
+    {
+        public override OpCode OpCode => OpCodes.Shr_Un;
+
+        public override ShiftDirection Direction => ShiftDirection.Right;
+    }
+
+    internal sealed class NegConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Neg;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            var si0 = decodeContext.PopStack();
+            Metadata.ILocalVariableInformation result;
+
+            if (si0.TargetType.IsByReference)
+                throw new InvalidProgramSequenceException(
+                    "Invalid arithmetical NEG operation: Location={0}, Type0={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si0.TargetType.FriendlyName);
+
+            if (si0.TargetType.IsInt32StackFriendlyType)
+            {
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+            }
+            else if (si0.TargetType.IsInt64StackFriendlyType)
+            {   // Int64 = -(Int64)
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
+            }
+            else
+            {   // double = -(double)
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+            }
+
+            return (extractContext, _) => new[] { string.Format(
+                    "{0} = -{1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0)) };
+        }
+    }
 }

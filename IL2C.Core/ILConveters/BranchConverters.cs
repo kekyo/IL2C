@@ -241,6 +241,28 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Bgt_UnConverter : ShortInlineBrTargetConverter
+    {
+        public override OpCode OpCode => OpCodes.Bgt_Un;
+
+        public override ExpressionEmitter Prepare(
+            ICodeInformation operand, DecodeContext decodeContext)
+        {
+            return BranchExpressionUtilities.ApplyBinary(operand, ">", decodeContext);
+        }
+    }
+
+    internal sealed class Bgt_Un_sConverter : ShortInlineBrTargetConverter
+    {
+        public override OpCode OpCode => OpCodes.Bgt_Un_S;
+
+        public override ExpressionEmitter Prepare(
+            ICodeInformation operand, DecodeContext decodeContext)
+        {
+            return BranchExpressionUtilities.ApplyBinary(operand, ">", decodeContext);
+        }
+    }
+
     internal sealed class BleConverter : ShortInlineBrTargetConverter
     {
         public override OpCode OpCode => OpCodes.Ble;

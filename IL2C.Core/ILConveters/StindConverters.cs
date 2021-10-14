@@ -157,4 +157,16 @@ namespace IL2C.ILConverters
             return StindConverter_Utilities.Prepare(decodeContext);
         }
     }
+
+    // It is just a generalized Stind. C compiler handles struct copy
+    internal sealed class StobjConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Stobj;
+
+        public override ExpressionEmitter Prepare(Metadata.ITypeInformation operand, DecodeContext decodeContext)
+        {
+            // Note: note really need the operand in this case, since IL2C knows the type already
+            return StindConverter_Utilities.Prepare(decodeContext);
+        }
+    }
 }

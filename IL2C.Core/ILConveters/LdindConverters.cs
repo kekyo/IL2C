@@ -31,7 +31,7 @@ namespace IL2C.ILConverters
         {
             var siFrom = decodeContext.PopStack();
 
-            // Requre only managed refs
+            // Require only managed refs
             if (!siFrom.TargetType.IsByReference)
             {
                 throw new InvalidProgramSequenceException(
@@ -156,6 +156,18 @@ namespace IL2C.ILConverters
 
         public override ExpressionEmitter Prepare(DecodeContext decodeContext)
         {
+            return LdindConverterUtilities.Prepare(decodeContext);
+        }
+    }
+
+    // It is just a generalized Ldind. C compiler handles struct copy
+    internal sealed class LdobjConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Ldobj;
+
+        public override ExpressionEmitter Prepare(Metadata.ITypeInformation operand, DecodeContext decodeContext)
+        {
+            // Note: note really need the operand in this case, since IL2C knows the type already
             return LdindConverterUtilities.Prepare(decodeContext);
         }
     }

@@ -33,6 +33,6 @@ namespace IL2C.ILConverters
     public sealed class Switch
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string TestSwitch(int value);
+        public static extern string TestSwitch(int v);
     }
 }

@@ -40,7 +40,7 @@ namespace IL2C.ILConveters
                         var caseStr = $"case {q}: goto {labels[q]}";
                         if (q == 0) result[q] += caseStr; else result[q] = caseStr;
                     }
-                    result[result.Length - 1] = "default: }";
+                    result[result.Length - 1] = "default: ;}";
                     return result;
                 };
         }

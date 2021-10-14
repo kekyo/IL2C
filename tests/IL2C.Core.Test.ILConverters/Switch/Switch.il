@@ -1,6 +1,6 @@
 ﻿.class public IL2C.ILConverters.Switch
 {
-    .method public static string TestSwitch(int value) cil managed
+    .method public static string TestSwitch(int32 v) cil managed
     {
         .maxstack 1
         ldarg.0

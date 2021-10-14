@@ -32,7 +32,7 @@ namespace IL2C.ILConverters
             var siFrom = decodeContext.PopStack();
 
             // Require only managed refs
-            if (!siFrom.TargetType.IsByReference)
+            if (!(siFrom.TargetType.IsByReference || siFrom.TargetType.IsArray))
             {
                 throw new InvalidProgramSequenceException(
                     "Invalid managed reference: Location={0}, StackType={1}",
@@ -43,10 +43,22 @@ namespace IL2C.ILConverters
             var targetType = siFrom.TargetType.ElementType;
             var symbol = decodeContext.PushStack(targetType);
 
-            return (extractContext, _) => new[] { string.Format(
-                "{0} = *{1}",
-                extractContext.GetSymbolName(symbol),
-                extractContext.GetSymbolName(siFrom)) };
+            if (siFrom.TargetType.IsArray)
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = *(({2}*){1})",
+                    extractContext.GetSymbolName(symbol),
+                    extractContext.GetSymbolName(siFrom),
+                    targetType.CLanguageTypeName
+                    ) };
+            }
+            else
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = *{1}",
+                    extractContext.GetSymbolName(symbol),
+                    extractContext.GetSymbolName(siFrom)) };
+            }
         }
     }
 

@@ -78,7 +78,7 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(si1)) };
             }
 
-            // Double = (Float) % (Float)
+            // Double = (Float) op (Float)
             if (si0.TargetType.IsFloatStackFriendlyType && si1.TargetType.IsFloatStackFriendlyType &&
                 (binaryOperator == BinaryOperators.Rem))
             {
@@ -105,7 +105,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (Int32) + (ByRef)
-            if (si0.TargetType.IsInt32StackFriendlyType && si1.TargetType.IsByReference &&
+            if (si0.TargetType.IsInt32StackFriendlyType && (si1.TargetType.IsByReference || si1.TargetType.IsArray) &&
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);
@@ -118,7 +118,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (IntPtr) + (ByRef)
-            if (si0.TargetType.IsIntPtrStackFriendlyType && si1.TargetType.IsByReference &&
+            if (si0.TargetType.IsIntPtrStackFriendlyType && (si1.TargetType.IsByReference || si1.TargetType.IsArray) &&
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);
@@ -131,7 +131,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (ByRef) +/- (Int32|IntPtr)
-            if (si0.TargetType.IsByReference &&
+            if ((si0.TargetType.IsByReference || si0.TargetType.IsArray) &&
                 (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType) &&
                 ((binaryOperator == BinaryOperators.Add) || (binaryOperator == BinaryOperators.Sub)))
             {

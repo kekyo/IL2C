@@ -22,25 +22,50 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase(4, "Ldobj_test_int32", 0 * 4)]
-    [TestCase(3, "Ldobj_test_int32", 1 * 4)]
-    [TestCase(2, "Ldobj_test_int32", 2 * 4)]
-    [TestCase(1, "Ldobj_test_int32", 3 * 4)]
-    [TestCase(0, "Ldobj_test_int32", 4 * 4)]
+    [TestCase(4, "Ldobj_test_int32", 4)]
+    [TestCase(1, "Ldobj_test_int32", 1)]
+    [TestCase(0, "Ldobj_test_int32", 0)]
+    [TestCase(int.MinValue, "Ldobj_test_int32", int.MinValue)]
+    [TestCase(int.MaxValue, "Ldobj_test_int32", int.MaxValue)]
+
+    //[TestCase("1:2 C(3,4,5)", "Ldobj_test_PointSer", "1:2 C(3,4,5)", IncludeTypes = new[] { typeof(Point) })]
+    //[TestCase("20:20 C(255,255,255)", "Ldobj_test_PointSer", "20:20 C(255,255,255)", IncludeTypes = new[] { typeof(Point) })]
     public sealed class Ldobj
     {
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int Ldobj_test_int32i(int v, int[] vs);
+        //public struct Point
+        //{
+        //    public int X, Y;
+        //    public int R, G, B;
 
-        public static int Ldobj_test_int32(int v)
-        {
-            var TestInt32Values = new int[5];
-            TestInt32Values[0] = 4;
-            TestInt32Values[1] = 3;
-            TestInt32Values[2] = 2;
-            TestInt32Values[3] = 1;
-            TestInt32Values[4] = 0;
-            return Ldobj_test_int32i(v, TestInt32Values);
-        }
+        //    public override string ToString()
+        //    {
+        //        return $"{X}:{Y} C({R},{G},{B})";
+        //    }
+
+        //    public static Point Parse(string v)
+        //    {
+        //        var result = new Point();
+        //        var coo = v.Split(' ')[0];
+        //        result.X = Int32.Parse(coo.Split(':')[0]);
+        //        result.Y = Int32.Parse(coo.Split(':')[1]);
+        //        var col = v.Split(' ')[1].Trim(new char[] { 'C', '(', ')' });
+        //        result.R = Int32.Parse(col.Split(',')[0]);
+        //        result.G = Int32.Parse(col.Split(',')[1]);
+        //        result.B = Int32.Parse(col.Split(',')[2]);
+        //        return result;
+        //    }
+        //}
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern int Ldobj_test_int32(int v);
+
+        //[MethodImpl(MethodImplOptions.ForwardRef)]
+        //public static extern Point Ldobj_test_Point(Point v);
+
+        //public static string Ldobj_test_PointSer(string val)
+        //{
+        //    var v = Point.Parse(val);
+        //    return Ldobj_test_Point(v).ToString();
+        //}
     }
 }

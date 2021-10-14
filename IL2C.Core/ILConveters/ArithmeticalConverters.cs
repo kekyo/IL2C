@@ -105,7 +105,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (Int32) + (ByRef)
-            if (si0.TargetType.IsInt32StackFriendlyType && (si1.TargetType.IsByReference || si1.TargetType.IsArray) &&
+            if (si0.TargetType.IsInt32StackFriendlyType && (si1.TargetType.IsByReference) &&
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);
@@ -118,7 +118,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (IntPtr) + (ByRef)
-            if (si0.TargetType.IsIntPtrStackFriendlyType && (si1.TargetType.IsByReference || si1.TargetType.IsArray) &&
+            if (si0.TargetType.IsIntPtrStackFriendlyType && (si1.TargetType.IsByReference) &&
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);

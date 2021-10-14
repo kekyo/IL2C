@@ -1,19 +1,20 @@
 ﻿.class public IL2C.ILConverters.Ldobj
 {
-    .method public static int32 Ldobj_test_int32i(int32 v, int32[] vs) cil managed
+    .method public static int32 Ldobj_test_int32(int32 v) cil managed
     {
-        .maxstack 2
-        .locals init (
-            int32[] pinned int32Values
-        )
-        ldarg.1
-        stloc.0
-        ldloc.0
-        ldarg.0
-        add
-        ldc.i4.8
-        add
+        .maxstack 1
+        ldarga.s 0
         ldobj [mscorlib]System.Int32
         ret
     }
+
+    /*
+    .method public static valuetype Point Ldobj_test_Point(valuetype Point v) cil managed
+    {
+        .maxstack 1
+        ldarga.s 0
+        ldobj valuetype Point
+        ret
+    }
+    */
 }

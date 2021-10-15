@@ -22,50 +22,63 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
+    public struct Point
+    {
+        public int X, Y;
+        public int R, G, B;
+
+        public override string ToString()
+        {
+            return $"{X}:{Y} C({R},{G},{B})";
+        }
+    }
+    [TestCase(byte.MinValue, "Ldobj_test_uint8", byte.MinValue)]
+    [TestCase(byte.MaxValue, "Ldobj_test_uint8", byte.MaxValue)]
+
+    [TestCase(ushort.MinValue, "Ldobj_test_uint16", ushort.MinValue)]
+    [TestCase(ushort.MaxValue, "Ldobj_test_uint16", ushort.MaxValue)]
+    
     [TestCase(4, "Ldobj_test_int32", 4)]
     [TestCase(1, "Ldobj_test_int32", 1)]
     [TestCase(0, "Ldobj_test_int32", 0)]
     [TestCase(int.MinValue, "Ldobj_test_int32", int.MinValue)]
     [TestCase(int.MaxValue, "Ldobj_test_int32", int.MaxValue)]
 
-    //[TestCase("1:2 C(3,4,5)", "Ldobj_test_PointSer", "1:2 C(3,4,5)", IncludeTypes = new[] { typeof(Point) })]
-    //[TestCase("20:20 C(255,255,255)", "Ldobj_test_PointSer", "20:20 C(255,255,255)", IncludeTypes = new[] { typeof(Point) })]
+    [TestCase(4L, "Ldobj_test_int64", 4L)]
+    [TestCase(1L, "Ldobj_test_int64", 1L)]
+    [TestCase(0L, "Ldobj_test_int64", 0L)]
+    [TestCase(long.MinValue, "Ldobj_test_int64", long.MinValue)]
+    [TestCase(long.MaxValue, "Ldobj_test_int64", long.MaxValue)]
+
+    [TestCase(ulong.MinValue, "Ldobj_test_uint64", ulong.MinValue)]
+    [TestCase(ulong.MaxValue, "Ldobj_test_uint64", ulong.MaxValue)]
+
+    [TestCase("1:2 C(3,4,5)", "Ldobj_test_PointSer", 1, 2, 3, 4, 5, IncludeTypes = new[] { typeof(Ldobj), typeof(Point), typeof(Int32), typeof(Char), typeof(String) })]
+    [TestCase("20:20 C(255,255,255)", "Ldobj_test_PointSer", 20, 20, 255, 255, 255, IncludeTypes = new[] { typeof(Ldobj), typeof(Point), typeof(Int32), typeof(Char), typeof(String) })]
     public sealed class Ldobj
     {
-        //public struct Point
-        //{
-        //    public int X, Y;
-        //    public int R, G, B;
-
-        //    public override string ToString()
-        //    {
-        //        return $"{X}:{Y} C({R},{G},{B})";
-        //    }
-
-        //    public static Point Parse(string v)
-        //    {
-        //        var result = new Point();
-        //        var coo = v.Split(' ')[0];
-        //        result.X = Int32.Parse(coo.Split(':')[0]);
-        //        result.Y = Int32.Parse(coo.Split(':')[1]);
-        //        var col = v.Split(' ')[1].Trim(new char[] { 'C', '(', ')' });
-        //        result.R = Int32.Parse(col.Split(',')[0]);
-        //        result.G = Int32.Parse(col.Split(',')[1]);
-        //        result.B = Int32.Parse(col.Split(',')[2]);
-        //        return result;
-        //    }
-        //}
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern byte Ldobj_test_uint8(byte v);
+        
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ushort Ldobj_test_uint16(ushort v);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int Ldobj_test_int32(int v);
 
-        //[MethodImpl(MethodImplOptions.ForwardRef)]
-        //public static extern Point Ldobj_test_Point(Point v);
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern long Ldobj_test_int64(long v);
 
-        //public static string Ldobj_test_PointSer(string val)
-        //{
-        //    var v = Point.Parse(val);
-        //    return Ldobj_test_Point(v).ToString();
-        //}
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern ulong Ldobj_test_uint64(ulong v);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern Point Ldobj_test_Point(Point v);
+
+        public static string Ldobj_test_PointSer(int x, int y, int r, int g, int b)
+        {
+            var v = new Point() { X = x, Y = y, R = r, G = g, B = b };
+            return Ldobj_test_Point(v).ToString();
+        }
     }
 }

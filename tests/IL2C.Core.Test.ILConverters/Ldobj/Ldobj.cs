@@ -53,6 +53,16 @@ namespace IL2C.ILConverters
     [TestCase(ulong.MinValue, "Ldobj_test_uint64", ulong.MinValue)]
     [TestCase(ulong.MaxValue, "Ldobj_test_uint64", ulong.MaxValue)]
 
+    [TestCase(0.0F, "Ldobj_test_float", 0.0F)]
+    [TestCase(-0.001F, "Ldobj_test_float", -0.001F)]
+    [TestCase(float.MinValue, "Ldobj_test_float", float.MinValue)]
+    [TestCase(float.MaxValue, "Ldobj_test_float", float.MaxValue)]
+
+    [TestCase(0.0, "Ldobj_test_double", 0.0)]
+    [TestCase(-0.001, "Ldobj_test_double", -0.001)]
+    [TestCase(double.MinValue, "Ldobj_test_double", double.MinValue)]
+    [TestCase(double.MaxValue, "Ldobj_test_double", double.MaxValue)]
+
     [TestCase("1:2 C(3,4,5)", "Ldobj_test_PointSer", 1, 2, 3, 4, 5, IncludeTypes = new[] { typeof(Ldobj), typeof(Point), typeof(Int32), typeof(Char), typeof(String) })]
     [TestCase("20:20 C(255,255,255)", "Ldobj_test_PointSer", 20, 20, 255, 255, 255, IncludeTypes = new[] { typeof(Ldobj), typeof(Point), typeof(Int32), typeof(Char), typeof(String) })]
     public sealed class Ldobj
@@ -71,6 +81,12 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong Ldobj_test_uint64(ulong v);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern float Ldobj_test_float(float v);
+        
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern double Ldobj_test_double(double v);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern Point Ldobj_test_Point(Point v);

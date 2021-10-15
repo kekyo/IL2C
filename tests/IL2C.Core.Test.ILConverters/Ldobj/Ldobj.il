@@ -39,6 +39,22 @@
         ret
     }
     
+    .method public static float32 Ldobj_test_float(float32 v) cil managed
+    {
+        .maxstack 1
+        ldarga.s 0
+        ldobj [mscorlib]System.Single
+        ret
+    }
+    
+    .method public static float64 Ldobj_test_double(float64 v) cil managed
+    {
+        .maxstack 1
+        ldarga.s 0
+        ldobj [mscorlib]System.Double
+        ret
+    }
+    
     .method public static valuetype IL2C.ILConverters.Point Ldobj_test_Point(valuetype IL2C.ILConverters.Point v) cil managed
     {
         .maxstack 1

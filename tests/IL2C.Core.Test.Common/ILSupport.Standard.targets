@@ -78,7 +78,7 @@
     <Target Name="CoreDecompile" Inputs="@(IntermediateAssembly)" Outputs="$(ILFile)" Condition=" Exists ( @(IntermediateAssembly) ) ">
         <Message Importance="normal" Text="ILSupport: ILDasmPath = $(ILDasmPath)" />
         <PropertyGroup>
-            <ILDasm>&quot;$(ILDasmPath)&quot; /linenum /utf8 /output=&quot;$(ILFile)&quot; @(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</ILDasm>
+            <ILDasm>&quot;$(ILDasmPath)&quot; -linenum -utf8 -output=&quot;$(ILFile)&quot; @(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</ILDasm>
         </PropertyGroup>
         <Exec Command="$(ILDasm)" />
         <ItemGroup>
@@ -102,47 +102,47 @@
     <Target Name="CoreCompileIL" Inputs="@(IL)" Outputs="@(IntermediateAssembly)">
         <Message Importance="normal" Text="ILSupport: ILAsmPath = $(ILAsmPath)" />
         <PropertyGroup>
-            <ILAsm>&quot;$(ILAsmPath)&quot; /nologo /quite /output=@(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</ILAsm>
+            <ILAsm>&quot;$(ILAsmPath)&quot; -nologo -quite -output=@(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</ILAsm>
             <MergedILPath>$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','Merged.il'))</MergedILPath>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(FileAlignment)' != '' ">
-            <ILAsm>$(ILAsm) /alignment=$(FileAlignment)</ILAsm>
+            <ILAsm>$(ILAsm) -alignment=$(FileAlignment)</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(BaseAddress)' != '' ">
-            <ILAsm>$(ILAsm) /base=$(BaseAddress)</ILAsm>
+            <ILAsm>$(ILAsm) -base=$(BaseAddress)</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(OutputType)' == 'Library' ">
-            <ILAsm>$(ILAsm) /dll</ILAsm>
+            <ILAsm>$(ILAsm) -dll</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(DebugType)' == 'pdbonly' ">
             <!-- warning : Classic PDB format is not supported on CoreCLR. -->
-            <ILAsm>$(ILAsm) /debug=opt /pdbfmt=portable</ILAsm>
+            <ILAsm>$(ILAsm) -debug=opt -pdbfmt=portable</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(DebugType)' == 'impl' ">
             <!-- warning : Classic PDB format is not supported on CoreCLR. -->
-            <ILAsm>$(ILAsm) /debug=impl /pdbfmt=portable</ILAsm>
+            <ILAsm>$(ILAsm) -debug=impl -pdbfmt=portable</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(DebugType)' == 'portable' ">
             <!-- warning : Classic PDB format is not supported on CoreCLR. -->
-            <ILAsm>$(ILAsm) /debug /pdbfmt=portable</ILAsm>
+            <ILAsm>$(ILAsm) -debug -pdbfmt=portable</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(DebugType)' == 'full' ">
             <!-- warning : Classic PDB format is not supported on CoreCLR. -->
-            <ILAsm>$(ILAsm) /debug /pdbfmt=portable</ILAsm>
+            <ILAsm>$(ILAsm) -debug -pdbfmt=portable</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(Optimize)' == 'true' ">
-            <ILAsm>$(ILAsm) /optimize</ILAsm>
+            <ILAsm>$(ILAsm) -optimize</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(Platform)' == 'Itanium' ">
-            <ILAsm>$(ILAsm) /pe64 /itanium</ILAsm>
+            <ILAsm>$(ILAsm) -pe64 -itanium</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' != '' ">
-            <ILAsm>$(ILAsm) /key:"$(AssemblyOriginatorKeyFile)"</ILAsm>
+            <ILAsm>$(ILAsm) -key:"$(AssemblyOriginatorKeyFile)"</ILAsm>
         </PropertyGroup>
         <!-- Couldn't combine resources with ILAsm .NET 5.0 version.
              IL2C regression test doesn't require Win32 resources, so simply omitted.
         <PropertyGroup Condition=" Exists ( '$(ILResourceFile)' ) ">
-            <ILAsm>$(ILAsm) /resource:"$(ILResourceFile)"</ILAsm>
+            <ILAsm>$(ILAsm) -resource:"$(ILResourceFile)"</ILAsm>
         </PropertyGroup>
         -->
         <PropertyGroup Condition=" Exists ( '$(ILFile)' ) ">

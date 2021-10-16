@@ -24,6 +24,7 @@
         <DebugType>full</DebugType>
         <DebugSymbols>true</DebugSymbols>
         <Platforms>AnyCPU</Platforms>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     </PropertyGroup>
 
     <ItemGroup>

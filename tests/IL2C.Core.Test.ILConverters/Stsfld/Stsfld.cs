@@ -41,8 +41,8 @@ namespace IL2C.ILConverters
         public static string StringValue;
     }
 
-    [TestCase(true, "Bool", true, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(false, "Bool", false, IncludeTypes = new[] { typeof(Stsfld_Field) })]
+    [TestCase(true, "Boolean", true, IncludeTypes = new[] { typeof(Stsfld_Field) })]
+    [TestCase(false, "Boolean", false, IncludeTypes = new[] { typeof(Stsfld_Field) })]
     [TestCase(byte.MaxValue, "Byte", byte.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
     [TestCase(short.MaxValue, "Int16", short.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
     [TestCase(int.MaxValue, "Int32", int.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
@@ -60,7 +60,7 @@ namespace IL2C.ILConverters
     public sealed class Stsfld
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern bool Bool(bool value);
+        public static extern bool Boolean(bool value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte Byte(byte value);

@@ -34,8 +34,14 @@ namespace IL2C.ILConverters
     [TestCase("18446744073709551615", "UInt64")]
     [TestCase("2147483647", "IntPtr")]
     [TestCase("4294967295", "UIntPtr")]
-    [TestCase("3.141593", "Single")]            // Lost last 2 digits via ToString conversion.
-    [TestCase("3.14159265358979", "Double")]    // Lost last 2 digits via ToString conversion.
+#if NET50
+    [TestCase("3.1415927", "Single")]   // Lost last 1 digits via ToString conversion.
+    [TestCase("3.141592653589793", "Double")]   // Lost last 1 digits via ToString conversion.
+#else
+    // Ignore validation because .NET Framework CLR precision is poor.
+    [TestCase("3.1415927", "Single", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]   // Lost last 1 digits via ToString conversion.
+    [TestCase("3.141592653589793", "Double", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]   // Lost last 1 digits via ToString conversion.
+#endif
     [TestCase("A", "Char")]
     [TestCase("ABC", new[] { "String", "UpdateString" })]               // Translation will include UpdateString method
     [TestCase("ABC", new[] { "LocalVariable_255", "UpdateString" })]    // Translation will include UpdateString method

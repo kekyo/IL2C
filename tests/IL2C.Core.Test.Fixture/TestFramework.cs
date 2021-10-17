@@ -29,6 +29,8 @@ using NUnit.Framework;
 using IL2C.Metadata;
 using IL2C.Internal;
 
+#pragma warning disable CS0436
+
 namespace IL2C
 {
     public static class TestFramework
@@ -212,7 +214,9 @@ namespace IL2C
                     Path.Combine(
                         Path.GetDirectoryName(caseInfo.Method.DeclaringType.Assembly.Location),
                         "..", "..", "..", "..", "..",
-                        "test-artifacts", configuration));
+                        "test-artifacts",
+                        configuration,
+                        ThisAssembly.AssemblyMetadata.TargetFramework));
             while (true)
             {
                 try

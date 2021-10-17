@@ -1,8 +1,5 @@
 #!/bin/sh
 
-echo "Setup nbgv ..."
-dotnet tool install -g nbgv
-
 echo "Setup native binary toolchain ..."
 
 apt-get update -y

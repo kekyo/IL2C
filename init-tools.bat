@@ -1,6 +1,4 @@
 @echo off
-echo "Setup nbgv ..."
-dotnet tool install -g nbgv
 
 echo "Setup native binary toolchain (IL2C-toolchain-gcc4-mingw32) ..."
 

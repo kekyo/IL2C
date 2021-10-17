@@ -5,6 +5,7 @@
       <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
       <OutputType>Library</OutputType>
+      <Optimize>False</Optimize>
       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
       <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
       <GenerateDocumentationFile>false</GenerateDocumentationFile>

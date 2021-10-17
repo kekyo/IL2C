@@ -37,39 +37,39 @@ namespace IL2C.ILConverters
     public sealed class Conv_u
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr SByte(sbyte value);
+        public static extern UIntPtr SByte(sbyte value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr Int16(short value);
+        public static extern UIntPtr Int16(short value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr Int32(int value);
+        public static extern UIntPtr Int32(int value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr Int64(long value);
+        public static extern UIntPtr Int64(long value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr IntPtr(IntPtr value);
+        public static extern UIntPtr IntPtr(IntPtr value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr Byte(byte value);
+        public static extern UIntPtr Byte(byte value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr UInt16(ushort value);
+        public static extern UIntPtr UInt16(ushort value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr UInt32(uint value);
+        public static extern UIntPtr UInt32(uint value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr UInt64(ulong value);
+        public static extern UIntPtr UInt64(ulong value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr UIntPtr(UIntPtr value);
+        public static extern UIntPtr UIntPtr(UIntPtr value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr Single(float value);
+        public static extern UIntPtr Single(float value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr Double(double value);
+        public static extern UIntPtr Double(double value);
     }
 }

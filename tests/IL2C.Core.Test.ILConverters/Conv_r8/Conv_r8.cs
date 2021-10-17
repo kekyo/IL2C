@@ -45,39 +45,39 @@ namespace IL2C.ILConverters
     public sealed class Conv_r8
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float SByte(sbyte value);
+        public static extern double SByte(sbyte value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float Int16(short value);
+        public static extern double Int16(short value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float Int32(int value);
+        public static extern double Int32(int value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float Int64(long value);
+        public static extern double Int64(long value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float IntPtr(IntPtr value);
+        public static extern double IntPtr(IntPtr value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float Byte(byte value);
+        public static extern double Byte(byte value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float UInt16(ushort value);
+        public static extern double UInt16(ushort value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float UInt32(uint value);
+        public static extern double UInt32(uint value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float UInt64(ulong value);
+        public static extern double UInt64(ulong value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float UIntPtr(UIntPtr value);
+        public static extern double UIntPtr(UIntPtr value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float Single(float value);
+        public static extern double Single(float value);
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern float Double(double value);
+        public static extern double Double(double value);
     }
 }

@@ -1,8 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- ====================================================================== -->
+
+    <!-- Imported from: Microsoft.NET.Sdk.IL.targets
+        https://github.com/kekyo/IL2C/issues/100#issuecomment-944294766
+        https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/src/coreclr/.nuget/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets#L29
+    -->
+    
+    <PropertyGroup>
+        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('windows'))">win</_OSPlatform>
+        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('linux'))">linux</_OSPlatform>
+        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('osx'))">osx</_OSPlatform>
+        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('freebsd'))">freebsd</_OSPlatform>
+        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('netbsd'))">netbsd</_OSPlatform>
+        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('illumos'))">illumos</_OSPlatform>
+        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('solaris'))">solaris</_OSPlatform>
+        <_OSArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)</_OSArchitecture>
+
+        <MicrosoftNetCoreIlasmPackageRuntimeId Condition="'$(MicrosoftNetCoreIlasmPackageRuntimeId)' == ''">$(_OSPlatform)-$(_OSArchitecture.ToLower())</MicrosoftNetCoreIlasmPackageRuntimeId>
+        <!-- It's RC version, but latest stable 5.0.0 cause unknown bug (0xc0000004) occurred -->
+        <MicrosoftNETCoreILAsmVersion Condition="'$(MicrosoftNETCoreILAsmVersion)' == ''">6.0.0-rc.2.21480.5</MicrosoftNETCoreILAsmVersion>
+        <MicrosoftNetCoreIlasmPackageName>runtime.$(MicrosoftNetCoreIlasmPackageRuntimeId).microsoft.netcore.ilasm</MicrosoftNetCoreIlasmPackageName>
+        <MicrosoftNetCoreIldasmPackageName>runtime.$(MicrosoftNetCoreIlasmPackageRuntimeId).microsoft.netcore.ildasm</MicrosoftNetCoreIldasmPackageName>
+
+        <!-- If ILAsmToolPath is specified, it will be used and no packages will be restored
+         Otherwise packages will be restored and ilasm and ildasm will be referenced from their packages.  -->
+        <_IlasmDir Condition="'$(ILAsmToolPath)' != ''">$([MSBuild]::NormalizeDirectory($(ILAsmToolPath)))</_IlasmDir>
+        <_IldasmDir Condition="'$(ILAsmToolPath)' != ''">$([MSBuild]::NormalizeDirectory($(ILAsmToolPath)))</_IldasmDir>
+        <CoreCompileDependsOn Condition="'$(ILAsmToolPath)' == ''">$(CoreCompileDependsOn);ResolveIlAsmToolPaths</CoreCompileDependsOn>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(ILAsmToolPath)' == ''">
+        <_IlasmPackageReference Include="$(MicrosoftNetCoreIlasmPackageName)" Version="$(MicrosoftNETCoreILAsmVersion)" />
+        <_IldasmPackageReference Include="$(MicrosoftNetCoreIldasmPackageName)" Version="$(MicrosoftNETCoreILAsmVersion)" />
+        
+        <!-- Made NuGet package referrer likes:
+            For windows x64: runtime.win-x64.Microsoft.NETCore.ILAsm
+            For linux x64: runtime.linux-x64.Microsoft.NETCore.ILAsm
+        -->
+        <PackageReference Include="@(_IlasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
+        <PackageReference Include="@(_IldasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
+    </ItemGroup>
+    <Target Name="ResolveIlAsmToolPaths">
+        <ItemGroup>
+            <_IlasmPackageReference NativePath="$(NuGetPackageRoot)\%(Identity)\%(Version)\runtimes\$(MicrosoftNetCoreIlasmPackageRuntimeId)\native" />
+            <_IlasmSourceFiles Include="%(_IlasmPackageReference.NativePath)\**\*" />
+            <_IldasmPackageReference NativePath="$(NuGetPackageRoot)\%(Identity)\%(Version)\runtimes\$(MicrosoftNetCoreIlasmPackageRuntimeId)\native" />
+            <_IldasmSourceFiles Include="%(_IldasmPackageReference.NativePath)\**\*" />
+        </ItemGroup>
+        <Error Condition="!Exists('%(_IlasmPackageReference.NativePath)')" Text="Package %(_IlasmPackageReference.Identity)\%(_IlasmPackageReference.Version) was not restored" />
+        <Error Condition="!Exists('%(_IldasmPackageReference.NativePath)')" Text="Package %(_IldasmPackageReference.Identity)\%(_IldasmPackageReference.Version) was not restored" />
+        <PropertyGroup>
+            <_IlasmDir Condition="'$(_IlasmDir)' == '' and '%(_IlasmPackageReference.Identity)' == '$(MicrosoftNetCoreIlasmPackageName)'">%(_IlasmPackageReference.NativePath)/</_IlasmDir>
+            <_IldasmDir Condition="'$(_IldasmDir)' == '' and '%(_IldasmPackageReference.Identity)' == '$(MicrosoftNetCoreIldasmPackageName)'">%(_IldasmPackageReference.NativePath)/</_IldasmDir>
+
+            <!-- Resolved final tooling path -->
+            <ILAsmPath>$([System.IO.Path]::Combine('$(_IlasmDir)','ilasm'))</ILAsmPath>
+            <ILDasmPath>$([System.IO.Path]::Combine('$(_IldasmDir)','ildasm'))</ILDasmPath>
+        </PropertyGroup>
+    </Target>
+
+    <!-- ====================================================================== -->
+
     <!-- Modified IL Support: https://github.com/ins0mniaque/ILSupport
         My version contains combining all decompiled source code into one file.
         Because will cause too long command line arguments coming from a lot of decompiled file paths. -->
+    
     <Target Name="ProcessILAfterCompile" AfterTargets="Compile">
         <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL" />
     </Target>
@@ -13,41 +76,10 @@
         </PropertyGroup>
     </Target>
     <Target Name="CoreDecompile" Inputs="@(IntermediateAssembly)" Outputs="$(ILFile)" Condition=" Exists ( @(IntermediateAssembly) ) ">
-        <GetFrameworkSdkPath>
-            <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
-        </GetFrameworkSdkPath>
-        <Message Importance="high" Text="ILSupport: FrameworkSdkPath = $(FrameworkSdkPath)" />
+        <Message Importance="normal" Text="ILSupport: ILDasmPath = $(ILDasmPath)" />
         <PropertyGroup>
-            <ILDasm>"$(FrameworkSdkPath)bin\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
+            <ILDasm>&quot;$(ILDasmPath)&quot; -linenum -utf8 -output=&quot;$(ILFile)&quot; @(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</ILDasm>
         </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.0 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.0 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.5.1 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.5.1 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.6 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.6 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.6.1 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.6.1 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.6.2 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.6.2 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7.1 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7.1 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.7.2 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.7.2 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <PropertyGroup Condition=" Exists ( '$(FrameworkSdkPath)bin\NETFX 4.8 Tools\ildasm.exe' ) ">
-            <ILDasm>"$(FrameworkSdkPath)bin\NETFX 4.8 Tools\ildasm.exe" /nobar /linenum /utf8 /output:"$(ILFile)" @(IntermediateAssembly->'"%(FullPath)"', ' ')</ILDasm>
-        </PropertyGroup>
-        <Message Importance="high" Text="ILSupport: ILDasm = $(ILDasm)" />
         <Exec Command="$(ILDasm)" />
         <ItemGroup>
             <FileWrites Include="$(ILFile)" />
@@ -65,55 +97,67 @@
         <PropertyGroup>
             <ILSource />
         </PropertyGroup>
-        <Delete Files="@(IntermediateAssembly)" />
+        <Move SourceFiles="@(IntermediateAssembly)" DestinationFiles="@(IntermediateAssembly->'%(FullPath).orig', ' ')" OverwriteReadOnlyFiles="true" />
     </Target>
     <Target Name="CoreCompileIL" Inputs="@(IL)" Outputs="@(IntermediateAssembly)">
-        <GetFrameworkPath>
-            <Output TaskParameter="Path" PropertyName="FrameworkPath" />
-        </GetFrameworkPath>
-        <Message Importance="high" Text="ILSupport: FrameworkPath = $(FrameworkPath)" />
+        <Message Importance="normal" Text="ILSupport: ILAsmPath = $(ILAsmPath)" />
         <PropertyGroup>
-            <ILAsm>"$(FrameworkPath)\ilasm.exe" /nologo /quiet /output:@(IntermediateAssembly->'"%(FullPath)"', ' ')</ILAsm>
+            <ILAsm>&quot;$(ILAsmPath)&quot; -nologo -quite -output=@(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</ILAsm>
+            <MergedILPath>$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','Merged.il'))</MergedILPath>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(FileAlignment)' != '' ">
-            <ILAsm>$(ILAsm) /alignment=$(FileAlignment)</ILAsm>
+            <ILAsm>$(ILAsm) -alignment=$(FileAlignment)</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(BaseAddress)' != '' ">
-            <ILAsm>$(ILAsm) /base=$(BaseAddress)</ILAsm>
+            <ILAsm>$(ILAsm) -base=$(BaseAddress)</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(OutputType)' == 'Library' ">
-            <ILAsm>$(ILAsm) /dll</ILAsm>
+            <ILAsm>$(ILAsm) -dll</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(DebugType)' == 'pdbonly' ">
-            <ILAsm>$(ILAsm) /pdb</ILAsm>
+            <!-- warning : Classic PDB format is not supported on CoreCLR. -->
+            <ILAsm>$(ILAsm) -debug=opt -pdbfmt=portable</ILAsm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" '$(DebugType)' == 'impl' ">
+            <!-- warning : Classic PDB format is not supported on CoreCLR. -->
+            <ILAsm>$(ILAsm) -debug=impl -pdbfmt=portable</ILAsm>
+        </PropertyGroup>
+        <PropertyGroup Condition=" '$(DebugType)' == 'portable' ">
+            <!-- warning : Classic PDB format is not supported on CoreCLR. -->
+            <ILAsm>$(ILAsm) -debug -pdbfmt=portable</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(DebugType)' == 'full' ">
-            <ILAsm>$(ILAsm) /debug</ILAsm>
+            <!-- warning : Classic PDB format is not supported on CoreCLR. -->
+            <ILAsm>$(ILAsm) -debug -pdbfmt=portable</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(Optimize)' == 'true' ">
-            <ILAsm>$(ILAsm) /optimize</ILAsm>
+            <ILAsm>$(ILAsm) -optimize</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(Platform)' == 'Itanium' ">
-            <ILAsm>$(ILAsm) /pe64 /itanium</ILAsm>
+            <ILAsm>$(ILAsm) -pe64 -itanium</ILAsm>
         </PropertyGroup>
         <PropertyGroup Condition=" '$(AssemblyOriginatorKeyFile)' != '' ">
-            <ILAsm>$(ILAsm) /key:"$(AssemblyOriginatorKeyFile)"</ILAsm>
+            <ILAsm>$(ILAsm) -key:"$(AssemblyOriginatorKeyFile)"</ILAsm>
         </PropertyGroup>
+        <!-- Couldn't combine resources with ILAsm .NET 5.0 version.
+             IL2C regression test doesn't require Win32 resources, so simply omitted.
         <PropertyGroup Condition=" Exists ( '$(ILResourceFile)' ) ">
-            <ILAsm>$(ILAsm) /resource:"$(ILResourceFile)"</ILAsm>
+            <ILAsm>$(ILAsm) -resource:"$(ILResourceFile)"</ILAsm>
         </PropertyGroup>
+        -->
         <PropertyGroup Condition=" Exists ( '$(ILFile)' ) ">
             <ILAsm>$(ILAsm) "$(ILFile)"</ILAsm>
         </PropertyGroup>
         <ReadLinesFromFile File="%(IL.Identity)">
             <Output TaskParameter="Lines" ItemName="ILLines" />
         </ReadLinesFromFile>
-        <WriteLinesToFile File="obj\Merged.il" Lines="@(ILLines)" Overwrite="true" />
-        <Message Importance="high" Text="ILSupport: ILAsm = $(ILAsm)" />
-        <Exec Command="$(ILAsm) obj\Merged.il" />
+        <WriteLinesToFile File="$(MergedILPath)" Lines="@(ILLines)" Overwrite="true" />
+        <Message Importance="normal" Text="ILSupport: ILAsm = $(ILAsm)" />
+        <Exec Command="$(ILAsm) &quot;$(MergedILPath)&quot;" />
         <ItemGroup>
             <FileWrites Include="@(IntermediateAssembly->'%(RootDir)%(Directory)DesignTimeResolveAssemblyReferencesInput.cache', ' ')" />
         </ItemGroup>
         <Touch Files="$(ILFile)" />
+        <Message Importance="high" Text="ILSupport: Combined both C# and IL into single assembly: $(AssemblyName).dll" />
     </Target>
 </Project>

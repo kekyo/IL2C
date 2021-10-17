@@ -4,8 +4,8 @@
 	{
 		.maxstack 2
 		ldc.i4 12345
-		box [mscorlib]System.Char
-		isinst [mscorlib]System.ValueType
+		box [netstandard]System.Char
+		isinst [netstandard]System.ValueType
         brnull.s F1
         ldc.i4.1
 		ret
@@ -17,7 +17,7 @@
 	.method public static int32 SizeOf() cil managed
 	{
 		.maxstack 1
-        sizeof [mscorlib]System.Char
+        sizeof [netstandard]System.Char
         ret
 	}
 }

@@ -9,7 +9,7 @@
         ldc.i4.1
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Boolean::ToString()
+        call instance string [netstandard]System.Boolean::ToString()
         ret
     }
 
@@ -22,7 +22,7 @@
         ldc.i4.0
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Boolean::ToString()
+        call instance string [netstandard]System.Boolean::ToString()
         ret
     }
 
@@ -35,7 +35,7 @@
         ldc.i4 255
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Byte::ToString()
+        call instance string [netstandard]System.Byte::ToString()
         ret
     }
 
@@ -48,7 +48,7 @@
         ldc.i4 32767
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Int16::ToString()
+        call instance string [netstandard]System.Int16::ToString()
         ret
     }
 
@@ -61,7 +61,7 @@
         ldc.i4 2147483647
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Int32::ToString()
+        call instance string [netstandard]System.Int32::ToString()
         ret
     }
 
@@ -74,7 +74,7 @@
         ldc.i8 9223372036854775807
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Int64::ToString()
+        call instance string [netstandard]System.Int64::ToString()
         ret
     }
 
@@ -87,7 +87,7 @@
         ldc.i4 127
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.SByte::ToString()
+        call instance string [netstandard]System.SByte::ToString()
         ret
     }
 
@@ -100,7 +100,7 @@
         ldc.i4 65535
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.UInt16::ToString()
+        call instance string [netstandard]System.UInt16::ToString()
         ret
     }
 
@@ -114,7 +114,7 @@
         conv.u4
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.UInt32::ToString()
+        call instance string [netstandard]System.UInt32::ToString()
         ret
     }
 
@@ -128,7 +128,7 @@
         conv.u8
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.UInt64::ToString()
+        call instance string [netstandard]System.UInt64::ToString()
         ret
     }
     
@@ -142,7 +142,7 @@
         conv.i
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.IntPtr::ToString()
+        call instance string [netstandard]System.IntPtr::ToString()
         ret
     }
     
@@ -156,7 +156,7 @@
         conv.u
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.UIntPtr::ToString()
+        call instance string [netstandard]System.UIntPtr::ToString()
         ret
     }
 
@@ -169,7 +169,7 @@
         ldc.r4 3.14159274
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Single::ToString()
+        call instance string [netstandard]System.Single::ToString()
         ret
     }
 
@@ -182,7 +182,7 @@
         ldc.r8 3.1415926535897931
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Double::ToString()
+        call instance string [netstandard]System.Double::ToString()
         ret
     }
 
@@ -195,7 +195,7 @@
         ldc.i4.s 0x41
         stloc.s 0
         ldloca.s 0
-        call instance string [mscorlib]System.Char::ToString()
+        call instance string [netstandard]System.Char::ToString()
         ret
     }
 

@@ -28,29 +28,29 @@ namespace IL2C.RuntimeSystems
 
     // The cast failure message different between .NET CLR 4 and IL2C.
     // Because IL2C choices short sentence by unbox operator message because better footprint.
-    //   (See also "il2c_cast_failed" symbol at il2c.c)
+    //   (See also "il2c_invalid_cast_message" symbol)
 
     [Description("These tests are verified the IL2C throw some exceptions from the internal runtimes by ECMA-335 I.12.4.2.1.")]
     [TestId("ExceptionThrownByCLI")]
-    [TestCase(true, "InvalidCastExceptionFromStringToString")]
+    [TestCase(true, "InvalidCastExceptionFromStringToString", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     [TestCase(true, "InvalidCastExceptionFromInt32ToString", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     [TestCase(true, new[] { "InvalidCastExceptionFromDelegateToString", "TestTarget" }, IncludeTypes = new[] { typeof(ObjectModelInstructionsTestDelegate) }, Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromByteToByte")]
-    [TestCase(true, "InvalidCastExceptionFromByteToInt16")]
-    [TestCase(true, "InvalidCastExceptionFromByteToInt32")]
-    [TestCase(true, "InvalidCastExceptionFromByteToInt64")]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToByte")]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToInt16")]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToInt32")]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToInt64")]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToByte")]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToInt16")]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToInt32")]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToInt64")]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToByte")]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToInt16")]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToInt32")]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToInt64")]
+    [TestCase(true, "InvalidCastExceptionFromByteToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromByteToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromByteToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromByteToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt16ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt16ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt16ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt16ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt32ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt32ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt32ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt32ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt64ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt64ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt64ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+    [TestCase(true, "InvalidCastExceptionFromInt64ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     public sealed class InvalidCastExceptions
     {
         // These cases become from ECMA-335 I.12.4.2.1 - Exceptions thrown by the CLI - Object Model Instructions

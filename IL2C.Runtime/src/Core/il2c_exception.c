@@ -236,7 +236,8 @@ il2c_noreturn__ void il2c_throw_nullreferenceexception__(void)
 
 // NOTE: Hmm, the unbox failed message different to the castclass opcode...
 //   IL2C choices short sentence by unbox operator message because better footprint.
-//   .NET 4 castclass message format: "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
+//   .NET Framework 4 or upper castclass message format:
+//      "Unable to cast object of type 'Foo.Bar' to type 'System.String'."
 IL2C_CONST_STRING(il2c_invalid_cast_message, L"Specified cast is not valid.");
 
 il2c_noreturn__ void il2c_throw_invalidcastexception__(void)

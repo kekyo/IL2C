@@ -35,9 +35,10 @@ jobs:
       run: init-tools.bat
       shell: cmd
     - name: Install dependencies
-      run: dotnet restore il2c.sln
-      run: dotnet restore samples/GettingStartedIL2C/GettingStartedIL2C.sln
-      run: dotnet restore samples/Calculator/Calculator.sln
+      run: |
+        dotnet restore il2c.sln
+        dotnet restore samples/GettingStartedIL2C/GettingStartedIL2C.sln
+        dotnet restore samples/Calculator/Calculator.sln
     - name: Build runtime library
       run: build-runtime.bat $(buildConfiguration)
       shell: cmd

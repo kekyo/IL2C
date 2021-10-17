@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE "${CONFIGURATION}")
 
 set(CMAKE_SYSTEM_NAME Generic)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused -fdata-sections -ffunction-sections -Wl,--gc-sections")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused -fdata-sections -ffunction-sections -Wl,--gc-sections -pthread")
 
 if("${CONFIGURATION}" STREQUAL "Release")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Ofast -flto -fomit-frame-pointer -march=native -DNDEBUG")

@@ -87,6 +87,7 @@
         </ItemGroup>
         <PropertyGroup>
             <ILSource>$([System.IO.File]::ReadAllText($(ILFile)))</ILSource>
+            <!-- Replace forwardref declaration to real il body -->
             <Replacement>// method ${method} forwardref removed for IL import</Replacement>
             <Pattern>\.method [^{}]+ cil managed forwardref[^}]+} // end of method (?&lt;method&gt;[^ \r\t\n]+)</Pattern>
             <ILSource>$([System.Text.RegularExpressions.Regex]::Replace($(ILSource), $(Pattern), $(Replacement)))</ILSource>
@@ -151,7 +152,13 @@
         <ReadLinesFromFile File="%(IL.Identity)">
             <Output TaskParameter="Lines" ItemName="ILLines" />
         </ReadLinesFromFile>
-        <WriteLinesToFile File="$(MergedILPath)" Lines="@(ILLines)" Overwrite="true" />
+
+        <!-- Replace '[netstandard]` to `[mscorlib]` is build target is .NET Framework. -->
+        <WriteLinesToFile Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+                          File="$(MergedILPath)" Lines="@(ILLines->Replace('[netstandard]','[mscorlib]'))" Overwrite="true" />
+        <WriteLinesToFile Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'"
+                          File="$(MergedILPath)" Lines="@(ILLines->Replace('[mscorlib]','[netstandard]'))" Overwrite="true" />
+        
         <Message Importance="normal" Text="ILSupport: ILAsm = $(ILAsm)" />
         <Exec Command="$(ILAsm) &quot;$(MergedILPath)&quot;" />
         <ItemGroup>

@@ -132,7 +132,7 @@ namespace IL2C
                             }
                             else
                             {
-                                exprs.Add(() => definitions[fxd]());
+                                exprs.Add(() => definitions.TryGetValue(fxd, out var value) ? value() : string.Empty);
                             }
                             state = 0;
                             index++;

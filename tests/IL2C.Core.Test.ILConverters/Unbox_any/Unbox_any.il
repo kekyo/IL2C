@@ -4,7 +4,7 @@
     {
         .maxstack 1
         ldarg.0
-        unbox.any [mscorlib]System.Int32
+        unbox.any [netstandard]System.Int32
         ret
     }
 }

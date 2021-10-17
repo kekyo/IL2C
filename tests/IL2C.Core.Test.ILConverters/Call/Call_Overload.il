@@ -4,7 +4,7 @@
 	{
 		.maxstack 1
         newobj instance void class IL2C.ILConverters.Call_Overload::.ctor()
-        call instance string [mscorlib]System.Object::ToString()
+        call instance string [netstandard]System.Object::ToString()
 		ret
 	}
 

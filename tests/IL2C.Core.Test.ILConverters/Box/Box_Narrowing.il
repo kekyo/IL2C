@@ -4,7 +4,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [mscorlib]System.Byte
+        box [netstandard]System.Byte
         ret
     }
 
@@ -12,7 +12,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [mscorlib]System.Int16
+        box [netstandard]System.Int16
         ret
     }
 
@@ -20,7 +20,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [mscorlib]System.Boolean
+        box [netstandard]System.Boolean
         ret
     }
 
@@ -28,7 +28,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [mscorlib]System.Char
+        box [netstandard]System.Char
         ret
     }
 
@@ -36,7 +36,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [mscorlib]System.UInt32
+        box [netstandard]System.UInt32
         ret
     }
 }

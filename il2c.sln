@@ -7,8 +7,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.github\workflows\build-linux.yaml = .github\workflows\build-linux.yaml
 		build-runtime.bat = build-runtime.bat
 		build-runtime.sh = build-runtime.sh
+		.github\workflows\build-windows.yaml = .github\workflows\build-windows.yaml
 		il2c.sln.licenseheader = il2c.sln.licenseheader
 		init-tools.bat = init-tools.bat
 		init-tools.sh = init-tools.sh

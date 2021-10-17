@@ -9,7 +9,7 @@
 
         ldstr "ABC"
         ldstr "DEF"
-        call string [mscorlib]System.String::Concat(string, string)
+        call string [netstandard]System.String::Concat(string, string)
         newobj instance void IL2C.RuntimeSystems.ObjRefInsideObjRefType::.ctor(string)
         stloc.0
 
@@ -19,8 +19,8 @@
         pop
         pop
 
-        call void [mscorlib]System.GC::Collect()
-        call void [mscorlib]System.GC::WaitForPendingFinalizers()
+        call void [netstandard]System.GC::Collect()
+        call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
         ldfld string IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
@@ -37,7 +37,7 @@
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF"
-        call string [mscorlib]System.String::Concat(string, string)
+        call string [netstandard]System.String::Concat(string, string)
         call instance void IL2C.RuntimeSystems.ObjRefInsideValueTypeType::.ctor(string)
 
         // Release concat string from the evaluation stack
@@ -46,8 +46,8 @@
         pop
         pop
 
-        call void [mscorlib]System.GC::Collect()
-        call void [mscorlib]System.GC::WaitForPendingFinalizers()
+        call void [netstandard]System.GC::Collect()
+        call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
         ldfld string IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
@@ -63,7 +63,7 @@
 
         ldstr "ABC"
         ldstr "DEF"
-        call string [mscorlib]System.String::Concat(string, string)
+        call string [netstandard]System.String::Concat(string, string)
         newobj instance void IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::.ctor(string)
         stloc.0
 
@@ -73,8 +73,8 @@
         pop
         pop
 
-        call void [mscorlib]System.GC::Collect()
-        call void [mscorlib]System.GC::WaitForPendingFinalizers()
+        call void [netstandard]System.GC::Collect()
+        call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
         ldflda valuetype IL2C.RuntimeSystems.ObjRefInsideValueTypeType IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::Value
@@ -92,7 +92,7 @@
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF"
-        call string [mscorlib]System.String::Concat(string, string)
+        call string [netstandard]System.String::Concat(string, string)
         call instance void IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::.ctor(string)
 
         // Release concat string from the evaluation stack
@@ -101,8 +101,8 @@
         pop
         pop
 
-        call void [mscorlib]System.GC::Collect()
-        call void [mscorlib]System.GC::WaitForPendingFinalizers()
+        call void [netstandard]System.GC::Collect()
+        call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloca.s 0
         ldfld class IL2C.RuntimeSystems.ObjRefInsideObjRefType IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::Value
@@ -120,13 +120,13 @@
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF1"
-        call string [mscorlib]System.String::Concat(string, string)
+        call string [netstandard]System.String::Concat(string, string)
         ldstr "ABC"
         ldstr "DEF2"
-        call string [mscorlib]System.String::Concat(string, string)
+        call string [netstandard]System.String::Concat(string, string)
         ldstr "ABC"
         ldstr "DEF3"
-        call string [mscorlib]System.String::Concat(string, string)
+        call string [netstandard]System.String::Concat(string, string)
         call instance void IL2C.RuntimeSystems.MultipleInsideValueTypeType::.ctor(string, string, string)
 
         // Release concat string from the evaluation stack
@@ -139,8 +139,8 @@
         pop
         pop
 
-        call void [mscorlib]System.GC::Collect()
-        call void [mscorlib]System.GC::WaitForPendingFinalizers()
+        call void [netstandard]System.GC::Collect()
+        call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldarg.0
         ldc.i4.0

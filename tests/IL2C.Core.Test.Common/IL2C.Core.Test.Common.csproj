@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net45</TargetFramework>
+        <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
         <OutputType>Library</OutputType>

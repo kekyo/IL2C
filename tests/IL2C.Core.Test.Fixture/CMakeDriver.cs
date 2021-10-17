@@ -26,6 +26,7 @@ namespace IL2C
 {
     internal static class CMakeDriver
     {
+#if false
         public static async Task<string> BuildAsync(
             string binPath, string configuration, string sourcePath, string il2cRuntimePath)
         {
@@ -95,22 +96,28 @@ namespace IL2C
 
             return testLog;
         }
-
+#else
         // FASTER than cmake: It's direct gcc driver with self-parsing cmake configuration.
-        public static async Task<string> BuildDirectlyAsync(
+        public static async Task<string> BuildAsync(
             string binPath, string configuration, string sourcePath, string il2cRuntimePath)
         {
+            var isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
+
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "build");
-            var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+            var executablePath = Path.Combine(
+                outPath,
+                Path.GetFileNameWithoutExtension(sourcePath) + (isWindows ? ".exe" : string.Empty));
 
             var currentListDir = Path.GetFullPath(
                 Path.Combine(il2cRuntimePath, "cmake"));
             var dict = await CMakeListsSimpleParser.ExtractDefinitionsAsync(
-                Path.Combine(currentListDir, "gcc4-win-mingw32.cmake"),
+                isWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
+                    Path.Combine(currentListDir, "gcc4-win-mingw32.cmake") :
+                    Path.Combine(currentListDir, "gcc-linux.cmake"),
                 new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
                     { "Configuration", configuration },
-                    { "Platform", "mingw32" },
+                    { "Platform", isWindows ? "mingw32" : "x86_64" },   // DIRTY: `uname -m` on Ubuntu 20.04
                     { "CMAKE_CURRENT_LIST_DIR", currentListDir }
                 });
 
@@ -131,7 +138,7 @@ namespace IL2C
             // Step1: Execute gcc
             var (gccExitCode, gccLog) = await TestUtilities.ExecuteAsync(
                 outPath, new[] { binPath },
-                Path.Combine(binPath, "gcc.exe"),
+                Path.Combine(binPath, isWindows ? "gcc.exe" : "gcc"),
                 $"-I{basePath}",
                 incDir,
                 libDir,
@@ -156,5 +163,6 @@ namespace IL2C
 
             return testLog;
         }
+#endif
     }
 }

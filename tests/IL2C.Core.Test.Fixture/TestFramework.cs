@@ -413,7 +413,7 @@ namespace IL2C
             string sanitized = null;
             try
             {
-                var executedResult = await CMakeDriver.BuildDirectlyAsync(
+                var executedResult = await CMakeDriver.BuildAsync(
                     binPath,
                     configuration,
                     sourcePath,

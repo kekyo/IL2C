@@ -1,0 +1,60 @@
+name: Linux
+
+on:
+  push:
+    branches:
+    - master
+    - devel
+  pull_request:
+    branches:
+    - master
+    - devel
+  workflow_dispatch:
+    branches:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Setup .NET Core 2.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.811
+    - name: Setup .NET Core 3.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.404
+    - name: Setup .NET 5
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.100
+    - name: Initialize tools
+      run: init-tools.sh
+      shell: bash
+    - name: Install dependencies
+      run: dotnet restore il2c.sln
+#      run: dotnet restore samples/GettingStartedIL2C/GettingStartedIL2C.sln
+#      run: dotnet restore samples/Calculator/Calculator.sln
+    - name: Build runtime library
+      run: build-runtime.sh $(buildConfiguration)
+      shell: bash
+    - name: Build il2c
+      run: dotnet build --configuration $(buildConfiguration) --no-restore -p:BuildIdentifier="$(Build.BuildId)" -p:Platform="Any CPU" il2c.sln
+#    - name: Build GettingStartedIL2C-x86
+#      run: dotnet build --configuration $(buildConfiguration) --no-restore -p:BuildIdentifier="$(Build.BuildId)" -p:Platform=x86 samples/GettingStartedIL2C/GettingStartedIL2C.sln
+#    - name: Build GettingStartedIL2C-x64
+#      run: dotnet build --configuration $(buildConfiguration) --no-restore -p:BuildIdentifier="$(Build.BuildId)" -p:Platform=x64 samples/GettingStartedIL2C/GettingStartedIL2C.sln
+#    - name: Build Calculator-x86
+#      run: dotnet build --configuration $(buildConfiguration) --no-restore -p:BuildIdentifier="$(Build.BuildId)" -p:Platform=x86 samples/Calculator/Calculator.sln
+#    - name: Build Calculator-x64
+#      run: dotnet build --configuration $(buildConfiguration) --no-restore -p:BuildIdentifier="$(Build.BuildId)" -p:Platform=x64 samples/Calculator/Calculator.sln
+    - name: Build Calculator-CMake-mingw32
+      run: build.sh $(buildConfiguration)
+      shell: bash
+      working-directory: "samples/Calculator/Calculator.CMake"
+    - name: Test il2c
+      run: dotnet test --no-restore --verbosity normal --configuration $(buildConfiguration) --no-restore -p:BuildIdentifier="$(Build.BuildId)" -p:Platform=x64 -p:CITest=True "tests/IL2C.Core.Test.Fixture/bin/$(buildConfiguration)/**/IL2C.Core.Test.Fixture.dll"
+      timeout-minutes: 10

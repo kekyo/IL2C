@@ -137,8 +137,8 @@ namespace IL2C
 
             // Step1: Execute gcc
             var (gccExitCode, gccLog) = await TestUtilities.ExecuteAsync(
-                outPath, new[] { binPath },
-                Path.Combine(binPath, isWindows ? "gcc.exe" : "gcc"),
+                outPath, isWindows ? new[] { binPath } : Array.Empty<string>(),
+                isWindows ? Path.Combine(binPath, "gcc.exe") : "gcc",   // NOT windows: uses system default gcc.
                 $"-I{basePath}",
                 incDir,
                 libDir,

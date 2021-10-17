@@ -30,9 +30,16 @@ namespace IL2C
         public static async Task<string> BuildAsync(
             string binPath, string configuration, string sourcePath, string il2cRuntimePath)
         {
+            var isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
+
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "build");
-            var executablePath = Path.Combine(outPath, Path.GetFileNameWithoutExtension(sourcePath) + ".exe");
+            var executablePath = Path.Combine(
+                outPath,
+                Path.GetFileNameWithoutExtension(sourcePath) + (isWindows ? ".exe" : string.Empty));
+
+            var targetCMakeScriptName = isWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
+                "gcc4-win-mingw32.cmake" : "gcc-linux.cmake";
 
             // Step1: Generate ninja script by cmake.
             if (!Directory.Exists(outPath))
@@ -47,8 +54,15 @@ namespace IL2C
                     var cmakeLog = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
                     {
                         var (exitCode, log) = await TestUtilities.ExecuteAsync(
-                            outPath, new[] { binPath },
-                            Path.Combine(binPath, "cmake.exe"), "-G", "Ninja", "-DCMAKE_MAKE_PROGRAM=ninja.exe", "-DPLATFORM=mingw32", $"-DCONFIGURATION={configuration}", "..");
+                            outPath, isWindows ? new[] { binPath } : Array.Empty<string>(),
+                            isWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
+                            "-G",
+                            "Ninja",
+                            isWindows ? "-DCMAKE_MAKE_PROGRAM=ninja.exe" : "-DCMAKE_MAKE_PROGRAM=ninja",
+                            isWindows ? "-DPLATFORM=mingw32" : "-DPLATFORM=x86_64",
+                            $"-DCONFIGURATION={configuration}",
+                            $"-DCMAKE_TARGET_SCRIPT_NAME={targetCMakeScriptName}",
+                            "..");
                         if (exitCode != 0)
                         {
                             throw new Exception("cmake [ExitCode=" + exitCode + "]: " + log);
@@ -73,8 +87,11 @@ namespace IL2C
             var cmakeNinjaLog = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {
                 var (exitCode, log) = await TestUtilities.ExecuteAsync(
-                    outPath, new[] { binPath },
-                    Path.Combine(binPath, "cmake.exe"), "--build", ".", "-j");
+                    outPath, isWindows ? new[] { binPath } : Array.Empty<string>(),
+                    isWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
+                    "--build",
+                    ".",
+                    "-j");
                 if (exitCode != 0)
                 {
                     throw new Exception("cmake [ninja] [ExitCode=" + exitCode + "]: " + log);
@@ -111,14 +128,15 @@ namespace IL2C
 
             var currentListDir = Path.GetFullPath(
                 Path.Combine(il2cRuntimePath, "cmake"));
+            var targetCMakeScriptName = isWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
+                "gcc4-win-mingw32.cmake" : "gcc-linux.cmake";
             var dict = await CMakeListsSimpleParser.ExtractDefinitionsAsync(
-                isWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
-                    Path.Combine(currentListDir, "gcc4-win-mingw32.cmake") :
-                    Path.Combine(currentListDir, "gcc-linux.cmake"),
+                Path.Combine(currentListDir, targetCMakeScriptName),
                 new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
                     { "Configuration", configuration },
                     { "Platform", isWindows ? "mingw32" : "x86_64" },   // DIRTY: `uname -m` on Ubuntu 20.04
-                    { "CMAKE_CURRENT_LIST_DIR", currentListDir }
+                    { "CMAKE_CURRENT_LIST_DIR", currentListDir },
+                    { "CMAKE_TARGET_SCRIPT_NAME", targetCMakeScriptName },
                 });
 
             var incDir = dict.TryGetValue("INCDIR", out var id) ? id : string.Empty;

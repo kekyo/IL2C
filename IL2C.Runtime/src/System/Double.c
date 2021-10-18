@@ -7,7 +7,10 @@ System_String* System_Double_ToString(double* this__)
 {
     wchar_t buffer[26];
 
-    il2c_snwprintf(buffer, 26, L"%.15g", *this__);
+    // In .NET Framework CLR, the double value string precision is 15 digits,
+    // but .NET 5.0 CLR is 16 digits.
+    // IL2C runtime adjusted to .NET 5.0.
+    il2c_snwprintf(buffer, 26, L"%.16g", *this__);
     return il2c_new_string(buffer);
 }
 

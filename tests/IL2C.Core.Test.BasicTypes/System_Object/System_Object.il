@@ -4,7 +4,7 @@
 	{
 		.maxstack 2
 		ldarg.0
-		isinst [mscorlib]System.ValueType
+		isinst [netstandard]System.ValueType
         brnull.s F1
         ldc.i4.1
 		ret
@@ -17,7 +17,7 @@
 	{
 		.maxstack 1
         ldarg.0
-        call instance string [mscorlib]System.Object::ToString()    // non virtual call
+        call instance string [netstandard]System.Object::ToString()    // non virtual call
         ret
 	}
 
@@ -25,26 +25,26 @@
 	{
 		.maxstack 1
         ldarg.0
-        call instance class [mscorlib]System.Type [mscorlib]System.Object::GetType()
-        callvirt instance string [mscorlib]System.Type::get_FullName()
+        call instance class [netstandard]System.Type [netstandard]System.Object::GetType()
+        callvirt instance string [netstandard]System.Type::get_FullName()
         ret
 	}
 
 	.method public static bool RefEquals_Same() cil managed
 	{
 		.maxstack 2
-        newobj instance void class [mscorlib]System.Object::.ctor()
+        newobj instance void class [netstandard]System.Object::.ctor()
         dup
-        call bool [mscorlib]System.Object::ReferenceEquals(object, object)
+        call bool [netstandard]System.Object::ReferenceEquals(object, object)
         ret
 	}
 
 	.method public static bool RefEquals_NotSame() cil managed
 	{
 		.maxstack 2
-        newobj instance void class [mscorlib]System.Object::.ctor()
-        newobj instance void class [mscorlib]System.Object::.ctor()
-        call bool [mscorlib]System.Object::ReferenceEquals(object, object)
+        newobj instance void class [netstandard]System.Object::.ctor()
+        newobj instance void class [netstandard]System.Object::.ctor()
+        call bool [netstandard]System.Object::ReferenceEquals(object, object)
         ret
 	}
 }

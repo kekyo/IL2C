@@ -30,7 +30,7 @@ namespace IL2C.ILConverters
     [TestCase((ulong)12345, "Int64", 12345L)]
     [TestCase(unchecked((ulong)-45678L), "Int64", -45678L)]
     [TestCase((ulong)12345, "IntPtr", 12345)]
-    [TestCase(unchecked((ulong)(uint)-45678), "IntPtr", -45678)]
+    //[TestCase(unchecked((ulong)(uint)-45678), "IntPtr", -45678)]  // Different result on both 32/64bit test environment
     [TestCase((ulong)123, "SByte", (sbyte)123)]
     [TestCase(unchecked((ulong)(uint)-123), "SByte", (sbyte)-123)]
     [TestCase((ulong)12345, "UInt16", (ushort)12345)]

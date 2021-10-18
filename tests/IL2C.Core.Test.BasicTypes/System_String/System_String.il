@@ -4,7 +4,7 @@
 	{
 		.maxstack 2
 		ldstr "ABC"
-		isinst [mscorlib]System.ValueType
+		isinst [netstandard]System.ValueType
         brnull.s F1
         ldc.i4.1
 		ret
@@ -17,7 +17,7 @@
 	{
 		.maxstack 1
         ldarg.0
-        call instance string [mscorlib]System.String::ToString()
+        call instance string [netstandard]System.String::ToString()
         ret
 	}
 
@@ -26,7 +26,7 @@
 		.maxstack 2
         ldarg.0
         ldarg.1
-        call instance bool [mscorlib]System.String::Equals(string)
+        call instance bool [netstandard]System.String::Equals(string)
         ret
 	}
 }

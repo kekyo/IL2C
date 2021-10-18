@@ -22,6 +22,7 @@ using System;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConverters
 {
@@ -275,7 +276,7 @@ namespace IL2C.ILConverters
     {
         public abstract ShiftDirection Direction { get; }
 
-        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        public ExpressionEmitter Prepare(DecodeContext decodeContext, Func<ILocalVariableInformation, string> cast)
         {
             var si1 = decodeContext.PopStack();
             var si0 = decodeContext.PopStack();
@@ -287,13 +288,26 @@ namespace IL2C.ILConverters
                     si0.TargetType.FriendlyName);
 
             var result = decodeContext.PushStack(si0.TargetType);
-            
-            return (extractContext, _) => new[] { string.Format(
+
+            if (cast == null)
+            {
+                return (extractContext, _) => new[] { string.Format(
                     "{0} = {1} {2} {3}",
                     extractContext.GetSymbolName(result),
                     extractContext.GetSymbolName(si0),
                     Direction == ShiftDirection.Left ? "<<" : ">>",
                     extractContext.GetSymbolName(si1)) };
+            }
+            else
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = ({4}){1} {2} {3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    Direction == ShiftDirection.Left ? "<<" : ">>",
+                    extractContext.GetSymbolName(si1),
+                    cast(si0)) };
+            }
         }
     }
 
@@ -302,6 +316,11 @@ namespace IL2C.ILConverters
         public override OpCode OpCode => OpCodes.Shr;
 
         public override ShiftDirection Direction => ShiftDirection.Right;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            return Prepare(decodeContext, si => si.TargetType.IsInt32StackFriendlyType ? "int32_t" : "int64_t");
+        }
     }
     
     internal sealed class ShiftLeftConverter : ShiftConverter
@@ -309,6 +328,11 @@ namespace IL2C.ILConverters
         public override OpCode OpCode => OpCodes.Shl;
 
         public override ShiftDirection Direction => ShiftDirection.Left;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            return Prepare(decodeContext, null);
+        }
     }
 
     internal sealed class ShiftRightUnConverter : ShiftConverter
@@ -316,6 +340,11 @@ namespace IL2C.ILConverters
         public override OpCode OpCode => OpCodes.Shr_Un;
 
         public override ShiftDirection Direction => ShiftDirection.Right;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            return Prepare(decodeContext, si => si.TargetType.IsInt32StackFriendlyType ? "uint32_t" : "uint64_t");
+        }
     }
 
     internal sealed class NegConverter : InlineNoneConverter

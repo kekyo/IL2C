@@ -1,5 +1,4 @@
 name: Linux
-
 on:
   push:
     branches:
@@ -11,11 +10,13 @@ on:
     - devel
   workflow_dispatch:
     branches:
-
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         buildConfiguration: [Debug, Release]
     env:

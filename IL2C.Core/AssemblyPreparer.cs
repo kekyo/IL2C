@@ -321,7 +321,7 @@ namespace IL2C
                 translateContext,
                 // All types
                 type => true,
-                // The methods except type initializer.
+                // All methods
                 method => true);
         }
     }

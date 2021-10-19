@@ -29,20 +29,16 @@ namespace IL2C.ILConverters
     internal static class StargConverterUtilities
     {
         public static ExpressionEmitter Prepare(
-            int parameterIndex, DecodeContext decodeContext, bool isReference)
+            int parameterIndex, DecodeContext decodeContext)
         {
             var si = decodeContext.PopStack();
             var parameter = decodeContext.Method.Parameters[parameterIndex];
-            var targetType = isReference ? parameter.TargetType.MakeByReference() : parameter.TargetType;
 
             // TODO: check target and source type
 
             return (extractContext, _) => new[] { string.Format(
-                "{0} = {1}{2}",
+                "{0} = {1}",
                 parameter.ParameterName,
-                // NOTE: Don't check "targetType.IsByReference" instead "isReference."
-                //   Because it's maybe double encoded byref type.
-                isReference ? "&" : string.Empty,
                 extractContext.GetSymbolName(si)) };
         }
     }
@@ -53,7 +49,7 @@ namespace IL2C.ILConverters
 
         public override ExpressionEmitter Prepare(VariableInformation operand, DecodeContext decodeContext)
         {
-            return StargConverterUtilities.Prepare(operand.Index, decodeContext, false);
+            return StargConverterUtilities.Prepare(operand.Index, decodeContext);
         }
     }
 
@@ -63,7 +59,7 @@ namespace IL2C.ILConverters
 
         public override ExpressionEmitter Prepare(VariableInformation operand, DecodeContext decodeContext)
         {
-            return StargConverterUtilities.Prepare(operand.Index, decodeContext, false);
+            return StargConverterUtilities.Prepare(operand.Index, decodeContext);
         }
     }
 }

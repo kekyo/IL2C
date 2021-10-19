@@ -34,6 +34,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.100
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
     - name: Initialize tools
       run: init-tools.bat
       shell: cmd
@@ -46,15 +48,15 @@ jobs:
       run: build-runtime.bat ${{env.buildConfiguration}}
       shell: cmd
     - name: Build il2c
-      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="Any CPU" il2c.sln
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="Any CPU" -maxCpuCount il2c.sln
     - name: Build GettingStartedIL2C-x86
-      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples\GettingStartedIL2C\GettingStartedIL2C.sln
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
     - name: Build GettingStartedIL2C-x64
-      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples\GettingStartedIL2C\GettingStartedIL2C.sln
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
     - name: Build Calculator-x86
-      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples\Calculator\Calculator.sln
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
     - name: Build Calculator-x64
-      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples\Calculator\Calculator.sln
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\Calculator\Calculator.sln
     - name: Build Calculator-CMake-mingw32
       run: build.bat ${{env.buildConfiguration}}
       shell: cmd

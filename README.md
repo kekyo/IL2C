@@ -120,7 +120,7 @@ Under Apache v2.
  conference
   * [Session video (Japanese)](http://bit.ly/2DiaoKZ)
   
-* Polish notation calculator:  [Minimum, but useful impls for "Win32", "UEFI" and "M5Stack(ESP32)"](samples/Calculator/)
+* Polish notation calculator: [Minimum, but useful impls for "Win32", "UEFI" and "M5Stack(ESP32)"](samples/Calculator/)
   ![Calculator.M5Stack](images/Calculator.M5Stack.jpg)
 
 * Slide: [How to make the calculator / Making archive IL2C](https://www.slideshare.net/kekyo/how-to-make-the-calculator)

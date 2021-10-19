@@ -177,7 +177,10 @@ namespace IL2C
         public static async Task<IReadOnlyDictionary<string, string>> ExtractDefinitionsAsync(
             string cmakeListsPath, IReadOnlyDictionary<string, string> predefinedDefinitions)
         {
-            using (var fs = new FileStream(cmakeListsPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var fs = new FileStream(
+                cmakeListsPath,
+                FileMode.Open, FileAccess.Read, FileShare.ReadWrite,
+                65536, true))
             {
                 var tr = new StreamReader(fs, Encoding.UTF8, true);
                 var definitions = predefinedDefinitions.ToDictionary(

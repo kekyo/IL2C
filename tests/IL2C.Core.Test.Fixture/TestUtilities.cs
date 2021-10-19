@@ -236,7 +236,10 @@ namespace IL2C
                     {
                     }
                 }
-                return (Stream)new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true);
+                return (Stream)new FileStream(
+                    path,
+                    FileMode.Create, FileAccess.ReadWrite, FileShare.None,
+                    65536, true);
             });
 
         public static async Task WriteTextFileAsync(

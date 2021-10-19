@@ -4,7 +4,7 @@
 	{
 		.maxstack 1
         newobj instance void class IL2C.ILConverters.Callvirt_Derived3_Newslot::.ctor()
-        callvirt instance string [mscorlib]System.Object::ToString()
+        callvirt instance string [netstandard]System.Object::ToString()
 		ret
 	}
 

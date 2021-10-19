@@ -7,7 +7,10 @@ System_String* System_Single_ToString(float* this__)
 {
     wchar_t buffer[16];
 
-    il2c_snwprintf(buffer, 16, L"%.7g", *this__);
+    // In .NET Framework CLR, the single value string precision is 7 digits,
+    // but .NET 5.0 CLR is 8 digits.
+    // IL2C runtime adjusted to .NET 5.0.
+    il2c_snwprintf(buffer, 16, L"%.8g", *this__);
     return il2c_new_string(buffer);
 }
 

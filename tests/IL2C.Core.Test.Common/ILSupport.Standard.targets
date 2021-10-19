@@ -9,16 +9,9 @@
     -->
     
     <PropertyGroup>
-        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('windows'))">win</_OSPlatform>
-        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('linux'))">linux</_OSPlatform>
-        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('osx'))">osx</_OSPlatform>
-        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('freebsd'))">freebsd</_OSPlatform>
-        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('netbsd'))">netbsd</_OSPlatform>
-        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('illumos'))">illumos</_OSPlatform>
-        <_OSPlatform Condition="$([MSBuild]::IsOSPlatform('solaris'))">solaris</_OSPlatform>
-        <_OSArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)</_OSArchitecture>
-
-        <MicrosoftNetCoreIlasmPackageRuntimeId Condition="'$(MicrosoftNetCoreIlasmPackageRuntimeId)' == ''">$(_OSPlatform)-$(_OSArchitecture.ToLower())</MicrosoftNetCoreIlasmPackageRuntimeId>
+        <_runtime>$(NETCoreSdkPortableRuntimeIdentifier)</_runtime>
+        <_runtime Condition="'$(_runtime)' == ''">$(NETCoreSdkRuntimeIdentifier)</_runtime>
+        <MicrosoftNetCoreIlasmPackageRuntimeId Condition="'$(MicrosoftNetCoreIlasmPackageRuntimeId)' == ''">$(_runtime)</MicrosoftNetCoreIlasmPackageRuntimeId>
         <!-- It's RC version, but latest stable 5.0.0 cause unknown bug (0xc0000004) occurred -->
         <MicrosoftNETCoreILAsmVersion Condition="'$(MicrosoftNETCoreILAsmVersion)' == ''">6.0.0-rc.2.21480.5</MicrosoftNETCoreILAsmVersion>
         <MicrosoftNetCoreIlasmPackageName>runtime.$(MicrosoftNetCoreIlasmPackageRuntimeId).microsoft.netcore.ilasm</MicrosoftNetCoreIlasmPackageName>
@@ -87,6 +80,7 @@
         </ItemGroup>
         <PropertyGroup>
             <ILSource>$([System.IO.File]::ReadAllText($(ILFile)))</ILSource>
+            <!-- Replace forwardref declaration to real il body -->
             <Replacement>// method ${method} forwardref removed for IL import</Replacement>
             <Pattern>\.method [^{}]+ cil managed forwardref[^}]+} // end of method (?&lt;method&gt;[^ \r\t\n]+)</Pattern>
             <ILSource>$([System.Text.RegularExpressions.Regex]::Replace($(ILSource), $(Pattern), $(Replacement)))</ILSource>
@@ -151,7 +145,13 @@
         <ReadLinesFromFile File="%(IL.Identity)">
             <Output TaskParameter="Lines" ItemName="ILLines" />
         </ReadLinesFromFile>
-        <WriteLinesToFile File="$(MergedILPath)" Lines="@(ILLines)" Overwrite="true" />
+
+        <!-- Replace '[netstandard]` to `[mscorlib]` is build target is .NET Framework. -->
+        <WriteLinesToFile Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+                          File="$(MergedILPath)" Lines="@(ILLines->Replace('[netstandard]','[mscorlib]'))" Overwrite="true" />
+        <WriteLinesToFile Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'"
+                          File="$(MergedILPath)" Lines="@(ILLines->Replace('[mscorlib]','[netstandard]'))" Overwrite="true" />
+        
         <Message Importance="normal" Text="ILSupport: ILAsm = $(ILAsm)" />
         <Exec Command="$(ILAsm) &quot;$(MergedILPath)&quot;" />
         <ItemGroup>

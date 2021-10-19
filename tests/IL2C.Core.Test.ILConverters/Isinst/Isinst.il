@@ -4,11 +4,11 @@
 	{
 		.maxstack 2
         ldarg.0
-		isinst [mscorlib]System.String
+		isinst [netstandard]System.String
 		dup
 		brnull.s N1
 		ldstr "DEF"
-		call string [mscorlib]System.String::Concat(string, string)
+		call string [netstandard]System.String::Concat(string, string)
 	N1:
 		ret
 	}
@@ -17,10 +17,10 @@
 	{
 		.maxstack 2
         ldarg.0
-		isinst [mscorlib]System.Int32
+		isinst [netstandard]System.Int32
 		dup
 		brnull.s N1
-		callvirt instance string [mscorlib]System.Object::ToString()
+		callvirt instance string [netstandard]System.Object::ToString()
 	N1:
 		ret
 	}

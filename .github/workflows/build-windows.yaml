@@ -63,4 +63,4 @@ jobs:
       working-directory: samples\Calculator\Calculator.CMake
     - name: Test il2c
       run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.Fixture\IL2C.Core.Test.Fixture.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
-      timeout-minutes: 10
+      timeout-minutes: 20

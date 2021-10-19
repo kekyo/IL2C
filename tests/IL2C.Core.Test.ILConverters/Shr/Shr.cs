@@ -59,6 +59,12 @@ namespace IL2C.ILConverters
     [TestCase((ulong)0, "ShrUlong", (ulong)1, 1)]
     [TestCase((ulong)UInt64.MaxValue, "ShrUlong", (ulong)UInt64.MaxValue, 1)]
     [TestCase((ulong)UInt64.MaxValue, "ShrUlong", (ulong)UInt64.MaxValue, 2)]
+
+    //[TestCase((int)(Int32.MaxValue - 1) / 2, "ShrIntByIntptr", (int)Int32.MaxValue, 1)]
+    //[TestCase((int)(Int32.MaxValue - 1) / 4, "ShrIntByIntptr", (int)Int32.MaxValue, 2)]
+
+    //[TestCase((long)(Int64.MaxValue - 1) / 2, "ShrUlongByUIntptr", (long)Int64.MaxValue, 1)]
+    //[TestCase((long)(Int64.MaxValue - 1) / 4, "ShrUlongByUIntptr", (long)Int64.MaxValue, 2)]
     public sealed class Shr
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -84,5 +90,11 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong ShrUlong(ulong v, int num);
+
+        //[MethodImpl(MethodImplOptions.ForwardRef)]
+        //public static extern int ShrIntByIntptr(int v, IntPtr num);
+
+        //[MethodImpl(MethodImplOptions.ForwardRef)]
+        //public static extern ulong ShrUlongByUIntptr(ulong v, UIntPtr num);
     }
 }

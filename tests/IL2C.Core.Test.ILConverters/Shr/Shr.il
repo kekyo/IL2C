@@ -71,4 +71,23 @@
 		shr
 		ret
 	}
+	/*
+	.method public static int32 ShrIntByIntptr(int32 v, native int num) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		shr
+		ret
+	}
+
+	.method public static uint64 ShrUlongByUIntptr(uint64 v, native uint num) cil managed
+	{
+		.maxstack 2
+		ldarg.0
+		ldarg.1
+		shr
+		ret
+	}
+	*/
 }

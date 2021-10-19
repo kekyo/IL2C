@@ -15,9 +15,11 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    #TODO:
+    strategy:
+      matrix:
+        buildConfiguration: [Debug, Release]
     env:
-      buildConfiguration: Release
+      buildConfiguration: ${{ matrix.buildConfiguration }}
     steps:
     - uses: actions/checkout@v2
       with:

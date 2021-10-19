@@ -81,9 +81,64 @@ namespace IL2C.ILConverters
         }
     }
 
+    internal sealed class Stind_i1Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Stind_I1;
+
+        public override ExpressionEmitter Prepare(
+            DecodeContext decodeContext)
+        {
+            return StindConverter_Utilities.Prepare(decodeContext);
+        }
+    }
+
+    internal sealed class Stind_i2Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Stind_I2;
+
+        public override ExpressionEmitter Prepare(
+            DecodeContext decodeContext)
+        {
+            return StindConverter_Utilities.Prepare(decodeContext);
+        }
+    }
+
     internal sealed class Stind_i4Converter : InlineNoneConverter
     {
         public override OpCode OpCode => OpCodes.Stind_I4;
+
+        public override ExpressionEmitter Prepare(
+            DecodeContext decodeContext)
+        {
+            return StindConverter_Utilities.Prepare(decodeContext);
+        }
+    }
+
+    internal sealed class Stind_i8Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Stind_I8;
+
+        public override ExpressionEmitter Prepare(
+            DecodeContext decodeContext)
+        {
+            return StindConverter_Utilities.Prepare(decodeContext);
+        }
+    }
+
+    internal sealed class Stind_r4Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Stind_R4;
+
+        public override ExpressionEmitter Prepare(
+            DecodeContext decodeContext)
+        {
+            return StindConverter_Utilities.Prepare(decodeContext);
+        }
+    }
+
+    internal sealed class Stind_r8Converter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Stind_R8;
 
         public override ExpressionEmitter Prepare(
             DecodeContext decodeContext)
@@ -99,6 +154,18 @@ namespace IL2C.ILConverters
         public override ExpressionEmitter Prepare(
             DecodeContext decodeContext)
         {
+            return StindConverter_Utilities.Prepare(decodeContext);
+        }
+    }
+
+    // It is just a generalized Stind. C compiler handles struct copy
+    internal sealed class StobjConverter : InlineTypeConverter
+    {
+        public override OpCode OpCode => OpCodes.Stobj;
+
+        public override ExpressionEmitter Prepare(Metadata.ITypeInformation operand, DecodeContext decodeContext)
+        {
+            // Note: note really need the operand in this case, since IL2C knows the type already
             return StindConverter_Utilities.Prepare(decodeContext);
         }
     }

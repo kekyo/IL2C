@@ -18,8 +18,8 @@ OpCode | Binary | Implement | Test | ILConverter
 | [bge.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bge_un_s) | 0x34 |  |  |  |
 | [bgt](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt) | 0x3d | Implemented |  | IL2C.ILConverters.BgtConverter |
 | [bgt.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_s) | 0x30 | Implemented |  | IL2C.ILConverters.Bgt_sConverter |
-| [bgt.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_un) | 0x42 |  |  |  |
-| [bgt.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_un_s) | 0x35 |  |  |  |
+| [bgt.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_un) | 0x42 | Implemented |  | IL2C.ILConverters.Bgt_UnConverter |
+| [bgt.un.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.bgt_un_s) | 0x35 | Implemented |  | IL2C.ILConverters.Bgt_Un_sConverter |
 | [ble](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble) | 0x3e | Implemented |  | IL2C.ILConverters.BleConverter |
 | [ble.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble_s) | 0x31 | Implemented |  | IL2C.ILConverters.Ble_sConverter |
 | [ble.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ble_un) | 0x43 |  |  |  |
@@ -153,7 +153,7 @@ OpCode | Binary | Implement | Test | ILConverter
 | [ldloca](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloca) | 0xfe0d |  |  |  |
 | [ldloca.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldloca_s) | 0x12 | Implemented | [Test [17]](../tests/IL2C.Core.Test.ILConverters/Ldloca_s) | IL2C.ILConverters.Ldloca_sConverter |
 | [ldnull](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldnull) | 0x14 | Implemented | [Test [3]](../tests/IL2C.Core.Test.ILConverters/Ldnull) | IL2C.ILConverters.LdnullConverter |
-| [ldobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldobj) | 0x71 |  |  |  |
+| [ldobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldobj) | 0x71 | Implemented | [Test [26]](../tests/IL2C.Core.Test.ILConverters/Ldobj) | IL2C.ILConverters.LdobjConverter |
 | [ldsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldsfld) | 0x7e | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Ldsfld) | IL2C.ILConverters.LdsfldConverter |
 | [ldsflda](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldsflda) | 0x7f | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Ldsflda) | IL2C.ILConverters.LdsfldaConverter |
 | [ldstr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldstr) | 0x72 | Implemented | [Test [1]](../tests/IL2C.Core.Test.ILConverters/Ldstr) | IL2C.ILConverters.LdstrConverter |
@@ -166,12 +166,12 @@ OpCode | Binary | Implement | Test | ILConverter
 | [mul](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul) | 0x5a | Implemented | [Test [9]](../tests/IL2C.Core.Test.ILConverters/Mul) | IL2C.ILConverters.MulConverter |
 | [mul.ovf](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul_ovf) | 0xd8 |  |  |  |
 | [mul.ovf.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.mul_ovf_un) | 0xd9 |  |  |  |
-| [neg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.neg) | 0x65 |  |  |  |
+| [neg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.neg) | 0x65 | Implemented |  | IL2C.ILConverters.NegConverter |
 | [newarr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.newarr) | 0x8d | Implemented |  | IL2C.ILConverters.NewarrConverter |
 | [newobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.newobj) | 0x73 | Implemented |  | IL2C.ILConverters.NewobjConverter |
 | no | 0xfe19 |  |  |  |
 | [nop](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.nop) | 0x0 | Implemented | [Test [1]](../tests/IL2C.Core.Test.ILConverters/Nop) | IL2C.ILConverters.NopConverter |
-| [not](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.not) | 0x66 |  |  |  |
+| [not](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.not) | 0x66 | Implemented |  | IL2C.ILConverters.NotConverter |
 | [or](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.or) | 0x60 | Implemented | [Test [5]](../tests/IL2C.Core.Test.ILConverters/Or) | IL2C.ILConverters.OrConverter |
 | [pop](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.pop) | 0x26 | Implemented |  | IL2C.ILConverters.PopConverter |
 | [readonly](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.readonly) | 0xfe1e |  |  |  |
@@ -181,12 +181,12 @@ OpCode | Binary | Implement | Test | ILConverter
 | [rem.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rem_un) | 0x5e |  |  |  |
 | [ret](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ret) | 0x2a | Implemented | [Test [6]](../tests/IL2C.Core.Test.ILConverters/Ret) | IL2C.ILConverters.RetConverter |
 | [rethrow](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.rethrow) | 0xfe1a | Implemented |  | IL2C.ILConverters.RethrowConverter |
-| [shl](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shl) | 0x62 |  |  |  |
-| [shr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shr) | 0x63 |  |  |  |
-| [shr.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shr_un) | 0x64 |  |  |  |
+| [shl](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shl) | 0x62 | Implemented |  | IL2C.ILConverters.ShiftLeftConverter |
+| [shr](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shr) | 0x63 | Implemented | [Test [40]](../tests/IL2C.Core.Test.ILConverters/Shr) | IL2C.ILConverters.ShiftRightConverter |
+| [shr.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.shr_un) | 0x64 | Implemented | [Test [40]](../tests/IL2C.Core.Test.ILConverters/Shr_un) | IL2C.ILConverters.ShiftRightUnConverter |
 | [sizeof](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sizeof) | 0xfe1c | Implemented |  | IL2C.ILConverters.SizeofConverter |
-| [starg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg) | 0xfe0b |  |  |  |
-| [starg.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg_s) | 0x10 |  |  |  |
+| [starg](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg) | 0xfe0b | Implemented |  | IL2C.ILConverters.StargConverter |
+| [starg.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.starg_s) | 0x10 | Implemented |  | IL2C.ILConverters.StargSConverter |
 | [stelem.any](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem) | 0xa4 | Implemented | [Test [42]](../tests/IL2C.Core.Test.ILConverters/Stelem) | IL2C.ILConverters.Stelem_anyConvertersConverter |
 | [stelem.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem_i) | 0x9b |  |  |  |
 | [stelem.i1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem_i1) | 0x9c | Implemented | [Test [6]](../tests/IL2C.Core.Test.ILConverters/Stelem_i1) | IL2C.ILConverters.Stelem_i1ConvertersConverter |
@@ -198,12 +198,12 @@ OpCode | Binary | Implement | Test | ILConverter
 | [stelem.ref](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stelem_ref) | 0xa2 | Implemented | [Test [6]](../tests/IL2C.Core.Test.ILConverters/Stelem_ref) | IL2C.ILConverters.Stelem_refConvertersConverter |
 | [stfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stfld) | 0x7d | Implemented |  | IL2C.ILConverters.StfldConverter |
 | [stind.i](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i) | 0xdf |  |  |  |
-| [stind.i1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i1) | 0x52 |  |  |  |
-| [stind.i2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i2) | 0x53 |  |  |  |
+| [stind.i1](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i1) | 0x52 | Implemented |  | IL2C.ILConverters.Stind_i1Converter |
+| [stind.i2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i2) | 0x53 | Implemented |  | IL2C.ILConverters.Stind_i2Converter |
 | [stind.i4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i4) | 0x54 | Implemented |  | IL2C.ILConverters.Stind_i4Converter |
-| [stind.i8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i8) | 0x55 |  |  |  |
-| [stind.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_r4) | 0x56 |  |  |  |
-| [stind.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_r8) | 0x57 |  |  |  |
+| [stind.i8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_i8) | 0x55 | Implemented |  | IL2C.ILConverters.Stind_i8Converter |
+| [stind.r4](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_r4) | 0x56 | Implemented |  | IL2C.ILConverters.Stind_r4Converter |
+| [stind.r8](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_r8) | 0x57 | Implemented |  | IL2C.ILConverters.Stind_r8Converter |
 | [stind.ref](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stind_ref) | 0x51 | Implemented |  | IL2C.ILConverters.Stind_RefConverter |
 | [stloc](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc) | 0xfe0e |  |  |  |
 | [stloc.0](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_0) | 0xa | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Stloc_0) | IL2C.ILConverters.Stloc_0Converter |
@@ -211,12 +211,12 @@ OpCode | Binary | Implement | Test | ILConverter
 | [stloc.2](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_2) | 0xc | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Stloc_2) | IL2C.ILConverters.Stloc_2Converter |
 | [stloc.3](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_3) | 0xd | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Stloc_3) | IL2C.ILConverters.Stloc_3Converter |
 | [stloc.s](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stloc_s) | 0x13 | Implemented | [Test [17]](../tests/IL2C.Core.Test.ILConverters/Stloc_s) | IL2C.ILConverters.Stloc_SConverter |
-| [stobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stobj) | 0x81 |  |  |  |
+| [stobj](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stobj) | 0x81 | Implemented | [Test [26]](../tests/IL2C.Core.Test.ILConverters/Stobj) | IL2C.ILConverters.StobjConverter |
 | [stsfld](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.stsfld) | 0x80 | Implemented | [Test [16]](../tests/IL2C.Core.Test.ILConverters/Stsfld) | IL2C.ILConverters.StsfldConverter |
 | [sub](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub) | 0x59 | Implemented | [Test [11]](../tests/IL2C.Core.Test.ILConverters/Sub) | IL2C.ILConverters.SubConverter |
 | [sub.ovf](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub_ovf) | 0xda |  |  |  |
 | [sub.ovf.un](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.sub_ovf_un) | 0xdb |  |  |  |
-| [switch](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.switch) | 0x45 |  |  |  |
+| [switch](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.switch) | 0x45 | Implemented | [Test [8]](../tests/IL2C.Core.Test.ILConverters/Switch) | IL2C.ILConveters.SwitchConverter |
 | [tail](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.tailcall) | 0xfe14 |  |  |  |
 | [throw](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.throw) | 0x7a | Implemented |  | IL2C.ILConverters.ThrowConverter |
 | [unaligned](https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.unaligned) | 0xfe12 |  |  |  |

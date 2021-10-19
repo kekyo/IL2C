@@ -342,7 +342,7 @@ namespace IL2C.Writers
                         declaredType.IsReferenceType ? "IL2C_TYPE_REFERENCE" :
                         "IL2C_TYPE_VALUE",
                     declaredType.CLanguageStaticSizeOfExpression,
-                    declaredType.BaseType.MangledUniqueName,
+                    declaredType.BaseType == null ? "NULL" : declaredType.BaseType.MangledUniqueName,
                     declaredType.IsDelegate ? "System_Delegate_MarkHandler__" : markTargetFields.Length.ToString(),
                     interfaceTypes.Length);
             }

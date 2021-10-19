@@ -270,6 +270,16 @@ namespace IL2C.Metadata
 
             public int Compare(ITypeInformation x, ITypeInformation y)
             {
+                if (x == null)
+                {
+                    if (y == null) return 0;
+                    else return 1;
+                }
+                else
+                {
+                    if (y == null) return -1;
+                }
+
                 if (x.Equals(y))
                 {
                     return 0;
@@ -385,9 +395,6 @@ namespace IL2C.Metadata
                 var xt = x.TargetType;
                 var yt = y.TargetType;
 
-                var xr = xt.IsAssignableFrom(yt);
-                var yr = yt.IsAssignableFrom(xt);
-
                 return MethodSignatureTypeComparer.Compare(xt, yt);
             }
 
@@ -424,10 +431,27 @@ namespace IL2C.Metadata
 
             public int Compare(IMethodInformation x, IMethodInformation y)
             {
-                var rn = x.Name.CompareTo(y.Name);
+                var xname = x.Name;
+                var yname = y.Name;
+
+                var rn = xname.CompareTo(yname);
                 if (rn != 0)
                 {
-                    return rn;
+                    // If it is an explicit interface implementation, we need to compare with it's full name
+                    if (x.DeclaringType.IsInterface)
+                    {
+                        xname = $"{x.DeclaringType.FriendlyName}.{xname}";
+                    }
+                    if (y.DeclaringType.IsInterface)
+                    {
+                        yname = $"{y.DeclaringType.FriendlyName}.{yname}";
+                    }
+
+                    rn = xname.CompareTo(yname);
+                    if (rn != 0)
+                    {
+                        return rn;
+                    }
                 }
 
                 var xps = x.Parameters;
@@ -449,9 +473,25 @@ namespace IL2C.Metadata
 
             public bool Equals(IMethodInformation x, IMethodInformation y)
             {
-                if (x.Name != y.Name)
+                var xname = x.Name;
+                var yname = y.Name;
+
+                if (xname != yname)
                 {
-                    return false;
+                    // If it is an explicit interface implementation, we need to compare with it's full name
+                    if (x.DeclaringType.IsInterface)
+                    {
+                        xname = $"{x.DeclaringType.FriendlyName}.{xname}";
+                    }
+                    if (y.DeclaringType.IsInterface)
+                    {
+                        yname = $"{y.DeclaringType.FriendlyName}.{yname}";
+                    }
+                    
+                    if (xname != yname)
+                    {
+                        return false;
+                    }
                 }
 
                 var xps = x.Parameters;

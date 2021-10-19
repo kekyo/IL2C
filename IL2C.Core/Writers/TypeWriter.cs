@@ -98,7 +98,7 @@ namespace IL2C.Writers
                     tw.WriteLine(
                         "// [1-2-3] {0} VTable layout (Derived from {1})",
                         declaredType.MemberTypeName,
-                        declaredType.BaseType.FriendlyName);
+                        declaredType.BaseType?.FriendlyName);
                 }
 
                 tw.WriteLine(
@@ -276,7 +276,7 @@ namespace IL2C.Writers
                 {
                     tw.WriteLine(
                         "// [1-5-1] VTable (Same as {0})",
-                        declaredType.BaseType.FriendlyName);
+                        declaredType.BaseType?.FriendlyName);
                     tw.WriteLine(
                         "#define {0}_VTABLE__ {1}_VTABLE__",
                         declaredType.MangledUniqueName,
@@ -287,7 +287,7 @@ namespace IL2C.Writers
                 {
                     tw.WriteLine(
                         "// [1-5-2] VTable (Derived from {0})",
-                        declaredType.BaseType.FriendlyName);
+                        declaredType.BaseType?.FriendlyName);
                     tw.WriteLine(
                         "extern {0}_VTABLE_DECL__ {0}_VTABLE__;",
                         declaredType.MangledUniqueName);

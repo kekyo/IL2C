@@ -22,6 +22,7 @@ using System;
 using Mono.Cecil.Cil;
 
 using IL2C.Translators;
+using IL2C.Metadata;
 
 namespace IL2C.ILConverters
 {
@@ -78,7 +79,7 @@ namespace IL2C.ILConverters
                     extractContext.GetSymbolName(si1)) };
             }
 
-            // Double = (Float) % (Float)
+            // Double = (Float) op (Float)
             if (si0.TargetType.IsFloatStackFriendlyType && si1.TargetType.IsFloatStackFriendlyType &&
                 (binaryOperator == BinaryOperators.Rem))
             {
@@ -105,7 +106,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (Int32) + (ByRef)
-            if (si0.TargetType.IsInt32StackFriendlyType && si1.TargetType.IsByReference &&
+            if (si0.TargetType.IsInt32StackFriendlyType && (si1.TargetType.IsByReference) &&
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);
@@ -118,7 +119,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (IntPtr) + (ByRef)
-            if (si0.TargetType.IsIntPtrStackFriendlyType && si1.TargetType.IsByReference &&
+            if (si0.TargetType.IsIntPtrStackFriendlyType && (si1.TargetType.IsByReference) &&
                 (binaryOperator == BinaryOperators.Add))
             {
                 var result = decodeContext.PushStack(si1.TargetType);
@@ -131,7 +132,7 @@ namespace IL2C.ILConverters
             }
 
             // ByRef = (ByRef) +/- (Int32|IntPtr)
-            if (si0.TargetType.IsByReference &&
+            if ((si0.TargetType.IsByReference || si0.TargetType.IsArray) &&
                 (si1.TargetType.IsInt32StackFriendlyType || si1.TargetType.IsIntPtrStackFriendlyType) &&
                 ((binaryOperator == BinaryOperators.Add) || (binaryOperator == BinaryOperators.Sub)))
             {
@@ -232,6 +233,144 @@ namespace IL2C.ILConverters
         {
             return ArithmeticalConverterUtilities.Prepare(
                 ArithmeticalConverterUtilities.BinaryOperators.Rem, decodeContext);
+        }
+    }
+
+    internal sealed class NotConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Not;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            var si0 = decodeContext.PopStack();
+
+            if (!(si0.TargetType.IsIntegerPrimitive && !si0.TargetType.IsCharType))
+                throw new InvalidProgramSequenceException(
+                    "Invalid arithmetical NOT operation: Location={0}, Type0={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si0.TargetType.FriendlyName);
+
+            var result = decodeContext.PushStack(si0.TargetType);
+            
+            return (extractContext, _) => new[] { string.Format(
+                    "{0} = ~{1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0)) };
+        }
+    }
+
+    internal enum ShiftDirection
+    {
+        Left, Right
+    }
+
+    internal abstract class ShiftConverter : InlineNoneConverter
+    {
+        public abstract ShiftDirection Direction { get; }
+
+        public ExpressionEmitter Prepare(DecodeContext decodeContext, Func<ILocalVariableInformation, string> cast)
+        {
+            var si1 = decodeContext.PopStack();
+            var si0 = decodeContext.PopStack();
+
+            if (si0.TargetType.IsFloatStackFriendlyType || si0.TargetType.IsByReference || !si1.TargetType.IsInt32Type)
+                throw new InvalidProgramSequenceException(
+                    "Invalid arithmetical NOT operation: Location={0}, Type0={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si0.TargetType.FriendlyName);
+
+            var result = decodeContext.PushStack(si0.TargetType);
+
+            if (cast == null)
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = {1} {2} {3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    Direction == ShiftDirection.Left ? "<<" : ">>",
+                    extractContext.GetSymbolName(si1)) };
+            }
+            else
+            {
+                return (extractContext, _) => new[] { string.Format(
+                    "{0} = ({4}){1} {2} {3}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0),
+                    Direction == ShiftDirection.Left ? "<<" : ">>",
+                    extractContext.GetSymbolName(si1),
+                    cast(si0)) };
+            }
+        }
+    }
+
+    internal sealed class ShiftRightConverter : ShiftConverter
+    {
+        public override OpCode OpCode => OpCodes.Shr;
+
+        public override ShiftDirection Direction => ShiftDirection.Right;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            return Prepare(decodeContext, si => si.TargetType.IsInt32StackFriendlyType ? "int32_t" : "int64_t");
+        }
+    }
+    
+    internal sealed class ShiftLeftConverter : ShiftConverter
+    {
+        public override OpCode OpCode => OpCodes.Shl;
+
+        public override ShiftDirection Direction => ShiftDirection.Left;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            return Prepare(decodeContext, null);
+        }
+    }
+
+    internal sealed class ShiftRightUnConverter : ShiftConverter
+    {
+        public override OpCode OpCode => OpCodes.Shr_Un;
+
+        public override ShiftDirection Direction => ShiftDirection.Right;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            return Prepare(decodeContext, si => si.TargetType.IsInt32StackFriendlyType ? "uint32_t" : "uint64_t");
+        }
+    }
+
+    internal sealed class NegConverter : InlineNoneConverter
+    {
+        public override OpCode OpCode => OpCodes.Neg;
+
+        public override ExpressionEmitter Prepare(DecodeContext decodeContext)
+        {
+            var si0 = decodeContext.PopStack();
+            Metadata.ILocalVariableInformation result;
+
+            if (si0.TargetType.IsByReference)
+                throw new InvalidProgramSequenceException(
+                    "Invalid arithmetical NEG operation: Location={0}, Type0={1}",
+                    decodeContext.CurrentCode.RawLocation,
+                    si0.TargetType.FriendlyName);
+
+            if (si0.TargetType.IsInt32StackFriendlyType)
+            {
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int32Type);
+            }
+            else if (si0.TargetType.IsInt64StackFriendlyType)
+            {   // Int64 = -(Int64)
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.Int64Type);
+            }
+            else
+            {   // double = -(double)
+                result = decodeContext.PushStack(decodeContext.PrepareContext.MetadataContext.DoubleType);
+            }
+
+            return (extractContext, _) => new[] { string.Format(
+                    "{0} = -{1}",
+                    extractContext.GetSymbolName(result),
+                    extractContext.GetSymbolName(si0)) };
         }
     }
 }

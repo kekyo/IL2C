@@ -321,8 +321,8 @@ namespace IL2C
                 translateContext,
                 // All types
                 type => true,
-                // The methods except type initializer.
-                method => !(method.IsConstructor && method.IsStatic));
+                // All methods
+                method => true);
         }
     }
 }

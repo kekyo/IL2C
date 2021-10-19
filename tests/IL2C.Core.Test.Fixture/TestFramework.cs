@@ -407,7 +407,7 @@ namespace IL2C
                     CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
                     CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
                     rawResult = caseInfo.Method.Invoke(null, caseInfo.Arguments);
-                    Assert.AreEqual(caseInfo.Expected, rawResult);
+                    Assert.AreEqual(caseInfo.Expected, rawResult, "Bad MSIL, or test case!");
                     break;
             }
 
@@ -439,7 +439,7 @@ namespace IL2C
             ///////////////////////////////////////////////
             // Step 4: Verify result.
 
-            Assert.AreEqual("Success", sanitized);
+            Assert.AreEqual("Success", sanitized, "Compiled C code failed!");
         }
     }
 }

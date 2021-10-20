@@ -19,6 +19,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace IL2C.RuntimeSystems
@@ -262,6 +263,7 @@ namespace IL2C.RuntimeSystems
     [TestCase("223", "InstanceImplement", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementExplicitlyTypeFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementExplicitlyType), typeof(IInterfaceType1) })]
+    [TestCase("223", "InstanceImplementExplicitlyTypeFromInterfaceByClass", 123, IncludeTypes = new[] { typeof(InstanceImplementExplicitlyType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceMultipleImplement1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
     [TestCase("223", "InstanceMultipleImplementFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
     [TestCase("323", "InstanceMultipleImplement2", 123L, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
@@ -310,6 +312,9 @@ namespace IL2C.RuntimeSystems
             IInterfaceType1 inst = new InstanceImplementExplicitlyType();
             return inst.GetStringFromInt32(value);
         }
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string InstanceImplementExplicitlyTypeFromInterfaceByClass(int value);
 
         public static string InstanceMultipleImplement1(int value)
         {

@@ -39,6 +39,17 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public class InstanceImplementExplicitlyType : IInterfaceType1
+    {
+        // It's the instance field, referrer from the method at same type.
+        private readonly int rhs = 100;
+
+        string IInterfaceType1.GetStringFromInt32(int value)
+        {
+            return (value + rhs).ToString();
+        }
+    }
+
     public interface IInterfaceType2
     {
         string GetStringFromInt64(long value);
@@ -250,6 +261,7 @@ namespace IL2C.RuntimeSystems
     [TestId("TypeRelations")]
     [TestCase("223", "InstanceImplement", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
+    [TestCase("223", "InstanceImplementExplicitlyTypeFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementExplicitlyType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceMultipleImplement1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
     [TestCase("223", "InstanceMultipleImplementFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
     [TestCase("323", "InstanceMultipleImplement2", 123L, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
@@ -290,6 +302,12 @@ namespace IL2C.RuntimeSystems
         public static string InstanceImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new InstanceImplementType();
+            return inst.GetStringFromInt32(value);
+        }
+
+        public static string InstanceImplementExplicitlyTypeFromInterface(int value)
+        {
+            IInterfaceType1 inst = new InstanceImplementExplicitlyType();
             return inst.GetStringFromInt32(value);
         }
 

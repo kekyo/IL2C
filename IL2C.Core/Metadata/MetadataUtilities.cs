@@ -473,25 +473,29 @@ namespace IL2C.Metadata
 
             public bool Equals(IMethodInformation x, IMethodInformation y)
             {
+                // Try strictly matching when both class/value type member method
+                // and explicitly implemented interface method are same.
+                if (!x.DeclaringType.IsInterface && y.DeclaringType.IsInterface)
+                {
+                    if (x.Overrides.Contains(y))
+                    {
+                        return true;
+                    }
+                }
+                if (x.DeclaringType.IsInterface && !y.DeclaringType.IsInterface)
+                {
+                    if (y.Overrides.Contains(x))
+                    {
+                        return true;
+                    }
+                }
+
                 var xname = x.Name;
                 var yname = y.Name;
 
                 if (xname != yname)
                 {
-                    // If it is an explicit interface implementation, we need to compare with it's full name
-                    if (x.DeclaringType.IsInterface)
-                    {
-                        xname = $"{x.DeclaringType.FriendlyName}.{xname}";
-                    }
-                    if (y.DeclaringType.IsInterface)
-                    {
-                        yname = $"{y.DeclaringType.FriendlyName}.{yname}";
-                    }
-                    
-                    if (xname != yname)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 var xps = x.Parameters;

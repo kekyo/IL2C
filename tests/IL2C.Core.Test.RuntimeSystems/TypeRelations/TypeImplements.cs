@@ -262,6 +262,7 @@ namespace IL2C.RuntimeSystems
     [TestId("TypeRelations")]
     [TestCase("223", "InstanceImplement", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
+    [TestCase("223", "InstanceImplementFromInterfaceByClass", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementExplicitlyTypeFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementExplicitlyType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceImplementExplicitlyTypeFromInterfaceByClass", 123, IncludeTypes = new[] { typeof(InstanceImplementExplicitlyType), typeof(IInterfaceType1) })]
     [TestCase("223", "InstanceMultipleImplement1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
@@ -306,6 +307,9 @@ namespace IL2C.RuntimeSystems
             IInterfaceType1 inst = new InstanceImplementType();
             return inst.GetStringFromInt32(value);
         }
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string InstanceImplementFromInterfaceByClass(int value);
 
         public static string InstanceImplementExplicitlyTypeFromInterface(int value)
         {

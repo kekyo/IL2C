@@ -23,7 +23,7 @@
     <ProjectGuid>{C1B0FEDE-8761-4CD9-B5EE-E60D3ACBEAEB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GettingStartedIL2CMain</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>$(LatestTargetPlatformVersion)</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

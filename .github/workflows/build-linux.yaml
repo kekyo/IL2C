@@ -39,7 +39,7 @@ jobs:
       with:
         dotnet-version: 5.0.402
     - name: Initialize tools
-      run: sudo bash ./init-tools.sh
+      run: bash ./init-tools.sh
     - name: Install dependencies
       run: |
         dotnet restore il2c.sln

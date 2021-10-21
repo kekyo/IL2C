@@ -505,6 +505,8 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
+extern bool il2c_required_initializing_type__(volatile uintptr_t* pInitializingCount);
+
 extern double il2c_fmod(double lhs, double rhs);
 
 #if defined(IL2C_USE_LINE_INFORMATION)

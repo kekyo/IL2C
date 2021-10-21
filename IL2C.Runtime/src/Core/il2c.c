@@ -346,6 +346,21 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
     return il2c_unsafe_unbox__(pReference, void);
 }
 
+///////////////////////////////////////////////////////
+// Another special runtime helper functions
+
+bool il2c_required_initializing_type__(volatile uintptr_t* pInitializingCount)
+{
+    const uintptr_t current = *pInitializingCount;
+    if (il2c_unlikely__(current != g_InitializerCount))
+    {
+        return (uintptr_t)il2c_icmpxchgptr(
+            pInitializingCount, g_InitializerCount, current) ==
+            current;
+    }
+    return false;
+}
+
 /////////////////////////////////////////////////////////////
 // IL2C runtime initialzer / shutdown
 

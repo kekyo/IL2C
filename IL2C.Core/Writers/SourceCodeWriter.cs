@@ -198,6 +198,9 @@ namespace IL2C.Writers
                             twSource.WriteLine(
                                 "static volatile uintptr_t {0}_initializerCount__ = 0;",
                                 staticFieldsName);
+                            twSource.WriteLine(
+                                "static volatile uintptr_t {0}_initializedCount__ = 0;",
+                                staticFieldsName);
                             twSource.SplitLine();
                             twSource.WriteLine(
                                 "static struct {0}_DECL__ /* IL2C_STATIC_FIELDS */",
@@ -252,6 +255,7 @@ namespace IL2C.Writers
                                 valueTypeStaticFields.Length);
                             twSource.SplitLine();
 
+                            // Generate static fileds
                             foreach (var field in otherStaticFields)
                             {
                                 twSource.WriteLine(
@@ -261,6 +265,50 @@ namespace IL2C.Writers
                             }
                             twSource.SplitLine();
 
+                            // Generate type initializer function
+                            var typeInitializerName =
+                                $"{type.MangledUniqueName}_TypeIntializer__";
+                            twSource.WriteLine(
+                                "static void {0}(void)",
+                                typeInitializerName);
+                            twSource.WriteLine("{");
+                            using (var __ = twSource.Shift())
+                            {
+                                twSource.WriteLine(
+                                    "if (il2c_unlikely__(il2c_required_initializing_type__(&{0}_initializerCount__)))",
+                                    staticFieldsName);
+                                twSource.WriteLine("{");
+                                using (var ____ = twSource.Shift())
+                                {
+                                    twSource.WriteLine(
+                                        "il2c_register_static_fields(&{0}__);",
+                                        staticFieldsName);
+
+                                    var typeInitializer = type.DeclaredMethods.
+                                        FirstOrDefault(method => method.IsConstructor && method.IsStatic);
+                                    if (typeInitializer != null)
+                                    {
+                                        twSource.WriteLine(
+                                            "{0}();",
+                                            typeInitializer.CLanguageFunctionFullName);
+                                    }
+
+                                    twSource.WriteLine(
+                                        "{0}_initializedCount__ = *il2c_initializer_count;",
+                                        staticFieldsName);
+                                    twSource.WriteLine(
+                                        "return;");
+                                }
+                                twSource.WriteLine("}");
+
+                                twSource.WriteLine(
+                                    "while (il2c_unlikely__({0}_initializedCount__ != *il2c_initializer_count));",
+                                    staticFieldsName);
+                            }
+                            twSource.WriteLine("}");
+                            twSource.SplitLine();
+
+                            // Generate filed access handlers
                             foreach (var field in staticFields)
                             {
                                 twSource.WriteLine(
@@ -271,28 +319,15 @@ namespace IL2C.Writers
 
                                 using (var _ = twSource.Shift())
                                 {
-                                    // TODO: Have to guard race condition for the multi threading feature.
                                     twSource.WriteLine(
-                                        "if (il2c_unlikely__({0}_initializerCount__ != *il2c_initializer_count))",
+                                        "if (il2c_unlikely__({0}_initializedCount__ != *il2c_initializer_count))",
                                         staticFieldsName);
                                     twSource.WriteLine("{");
                                     using (var __ = twSource.Shift())
                                     {
                                         twSource.WriteLine(
-                                            "{0}_initializerCount__ = *il2c_initializer_count;",
-                                            staticFieldsName);
-                                        twSource.WriteLine(
-                                            "il2c_register_static_fields(&{0}__);",
-                                            staticFieldsName);
-
-                                        var typeInitializer = type.DeclaredMethods.
-                                            FirstOrDefault(method => method.IsConstructor && method.IsStatic);
-                                        if (typeInitializer != null)
-                                        {
-                                            twSource.WriteLine(
-                                                "{0}();",
-                                                typeInitializer.CLanguageFunctionFullName);
-                                        }
+                                            "{0}();",
+                                            typeInitializerName);
                                     }
                                     twSource.WriteLine("}");
 

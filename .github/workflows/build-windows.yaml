@@ -4,6 +4,7 @@ on:
     branches:
     - master
     - devel
+    - feature/github-actions-2
   pull_request:
     branches:
     - master

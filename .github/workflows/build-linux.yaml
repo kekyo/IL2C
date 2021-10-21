@@ -14,7 +14,7 @@ on:
 permissions:
   contents: read
 jobs:
-  build:
+  build-linux:
     runs-on: [self-hosted, linux, x64]
     strategy:
       fail-fast: false

@@ -14,7 +14,7 @@ on:
 permissions:
   contents: read
 jobs:
-  build:
+  build-windows:
     runs-on: [self-hosted, windows, x64]
     strategy:
       fail-fast: false

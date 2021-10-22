@@ -284,20 +284,42 @@ namespace IL2C.Writers
                                         "il2c_register_static_fields(&{0}__);",
                                         staticFieldsName);
 
-                                    var typeInitializer = type.DeclaredMethods.
-                                        FirstOrDefault(method => method.IsConstructor && method.IsStatic);
-                                    if (typeInitializer != null)
+                                    twSource.WriteLine(
+                                        "il2c_try(nest0, il2c_default_finally_filter__)");
+                                    twSource.WriteLine("{");
+                                    using (var _____ = twSource.Shift())
+                                    {
+                                        var typeInitializer = type.DeclaredMethods.
+                                            FirstOrDefault(method => method.IsConstructor && method.IsStatic);
+                                        if (typeInitializer != null)
+                                        {
+                                            twSource.WriteLine(
+                                                "{0}();",
+                                                typeInitializer.CLanguageFunctionFullName);
+                                        }
+                                        twSource.WriteLine("il2c_leave(nest0, 0);");
+                                    }
+                                    twSource.WriteLine("}");
+                                    twSource.WriteLine("il2c_finally(nest0)");
+                                    twSource.WriteLine("{");
+                                    using (var _____ = twSource.Shift())
                                     {
                                         twSource.WriteLine(
-                                            "{0}();",
-                                            typeInitializer.CLanguageFunctionFullName);
+                                            "{0}_initializedCount__ = *il2c_initializer_count;",
+                                            staticFieldsName);
+                                        twSource.WriteLine("il2c_endfinally(nest0);");
                                     }
+                                    twSource.WriteLine("}");
+                                    twSource.WriteLine("il2c_leave_to(nest0)");
+                                    twSource.WriteLine("{");
+                                    using (var _____ = twSource.Shift())
+                                    {
+                                        twSource.WriteLine("il2c_leave_bind(nest0, 0, CCTOR_F);");
+                                    }
+                                    twSource.WriteLine("}");
+                                    twSource.WriteLine("il2c_end_try(nest0);");
 
-                                    twSource.WriteLine(
-                                        "{0}_initializedCount__ = *il2c_initializer_count;",
-                                        staticFieldsName);
-                                    twSource.WriteLine(
-                                        "return;");
+                                    twSource.WriteLine("CCTOR_F: return;");
                                 }
                                 twSource.WriteLine("}");
 

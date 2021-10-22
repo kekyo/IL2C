@@ -449,6 +449,8 @@ extern il2c_noreturn__ void il2c_rethrow(void);
 extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter);
 extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 
+extern int16_t il2c_default_finally_filter__(System_Exception* ex);
+
 #define IL2C_FILTER_NOMATCH (0)
 #define IL2C_FILTER_FINALLY (-1)
 
@@ -505,7 +507,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-extern bool il2c_required_initializing_type__(volatile interlock_t* pInitializingCount);
+extern bool il2c_required_initializing_type__(interlock_t* pInitializingCount);
 
 extern double il2c_fmod(double lhs, double rhs);
 

@@ -349,7 +349,7 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-bool il2c_required_initializing_type__(volatile interlock_t* pInitializingCount)
+bool il2c_required_initializing_type__(interlock_t* pInitializingCount)
 {
     const interlock_t current = *pInitializingCount;
     if (il2c_unlikely__(current != g_InitializerCount))

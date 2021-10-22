@@ -368,24 +368,24 @@ void il2c_try_intialize_type__(
             current) == current)
         {
             il2c_register_static_fields__(pStaticFields);
-            il2c_try(nest0, il2c_default_finally_filter__)
+            if (pTypeInitializer != NULL)
             {
-                if (pTypeInitializer != NULL)
+                il2c_try(nest0, il2c_default_finally_filter__)
                 {
                     pTypeInitializer();
+                    il2c_leave(nest0, 0);
                 }
-                il2c_leave(nest0, 0);
+                il2c_finally(nest0)
+                {
+                    pTypeInitializerInformation->initialized__ = g_InitializerCount;
+                    il2c_endfinally(nest0);
+                }
+                il2c_leave_to(nest0)
+                {
+                    il2c_leave_bind(nest0, 0, CCTOR_F);
+                }
+                il2c_end_try(nest0);
             }
-            il2c_finally(nest0)
-            {
-                pTypeInitializerInformation->initialized__ = g_InitializerCount;
-                il2c_endfinally(nest0);
-            }
-            il2c_leave_to(nest0)
-            {
-                il2c_leave_bind(nest0, 0, CCTOR_F);
-            }
-            il2c_end_try(nest0);
         CCTOR_F:
             return;
         }

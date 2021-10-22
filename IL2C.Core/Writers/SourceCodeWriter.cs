@@ -196,10 +196,10 @@ namespace IL2C.Writers
                             var staticFieldsName = type.MangledUniqueName + "_STATIC_FIELDS";
 
                             twSource.WriteLine(
-                                "static volatile uintptr_t {0}_initializerCount__ = 0;",
+                                "static volatile interlock_t {0}_initializerCount__ = 0;",
                                 staticFieldsName);
                             twSource.WriteLine(
-                                "static volatile uintptr_t {0}_initializedCount__ = 0;",
+                                "static volatile interlock_t {0}_initializedCount__ = 0;",
                                 staticFieldsName);
                             twSource.SplitLine();
                             twSource.WriteLine(

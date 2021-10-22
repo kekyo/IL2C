@@ -28,8 +28,8 @@ extern IL2C_TLS_INDEX g_TlsIndex__;
 // The initializer count produces when works the type initializer.
 // "il2c_initializer_count" will compare the local type counter,
 // the translated code have to initialize first using static members if count value different.
-static uintptr_t g_InitializerCount = 0;
-const uintptr_t* il2c_initializer_count = &g_InitializerCount;
+static interlock_t g_InitializerCount = 0;
+const interlock_t* il2c_initializer_count = &g_InitializerCount;
 
 extern void il2c_collect_for_final_shutdown__(void);
 
@@ -349,12 +349,12 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-bool il2c_required_initializing_type__(volatile uintptr_t* pInitializingCount)
+bool il2c_required_initializing_type__(volatile interlock_t* pInitializingCount)
 {
-    const uintptr_t current = *pInitializingCount;
+    const interlock_t current = *pInitializingCount;
     if (il2c_unlikely__(current != g_InitializerCount))
     {
-        return (uintptr_t)il2c_icmpxchgptr(
+        return il2c_icmpxchg(
             pInitializingCount, g_InitializerCount, current) ==
             current;
     }
@@ -366,7 +366,7 @@ bool il2c_required_initializing_type__(volatile uintptr_t* pInitializingCount)
 
 void il2c_initialize__(void)
 {
-    g_InitializerCount++;
+    il2c_iinc(&g_InitializerCount);
 
     g_TlsIndex__ = il2c_tls_alloc();
 

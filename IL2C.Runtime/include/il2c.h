@@ -335,7 +335,7 @@ extern void* il2c_cleanup_at_return__(void* pReference);
 #define il2c_return_unlink_with_value(pFrame, value) \
     il2c_unlink_execution_frame((pFrame), NULL); return (value)
 
-extern const uintptr_t* il2c_initializer_count;
+extern const interlock_t* il2c_initializer_count;
 extern void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields);
 
 ///////////////////////////////////////////////////////
@@ -505,7 +505,7 @@ extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-extern bool il2c_required_initializing_type__(volatile uintptr_t* pInitializingCount);
+extern bool il2c_required_initializing_type__(volatile interlock_t* pInitializingCount);
 
 extern double il2c_fmod(double lhs, double rhs);
 

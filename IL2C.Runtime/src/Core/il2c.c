@@ -349,16 +349,48 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-bool il2c_required_initializing_type__(interlock_t* pInitializingCount)
+void il2c_try_intialize_static_field__(
+    void* pStaticFields,
+    interlock_t* pInitializerCount,
+    interlock_t* pInitializedCount,
+    void (*pTypeInitializer)(void))
 {
-    const interlock_t current = *pInitializingCount;
+    il2c_assert(pStaticFields != NULL);
+    il2c_assert(pInitializerCount != NULL);
+    il2c_assert(pInitializedCount != NULL);
+
+    const interlock_t current = *pInitializerCount;
     if (il2c_unlikely__(current != g_InitializerCount))
     {
-        return il2c_icmpxchg(
-            pInitializingCount, g_InitializerCount, current) ==
-            current;
+        if (il2c_icmpxchg(
+            pInitializerCount, g_InitializerCount, current) == current)
+        {
+            il2c_register_static_fields(pStaticFields);
+            il2c_try(nest0, il2c_default_finally_filter__)
+            {
+                if (pTypeInitializer != NULL)
+                {
+                    pTypeInitializer();
+                }
+                il2c_leave(nest0, 0);
+            }
+            il2c_finally(nest0)
+            {
+                *pInitializedCount = g_InitializerCount;
+                il2c_endfinally(nest0);
+            }
+            il2c_leave_to(nest0)
+            {
+                il2c_leave_bind(nest0, 0, CCTOR_F);
+            }
+            il2c_end_try(nest0);
+        CCTOR_F:
+            return;
+        }
     }
-    return false;
+
+    // TODO: spin wait
+    while (il2c_unlikely__(*pInitializedCount != g_InitializerCount));
 }
 
 /////////////////////////////////////////////////////////////

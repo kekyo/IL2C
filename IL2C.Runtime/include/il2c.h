@@ -507,7 +507,11 @@ extern int16_t il2c_default_finally_filter__(System_Exception* ex);
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
 
-extern bool il2c_required_initializing_type__(interlock_t* pInitializingCount);
+extern void il2c_try_intialize_static_field__(
+    void* pStaticFields,
+    interlock_t* pInitializerCount,
+    interlock_t* pInitializedCount,
+    void (*pTypeInitializer)(void));
 
 extern double il2c_fmod(double lhs, double rhs);
 

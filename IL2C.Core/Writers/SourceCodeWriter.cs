@@ -196,10 +196,10 @@ namespace IL2C.Writers
                             var staticFieldsName = type.MangledUniqueName + "_STATIC_FIELDS";
 
                             twSource.WriteLine(
-                                "static volatile interlock_t {0}_initializerCount__ = 0;",
+                                "static interlock_t {0}_initializerCount__ = 0;",
                                 staticFieldsName);
                             twSource.WriteLine(
-                                "static volatile interlock_t {0}_initializedCount__ = 0;",
+                                "static interlock_t {0}_initializedCount__ = 0;",
                                 staticFieldsName);
                             twSource.SplitLine();
                             twSource.WriteLine(
@@ -274,58 +274,12 @@ namespace IL2C.Writers
                             twSource.WriteLine("{");
                             using (var __ = twSource.Shift())
                             {
+                                var typeInitializer = type.DeclaredMethods.
+                                    FirstOrDefault(method => method.IsConstructor && method.IsStatic);
                                 twSource.WriteLine(
-                                    "if (il2c_unlikely__(il2c_required_initializing_type__(&{0}_initializerCount__)))",
-                                    staticFieldsName);
-                                twSource.WriteLine("{");
-                                using (var ____ = twSource.Shift())
-                                {
-                                    twSource.WriteLine(
-                                        "il2c_register_static_fields(&{0}__);",
-                                        staticFieldsName);
-
-                                    twSource.WriteLine(
-                                        "il2c_try(nest0, il2c_default_finally_filter__)");
-                                    twSource.WriteLine("{");
-                                    using (var _____ = twSource.Shift())
-                                    {
-                                        var typeInitializer = type.DeclaredMethods.
-                                            FirstOrDefault(method => method.IsConstructor && method.IsStatic);
-                                        if (typeInitializer != null)
-                                        {
-                                            twSource.WriteLine(
-                                                "{0}();",
-                                                typeInitializer.CLanguageFunctionFullName);
-                                        }
-                                        twSource.WriteLine("il2c_leave(nest0, 0);");
-                                    }
-                                    twSource.WriteLine("}");
-                                    twSource.WriteLine("il2c_finally(nest0)");
-                                    twSource.WriteLine("{");
-                                    using (var _____ = twSource.Shift())
-                                    {
-                                        twSource.WriteLine(
-                                            "{0}_initializedCount__ = *il2c_initializer_count;",
-                                            staticFieldsName);
-                                        twSource.WriteLine("il2c_endfinally(nest0);");
-                                    }
-                                    twSource.WriteLine("}");
-                                    twSource.WriteLine("il2c_leave_to(nest0)");
-                                    twSource.WriteLine("{");
-                                    using (var _____ = twSource.Shift())
-                                    {
-                                        twSource.WriteLine("il2c_leave_bind(nest0, 0, CCTOR_F);");
-                                    }
-                                    twSource.WriteLine("}");
-                                    twSource.WriteLine("il2c_end_try(nest0);");
-
-                                    twSource.WriteLine("CCTOR_F: return;");
-                                }
-                                twSource.WriteLine("}");
-
-                                twSource.WriteLine(
-                                    "while (il2c_unlikely__({0}_initializedCount__ != *il2c_initializer_count));",
-                                    staticFieldsName);
+                                    "il2c_try_intialize_static_field__(&{0}__, &{0}_initializerCount__, &{0}_initializedCount__, {1});",
+                                    staticFieldsName,
+                                    typeInitializer?.CLanguageFunctionFullName ?? "NULL");
                             }
                             twSource.WriteLine("}");
                             twSource.SplitLine();

@@ -193,14 +193,14 @@ namespace IL2C.Writers
                             twSource.WriteLine("// [9-3] Static field handlers:");
                             twSource.SplitLine();
 
-                            var staticFieldsName = type.MangledUniqueName + "_STATIC_FIELDS";
+                            var typeInitializerInformationName =
+                                type.MangledUniqueName + "_TYPE_INITIALIZER_INFORMATION__";
+                            var staticFieldsName =
+                                type.MangledUniqueName + "_STATIC_FIELDS";
 
                             twSource.WriteLine(
-                                "static interlock_t {0}_initializerCount__ = 0;",
-                                staticFieldsName);
-                            twSource.WriteLine(
-                                "static interlock_t {0}_initializedCount__ = 0;",
-                                staticFieldsName);
+                                "static IL2C_TYPE_INITIALIZER_INFORMATION {0} = {{ 0, 0 }};",
+                                typeInitializerInformationName);
                             twSource.SplitLine();
                             twSource.WriteLine(
                                 "static struct {0}_DECL__ /* IL2C_STATIC_FIELDS */",
@@ -266,18 +266,19 @@ namespace IL2C.Writers
                             twSource.SplitLine();
 
                             // Generate type initializer function
-                            var typeInitializerName =
-                                $"{type.MangledUniqueName}_TypeIntializer__";
+                            var typeInitializerBodyName =
+                                type.MangledUniqueName + "_TypeIntializer__";
                             twSource.WriteLine(
                                 "static void {0}(void)",
-                                typeInitializerName);
+                                typeInitializerBodyName);
                             twSource.WriteLine("{");
                             using (var __ = twSource.Shift())
                             {
                                 var typeInitializer = type.DeclaredMethods.
                                     FirstOrDefault(method => method.IsConstructor && method.IsStatic);
                                 twSource.WriteLine(
-                                    "il2c_try_intialize_static_field__(&{0}__, &{0}_initializerCount__, &{0}_initializedCount__, {1});",
+                                    "il2c_try_intialize_type__(&{0}, &{1}__, {2});",
+                                    typeInitializerInformationName,
                                     staticFieldsName,
                                     typeInitializer?.CLanguageFunctionFullName ?? "NULL");
                             }
@@ -296,14 +297,14 @@ namespace IL2C.Writers
                                 using (var _ = twSource.Shift())
                                 {
                                     twSource.WriteLine(
-                                        "if (il2c_unlikely__({0}_initializedCount__ != *il2c_initializer_count))",
-                                        staticFieldsName);
+                                        "if (!il2c_is_type_initialized__(&{0}))",
+                                        typeInitializerInformationName);
                                     twSource.WriteLine("{");
                                     using (var __ = twSource.Shift())
                                     {
                                         twSource.WriteLine(
                                             "{0}();",
-                                            typeInitializerName);
+                                            typeInitializerBodyName);
                                     }
                                     twSource.WriteLine("}");
 

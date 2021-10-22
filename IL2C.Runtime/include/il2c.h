@@ -335,8 +335,24 @@ extern void* il2c_cleanup_at_return__(void* pReference);
 #define il2c_return_unlink_with_value(pFrame, value) \
     il2c_unlink_execution_frame((pFrame), NULL); return (value)
 
-extern const interlock_t* il2c_initializer_count;
-extern void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields);
+///////////////////////////////////////////////////////
+// Type intializing related declarations
+
+typedef volatile struct IL2C_TYPE_INITIALIZER_INFORMATION_DECL
+{
+    interlock_t initializing__;
+    interlock_t initialized__;
+} IL2C_TYPE_INITIALIZER_INFORMATION;
+
+extern const interlock_t* il2c_initializer_count__;
+
+#define il2c_is_type_initialized__(pTypeInitializerInformation) \
+    il2c_likely__((pTypeInitializerInformation)->initialized__ == *il2c_initializer_count__)
+
+extern void il2c_try_intialize_type__(
+    IL2C_TYPE_INITIALIZER_INFORMATION* pTypeInitializerInformation,
+    /* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields,
+    void (*pTypeInitializer)(void));
 
 ///////////////////////////////////////////////////////
 // Basic exceptions
@@ -506,12 +522,6 @@ extern int16_t il2c_default_finally_filter__(System_Exception* ex);
 
 ///////////////////////////////////////////////////////
 // Another special runtime helper functions
-
-extern void il2c_try_intialize_static_field__(
-    void* pStaticFields,
-    interlock_t* pInitializerCount,
-    interlock_t* pInitializedCount,
-    void (*pTypeInitializer)(void));
 
 extern double il2c_fmod(double lhs, double rhs);
 

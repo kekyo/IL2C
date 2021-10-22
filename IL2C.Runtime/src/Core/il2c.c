@@ -29,7 +29,7 @@ extern IL2C_TLS_INDEX g_TlsIndex__;
 // "il2c_initializer_count" will compare the local type counter,
 // the translated code have to initialize first using static members if count value different.
 static interlock_t g_InitializerCount = 0;
-const interlock_t* il2c_initializer_count = &g_InitializerCount;
+const interlock_t* il2c_initializer_count__ = &g_InitializerCount;
 
 extern void il2c_collect_for_final_shutdown__(void);
 
@@ -347,25 +347,27 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
 }
 
 ///////////////////////////////////////////////////////
-// Another special runtime helper functions
+// Type intializing related declarations
 
-void il2c_try_intialize_static_field__(
-    void* pStaticFields,
-    interlock_t* pInitializerCount,
-    interlock_t* pInitializedCount,
+extern void il2c_register_static_fields__(volatile void* pStaticFields);
+
+void il2c_try_intialize_type__(
+    IL2C_TYPE_INITIALIZER_INFORMATION* pTypeInitializerInformation,
+    /* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields,
     void (*pTypeInitializer)(void))
 {
+    il2c_assert(pTypeInitializerInformation != NULL);
     il2c_assert(pStaticFields != NULL);
-    il2c_assert(pInitializerCount != NULL);
-    il2c_assert(pInitializedCount != NULL);
 
-    const interlock_t current = *pInitializerCount;
+    const interlock_t current = pTypeInitializerInformation->initializing__;
     if (il2c_unlikely__(current != g_InitializerCount))
     {
         if (il2c_icmpxchg(
-            pInitializerCount, g_InitializerCount, current) == current)
+            &pTypeInitializerInformation->initializing__,
+            g_InitializerCount,
+            current) == current)
         {
-            il2c_register_static_fields(pStaticFields);
+            il2c_register_static_fields__(pStaticFields);
             il2c_try(nest0, il2c_default_finally_filter__)
             {
                 if (pTypeInitializer != NULL)
@@ -376,7 +378,7 @@ void il2c_try_intialize_static_field__(
             }
             il2c_finally(nest0)
             {
-                *pInitializedCount = g_InitializerCount;
+                pTypeInitializerInformation->initialized__ = g_InitializerCount;
                 il2c_endfinally(nest0);
             }
             il2c_leave_to(nest0)
@@ -390,7 +392,7 @@ void il2c_try_intialize_static_field__(
     }
 
     // TODO: spin wait
-    while (il2c_unlikely__(*pInitializedCount != g_InitializerCount));
+    while (il2c_unlikely__(pTypeInitializerInformation->initialized__ != g_InitializerCount));
 }
 
 /////////////////////////////////////////////////////////////

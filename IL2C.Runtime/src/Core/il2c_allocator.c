@@ -247,7 +247,8 @@ void* il2c_cleanup_at_return__(void* pReference)
 /////////////////////////////////////////////////////////////
 // Static fields manipulator functions
 
-void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields)
+void il2c_register_static_fields__(
+    /* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields)
 {
     il2c_assert(pStaticFields != NULL);
 

@@ -507,9 +507,7 @@ namespace IL2C.Metadata
 
         public static IEnumerable<IMethodInformation> FilterByNewslots(
             this IEnumerable<IMethodInformation> methods) =>
-            methods.Where(method => method.IsVirtual &&
-                // In mono environment, the System.Object.Finalizer method isn't marked 'newslot' ...
-                (method.IsNewSlot || method.DeclaringType.IsObjectType));
+            methods.Where(method => method.IsVirtual && method.IsNewSlot);
 
         public static IEnumerable<(IMethodInformation newslotMethod, IMethodInformation[] reuseslotMethods)> OrderByMostOverrides(
             this IEnumerable<IMethodInformation> methods)
@@ -517,8 +515,7 @@ namespace IL2C.Metadata
             var list = new List<Tuple<IMethodInformation, List<IMethodInformation>>>();
             foreach (var method in methods.Where(method => method.IsVirtual))
             {
-                // In mono environment, the System.Object.Finalizer method isn't marked 'newslot' ...
-                if (method.IsNewSlot || method.DeclaringType.IsObjectType)
+                if (method.IsNewSlot)
                 {
                     list.Add(Tuple.Create(method, new List<IMethodInformation> { method }));
                 }

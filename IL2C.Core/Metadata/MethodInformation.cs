@@ -184,7 +184,8 @@ namespace IL2C.Metadata
         public bool IsSealed =>
             this.Definition.IsFinal || this.DeclaringType.IsSealed;
         public bool IsNewSlot =>
-            this.Definition.IsNewSlot;
+            // In mono environment, the System.Object.Finalizer method isn't marked 'newslot' ...
+            this.Definition.IsNewSlot || (this.Definition.IsVirtual && this.DeclaringType.IsObjectType);
         public bool IsReuseSlot =>
             this.Definition.IsReuseSlot;
         public bool IsExtern =>

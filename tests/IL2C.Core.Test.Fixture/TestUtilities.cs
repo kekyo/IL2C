@@ -166,6 +166,9 @@ namespace IL2C
         #endregion
 
         #region IO related
+        public static readonly bool IsWindows =
+            Environment.OSVersion.Platform == PlatformID.Win32NT;
+
         private static bool IsStrangeProblemException(Exception ex) =>
             ex.Message.Contains("not a valid application") ||
             ex.Message.Contains("it is being used by another process") ||
@@ -329,8 +332,29 @@ namespace IL2C
             CopyResourceToTextFileAsync(path, resourceName, empty);
 
         public static async Task<(int, string)> ExecuteAsync(
-            string workingPath, string[] searchPaths, string executablePath, params object[] args)
+            string workingPath, string scriptName, string[] searchPaths, string executablePath, params object[] args)
         {
+            File.WriteAllText(
+                Path.Combine(workingPath, scriptName),
+                string.Join(Environment.NewLine, new[]
+                {
+                    IsWindows ?
+                        "@echo off" :
+                        "#!/bin/sh",
+                    string.Empty,
+                    IsWindows ? "; IL2C: It is a pseudo script." : "# IL2C: It is a pseudo script.",
+                    string.Empty,
+                    IsWindows ? 
+                        $"set PATH={string.Join(";",searchPaths)};%PATH%" :
+                        $"export PATH=\"{string.Join(":",searchPaths)}:$PATH\"",
+                    string.Empty,
+                    $"cd \"{workingPath}\"",
+                    string.Empty,
+                    $"\"{executablePath}\" {string.Join(" ", args)}",
+                    string.Empty,
+                }),
+                new UTF8Encoding(IsWindows, true));
+            
             using (var p = new Process())
             {
                 p.StartInfo.FileName = executablePath;

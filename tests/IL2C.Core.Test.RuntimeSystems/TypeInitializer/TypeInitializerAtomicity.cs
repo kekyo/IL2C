@@ -44,6 +44,7 @@ namespace IL2C.RuntimeSystems
     }
 
     [TestCase(1230, "MultipleExecution", 10, IncludeTypes = new[] { typeof(MultipleExecutionClosure), typeof(TypeInitializer_Atomicity) })]
+    [TestCase(246, "AfterInitialized", IncludeTypes = new[] { typeof(TypeInitializer_Atomicity) })]
     partial class TypeInitializer
     {
         public static int MultipleExecution(int count)
@@ -73,6 +74,14 @@ namespace IL2C.RuntimeSystems
             }
 
             return sum;
+        }
+
+        public static int AfterInitialized()
+        {
+            var value0 = TypeInitializer_Atomicity.Int32Value;
+            var value1 = TypeInitializer_Atomicity.Int32Value;
+
+            return value0 + value1;
         }
     }
 }

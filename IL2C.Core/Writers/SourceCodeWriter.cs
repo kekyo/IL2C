@@ -215,7 +215,7 @@ namespace IL2C.Writers
 
                             // Generate STATIC_FIELDS when available
                             var isAvailableStaticFieldStructs =
-                                (objrefStaticFields.Length >= 1) && (valueTypeStaticFields.Length >= 1);
+                                (objrefStaticFields.Length >= 1) || (valueTypeStaticFields.Length >= 1);
                             if (isAvailableStaticFieldStructs)
                             {
                                 twSource.WriteLine(
@@ -286,7 +286,7 @@ namespace IL2C.Writers
 
                             // Generate type initializer function
                             var typeInitializerBodyName =
-                                type.MangledUniqueName + "_TypeIntializer__";
+                                type.MangledUniqueName + "__TryIntialize__";
                             twSource.WriteLine(
                                 "static void {0}(void)",
                                 typeInitializerBodyName);

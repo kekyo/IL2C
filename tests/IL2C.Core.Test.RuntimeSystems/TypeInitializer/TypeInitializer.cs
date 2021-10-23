@@ -73,6 +73,24 @@ namespace IL2C.RuntimeSystems
         public static readonly string StringValue;
     }
 
+    public static class TypeInitializer_NonTrackingGCs
+    {
+        public static readonly bool BooleanValue;
+        public static readonly byte ByteValue;
+        public static readonly short Int16Value;
+        public static readonly int Int32Value;
+        public static readonly long Int64Value;
+        public static readonly sbyte SByteValue;
+        public static readonly ushort UInt16Value;
+        public static readonly uint UInt32Value;
+        public static readonly ulong UInt64Value;
+        public static readonly IntPtr IntPtrValue;
+        public static readonly UIntPtr UIntPtrValue;
+        public static readonly float SingleValue;
+        public static readonly double DoubleValue;
+        public static readonly char CharValue;
+    }
+
     [TestId("TypeInitializer")]
     [Description("These tests are verified the IL2C can handle the type initializer special translation cases.")]
     [TestCase(true, "Bool", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
@@ -92,6 +110,7 @@ namespace IL2C.RuntimeSystems
     [TestCase("ABC", "String", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase(0, "Int32_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
     [TestCase(null, "String_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
+    [TestCase(0, "NonTracked", IncludeTypes = new[] { typeof(TypeInitializer_NonTrackingGCs) })]
     public sealed partial class TypeInitializer
     {
         public static bool Bool()
@@ -177,6 +196,12 @@ namespace IL2C.RuntimeSystems
         public static string String_None()
         {
             return TypeInitializer_None.StringValue;
+        }
+
+        // Only manual revewing generated C source code.
+        public static int NonTracked()
+        {
+            return TypeInitializer_NonTrackingGCs.Int32Value;
         }
     }
 }

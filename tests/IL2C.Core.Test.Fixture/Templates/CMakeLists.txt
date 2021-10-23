@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
-include(${CMAKE_CURRENT_LIST_DIR}/../../../../../IL2C.Runtime/cmake/${CMAKE_TARGET_SCRIPT_NAME})
+include(${CMAKE_CURRENT_LIST_DIR}/../../../../../../IL2C.Runtime/cmake/${CMAKE_TARGET_SCRIPT_NAME})
 
 project(test C)
 

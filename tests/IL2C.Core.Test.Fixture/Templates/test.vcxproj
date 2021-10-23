@@ -57,7 +57,7 @@
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <FunctionLevelLinking>true</FunctionLevelLinking>
             <CreateHotpatchableImage>false</CreateHotpatchableImage>
-            <AdditionalIncludeDirectories>.;..\..\..\..\..\IL2C.Runtime\include</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>.;..\..\..\..\..\..\IL2C.Runtime\include</AdditionalIncludeDirectories>
             <DisableSpecificWarnings>4100;4197;4206</DisableSpecificWarnings>
             <ExceptionHandling>false</ExceptionHandling>
             <AssemblerOutput>All</AssemblerOutput>
@@ -87,7 +87,7 @@
             <MapExports>true</MapExports>
             <OptimizeReferences>true</OptimizeReferences>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
-            <AdditionalDependencies>..\..\..\..\..\IL2C.Runtime\lib\$(Configuration)\libil2c-msvc-win-$(Platform)-rts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>..\..\..\..\..\..\IL2C.Runtime\lib\$(Configuration)\libil2c-msvc-win-$(Platform)-rts.lib;%(AdditionalDependencies)</AdditionalDependencies>
         </Link>
         <Link Condition="'$(Configuration)'=='Release'">
             <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>

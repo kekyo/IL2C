@@ -84,7 +84,7 @@ namespace IL2C.RuntimeSystems
     [TestCase((double)1, "Double", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase((char)1, "Char", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase("ABC", "String", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    public sealed class TypeInitializer
+    public sealed partial class TypeInitializer
     {
         public static bool Bool()
         {

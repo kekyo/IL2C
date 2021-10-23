@@ -2,7 +2,7 @@
     "profiles": {
         "IL2C": {
             "commandName": "Project",
-            "commandLineArgs": "-g1 $(ProjectDir)..\\samples\\Calculator\\Generated $(ProjectDir)..\\samples\\Calculator\\Calculator.Core\\bin\\Debug\\netstandard2.0\\Calculator.Core.dll"
+            "commandLineArgs": "-g1 $(ProjectDir)../samples/Calculator/Generated $(ProjectDir)../samples/Calculator/Calculator.Core/bin/Debug/netstandard2.0/Calculator.Core.dll"
         }
     }
 }

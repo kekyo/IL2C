@@ -67,6 +67,12 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public static class TypeInitializer_None
+    {
+        public static readonly int Int32Value;
+        public static readonly string StringValue;
+    }
+
     [TestId("TypeInitializer")]
     [Description("These tests are verified the IL2C can handle the type initializer special translation cases.")]
     [TestCase(true, "Bool", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
@@ -84,6 +90,8 @@ namespace IL2C.RuntimeSystems
     [TestCase((double)1, "Double", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase((char)1, "Char", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
     [TestCase("ABC", "String", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
+    [TestCase(0, "Int32_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
+    [TestCase(null, "String_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
     public sealed partial class TypeInitializer
     {
         public static bool Bool()
@@ -159,6 +167,16 @@ namespace IL2C.RuntimeSystems
         public static string String()
         {
             return TypeInitializer_Field.StringValue;
+        }
+
+        public static int Int32_None()
+        {
+            return TypeInitializer_None.Int32Value;
+        }
+
+        public static string String_None()
+        {
+            return TypeInitializer_None.StringValue;
         }
     }
 }

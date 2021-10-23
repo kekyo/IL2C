@@ -43,7 +43,23 @@ namespace IL2C.RuntimeSystems
         }
     }
 
+    public static class TypeInitializer_Atomicity_NoTypeInitializer
+    {
+        public static readonly int Int32Value;
+    }
+
+    public sealed class MultipleExecutionClosure_NoTypeInitializer
+    {
+        public int Value;
+
+        public void Run()
+        {
+            this.Value = TypeInitializer_Atomicity_NoTypeInitializer.Int32Value;
+        }
+    }
+
     [TestCase(1230, "MultipleExecution", 10, IncludeTypes = new[] { typeof(MultipleExecutionClosure), typeof(TypeInitializer_Atomicity) })]
+    [TestCase(0, "MultipleExecutionWithNoTypeInitializer", 40, IncludeTypes = new[] { typeof(MultipleExecutionClosure_NoTypeInitializer), typeof(TypeInitializer_Atomicity_NoTypeInitializer) })]
     [TestCase(246, "AfterInitialized", IncludeTypes = new[] { typeof(TypeInitializer_Atomicity) })]
     partial class TypeInitializer
     {
@@ -54,6 +70,37 @@ namespace IL2C.RuntimeSystems
             for (var index = 0; index < count; index++)
             {
                 targets[index] = new MultipleExecutionClosure();
+                threads[index] = new Thread(targets[index].Run);
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Start();
+            }
+
+            for (var index = 0; index < count; index++)
+            {
+                threads[index].Join();
+            }
+
+            // Will not deadlock by any suspend executing type initializer...
+
+            var sum = 0;
+            for (var index = 0; index < count; index++)
+            {
+                sum += targets[index].Value;
+            }
+
+            return sum;
+        }
+
+        public static int MultipleExecutionWithNoTypeInitializer(int count)
+        {
+            var targets = new MultipleExecutionClosure_NoTypeInitializer[count];
+            var threads = new Thread[count];
+            for (var index = 0; index < count; index++)
+            {
+                targets[index] = new MultipleExecutionClosure_NoTypeInitializer();
                 threads[index] = new Thread(targets[index].Run);
             }
 

@@ -366,6 +366,8 @@ void il2c_try_intialize_type__(
             g_InitializerCount,
             current) == current)
         {
+            // Begin initialization process.
+
             if (pStaticFields != NULL)
             {
                 il2c_register_static_fields__(pStaticFields);
@@ -380,6 +382,7 @@ void il2c_try_intialize_type__(
                 }
                 il2c_finally(nest0)
                 {
+                    // Finished initialization process.
                     pTypeInitializerInformation->initialized__ = g_InitializerCount;
                     il2c_endfinally(nest0);
                 }
@@ -389,10 +392,18 @@ void il2c_try_intialize_type__(
                 }
                 il2c_end_try(nest0);
             }
+            else
+            {
+                // Finished initialization process.
+                pTypeInitializerInformation->initialized__ = g_InitializerCount;
+            }
+
         CCTOR_F:
             return;
         }
     }
+
+    // Will suspend by executing type initializer
 
     // TODO: spin wait
     while (il2c_unlikely__(pTypeInitializerInformation->initialized__ != g_InitializerCount));

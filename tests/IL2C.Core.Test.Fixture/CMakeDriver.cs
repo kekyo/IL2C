@@ -65,7 +65,7 @@ namespace IL2C
                             "..");
                         if (exitCode != 0)
                         {
-                            throw new Exception("cmake [ExitCode=" + exitCode + "]: " + log);
+                            throw new Exception($"cmake [Path=\"{basePath}\", ExitCode={exitCode}]: {log}");
                         }
                         return log;
                     });
@@ -94,7 +94,7 @@ namespace IL2C
                     "-j");
                 if (exitCode != 0)
                 {
-                    throw new Exception("cmake [ninja] [ExitCode=" + exitCode + "]: " + log);
+                    throw new Exception($"cmake [ninja] [Path=\"{basePath}\", ExitCode={exitCode}]: {log}");
                 }
                 return log;
             });
@@ -106,7 +106,7 @@ namespace IL2C
                     outPath, new[] { outPath }, executablePath);
                 if (exitCode != 0)
                 {
-                    throw new Exception("test [ExitCode=" + exitCode + "]: " + log);
+                    throw new Exception($"test [Path=\"{basePath}\", ExitCode={exitCode}]: {log}");
                 }
                 return log;
             });
@@ -168,7 +168,7 @@ namespace IL2C
                 libs);
             if (gccExitCode != 0)
             {
-                throw new Exception("gcc [ExitCode=" + gccExitCode + "]: " + gccLog);
+                throw new Exception($"gcc [Path=\"{basePath}\", ExitCode={gccExitCode}]: {gccLog}");
             }
 
             // Step2: Execute native binary
@@ -176,7 +176,7 @@ namespace IL2C
                 outPath, new[] { outPath }, executablePath);
             if (testExitCode != 0)
             {
-                throw new Exception("test [ExitCode=" + testExitCode + "]: " + testLog);
+                throw new Exception($"test [Path=\"{basePath}\", ExitCode={testExitCode}]: {testLog}");
             }
 
             return testLog;

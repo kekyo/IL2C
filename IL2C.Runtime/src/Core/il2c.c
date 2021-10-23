@@ -28,8 +28,8 @@ extern IL2C_TLS_INDEX g_TlsIndex__;
 // The initializer count produces when works the type initializer.
 // "il2c_initializer_count" will compare the local type counter,
 // the translated code have to initialize first using static members if count value different.
-static uintptr_t g_InitializerCount = 0;
-const uintptr_t* il2c_initializer_count = &g_InitializerCount;
+static interlock_t g_InitializerCount = 0;
+const interlock_t* il2c_initializer_count__ = &g_InitializerCount;
 
 extern void il2c_collect_for_final_shutdown__(void);
 
@@ -346,12 +346,75 @@ void* il2c_unbox__(/* System_ValueType* */ void* pReference, IL2C_RUNTIME_TYPE v
     return il2c_unsafe_unbox__(pReference, void);
 }
 
+///////////////////////////////////////////////////////
+// Type intializing related declarations
+
+extern void il2c_register_static_fields__(volatile void* pStaticFields);
+
+void il2c_try_intialize_type__(
+    IL2C_TYPE_INITIALIZER_INFORMATION* pTypeInitializerInformation,
+    /* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields,
+    void (*pTypeInitializer)(void))
+{
+    il2c_assert(pTypeInitializerInformation != NULL);
+
+    const interlock_t current = pTypeInitializerInformation->initializing__;
+    if (il2c_unlikely__(current != g_InitializerCount))
+    {
+        if (il2c_icmpxchg(
+            &pTypeInitializerInformation->initializing__,
+            g_InitializerCount,
+            current) == current)
+        {
+            // Begin initialization process.
+
+            if (pStaticFields != NULL)
+            {
+                il2c_register_static_fields__(pStaticFields);
+            }
+
+            if (pTypeInitializer != NULL)
+            {
+                il2c_try(nest0, il2c_default_finally_filter__)
+                {
+                    pTypeInitializer();
+                    il2c_leave(nest0, 0);
+                }
+                il2c_finally(nest0)
+                {
+                    // Finished initialization process.
+                    pTypeInitializerInformation->initialized__ = g_InitializerCount;
+                    il2c_endfinally(nest0);
+                }
+                il2c_leave_to(nest0)
+                {
+                    il2c_leave_bind(nest0, 0, CCTOR_F);
+                }
+                il2c_end_try(nest0);
+            }
+            else
+            {
+                // Finished initialization process.
+                pTypeInitializerInformation->initialized__ = g_InitializerCount;
+            }
+
+        CCTOR_F:
+            return;
+        }
+    }
+
+    // Will suspend by executing type initializer
+
+    // TODO: spin wait
+    while (il2c_unlikely__(pTypeInitializerInformation->initialized__ != g_InitializerCount));
+}
+
 /////////////////////////////////////////////////////////////
 // IL2C runtime initialzer / shutdown
 
 void il2c_initialize__(void)
 {
-    g_InitializerCount++;
+    il2c_iinc(&g_InitializerCount);
 
     g_TlsIndex__ = il2c_tls_alloc();
 

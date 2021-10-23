@@ -335,8 +335,24 @@ extern void* il2c_cleanup_at_return__(void* pReference);
 #define il2c_return_unlink_with_value(pFrame, value) \
     il2c_unlink_execution_frame((pFrame), NULL); return (value)
 
-extern const uintptr_t* il2c_initializer_count;
-extern void il2c_register_static_fields(/* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields);
+///////////////////////////////////////////////////////
+// Type intializing related declarations
+
+typedef volatile struct IL2C_TYPE_INITIALIZER_INFORMATION_DECL
+{
+    interlock_t initializing__;
+    interlock_t initialized__;
+} IL2C_TYPE_INITIALIZER_INFORMATION;
+
+extern const interlock_t* il2c_initializer_count__;
+
+#define il2c_is_type_initialized__(pTypeInitializerInformation) \
+    il2c_likely__((pTypeInitializerInformation)->initialized__ == *il2c_initializer_count__)
+
+extern void il2c_try_intialize_type__(
+    IL2C_TYPE_INITIALIZER_INFORMATION* pTypeInitializerInformation,
+    /* IL2C_STATIC_FIELDS* */ volatile void* pStaticFields,
+    void (*pTypeInitializer)(void));
 
 ///////////////////////////////////////////////////////
 // Basic exceptions
@@ -448,6 +464,8 @@ extern il2c_noreturn__ void il2c_rethrow(void);
 
 extern void il2c_link_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget, IL2C_EXCEPTION_FILTER filter);
 extern void il2c_unlink_unwind_target__(IL2C_EXCEPTION_FRAME* pUnwindTarget);
+
+extern int16_t il2c_default_finally_filter__(System_Exception* ex);
 
 #define IL2C_FILTER_NOMATCH (0)
 #define IL2C_FILTER_FINALLY (-1)

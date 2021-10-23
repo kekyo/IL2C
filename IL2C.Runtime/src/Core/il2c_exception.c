@@ -186,6 +186,12 @@ il2c_noreturn__ void il2c_rethrow(void)
     il2c_assert(0);
 }
 
+int16_t il2c_default_finally_filter__(System_Exception* ex)
+{
+    il2c_assert(ex != NULL);
+    return IL2C_FILTER_FINALLY;
+}
+
 #if defined(IL2C_USE_SIGNAL)
 il2c_noreturn__ void il2c_SIGSEGV_handler(int sig)
 {

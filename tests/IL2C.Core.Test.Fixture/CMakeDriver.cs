@@ -53,7 +53,7 @@ namespace IL2C
                     {
                         var (exitCode, log) = await TestUtilities.ExecuteAsync(
                             outPath,
-                            TestUtilities.IsWindows ? "gen.bat" : "gen.sh",
+                            "gen",
                             TestUtilities.IsWindows ? new[] { binPath } : Array.Empty<string>(),
                             TestUtilities.IsWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
                             "-G",
@@ -88,7 +88,7 @@ namespace IL2C
             {
                 var (exitCode, log) = await TestUtilities.ExecuteAsync(
                     outPath,
-                    TestUtilities.IsWindows ? "build.bat" : "build.sh",
+                    "build",
                     TestUtilities.IsWindows ? new[] { binPath } : Array.Empty<string>(),
                     TestUtilities.IsWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
                     "--build",
@@ -106,7 +106,7 @@ namespace IL2C
             {
                 var (exitCode, log) = await TestUtilities.ExecuteAsync(
                     outPath,
-                    TestUtilities.IsWindows ? "run.bat" : "run.sh",
+                    "run",
                     new[] { outPath },
                     executablePath);
                 if (exitCode != 0)
@@ -159,7 +159,7 @@ namespace IL2C
             // Step1: Execute gcc
             var (gccExitCode, gccLog) = await TestUtilities.ExecuteAsync(
                 outPath,
-                TestUtilities.IsWindows ? "build.bat" : "build.sh",
+                "build",
                 TestUtilities.IsWindows ? new[] { binPath } : Array.Empty<string>(),
                 TestUtilities.IsWindows ? Path.Combine(binPath, "gcc.exe") : "gcc",   // NOT windows: uses system default gcc.
                 $"-I{basePath}",
@@ -179,7 +179,7 @@ namespace IL2C
             // Step2: Execute native binary
             var (testExitCode, testLog) = await TestUtilities.ExecuteAsync(
                 outPath,
-                TestUtilities.IsWindows ? "run.bat" : "run.sh",
+                "run",
                 new[] { outPath },
                 executablePath);
             if (testExitCode != 0)

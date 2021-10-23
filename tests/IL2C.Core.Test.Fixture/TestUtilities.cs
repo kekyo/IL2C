@@ -334,26 +334,44 @@ namespace IL2C
         public static async Task<(int, string)> ExecuteAsync(
             string workingPath, string scriptName, string[] searchPaths, string executablePath, params object[] args)
         {
-            File.WriteAllText(
-                Path.Combine(workingPath, scriptName),
-                string.Join(Environment.NewLine, new[]
-                {
-                    IsWindows ?
-                        "@echo off" :
+            if (IsWindows)
+            {
+                File.WriteAllText(
+                    Path.Combine(workingPath, scriptName + ".bat"),
+                    string.Join(Environment.NewLine, new[]
+                    {
+                        "@echo off",
+                        string.Empty,
+                        "rem IL2C: It is a pseudo script.",
+                        string.Empty,
+                        $"set PATH={string.Join(";",searchPaths)};%PATH%",
+                        string.Empty,
+                        $"cd \"{workingPath}\"",
+                        string.Empty,
+                        $"\"{executablePath}\" {string.Join(" ", args)}",
+                        string.Empty,
+                    }),
+                    new UTF8Encoding(false, true));
+            }
+            else
+            {
+                File.WriteAllText(
+                    Path.Combine(workingPath, scriptName + ".sh"),
+                    string.Join(Environment.NewLine, new[]
+                    {
                         "#!/bin/sh",
-                    string.Empty,
-                    IsWindows ? "; IL2C: It is a pseudo script." : "# IL2C: It is a pseudo script.",
-                    string.Empty,
-                    IsWindows ? 
-                        $"set PATH={string.Join(";",searchPaths)};%PATH%" :
+                        string.Empty,
+                        "# IL2C: It is a pseudo script.",
+                        string.Empty,
                         $"export PATH=\"{string.Join(":",searchPaths)}:$PATH\"",
-                    string.Empty,
-                    $"cd \"{workingPath}\"",
-                    string.Empty,
-                    $"\"{executablePath}\" {string.Join(" ", args)}",
-                    string.Empty,
-                }),
-                new UTF8Encoding(IsWindows, true));
+                        string.Empty,
+                        $"cd \"{workingPath}\"",
+                        string.Empty,
+                        $"\"{executablePath}\" {string.Join(" ", args)}",
+                        string.Empty,
+                    }),
+                    new UTF8Encoding(false, true));
+            }
             
             using (var p = new Process())
             {

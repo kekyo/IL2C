@@ -259,9 +259,21 @@ namespace IL2C.Writers
                             foreach (var field in otherStaticFields)
                             {
                                 twSource.WriteLine(
-                                   "static {0} {1};",
+                                   "static {0} {1} = {2};",
                                    field.FieldType.CLanguageTypeName,
-                                   field.MangledUniqueName);
+                                   field.MangledUniqueName,
+                                   field.FieldType.IsBooleanType ?
+                                       "false" :
+                                       field.FieldType.IsCharType ?
+                                           "L'\\0'" :
+                                           (field.FieldType.IsIntegerPrimitive || field.FieldType.IsIntPtrType || field.FieldType.IsUIntPtrType) ?
+                                               "0" :
+                                               field.FieldType.IsSingleType ?
+                                                   "0.0f" :
+                                                   field.FieldType.IsDoubleType ?
+                                                       "0.0" :
+                                                        // Final fallback is non traversal value type (!IsRequiredTraverse)
+                                                        "{ }");
                             }
                             twSource.SplitLine();
 

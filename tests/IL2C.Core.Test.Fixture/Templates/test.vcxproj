@@ -29,7 +29,7 @@
         <ProjectGuid>{182A62A4-47AC-4290-8EA5-250AE8131613}</ProjectGuid>
         <Keyword>Win32Proj</Keyword>
         <RootNamespace>IL2CRuntime</RootNamespace>
-        <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+        <WindowsTargetPlatformVersion>$(LatestTargetPlatformVersion)</WindowsTargetPlatformVersion>
         <ConfigurationType>Application</ConfigurationType>
         <PlatformToolset>v142</PlatformToolset>
         <LinkIncremental>false</LinkIncremental>

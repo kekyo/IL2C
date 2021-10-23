@@ -19,3 +19,5 @@ set(TARGET_LIBRARY_NAME "${IL2C_LIBRARY_NAME_BASE}")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../include)
 link_directories(${CMAKE_CURRENT_LIST_DIR}/../lib)
+
+set(CMAKE_REQUIRED_LIBRARIES m ${IL2C_LIBRARY_NAME_BASE})

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace IL2C
@@ -30,15 +31,13 @@ namespace IL2C
         public static async Task<string> BuildAsync(
             string binPath, string configuration, string sourcePath, string il2cRuntimePath)
         {
-            var isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
-
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "build");
             var executablePath = Path.Combine(
                 outPath,
-                Path.GetFileNameWithoutExtension(sourcePath) + (isWindows ? ".exe" : string.Empty));
+                Path.GetFileNameWithoutExtension(sourcePath) + (TestUtilities.IsWindows ? ".exe" : string.Empty));
 
-            var targetCMakeScriptName = isWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
+            var targetCMakeScriptName = TestUtilities.IsWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
                 "gcc4-win-mingw32.cmake" : "gcc-linux.cmake";
 
             // Step1: Generate ninja script by cmake.
@@ -54,18 +53,20 @@ namespace IL2C
                     var cmakeLog = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
                     {
                         var (exitCode, log) = await TestUtilities.ExecuteAsync(
-                            outPath, isWindows ? new[] { binPath } : Array.Empty<string>(),
-                            isWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
+                            outPath,
+                            "gen",
+                            TestUtilities.IsWindows ? new[] { binPath } : Array.Empty<string>(),
+                            TestUtilities.IsWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
                             "-G",
                             "Ninja",
-                            isWindows ? "-DCMAKE_MAKE_PROGRAM=ninja.exe" : "-DCMAKE_MAKE_PROGRAM=ninja",
-                            isWindows ? "-DPLATFORM=mingw32" : "-DPLATFORM=x86_64",
+                            TestUtilities.IsWindows ? "-DCMAKE_MAKE_PROGRAM=ninja.exe" : "-DCMAKE_MAKE_PROGRAM=ninja",
+                            TestUtilities.IsWindows ? "-DPLATFORM=mingw32" : "-DPLATFORM=x86_64",
                             $"-DCONFIGURATION={configuration}",
                             $"-DCMAKE_TARGET_SCRIPT_NAME={targetCMakeScriptName}",
                             "..");
                         if (exitCode != 0)
                         {
-                            throw new Exception("cmake [ExitCode=" + exitCode + "]: " + log);
+                            throw new Exception($"cmake [Path=\"{basePath}\", ExitCode={exitCode}]: {log}");
                         }
                         return log;
                     });
@@ -87,14 +88,16 @@ namespace IL2C
             var cmakeNinjaLog = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {
                 var (exitCode, log) = await TestUtilities.ExecuteAsync(
-                    outPath, isWindows ? new[] { binPath } : Array.Empty<string>(),
-                    isWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
+                    outPath,
+                    "build",
+                    TestUtilities.IsWindows ? new[] { binPath } : Array.Empty<string>(),
+                    TestUtilities.IsWindows ? Path.Combine(binPath, "cmake.exe") : "cmake",
                     "--build",
                     ".",
                     "-j");
                 if (exitCode != 0)
                 {
-                    throw new Exception("cmake [ninja] [ExitCode=" + exitCode + "]: " + log);
+                    throw new Exception($"cmake [ninja] [Path=\"{basePath}\", ExitCode={exitCode}]: {log}");
                 }
                 return log;
             });
@@ -103,10 +106,13 @@ namespace IL2C
             var testLog = await TestUtilities.RetryIfStrangeProblemAsync(async () =>
             {
                 var (exitCode, log) = await TestUtilities.ExecuteAsync(
-                    outPath, new[] { outPath }, executablePath);
+                    outPath,
+                    "run",
+                    new[] { outPath },
+                    executablePath);
                 if (exitCode != 0)
                 {
-                    throw new Exception("test [ExitCode=" + exitCode + "]: " + log);
+                    throw new Exception($"test [Path=\"{basePath}\", ExitCode={exitCode}]: {log}");
                 }
                 return log;
             });
@@ -118,23 +124,21 @@ namespace IL2C
         public static async Task<string> BuildAsync(
             string binPath, string configuration, string sourcePath, string il2cRuntimePath)
         {
-            var isWindows = Environment.OSVersion.Platform == PlatformID.Win32NT;
-
             var basePath = Path.GetDirectoryName(sourcePath);
             var outPath = Path.Combine(basePath, "build");
             var executablePath = Path.Combine(
                 outPath,
-                Path.GetFileNameWithoutExtension(sourcePath) + (isWindows ? ".exe" : string.Empty));
+                Path.GetFileNameWithoutExtension(sourcePath) + (TestUtilities.IsWindows ? ".exe" : string.Empty));
 
             var currentListDir = Path.GetFullPath(
                 Path.Combine(il2cRuntimePath, "cmake"));
-            var targetCMakeScriptName = isWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
+            var targetCMakeScriptName = TestUtilities.IsWindows ?  // DIRTY: ugly choice only win-mingw32 or linux...
                 "gcc4-win-mingw32.cmake" : "gcc-linux.cmake";
             var dict = await CMakeListsSimpleParser.ExtractDefinitionsAsync(
                 Path.Combine(currentListDir, targetCMakeScriptName),
                 new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
                     { "Configuration", configuration },
-                    { "Platform", isWindows ? "mingw32" : "x86_64" },   // DIRTY: `uname -m` on Ubuntu 20.04
+                    { "Platform", TestUtilities.IsWindows ? "mingw32" : "x86_64" },   // DIRTY: `uname -m` on Ubuntu 20.04
                     { "CMAKE_CURRENT_LIST_DIR", currentListDir },
                     { "CMAKE_TARGET_SCRIPT_NAME", targetCMakeScriptName },
                 });
@@ -143,7 +147,11 @@ namespace IL2C
             var libDir = dict.TryGetValue("LIBDIR", out var ld) ? ld : string.Empty;
             var cdefs = dict.TryGetValue("COMPILE_DEFINITIONS", out var cd) ? cd : string.Empty;
             var ccflags = dict.TryGetValue("CMAKE_C_FLAGS", out var ccf) ? ccf : string.Empty;
-            var libs = dict.TryGetValue("IL2C_LIBRARY_NAME_BASE", out var ls) ? $"-l{ls}" : string.Empty;
+            
+            // IL2C library implicitly included into CMAKE_REQUIRED_LIBRARIES on cmake script.
+            var libs = string.Join(" ",
+                (dict.TryGetValue("CMAKE_REQUIRED_LIBRARIES", out var rl) ?
+                rl.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(lib => $"-l{lib}") : Array.Empty<string>()));
 
             if (!Directory.Exists(outPath))
             {
@@ -155,8 +163,10 @@ namespace IL2C
 
             // Step1: Execute gcc
             var (gccExitCode, gccLog) = await TestUtilities.ExecuteAsync(
-                outPath, isWindows ? new[] { binPath } : Array.Empty<string>(),
-                isWindows ? Path.Combine(binPath, "gcc.exe") : "gcc",   // NOT windows: uses system default gcc.
+                outPath,
+                "build",
+                TestUtilities.IsWindows ? new[] { binPath } : Array.Empty<string>(),
+                TestUtilities.IsWindows ? Path.Combine(binPath, "gcc.exe") : "gcc",   // NOT windows: uses system default gcc.
                 $"-I{basePath}",
                 incDir,
                 libDir,
@@ -168,15 +178,18 @@ namespace IL2C
                 libs);
             if (gccExitCode != 0)
             {
-                throw new Exception("gcc [ExitCode=" + gccExitCode + "]: " + gccLog);
+                throw new Exception($"gcc [Path=\"{basePath}\", ExitCode={gccExitCode}]: {gccLog}");
             }
 
             // Step2: Execute native binary
             var (testExitCode, testLog) = await TestUtilities.ExecuteAsync(
-                outPath, new[] { outPath }, executablePath);
+                outPath,
+                "run",
+                new[] { outPath },
+                executablePath);
             if (testExitCode != 0)
             {
-                throw new Exception("test [ExitCode=" + testExitCode + "]: " + testLog);
+                throw new Exception($"test [Path=\"{basePath}\", ExitCode={testExitCode}]: {testLog}");
             }
 
             return testLog;

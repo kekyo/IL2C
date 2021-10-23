@@ -4,6 +4,7 @@ on:
     branches:
     - master
     - devel
+    - feature/github-actions-2
   pull_request:
     branches:
     - master
@@ -13,8 +14,8 @@ on:
 permissions:
   contents: read
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-linux:
+    runs-on: [self-hosted, linux, x64]
     strategy:
       fail-fast: false
       matrix:
@@ -28,17 +29,17 @@ jobs:
     - name: Setup .NET Core 2.1
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 2.1.811
+        dotnet-version: 2.1.818
     - name: Setup .NET Core 3.1
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.404
+        dotnet-version: 3.1.414
     - name: Setup .NET 5
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.100
+        dotnet-version: 5.0.402
     - name: Initialize tools
-      run: sudo bash ./init-tools.sh
+      run: bash ./init-tools.sh
     - name: Install dependencies
       run: |
         dotnet restore il2c.sln

@@ -166,6 +166,9 @@ namespace IL2C
         #endregion
 
         #region IO related
+        public static readonly bool IsWindows =
+            Environment.OSVersion.Platform == PlatformID.Win32NT;
+
         private static bool IsStrangeProblemException(Exception ex) =>
             ex.Message.Contains("not a valid application") ||
             ex.Message.Contains("it is being used by another process") ||
@@ -329,8 +332,47 @@ namespace IL2C
             CopyResourceToTextFileAsync(path, resourceName, empty);
 
         public static async Task<(int, string)> ExecuteAsync(
-            string workingPath, string[] searchPaths, string executablePath, params object[] args)
+            string workingPath, string scriptName, string[] searchPaths, string executablePath, params object[] args)
         {
+            if (IsWindows)
+            {
+                File.WriteAllText(
+                    Path.Combine(workingPath, scriptName + ".bat"),
+                    string.Join(Environment.NewLine, new[]
+                    {
+                        "@echo off",
+                        string.Empty,
+                        "rem IL2C: It is a pseudo script.",
+                        string.Empty,
+                        $"set PATH={string.Join(";",searchPaths)};%PATH%",
+                        string.Empty,
+                        $"cd \"{workingPath}\"",
+                        string.Empty,
+                        $"\"{executablePath}\" {string.Join(" ", args)}",
+                        string.Empty,
+                    }),
+                    new UTF8Encoding(false, true));
+            }
+            else
+            {
+                File.WriteAllText(
+                    Path.Combine(workingPath, scriptName + ".sh"),
+                    string.Join(Environment.NewLine, new[]
+                    {
+                        "#!/bin/sh",
+                        string.Empty,
+                        "# IL2C: It is a pseudo script.",
+                        string.Empty,
+                        $"export PATH=\"{string.Join(":",searchPaths)}:$PATH\"",
+                        string.Empty,
+                        $"cd \"{workingPath}\"",
+                        string.Empty,
+                        $"\"{executablePath}\" {string.Join(" ", args)}",
+                        string.Empty,
+                    }),
+                    new UTF8Encoding(false, true));
+            }
+            
             using (var p = new Process())
             {
                 p.StartInfo.FileName = executablePath;

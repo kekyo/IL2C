@@ -7,4 +7,4 @@ project(test C)
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 add_executable(test ${CMAKE_CURRENT_LIST_DIR}/test.c)
-target_link_libraries(test ${IL2C_LIBRARY_NAME})
+target_link_libraries(test)

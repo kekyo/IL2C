@@ -211,14 +211,25 @@ namespace IL2C
                         line;
                     var args = (index >= 0) ?
                         SplitArguments(line.Substring(index + 1, line.IndexOf(')') - index - 1), definitions).ToArray() :
-                        new Func<string>[0];
+                        Array.Empty<Func<string>>();
 
                     switch (statement.ToLowerInvariant())
                     {
-                        case "set" when args.Length == 2:
+                        case "set" when args.Length >= 2:
                             if (runBlock)
                             {
-                                definitions[args[0]()] = args[1];
+                                var key = args[0]();
+                                if (definitions.TryGetValue(key, out var lastValue))
+                                {
+                                    definitions[key] = () =>
+                                        lastValue() + " " +
+                                        string.Join(" ", args.Skip(1).Select(arg => arg()));
+                                }
+                                else
+                                {
+                                    definitions[key] = () =>
+                                        string.Join(" ", args.Skip(1).Select(arg => arg()));
+                                }
                             }
                             break;
                         case "if" when args.Length == 3:

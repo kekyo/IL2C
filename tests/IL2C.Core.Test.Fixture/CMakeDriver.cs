@@ -147,12 +147,11 @@ namespace IL2C
             var libDir = dict.TryGetValue("LIBDIR", out var ld) ? ld : string.Empty;
             var cdefs = dict.TryGetValue("COMPILE_DEFINITIONS", out var cd) ? cd : string.Empty;
             var ccflags = dict.TryGetValue("CMAKE_C_FLAGS", out var ccf) ? ccf : string.Empty;
+            
+            // IL2C library implicitly included into CMAKE_REQUIRED_LIBRARIES on cmake script.
             var libs = string.Join(" ",
                 (dict.TryGetValue("CMAKE_REQUIRED_LIBRARIES", out var rl) ?
-                    rl.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(lib => $"-l{lib}") : Array.Empty<string>()).
-                Concat(
-                    dict.TryGetValue("IL2C_LIBRARY_NAME_BASE", out var ls) ?
-                        new[] { $"-l{ls}" } : Array.Empty<string>()));
+                rl.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(lib => $"-l{lib}") : Array.Empty<string>()));
 
             if (!Directory.Exists(outPath))
             {

@@ -357,7 +357,6 @@ void il2c_try_intialize_type__(
     void (*pTypeInitializer)(void))
 {
     il2c_assert(pTypeInitializerInformation != NULL);
-    il2c_assert(pStaticFields != NULL);
 
     const interlock_t current = pTypeInitializerInformation->initializing__;
     if (il2c_unlikely__(current != g_InitializerCount))
@@ -367,7 +366,11 @@ void il2c_try_intialize_type__(
             g_InitializerCount,
             current) == current)
         {
-            il2c_register_static_fields__(pStaticFields);
+            if (pStaticFields != NULL)
+            {
+                il2c_register_static_fields__(pStaticFields);
+            }
+
             if (pTypeInitializer != NULL)
             {
                 il2c_try(nest0, il2c_default_finally_filter__)

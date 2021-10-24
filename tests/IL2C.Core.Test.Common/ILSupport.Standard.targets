@@ -12,27 +12,34 @@
         <_runtime>$(NETCoreSdkPortableRuntimeIdentifier)</_runtime>
         <_runtime Condition="'$(_runtime)' == ''">$(NETCoreSdkRuntimeIdentifier)</_runtime>
         <MicrosoftNetCoreIlasmPackageRuntimeId Condition="'$(MicrosoftNetCoreIlasmPackageRuntimeId)' == ''">$(_runtime)</MicrosoftNetCoreIlasmPackageRuntimeId>
+   
         <!-- It's RC version, but latest stable 5.0.0 cause unknown bug (0xc0000004) occurred -->
-        <MicrosoftNETCoreILAsmVersion Condition="'$(MicrosoftNETCoreILAsmVersion)' == ''">6.0.0-rc.2.21480.5</MicrosoftNETCoreILAsmVersion>
+        <MicrosoftNETCoreToolingVersion Condition="'$(MicrosoftNETCoreToolingVersion)' == ''">6.0.0-rc.2.21480.5</MicrosoftNETCoreToolingVersion>
+        <ILVerifyPackageVersion Condition="'$(ILVerifyPackageVersion)' == ''">5.0.0</ILVerifyPackageVersion>
+
         <MicrosoftNetCoreIlasmPackageName>runtime.$(MicrosoftNetCoreIlasmPackageRuntimeId).microsoft.netcore.ilasm</MicrosoftNetCoreIlasmPackageName>
         <MicrosoftNetCoreIldasmPackageName>runtime.$(MicrosoftNetCoreIlasmPackageRuntimeId).microsoft.netcore.ildasm</MicrosoftNetCoreIldasmPackageName>
+        <MicrosoftNetCoreIlverifyPackageName>dotnet-ilverify</MicrosoftNetCoreIlverifyPackageName>
 
         <!-- If ILAsmToolPath is specified, it will be used and no packages will be restored
          Otherwise packages will be restored and ilasm and ildasm will be referenced from their packages.  -->
         <_IlasmDir Condition="'$(ILAsmToolPath)' != ''">$([MSBuild]::NormalizeDirectory($(ILAsmToolPath)))</_IlasmDir>
         <_IldasmDir Condition="'$(ILAsmToolPath)' != ''">$([MSBuild]::NormalizeDirectory($(ILAsmToolPath)))</_IldasmDir>
+        <_IlverifyDir Condition="'$(ILAsmToolPath)' != ''">$([MSBuild]::NormalizeDirectory($(ILAsmToolPath)))</_IlverifyDir>
         <CoreCompileDependsOn Condition="'$(ILAsmToolPath)' == ''">$(CoreCompileDependsOn);ResolveIlAsmToolPaths</CoreCompileDependsOn>
     </PropertyGroup>
     <ItemGroup Condition="'$(ILAsmToolPath)' == ''">
-        <_IlasmPackageReference Include="$(MicrosoftNetCoreIlasmPackageName)" Version="$(MicrosoftNETCoreILAsmVersion)" />
-        <_IldasmPackageReference Include="$(MicrosoftNetCoreIldasmPackageName)" Version="$(MicrosoftNETCoreILAsmVersion)" />
-        
+        <_IlasmPackageReference Include="$(MicrosoftNetCoreIlasmPackageName)" Version="$(MicrosoftNETCoreToolingVersion)" />
+        <_IldasmPackageReference Include="$(MicrosoftNetCoreIldasmPackageName)" Version="$(MicrosoftNETCoreToolingVersion)" />
+        <_IlverifyPackageReference Include="$(MicrosoftNetCoreIlverifyPackageName)" Version="$(ILVerifyPackageVersion)" />
+
         <!-- Made NuGet package referrer likes:
             For windows x64: runtime.win-x64.Microsoft.NETCore.ILAsm
             For linux x64: runtime.linux-x64.Microsoft.NETCore.ILAsm
         -->
         <PackageReference Include="@(_IlasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
         <PackageReference Include="@(_IldasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
+        <PackageReference Include="@(_IlverifyPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
     </ItemGroup>
     <Target Name="ResolveIlAsmToolPaths">
         <ItemGroup>
@@ -40,16 +47,21 @@
             <_IlasmSourceFiles Include="%(_IlasmPackageReference.NativePath)\**\*" />
             <_IldasmPackageReference NativePath="$(NuGetPackageRoot)\%(Identity)\%(Version)\runtimes\$(MicrosoftNetCoreIlasmPackageRuntimeId)\native" />
             <_IldasmSourceFiles Include="%(_IldasmPackageReference.NativePath)\**\*" />
+            <_IlverifyPackageReference AssemblyPath="$(NuGetPackageRoot)\%(Identity)\%(Version)\tools\netcoreapp3.1\any" />
+            <_IlverifySourceFiles Include="%(_IlverifyPackageReference.AssemblyPath)\**\*" />
         </ItemGroup>
         <Error Condition="!Exists('%(_IlasmPackageReference.NativePath)')" Text="Package %(_IlasmPackageReference.Identity)\%(_IlasmPackageReference.Version) was not restored" />
         <Error Condition="!Exists('%(_IldasmPackageReference.NativePath)')" Text="Package %(_IldasmPackageReference.Identity)\%(_IldasmPackageReference.Version) was not restored" />
+        <Error Condition="!Exists('%(_IlverifyPackageReference.AssemblyPath)')" Text="Package %(_IlverifyPackageReference.Identity)\%(_IlverifyPackageReference.Version) was not restored" />
         <PropertyGroup>
             <_IlasmDir Condition="'$(_IlasmDir)' == '' and '%(_IlasmPackageReference.Identity)' == '$(MicrosoftNetCoreIlasmPackageName)'">%(_IlasmPackageReference.NativePath)/</_IlasmDir>
             <_IldasmDir Condition="'$(_IldasmDir)' == '' and '%(_IldasmPackageReference.Identity)' == '$(MicrosoftNetCoreIldasmPackageName)'">%(_IldasmPackageReference.NativePath)/</_IldasmDir>
+            <_IlverifyDir Condition="'$(_IlverifyDir)' == '' and '%(_IlverifyPackageReference.Identity)' == '$(MicrosoftNetCoreIlverifyPackageName)'">%(_IlverifyPackageReference.AssemblyPath)/</_IlverifyDir>
 
             <!-- Resolved final tooling path -->
             <ILAsmPath>$([System.IO.Path]::Combine('$(_IlasmDir)','ilasm'))</ILAsmPath>
             <ILDasmPath>$([System.IO.Path]::Combine('$(_IldasmDir)','ildasm'))</ILDasmPath>
+            <ILVerifyPath>$([System.IO.Path]::Combine('$(_IlverifyDir)','ILVerify.dll'))</ILVerifyPath>
         </PropertyGroup>
     </Target>
 
@@ -60,14 +72,16 @@
         Because will cause too long command line arguments coming from a lot of decompiled file paths. -->
     
     <Target Name="ProcessILAfterCompile" AfterTargets="Compile">
-        <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL" />
+        <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL; VerifyIL" />
     </Target>
+
     <Target Name="InitializeIL">
         <PropertyGroup>
             <ILFile>@(IntermediateAssembly->'%(RootDir)%(Directory)%(Filename).il', ' ')</ILFile>
             <ILResourceFile>@(IntermediateAssembly->'%(RootDir)%(Directory)%(Filename).res', ' ')</ILResourceFile>
         </PropertyGroup>
     </Target>
+
     <Target Name="CoreDecompile" Inputs="@(IntermediateAssembly)" Outputs="$(ILFile)" Condition=" Exists ( @(IntermediateAssembly) ) ">
         <Message Importance="normal" Text="ILSupport: ILDasmPath = $(ILDasmPath)" />
         <PropertyGroup>
@@ -93,6 +107,7 @@
         </PropertyGroup>
         <Move SourceFiles="@(IntermediateAssembly)" DestinationFiles="@(IntermediateAssembly->'%(FullPath).orig', ' ')" OverwriteReadOnlyFiles="true" />
     </Target>
+    
     <Target Name="CoreCompileIL" Inputs="@(IL)" Outputs="@(IntermediateAssembly)">
         <Message Importance="normal" Text="ILSupport: ILAsmPath = $(ILAsmPath)" />
         <PropertyGroup>
@@ -158,6 +173,19 @@
             <FileWrites Include="@(IntermediateAssembly->'%(RootDir)%(Directory)DesignTimeResolveAssemblyReferencesInput.cache', ' ')" />
         </ItemGroup>
         <Touch Files="$(ILFile)" />
-        <Message Importance="high" Text="ILSupport: Combined both C# and IL into single assembly: $(AssemblyName).dll" />
+        <Message Importance="high" Text="ILSupport: Combined both C# and IL into single assembly: &quot;$(AssemblyName).dll&quot;" />
     </Target>
+
+    <Target Name="VerifyIL">
+        <PropertyGroup>
+            <TargetVerifyAssembly>@(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</TargetVerifyAssembly>
+            <VerifyReferenceAssemblies>@(ReferencePath->'&quot;%(FullPath)&quot;', ' ')</VerifyReferenceAssemblies>
+        </PropertyGroup>
+        <!-- TODO: Ignored any errors, will be removed future release -->
+        <Exec
+            IgnoreExitCode="true"
+            Command="dotnet &quot;$(ILVerifyPath)&quot; &quot;$(TargetVerifyAssembly)&quot; -r $(VerifyReferenceAssemblies)" />
+        <Message Importance="high" Text="ILSupport: Verified IL assembly: $(TargetVerifyAssembly)" />
+    </Target>
+
 </Project>

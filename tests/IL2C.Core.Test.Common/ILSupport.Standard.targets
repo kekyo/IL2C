@@ -173,7 +173,7 @@
             <FileWrites Include="@(IntermediateAssembly->'%(RootDir)%(Directory)DesignTimeResolveAssemblyReferencesInput.cache', ' ')" />
         </ItemGroup>
         <Touch Files="$(ILFile)" />
-        <Message Importance="high" Text="ILSupport: Combined both C# and IL into single assembly: $(AssemblyName).dll" />
+        <Message Importance="high" Text="ILSupport: Combined both C# and IL into single assembly: &quot;$(AssemblyName).dll&quot;" />
     </Target>
 
     <Target Name="VerifyIL">
@@ -185,6 +185,7 @@
         <Exec
             IgnoreExitCode="true"
             Command="dotnet &quot;$(ILVerifyPath)&quot; &quot;$(TargetVerifyAssembly)&quot; -r $(VerifyReferenceAssemblies)" />
+        <Message Importance="high" Text="ILSupport: Verified IL assembly: $(TargetVerifyAssembly)" />
     </Target>
 
 </Project>

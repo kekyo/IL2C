@@ -180,11 +180,12 @@
         <PropertyGroup>
             <TargetVerifyAssembly>@(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</TargetVerifyAssembly>
             <VerifyReferenceAssemblies>@(ReferencePath->'&quot;%(FullPath)&quot;', ' ')</VerifyReferenceAssemblies>
+            <ILVerifyIgnoreFlags Condition="'$(ILVerifyIgnoreFlags)' == ''"></ILVerifyIgnoreFlags>
         </PropertyGroup>
         <!-- TODO: Ignored any errors, will be removed future release -->
         <Exec
-            IgnoreExitCode="true"
-            Command="dotnet &quot;$(ILVerifyPath)&quot; &quot;$(TargetVerifyAssembly)&quot; -r $(VerifyReferenceAssemblies)" />
+            IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true"
+            Command="dotnet &quot;$(ILVerifyPath)&quot; &quot;$(TargetVerifyAssembly)&quot; --statistics $(ILVerifyIgnoreFlags) -r $(VerifyReferenceAssemblies)" />
         <Message Importance="high" Text="ILSupport: Verified IL assembly: $(TargetVerifyAssembly)" />
     </Target>
 

@@ -25,6 +25,8 @@
       <DebugType>full</DebugType>
       <DebugSymbols>true</DebugSymbols>
       <Platforms>AnyCPU</Platforms>
+
+      <ILVerifyIgnoreFlags>-g ThisMismatch</ILVerifyIgnoreFlags>
     </PropertyGroup>
 
     <ItemGroup>

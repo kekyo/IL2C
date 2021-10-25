@@ -17,7 +17,7 @@
     {
         .maxstack 1
         ldarg.0
-        callvirt instance string [netstandard]System.Object::ToString()    // non virtual call
+        call instance string [netstandard]System.Object::ToString()    // non virtual call
         ret
     }
 

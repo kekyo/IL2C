@@ -17,7 +17,7 @@
     {
         .maxstack 1
         ldarg.0
-        call instance string [netstandard]System.Object::ToString()    // non virtual call
+        call instance string object::ToString()    // non virtual call
         ret
     }
 
@@ -25,7 +25,7 @@
     {
         .maxstack 1
         ldarg.0
-        call instance class [netstandard]System.Type [netstandard]System.Object::GetType()
+        call instance class [netstandard]System.Type object::GetType()
         callvirt instance string [netstandard]System.Type::get_FullName()
         ret
     }
@@ -33,18 +33,18 @@
     .method public static bool RefEquals_Same() cil managed
     {
         .maxstack 2
-        newobj instance void class [netstandard]System.Object::.ctor()
+        newobj instance void object::.ctor()
         dup
-        call bool [netstandard]System.Object::ReferenceEquals(object, object)
+        call bool object::ReferenceEquals(object, object)
         ret
     }
 
     .method public static bool RefEquals_NotSame() cil managed
     {
         .maxstack 2
-        newobj instance void class [netstandard]System.Object::.ctor()
-        newobj instance void class [netstandard]System.Object::.ctor()
-        call bool [netstandard]System.Object::ReferenceEquals(object, object)
+        newobj instance void object::.ctor()
+        newobj instance void object::.ctor()
+        call bool object::ReferenceEquals(object, object)
         ret
     }
 }

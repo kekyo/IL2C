@@ -5,7 +5,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Boolean::ToString()
+        call instance string bool::ToString()
         ret
     }
 
@@ -14,7 +14,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Byte::ToString()
+        call instance string uint8::ToString()
         ret
     }
 
@@ -23,7 +23,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Int16::ToString()
+        call instance string int16::ToString()
         ret
     }
 
@@ -32,7 +32,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Int32::ToString()
+        call instance string int32::ToString()
         ret
     }
 
@@ -41,7 +41,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Int64::ToString()
+        call instance string int64::ToString()
         ret
     }
                         
@@ -50,7 +50,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.SByte::ToString()
+        call instance string int8::ToString()
         ret
     }
 
@@ -59,7 +59,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.UInt16::ToString()
+        call instance string uint16::ToString()
         ret
     }
     
@@ -68,7 +68,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.UInt32::ToString()
+        call instance string uint32::ToString()
         ret
     }
         
@@ -77,7 +77,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.UInt64::ToString()
+        call instance string uint64::ToString()
         ret
     }
             
@@ -86,7 +86,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.IntPtr::ToString()
+        call instance string native int::ToString()
         ret
     }
 
@@ -95,7 +95,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.UIntPtr::ToString()
+        call instance string native uint::ToString()
         ret
     }
 
@@ -104,7 +104,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Single::ToString()
+        call instance string float32::ToString()
         ret
     }
 
@@ -113,7 +113,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Double::ToString()
+        call instance string float64::ToString()
         ret
     }
                 
@@ -122,7 +122,7 @@
     {
         .maxstack 1
         ldarga.s 4
-        call instance string [netstandard]System.Char::ToString()
+        call instance string char::ToString()
         ret
     }
 

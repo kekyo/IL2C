@@ -23,7 +23,8 @@ using System.Runtime.CompilerServices;
 namespace IL2C.ILConverters
 {
     [TestId("Call")]
-    [TestCase("IL2C.ILConverters.Call_Overload_Virtual", new[] { "Instance_Overload_Virtual_ToString_System_Object", "ToString" })]
+    [TestCase("IL2C.ILConverters.Call_Overload_Virtual", new[] { "Instance_Overload_Virtual_ToString_System_Object", "ToString" }, IgnoreILErrors = new[] { "ThisMismatch" })]
+    [TestCase("CallTest", new[] { "Instance_Overload_Virtual_ToString_NoArgument_IL2C_ILConverters_Call", "ToString" })]
     [TestCase("CallTestABC", new[] { "Instance_Overload_Virtual_ToString_IL2C_ILConverters_Call", "ToString" }, "ABC")]
     public class Call_Overload_Virtual
     {

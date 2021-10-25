@@ -9,7 +9,7 @@
 
         ldstr "ABC"
         ldstr "DEF"
-        call string [netstandard]System.String::Concat(string, string)
+        call string string::Concat(string, string)
         newobj instance void IL2C.RuntimeSystems.ObjRefInsideObjRefType::.ctor(string)
         stloc.0
 
@@ -37,7 +37,7 @@
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF"
-        call string [netstandard]System.String::Concat(string, string)
+        call string string::Concat(string, string)
         call instance void IL2C.RuntimeSystems.ObjRefInsideValueTypeType::.ctor(string)
 
         // Release concat string from the evaluation stack
@@ -63,7 +63,7 @@
 
         ldstr "ABC"
         ldstr "DEF"
-        call string [netstandard]System.String::Concat(string, string)
+        call string string::Concat(string, string)
         newobj instance void IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::.ctor(string)
         stloc.0
 
@@ -92,7 +92,7 @@
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF"
-        call string [netstandard]System.String::Concat(string, string)
+        call string string::Concat(string, string)
         call instance void IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::.ctor(string)
 
         // Release concat string from the evaluation stack
@@ -120,13 +120,13 @@
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF1"
-        call string [netstandard]System.String::Concat(string, string)
+        call string string::Concat(string, string)
         ldstr "ABC"
         ldstr "DEF2"
-        call string [netstandard]System.String::Concat(string, string)
+        call string string::Concat(string, string)
         ldstr "ABC"
         ldstr "DEF3"
-        call string [netstandard]System.String::Concat(string, string)
+        call string string::Concat(string, string)
         call instance void IL2C.RuntimeSystems.MultipleInsideValueTypeType::.ctor(string, string, string)
 
         // Release concat string from the evaluation stack

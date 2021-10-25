@@ -1,23 +1,23 @@
 ﻿.class public IL2C.BasicTypes.System_Int16
 {
-	.method public static bool IsValueType() cil managed
-	{
-		.maxstack 2
-		ldc.i4 12345
-		box [netstandard]System.Int16
-		isinst [netstandard]System.ValueType
+    .method public static bool IsValueType() cil managed
+    {
+        .maxstack 2
+        ldc.i4 12345
+        box int16
+        isinst [netstandard]System.ValueType
         brnull.s F1
         ldc.i4.1
-		ret
+        ret
     F1:
         ldc.i4.0
         ret
-	}
+    }
 
-	.method public static int32 SizeOf() cil managed
-	{
-		.maxstack 1
-        sizeof [netstandard]System.Int16
+    .method public static int32 SizeOf() cil managed
+    {
+        .maxstack 1
+        sizeof int16
         ret
-	}
+    }
 }

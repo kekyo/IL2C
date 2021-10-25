@@ -133,7 +133,8 @@ namespace IL2C.Internal
                         ToDictionary(
                             e => GetMethodFullName(e.method),
                             e => e.results.Select(r =>
-                                r.TryGetArgumentValue("Offset", out int offset) ?
+                                ((r.ErrorArguments != null) &&   // BUG?
+                                 r.TryGetArgumentValue("Offset", out int offset)) ?
                                     (r, $"[0x{offset:x4}]: {(ILOpCode)EcmaMethodIL.Create((EcmaMethod)e.method).GetILBytes()[offset]}") : (r, "(No offset)")
                         ).
                         ToArray());

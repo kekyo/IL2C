@@ -39,7 +39,7 @@
         -->
         <PackageReference Include="@(_IlasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
         <PackageReference Include="@(_IldasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
-        <PackageReference Include="@(_IlverifyPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
+        <!-- <PackageReference Include="@(_IlverifyPackageReference)" ExcludeAssets="all" PrivateAssets="all" /> -->
     </ItemGroup>
     <Target Name="ResolveIlAsmToolPaths">
         <ItemGroup>
@@ -72,7 +72,7 @@
         Because will cause too long command line arguments coming from a lot of decompiled file paths. -->
     
     <Target Name="ProcessILAfterCompile" AfterTargets="Compile">
-        <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL; VerifyIL" />
+        <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL" />  <!-- ; VerifyIL -->
     </Target>
 
     <Target Name="InitializeIL">

@@ -155,6 +155,8 @@ namespace IL2C
             }
         }
 
+        private static readonly ILVerifier ilVerifier = new ILVerifier();
+
         public static async Task ExecuteTestAsync(TestCaseInformation caseInfo)
         {
             Assert.IsTrue(caseInfo.Method.IsPublic && caseInfo.Method.IsStatic);
@@ -393,7 +395,24 @@ namespace IL2C
             await TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues);
 
             ///////////////////////////////////////////////
-            // Step 2: Test and verify result by real IL code at this runtime.
+            // Step 2: Verify IL code.
+
+            var verifyResults = ilVerifier.Verify(caseInfo.Method).
+                Where(r => !caseInfo.IgnoreILErrors.Contains(r.result.Code.ToString())).
+                ToArray();
+            if (verifyResults.Length >= 1)
+            {
+                foreach (var resultx in verifyResults.Take(verifyResults.Length - 1))
+                {
+                    Assert.Warn($"{caseInfo.Method.DeclaringType.FullName}.{caseInfo.Method.Name}: [{resultx.result.Code}/{resultx.result.ExceptionID?.ToString() ?? "None"}]: {string.Format(resultx.result.Message, resultx.result.Args ?? Array.Empty<object>())}: {string.Join(",", resultx.result.ErrorArguments.Select(a => $"{a.Name}={a.Value}"))}: {resultx.instruction}");
+                }
+
+                var result = verifyResults[verifyResults.Length - 1];
+                Assert.Fail($"{caseInfo.Method.DeclaringType.FullName}.{caseInfo.Method.Name}: [{result.result.Code}/{result.result.ExceptionID?.ToString() ?? "None"}]: {string.Format(result.result.Message, result.result.Args ?? Array.Empty<object>())}: {string.Join(",", result.result.ErrorArguments.Select(a => $"{a.Name}={a.Value}"))}: {result.instruction}");
+            }
+
+            ///////////////////////////////////////////////
+            // Step 3: Test and verify result by real IL code at this runtime.
 
             object rawResult;
             switch (caseInfo.Assert)
@@ -412,7 +431,7 @@ namespace IL2C
             }
 
             ///////////////////////////////////////////////
-            // Step 3: Test compiled C source code and execute.
+            // Step 4: Test compiled C source code and execute.
 
             string sanitized = null;
             try
@@ -437,7 +456,7 @@ namespace IL2C
             Assert.IsFalse(caseInfo.Assert == TestCaseAsserts.CauseBreak, "Code didn't break.");
 
             ///////////////////////////////////////////////
-            // Step 4: Verify result.
+            // Step 5: Verify result.
 
             Assert.AreEqual("Success", sanitized);
         }

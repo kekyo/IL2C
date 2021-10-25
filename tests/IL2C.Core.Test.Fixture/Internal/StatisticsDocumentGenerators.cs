@@ -29,7 +29,7 @@ using NUnit.Framework;
 
 using IL2C.ILConverters;
 
-namespace IL2C
+namespace IL2C.Internal
 {
     [TestFixture]
     public sealed class StatisticsDocumentGenerators

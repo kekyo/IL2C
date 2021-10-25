@@ -35,10 +35,11 @@ namespace IL2C
         public readonly object Expected;
         public readonly object[] Arguments;
         public readonly TestCaseAsserts Assert;
+        public readonly string[] IgnoreILErrors;
 
         public TestCaseInformation(
             string categoryName, string id, string name, string uniqueName, string description, object expected, TestCaseAsserts assert,
-            MethodInfo method, Type[] additionalTypes, MethodBase[] additionalMethods, object[] arguments)
+            MethodInfo method, Type[] additionalTypes, MethodBase[] additionalMethods, object[] arguments, string[] ignoreILErrors)
         {
             this.CategoryName = categoryName;
             this.Id = id;
@@ -51,6 +52,7 @@ namespace IL2C
             this.Expected = expected;
             this.Arguments = arguments;
             this.Assert = assert;
+            this.IgnoreILErrors = ignoreILErrors;
         }
 
         public override string ToString()

@@ -42,6 +42,7 @@ namespace IL2C
             this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
             this.IncludeTypes = Type.EmptyTypes;
+            this.IgnoreILErrors = Array.Empty<string>();
         }
 
         // This overload contains additional methods, those are used from the test method (first methodName is target.)
@@ -54,6 +55,7 @@ namespace IL2C
             this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
             this.IncludeTypes = Type.EmptyTypes;
+            this.IgnoreILErrors = Array.Empty<string>();
         }
 
         public string MethodName { get; }
@@ -64,5 +66,6 @@ namespace IL2C
         public TestCaseAsserts Assert { get; set; }
         public bool IncludeBaseTypes { get; set; }
         public Type[] IncludeTypes { get; set; }
+        public string[] IgnoreILErrors { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net48;net5.0</TargetFrameworks>
@@ -43,6 +43,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.ILVerification" Version="5.0.0" />
         <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
         <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />

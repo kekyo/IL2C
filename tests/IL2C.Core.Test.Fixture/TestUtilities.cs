@@ -113,7 +113,8 @@ namespace IL2C
                 additionalMethods,
                 caseAttribute.Arguments.
                     Zip(method.GetParameters().Select(p => p.ParameterType), (arg, type) => ConvertToArgumentType(arg, type)).
-                    ToArray());
+                    ToArray(),
+                caseAttribute.IgnoreILErrors);
 
         private static IEnumerable<Type> TraverseTypes(Type targetType, bool includeBaseTypes) =>
             includeBaseTypes ?

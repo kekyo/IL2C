@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IL2C
+namespace IL2C.Internal
 {
     public static class CMakeListsSimpleParser
     {

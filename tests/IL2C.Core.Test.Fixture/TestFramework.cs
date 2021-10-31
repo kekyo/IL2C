@@ -28,6 +28,9 @@ using NUnit.Framework;
 
 using IL2C.Metadata;
 using IL2C.Internal;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Interfaces;
+using ILVerify;
 
 #pragma warning disable CS0436
 
@@ -402,13 +405,19 @@ namespace IL2C
                 ToArray();
             if (verifyResults.Length >= 1)
             {
-                foreach (var resultx in verifyResults.Take(verifyResults.Length - 1))
+                // TODO: ILVerify (IL.Verification library comes portable version of PEVerify)
+                //   produces a lot of minor or invalid result.
+                //   So currently IL2C doesn't make error message.
+                static void RecordInformation(string message)
                 {
-                    Assert.Warn($"{caseInfo.Method.DeclaringType.FullName}.{caseInfo.Method.Name}: [{resultx.result.Code}/{resultx.result.ExceptionID?.ToString() ?? "None"}]: {string.Format(resultx.result.Message, resultx.result.Args ?? Array.Empty<object>())}: {string.Join(",", resultx.result.ErrorArguments.Select(a => $"{a.Name}={a.Value}"))}: {resultx.instruction}");
+                    var currentResult = TestExecutionContext.CurrentContext.CurrentResult;
+                    currentResult.OutWriter.WriteLine(message);
                 }
 
-                var result = verifyResults[verifyResults.Length - 1];
-                Assert.Fail($"{caseInfo.Method.DeclaringType.FullName}.{caseInfo.Method.Name}: [{result.result.Code}/{result.result.ExceptionID?.ToString() ?? "None"}]: {string.Format(result.result.Message, result.result.Args ?? Array.Empty<object>())}: {string.Join(",", result.result.ErrorArguments.Select(a => $"{a.Name}={a.Value}"))}: {result.instruction}");
+                foreach (var resultx in verifyResults)
+                {
+                    RecordInformation($"IL.Verification: {caseInfo.Method.DeclaringType.FullName}.{caseInfo.Method.Name}: [{resultx.result.Code}/{resultx.result.ExceptionID?.ToString() ?? "None"}]: {string.Format(resultx.result.Message, resultx.result.Args ?? Array.Empty<object>())}: {string.Join(",", resultx.result.ErrorArguments?.Select(a => $"{a.Name}={a.Value}") ?? Array.Empty<string>())}: {resultx.instruction}");
+                }
             }
 
             ///////////////////////////////////////////////

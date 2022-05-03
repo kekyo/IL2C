@@ -13,16 +13,12 @@
   <!-- Common -->
     
   <PropertyGroup>
-    <IL2CTargetAssemblyFileName Condition="'$(IL2CTargetAssemblyFileName)' == ''">$([System.String]::Concat('$(AssemblyName)','$(TargetExt)'))</IL2CTargetAssemblyFileName>
-    <IL2CTargetAssemblyPath Condition="'$(IL2CTargetAssemblyPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2CTargetAssemblyFileName)'))</IL2CTargetAssemblyPath>
-    <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' != ''">$([System.String]::Concat('$(IL2CAssemblyPaths)',';','$(IL2CTargetAssemblyPath)').split(';'))</IL2CAssemblyPaths>
-    <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' == ''">$(IL2CTargetAssemblyPath)</IL2CAssemblyPaths>
-    <IL2COutputPath Condition="'$(IL2COutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','IL2C'))</IL2COutputPath>
     <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
     <IL2CReadSymbols Condition="'$(IL2CReadSymbols)' == ''">true</IL2CReadSymbols>
     <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
     <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
     <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
+    <IL2CBuildTrace Condition="'$(IL2CBuildTrace)' == ''">False</IL2CBuildTrace>
   </PropertyGroup>
 
   <!-- Common (internal) -->
@@ -43,13 +39,6 @@
 
   <PropertyGroup>
     <_IL2C_ToolingDir>$([System.IO.Path]::Combine('$(_IL2C_ScriptBaseDir)','..','tools','$(_IL2C_PlatformName)'))</_IL2C_ToolingDir>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <CoreBuildDependsOn>
-      $(CoreBuildDependsOn);
-      IL2CBuild
-    </CoreBuildDependsOn>
   </PropertyGroup>
 
   <!-- Custom inlined task -->
@@ -90,12 +79,19 @@
     
   <!-- Custom target at after compile process -->
     
-  <Target Name="IL2CBuild" Outputs="$(IL2COutputPath)">
+  <Target Name="IL2CBuild" AfterTargets="AfterBuild">
 
     <PropertyGroup>
+      <IL2CTargetAssemblyFileName Condition="'$(IL2CTargetAssemblyFileName)' == ''">$(TargetFileName)</IL2CTargetAssemblyFileName>
+      <IL2CTargetAssemblyPath Condition="'$(IL2CTargetAssemblyPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2CTargetAssemblyFileName)'))</IL2CTargetAssemblyPath>
+      <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' != ''">$([System.String]::Concat('$(IL2CAssemblyPaths)',';','$(IL2CTargetAssemblyPath)').split(';'))</IL2CAssemblyPaths>
+      <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' == ''">$(IL2CTargetAssemblyPath)</IL2CAssemblyPaths>
+      <IL2COutputPath Condition="'$(IL2COutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','IL2C'))</IL2COutputPath>
+    
       <IL2CBuildToolingRuntimeName Condition="'$(IL2CBuildToolingRuntimeName)' == ''">$(_IL2C_RuntimeName)</IL2CBuildToolingRuntimeName>
       <IL2CBuildToolingDir Condition="'$(IL2CBuildToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_IL2C_ToolingDir)'))</IL2CBuildToolingDir>
       <IL2CBuildToolingPath Condition="'$(IL2CBuildToolingPath)' == ''">$([System.IO.Path]::Combine('$(IL2CBuildToolingDir)','$(_IL2C_ExecutableName)'))</IL2CBuildToolingPath>
+      <IL2CBuildTraceOption Condition="$(IL2CBuildTrace)">-t </IL2CBuildTraceOption>
     </PropertyGroup>
 
     <GetCombinedReferencesBasePath References="@(ReferencePath)">
@@ -103,7 +99,13 @@
     </GetCombinedReferencesBasePath>
         
     <Exec WorkingDirectory="$(IL2CBuildToolingDir)"
-        Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --debug=&quot;$(IL2CDebugInformation)&quot; --readSymbol=&quot;$(IL2CReadSymbols)&quot; --cpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refs=&quot;$(CombinedReferencesBasePath)&quot; &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
+        Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; $(IL2CBuildTraceOption)--debug=&quot;$(IL2CDebugInformation)&quot; --readSymbol=&quot;$(IL2CReadSymbols)&quot; --cpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refs=&quot;$(CombinedReferencesBasePath)&quot; &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
+
+    <ItemGroup>
+      <FileWrites Include="$(IL2COutputPath)\**\*.c" />
+      <FileWrites Include="$(IL2COutputPath)\**\*.cpp" />
+      <FileWrites Include="$(IL2COutputPath)\**\*.h" />
+    </ItemGroup>
   </Target>
 
 </Project>

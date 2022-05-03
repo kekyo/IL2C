@@ -13,6 +13,8 @@ using System.Runtime.InteropServices;
 
 using Mono.Options;
 
+#pragma warning disable CS0219
+
 namespace IL2C
 {
 // warning CS0649: Field is never assigned to, and will always have its default value `null'
@@ -30,6 +32,7 @@ namespace IL2C
                 var enableBundler = false;
                 var targetPlatform = TargetPlatforms.Generic;
                 var refs = new string[0];
+                var trace = false;
                 var help = false;
 
                 var options = new OptionSet()
@@ -40,6 +43,7 @@ namespace IL2C
                     { "bundler=", "Produce bundler source file", _ => enableBundler = true },
                     { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var t) ? t : TargetPlatforms.Generic },
                     { "refs=", "Reference assembly paths (semi-colon separated)", v => refs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
+                    { "t", "Enable trace log", _ => trace = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -57,7 +61,9 @@ namespace IL2C
                     var outputPath = extra[0];
                     var assemblyPaths = extra.Skip(1);
 
-                    // TODO: refs
+                    Console.Out.WriteLine($"IL2C.Build [{ThisAssembly.AssemblyVersion}] Started.");
+
+                    // TODO: refs, trace
 
                     SimpleDriver.TranslateAll(
                         Console.Out,

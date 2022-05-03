@@ -515,9 +515,7 @@ namespace IL2C.Metadata
             var list = new List<Tuple<IMethodInformation, List<IMethodInformation>>>();
             foreach (var method in methods.Where(method => method.IsVirtual))
             {
-                if (method.IsNewSlot ||
-                    // In mono environment, the System.Object.Finalizer method is marked 'reuseslot' ...
-                    method.DeclaringType.IsObjectType)
+                if (method.IsNewSlot)
                 {
                     list.Add(Tuple.Create(method, new List<IMethodInformation> { method }));
                 }

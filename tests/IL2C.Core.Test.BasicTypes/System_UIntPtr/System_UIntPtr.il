@@ -1,24 +1,24 @@
 ﻿.class public IL2C.BasicTypes.System_UIntPtr
 {
-	.method public static bool IsValueType() cil managed
-	{
-		.maxstack 2
-		ldc.i4 1234567
+    .method public static bool IsValueType() cil managed
+    {
+        .maxstack 2
+        ldc.i4 1234567
         conv.u
-		box [netstandard]System.UIntPtr
-		isinst [netstandard]System.ValueType
+        box native uint
+        isinst [netstandard]System.ValueType
         brnull.s F1
         ldc.i4.1
-		ret
+        ret
     F1:
         ldc.i4.0
         ret
-	}
+    }
 
-	.method public static int32 SizeOf() cil managed
-	{
-		.maxstack 1
-        sizeof [netstandard]System.UIntPtr
+    .method public static int32 SizeOf() cil managed
+    {
+        .maxstack 1
+        sizeof native uint
         ret
-	}
+    }
 }

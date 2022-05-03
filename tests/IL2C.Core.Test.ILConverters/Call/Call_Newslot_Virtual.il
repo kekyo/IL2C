@@ -4,7 +4,7 @@
 	{
 		.maxstack 1
         newobj instance void class IL2C.ILConverters.Call_Newslot_Virtual::.ctor()
-        call instance string [netstandard]System.Object::ToString()
+        call instance string object::ToString()
 		ret
 	}
 

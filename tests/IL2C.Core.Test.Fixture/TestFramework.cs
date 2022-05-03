@@ -28,6 +28,9 @@ using NUnit.Framework;
 
 using IL2C.Metadata;
 using IL2C.Internal;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Interfaces;
+using ILVerify;
 
 #pragma warning disable CS0436
 
@@ -154,6 +157,8 @@ namespace IL2C
                 this.Expression = expression;
             }
         }
+
+        private static readonly ILVerifier ilVerifier = new ILVerifier();
 
         public static async Task ExecuteTestAsync(TestCaseInformation caseInfo)
         {
@@ -393,7 +398,30 @@ namespace IL2C
             await TestUtilities.WriteTextFileAsync(sourcePath, sourceCode, replaceValues);
 
             ///////////////////////////////////////////////
-            // Step 2: Test and verify result by real IL code at this runtime.
+            // Step 2: Verify IL code.
+
+            var verifyResults = ilVerifier.Verify(caseInfo.Method).
+                Where(r => !caseInfo.IgnoreILErrors.Contains(r.result.Code.ToString())).
+                ToArray();
+            if (verifyResults.Length >= 1)
+            {
+                // TODO: ILVerify (IL.Verification library comes portable version of PEVerify)
+                //   produces a lot of minor or invalid result.
+                //   So currently IL2C doesn't make error message.
+                static void RecordInformation(string message)
+                {
+                    var currentResult = TestExecutionContext.CurrentContext.CurrentResult;
+                    currentResult.OutWriter.WriteLine(message);
+                }
+
+                foreach (var resultx in verifyResults)
+                {
+                    RecordInformation($"IL.Verification: {caseInfo.Method.DeclaringType.FullName}.{caseInfo.Method.Name}: [{resultx.result.Code}/{resultx.result.ExceptionID?.ToString() ?? "None"}]: {string.Format(resultx.result.Message, resultx.result.Args ?? Array.Empty<object>())}: {string.Join(",", resultx.result.ErrorArguments?.Select(a => $"{a.Name}={a.Value}") ?? Array.Empty<string>())}: {resultx.instruction}");
+                }
+            }
+
+            ///////////////////////////////////////////////
+            // Step 3: Test and verify result by real IL code at this runtime.
 
             object rawResult;
             switch (caseInfo.Assert)
@@ -412,7 +440,7 @@ namespace IL2C
             }
 
             ///////////////////////////////////////////////
-            // Step 3: Test compiled C source code and execute.
+            // Step 4: Test compiled C source code and execute.
 
             string sanitized = null;
             try
@@ -437,7 +465,7 @@ namespace IL2C
             Assert.IsFalse(caseInfo.Assert == TestCaseAsserts.CauseBreak, "Code didn't break.");
 
             ///////////////////////////////////////////////
-            // Step 4: Verify result.
+            // Step 5: Verify result.
 
             Assert.AreEqual("Success", sanitized);
         }

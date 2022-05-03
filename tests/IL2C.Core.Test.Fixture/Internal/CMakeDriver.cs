@@ -23,7 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IL2C
+namespace IL2C.Internal
 {
     internal static class CMakeDriver
     {

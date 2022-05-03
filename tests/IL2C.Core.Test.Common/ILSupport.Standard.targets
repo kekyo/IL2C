@@ -39,7 +39,7 @@
         -->
         <PackageReference Include="@(_IlasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
         <PackageReference Include="@(_IldasmPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
-        <PackageReference Include="@(_IlverifyPackageReference)" ExcludeAssets="all" PrivateAssets="all" />
+        <!-- <PackageReference Include="@(_IlverifyPackageReference)" ExcludeAssets="all" PrivateAssets="all" /> -->
     </ItemGroup>
     <Target Name="ResolveIlAsmToolPaths">
         <ItemGroup>
@@ -72,7 +72,7 @@
         Because will cause too long command line arguments coming from a lot of decompiled file paths. -->
     
     <Target Name="ProcessILAfterCompile" AfterTargets="Compile">
-        <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL; VerifyIL" />
+        <CallTarget Targets="InitializeIL; CoreDecompile; CoreCompileIL" />  <!-- ; VerifyIL -->
     </Target>
 
     <Target Name="InitializeIL">
@@ -180,11 +180,12 @@
         <PropertyGroup>
             <TargetVerifyAssembly>@(IntermediateAssembly->'&quot;%(FullPath)&quot;', ' ')</TargetVerifyAssembly>
             <VerifyReferenceAssemblies>@(ReferencePath->'&quot;%(FullPath)&quot;', ' ')</VerifyReferenceAssemblies>
+            <ILVerifyIgnoreFlags Condition="'$(ILVerifyIgnoreFlags)' == ''"></ILVerifyIgnoreFlags>
         </PropertyGroup>
         <!-- TODO: Ignored any errors, will be removed future release -->
         <Exec
-            IgnoreExitCode="true"
-            Command="dotnet &quot;$(ILVerifyPath)&quot; &quot;$(TargetVerifyAssembly)&quot; -r $(VerifyReferenceAssemblies)" />
+            IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true"
+            Command="dotnet &quot;$(ILVerifyPath)&quot; &quot;$(TargetVerifyAssembly)&quot; --statistics $(ILVerifyIgnoreFlags) -r $(VerifyReferenceAssemblies)" />
         <Message Importance="high" Text="ILSupport: Verified IL assembly: $(TargetVerifyAssembly)" />
     </Target>
 

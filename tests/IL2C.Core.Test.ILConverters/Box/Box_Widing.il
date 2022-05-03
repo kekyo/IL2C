@@ -4,7 +4,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [netstandard]System.Int32
+        box int32
         ret
     }
 
@@ -12,7 +12,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [netstandard]System.Int32
+        box int32
         ret
     }
 
@@ -20,7 +20,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [netstandard]System.Int32
+        box int32
         ret
     }
 
@@ -28,7 +28,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [netstandard]System.Int32
+        box int32
         ret
     }
 
@@ -36,7 +36,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [netstandard]System.Int32
+        box int32
         ret
     }
 
@@ -44,7 +44,7 @@
     {
         .maxstack 1
         ldarg.0
-        box [netstandard]System.Int32
+        box int32
         ret
     }
 }

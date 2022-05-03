@@ -23,8 +23,8 @@ namespace IL2C.BasicTypes
 {
     [TestCase(true, "IsValueType", 123)]
     [TestCase(false, "IsValueType", "ABC")]
-    [TestCase("System.Int32", "ToString", int.MaxValue)]
-    [TestCase("System.String", "ToString", "ABC")]
+    [TestCase("System.Int32", "ToString", int.MaxValue, IgnoreILErrors = new[] { "ThisMismatch" })]
+    [TestCase("System.String", "ToString", "ABC", IgnoreILErrors = new[] { "ThisMismatch" })]
     [TestCase("System.Int32", "GetType", int.MaxValue)]
     [TestCase("System.String", "GetType", "ABC")]
     [TestCase(true, "RefEquals_Same")]

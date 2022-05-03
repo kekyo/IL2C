@@ -17,6 +17,12 @@
   </PropertyGroup>
 
   <Target Name="IL2CBuild" Outputs="$(IL2COutputPath)">
-    <Translate AssemblyPaths="$(IL2CAssemblyPaths)" OutputPath="$(IL2COutputPath)" DebugInformation="$(IL2CDebugInformation)" ReadSymbols="$(IL2CReadSymbols)" EnableCpp="$(IL2CEnableCpp)" EnableBundler="$(IL2CEnableBundler)" TargetPlatform="$(IL2CTargetPlatform)" />
+    <Translate AssemblyPaths="$(IL2CAssemblyPaths)"
+               OutputPath="$(IL2COutputPath)"
+               DebugInformation="$(IL2CDebugInformation)"
+               ReadSymbols="$(IL2CReadSymbols)"
+               EnableCpp="$(IL2CEnableCpp)"
+               EnableBundler="$(IL2CEnableBundler)"
+               TargetPlatform="$(IL2CTargetPlatform)" />
   </Target>
 </Project>

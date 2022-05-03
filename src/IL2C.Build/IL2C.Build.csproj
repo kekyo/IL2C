@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp2.2;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp2.1;netcoreapp2.2;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
     <AssemblyName>il2c</AssemblyName>
     <StartupObject>IL2C.Program</StartupObject>
+    <NuspecFile>IL2C.Build.nuspec</NuspecFile>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +18,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IL2C.Core\IL2C.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="build\*.*" CopyToOutputDirectory="Never" />
+    <Content Include="buildMultiTargeting\*.*" CopyToOutputDirectory="Never" />
   </ItemGroup>
 
 </Project>

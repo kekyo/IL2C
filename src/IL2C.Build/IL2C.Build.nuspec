@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+-->
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>IL2C.Build</id>
+    <version>$PackageVersion$</version>
+    <authors>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">Apache-2.0</license>
+    <licenseUrl>https://licenses.nuget.org/Apache-2.0</licenseUrl>
+    <icon>IL2C.100.png</icon>
+    <projectUrl>https://github.com/kekyo/IL2C.git</projectUrl>
+    <description>A translator implementation of .NET intermediate language to C language.</description>
+    <releaseNotes>$PackageReleaseNotes$</releaseNotes>
+    <copyright>Copyright (c) Kouji Matsui</copyright>
+    <tags>il2c cil msil translate transpile aot ecma335 c c++ win32 uefi wdm multi-platform systems-programming</tags>
+    <repository type="git" url="https://github.com/kekyo/IL2C.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
+  </metadata>
+  <files>
+    <file src="..\..\Images\IL2C.100.png" target="/" />
+    <file src="build\*.*" target="build" />
+    <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
+    <file src="bin\$Configuration$\net45\*.*" target="tools/net45" />
+    <file src="bin\$Configuration$\netcoreapp2.1\*.*" target="tools/netcoreapp2.1" />
+    <file src="bin\$Configuration$\netcoreapp2.2\*.*" target="tools/netcoreapp2.2" />
+    <file src="bin\$Configuration$\netcoreapp3.1\*.*" target="tools/netcoreapp3.1" />
+    <file src="bin\$Configuration$\net5.0\*.*" target="tools/net5.0" />
+    <file src="bin\$Configuration$\net6.0\*.*" target="tools/net6.0" />
+  </files>
+</package>

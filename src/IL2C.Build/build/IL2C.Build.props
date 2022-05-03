@@ -1,0 +1,30 @@
+﻿<!--
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
+    <_IL2C_RuntimeName>dotnet </_IL2C_RuntimeName>
+    <_IL2C_ExecutableName>il2c.dll</_IL2C_ExecutableName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Full'">
+    <_IL2C_RuntimeName></_IL2C_RuntimeName>
+    <_IL2C_ExecutableName>il2c.exe</_IL2C_ExecutableName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
+    <_IL2C_RuntimeName>mono </_IL2C_RuntimeName>
+    <_IL2C_ExecutableName>il2c.exe</_IL2C_ExecutableName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_IL2C_ScriptBaseDir>$(MSBuildThisFileDirectory)</_IL2C_ScriptBaseDir>
+  </PropertyGroup>
+
+</Project>

@@ -1,68 +1,48 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>net48;net6.0</TargetFrameworks>
-        <CheckEolTargetFramework>false</CheckEolTargetFramework>
+  <PropertyGroup>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
 
-        <OutputType>Library</OutputType>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
-        <AssemblyName>IL2C.Core.Test.Fixture</AssemblyName>
-        <RootNamespace>IL2C</RootNamespace>
-        <AssemblyTitle>A translator implementation of .NET intermediate language to C language.</AssemblyTitle>
-        <Product>IL2C</Product>
-        <Trademark>IL2C</Trademark>
-        <Copyright>Copyright (c) 2017 Kouji Matsui</Copyright>
-        <Description>A translator implementation of .NET intermediate language to C language.</Description>
-        <Company>Kouji Matsui (@kozy_kekyo)</Company>
-        <Authors>Kouji Matsui (@kozy_kekyo)</Authors>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/kekyo/IL2C.git</RepositoryUrl>
-        <LangVersion>latest</LangVersion>
-        <DebugType>full</DebugType>
-        <DebugSymbols>true</DebugSymbols>
-        <Platforms>AnyCPU</Platforms>
-    </PropertyGroup>
+    <AssemblyName>IL2C.Core.Test.Fixture</AssemblyName>
+    <RootNamespace>IL2C</RootNamespace>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <None Remove="Templates\CMakeLists.txt" />
-        <None Remove="Templates\launch.json" />
-        <None Remove="Templates\test_void.c" />
-        <None Remove="Templates\test.c" />
-        <None Remove="Templates\test.vcxproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ILVerification" Version="5.0.0" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <packagereference Include="NUnit3TestAdapter" Version="3.17.0" PrivateAssets="All" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <EmbeddedResource Include="Templates\CMakeLists.txt" />
-        <EmbeddedResource Include="Templates\launch.json" />
-        <EmbeddedResource Include="Templates\test_void.c" />
-        <EmbeddedResource Include="Templates\test.c" />
-        <EmbeddedResource Include="Templates\test.vcxproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\IL2C.Core\IL2C.Core.csproj" />
+    <ProjectReference Include="..\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj" />
+    <ProjectReference Include="..\IL2C.Core.Test.ILConverters\IL2C.Core.Test.ILConverters.csproj" />
+    <ProjectReference Include="..\IL2C.Core.Test.RuntimeSystems\IL2C.Core.Test.RuntimeSystems.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.ILVerification" Version="5.0.0" />
-        <PackageReference Include="RelaxVersioner" Version="2.6.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-        <PackageReference Include="NUnit" Version="3.13.2" />
-        <packagereference Include="NUnit3TestAdapter" Version="3.17.0" PrivateAssets="All" />
-        <PackageReference Include="Mono.Cecil" Version="0.11.4" />
-        <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
-        <PackageReference Include="System.Net.Http" Version="4.3.4" />
-        <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-        <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="Templates\CMakeLists.txt" />
+    <None Remove="Templates\launch.json" />
+    <None Remove="Templates\test_void.c" />
+    <None Remove="Templates\test.c" />
+    <None Remove="Templates\test.vcxproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\IL2C.Core\IL2C.Core.csproj" />
-        <ProjectReference Include="..\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj" />
-        <ProjectReference Include="..\IL2C.Core.Test.ILConverters\IL2C.Core.Test.ILConverters.csproj" />
-        <ProjectReference Include="..\IL2C.Core.Test.RuntimeSystems\IL2C.Core.Test.RuntimeSystems.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\CMakeLists.txt" />
+    <EmbeddedResource Include="Templates\launch.json" />
+    <EmbeddedResource Include="Templates\test_void.c" />
+    <EmbeddedResource Include="Templates\test.c" />
+    <EmbeddedResource Include="Templates\test.vcxproj" />
+  </ItemGroup>
 
 </Project>

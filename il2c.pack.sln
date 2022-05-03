@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C", "IL2C\IL2C.csproj", "{2CBC90EC-5581-452F-8231-086E4553D20E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C", "src\IL2C\IL2C.csproj", "{2CBC90EC-5581-452F-8231-086E4553D20E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5} = {EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}
 	EndProjectSection
@@ -15,27 +15,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		pack.sh = pack.sh
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core", "IL2C.Core\IL2C.Core.csproj", "{678EFB0E-BC0A-4749-AD48-079F98D9468D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core", "src\IL2C.Core\IL2C.Core.csproj", "{678EFB0E-BC0A-4749-AD48-079F98D9468D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5} = {EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Tasks", "IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Tasks", "src\IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5} = {EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Runtime", "IL2C.Runtime\IL2C.Runtime.vcxproj", "{182A62A4-47AC-4290-8EA5-250AE8131613}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Runtime", "src\IL2C.Runtime\IL2C.Runtime.vcxproj", "{182A62A4-47AC-4290-8EA5-250AE8131613}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5} = {EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Interop", "IL2C.Interop\IL2C.Interop.csproj", "{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Interop", "src\IL2C.Interop\IL2C.Interop.csproj", "{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5} = {EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtifactCollector", "ArtifactCollector\ArtifactCollector.csproj", "{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtifactCollector", "src\ArtifactCollector\ArtifactCollector.csproj", "{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

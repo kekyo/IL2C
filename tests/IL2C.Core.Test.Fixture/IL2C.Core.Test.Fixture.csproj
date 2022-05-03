@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net48;net5.0</TargetFrameworks>
+        <TargetFrameworks>net48;net6.0</TargetFrameworks>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
 
         <OutputType>Library</OutputType>
@@ -59,7 +59,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\IL2C.Core\IL2C.Core.csproj" />
+        <ProjectReference Include="..\..\src\IL2C.Core\IL2C.Core.csproj" />
         <ProjectReference Include="..\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj" />
         <ProjectReference Include="..\IL2C.Core.Test.ILConverters\IL2C.Core.Test.ILConverters.csproj" />
         <ProjectReference Include="..\IL2C.Core.Test.RuntimeSystems\IL2C.Core.Test.RuntimeSystems.csproj" />

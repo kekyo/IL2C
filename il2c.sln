@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C", "IL2C\IL2C.csproj", "{2CBC90EC-5581-452F-8231-086E4553D20E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C", "src\IL2C\IL2C.csproj", "{2CBC90EC-5581-452F-8231-086E4553D20E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,20 +19,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core", "IL2C.Core\IL2C.Core.csproj", "{678EFB0E-BC0A-4749-AD48-079F98D9468D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core", "src\IL2C.Core\IL2C.Core.csproj", "{678EFB0E-BC0A-4749-AD48-079F98D9468D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5710A57F-57F8-4D50-8C78-82E2DFDCB613}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Tasks", "IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Tasks", "src\IL2C.Tasks\IL2C.Tasks.csproj", "{A1D40B7C-2F51-43E3-9201-EA8DFFE3B214}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Runtime", "IL2C.Runtime\IL2C.Runtime.vcxproj", "{182A62A4-47AC-4290-8EA5-250AE8131613}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Runtime", "src\IL2C.Runtime\IL2C.Runtime.vcxproj", "{182A62A4-47AC-4290-8EA5-250AE8131613}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core.Test.Fixture", "tests\IL2C.Core.Test.Fixture\IL2C.Core.Test.Fixture.csproj", "{B0F1010D-8B73-46F7-AF8E-E3C58F68525F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{182A62A4-47AC-4290-8EA5-250AE8131613} = {182A62A4-47AC-4290-8EA5-250AE8131613}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Interop", "IL2C.Interop\IL2C.Interop.csproj", "{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Interop", "src\IL2C.Interop\IL2C.Interop.csproj", "{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{3EBFA913-CF51-4A28-9E4D-73CB5AE27D2F}"
 	ProjectSection(SolutionItems) = preProject
@@ -52,7 +52,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core.Test.ILConverters
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core.Test.RuntimeSystems", "tests\IL2C.Core.Test.RuntimeSystems\IL2C.Core.Test.RuntimeSystems.csproj", "{E397A251-4373-4A8E-AA13-3891282DEDC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtifactCollector", "ArtifactCollector\ArtifactCollector.csproj", "{DF4432C4-A285-4163-9F95-3A56A2226C9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtifactCollector", "src\ArtifactCollector\ArtifactCollector.csproj", "{DF4432C4-A285-4163-9F95-3A56A2226C9A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C26C4683-9840-4307-8774-F1F952E3591B}"
 EndProject

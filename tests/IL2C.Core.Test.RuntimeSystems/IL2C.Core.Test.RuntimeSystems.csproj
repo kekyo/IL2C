@@ -38,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\IL2C.Interop\IL2C.Interop.csproj" />
+      <ProjectReference Include="..\..\src\IL2C.Interop\IL2C.Interop.csproj" />
       <ProjectReference Include="..\IL2C.Core.Test.Common\IL2C.Core.Test.Common.csproj" />
     </ItemGroup>
 

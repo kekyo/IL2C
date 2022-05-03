@@ -24,13 +24,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using NUnit.Framework;
-
-using IL2C.Metadata;
 using IL2C.Internal;
+using IL2C.Metadata;
+
+using NUnit.Framework;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Interfaces;
-using ILVerify;
 
 #pragma warning disable CS0436
 
@@ -61,6 +59,7 @@ namespace IL2C
                     "..",
                     "..",
                     "..",
+                    "src",
                     "IL2C.Runtime"));
 
         private static string GetCLangaugeSafeConversionExpression(

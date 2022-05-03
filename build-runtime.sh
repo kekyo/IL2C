@@ -8,7 +8,7 @@ else
   Configuration=$1
 fi
 
-cd IL2C.Runtime
+cd src/IL2C.Runtime
 
 rm -rf build.cmake
 

@@ -42,7 +42,7 @@ echo ///////////////////////////////////////////////
 echo // Collects artifacts.
 echo.
 
-ArtifactCollector\ArtifactCollector.exe . .\artifacts "%BuildIdentifier%" IL2C.Interop IL2C.Core IL2C.Tasks IL2C.Runtime
+src\ArtifactCollector\ArtifactCollector.exe . .\artifacts "%BuildIdentifier%" src\IL2C.Interop src\IL2C.Core src\IL2C.Tasks src\IL2C.Runtime
 
 rem =========================================
 

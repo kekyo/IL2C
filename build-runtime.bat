@@ -17,7 +17,7 @@ if "%Configuration%" == "" (
     set Configuration=Debug
 )
 
-cd IL2C.Runtime
+cd src\IL2C.Runtime
 
 if exist build.cmake (
     move build.cmake build.cmake.old

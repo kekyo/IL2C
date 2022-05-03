@@ -1,3 +1,0 @@
-<Project>
-  <Import Project="..\build\IL2C.Build.targets" />
-</Project>

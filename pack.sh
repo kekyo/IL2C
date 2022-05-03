@@ -33,8 +33,8 @@ echo "///////////////////////////////////////////////"
 echo "// Build IL2C.Build"
 echo ""
 
-dotnet pack --configuration Release --include-symbols -p:VersionPrefix=${VERSION} src/IL2C.Tasks/IL2C.Tasks.csproj
-cp src/IL2C.Tasks/bin/Release/IL2C.Build.${VERSION}.symbols.nupkg artifacts/IL2C.Build.${VERSION}.nupkg
+dotnet pack --configuration Release --include-symbols -p:VersionPrefix=${VERSION} src/IL2C.Build/IL2C.Build.csproj
+cp src/IL2C.Build/bin/Release/IL2C.Build.${VERSION}.symbols.nupkg artifacts/IL2C.Build.${VERSION}.nupkg
 
 echo ""
 echo "///////////////////////////////////////////////"

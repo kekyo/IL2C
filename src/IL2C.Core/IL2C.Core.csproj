@@ -12,4 +12,8 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="../../Images/IL2C.100.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
 </Project>

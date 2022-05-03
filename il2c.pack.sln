@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C", "src\IL2C\IL2C.csproj", "{2CBC90EC-5581-452F-8231-086E4553D20E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Build", "src\IL2C.Build\IL2C.Build.csproj", "{2CBC90EC-5581-452F-8231-086E4553D20E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5} = {EA6C4A63-B6AB-4AAD-98FA-FF102227EAB5}
 	EndProjectSection

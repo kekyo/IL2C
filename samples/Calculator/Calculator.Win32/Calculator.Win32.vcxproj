@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
+    <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{4DB1CA14-5035-4848-BCDE-10F0A7DC0F50}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Win32Target</RootNamespace>
@@ -29,7 +29,7 @@
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -51,7 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4100;4146;4197;4206</DisableSpecificWarnings>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Generated/include;../Generated/src;../../../src/IL2C.Runtime/include</AdditionalIncludeDirectories>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <StringPooling>true</StringPooling>
@@ -80,7 +80,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
-      <AdditionalLibraryDirectories>../../../IL2C.Runtime/lib/$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../../src/IL2C.Runtime/lib/$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libil2c-msvc-win-$(Platform)-rts.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4217 %(AdditionalOptions)</AdditionalOptions>
       <GenerateMapFile>true</GenerateMapFile>
@@ -96,7 +96,7 @@
     <ClCompile Include="Main.c" />
     <ClInclude Include="..\Generated\include\**\*.h" />
     <ClInclude Include="..\Generated\src\**\*.h" />
-    <ClInclude Include="..\..\..\IL2C.Runtime\include\**\*.h" />
+    <ClInclude Include="..\..\..\src\IL2C.Runtime\include\**\*.h" />
     <ClInclude Include="Main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

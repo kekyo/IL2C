@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <!-- Build with local projects: -->
     <Import Project="..\..\..\src\IL2C.Build\build\IL2C.Build.props" />
 
     <!-- ====================================================== -->
@@ -12,7 +13,7 @@
 
         <IL2COutputPath>$(ProjectDir)../Generated</IL2COutputPath>
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
-        <IL2CBuildTrace>true</IL2CBuildTrace>
+        <!-- <IL2CBuildTrace>true</IL2CBuildTrace> -->
     </PropertyGroup>
 
     <!-- ====================================================== -->

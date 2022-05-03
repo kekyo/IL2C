@@ -28,7 +28,7 @@ rem     //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32
 rem     //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma",
 rem     mingwBaseUrl + "/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma",
 rem     mingwBaseUrl + "/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
-rem     "https://cmake.org/files/v3.17/cmake-3.17.3-win32-x86.zip",
+rem     "https://cmake.org/files/v3.23/cmake-3.23.1-windows-i386.zip",
 rem     "https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip"
 
 cd toolchain
@@ -48,7 +48,7 @@ if errorlevel 1 (
     exit /b %errorlevel%
 )
 
-7z\7za.exe a -mx9 -sfx ..\artifacts\IL2C-toolchain-gcc4-mingw32-3.exe gcc4
+7z\7za.exe a -mx9 -sfx ..\artifacts\IL2C-toolchain-gcc4-mingw32-4.exe gcc4
 
 rem ========================================================
 

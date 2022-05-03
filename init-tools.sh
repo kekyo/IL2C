@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Required: .NET 5.0 SDK
-#   https://dotnet.microsoft.com/download/dotnet/5.0
+# Required: .NET 6.0 SDK
+#   https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
 echo "Setup native binary toolchain ..."
 

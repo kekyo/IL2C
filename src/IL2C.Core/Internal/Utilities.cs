@@ -775,7 +775,9 @@ namespace IL2C.Internal
                         string.Empty,
                         "rem IL2C: It is a pseudo script.",
                         string.Empty,
-                        $"set PATH={string.Join(";",searchPaths)};%PATH%",
+                        searchPaths.Length >= 1 ?
+                            $"set PATH={string.Join(";",searchPaths)};%PATH%" :
+                            "rem set PATH=;%PATH%",
                         string.Empty,
                         $"cd \"{workingPath}\"",
                         string.Empty,
@@ -794,7 +796,9 @@ namespace IL2C.Internal
                         string.Empty,
                         "# IL2C: It is a pseudo script.",
                         string.Empty,
-                        $"export PATH=\"{string.Join(":",searchPaths)}:$PATH\"",
+                        searchPaths.Length >= 1 ?
+                            $"export PATH=\"{string.Join(":",searchPaths)}:$PATH\"" :
+                            "#export PATH=\":$PATH\"",
                         string.Empty,
                         $"cd \"{workingPath}\"",
                         string.Empty,

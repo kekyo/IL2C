@@ -108,34 +108,42 @@ namespace IL2C
             }
 
             var nativeCompilerBasePath = Path.GetDirectoryName(nativeCompiler);
-            var outputFilePath = Path.Combine(
+            var nativeCompilerBasePaths =
+                string.IsNullOrWhiteSpace(nativeCompilerBasePath) ?
+                    new string[0] :
+                    new[] { Path.GetFullPath(nativeCompilerBasePath) };
+
+            var outputFilePath = Path.GetFullPath(Path.Combine(
                 outputDirPath,
                 Environment.OSVersion.Platform == PlatformID.Win32NT ?
                     assemblyName + ".exe" :
-                    assemblyName);
+                    assemblyName));
             var sourceCodePaths =
-                Directory.GetFiles(
+                Directory.EnumerateFiles(
                     sourceCodeDirPath,
                     enableBundler ?
                         $"*_bundle.{(enableCpp ? "cpp" : "c")}" :
                         $"*.{(enableCpp ? "cpp" : "c")}",
-                    SearchOption.AllDirectories);
+                    SearchOption.AllDirectories).
+                Select(p => Path.GetFullPath(Path.Combine(sourceCodeDirPath, p)));
+            var includeDir = Path.GetFullPath(Path.Combine(sourceCodeDirPath, "include"));
 
             var (exitCode, log) = await Utilities.ExecuteAsync(
                 sourceCodeDirPath,
                 "build",
-                new[] { nativeCompilerBasePath },
+                nativeCompilerBasePaths,
                 nativeCompiler,
                 new[]
                 {
                     nativeCompilerFlags,
+                    "-I", includeDir,
                     "-o", outputFilePath,
                 }.Concat(sourceCodePaths).
                 ToArray());
 
             if (exitCode != 0)
             {
-                throw new Exception($"{Path.GetFileName(nativeCompiler)}: ExitCode={exitCode}]: {log}");
+                throw new Exception($"{Path.GetFileName(nativeCompiler)}: ExitCode={exitCode}: {log}");
             }
 
             logw.WriteLine($"{Path.GetFileName(nativeCompiler)}: Built native binary: Path={outputFilePath}");

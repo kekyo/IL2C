@@ -7,11 +7,12 @@
     <AssemblyName>ArtifactCollector</AssemblyName>
     <RootNamespace>IL2C.ArtifactCollector</RootNamespace>
   </PropertyGroup>
-  
+    
   <ItemGroup>
-    <Reference Include="System.IO.Compression" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="RelaxVersioner" Version="2.6.0" PrivateAssets="all" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Remove="Arduino.properties" />
     <EmbeddedResource Include="Arduino.properties" />

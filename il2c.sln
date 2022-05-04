@@ -82,11 +82,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{E02C4728-C4FF-46C1-B197-0CAA3ECDB716}"
 	ProjectSection(SolutionItems) = preProject
 		misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.props = misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.props
+		misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.targets = misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildMultiTargeting", "buildMultiTargeting", "{736AC64B-6071-4CEA-8DEF-DA1B2D9380A8}"
 	ProjectSection(SolutionItems) = preProject
 		misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.props = misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.props
+		misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.targets = misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.targets
 	EndProjectSection
 EndProject
 Global

@@ -25,6 +25,7 @@
 
   <PropertyGroup>
     <_IL2C_ScriptBaseDir>$(MSBuildThisFileDirectory)</_IL2C_ScriptBaseDir>
+    <IL2CConfiguration>$(Configuration)</IL2CConfiguration>
   </PropertyGroup>
 
 </Project>

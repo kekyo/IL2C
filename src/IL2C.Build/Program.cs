@@ -32,6 +32,8 @@ namespace IL2C
                 var enableBundler = false;
                 var targetPlatform = TargetPlatforms.Generic;
                 var refs = new string[0];
+                var nativeCompiler = "";
+                var nativeCompilerFlags = "";
                 var trace = false;
                 var help = false;
 
@@ -39,10 +41,12 @@ namespace IL2C
                 {
                     { "debug=", "Emit debug informations [none|commentonly|full]", v => debugInformationOptions = Enum.TryParse<DebugInformationOptions>(v, true, out var t) ? t : DebugInformationOptions.None },
                     { "readSymbol=", "Read symbol files [true|false]", v => readSymbols = bool.TryParse(v, out var rs) ? rs : true },
-                    { "cpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => enableCpp = bool.TryParse(v, out var ec) ? ec : false },
+                    { "produceCpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => enableCpp = bool.TryParse(v, out var ec) ? ec : false },
                     { "bundler=", "Produce bundler source file", _ => enableBundler = true },
                     { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var t) ? t : TargetPlatforms.Generic },
                     { "refs=", "Reference assembly paths (semi-colon separated)", v => refs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
+                    { "nativeCompiler=", "Native compiler driver file", v => nativeCompiler = v },
+                    { "nativeCompilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
                     { "t", "Enable trace log", _ => trace = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
@@ -63,7 +67,7 @@ namespace IL2C
 
                     Console.Out.WriteLine($"IL2C.Build [{ThisAssembly.AssemblyVersion}] Started.");
 
-                    // TODO: refs, trace
+                    // TODO: refs, trace, nativeCompiler, nativeCompilerFlags
 
                     SimpleDriver.TranslateAll(
                         Console.Out,

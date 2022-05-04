@@ -19,6 +19,6 @@
     <file src="build\*.*" target="build" />
     <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
     <file src="README.md" target="/" />
-    <file src="gcc4\**\*" target="tools/gcc4" />
+    <file src="gcc4\**\*" target="gcc4" />
   </files>
 </package>

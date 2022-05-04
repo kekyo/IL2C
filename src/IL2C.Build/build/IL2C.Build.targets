@@ -113,7 +113,10 @@
     <PropertyGroup Condition="$(IL2CEnableNativeCompile)">
       <IL2CNativeCompilerOption>--compiler=&quot;$(IL2CNativeCompiler)&quot;</IL2CNativeCompilerOption>
       <IL2CNativeCompilerFlagsOption>--compilerFlags=&quot;$(IL2CNativeCompilerDefaultFlags) $(IL2CNativeCompilerRequiredFlags) $(IL2CNativeCompilerFlags)&quot;</IL2CNativeCompilerFlagsOption>
+      <IL2CNativeIncludeDirOption>--includeDirs=&quot;$(IL2CNativeIncludeDir)&quot;</IL2CNativeIncludeDirOption>
+      <IL2CNativeLibPathOption>--libs=&quot;$(IL2CNativeLibPath)&quot;</IL2CNativeLibPathOption>
       <IL2COutputNativeDirOption>--outputNativeDir=&quot;$(IL2COutputNativePath)&quot;</IL2COutputNativeDirOption>
+      <IL2CNativeOptions>$(IL2CNativeCompilerOption) $(IL2CNativeCompilerFlagsOption) $(IL2CNativeIncludeDirOption) $(IL2CNativeLibPathOption) $(IL2COutputNativeDirOption)</IL2CNativeOptions>
     </PropertyGroup>
 
     <GetCombinedReferencesBasePath References="@(ReferencePath)">
@@ -121,7 +124,7 @@
     </GetCombinedReferencesBasePath>
         
     <Exec WorkingDirectory="$(IL2CBuildToolingDir)"
-        Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; $(IL2CBuildTraceOption)--debug=&quot;$(IL2CDebugInformation)&quot; --readSymbol=&quot;$(IL2CReadSymbols)&quot; --produceCpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refs=&quot;$(CombinedReferencesBasePath)&quot; $(IL2CNativeCompilerOption) $(IL2CNativeCompilerFlagsOption) $(IL2COutputNativeDirOption) &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
+        Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; $(IL2CBuildTraceOption)--debug=&quot;$(IL2CDebugInformation)&quot; --readSymbol=&quot;$(IL2CReadSymbols)&quot; --produceCpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refs=&quot;$(CombinedReferencesBasePath)&quot; $(IL2CNativeOptions) &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
 
     <ItemGroup>
       <FileWrites Include="$(IL2COutputPath)\**\*.c" />

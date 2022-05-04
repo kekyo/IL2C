@@ -12,6 +12,6 @@
   <PropertyGroup>
     <IL2CNativeCompiler>$(MSBuildThisFileDirectory)..\gcc4\bin\gcc.exe</IL2CNativeCompiler>
     <IL2CNativeCompilerDefaultFlags>-pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused</IL2CNativeCompilerDefaultFlags>
-    <IL2CNativeCompilerRequiredFlags>-fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias</IL2CNativeCompilerRequiredFlags>
+    <IL2CNativeCompilerRequiredFlags>-D_WIN32 -fdata-sections -ffunction-sections -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias</IL2CNativeCompilerRequiredFlags>
   </PropertyGroup>
 </Project>

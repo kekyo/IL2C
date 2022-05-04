@@ -27,7 +27,11 @@
     -->
 
     <!-- OR, build with local projects: -->
+    <PropertyGroup>
+        <IL2CRuntimeBasePath>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\src\IL2C.Runtime'))</IL2CRuntimeBasePath>
+    </PropertyGroup>
     <Import Project="..\..\..\src\IL2C.Build\build\IL2C.Build.targets" />
+    <Import Project="..\..\..\src\IL2C.Runtime\build\IL2C.Runtime.targets" />
     <Import Project="..\..\..\misc\IL2C.Toolchain\build\IL2C.Toolchain.gcc4.mingw32.targets" />
     <PropertyGroup>
         <IL2CBuildToolingDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\src\IL2C.Build\bin\$(Configuration)\$(_IL2C_PlatformName)'))</IL2CBuildToolingDir>

@@ -94,6 +94,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{EA30816B-8F8B-4584-9D74-103470BB6C76}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator.Core", "samples\Calculator\Calculator.Core\Calculator.Core.csproj", "{9A796AD6-AEA2-4E31-ACF2-5B1834F4A5F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{182A62A4-47AC-4290-8EA5-250AE8131613} = {182A62A4-47AC-4290-8EA5-250AE8131613}
+		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator.Core.Tests", "samples\Calculator\Calculator.Core.Tests\Calculator.Core.Tests.csproj", "{9A4F9C68-A90D-4E13-9140-8E4B9D527334}"
 EndProject

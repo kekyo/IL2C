@@ -10,6 +10,6 @@
 -->
 <Project ToolVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <IL2CRuntimeBasePath>$(MSBuildThisFileDirectory)..\lib\native</IL2CRuntimeBasePath>
+    <IL2CRuntimeBasePath>$(MSBuildThisFileDirectory)..</IL2CRuntimeBasePath>
   </PropertyGroup>
 </Project>

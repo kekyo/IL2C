@@ -92,6 +92,8 @@ namespace IL2C
             string assemblyName,
             string nativeCompiler,
             string nativeCompilerFlags,
+            string[] includeDirs,
+            string[] libPaths,
             bool enableCpp,
             bool enableBundler,
             string sourceCodeDirPath)
@@ -107,6 +109,7 @@ namespace IL2C
                 }
             }
 
+            var sourceCodeDirFullPath = Path.GetFullPath(sourceCodeDirPath);
             var nativeCompilerBasePath = Path.GetDirectoryName(nativeCompiler);
             var nativeCompilerBasePaths =
                 string.IsNullOrWhiteSpace(nativeCompilerBasePath) ?
@@ -120,25 +123,33 @@ namespace IL2C
                     assemblyName));
             var sourceCodePaths =
                 Directory.EnumerateFiles(
-                    sourceCodeDirPath,
+                    sourceCodeDirFullPath,
                     enableBundler ?
                         $"*_bundle.{(enableCpp ? "cpp" : "c")}" :
                         $"*.{(enableCpp ? "cpp" : "c")}",
                     SearchOption.AllDirectories).
-                Select(p => Path.GetFullPath(Path.Combine(sourceCodeDirPath, p)));
-            var includeDir = Path.GetFullPath(Path.Combine(sourceCodeDirPath, "include"));
+                Select(p => Path.Combine(sourceCodeDirFullPath, p));
+            var includeDir = Path.Combine(sourceCodeDirFullPath, "include");
+            var srcDir = Path.Combine(sourceCodeDirFullPath, "src");
 
             var (exitCode, log) = await Utilities.ExecuteAsync(
-                sourceCodeDirPath,
+                sourceCodeDirFullPath,
                 "build",
                 nativeCompilerBasePaths,
                 nativeCompiler,
                 new[]
                 {
                     nativeCompilerFlags,
-                    "-I", includeDir,
+                    $"-I{includeDir}",
+                    $"-I{srcDir}",
+                }.
+                Concat(includeDirs.Select(p => $"-I{p}")).
+                Concat(new[]
+                {
                     "-o", outputFilePath,
-                }.Concat(sourceCodePaths).
+                }).
+                Concat(sourceCodePaths).
+                Concat(libPaths).
                 ToArray());
 
             if (exitCode != 0)

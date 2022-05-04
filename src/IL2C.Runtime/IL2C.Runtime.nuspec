@@ -16,12 +16,12 @@
   </metadata>
   <files>
     <file src="..\..\Images\IL2C.100.png" target="/" />
-    <file src="build\IL2C.Runtime.props" target="build" />
-    <file src="include\**\*.h" target="lib\native\include" />
-    <file src="src\**\*.h" target="lib\native\src" />
-    <file src="src\**\*.c" target="lib\native\src" />
-    <file src="lib\**\*.a" target="lib\native\lib" />
-    <file src="cmake\gcc4-win-mingw32.cmake" target="lib\native\cmake" />
-    <file src="cmake\gcc-linux.cmake" target="lib\native\cmake" />
+    <file src="build\*.*" target="build" />
+    <file src="include\**\*.h" target="include" />
+    <file src="src\**\*.h" target="src" />
+    <file src="src\**\*.c" target="src" />
+    <file src="lib\**\*.a" target="lib" />
+    <file src="cmake\gcc4-win-mingw32.cmake" target="cmake" />
+    <file src="cmake\gcc-linux.cmake" target="cmake" />
   </files>
 </package>

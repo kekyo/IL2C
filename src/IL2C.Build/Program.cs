@@ -44,6 +44,8 @@ namespace IL2C
                 var nativeCompilerFlags = "";
                 var outputType = OutputTypes.Exe;
                 var outputNativeDirPath = "";
+                var includeDirs = new string[0];
+                var libPaths = new string[0];
                 var trace = false;
                 var help = false;
 
@@ -59,6 +61,8 @@ namespace IL2C
                     { "compilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
                     { "outputType=", "Output type [library|exe]", v => outputType = Enum.TryParse<OutputTypes>(v, true, out var ot) ? ot : OutputTypes.Exe },
                     { "outputNativeDir=", "Output native directory path", v => outputNativeDirPath = v },
+                    { "includeDirs=", "Compilation include directory path", v => includeDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
+                    { "libs=", "Compilation library path", v => libPaths = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "t", "Enable trace log", _ => trace = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
@@ -105,6 +109,8 @@ namespace IL2C
                             primaryAssemblyName,
                             nativeCompiler,
                             nativeCompilerFlags,
+                            includeDirs,
+                            libPaths,
                             enableCpp,
                             enableBundler,
                             outputDirPath);

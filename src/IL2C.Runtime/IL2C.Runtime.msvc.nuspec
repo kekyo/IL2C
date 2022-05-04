@@ -21,8 +21,8 @@
     <file src="..\..\Images\IL2C.100.png" target="/" />
     <file src="build\IL2C.Runtime.msvc.props" target="build" />
     <file src="build\IL2C.Runtime.msvc.targets" target="build" />
-    <file src="lib\**\*.lib" target="lib\native\lib" />
-    <file src="lib\**\*.pdb" target="lib\native\lib" />
-    <file src="cmake\msvc-*.cmake" target="lib\native\cmake" />
+    <file src="lib\**\*.lib" target="lib" />
+    <file src="lib\**\*.pdb" target="lib" />
+    <file src="cmake\msvc-*.cmake" target="cmake" />
   </files>
 </package>

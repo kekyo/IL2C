@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build-runtime.sh = build-runtime.sh
 		Directory.Build.props = Directory.Build.props
 		src\Directory.Build.props = src\Directory.Build.props
-		tests\Directory.Build.props = tests\Directory.Build.props
-		misc\Directory.Build.props = misc\Directory.Build.props
 		il2c.sln.licenseheader = il2c.sln.licenseheader
 		init-tools.bat = init-tools.bat
 		init-tools.sh = init-tools.sh
@@ -26,6 +24,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core", "src\IL2C.Core\IL2C.Core.csproj", "{678EFB0E-BC0A-4749-AD48-079F98D9468D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5710A57F-57F8-4D50-8C78-82E2DFDCB613}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Runtime", "src\IL2C.Runtime\IL2C.Runtime.vcxproj", "{182A62A4-47AC-4290-8EA5-250AE8131613}"
 EndProject
@@ -63,8 +64,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{4BC9EFBC-600E-48BF-ADDC-3E573D8315F0}"
+	ProjectSection(SolutionItems) = preProject
+		misc\build-tools-pack.bat = misc\build-tools-pack.bat
+		misc\Directory.Build.props = misc\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtifactCollector", "misc\ArtifactCollector\ArtifactCollector.csproj", "{C5D17DC3-D27B-4812-8916-49912F82DE0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IL2C.Toolchain", "IL2C.Toolchain", "{562347D9-712A-4A9B-932F-7249AFA5CF96}"
+	ProjectSection(SolutionItems) = preProject
+		misc\IL2C.toolchain\.gitignore = misc\IL2C.toolchain\.gitignore
+		misc\IL2C.toolchain\extract.bat = misc\IL2C.toolchain\extract.bat
+		misc\IL2C.toolchain\IL2C.Toolchain.gcc4.mingw32.nuspec = misc\IL2C.toolchain\IL2C.Toolchain.gcc4.mingw32.nuspec
+		misc\IL2C.toolchain\README.md = misc\IL2C.toolchain\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{E02C4728-C4FF-46C1-B197-0CAA3ECDB716}"
+	ProjectSection(SolutionItems) = preProject
+		misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.props = misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildMultiTargeting", "buildMultiTargeting", "{736AC64B-6071-4CEA-8DEF-DA1B2D9380A8}"
+	ProjectSection(SolutionItems) = preProject
+		misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.props = misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +146,9 @@ Global
 		{C26C4683-9840-4307-8774-F1F952E3591B} = {D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}
 		{21592C48-BEE1-4706-8024-CF7EB0CF8BA7} = {C26C4683-9840-4307-8774-F1F952E3591B}
 		{C5D17DC3-D27B-4812-8916-49912F82DE0F} = {4BC9EFBC-600E-48BF-ADDC-3E573D8315F0}
+		{562347D9-712A-4A9B-932F-7249AFA5CF96} = {4BC9EFBC-600E-48BF-ADDC-3E573D8315F0}
+		{E02C4728-C4FF-46C1-B197-0CAA3ECDB716} = {562347D9-712A-4A9B-932F-7249AFA5CF96}
+		{736AC64B-6071-4CEA-8DEF-DA1B2D9380A8} = {562347D9-712A-4A9B-932F-7249AFA5CF96}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

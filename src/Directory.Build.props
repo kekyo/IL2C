@@ -17,7 +17,7 @@
     <Authors>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</Authors>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kekyo/IL2C.git</PackageProjectUrl>
-    <!-- <PackageIcon>IL2C.100.png</PackageIcon> -->
+    <PackageIcon>IL2C.100.png</PackageIcon>
     <PackageTags>il2c;cil;msil;translate;transpile;aot;ecma335;c;c++;win32;uefi;wdm;multi-platform;systems-programming</PackageTags>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <NoWarn>$(NoWarn);NU1605;NU1701;NU5105</NoWarn>

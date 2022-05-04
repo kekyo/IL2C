@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 set TOOLCHAINPATH=%~dp0toolchain\gcc4
-set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.17
+set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.23
 
 if not exist %TOOLCHAINPATH% (
     echo Native toolchain not found.
@@ -14,12 +14,6 @@ set BuildIdentifier=%1
 if "%BuildIdentifier%" == "" (
     set BuildIdentifier=manually
 )
-
-rem if not exist ArtifactCollector\ArtifactCollector.exe (
-rem     echo ArtifactCollector not found.
-rem     echo Build il2c.sln first.
-rem     exit /b 1
-rem )
 
 rem =========================================
 
@@ -42,7 +36,7 @@ echo ///////////////////////////////////////////////
 echo // Collects artifacts.
 echo.
 
-src\ArtifactCollector\ArtifactCollector.exe . .\artifacts "%BuildIdentifier%" src\IL2C.Interop src\IL2C.Core src\IL2C.Build src\IL2C.Runtime
+misc\ArtifactCollector\ArtifactCollector.exe . .\artifacts "%BuildIdentifier%" src\IL2C.Interop src\IL2C.Core src\IL2C.Build src\IL2C.Runtime
 
 rem =========================================
 

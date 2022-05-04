@@ -10,16 +10,16 @@ echo "///////////////////////////////////////////////"
 echo "// Build IL2C.Interop"
 echo ""
 
-dotnet pack --configuration Release --include-symbols -p:VersionPrefix=${VERSION} src/IL2C.Interop/IL2C.Interop.csproj
-cp src/IL2C.Interop/bin/Release/IL2C.Interop.${VERSION}.symbols.nupkg artifacts/IL2C.Interop.${VERSION}.nupkg
+dotnet pack --configuration Release src/IL2C.Interop/IL2C.Interop.csproj
+cp src/IL2C.Interop/bin/Release/IL2C.Interop.*.nupkg artifacts/
 
 echo ""
 echo "///////////////////////////////////////////////"
 echo "// Build IL2C.Core"
 echo ""
 
-dotnet pack --configuration Release --include-symbols -p:VersionPrefix=${VERSION} src/IL2C.Core/IL2C.Core.csproj
-cp src/IL2C.Core/bin/Release/IL2C.Core.${VERSION}.symbols.nupkg artifacts/IL2C.Core.${VERSION}.nupkg
+dotnet pack --configuration Release src/IL2C.Core/IL2C.Core.csproj
+cp src/IL2C.Core/bin/Release/IL2C.Core.*.nupkg artifacts/
 
 echo ""
 echo "///////////////////////////////////////////////"
@@ -33,8 +33,8 @@ echo "///////////////////////////////////////////////"
 echo "// Build IL2C.Build"
 echo ""
 
-dotnet pack --configuration Release --include-symbols -p:VersionPrefix=${VERSION} src/IL2C.Build/IL2C.Build.csproj
-cp src/IL2C.Build/bin/Release/IL2C.Build.${VERSION}.symbols.nupkg artifacts/IL2C.Build.${VERSION}.nupkg
+dotnet pack --configuration Release src/IL2C.Build/IL2C.Build.csproj
+cp src/IL2C.Build/bin/Release/IL2C.Build.*.symbols.nupkg artifacts/
 
 echo ""
 echo "///////////////////////////////////////////////"

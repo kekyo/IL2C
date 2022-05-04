@@ -138,6 +138,7 @@ namespace IL2C.ArtifactCollector
                     "pack",
                     "-Version", versionString,
                     "-NoPackageAnalysis",
+                    "-Verbosity", "detailed",
                     "-Prop", $"Configuration=Release",
                     "-Prop", $"BuildIdentifier={buildIdentifier}",
                     "-OutputDirectory", $"\"{outputDirectory}\"",

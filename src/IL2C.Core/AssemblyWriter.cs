@@ -7,10 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Collections.Generic;
 
-using IL2C.Metadata;
 using IL2C.Translators;
 using IL2C.Writers;
 

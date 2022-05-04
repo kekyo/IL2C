@@ -7,14 +7,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-using System.Collections.Generic;
+using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+using IL2C.Internal;
 
 namespace IL2C
 {
     public static class SimpleDriver
     {
-        public static void Translate(
+        public static Task TranslateAsync(
             TextWriter logw,
             CodeTextStorage storage,
             bool readSymbols,
@@ -47,97 +51,94 @@ namespace IL2C
                     enableBundler,
                     debugInformationOptions);
             }
+
+            // TODO:
+#if NET452_OR_GREATER || NETSTANDARD || NETCOREAPP
+            return Task.CompletedTask;
+#else
+            return Task.FromResult(0);
+#endif
         }
 
-        public static void TranslateAll(
+        public static Task TranslateAsync(
             TextWriter logw,
-            CodeTextStorage storage,
+            string outputDirPath,
             bool readSymbols,
+            bool enableCpp,
             bool enableBundler,
             TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOptions,
-            IEnumerable<string> assemblyPaths)
+            string assemblyPath)
         {
-            foreach (var assemblyPath in assemblyPaths)
-            {
-                Translate(
-                    logw,
-                    storage,
-                    readSymbols,
-                    enableBundler,
-                    targetPlatform,
-                    debugInformationOptions,
-                    assemblyPath);
-            }
-        }
+            var storage = new CodeTextStorage(
+                logw,
+                outputDirPath,
+                enableCpp,
+                "    ");
 
-        public static void TranslateAll(
-            TextWriter logw,
-            CodeTextStorage storage,
-            bool readSymbols,
-            bool enableBundler,
-            TargetPlatforms targetPlatform,
-            DebugInformationOptions debugInformationOptions,
-            params string[] assemblyPaths)
-        {
-            TranslateAll(
+            return TranslateAsync(
                 logw,
                 storage,
                 readSymbols,
                 enableBundler,
                 targetPlatform,
                 debugInformationOptions,
-                (IEnumerable<string>)assemblyPaths);
+                assemblyPath);
         }
 
-        public static void TranslateAll(
+        public static async Task CompileAsync(
             TextWriter logw,
-            string outputPath,
-            bool readSymbols,
+            string outputDirPath,
+            string assemblyName,
+            string nativeCompiler,
+            string nativeCompilerFlags,
             bool enableCpp,
             bool enableBundler,
-            TargetPlatforms targetPlatform,
-            DebugInformationOptions debugInformationOptions,
-            IEnumerable<string> assemblyPaths)
+            string sourceCodeDirPath)
         {
-            var storage = new CodeTextStorage(
-                logw,
-                outputPath,
-                enableCpp,
-                "    ");
-
-            foreach (var assemblyPath in assemblyPaths)
+            if (!Directory.Exists(outputDirPath))
             {
-                Translate(
-                    logw,
-                    storage,
-                    readSymbols,
-                    enableBundler,
-                    targetPlatform,
-                    debugInformationOptions,
-                    assemblyPath);
+                try
+                {
+                    Directory.CreateDirectory(outputDirPath);
+                }
+                catch
+                {
+                }
             }
-        }
 
-        public static void TranslateAll(
-            TextWriter logw,
-            string outputPath,
-            bool readSymbols,
-            bool enableCpp,
-            bool enableBundler,
-            TargetPlatforms targetPlatform,
-            DebugInformationOptions debugInformationOptions,
-            params string[] assemblyPaths)
-        {
-            TranslateAll(
-                logw,
-                outputPath,
-                readSymbols,
-                enableCpp,
-                enableBundler,
-                targetPlatform,
-                debugInformationOptions,
-                (IEnumerable<string>)assemblyPaths);
+            var nativeCompilerBasePath = Path.GetDirectoryName(nativeCompiler);
+            var outputFilePath = Path.Combine(
+                outputDirPath,
+                Environment.OSVersion.Platform == PlatformID.Win32NT ?
+                    assemblyName + ".exe" :
+                    assemblyName);
+            var sourceCodePaths =
+                Directory.GetFiles(
+                    sourceCodeDirPath,
+                    enableBundler ?
+                        $"*_bundle.{(enableCpp ? "cpp" : "c")}" :
+                        $"*.{(enableCpp ? "cpp" : "c")}",
+                    SearchOption.AllDirectories);
+
+            var (exitCode, log) = await Utilities.ExecuteAsync(
+                sourceCodeDirPath,
+                "build",
+                new[] { nativeCompilerBasePath },
+                nativeCompiler,
+                new[]
+                {
+                    nativeCompilerFlags,
+                    "-o", outputFilePath,
+                }.Concat(sourceCodePaths).
+                ToArray());
+
+            if (exitCode != 0)
+            {
+                throw new Exception($"{Path.GetFileName(nativeCompiler)}: ExitCode={exitCode}]: {log}");
+            }
+
+            logw.WriteLine($"{Path.GetFileName(nativeCompiler)}: Built native binary: Path={outputFilePath}");
         }
     }
 }

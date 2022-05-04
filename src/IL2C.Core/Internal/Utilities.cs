@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 using Mono.Cecil.Cil;
 
@@ -760,5 +761,90 @@ namespace IL2C.Internal
 
         public static readonly IEqualityComparer<object> LooseTypeKindComparer = new LooseTypeKindComparerImpl();
         #endregion
+
+        public static async Task<(int, string)> ExecuteAsync(
+            string workingPath, string scriptName, string[] searchPaths, string executablePath, params object[] args)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                File.WriteAllText(
+                    Path.Combine(workingPath, scriptName + ".bat"),
+                    string.Join(Environment.NewLine, new[]
+                    {
+                        "@echo off",
+                        string.Empty,
+                        "rem IL2C: It is a pseudo script.",
+                        string.Empty,
+                        $"set PATH={string.Join(";",searchPaths)};%PATH%",
+                        string.Empty,
+                        $"cd \"{workingPath}\"",
+                        string.Empty,
+                        $"\"{executablePath}\" {string.Join(" ", args)}",
+                        string.Empty,
+                    }),
+                    new UTF8Encoding(false, true));
+            }
+            else
+            {
+                File.WriteAllText(
+                    Path.Combine(workingPath, scriptName + ".sh"),
+                    string.Join(Environment.NewLine, new[]
+                    {
+                        "#!/bin/sh",
+                        string.Empty,
+                        "# IL2C: It is a pseudo script.",
+                        string.Empty,
+                        $"export PATH=\"{string.Join(":",searchPaths)}:$PATH\"",
+                        string.Empty,
+                        $"cd \"{workingPath}\"",
+                        string.Empty,
+                        $"\"{executablePath}\" {string.Join(" ", args)}",
+                        string.Empty,
+                    }),
+                    new UTF8Encoding(false, true));
+            }
+
+            using (var p = new Process())
+            {
+                p.StartInfo.FileName = executablePath;
+                p.StartInfo.Arguments = string.Join(" ", args);
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.CreateNoWindow = true;
+                p.StartInfo.ErrorDialog = false;
+                p.StartInfo.WorkingDirectory = workingPath;
+
+#if NET46_OR_GREATER || NETSTANDARD || NETCOREAPP
+                var pathEnv = p.StartInfo.Environment["PATH"];
+                p.StartInfo.Environment["PATH"] = string.Join(";", searchPaths) + ";" + pathEnv;
+#else
+                var pathEnv = p.StartInfo.EnvironmentVariables["PATH"];
+                p.StartInfo.EnvironmentVariables["PATH"] = string.Join(";", searchPaths) + ";" + pathEnv;
+#endif
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+
+                var sb = new StringBuilder();
+                p.OutputDataReceived += (sender, e) => { if (e.Data != null) lock (sb) sb.AppendLine(e.Data); };
+                p.ErrorDataReceived += (sender, e) => { if (e.Data != null) lock (sb) sb.AppendLine(e.Data); };
+
+                var tcs = new TaskCompletionSource<int>();
+                p.Exited += (sender, e) => tcs.SetResult(p.ExitCode);
+                p.EnableRaisingEvents = true;
+
+                p.Start();
+
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+
+                var exitCode = await tcs.Task;
+
+                p.WaitForExit();
+
+                p.CancelOutputRead();
+                p.CancelErrorRead();
+
+                return (exitCode, sb.ToString());
+            }
+        }
     }
 }

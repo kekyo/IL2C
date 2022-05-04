@@ -8,9 +8,10 @@
 ////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-
+using System.Threading.Tasks;
 using Mono.Options;
 
 #pragma warning disable CS0219
@@ -22,7 +23,14 @@ namespace IL2C
 
     public static class Program
     {
-        public static int Main(string[] args)
+        private enum OutputTypes
+        {
+            Library,
+            Exe,
+            WinExe,    // Alias
+        }
+
+        public static async Task<int> Main(string[] args)
         {
             try
             {
@@ -34,6 +42,8 @@ namespace IL2C
                 var refs = new string[0];
                 var nativeCompiler = "";
                 var nativeCompilerFlags = "";
+                var outputType = OutputTypes.Exe;
+                var outputNativeDirPath = "";
                 var trace = false;
                 var help = false;
 
@@ -43,10 +53,12 @@ namespace IL2C
                     { "readSymbol=", "Read symbol files [true|false]", v => readSymbols = bool.TryParse(v, out var rs) ? rs : true },
                     { "produceCpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => enableCpp = bool.TryParse(v, out var ec) ? ec : false },
                     { "bundler=", "Produce bundler source file", _ => enableBundler = true },
-                    { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var t) ? t : TargetPlatforms.Generic },
+                    { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var tp) ? tp : TargetPlatforms.Generic },
                     { "refs=", "Reference assembly paths (semi-colon separated)", v => refs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
-                    { "nativeCompiler=", "Native compiler driver file", v => nativeCompiler = v },
-                    { "nativeCompilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
+                    { "compiler=", "Native compiler driver file", v => nativeCompiler = v },
+                    { "compilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
+                    { "outputType=", "Output type [library|exe]", v => outputType = Enum.TryParse<OutputTypes>(v, true, out var ot) ? ot : OutputTypes.Exe },
+                    { "outputNativeDir=", "Output native directory path", v => outputNativeDirPath = v },
                     { "t", "Enable trace log", _ => trace = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
@@ -62,22 +74,41 @@ namespace IL2C
                 }
                 else
                 {
-                    var outputPath = extra[0];
+                    var outputDirPath = extra[0];
                     var assemblyPaths = extra.Skip(1);
 
                     Console.Out.WriteLine($"IL2C.Build [{ThisAssembly.AssemblyVersion}] Started.");
 
                     // TODO: refs, trace, nativeCompiler, nativeCompilerFlags
 
-                    SimpleDriver.TranslateAll(
-                        Console.Out,
-                        outputPath,
-                        readSymbols,
-                        enableCpp,
-                        enableBundler,
-                        targetPlatform,
-                        debugInformationOptions,
-                        assemblyPaths);
+                    foreach (var assemblyPath in assemblyPaths)
+                    {
+                        await SimpleDriver.TranslateAsync(
+                            Console.Out,
+                            outputDirPath,
+                            readSymbols,
+                            enableCpp,
+                            enableBundler,
+                            targetPlatform,
+                            debugInformationOptions,
+                            assemblyPath);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(nativeCompiler))
+                    {
+                        var primaryAssemblyName =
+                            Path.GetFileNameWithoutExtension(assemblyPaths.First());
+
+                        await SimpleDriver.CompileAsync(
+                            Console.Out,
+                            outputNativeDirPath,
+                            primaryAssemblyName,
+                            nativeCompiler,
+                            nativeCompilerFlags,
+                            enableCpp,
+                            enableBundler,
+                            outputDirPath);
+                    }
                 }
 
                 return 0;

@@ -25,6 +25,9 @@
 
   <PropertyGroup>
     <_IL2C_ScriptBaseDir>$(MSBuildThisFileDirectory)</_IL2C_ScriptBaseDir>
+    <_IL2C_NativeCompilerDefaultFlags>-pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused</_IL2C_NativeCompilerDefaultFlags>
+    <_IL2C_NativeCompilerDebugFlags>-O0 -D_DEBUG</_IL2C_NativeCompilerDebugFlags>
+    <_IL2C_NativeCompilerReleaseFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native -DNDEBUG</_IL2C_NativeCompilerReleaseFlags>
     <IL2CConfiguration>$(Configuration)</IL2CConfiguration>
   </PropertyGroup>
 

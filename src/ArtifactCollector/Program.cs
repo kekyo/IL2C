@@ -56,15 +56,16 @@ namespace IL2C.ArtifactCollector
                     SelectMany(p => Directory.GetFiles(Path.Combine(solutionDir, p), "*.csproj")).
                     ToArray();
 
+                var nuspecPaths = dirNames.
+                    SelectMany(p => Directory.GetFiles(Path.Combine(solutionDir, p), "*.nuspec")).
+                    Where(p => !csprojPaths.Any(csprojPath => Path.GetDirectoryName(csprojPath) == Path.GetDirectoryName(p))).
+                    ToArray();
+
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     string.Join(", ", csprojPaths.Select(p => Path.GetFileName(p))));
 
                 await Collectors.BuildCsprojAndCollectArtifactsAsync(
                     solutionDir, artifactsDir, buildIdentifier, csprojPaths);
-
-                var nuspecPaths = dirNames.
-                    SelectMany(p => Directory.GetFiles(Path.Combine(solutionDir, p), "*.nuspec")).
-                    ToArray();
 
                 WriteLine("\r\n/////////////////////////////////////////////////////\r\n// Collect for {0}\r\n\r\n",
                     string.Join(", ", nuspecPaths.Select(p => Path.GetFileName(p))));

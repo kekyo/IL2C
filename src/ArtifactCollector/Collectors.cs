@@ -222,13 +222,13 @@ namespace IL2C.ArtifactCollector
                     { "{semver2}", typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion }
                 });
 
-            var fromIncludeDir = Path.Combine(solutionDir, "IL2C.Runtime", "include");
+            var fromIncludeDir = Path.Combine(solutionDir, "src", "IL2C.Runtime", "include");
             var toIncludeDir = Path.Combine(arduinoBasePath, "include");
             await Task.WhenAll(
                 Directory.EnumerateFiles(fromIncludeDir, "*.h", SearchOption.AllDirectories).
                 Select(path => CopyFileAsync(path, Path.Combine(toIncludeDir, path.Substring(fromIncludeDir.Length + 1)))));
 
-            var fromSrcDir = Path.Combine(solutionDir, "IL2C.Runtime", "src");
+            var fromSrcDir = Path.Combine(solutionDir, "src", "IL2C.Runtime", "src");
             var toSrcDir = Path.Combine(arduinoBasePath, "src");
             await Task.WhenAll(
                 Directory.EnumerateFiles(fromSrcDir, "*.c", SearchOption.AllDirectories).

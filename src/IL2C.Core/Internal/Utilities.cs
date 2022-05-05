@@ -26,6 +26,21 @@ using IL2C.Metadata;
 
 namespace IL2C.Internal
 {
+    internal readonly struct ExecuteResult
+    {
+        public readonly int ExitCode;
+        public readonly string Logs;
+
+        public ExecuteResult(int exitCode, string logs)
+        {
+            this.ExitCode = exitCode;
+            this.Logs = logs;
+        }
+
+        public override string ToString() =>
+            $"{this.ExitCode}: {this.Logs}";
+    }
+
     internal static class Utilities
     {
         private static readonly string intMinValueExpression = string.Format("{0} - 1", int.MinValue + 1);
@@ -762,8 +777,9 @@ namespace IL2C.Internal
         public static readonly IEqualityComparer<object> LooseTypeKindComparer = new LooseTypeKindComparerImpl();
         #endregion
 
-        public static async Task<(int, string)> ExecuteAsync(
-            string workingPath, string scriptName, string[] searchPaths, string executablePath, params object[] args)
+        public static async Task<ExecuteResult> ExecuteAsync(
+            string workingPath, string scriptName, string[] searchPaths,
+            string executablePath, string[] args)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
@@ -847,7 +863,7 @@ namespace IL2C.Internal
                 p.CancelOutputRead();
                 p.CancelErrorRead();
 
-                return (exitCode, sb.ToString());
+                return new ExecuteResult(exitCode, sb.ToString());
             }
         }
     }

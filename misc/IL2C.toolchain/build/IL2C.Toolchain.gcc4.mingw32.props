@@ -12,5 +12,6 @@
   <PropertyGroup>
     <IL2CNativeCompiler>$(MSBuildThisFileDirectory)..\gcc4\bin\gcc.exe</IL2CNativeCompiler>
     <IL2CNativeCompilerRequiredFlags>-D_WIN32 -fdata-sections -ffunction-sections -static-libgcc -Wl,--gc-sections -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias</IL2CNativeCompilerRequiredFlags>
+    <IL2CNativeArciver>$(MSBuildThisFileDirectory)..\gcc4\bin\ar.exe</IL2CNativeArciver>
   </PropertyGroup>
 </Project>

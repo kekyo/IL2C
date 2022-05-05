@@ -42,9 +42,10 @@ namespace IL2C
                 var refDirs = new string[0];
                 var nativeCompiler = "";
                 var nativeCompilerFlags = "";
+                var nativeArchiver = "";
                 var isLibrary = false;
                 var outputNativePath = "";
-                var includeDirs = new string[0];
+                var additionalIncludeDirs = new string[0];
                 var libPaths = new string[0];
                 var trace = false;
                 var help = false;
@@ -59,9 +60,10 @@ namespace IL2C
                     { "refDirs=", "Reference assembly paths (semi-colon separated)", v => refDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "compiler=", "Native compiler driver file", v => nativeCompiler = v },
                     { "compilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
+                    { "archiver=", "Native archiver file", v => nativeArchiver = v },
                     { "outputType=", "Output type [library|exe]", v => isLibrary = Enum.TryParse<OutputTypes>(v, true, out var ot) && ot == OutputTypes.Library },
                     { "outputNativePath=", "Output native directory path", v => outputNativePath = v },
-                    { "includeDirs=", "Compilation include directory path", v => includeDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
+                    { "includeDirs=", "Compilation additional include directory path", v => additionalIncludeDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "libs=", "Compilation library path", v => libPaths = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "t", "Enable trace log", _ => trace = true },
                     { "h|help", "Print this help", _ => help = true },
@@ -100,15 +102,14 @@ namespace IL2C
 
                     if (!string.IsNullOrWhiteSpace(nativeCompiler))
                     {
-                        await SimpleDriver.CompileAsync(
+                        await SimpleDriver.CompileToNativeAsync(
                             Console.Out,
                             outputNativePath,
                             nativeCompiler,
                             nativeCompilerFlags,
-                            includeDirs,
+                            nativeArchiver,
+                            additionalIncludeDirs,
                             libPaths,
-                            enableCpp,
-                            enableBundler,
                             isLibrary,
                             outputDirPath);
                     }

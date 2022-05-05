@@ -18,8 +18,9 @@ namespace IL2C
 {
     public class CodeTextStorage
     {
+        public readonly string BasePath;
+
         private readonly TextWriter logw;
-        private readonly string basePath;
         private readonly bool enableCpp;
         private readonly string indent;
         private readonly Stack<string> scopeNames = new Stack<string>();
@@ -27,7 +28,7 @@ namespace IL2C
         public CodeTextStorage(TextWriter logw, string basePath, bool enableCpp, string indent)
         {
             this.logw = logw;
-            this.basePath = basePath;
+            this.BasePath = Path.GetFullPath(basePath);
             this.enableCpp = enableCpp;
             this.indent = indent;
         }
@@ -35,8 +36,8 @@ namespace IL2C
         public CodeTextWriter CreateTextWriter(string fileName, string ext)
         {
             var scopedPath = Path.Combine(scopeNames.Reverse().ToArray());
-            var path = Path.Combine(basePath, scopedPath, fileName + ext);
-            var tw = this.OnCreateTextWriter(Path.GetFullPath(path));
+            var path = Path.Combine(this.BasePath, scopedPath, fileName + ext);
+            var tw = this.OnCreateTextWriter(path);
 
             logw.Write("IL2C: Writing: \"{0}\" ...", path);
 

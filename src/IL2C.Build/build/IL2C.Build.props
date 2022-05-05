@@ -25,9 +25,11 @@
 
   <PropertyGroup>
     <_IL2C_ScriptBaseDir>$(MSBuildThisFileDirectory)</_IL2C_ScriptBaseDir>
-    <_IL2C_NativeCompilerDefaultFlags>-pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused</_IL2C_NativeCompilerDefaultFlags>
-    <_IL2C_NativeCompilerDebugFlags>-O0 -D_DEBUG</_IL2C_NativeCompilerDebugFlags>
-    <_IL2C_NativeCompilerReleaseFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native -DNDEBUG</_IL2C_NativeCompilerReleaseFlags>
+    <_IL2C_GCC_Driver Condition="'$(OS)' == 'Windows_NT'">gcc.exe</_IL2C_GCC_Driver>
+    <_IL2C_GCC_Driver Condition="'$(OS)' != 'Windows_NT'">gcc</_IL2C_GCC_Driver>
+    <_IL2C_GCC_DefaultFlags>-pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused</_IL2C_GCC_DefaultFlags>
+    <_IL2C_GCC_DebugFlags>-O0 -D_DEBUG</_IL2C_GCC_DebugFlags>
+    <_IL2C_GCC_ReleaseFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native -DNDEBUG</_IL2C_GCC_ReleaseFlags>
   </PropertyGroup>
 
   <PropertyGroup>

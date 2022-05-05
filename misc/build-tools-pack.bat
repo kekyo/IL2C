@@ -4,8 +4,8 @@ rem ========================================================
 rem Download preconfigured gcc4 toolchain from GitHub.
 rem It contains:
 rem -----------------
-rem mingwBaseUrl = "https://jaist.dl.sourceforge.net/project/mingw/MinGW";
 rem bsdTarUrl = mingwBaseUrl + "/Extension/bsdtar/basic-bsdtar-2.8.3-1/basic-bsdtar-2.8.3-1-mingw32-bin.zip";
+rem mingwBaseUrl = "https://jaist.dl.sourceforge.net/project/mingw/MinGW";
 rem gccRequirementUrls =
 rem     mingwBaseUrl + "/Base/binutils/binutils-2.28/binutils-2.28-1-mingw32-bin.tar.xz",
 rem     mingwBaseUrl + "/Base/mingwrt/mingwrt-3.20/mingwrt-3.20-2-mingw32-dev.tar.lzma",
@@ -28,6 +28,7 @@ rem     //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32
 rem     //mingwBaseUrl + "/Base/gcc/Version4/gcc-4.8.1-4/gcc-c++-4.8.1-4-mingw32-dll.tar.lzma",
 rem     mingwBaseUrl + "/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma",
 rem     mingwBaseUrl + "/Extension/gdb/gdb-7.6.1-1/gdb-7.6.1-1-mingw32-bin.tar.lzma",
+rem builderRequirementUrls =
 rem     "https://cmake.org/files/v3.23/cmake-3.23.1-windows-i386.zip",
 rem     "https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip"
 

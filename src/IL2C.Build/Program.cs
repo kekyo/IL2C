@@ -39,11 +39,11 @@ namespace IL2C
                 var enableCpp = false;
                 var enableBundler = false;
                 var targetPlatform = TargetPlatforms.Generic;
-                var refs = new string[0];
+                var refDirs = new string[0];
                 var nativeCompiler = "";
                 var nativeCompilerFlags = "";
-                var outputType = OutputTypes.Exe;
-                var outputNativeDirPath = "";
+                var isLibrary = false;
+                var outputNativePath = "";
                 var includeDirs = new string[0];
                 var libPaths = new string[0];
                 var trace = false;
@@ -56,11 +56,11 @@ namespace IL2C
                     { "produceCpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => enableCpp = bool.TryParse(v, out var ec) ? ec : false },
                     { "bundler=", "Produce bundler source file", _ => enableBundler = true },
                     { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var tp) ? tp : TargetPlatforms.Generic },
-                    { "refs=", "Reference assembly paths (semi-colon separated)", v => refs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
+                    { "refDirs=", "Reference assembly paths (semi-colon separated)", v => refDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "compiler=", "Native compiler driver file", v => nativeCompiler = v },
                     { "compilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
-                    { "outputType=", "Output type [library|exe]", v => outputType = Enum.TryParse<OutputTypes>(v, true, out var ot) ? ot : OutputTypes.Exe },
-                    { "outputNativeDir=", "Output native directory path", v => outputNativeDirPath = v },
+                    { "outputType=", "Output type [library|exe]", v => isLibrary = Enum.TryParse<OutputTypes>(v, true, out var ot) && ot == OutputTypes.Library },
+                    { "outputNativePath=", "Output native directory path", v => outputNativePath = v },
                     { "includeDirs=", "Compilation include directory path", v => includeDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "libs=", "Compilation library path", v => libPaths = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "t", "Enable trace log", _ => trace = true },
@@ -83,7 +83,7 @@ namespace IL2C
 
                     Console.Out.WriteLine($"IL2C.Build [{ThisAssembly.AssemblyVersion}] Started.");
 
-                    // TODO: refs, trace, nativeCompiler, nativeCompilerFlags
+                    // TODO: refs, trace
 
                     foreach (var assemblyPath in assemblyPaths)
                     {
@@ -100,19 +100,16 @@ namespace IL2C
 
                     if (!string.IsNullOrWhiteSpace(nativeCompiler))
                     {
-                        var primaryAssemblyName =
-                            Path.GetFileNameWithoutExtension(assemblyPaths.First());
-
                         await SimpleDriver.CompileAsync(
                             Console.Out,
-                            outputNativeDirPath,
-                            primaryAssemblyName,
+                            outputNativePath,
                             nativeCompiler,
                             nativeCompilerFlags,
                             includeDirs,
                             libPaths,
                             enableCpp,
                             enableBundler,
+                            isLibrary,
                             outputDirPath);
                     }
                 }

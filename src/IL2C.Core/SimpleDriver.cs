@@ -27,12 +27,12 @@ namespace IL2C
             DebugInformationOptions debugInformationOptions,
             string assemblyPath)
         {
-            logw.Write("IL2C: Preparing assembly: \"{0}\" ...", Path.GetFullPath(assemblyPath));
+            logw.WriteLine("IL2C: Preparing assembly: \"{0}\" ...", Path.GetFullPath(assemblyPath));
 
             var translateContext = new TranslateContext(assemblyPath, readSymbols, targetPlatform);
             var preparedFunctions = AssemblyPreparer.Prepare(translateContext);
 
-            logw.WriteLine(" done.");
+            logw.WriteLine("IL2C: Translating assembly: \"{0}\" ...", Path.GetFullPath(assemblyPath));
 
             using (var _ = storage.EnterScope("include"))
             {
@@ -51,6 +51,8 @@ namespace IL2C
                     enableBundler,
                     debugInformationOptions);
             }
+
+            logw.WriteLine("IL2C: Translated assembly: Stored into \"{0}\"", Path.GetFullPath(storage.BasePath));
 
             // TODO:
 #if NET452_OR_GREATER || NETSTANDARD || NETCOREAPP
@@ -88,39 +90,38 @@ namespace IL2C
 
         public static async Task CompileAsync(
             TextWriter logw,
-            string outputDirPath,
-            string assemblyName,
+            string outputNativePath,
             string nativeCompiler,
             string nativeCompilerFlags,
             string[] includeDirs,
             string[] libPaths,
             bool enableCpp,
             bool enableBundler,
+            bool isLibrary,
             string sourceCodeDirPath)
         {
-            if (!Directory.Exists(outputDirPath))
-            {
-                try
-                {
-                    Directory.CreateDirectory(outputDirPath);
-                }
-                catch
-                {
-                }
-            }
-
             var sourceCodeDirFullPath = Path.GetFullPath(sourceCodeDirPath);
+            var outputNativeFullPath = Path.GetFullPath(outputNativePath);
             var nativeCompilerBasePath = Path.GetDirectoryName(nativeCompiler);
             var nativeCompilerBasePaths =
                 string.IsNullOrWhiteSpace(nativeCompilerBasePath) ?
                     new string[0] :
                     new[] { Path.GetFullPath(nativeCompilerBasePath) };
 
-            var outputFilePath = Path.GetFullPath(Path.Combine(
-                outputDirPath,
-                Environment.OSVersion.Platform == PlatformID.Win32NT ?
-                    assemblyName + ".exe" :
-                    assemblyName));
+            logw.WriteLine("IL2C: Preparing for building native binary: \"{0}\" ...", sourceCodeDirFullPath);
+
+            var outputNativeDirPath = Path.GetDirectoryName(outputNativeFullPath);
+            if (!Directory.Exists(outputNativeDirPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(outputNativeDirPath);
+                }
+                catch
+                {
+                }
+            }
+
             var sourceCodePaths =
                 Directory.EnumerateFiles(
                     sourceCodeDirFullPath,
@@ -132,6 +133,8 @@ namespace IL2C
             var includeDir = Path.Combine(sourceCodeDirFullPath, "include");
             var srcDir = Path.Combine(sourceCodeDirFullPath, "src");
 
+            logw.WriteLine("IL2C: Building native binary: \"{0}\" ...", outputNativeFullPath);
+
             var (exitCode, log) = await Utilities.ExecuteAsync(
                 sourceCodeDirFullPath,
                 "build",
@@ -140,13 +143,14 @@ namespace IL2C
                 new[]
                 {
                     nativeCompilerFlags,
+                    isLibrary ? "-c" : "",
                     $"-I{includeDir}",
                     $"-I{srcDir}",
                 }.
                 Concat(includeDirs.Select(p => $"-I{p}")).
                 Concat(new[]
                 {
-                    "-o", outputFilePath,
+                    "-o", outputNativeFullPath,
                 }).
                 Concat(sourceCodePaths).
                 Concat(libPaths).
@@ -157,7 +161,7 @@ namespace IL2C
                 throw new Exception($"{Path.GetFileName(nativeCompiler)}: ExitCode={exitCode}: {log}");
             }
 
-            logw.WriteLine($"{Path.GetFileName(nativeCompiler)}: Built native binary: Path={outputFilePath}");
+            logw.WriteLine("IL2C: Built native binary: \"{0}\" ...", outputNativeFullPath);
         }
     }
 }

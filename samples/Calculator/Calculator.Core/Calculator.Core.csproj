@@ -13,10 +13,13 @@
         <AssemblyName>Calculator.Core</AssemblyName>
         <RootNamespace>Calculator</RootNamespace>
 
-        <IL2COutputPath>$(ProjectDir)../Generated</IL2COutputPath>
+        <IL2COutputPath>..\..\..\..\Generated</IL2COutputPath>
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
-        <!-- <IL2CEnableNativeCompile>False</IL2CEnableNativeCompile> -->
         <!-- <IL2CBuildTrace>true</IL2CBuildTrace> -->
+
+        <IL2CEnableNativeCompile>true</IL2CEnableNativeCompile>
+
+        <!-- <IL2CNativeCompilerFlags></IL2CNativeCompilerFlags> -->
     </PropertyGroup>
 
     <!-- ====================================================== -->
@@ -24,6 +27,7 @@
     <!-- Use real deployed package:
     <ItemGroup>
         <PackageReference Include="IL2C.Build" Version="*" />
+        <PackageReference Include="IL2C.Toolchain.gcc4.mingw32" Version="*" />
     </ItemGroup>
     -->
 

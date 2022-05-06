@@ -28,16 +28,16 @@
     <_IL2C_GCC_Compiler Condition="'$(OS)' != 'Windows_NT'">gcc</_IL2C_GCC_Compiler>
     <_IL2C_GCC_DefaultFlags>-pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused</_IL2C_GCC_DefaultFlags>
     <_IL2C_GCC_DebugFlags>-O0 -D_DEBUG</_IL2C_GCC_DebugFlags>
-    <_IL2C_GCC_ReleaseFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native -DNDEBUG</_IL2C_GCC_ReleaseFlags>
+    <_IL2C_GCC_ReleaseFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native -fdata-sections -ffunction-sections -Wl,--gc-sections -DNDEBUG</_IL2C_GCC_ReleaseFlags>
     <_IL2C_GCC_Archiver Condition="'$(OS)' == 'Windows_NT'">ar.exe</_IL2C_GCC_Archiver>
     <_IL2C_GCC_Archiver Condition="'$(OS)' != 'Windows_NT'">ar</_IL2C_GCC_Archiver>
-    <_IL2C_Runtime_NativeMainSignature>int main(int argc, char** argv)</_IL2C_Runtime_NativeMainSignature>
   </PropertyGroup>
 
   <PropertyGroup>
     <IL2CBuildBaseDir>$(MSBuildThisFileDirectory)..</IL2CBuildBaseDir>
     <IL2CConfiguration>$(Configuration)</IL2CConfiguration>
     <IL2CLibConfiguration>$(IL2CConfiguration)</IL2CLibConfiguration>
+    <IL2COutputPath>ILC2</IL2COutputPath>
   </PropertyGroup>
 
 </Project>

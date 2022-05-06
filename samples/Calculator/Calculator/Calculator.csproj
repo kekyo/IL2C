@@ -14,10 +14,14 @@
         <AssemblyName>Calculator</AssemblyName>
         <RootNamespace>Calculator</RootNamespace>
 
-        <!-- <IL2COutputPath>$(ProjectDir)../Generated</IL2COutputPath> -->
+        <!-- <IL2COutputPath>IL2C</IL2COutputPath> -->
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
-        <!-- <IL2CEnableNativeCompile>False</IL2CEnableNativeCompile> -->
         <!-- <IL2CBuildTrace>true</IL2CBuildTrace> -->
+
+        <!-- <IL2CEnableNativeCompile>False</IL2CEnableNativeCompile> -->
+        
+        <!-- <IL2CNativeCompilerFlags></IL2CNativeCompilerFlags> -->
+        <!-- <IL2CNativeLinkingFlags>-s</IL2CNativeLinkingFlags> -->
     </PropertyGroup>
 
     <ItemGroup>

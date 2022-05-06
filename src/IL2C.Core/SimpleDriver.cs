@@ -43,6 +43,7 @@ namespace IL2C
     {
         public readonly string NativeCompiler;
         public readonly string NativeCompilerFlags;
+        public readonly string NativeLinkingFlags;
         public readonly string NativeArchiver;
         public readonly string[] AdditionalIncludeDirs;
         public readonly string[] LibraryPaths;
@@ -51,6 +52,7 @@ namespace IL2C
         public ToolchainOptions(
             string nativeCompiler,
             string nativeCompilerFlags,
+            string nativeLinkingFlags,
             string nativeArchiver,
             string[] additionalIncludeDirs,
             string[] libraryPaths,
@@ -58,6 +60,7 @@ namespace IL2C
         {
             this.NativeCompiler = nativeCompiler;
             this.NativeCompilerFlags = nativeCompilerFlags;
+            this.NativeLinkingFlags = nativeLinkingFlags;
             this.NativeArchiver = nativeArchiver;
             this.AdditionalIncludeDirs = additionalIncludeDirs;
             this.LibraryPaths = libraryPaths;
@@ -401,7 +404,7 @@ namespace IL2C
                     outputNativeExecutableFullPath,
                     nativeToolchainBasePaths,
                     toolchainOptions.NativeCompiler,
-                    toolchainOptions.NativeCompilerFlags,
+                    toolchainOptions.NativeCompilerFlags + " " + toolchainOptions.NativeLinkingFlags,
                     includeDir,
                     sourceDir,
                     false,

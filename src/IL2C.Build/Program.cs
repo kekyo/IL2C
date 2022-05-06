@@ -9,19 +9,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using IL2C.Metadata;
+
 using Mono.Options;
+
+using IL2C.Metadata;
 
 #pragma warning disable CS0219
 
 namespace IL2C
 {
-// warning CS0649: Field is never assigned to, and will always have its default value `null'
+    // warning CS0649: Field is never assigned to, and will always have its default value `null'
 #pragma warning disable 0649
 
     public static class Program
@@ -38,6 +38,7 @@ namespace IL2C
                 var refDirs = new string[0];
                 var nativeCompiler = "";
                 var nativeCompilerFlags = "";
+                var nativeLinkingFlags = "";
                 var nativeArchiver = "";
                 var outputNativeExecutableFileName = "";
                 var outputNativeArchiveFileName = "";
@@ -57,6 +58,7 @@ namespace IL2C
                     { "refDirs=", "Reference assembly paths (semi-colon separated)", v => refDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "compiler=", "Native compiler driver file", v => nativeCompiler = v },
                     { "compilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
+                    { "linkingFlags=", "Native compiler linking flags", v => nativeLinkingFlags = v },
                     { "archiver=", "Native archiver file", v => nativeArchiver = v },
                     { "includeDirs=", "Compilation additional include directory path", v => additionalIncludeDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "libs=", "Compilation library path", v => libraryPaths = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
@@ -115,11 +117,10 @@ namespace IL2C
                     if (!string.IsNullOrWhiteSpace(nativeCompiler) &&
                         !string.IsNullOrWhiteSpace(nativeArchiver) &&
                         !string.IsNullOrWhiteSpace(outputNativeExecutableFileName) &&
-                        !string.IsNullOrWhiteSpace(outputNativeArchiveFileName) &&
-                        results.FirstOrDefault() is { } mainEntryPoint)
+                        !string.IsNullOrWhiteSpace(outputNativeArchiveFileName))
                     {
                         var toolchainOptions = new ToolchainOptions(
-                            nativeCompiler, nativeCompilerFlags, nativeArchiver,
+                            nativeCompiler, nativeCompilerFlags, nativeLinkingFlags, nativeArchiver,
                             additionalIncludeDirs, libraryPaths, mainTemplatePath);
                         var artifactPathOptions = new ArtifactPathOptions(
                             outputNativeArchiveFileName, outputNativeExecutableFileName);
@@ -128,7 +129,7 @@ namespace IL2C
                             Console.Out,
                             toolchainOptions,
                             artifactPathOptions,
-                            mainEntryPoint,
+                            results.FirstOrDefault(),
                             outputBaseDirPath);
                     }
                 }

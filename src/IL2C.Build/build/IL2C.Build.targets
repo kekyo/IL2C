@@ -92,8 +92,8 @@
       <IL2CTargetAssemblyPath Condition="'$(IL2CTargetAssemblyPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2CTargetAssemblyFileName)'))</IL2CTargetAssemblyPath>
       <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' != ''">$([System.String]::Concat('$(IL2CAssemblyPaths)',';','$(IL2CTargetAssemblyPath)').split(';'))</IL2CAssemblyPaths>
       <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' == ''">$(IL2CTargetAssemblyPath)</IL2CAssemblyPaths>
-      <IL2COutputPath Condition="'$(IL2COutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','IL2C'))</IL2COutputPath>
-      <IL2COutputNativeFileName Condition="'$(IL2COutputNativePath)' == ''">$(TargetName)</IL2COutputNativeFileName>
+      <IL2COutputPath>$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2COutputPath)'))</IL2COutputPath>
+      <IL2COutputNativeName Condition="'$(IL2COutputNativeName)' == ''">$(TargetName)</IL2COutputNativeName>
     </PropertyGroup>
 
     <!-- Apply tooling variables: -->
@@ -110,8 +110,8 @@
     <PropertyGroup Condition="'$(IL2CNativeCompiler)' == ''">
       <IL2CNativeCompiler>$(_IL2C_GCC_Compiler)</IL2CNativeCompiler>
       <IL2CNativeCompilerDefaultFlags Condition="'$(IL2CNativeCompilerDefaultFlags)' == ''">$(_IL2C_GCC_DefaultFlags)</IL2CNativeCompilerDefaultFlags>
-      <IL2CNativeCompilerFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerFlags)' == '')">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerFlags>
-      <IL2CNativeCompilerFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerFlags)' == '')">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
     </PropertyGroup>
     <PropertyGroup Condition="'$(IL2CNativeArchiver)' == ''">
       <IL2CNativeArchiver>$(_IL2C_GCC_Archiver)</IL2CNativeArchiver>
@@ -124,22 +124,23 @@
 
     <!-- Native code files output path group: -->
     <PropertyGroup>
-      <_IL2C_OutputNativeArchiveFileName>$(IL2COutputNativeFileName).a</_IL2C_OutputNativeArchiveFileName>
-      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' == 'Windows_NT')">$(IL2COutputNativeFileName).exe</_IL2C_OutputNativeExecutableFileName>
-      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' != 'Windows_NT')">$(IL2COutputNativeFileName)</_IL2C_OutputNativeExecutableFileName>
+      <_IL2C_OutputNativeArchiveFileName>$(IL2COutputNativeName).a</_IL2C_OutputNativeArchiveFileName>
+      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' == 'Windows_NT')">$(IL2COutputNativeName).exe</_IL2C_OutputNativeExecutableFileName>
+      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' != 'Windows_NT')">$(IL2COutputNativeName)</_IL2C_OutputNativeExecutableFileName>
     </PropertyGroup>
 
     <!-- Native compiler settings: -->
     <PropertyGroup Condition="$(IL2CEnableNativeCompile)">
       <_IL2C_NativeCompilerOption>--compiler=&quot;$(IL2CNativeCompiler)&quot;</_IL2C_NativeCompilerOption>
-      <_IL2C_NativeCompilerFlagsOption>--compilerFlags=&quot;$(IL2CNativeCompilerDefaultFlags) $(IL2CNativeCompilerRequiredFlags) $(IL2CNativeCompilerFlags)&quot;</_IL2C_NativeCompilerFlagsOption>
+      <_IL2C_NativeCompilerFlagsOption>--compilerFlags=&quot;$(IL2CNativeCompilerDefaultFlags) $(IL2CNativeCompilerRequiredFlags) $(IL2CNativeCompilerConditionalFlags) $(IL2CNativeCompilerFlags)&quot;</_IL2C_NativeCompilerFlagsOption>
+      <_IL2C_NativeLinkingFlagsOption Condition="'$(IL2CNativeLinkingFlags)' != ''">--linkingFlags=&quot;$(IL2CNativeLinkingFlags)&quot;</_IL2C_NativeLinkingFlagsOption>
       <_IL2C_NativeArchiverOption>--archiver=&quot;$(IL2CNativeArciver)&quot;</_IL2C_NativeArchiverOption>
       <_IL2C_NativeIncludeDirOption>--includeDirs=&quot;$(IL2CNativeIncludeDir)&quot;</_IL2C_NativeIncludeDirOption>
       <_IL2C_NativeLibPathOption>--libs=&quot;$(IL2CNativeLibPath)&quot;</_IL2C_NativeLibPathOption>
       <_IL2C_OutputNativeArchiveFileNameOption>--outputNativeArchive=&quot;$(_IL2C_OutputNativeArchiveFileName)&quot;</_IL2C_OutputNativeArchiveFileNameOption>
       <_IL2C_OutputNativeExecutableFileNameOption Condition="'$(_IL2C_OutputNativeExecutableFileName)' != ''">--outputNativeExecutable=&quot;$(_IL2C_OutputNativeExecutableFileName)&quot;</_IL2C_OutputNativeExecutableFileNameOption>
       <_IL2C_NativeMainTemplatePathOption Condition="'$(OutputType)' != 'Library'">--mainTemplate=&quot;$(IL2CNativeMainTemplatePath)&quot;</_IL2C_NativeMainTemplatePathOption>
-      <_IL2C_NativeOptions>$(_IL2C_OutputTypeOption) $(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption)</_IL2C_NativeOptions>
+      <_IL2C_NativeOptions>$(_IL2C_OutputTypeOption) $(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption)</_IL2C_NativeOptions>
     </PropertyGroup>
 
     <!-- Aggregates managed reference assembly base directories: -->
@@ -154,9 +155,7 @@
       Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; $(_IL2C_BuildTraceOption) --debug=&quot;$(IL2CDebugInformation)&quot; --readSymbol=&quot;$(IL2CReadSymbols)&quot; --produceCpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refDirs=&quot;$(_IL2C_CombinedReferenceDir)&quot; $(_IL2C_NativeOptions) &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
 
     <ItemGroup>
-      <FileWrites Include="$(IL2COutputPath)\**\*.c" />
-      <FileWrites Include="$(IL2COutputPath)\**\*.cpp" />
-      <FileWrites Include="$(IL2COutputPath)\**\*.h" />
+      <FileWrites Include="$(IL2COutputPath)\**\*" />
     </ItemGroup>
   </Target>
 

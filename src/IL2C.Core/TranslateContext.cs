@@ -44,12 +44,6 @@ namespace IL2C
         private string currentExceptionNestedFrameIndexName;
         #endregion
 
-        #region Constructors
-        public TranslateContext(Assembly assembly, bool readSymbols, TargetPlatforms targetPlatform)
-            : this(assembly.Location, readSymbols, targetPlatform)
-        {
-        }
-
         public TranslateContext(string assemblyPath, bool readSymbols, TargetPlatforms targetPlatform)
         {
             var context = new MetadataContext(assemblyPath, readSymbols);
@@ -57,7 +51,6 @@ namespace IL2C
             this.Assembly = context.MainAssembly;
             this.TargetPlatform = targetPlatform;
         }
-        #endregion
 
         public IMetadataContext MetadataContext { get; }
 

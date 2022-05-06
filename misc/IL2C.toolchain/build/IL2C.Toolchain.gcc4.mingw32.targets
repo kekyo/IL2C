@@ -9,9 +9,10 @@
 ////////////////////////////////////////////////////////////////////////////
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <IL2CNativeCompilerDefaultFlags>$(_IL2C_GCC_DefaultFlags)</IL2CNativeCompilerDefaultFlags>
     <IL2CNativeCompilerFlags Condition="'$(IL2CConfiguration)' == 'Debug'">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerFlags>
     <IL2CNativeCompilerFlags Condition="'$(IL2CConfiguration)' == 'Release'">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerFlags>
+    <IL2CNativeMainTemplatePath Condition="'$(OutputType)' == 'WinExe'">$(_IL2C_WinExeMainTemplatePath)</IL2CNativeMainTemplatePath>
   </PropertyGroup>
 </Project>

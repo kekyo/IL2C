@@ -8,10 +8,13 @@
 ////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using IL2C.Metadata;
 using Mono.Options;
 
 #pragma warning disable CS0219
@@ -23,13 +26,6 @@ namespace IL2C
 
     public static class Program
     {
-        private enum OutputTypes
-        {
-            Library,
-            Exe,
-            WinExe,    // Alias
-        }
-
         public static async Task<int> Main(string[] args)
         {
             try
@@ -43,10 +39,11 @@ namespace IL2C
                 var nativeCompiler = "";
                 var nativeCompilerFlags = "";
                 var nativeArchiver = "";
-                var isLibrary = false;
-                var outputNativePath = "";
+                var outputNativeExecutableFileName = "";
+                var outputNativeArchiveFileName = "";
                 var additionalIncludeDirs = new string[0];
-                var libPaths = new string[0];
+                var libraryPaths = new string[0];
+                var mainTemplatePath = "";
                 var trace = false;
                 var help = false;
 
@@ -61,10 +58,11 @@ namespace IL2C
                     { "compiler=", "Native compiler driver file", v => nativeCompiler = v },
                     { "compilerFlags=", "Native compiler flags", v => nativeCompilerFlags = v },
                     { "archiver=", "Native archiver file", v => nativeArchiver = v },
-                    { "outputType=", "Output type [library|exe]", v => isLibrary = Enum.TryParse<OutputTypes>(v, true, out var ot) && ot == OutputTypes.Library },
-                    { "outputNativePath=", "Output native directory path", v => outputNativePath = v },
                     { "includeDirs=", "Compilation additional include directory path", v => additionalIncludeDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
-                    { "libs=", "Compilation library path", v => libPaths = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
+                    { "libs=", "Compilation library path", v => libraryPaths = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
+                    { "outputNativeArchive=", "Output native archive file name", v => outputNativeArchiveFileName = v },
+                    { "outputNativeExecutable=", "Output native executable file name", v => outputNativeExecutableFileName = v },
+                    { "mainTemplate=", "Native main template path", v => mainTemplatePath = v },
                     { "t", "Enable trace log", _ => trace = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
@@ -80,38 +78,58 @@ namespace IL2C
                 }
                 else
                 {
-                    var outputDirPath = extra[0];
+                    var outputBaseDirPath = extra[0];
                     var assemblyPaths = extra.Skip(1);
 
                     Console.Out.WriteLine($"IL2C.Build [{ThisAssembly.AssemblyVersion}] Started.");
 
                     // TODO: refs, trace
+                    // TODO: Makes parallelism
 
+                    var translationOptions = new TranslationOptions(
+                        readSymbols, enableBundler, targetPlatform, debugInformationOptions);
+
+#if DEBUG
+                    var results = new List<IMethodInformation>();
                     foreach (var assemblyPath in assemblyPaths)
                     {
-                        await SimpleDriver.TranslateAsync(
+                        var r = await SimpleDriver.TranslateAsync(
                             Console.Out,
-                            outputDirPath,
-                            readSymbols,
+                            outputBaseDirPath,
                             enableCpp,
-                            enableBundler,
-                            targetPlatform,
-                            debugInformationOptions,
+                            translationOptions,
                             assemblyPath);
+                        results.Add(r);
                     }
-
-                    if (!string.IsNullOrWhiteSpace(nativeCompiler))
+#else
+                    var results = await Task.WhenAll(
+                        assemblyPaths.Select(assemblyPath =>
+                            SimpleDriver.TranslateAsync(
+                                Console.Out,
+                                outputBaseDirPath,
+                                enableCpp,
+                                translationOptions,
+                                assemblyPath))).
+                        ConfigureAwait(false);
+#endif
+                    if (!string.IsNullOrWhiteSpace(nativeCompiler) &&
+                        !string.IsNullOrWhiteSpace(nativeArchiver) &&
+                        !string.IsNullOrWhiteSpace(outputNativeExecutableFileName) &&
+                        !string.IsNullOrWhiteSpace(outputNativeArchiveFileName) &&
+                        results.FirstOrDefault() is { } mainEntryPoint)
                     {
+                        var toolchainOptions = new ToolchainOptions(
+                            nativeCompiler, nativeCompilerFlags, nativeArchiver,
+                            additionalIncludeDirs, libraryPaths, mainTemplatePath);
+                        var artifactPathOptions = new ArtifactPathOptions(
+                            outputNativeArchiveFileName, outputNativeExecutableFileName);
+
                         await SimpleDriver.CompileToNativeAsync(
                             Console.Out,
-                            outputNativePath,
-                            nativeCompiler,
-                            nativeCompilerFlags,
-                            nativeArchiver,
-                            additionalIncludeDirs,
-                            libPaths,
-                            isLibrary,
-                            outputDirPath);
+                            toolchainOptions,
+                            artifactPathOptions,
+                            mainEntryPoint,
+                            outputBaseDirPath);
                     }
                 }
 

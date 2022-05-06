@@ -48,6 +48,8 @@ namespace IL2C.Metadata
         ITypeInformation BooleanType { get; }
 
         ITypeInformation RuntimeFieldHandle { get; }
+
+        IMethodInformation EntryPoint { get; }
     }
 
     internal sealed class MetadataContext
@@ -132,10 +134,15 @@ namespace IL2C.Metadata
             this.BooleanType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Boolean);
 
             this.RuntimeFieldHandle = this.GetOrAddType(resolvedCoreModule.GetType("System.RuntimeFieldHandle"));
+
+            this.EntryPoint = mainAssembly.EntryPoint is { } entryPoint ?
+                this.GetOrAddMethod(entryPoint) : null;
         }
 
         public IAssemblyInformation MainAssembly { get; }
         public IEnumerable<IAssemblyInformation> Assemblies => assemblies.Values;
+
+        public IMethodInformation EntryPoint { get; }
 
         #region IAssemblyInformation
         internal AssemblyInformation GetOrAddAssembly(

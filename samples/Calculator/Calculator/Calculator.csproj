@@ -8,22 +8,28 @@
     <!-- ====================================================== -->
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net48</TargetFrameworks>
+        <OutputType>Exe</OutputType>
 
-        <AssemblyName>Calculator.Core</AssemblyName>
+        <AssemblyName>Calculator</AssemblyName>
         <RootNamespace>Calculator</RootNamespace>
 
-        <IL2COutputPath>$(ProjectDir)../Generated</IL2COutputPath>
+        <!-- <IL2COutputPath>$(ProjectDir)../Generated</IL2COutputPath> -->
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
         <!-- <IL2CEnableNativeCompile>False</IL2CEnableNativeCompile> -->
         <!-- <IL2CBuildTrace>true</IL2CBuildTrace> -->
     </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\Calculator.Core\*.cs" />
+    </ItemGroup>
 
     <!-- ====================================================== -->
 
     <!-- Use real deployed package:
     <ItemGroup>
         <PackageReference Include="IL2C.Build" Version="*" />
+        <PackageReference Include="IL2C.Toolchain.gcc4.mingw32" Version="*" />
     </ItemGroup>
     -->
 

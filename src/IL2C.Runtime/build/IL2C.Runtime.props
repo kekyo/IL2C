@@ -11,5 +11,6 @@
 <Project ToolVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <IL2CRuntimeBasePath>$(MSBuildThisFileDirectory)..</IL2CRuntimeBasePath>
+    <_IL2C_StandardNativeMainTemplatePath>$(IL2CRuntimeBasePath)/src/main_template.c</_IL2C_StandardNativeMainTemplatePath>
   </PropertyGroup>
 </Project>

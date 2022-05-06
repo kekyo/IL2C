@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NuspecFile>IL2C.Toolchain.gcc4.mingw32.nuspec</NuspecFile>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="gcc4\**\*" />
+    <None Remove="IL2C-toolchain-gcc4-mingw32-4-base.exe" />
+    <Content Include="IL2C-toolchain-gcc4-mingw32-4-base.exe" />
+  </ItemGroup>
+</Project>

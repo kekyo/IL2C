@@ -6,6 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Build", "src\IL2C.Buil
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		build-runtime.bat = build-runtime.bat
 		build-runtime.sh = build-runtime.sh
@@ -71,26 +72,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{4BC9EFBC-6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtifactCollector", "misc\ArtifactCollector\ArtifactCollector.csproj", "{C5D17DC3-D27B-4812-8916-49912F82DE0F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IL2C.Toolchain", "IL2C.Toolchain", "{562347D9-712A-4A9B-932F-7249AFA5CF96}"
-	ProjectSection(SolutionItems) = preProject
-		misc\IL2C.toolchain\.gitignore = misc\IL2C.toolchain\.gitignore
-		misc\IL2C.toolchain\fetch.bat = misc\IL2C.toolchain\fetch.bat
-		misc\IL2C.toolchain\IL2C.Toolchain.gcc4.mingw32.nuspec = misc\IL2C.toolchain\IL2C.Toolchain.gcc4.mingw32.nuspec
-		misc\IL2C.toolchain\README.md = misc\IL2C.toolchain\README.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{E02C4728-C4FF-46C1-B197-0CAA3ECDB716}"
-	ProjectSection(SolutionItems) = preProject
-		misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.props = misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.props
-		misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.targets = misc\IL2C.toolchain\build\IL2C.Toolchain.gcc4.mingw32.targets
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildMultiTargeting", "buildMultiTargeting", "{736AC64B-6071-4CEA-8DEF-DA1B2D9380A8}"
-	ProjectSection(SolutionItems) = preProject
-		misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.props = misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.props
-		misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.targets = misc\IL2C.toolchain\buildMultiTargeting\IL2C.Toolchain.gcc4.mingw32.targets
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{EA30816B-8F8B-4584-9D74-103470BB6C76}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator.Core", "samples\Calculator\Calculator.Core\Calculator.Core.csproj", "{9A796AD6-AEA2-4E31-ACF2-5B1834F4A5F9}"
@@ -105,10 +86,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator", "samples\Calcu
 		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DD2DB02C-E3E2-450A-A7AA-A9D27BA2B51E}"
-	ProjectSection(SolutionItems) = preProject
-		misc\IL2C.toolchain\src\main_winexe_template.c = misc\IL2C.toolchain\src\main_winexe_template.c
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.toolchain.gcc4.mingw32", "misc\IL2C.toolchain.gcc4.mingw32\IL2C.toolchain.gcc4.mingw32.csproj", "{BB7FA204-433A-416B-B9D0-9A79DF874284}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,6 +140,10 @@ Global
 		{219DD14F-F462-42C0-BA05-EE92C099896E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{219DD14F-F462-42C0-BA05-EE92C099896E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{219DD14F-F462-42C0-BA05-EE92C099896E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB7FA204-433A-416B-B9D0-9A79DF874284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7FA204-433A-416B-B9D0-9A79DF874284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7FA204-433A-416B-B9D0-9A79DF874284}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7FA204-433A-416B-B9D0-9A79DF874284}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,12 +157,9 @@ Global
 		{C26C4683-9840-4307-8774-F1F952E3591B} = {D105E6CD-626A-4C04-8AF6-0AA34A4E9CF4}
 		{21592C48-BEE1-4706-8024-CF7EB0CF8BA7} = {C26C4683-9840-4307-8774-F1F952E3591B}
 		{C5D17DC3-D27B-4812-8916-49912F82DE0F} = {4BC9EFBC-600E-48BF-ADDC-3E573D8315F0}
-		{562347D9-712A-4A9B-932F-7249AFA5CF96} = {4BC9EFBC-600E-48BF-ADDC-3E573D8315F0}
-		{E02C4728-C4FF-46C1-B197-0CAA3ECDB716} = {562347D9-712A-4A9B-932F-7249AFA5CF96}
-		{736AC64B-6071-4CEA-8DEF-DA1B2D9380A8} = {562347D9-712A-4A9B-932F-7249AFA5CF96}
 		{9A796AD6-AEA2-4E31-ACF2-5B1834F4A5F9} = {EA30816B-8F8B-4584-9D74-103470BB6C76}
 		{219DD14F-F462-42C0-BA05-EE92C099896E} = {EA30816B-8F8B-4584-9D74-103470BB6C76}
-		{DD2DB02C-E3E2-450A-A7AA-A9D27BA2B51E} = {562347D9-712A-4A9B-932F-7249AFA5CF96}
+		{BB7FA204-433A-416B-B9D0-9A79DF874284} = {4BC9EFBC-600E-48BF-ADDC-3E573D8315F0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4628360-6C13-42D4-9011-6E43A3A0777C}

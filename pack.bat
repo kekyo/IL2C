@@ -36,7 +36,7 @@ echo ///////////////////////////////////////////////
 echo // Collects artifacts.
 echo.
 
-misc\ArtifactCollector\ArtifactCollector.exe . .\artifacts "%BuildIdentifier%" src\IL2C.Interop src\IL2C.Core src\IL2C.Build src\IL2C.Runtime misc\IL2C.toolchain
+misc\ArtifactCollector\ArtifactCollector.exe . .\artifacts "%BuildIdentifier%" src\IL2C.Interop src\IL2C.Core src\IL2C.Build src\IL2C.Runtime misc\IL2C.Toolchain.gcc4.mingw32
 
 rem =========================================
 

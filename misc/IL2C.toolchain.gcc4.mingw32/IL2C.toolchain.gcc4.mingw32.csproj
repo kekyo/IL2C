@@ -5,6 +5,11 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RelaxVersioner" Version="2.6.0" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="7z\**\*" />
     <None Remove="gcc4\**\*" />

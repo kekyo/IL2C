@@ -5,9 +5,7 @@ It contains GNU compiler collection built on MinGW environment.
 
 ## License
 
-IL2C is under Apache-v2, but there are under GPL-v2 inside following directories:
-
-* gcc4/
+IL2C is under Apache-v2, but there are under GPL-v2 inside `IL2C-toolchain-gcc4-mingw32-4-base.exe` (7zip sfx).
 
 These files come from:
 

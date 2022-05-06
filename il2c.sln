@@ -74,7 +74,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IL2C.Toolchain", "IL2C.Toolchain", "{562347D9-712A-4A9B-932F-7249AFA5CF96}"
 	ProjectSection(SolutionItems) = preProject
 		misc\IL2C.toolchain\.gitignore = misc\IL2C.toolchain\.gitignore
-		misc\IL2C.toolchain\extract.bat = misc\IL2C.toolchain\extract.bat
+		misc\IL2C.toolchain\fetch.bat = misc\IL2C.toolchain\fetch.bat
 		misc\IL2C.toolchain\IL2C.Toolchain.gcc4.mingw32.nuspec = misc\IL2C.toolchain\IL2C.Toolchain.gcc4.mingw32.nuspec
 		misc\IL2C.toolchain\README.md = misc\IL2C.toolchain\README.md
 	EndProjectSection
@@ -106,6 +106,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator", "samples\Calcu
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DD2DB02C-E3E2-450A-A7AA-A9D27BA2B51E}"
+	ProjectSection(SolutionItems) = preProject
+		misc\IL2C.toolchain\src\main_winexe_template.c = misc\IL2C.toolchain\src\main_winexe_template.c
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

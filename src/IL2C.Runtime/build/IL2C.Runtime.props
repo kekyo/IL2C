@@ -10,7 +10,7 @@
 -->
 <Project ToolVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <IL2CRuntimeBasePath>$(MSBuildThisFileDirectory)..</IL2CRuntimeBasePath>
-    <_IL2C_StandardNativeMainTemplatePath>$(IL2CRuntimeBasePath)/src/_main_template.c_</_IL2C_StandardNativeMainTemplatePath>
+    <IL2CRuntimeBasePath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..'))</IL2CRuntimeBasePath>
+    <_IL2C_StandardNativeMainTemplatePath>$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','src','_main_template.c_'))</_IL2C_StandardNativeMainTemplatePath>
   </PropertyGroup>
 </Project>

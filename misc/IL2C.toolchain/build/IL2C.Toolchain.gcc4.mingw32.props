@@ -10,9 +10,15 @@
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-    <IL2CNativeCompiler>$(MSBuildThisFileDirectory)..\gcc4\bin\gcc.exe</IL2CNativeCompiler>
+    <_IL2C_GCC4_MinGW32_NativeToolchainBasePath>$(MSBuildThisFileDirectory)..</_IL2C_GCC4_MinGW32_NativeToolchainBasePath>
+    <_IL2C_GCC4_MinGW32_NativeToolchainName>gcc4</_IL2C_GCC4_MinGW32_NativeToolchainName>
+    <_IL2C_GCC4_MinGW32_NativeToolchainPath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','$(_IL2C_GCC4_MinGW32_NativeToolchainName)'))</_IL2C_GCC4_MinGW32_NativeToolchainPath>
+
+    <_IL2C_GCC4PackedToolchainArchivePath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','IL2C-toolchain-gcc4-mingw32-4-base.exe'))</_IL2C_GCC4PackedToolchainArchivePath>  
+    <_IL2C_WinExeMainTemplatePath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','src','main_winexe_template.c'))</_IL2C_WinExeMainTemplatePath>
+
+    <IL2CNativeCompiler>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','gcc.exe'))</IL2CNativeCompiler>
     <IL2CNativeCompilerRequiredFlags>-D_WIN32 -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias</IL2CNativeCompilerRequiredFlags>
-    <IL2CNativeArciver>$(MSBuildThisFileDirectory)..\gcc4\bin\ar.exe</IL2CNativeArciver>
-    <_IL2C_WinExeMainTemplatePath>$(MSBuildThisFileDirectory)..\src\main_winexe_template.c</_IL2C_WinExeMainTemplatePath>
+    <IL2CNativeArciver>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','ar.exe'))</IL2CNativeArciver>
   </PropertyGroup>
 </Project>

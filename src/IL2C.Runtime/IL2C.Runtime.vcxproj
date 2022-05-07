@@ -25,6 +25,7 @@
     <None Remove="bin/**/*" />
     <None Remove="lib/**/*" />
     <None Remove="libcache/**/*" />
+    <None Remove="build.cmake/**/*" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="build/*">
@@ -43,9 +44,6 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
     <Text Include="IL2C.Runtime.Artifacts.zaspec">
-      <DeploymentContent>false</DeploymentContent>
-    </Text>
-    <Text Include="IL2C.Runtime.msvc.nuspec">
       <DeploymentContent>false</DeploymentContent>
     </Text>
     <Text Include="IL2C.Runtime.nuspec">

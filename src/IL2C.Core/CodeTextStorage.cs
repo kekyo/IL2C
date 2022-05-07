@@ -21,15 +21,15 @@ namespace IL2C
         public readonly string BasePath;
 
         private readonly TextWriter logw;
-        private readonly bool enableCpp;
+        private readonly bool produceCpp;
         private readonly string indent;
         private readonly Stack<string> scopeNames = new Stack<string>();
 
-        public CodeTextStorage(TextWriter logw, string basePath, bool enableCpp, string indent)
+        public CodeTextStorage(TextWriter logw, string basePath, bool produceCpp, string indent)
         {
             this.logw = logw;
             this.BasePath = Path.GetFullPath(basePath);
-            this.enableCpp = enableCpp;
+            this.produceCpp = produceCpp;
             this.indent = indent;
         }
 
@@ -46,7 +46,7 @@ namespace IL2C
 
         public CodeTextWriter CreateSourceCodeWriter(string fileName)
         {
-            return this.CreateTextWriter(fileName, enableCpp ? ".cpp" : ".c");
+            return this.CreateTextWriter(fileName, produceCpp ? ".cpp" : ".c");
         }
 
         public CodeTextWriter CreateHeaderWriter(string fileName)

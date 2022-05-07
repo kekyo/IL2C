@@ -26,16 +26,24 @@ namespace IL2C
 
     public static class Program
     {
+        private enum DrivingModes
+        {
+            Translation = 1,
+            Compilation = 2,
+            Both = 3,
+        }
+
         public static async Task<int> Main(string[] args)
         {
             try
             {
+                var drivingMode = DrivingModes.Both;
                 var debugInformationOptions = DebugInformationOptions.None;
-                var readSymbols = true;
-                var enableCpp = false;
+                var produceCpp = false;
                 var enableBundler = false;
                 var targetPlatform = TargetPlatforms.Generic;
                 var refDirs = new string[0];
+                var outputNativeDirPath = "";
                 var nativeCompiler = "";
                 var nativeCompilerFlags = "";
                 var nativeLinkingFlags = "";
@@ -50,10 +58,10 @@ namespace IL2C
 
                 var options = new OptionSet()
                 {
+                    { "mode=", "Driving mode [both|translation|compilation]", v => drivingMode = Enum.TryParse<DrivingModes>(v, true, out var dm) ? dm : DrivingModes.Both },
                     { "debug=", "Emit debug informations [none|commentonly|full]", v => debugInformationOptions = Enum.TryParse<DebugInformationOptions>(v, true, out var t) ? t : DebugInformationOptions.None },
-                    { "readSymbol=", "Read symbol files [true|false]", v => readSymbols = bool.TryParse(v, out var rs) ? rs : true },
-                    { "produceCpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => enableCpp = bool.TryParse(v, out var ec) ? ec : false },
-                    { "bundler=", "Produce bundler source file", _ => enableBundler = true },
+                    { "produceCpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => produceCpp = bool.TryParse(v, out var pc) ? pc : false },
+                    { "bundler=", "Produce bundler source file", v => enableBundler = bool.TryParse(v, out var eb) ? eb : false },
                     { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var tp) ? tp : TargetPlatforms.Generic },
                     { "refDirs=", "Reference assembly paths (semi-colon separated)", v => refDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "compiler=", "Native compiler driver file", v => nativeCompiler = v },
@@ -64,6 +72,7 @@ namespace IL2C
                     { "libs=", "Compilation library path", v => libraryPaths = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "outputNativeArchive=", "Output native archive file name", v => outputNativeArchiveFileName = v },
                     { "outputNativeExecutable=", "Output native executable file name", v => outputNativeExecutableFileName = v },
+                    { "outputNativeDir=", "Output native binary directory path", v => outputNativeDirPath = v },
                     { "mainTemplate=", "Native main template path", v => mainTemplatePath = v },
                     { "t", "Enable trace log", _ => trace = true },
                     { "h|help", "Print this help", _ => help = true },
@@ -81,42 +90,52 @@ namespace IL2C
                 else
                 {
                     var outputBaseDirPath = extra[0];
-                    var assemblyPaths = extra.Skip(1);
+                    var inputPaths = extra.Skip(1);
 
                     Console.Out.WriteLine($"IL2C.Build [{ThisAssembly.AssemblyVersion}] Started.");
 
                     // TODO: refs, trace
-                    // TODO: Makes parallelism
 
-                    var translationOptions = new TranslationOptions(
-                        readSymbols, enableBundler, targetPlatform, debugInformationOptions);
-
-#if DEBUG
-                    var results = new List<IMethodInformation>();
-                    foreach (var assemblyPath in assemblyPaths)
+                    IMethodInformation mainEntryPoint = null;
+                    string inputCompilationDirPath;
+                    if ((drivingMode & DrivingModes.Translation) == DrivingModes.Translation)
                     {
-                        var r = await SimpleDriver.TranslateAsync(
-                            Console.Out,
-                            outputBaseDirPath,
-                            enableCpp,
-                            translationOptions,
-                            assemblyPath);
-                        results.Add(r);
-                    }
-#else
-                    var results = await Task.WhenAll(
-                        assemblyPaths.Select(assemblyPath =>
-                            SimpleDriver.TranslateAsync(
+                        var translationOptions = new TranslationOptions(
+                            true, enableBundler, targetPlatform, debugInformationOptions);
+#if DEBUG
+                        var results = new List<IMethodInformation>();
+                        foreach (var assemblyPath in inputPaths)
+                        {
+                            var r = await SimpleDriver.TranslateAsync(
                                 Console.Out,
                                 outputBaseDirPath,
-                                enableCpp,
+                                produceCpp,
                                 translationOptions,
-                                assemblyPath))).
-                        ConfigureAwait(false);
+                                assemblyPath);
+                            results.Add(r);
+                        }
+#else
+                        var results = await Task.WhenAll(
+                            inputPaths.Select(assemblyPath =>
+                                SimpleDriver.TranslateAsync(
+                                    Console.Out,
+                                    outputBaseDirPath,
+                                    produceCpp,
+                                    translationOptions,
+                                    assemblyPath))).
+                            ConfigureAwait(false);
 #endif
-                    if (!string.IsNullOrWhiteSpace(nativeCompiler) &&
+                        mainEntryPoint = results.FirstOrDefault();
+                        inputCompilationDirPath = outputBaseDirPath;
+                    }
+                    else
+                    {
+                        inputCompilationDirPath = inputPaths.First();
+                    }
+
+                    if ((drivingMode & DrivingModes.Compilation) == DrivingModes.Compilation &&
+                        !string.IsNullOrWhiteSpace(nativeCompiler) &&
                         !string.IsNullOrWhiteSpace(nativeArchiver) &&
-                        !string.IsNullOrWhiteSpace(outputNativeExecutableFileName) &&
                         !string.IsNullOrWhiteSpace(outputNativeArchiveFileName))
                     {
                         var toolchainOptions = new ToolchainOptions(
@@ -129,8 +148,10 @@ namespace IL2C
                             Console.Out,
                             toolchainOptions,
                             artifactPathOptions,
-                            results.FirstOrDefault(),
-                            outputBaseDirPath);
+                            mainEntryPoint,
+                            inputCompilationDirPath,
+                            string.IsNullOrWhiteSpace(outputNativeDirPath) ?
+                                inputCompilationDirPath : outputNativeDirPath);
                     }
                 }
 

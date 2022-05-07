@@ -12,8 +12,6 @@
   <PropertyGroup>
     <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' != ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'));$(IL2CNativeIncludeDir)</IL2CNativeIncludeDir>
     <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' == ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'))</IL2CNativeIncludeDir>
-    <IL2CNativeLibPath Condition="'$(IL2CNativeLibPath)' != ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','lib','$(IL2CLibConfiguration)','libil2c-gcc4-win-mingw32.a'));$(IL2CNativeLibPath)</IL2CNativeLibPath>
-    <IL2CNativeLibPath Condition="'$(IL2CNativeLibPath)' == ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','lib','$(IL2CLibConfiguration)','libil2c-gcc4-win-mingw32.a'))</IL2CNativeLibPath>
     <IL2CNativeMainTemplatePath Condition="'$(IL2CNativeMainTemplatePath)' == ''">$(_IL2C_StandardNativeMainTemplatePath)</IL2CNativeMainTemplatePath>
   </PropertyGroup>
 </Project>

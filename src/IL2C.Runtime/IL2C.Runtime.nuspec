@@ -20,7 +20,6 @@
     <file src="include\**\*.h" target="include" />
     <file src="src\**\*.h" target="src" />
     <file src="src\**\*.c" target="src" />
-    <file src="lib\**\*.a" target="lib" />
     <file src="cmake\gcc4-win-mingw32.cmake" target="cmake" />
     <file src="cmake\gcc-linux.cmake" target="cmake" />
   </files>

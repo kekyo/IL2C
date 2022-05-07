@@ -22,6 +22,9 @@
     <ClCompile Include="src\_main_template.c_" />
     <ClInclude Include="include/**/*.h" />
     <ClInclude Include="src/**/*.h" />
+    <None Remove="bin/**/*" />
+    <None Remove="lib/**/*" />
+    <None Remove="libcache/**/*" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="build/*">

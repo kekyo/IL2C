@@ -777,13 +777,25 @@ namespace IL2C.Internal
         public static readonly IEqualityComparer<object> LooseTypeKindComparer = new LooseTypeKindComparerImpl();
         #endregion
 
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+        public static Task<string> ReadAllTextAsync(string path, Encoding encoding) =>
+            File.ReadAllTextAsync(path, encoding);
+        public static Task WriteAllTextAsync(string path, string contents, Encoding encoding) =>
+            File.WriteAllTextAsync(path, contents, encoding);
+#else
+        public static Task<string> ReadAllTextAsync(string path, Encoding encoding) =>
+            Task.Run(() => File.ReadAllText(path, encoding));
+        public static Task WriteAllTextAsync(string path, string contents, Encoding encoding) =>
+            Task.Run(() => File.WriteAllText(path, contents, encoding));
+#endif
+
         public static async Task<ExecuteResult> ExecuteAsync(
             string workingPath, string scriptName, string[] searchPaths,
             string executablePath, string[] args)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                File.WriteAllText(
+                await WriteAllTextAsync(
                     Path.Combine(workingPath, scriptName + ".bat"),
                     string.Join(Environment.NewLine, new[]
                     {
@@ -795,16 +807,15 @@ namespace IL2C.Internal
                             $"set PATH={string.Join(";",searchPaths)};%PATH%" :
                             "rem set PATH=;%PATH%",
                         string.Empty,
-                        $"cd \"{workingPath}\"",
-                        string.Empty,
                         $"\"{executablePath}\" {string.Join(" ", args)}",
                         string.Empty,
                     }),
-                    new UTF8Encoding(false, true));
+                    new UTF8Encoding(false, true)).
+                    ConfigureAwait(false);
             }
             else
             {
-                File.WriteAllText(
+                await WriteAllTextAsync(
                     Path.Combine(workingPath, scriptName + ".sh"),
                     string.Join(Environment.NewLine, new[]
                     {
@@ -816,12 +827,11 @@ namespace IL2C.Internal
                             $"export PATH=\"{string.Join(":",searchPaths)}:$PATH\"" :
                             "#export PATH=\":$PATH\"",
                         string.Empty,
-                        $"cd \"{workingPath}\"",
-                        string.Empty,
                         $"\"{executablePath}\" {string.Join(" ", args)}",
                         string.Empty,
                     }),
-                    new UTF8Encoding(false, true));
+                    new UTF8Encoding(false, true)).
+                    ConfigureAwait(false);
             }
 
             using (var p = new Process())
@@ -856,7 +866,8 @@ namespace IL2C.Internal
                 p.BeginOutputReadLine();
                 p.BeginErrorReadLine();
 
-                var exitCode = await tcs.Task;
+                var exitCode = await tcs.Task.
+                    ConfigureAwait(false);
 
                 p.WaitForExit();
 

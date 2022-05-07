@@ -26,7 +26,7 @@
   <PropertyGroup>
     <_IL2C_GCC_Compiler Condition="'$(OS)' == 'Windows_NT'">gcc.exe</_IL2C_GCC_Compiler>
     <_IL2C_GCC_Compiler Condition="'$(OS)' != 'Windows_NT'">gcc</_IL2C_GCC_Compiler>
-    <_IL2C_GCC_DefaultFlags>-pipe -g2 -Wall -Werror -Wstrict-prototypes -Wno-unused</_IL2C_GCC_DefaultFlags>
+    <_IL2C_GCC_DefaultFlags>-pipe -g -Wall -Werror -Wstrict-prototypes -Wno-unused</_IL2C_GCC_DefaultFlags>
     <_IL2C_GCC_DebugFlags>-O0 -D_DEBUG</_IL2C_GCC_DebugFlags>
     <_IL2C_GCC_ReleaseFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native -fdata-sections -ffunction-sections -Wl,--gc-sections -DNDEBUG</_IL2C_GCC_ReleaseFlags>
     <_IL2C_GCC_Archiver Condition="'$(OS)' == 'Windows_NT'">ar.exe</_IL2C_GCC_Archiver>
@@ -39,5 +39,114 @@
     <IL2CLibConfiguration>$(IL2CConfiguration)</IL2CLibConfiguration>
     <IL2COutputPath>ILC2</IL2COutputPath>
   </PropertyGroup>
+
+  <!-- ============================================================================= -->
+
+  <!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-roslyncodetaskfactory?view=vs-2022#provide-backward-compatibility -->
+  <Choose>
+    <When Condition="'$(MSBuildVersion.Substring(0,2))' &gt;= 16 OR ('$(MSBuildVersion.Substring(0,2))' == 15 AND '$(MSBuildVersion.Substring(3,1))' &gt;= 8)">
+      <PropertyGroup>
+        <TaskFactory>RoslynCodeTaskFactory</TaskFactory>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <TaskFactory>CodeTaskFactory</TaskFactory>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+    
+  <UsingTask
+    TaskName="_IL2C_Build_MoveDirectory"
+    TaskFactory="$(TaskFactory)"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <From ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
+      <To ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Using Namespace="System.Collections"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        string toPath = Path.GetFullPath(To.ItemSpec);
+        if (!Directory.Exists(toPath))
+        {
+            try
+            {
+                Directory.Move(
+                    Path.GetFullPath(From.ItemSpec),
+                    toPath);
+            }
+            catch
+            {
+                // Maybe this is race condition for multiple execution, but can ignore this situation.
+            }
+        }
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask
+    TaskName="_IL2C_GetCombinedReferencesBasePath"
+    TaskFactory="$(TaskFactory)"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <References ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <CombinedReferencesBasePath Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <!-- HACK: Will cause compilation error by using `System.Collection.Generic` and/or `System.Linq` on MacOS
+           (Maybe related both mono environment and unreferenced core assembly on `RoslynCodeTaskFactory`) -->
+      <Using Namespace="System.Collections"/>
+      <Using Namespace="Microsoft.Build.Framework"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        Hashtable candidates = new Hashtable();
+        foreach (ITaskItem item in References)
+        {
+            if (!string.IsNullOrEmpty(item.ItemSpec))
+            {
+                string path = Path.GetDirectoryName(Path.GetFullPath(item.ItemSpec));
+                candidates[path] = path;
+            }
+        }
+        object[] pathList = new object[candidates.Keys.Count];
+        candidates.Keys.CopyTo(pathList, 0);
+        CombinedReferencesBasePath = string.Join(";", pathList);
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+    
+  <UsingTask
+    TaskName="_IL2C_CalculateContentHash"
+    TaskFactory="$(TaskFactory)"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <Content Required="true" />
+      <HashValue Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.Security.Cryptography"/>
+      <Using Namespace="System.Text"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        using (MD5 md5 = MD5.Create())
+        {
+            char[] separators = new char[] { ' ' };
+            string normalized = string.Join(" ", Content.Split(separators, StringSplitOptions.RemoveEmptyEntries));
+            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(normalized));
+            HashValue = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+        }
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
 
 </Project>

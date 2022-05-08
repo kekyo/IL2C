@@ -23,9 +23,14 @@ jobs:
     env:
       buildConfiguration: ${{ matrix.buildConfiguration }}
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        lfs: true
+    # https://stackoverflow.com/questions/61463578/github-actions-actions-checkoutv2-lfs-true-flag-not-converting-pointers-to-act
+    - name: Checkout LFS objects
+      run: git lfs checkout
     - name: Setup .NET Core 2.1
       uses: actions/setup-dotnet@v1
       with:

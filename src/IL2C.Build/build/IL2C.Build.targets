@@ -10,44 +10,44 @@
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- ============================================================================= -->
+  <!-- Common -->
+    
+  <PropertyGroup>
+    <IL2CEnableNativeCompile Condition="'$(IL2CEnableNativeCompile)' == ''">true</IL2CEnableNativeCompile>
+    <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
+    <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
+    <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
+    <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
+    <IL2CBuildLogLevel Condition="'$(IL2CBuildLogLevel)' == ''">Information</IL2CBuildLogLevel>
+  </PropertyGroup>
+  
+  <!-- ============================================================================= -->
+  <!-- Common (internal) -->
+    
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' != '')">
+    <_IL2C_PlatformName>$(MicrosoftNETBuildTasksTFM)</_IL2C_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' != '')">
+    <_IL2C_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &gt;= 5.0">net$(BundledNETCoreAppTargetFrameworkVersion)</_IL2C_PlatformName>
+    <_IL2C_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_IL2C_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
+    <_IL2C_PlatformName>netcoreapp2.0</_IL2C_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+    <_IL2C_PlatformName>net462</_IL2C_PlatformName>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <_IL2C_ToolingDir>$([System.IO.Path]::Combine('$(IL2CBuildBaseDir)','tools','$(_IL2C_PlatformName)'))</_IL2C_ToolingDir>
+  </PropertyGroup>
+
+  <!-- ============================================================================= -->
+
   <!-- Custom target after compile process -->
   <Target Name="IL2CBuildPrepare"
     AfterTargets="PostBuildEvent">
-
-    <!-- ============================================================================= -->
-    <!-- Common -->
-      
-    <PropertyGroup>
-      <IL2CEnableNativeCompile Condition="'$(IL2CEnableNativeCompile)' == ''">true</IL2CEnableNativeCompile>
-      <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
-      <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
-      <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
-      <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
-      <IL2CBuildLogLevel Condition="'$(IL2CBuildLogLevel)' == ''">Information</IL2CBuildLogLevel>
-    </PropertyGroup>
-    
-    <!-- ============================================================================= -->
-    <!-- Common (internal) -->
-      
-    <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' != '')">
-      <_IL2C_PlatformName>$(MicrosoftNETBuildTasksTFM)</_IL2C_PlatformName>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' != '')">
-      <_IL2C_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &gt;= 5.0">net$(BundledNETCoreAppTargetFrameworkVersion)</_IL2C_PlatformName>
-      <_IL2C_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_IL2C_PlatformName>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
-      <_IL2C_PlatformName>netcoreapp2.0</_IL2C_PlatformName>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
-      <_IL2C_PlatformName>net462</_IL2C_PlatformName>
-    </PropertyGroup>
-    
-    <PropertyGroup>
-      <_IL2C_ToolingDir>$([System.IO.Path]::Combine('$(IL2CBuildBaseDir)','tools','$(_IL2C_PlatformName)'))</_IL2C_ToolingDir>
-    </PropertyGroup>
-
-    <!-- ============================================================================= -->
 
     <!-- Produces default file paths: -->
     <PropertyGroup>

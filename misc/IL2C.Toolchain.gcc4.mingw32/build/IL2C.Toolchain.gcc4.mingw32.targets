@@ -17,8 +17,8 @@
   </PropertyGroup>
 
   <!-- Extract toolchain 7zip archive only once. -->
-  <Target Name="_IL2C_Extract_GCC4_MinGW32_PackedToolchainArchive" BeforeTargets="IL2CBuild"
-    Condition="!Exists($(_IL2C_GCC4_MinGW32_NativeToolchainPath))">
+  <Target Name="_IL2C_Extract_GCC4_MinGW32_PackedToolchainArchive" BeforeTargets="IL2CBuildRuntimeLibrary"
+    Condition="('$(OS)' == 'Windows_NT') AND (!Exists($(_IL2C_GCC4_MinGW32_NativeToolchainPath)))">
       
     <PropertyGroup>
       <_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','$([System.Guid]::NewGuid().ToString())'))</_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive>

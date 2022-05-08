@@ -16,7 +16,7 @@
     <PackageReference Include="IL2C.Toolchain.gcc4.mingw32" Version="*" PrivateAssets="All" />
 
     <!-- Refers IL2C/Invoke attribute types. -->
-    <PackageReference Include="IL2C.Interop" Version="0.4.200" />
+    <PackageReference Include="IL2C.Interop" Version="*" />
   </ItemGroup>
 
 </Project>

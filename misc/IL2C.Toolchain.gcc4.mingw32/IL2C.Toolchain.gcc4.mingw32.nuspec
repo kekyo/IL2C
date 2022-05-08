@@ -15,7 +15,8 @@
     <repository type="git" url="https://github.com/kekyo/IL2C.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <dependency id="IL2C.Build" version="$PackageVersion$" exclude="All" />
+      <dependency id="IL2C.Build" version="$PackageVersion$" />
+      <dependency id="IL2C.Runtime" version="$PackageVersion$" />
     </dependencies>
   </metadata>
   <files>

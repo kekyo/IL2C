@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IL2C.Build" Version="0.4.102" />
+    <PackageReference Include="IL2C.Build" Version="0.4.189" PrivateAssets="All" />
+    <PackageReference Include="IL2C.Toolchain.gcc4.mingw32" Version="0.4.189" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

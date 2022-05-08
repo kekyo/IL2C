@@ -9,9 +9,13 @@
 ////////////////////////////////////////////////////////////////////////////
 -->
 <Project ToolVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' != ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'));$(IL2CNativeIncludeDir)</IL2CNativeIncludeDir>
-    <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' == ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'))</IL2CNativeIncludeDir>
-    <IL2CNativeMainTemplatePath Condition="'$(IL2CNativeMainTemplatePath)' == ''">$(_IL2C_StandardNativeMainTemplatePath)</IL2CNativeMainTemplatePath>
-  </PropertyGroup>
+
+  <Target Name="_IL2C_Runtime_TargetBody" BeforeTargets="IL2CBuildPrepare">
+    <PropertyGroup>
+      <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' != ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'));$(IL2CNativeIncludeDir)</IL2CNativeIncludeDir>
+      <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' == ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'))</IL2CNativeIncludeDir>
+      <IL2CNativeMainTemplatePath Condition="'$(IL2CNativeMainTemplatePath)' == ''">$(_IL2C_StandardNativeMainTemplatePath)</IL2CNativeMainTemplatePath>
+    </PropertyGroup>
+  </Target>
+
 </Project>

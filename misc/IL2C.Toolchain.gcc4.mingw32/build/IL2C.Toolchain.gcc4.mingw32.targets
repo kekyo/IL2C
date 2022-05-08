@@ -9,12 +9,14 @@
 ////////////////////////////////////////////////////////////////////////////
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    
-  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-    <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Debug'">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
-    <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Release'">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
-    <IL2CNativeMainTemplatePath Condition="'$(OutputType)' == 'WinExe'">$(_IL2C_WinExeMainTemplatePath)</IL2CNativeMainTemplatePath>
-  </PropertyGroup>
+
+  <Target Name="_IL2C_GCC4_MinGW32_ToolChainTargetBody" BeforeTargets="IL2CBuildPrepare">
+    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+      <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Debug'">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Release'">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeMainTemplatePath Condition="'$(OutputType)' == 'WinExe'">$(_IL2C_WinExeMainTemplatePath)</IL2CNativeMainTemplatePath>
+    </PropertyGroup>
+  </Target>
 
   <!-- Extract toolchain 7zip archive only once. -->
   <Target Name="_IL2C_Extract_GCC4_MinGW32_PackedToolchainArchive" BeforeTargets="IL2CBuildRuntimeLibrary"

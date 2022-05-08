@@ -18,14 +18,12 @@ namespace IL2C
 {
     public enum LogLevels
     {
-        Debug,
+        Debug = 1,
         Trace,
         Information,
-        Important,
         Warning,
         Error,
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        Silent,
+        Silent = 100,
     }
 
     public interface ILogger
@@ -102,6 +100,27 @@ namespace IL2C
             }
         }
 
+        protected virtual string? ToString(
+            string? header, LogLevels logLevel, FormattableString? message, Exception? ex)
+        {
+            static string GetHeaderString(string? header) =>
+                header is { } ? $",{header}" : "";
+            static string GetLogLevelString(LogLevels logLevel) =>
+                logLevel != LogLevels.Information ? $" {logLevel}:" : "";
+
+            switch (message, ex)
+            {
+                case ({ }, { }):
+                    return $"IL2C [{ThisAssembly.AssemblyVersion}]{GetHeaderString(header)}:{GetLogLevelString(logLevel)} {message}, {ex}";
+                case ({ }, null):
+                    return $"IL2C [{ThisAssembly.AssemblyVersion}]{GetHeaderString(header)}:{GetLogLevelString(logLevel)} {message}";
+                case (null, { }):
+                    return $"IL2C [{ThisAssembly.AssemblyVersion}]{GetHeaderString(header)}:{GetLogLevelString(logLevel)} {ex}";
+                default:
+                    return null;
+            }
+        }
+
         protected abstract ValueTask OnOutputLogAsync(
             LogLevels logLevel, FormattableString? message, Exception? ex);
     }
@@ -110,9 +129,14 @@ namespace IL2C
     {
         public readonly TextWriter Writer;
 
-        public TextWriterLogger(LogLevels baseLevel, TextWriter tw) :
-            base(baseLevel) =>
+        private readonly string? header;
+
+        public TextWriterLogger(LogLevels baseLevel, TextWriter tw, string? header = null) :
+            base(baseLevel)
+        {
             this.Writer = tw;
+            this.header = header;
+        }
 
         public void Dispose() =>
             this.Writer.Flush();
@@ -120,17 +144,10 @@ namespace IL2C
         protected override async ValueTask OnOutputLogAsync(
             LogLevels logLevel, FormattableString? message, Exception? ex)
         {
-            switch (message, ex)
+            if (base.ToString(this.header, logLevel, message, ex) is { } formatted)
             {
-                case ({ }, { }):
-                    await this.Writer.WriteLineAsync($"IL2C [{ThisAssembly.AssemblyVersion}]: {message}, {ex}");
-                    break;
-                case ({ }, null):
-                    await this.Writer.WriteLineAsync($"IL2C [{ThisAssembly.AssemblyVersion}]: {message}");
-                    break;
-                case (null, { }):
-                    await this.Writer.WriteLineAsync($"IL2C [{ThisAssembly.AssemblyVersion}]: {ex}");
-                    break;
+                await this.Writer.WriteLineAsync(formatted).
+                    ConfigureAwait(false);
             }
         }
     }

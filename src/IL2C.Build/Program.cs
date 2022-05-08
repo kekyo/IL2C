@@ -54,6 +54,7 @@ namespace IL2C
                 var libraryPaths = new string[0];
                 var mainTemplatePath = default(string);
                 var logLevel = LogLevels.Information;
+                var logtfm = default(string);
                 var help = false;
 
                 var options = new OptionSet()
@@ -75,6 +76,7 @@ namespace IL2C
                     { "outputNativeDir=", "Output native binary directory path", v => outputNativeDirPath = v },
                     { "mainTemplate=", "Native main template path", v => mainTemplatePath = v },
                     { "logLevel", "Log level [debug|trace|information|warning|error|silent]", v => logLevel = Enum.TryParse<LogLevels>(v, true, out var ll) ? ll : LogLevels.Information },
+                    { "logtfm=", "Log header tfm", v => logtfm = v },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -92,7 +94,8 @@ namespace IL2C
                     var outputBaseDirPath = extra[0];
                     var inputPaths = extra.Skip(1);
 
-                    using var logger = new TextWriterLogger(LogLevels.Information, Console.Out);
+                    using var logger = new TextWriterLogger(
+                        LogLevels.Information, Console.Out, logtfm);
 
                     logger.Information($"Started.");
 

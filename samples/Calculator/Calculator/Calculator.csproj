@@ -14,7 +14,7 @@
         <AssemblyName>Calculator</AssemblyName>
         <RootNamespace>Calculator</RootNamespace>
 
-        <!-- <IL2COutputPath>IL2C</IL2COutputPath> -->
+        <!-- <IL2COutputPath>il2c</IL2COutputPath> -->
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
         <!-- <IL2CBuildLogLevel>Trace</IL2CBuildLogLevel> -->
 

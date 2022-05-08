@@ -17,7 +17,7 @@
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
         <!-- <IL2CBuildLogLevel>Trace</IL2CBuildLogLevel> -->
 
-        <IL2CEnableNativeCompile>true</IL2CEnableNativeCompile>
+        <!-- <IL2CEnableNativeCompile>False</IL2CEnableNativeCompile> -->
 
         <!-- <IL2CNativeCompilerFlags></IL2CNativeCompilerFlags> -->
     </PropertyGroup>

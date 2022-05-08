@@ -15,7 +15,7 @@
     <_IL2C_GCC4_MinGW32_NativeToolchainName>gcc4</_IL2C_GCC4_MinGW32_NativeToolchainName>
     <_IL2C_GCC4_MinGW32_NativeToolchainPath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','$(_IL2C_GCC4_MinGW32_NativeToolchainName)'))</_IL2C_GCC4_MinGW32_NativeToolchainPath>
 
-    <_IL2C_GCC4PackedToolchainArchivePath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','IL2C-toolchain-gcc4-mingw32-4-base.exe'))</_IL2C_GCC4PackedToolchainArchivePath>  
+    <_IL2C_GCC4_MinGW32_PackedNativeToolchainArchivePath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','IL2C.Toolchain.gcc4.mingw32.packed.exe'))</_IL2C_GCC4_MinGW32_PackedNativeToolchainArchivePath>
     <_IL2C_WinExeMainTemplatePath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','src','main_winexe_template.c'))</_IL2C_WinExeMainTemplatePath>
 
     <IL2CNativeCompiler>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','gcc.exe'))</IL2CNativeCompiler>

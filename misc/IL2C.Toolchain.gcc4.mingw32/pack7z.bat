@@ -44,6 +44,6 @@ if errorlevel 1 (
     exit /b %errorlevel%
 )
 
-7z\7za.exe a -mx9 -sfx IL2C-toolchain-gcc4-mingw32-4-base.exe gcc4
+7z\7za.exe a -mx9 -sfx IL2C.Toolchain.gcc4.mingw32.packed.exe gcc4
 
 rmdir /s/q 7z

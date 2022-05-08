@@ -19,7 +19,7 @@
     <file src="build\*.*" target="build" />
     <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
     <file src="README.md" target="/" />
-    <file src="IL2C-toolchain-gcc4-mingw32-4-base.exe" target="/" />
+    <file src="IL2C.Toolchain.gcc4.mingw32.packed.exe" target="/" />
     <file src="src\*.*" target="src" />
   </files>
 </package>

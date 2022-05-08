@@ -24,6 +24,7 @@
     <copyright>Copyright (c) Kouji Matsui</copyright>
     <tags>il2c cil msil translate transpile aot ecma335 c c++ win32 uefi wdm multi-platform systems-programming</tags>
     <repository type="git" url="https://github.com/kekyo/IL2C.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
+    <developmentDependency>true</developmentDependency>
     <dependencies>
       <dependency id="IL2C.Runtime" version="$PackageVersion$" exclude="All" />
     </dependencies>

@@ -13,6 +13,7 @@
     <copyright>Copyright (c) Kouji Matsui</copyright>
     <tags>il2c native cil msil translate transpile aot ecma335 c c++ win32 uefi wdm multi-platform systems-programming</tags>
     <repository type="git" url="https://github.com/kekyo/IL2C.git" />
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="..\..\Images\IL2C.100.png" target="/" />

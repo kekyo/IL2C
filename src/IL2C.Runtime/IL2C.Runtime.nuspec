@@ -21,6 +21,6 @@
     <file src="include\**\*.h" target="include" />
     <file src="src\**\*.h" target="src" />
     <file src="src\**\*.c" target="src" />
-    <file src="src\main_template.c_" target="src" />
+    <file src="src\_main_template.c_" target="src" />
   </files>
 </package>

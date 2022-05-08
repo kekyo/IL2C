@@ -33,7 +33,7 @@ namespace IL2C.RuntimeSystems
 
     public sealed class CSharpEventImpl
     {
-        public event CSharpEventDelegate TestEvent;
+        public event CSharpEventDelegate? TestEvent;
 
         public void DoEvent(int value)
         {

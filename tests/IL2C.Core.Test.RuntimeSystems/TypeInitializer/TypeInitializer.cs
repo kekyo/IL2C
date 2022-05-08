@@ -60,7 +60,7 @@ namespace IL2C.RuntimeSystems
     public static class TypeInitializer_None
     {
         public static readonly int Int32Value;
-        public static readonly string StringValue;
+        public static readonly string? StringValue;
     }
 
     public static class TypeInitializer_NonTrackingGCs
@@ -183,7 +183,7 @@ namespace IL2C.RuntimeSystems
             return TypeInitializer_None.Int32Value;
         }
 
-        public static string String_None()
+        public static string? String_None()
         {
             return TypeInitializer_None.StringValue;
         }

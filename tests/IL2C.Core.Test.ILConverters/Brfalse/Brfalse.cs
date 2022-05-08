@@ -21,7 +21,7 @@ namespace IL2C.ILConverters
     [TestCase("DEF", "IntPtrValue", 0)]
     [TestCase("ABC", "IntPtrValue", -100)]
     [TestCase("ABC", "ObjectValue", "")]
-    [TestCase("DEF", "ObjectValue", null)]
+    [TestCase("DEF", "ObjectValue", null!)]
     public sealed class Brfalse
     {
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -7,6 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
+#nullable enable
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -119,7 +121,7 @@ namespace IL2C
 
         private sealed class Unshifter : IDisposable
         {
-            private CodeTextWriter parent;
+            private CodeTextWriter? parent;
             private int shiftCount;
 
             public Unshifter(CodeTextWriter parent, int shiftCount)
@@ -130,11 +132,11 @@ namespace IL2C
 
             public void Dispose()
             {
-                if (parent != null)
+                if (this.parent != null)
                 {
-                    parent.UpdateIndent(shiftCount);
-                    parent = null;
-                    shiftCount = 0;
+                    this.parent.UpdateIndent(shiftCount);
+                    this.parent = null;
+                    this.shiftCount = 0;
                 }
             }
         }

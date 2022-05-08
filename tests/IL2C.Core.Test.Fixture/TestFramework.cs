@@ -234,8 +234,9 @@ namespace IL2C
                     caseInfo.Id,
                     caseInfo.UniqueName);
 
-            var logw = new StringWriter();
-            var storage = new CodeTextStorage(logw, translatedPath, false, "    ");
+            var tw = new StringWriter();
+            var logger = new TextWriterLogger(LogLevels.Debug, tw);
+            var storage = new CodeTextStorage(logger, translatedPath, false, "    ");
 
             AssemblyWriter.WriteHeader(
                 storage,

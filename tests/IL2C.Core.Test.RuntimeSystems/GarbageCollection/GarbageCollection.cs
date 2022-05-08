@@ -101,7 +101,7 @@ namespace IL2C.RuntimeSystems
 
     public class FinalzerImplementedWithResurrect
     {
-        public static FinalzerImplementedWithResurrect Instance;
+        public static FinalzerImplementedWithResurrect? Instance;
         public int Value;
 
         public FinalzerImplementedWithResurrect(int value)
@@ -146,7 +146,7 @@ namespace IL2C.RuntimeSystems
 
     public static class StaticFieldTracible
     {
-        public static StaticFieldInstanceType StaticFieldInstance;
+        public static StaticFieldInstanceType? StaticFieldInstance;
     }
 
     public sealed class DelegateMarkHandlerForObjRef
@@ -304,7 +304,7 @@ namespace IL2C.RuntimeSystems
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            return StaticFieldTracible.StaticFieldInstance.Value;
+            return StaticFieldTracible.StaticFieldInstance!.Value;
         }
 
         private static void RunCallFinalizer(FinalizerCalleeHolder holder)
@@ -363,7 +363,7 @@ namespace IL2C.RuntimeSystems
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            return FinalzerImplementedWithResurrect.Instance.Value;
+            return FinalzerImplementedWithResurrect.Instance!.Value;
         }
 
         private static void RunCallFinalizerWithReRegister(FinalizerCalleeHolder holder)

@@ -22,7 +22,7 @@ namespace IL2C.BasicTypes
     [TestCase(8, "Length", "ABCDEFGH")]
     [TestCase(false, "IsNullOrWhiteSpace", "ABCDEFGH")]
     [TestCase(true, "IsNullOrWhiteSpace", "")]
-    [TestCase(true, "IsNullOrWhiteSpace", null)]
+    [TestCase(true, "IsNullOrWhiteSpace", null!)]
     [TestCase(true, "Equals1", "ABC", "ABC")]
     [TestCase(false, "Equals1", "ABC", "ABCDEF")]
     [TestCase(false, "Equals1", "ABC", "DEF")]

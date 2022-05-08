@@ -4,6 +4,7 @@
     <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <Optimize>False</Optimize>
+    <Nullable>enable</Nullable>
 
     <AssemblyName>IL2C.Core.Test.BasicTypes</AssemblyName>
     <RootNamespace>IL2C.BasicTypes</RootNamespace>

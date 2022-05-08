@@ -19,7 +19,7 @@
     <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
     <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
     <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
-    <IL2CBuildTrace Condition="'$(IL2CBuildTrace)' == ''">false</IL2CBuildTrace>
+    <IL2CBuildLogLevel Condition="'$(IL2CBuildLogLevel)' == ''">Information</IL2CBuildLogLevel>
   </PropertyGroup>
 
   <!-- ============================================================================= -->
@@ -36,7 +36,7 @@
     <_IL2C_PlatformName>netcoreapp2.0</_IL2C_PlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
-    <_IL2C_PlatformName>net45</_IL2C_PlatformName>
+    <_IL2C_PlatformName>net462</_IL2C_PlatformName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -79,9 +79,9 @@
       <IL2CNativeArchiver>$(_IL2C_GCC_Archiver)</IL2CNativeArchiver>
     </PropertyGroup>
 
-    <!-- Specified log settings: -->
+    <!-- Specified log level: -->
     <PropertyGroup>
-      <_IL2C_BuildTraceOption Condition="$(IL2CBuildTrace)">-t</_IL2C_BuildTraceOption>
+      <_IL2C_BuildLogLevelOption>--logLevel=$(IL2CBuildLogLevel)</_IL2C_BuildLogLevelOption>
     </PropertyGroup>
 
     <!-- Get candidate runtime library path: -->
@@ -143,7 +143,7 @@
       
     <MakeDir Directories="$(_IL2C_TemporaryDirPathForRuntimeLibrary)" />
     <Exec WorkingDirectory="$(IL2CBuildToolingDir)"
-      Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --mode=compilation $(_IL2C_BuildTraceOption) $(_IL2C_BuildRuntimeLibraryOptions) &quot;$(_IL2C_TemporaryDirPathForRuntimeLibrary)&quot; &quot;$(IL2CRuntimeBasePath)&quot;" />
+      Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --mode=compilation $(_IL2C_BuildLogLevelOption) $(_IL2C_BuildRuntimeLibraryOptions) &quot;$(_IL2C_TemporaryDirPathForRuntimeLibrary)&quot; &quot;$(IL2CRuntimeBasePath)&quot;" />
     <_IL2C_Build_MoveDirectory
       From="$(_IL2C_TemporaryDirPathForRuntimeLibrary)"
       To="$(_IL2C_CandidateRuntimeLibraryBasePath)" />
@@ -157,7 +157,7 @@
   <Target Name="IL2CBuildCore" AfterTargets="IL2CBuildRuntimeLibrary">
 
     <Exec WorkingDirectory="$(IL2CBuildToolingDir)"
-      Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --mode=$(_IL2C_DrivingMode) $(_IL2C_BuildTraceOption) --debug=&quot;$(IL2CDebugInformation)&quot; --produceCpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refDirs=&quot;$(_IL2C_CombinedReferenceDir)&quot; $(_IL2C_NativeOptions) &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
+      Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --mode=$(_IL2C_DrivingMode) $(_IL2C_BuildLogLevelOption) --debug=&quot;$(IL2CDebugInformation)&quot; --produceCpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refDirs=&quot;$(_IL2C_CombinedReferenceDir)&quot; $(_IL2C_NativeOptions) &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
 
     <ItemGroup>
       <FileWrites Include="$(IL2COutputPath)\**\*" />

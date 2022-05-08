@@ -43,17 +43,17 @@ namespace IL2C
                 var enableBundler = false;
                 var targetPlatform = TargetPlatforms.Generic;
                 var refDirs = new string[0];
-                var outputNativeDirPath = "";
-                var nativeCompiler = "";
+                var outputNativeDirPath = default(string);
+                var nativeCompiler = default(string);
                 var nativeCompilerFlags = "";
                 var nativeLinkingFlags = "";
-                var nativeArchiver = "";
-                var outputNativeExecutableFileName = "";
-                var outputNativeArchiveFileName = "";
+                var nativeArchiver = default(string);
+                var outputNativeExecutableFileName = default(string);
+                var outputNativeArchiveFileName = default(string);
                 var additionalIncludeDirs = new string[0];
                 var libraryPaths = new string[0];
-                var mainTemplatePath = "";
-                var trace = false;
+                var mainTemplatePath = default(string);
+                var logLevel = LogLevels.Information;
                 var help = false;
 
                 var options = new OptionSet()
@@ -74,7 +74,7 @@ namespace IL2C
                     { "outputNativeExecutable=", "Output native executable file name", v => outputNativeExecutableFileName = v },
                     { "outputNativeDir=", "Output native binary directory path", v => outputNativeDirPath = v },
                     { "mainTemplate=", "Native main template path", v => mainTemplatePath = v },
-                    { "t", "Enable trace log", _ => trace = true },
+                    { "logLevel", "Log level [debug|trace|information|warning|error|silent]", v => logLevel = Enum.TryParse<LogLevels>(v, true, out var ll) ? ll : LogLevels.Information },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -92,11 +92,13 @@ namespace IL2C
                     var outputBaseDirPath = extra[0];
                     var inputPaths = extra.Skip(1);
 
-                    Console.Out.WriteLine($"IL2C.Build [{ThisAssembly.AssemblyVersion}] Started.");
+                    using var logger = new TextWriterLogger(LogLevels.Information, Console.Out);
+
+                    logger.Information($"Started.");
 
                     // TODO: refs, trace
 
-                    IMethodInformation mainEntryPoint = null;
+                    IMethodInformation? mainEntryPoint = null;
                     string inputCompilationDirPath;
                     if ((drivingMode & DrivingModes.Translation) == DrivingModes.Translation)
                     {
@@ -107,7 +109,7 @@ namespace IL2C
                         foreach (var assemblyPath in inputPaths)
                         {
                             var r = await SimpleDriver.TranslateAsync(
-                                Console.Out,
+                                logger,
                                 outputBaseDirPath,
                                 produceCpp,
                                 translationOptions,
@@ -118,7 +120,7 @@ namespace IL2C
                         var results = await Task.WhenAll(
                             inputPaths.Select(assemblyPath =>
                                 SimpleDriver.TranslateAsync(
-                                    Console.Out,
+                                    logger,
                                     outputBaseDirPath,
                                     produceCpp,
                                     translationOptions,
@@ -139,19 +141,19 @@ namespace IL2C
                         !string.IsNullOrWhiteSpace(outputNativeArchiveFileName))
                     {
                         var toolchainOptions = new ToolchainOptions(
-                            nativeCompiler, nativeCompilerFlags, nativeLinkingFlags, nativeArchiver,
+                            nativeCompiler!, nativeCompilerFlags, nativeLinkingFlags, nativeArchiver!,
                             additionalIncludeDirs, libraryPaths, mainTemplatePath);
                         var artifactPathOptions = new ArtifactPathOptions(
-                            outputNativeArchiveFileName, outputNativeExecutableFileName);
+                            outputNativeArchiveFileName!, outputNativeExecutableFileName);
 
                         await SimpleDriver.CompileToNativeAsync(
-                            Console.Out,
+                            logger,
                             toolchainOptions,
                             artifactPathOptions,
                             mainEntryPoint,
                             inputCompilationDirPath,
                             string.IsNullOrWhiteSpace(outputNativeDirPath) ?
-                                inputCompilationDirPath : outputNativeDirPath);
+                                inputCompilationDirPath : outputNativeDirPath!);
                     }
                 }
 

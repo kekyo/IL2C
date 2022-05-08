@@ -7,12 +7,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-using IL2C.Internal;
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
+using IL2C.Internal;
 
 namespace IL2C
 {
@@ -20,14 +23,14 @@ namespace IL2C
     {
         public readonly string BasePath;
 
-        private readonly TextWriter logw;
+        private readonly ILogger logger;
         private readonly bool produceCpp;
         private readonly string indent;
         private readonly Stack<string> scopeNames = new Stack<string>();
 
-        public CodeTextStorage(TextWriter logw, string basePath, bool produceCpp, string indent)
+        public CodeTextStorage(ILogger logger, string basePath, bool produceCpp, string indent)
         {
-            this.logw = logw;
+            this.logger = logger;
             this.BasePath = Path.GetFullPath(basePath);
             this.produceCpp = produceCpp;
             this.indent = indent;
@@ -39,9 +42,7 @@ namespace IL2C
             var path = Path.Combine(this.BasePath, scopedPath, fileName + ext);
             var tw = this.OnCreateTextWriter(path);
 
-            logw.Write("IL2C: Writing: \"{0}\" ...", path);
-
-            return new InternalCodeTextWriter(logw, tw, path, indent);
+            return new InternalCodeTextWriter(this.logger, tw, path, indent);
         }
 
         public CodeTextWriter CreateSourceCodeWriter(string fileName)
@@ -56,7 +57,7 @@ namespace IL2C
 
         protected virtual TextWriter OnCreateTextWriter(string path)
         {
-            var directoryPath = Path.GetDirectoryName(path);
+            var directoryPath = Path.GetDirectoryName(path)!;
             try
             {
                 if (!Directory.Exists(directoryPath))
@@ -80,28 +81,28 @@ namespace IL2C
 
         private sealed class InternalCodeTextWriter : CodeTextWriter
         {
-            private TextWriter logw;
+            private ILogger? logger;
 
-            public InternalCodeTextWriter(TextWriter logw, TextWriter tw, string relatedPath, string indent)
+            public InternalCodeTextWriter(ILogger logger, TextWriter tw, string relatedPath, string indent)
                 : base(tw, relatedPath, indent)
             {
-                this.logw = logw;
+                this.logger = logger;
             }
 
             public override void Dispose()
             {
-                if (logw != null)
+                if (this.logger != null)
                 {
                     base.Dispose();
-                    logw.WriteLine(" Done.");
-                    logw = null;
+                    this.logger.Trace($"Translated: \"{base.RelatedPath}\"");
+                    this.logger = null;
                 }
             }
         }
 
         private sealed class ScopeDisposer : IDisposable
         {
-            private CodeTextStorage parent;
+            private CodeTextStorage? parent;
 
             public ScopeDisposer(CodeTextStorage parent)
             {
@@ -110,10 +111,10 @@ namespace IL2C
 
             public void Dispose()
             {
-                if (parent != null)
+                if (this.parent != null)
                 {
-                    parent.scopeNames.Pop();
-                    parent = null;
+                    this.parent.scopeNames.Pop();
+                    this.parent = null;
                 }
             }
         }

@@ -28,7 +28,7 @@ namespace IL2C.ILConverters
         public static float SingleValue;
         public static double DoubleValue;
         public static char CharValue;
-        public static string StringValue;
+        public static string? StringValue;
     }
 
     [TestCase(true, "Boolean", true, IncludeTypes = new[] { typeof(Stsfld_Field) })]

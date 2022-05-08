@@ -8,7 +8,7 @@
     <!-- ====================================================== -->
 
     <PropertyGroup>
-        <TargetFrameworks>net48</TargetFrameworks>
+        <TargetFrameworks>net48;net6.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
 
         <AssemblyName>Calculator</AssemblyName>
@@ -16,7 +16,7 @@
 
         <!-- <IL2COutputPath>IL2C</IL2COutputPath> -->
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
-        <!-- <IL2CBuildTrace>true</IL2CBuildTrace> -->
+        <!-- <IL2CBuildLogLevel>Trace</IL2CBuildLogLevel> -->
 
         <!-- <IL2CEnableNativeCompile>False</IL2CEnableNativeCompile> -->
         

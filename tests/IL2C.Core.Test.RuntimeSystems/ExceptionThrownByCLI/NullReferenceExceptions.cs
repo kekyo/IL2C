@@ -16,11 +16,11 @@ namespace IL2C.RuntimeSystems
 {
     [TestId("ExceptionThrownByCLI")]
     [TestCase(false, "NullReference", "ABC")]
-    [TestCase(true, "NullReference", null)]
+    [TestCase(true, "NullReference", null!)]
     [TestCase(false, "NullReferenceTwoTimes", "ABC")]   // Test for re-register signal handler
-    [TestCase(true, "NullReferenceTwoTimes", null)]
+    [TestCase(true, "NullReferenceTwoTimes", null!)]
     [TestCase(false, "NullReferenceAtTheUnbox", (object)123)]
-    [TestCase(true, "NullReferenceAtTheUnbox", null)]
+    [TestCase(true, "NullReferenceAtTheUnbox", null!)]
     public sealed class NullReferenceExceptions
     {
         public static bool NullReference(object v)

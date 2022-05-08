@@ -20,6 +20,7 @@
     <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
     <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
     <IL2CBuildLogLevel Condition="'$(IL2CBuildLogLevel)' == ''">Information</IL2CBuildLogLevel>
+    <IL2CRaiseDebugBreak Condition="'$(IL2CRaiseDebugBreak)' == ''">false</IL2CRaiseDebugBreak>
   </PropertyGroup>
   
   <!-- ============================================================================= -->
@@ -118,7 +119,8 @@
       <_IL2C_OutputNativeArchiveFileNameOption>--outputNativeArchive=&quot;$(_IL2C_OutputNativeArchiveFileName)&quot;</_IL2C_OutputNativeArchiveFileNameOption>
       <_IL2C_OutputNativeExecutableFileNameOption Condition="'$(_IL2C_OutputNativeExecutableFileName)' != ''">--outputNativeExecutable=&quot;$(_IL2C_OutputNativeExecutableFileName)&quot;</_IL2C_OutputNativeExecutableFileNameOption>
       <_IL2C_NativeMainTemplatePathOption Condition="'$(OutputType)' != 'Library'">--mainTemplate=&quot;$(IL2CNativeMainTemplatePath)&quot;</_IL2C_NativeMainTemplatePathOption>
-      <_IL2C_NativeOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption)</_IL2C_NativeOptions>
+      <_IL2C_RaiseDebugBreakOption Condition="$(IL2CRaiseDebugBreak)">--debugBreak</_IL2C_RaiseDebugBreakOption>
+      <_IL2C_NativeOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption) $(_IL2C_RaiseDebugBreakOption)</_IL2C_NativeOptions>
     </PropertyGroup>
     <PropertyGroup Condition="!($(IL2CEnableNativeCompile))">
       <_IL2C_DrivingMode>translation</_IL2C_DrivingMode>
@@ -140,7 +142,7 @@
 
     <PropertyGroup>
       <_IL2C_TemporaryDirPathForRuntimeLibrary>$([System.IO.Path]::Combine('$(_IL2C_RuntimeLibraryCacheBaseDirPath)','$([System.Guid]::NewGuid().ToString())'))</_IL2C_TemporaryDirPathForRuntimeLibrary>
-      <_IL2C_BuildRuntimeLibraryOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) --outputNativeArchive=&quot;$(_IL2C_RuntimeLibraryCacheFileName)&quot; --outputNativeDir=&quot;$(_IL2C_TemporaryDirPathForRuntimeLibrary)&quot;</_IL2C_BuildRuntimeLibraryOptions>
+      <_IL2C_BuildRuntimeLibraryOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_RaiseDebugBreakOption) --outputNativeArchive=&quot;$(_IL2C_RuntimeLibraryCacheFileName)&quot; --outputNativeDir=&quot;$(_IL2C_TemporaryDirPathForRuntimeLibrary)&quot;</_IL2C_BuildRuntimeLibraryOptions>
     </PropertyGroup>
       
     <MakeDir Directories="$(_IL2C_TemporaryDirPathForRuntimeLibrary)" />

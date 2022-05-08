@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Mono.Options;
 
 using IL2C.Metadata;
+using System.Diagnostics;
 
 #pragma warning disable CS0219
 
@@ -55,6 +56,7 @@ namespace IL2C
                 var mainTemplatePath = default(string);
                 var logLevel = LogLevels.Information;
                 var logtfm = default(string);
+                var debugBreak = false;
                 var help = false;
 
                 var options = new OptionSet()
@@ -77,6 +79,7 @@ namespace IL2C
                     { "mainTemplate=", "Native main template path", v => mainTemplatePath = v },
                     { "logLevel", "Log level [debug|trace|information|warning|error|silent]", v => logLevel = Enum.TryParse<LogLevels>(v, true, out var ll) ? ll : LogLevels.Information },
                     { "logtfm=", "Log header tfm", v => logtfm = v },
+                    { "debugBreak", "Raise debug break", _ => debugBreak = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -98,6 +101,11 @@ namespace IL2C
                         LogLevels.Information, Console.Out, logtfm);
 
                     logger.Information($"Started.");
+
+                    if (debugBreak)
+                    {
+                        Debugger.Launch();
+                    }
 
                     // TODO: refs, trace
 

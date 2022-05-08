@@ -33,6 +33,13 @@ void System_Console_WriteLine__System_Int32(int32_t value)
     il2c_writeline(buffer);
 }
 
+void System_Console_WriteLine__System_Int64(int64_t value)
+{
+    wchar_t buffer[24];
+    il2c_i64tow(value, buffer, 10);
+    il2c_writeline(buffer);
+}
+
 void System_Console_WriteLine__System_String(System_String* value)
 {
     if (value != NULL)

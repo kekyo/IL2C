@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShowMessageBoxOnWindows", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{849B0A98-1053-412A-96DC-08D299E9F56A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TakeAdvantageWithIL2CInvoke", "TakeAdvantageWithIL2CInvoke\TakeAdvantageWithIL2CInvoke.csproj", "{504A5EF3-5DA7-489D-BECD-CCACCF22244B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{849B0A98-1053-412A-96DC-08D299E9F56A}.Release|x64.Build.0 = Release|Any CPU
 		{849B0A98-1053-412A-96DC-08D299E9F56A}.Release|x86.ActiveCfg = Release|Any CPU
 		{849B0A98-1053-412A-96DC-08D299E9F56A}.Release|x86.Build.0 = Release|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Debug|x64.Build.0 = Debug|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Debug|x86.Build.0 = Debug|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Release|x64.ActiveCfg = Release|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Release|x64.Build.0 = Release|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Release|x86.ActiveCfg = Release|Any CPU
+		{504A5EF3-5DA7-489D-BECD-CCACCF22244B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

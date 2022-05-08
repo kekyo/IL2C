@@ -25,6 +25,6 @@
     <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
     <file src="README.md" target="/" />
     <file src="IL2C.Toolchain.gcc4.mingw32.packed.exe" target="/" />
-    <file src="src\*.*" target="src" />
+    <file src="src\_main_winexe_template.c_" target="src" />
   </files>
 </package>

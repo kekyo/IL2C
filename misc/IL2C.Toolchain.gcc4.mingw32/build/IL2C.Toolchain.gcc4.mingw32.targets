@@ -18,6 +18,7 @@
       <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Debug'">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
       <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Release'">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
       <IL2CNativeMainTemplatePath Condition="'$(OutputType)' == 'WinExe'">$(_IL2C_WinExeMainTemplatePath)</IL2CNativeMainTemplatePath>
+      <IL2CNativeCompilerRequiredFlags Condition="'$(OutputType)' == 'WinExe'">$(IL2CNativeCompilerRequiredFlags) -mwindows</IL2CNativeCompilerRequiredFlags>
     </PropertyGroup>
   
   </Target>

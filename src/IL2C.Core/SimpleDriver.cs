@@ -329,6 +329,7 @@ namespace IL2C
             var crs = new List<CompilationResult>();
             foreach (var sourceCodePath in sourceCodePaths)
             {
+                logger.Trace($"Compiling source code: \"{sourceCodePath}\" ...");
                 var r = await ExecuteCompilerAsync(
                     sourceCodePath,
                     outputStagingBaseDirPath,
@@ -348,19 +349,23 @@ namespace IL2C
 #else
             var crs = await Task.WhenAll(
                 sourceCodePaths.
-                Select(sourceCodePath => ExecuteCompilerAsync(
-                    sourceCodePath,
-                    outputStagingBaseDirPath,
-                    Path.GetFileNameWithoutExtension(sourceCodePath) + ".o",
-                    nativeToolchainBasePaths,
-                    toolchainOptions.NativeCompiler,
-                    toolchainOptions.NativeCompilerFlags,
-                    includeDir,
-                    sourceDir,
-                    true,
-                    null,
-                    toolchainOptions.AdditionalIncludeDirs,
-                    new string[0]))).
+                Select(sourceCodePath =>
+                {
+                    logger.Trace($"Compiling source code: \"{sourceCodePath}\" ...");
+                    return ExecuteCompilerAsync(
+                        sourceCodePath,
+                        outputStagingBaseDirPath,
+                        Path.GetFileNameWithoutExtension(sourceCodePath) + ".o",
+                        nativeToolchainBasePaths,
+                        toolchainOptions.NativeCompiler,
+                        toolchainOptions.NativeCompilerFlags,
+                        includeDir,
+                        sourceDir,
+                        true,
+                        null,
+                        toolchainOptions.AdditionalIncludeDirs,
+                        new string[0]);
+                })).
                 ConfigureAwait(false);
 #endif
             var cr = crs.FirstOrDefault(r => r.ExitCode != 0);

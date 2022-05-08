@@ -13,7 +13,7 @@
   <ItemGroup>
     <None Remove="7z\**\*" />
     <None Remove="gcc4\**\*" />
-    <None Remove="IL2C-toolchain-gcc4-mingw32-4-base.exe" />
-    <Content Include="IL2C-toolchain-gcc4-mingw32-4-base.exe" />
+    <None Remove="IL2C.Toolchain.gcc4.mingw32.packed.exe" />
+    <Content Include="IL2C.Toolchain.gcc4.mingw32.packed.exe" />
   </ItemGroup>
 </Project>

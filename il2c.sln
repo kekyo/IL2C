@@ -86,7 +86,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator", "samples\Calcu
 		{2CBC90EC-5581-452F-8231-086E4553D20E} = {2CBC90EC-5581-452F-8231-086E4553D20E}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.toolchain.gcc4.mingw32", "misc\IL2C.toolchain.gcc4.mingw32\IL2C.toolchain.gcc4.mingw32.csproj", "{BB7FA204-433A-416B-B9D0-9A79DF874284}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Toolchain.gcc4.mingw32", "misc\IL2C.Toolchain.gcc4.mingw32\IL2C.Toolchain.gcc4.mingw32.csproj", "{BB7FA204-433A-416B-B9D0-9A79DF874284}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -131,12 +131,12 @@ namespace IL2C
 #else
                         var results = await Task.WhenAll(
                             inputPaths.Select(assemblyPath =>
-                                SimpleDriver.TranslateAsync(
+                                SimpleTranslator.TranslateAsync(
                                     logger,
                                     outputBaseDirPath,
                                     produceCpp,
                                     translationOptions,
-                                    assemblyPath))).
+                                    assemblyPath).AsTask())).
                             ConfigureAwait(false);
 #endif
                         mainEntryPoint = results.FirstOrDefault();

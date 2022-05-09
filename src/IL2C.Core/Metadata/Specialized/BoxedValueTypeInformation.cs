@@ -130,9 +130,9 @@ namespace IL2C.Metadata.Specialized
         public string FriendlyName => this.UniqueName;
 
         public string MangledUniqueName =>
-            Utilities.GetMangledName(this.UniqueName);
+            SymbolManipulator.GetMangledName(this.UniqueName);
         public string MangledName =>
-            Utilities.GetMangledName(this.Name);
+            SymbolManipulator.GetMangledName(this.Name);
 
         public IMetadataContext Context => throw new NotImplementedException();
 

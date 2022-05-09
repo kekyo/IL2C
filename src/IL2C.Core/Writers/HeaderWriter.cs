@@ -149,7 +149,7 @@ namespace IL2C.Writers
             string assemblyName)
         {
             IExtractContext extractContext = translateContext;
-            var assemblyMangledName = Utilities.GetMangledName(assemblyName);
+            var assemblyMangledName = SymbolManipulator.GetMangledName(assemblyName);
 
             using (var twHeader = storage.CreateHeaderWriter(assemblyName))
             {
@@ -221,7 +221,7 @@ namespace IL2C.Writers
                         twHeader.WriteLine(
                             "#include \"{0}/{1}/{2}.h\"",
                             assemblyName,
-                            Utilities.GetCLanguageScopedPath(type.ScopeName),
+                            SymbolManipulator.GetCLanguageScopedPath(type.ScopeName),
                             type.Name);
                     }
                     twHeader.SplitLine();
@@ -241,7 +241,7 @@ namespace IL2C.Writers
                         twHeader.WriteLine(
                             "#include \"{0}/{1}/{2}.h\"",
                             assemblyName,
-                            Utilities.GetCLanguageScopedPath(type.ScopeName),
+                            SymbolManipulator.GetCLanguageScopedPath(type.ScopeName),
                             type.Name);
                     }
                     twHeader.SplitLine();
@@ -260,7 +260,8 @@ namespace IL2C.Writers
         {
             IExtractContext extractContext = translateContext;
             var annotatedAssemblyName = assemblyName + "_internal";
-            var annotatedAssemblyMangledName = Utilities.GetMangledName(annotatedAssemblyName);
+            var annotatedAssemblyMangledName =
+                SymbolManipulator.GetMangledName(annotatedAssemblyName);
 
             using (var twHeader = storage.CreateHeaderWriter(annotatedAssemblyName))
             {
@@ -324,7 +325,7 @@ namespace IL2C.Writers
                         Debug.Assert(targetType.IsArray);
 
                         var elementType = targetType.ElementType.ResolveToRuntimeType();
-                        var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
+                        var values = TypeUtilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
 
                         var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
                         twHeader.WriteLine(
@@ -408,7 +409,7 @@ namespace IL2C.Writers
                     {
                         using (var twHeader = storage.CreateHeaderWriter(type.Name))
                         {
-                            var scopeName = Utilities.GetMangledName(type.ScopeName);
+                            var scopeName = SymbolManipulator.GetMangledName(type.ScopeName);
 
                             twHeader.WriteLine(
                                 "// [14-1] This is {0} native code translated by IL2C, do not edit.",

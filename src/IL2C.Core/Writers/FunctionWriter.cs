@@ -294,7 +294,7 @@ namespace IL2C.Writers
                                 (codeStream.ExceptionHandlers.Length >= 1) ? "volatile " : string.Empty,
                                 local.TargetType.CLanguageTypeName,
                                 name,
-                                Utilities.GetCLanguageExpression(local.TargetType.InternalStaticEmptyValue));
+                                SymbolManipulator.GetCLanguageExpression(local.TargetType.InternalStaticEmptyValue));
                         }
                         else
                         {

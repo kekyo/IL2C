@@ -76,13 +76,13 @@ namespace IL2C.ILConverters
             var type = ctor.DeclaringType;
             ILocalVariableInformation thisSymbol = null;
 
-            var pairParameters = new LinkedList<Utilities.RightExpressionGivenParameter>();
+            var pairParameters = new LinkedList<SymbolManipulator.RightExpressionGivenParameter>();
             foreach (var parameter in ctor.Parameters.Reverse())
             {
                 // Except this parameter
                 if (pairParameters.Count < (ctor.Parameters.Length) - 1)
                 {
-                    pairParameters.AddFirst(new Utilities.RightExpressionGivenParameter(
+                    pairParameters.AddFirst(new SymbolManipulator.RightExpressionGivenParameter(
                         parameter.TargetType,
                         decodeContext.PopStack()));
                 }
@@ -94,7 +94,7 @@ namespace IL2C.ILConverters
                     // Instance from get_uninitialized_object
                     thisSymbol = decodeContext.PushStack(type, ctor);
 
-                    pairParameters.AddFirst(new Utilities.RightExpressionGivenParameter(
+                    pairParameters.AddFirst(new SymbolManipulator.RightExpressionGivenParameter(
                         type,
                         thisSymbol));
                 }
@@ -131,7 +131,7 @@ namespace IL2C.ILConverters
 
                 return (extractContext, _) =>
                 {
-                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                    var parameterString = SymbolManipulator.GetGivenParameterDeclaration(
                         pairParameters.Skip(1).ToArray(), extractContext, codeInformation);
 
                     return new[]
@@ -168,7 +168,7 @@ namespace IL2C.ILConverters
 
                 return (extractContext, _) =>
                 {
-                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                    var parameterString = SymbolManipulator.GetGivenParameterDeclaration(
                         pairParameters.Skip(1).ToArray(), extractContext, codeInformation);
 
                     return new[]
@@ -186,7 +186,7 @@ namespace IL2C.ILConverters
 
             return (extractContext, _) =>
             {
-                var parameterString = Utilities.GetGivenParameterDeclaration(
+                var parameterString = SymbolManipulator.GetGivenParameterDeclaration(
                     pairParameters.ToArray(), extractContext, codeInformation);
 
                 // newobj opcode can handle value type with parameter applied constructor.

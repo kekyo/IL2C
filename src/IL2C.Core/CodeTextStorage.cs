@@ -57,7 +57,7 @@ namespace IL2C
 
         protected virtual TextWriter OnCreateTextWriter(string path)
         {
-            var directoryPath = Utilities.SafeGetDirectoryName(path);
+            var directoryPath = IOAccessor.SafeGetDirectoryName(path);
             try
             {
                 if (!Directory.Exists(directoryPath))
@@ -75,7 +75,7 @@ namespace IL2C
 
         public IDisposable EnterScope(string scopeName, bool splitScope = true)
         {
-            scopeNames.Push(splitScope ? Utilities.GetCLanguageScopedPath(scopeName) : scopeName);
+            scopeNames.Push(splitScope ? SymbolManipulator.GetCLanguageScopedPath(scopeName) : scopeName);
             return new ScopeDisposer(this);
         }
 

@@ -27,7 +27,7 @@ namespace IL2C.ILConverters
             return (extractContext, _) => new[] { string.Format(
                 "{0} = {1}",
                 extractContext.GetSymbolName(symbol),
-                Utilities.GetCLanguageExpression(value)) };
+                SymbolManipulator.GetCLanguageExpression(value)) };
         }
 
         public static ExpressionEmitter Prepare(

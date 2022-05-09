@@ -7,6 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +32,7 @@ namespace IL2C.Translators
 
         public int Count => this.Functions.Count;
 
-        public bool TryGet(string methodName, out PreparedMethodInformation preparedFunction)
+        public bool TryGet(string methodName, out PreparedMethodInformation? preparedFunction)
         {
             preparedFunction = this.Functions
                 .Where(entry => entry.Key.UniqueName == methodName)

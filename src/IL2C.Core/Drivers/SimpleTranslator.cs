@@ -39,7 +39,7 @@ namespace IL2C.Drivers
 
     public static class SimpleTranslator
     {
-        public static Task<IMethodInformation> TranslateAsync(
+        public static async ValueTask<IMethodInformation> TranslateAsync(
             ILogger logger,
             CodeTextStorage storage,
             TranslationOptions options,
@@ -47,7 +47,9 @@ namespace IL2C.Drivers
         {
             logger.Information($"Preparing assembly: \"{Path.GetFullPath(assemblyPath)}\" ...");
 
-            Utilities.SafeCreateDirectory(storage.BasePath, true);
+            await IOAccessor.SafeCreateDirectoryAsync(
+                storage.BasePath, true).
+                ConfigureAwait(false);
 
             var translateContext = new TranslateContext(
                 assemblyPath, options.ReadSymbols, options.TargetPlatform);
@@ -55,6 +57,8 @@ namespace IL2C.Drivers
                 translateContext);
 
             logger.Information($"Translating assembly: \"{Path.GetFullPath(assemblyPath)}\" ...");
+
+            // TODO: Makes asynchronously operation.
 
             using (var _ = storage.EnterScope("include"))
             {
@@ -76,11 +80,10 @@ namespace IL2C.Drivers
 
             logger.Information($"Translated assembly: Stored into \"{Path.GetFullPath(storage.BasePath)}\"");
 
-            // TODO: Makes asynchronously operation.
-            return Task.FromResult(translateContext.MetadataContext.EntryPoint);
+            return translateContext.MetadataContext.EntryPoint;
         }
 
-        public static Task<IMethodInformation> TranslateAsync(
+        public static ValueTask<IMethodInformation> TranslateAsync(
             ILogger logger,
             string outputBaseDirPath,
             bool produceCpp,

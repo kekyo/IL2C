@@ -100,7 +100,7 @@ namespace IL2C.Drivers
             var sourceCodeFileName = Path.GetFileNameWithoutExtension(sourceCodePath);
             var outputBasePath = Path.Combine(
                 outputStagingDirPath,
-                Utilities.SafeGetDirectoryName(sourceCodePath.Substring(sourceDir.Length + 1)));
+                IOAccessor.SafeGetDirectoryName(sourceCodePath.Substring(sourceDir.Length + 1)));
             var outputPath = Path.Combine(
                 outputBasePath,
                 outputFileName);
@@ -108,9 +108,11 @@ namespace IL2C.Drivers
                 outputBasePath,
                 $"build_{sourceCodeFileName}");
 
-            Utilities.SafeCreateDirectory(outputBasePath, false);
+            await IOAccessor.SafeCreateDirectoryAsync(
+                outputBasePath, false).
+                ConfigureAwait(false);
 
-            var result = await Utilities.ExecuteAsync(
+            var result = await IOAccessor.ExecuteAsync(
                 outputBasePath,
                 buildScriptPath,
                 nativeToolchainBasePaths,
@@ -119,35 +121,35 @@ namespace IL2C.Drivers
                 {
                     nativeCompilerFlags,
                     isCompileOnly ? "-c" : "",
-                    $"-I{Utilities.ToRelativePath(outputBasePath, includeDir)}",
-                    $"-I{Utilities.ToRelativePath(outputBasePath, sourceDir)}",
+                    $"-I{IOAccessor.ToRelativePath(outputBasePath, includeDir)}",
+                    $"-I{IOAccessor.ToRelativePath(outputBasePath, sourceDir)}",
                 }.
-                Concat(additionalIncludeDirs.Select(p => $"-I{Utilities.ToRelativePath(outputBasePath, p)}")).
+                Concat(additionalIncludeDirs.Select(p => $"-I{IOAccessor.ToRelativePath(outputBasePath, p)}")).
                 Concat(new[]
                 {
-                    "-o", Utilities.ToRelativePath(outputBasePath, outputPath),
-                    Utilities.ToRelativePath(outputBasePath, sourceCodePath),
+                    "-o", IOAccessor.ToRelativePath(outputBasePath, outputPath),
+                    IOAccessor.ToRelativePath(outputBasePath, sourceCodePath),
                 }).
-                Concat(libraryPath is { } lp ? new[] { Utilities.ToRelativePath(outputBasePath, lp) } : new string[0]).
-                Concat(additionalLibraryPaths.Select(p => Utilities.ToRelativePath(outputBasePath, p))).
+                Concat(libraryPath is { } lp ? new[] { IOAccessor.ToRelativePath(outputBasePath, lp) } : new string[0]).
+                Concat(additionalLibraryPaths.Select(p => IOAccessor.ToRelativePath(outputBasePath, p))).
                 ToArray()).
                 ConfigureAwait(false);
 
             return new CompilationResult(result.ExitCode, result.Logs, outputPath);
         }
 
-        private static Task<ExecuteResult> ExecuteArchiverAsync(
+        private static ValueTask<ExecuteResult> ExecuteArchiverAsync(
             string[] objectPaths,
             string outputPath,
             string[] nativeCompilerBasePaths,
             string nativeArchiver)
         {
-            var outputBasePath = Utilities.SafeGetDirectoryName(outputPath);
+            var outputBasePath = IOAccessor.SafeGetDirectoryName(outputPath);
             var buildScriptPath = Path.Combine(
                 outputBasePath,
                 $"build_{Path.GetFileNameWithoutExtension(outputPath)}");
 
-            return Utilities.ExecuteAsync(
+            return IOAccessor.ExecuteAsync(
                 outputBasePath,
                 buildScriptPath,
                 nativeCompilerBasePaths,
@@ -155,13 +157,13 @@ namespace IL2C.Drivers
                 new[]
                 {
                     "rcs",
-                    Utilities.ToRelativePath(outputBasePath, outputPath),
+                    IOAccessor.ToRelativePath(outputBasePath, outputPath),
                 }.
-                Concat(objectPaths.Select(p => Utilities.ToRelativePath(outputBasePath, p))).
+                Concat(objectPaths.Select(p => IOAccessor.ToRelativePath(outputBasePath, p))).
                 ToArray());
         }
 
-        public static async Task CompileToNativeAsync(
+        public static async ValueTask CompileToNativeAsync(
             ILogger logger,
             ToolchainOptions toolchainOptions,
             ArtifactPathOptions artifactPathOptions,
@@ -175,7 +177,7 @@ namespace IL2C.Drivers
                 Path.Combine(
                     outputDirFullPath,
                     artifactPathOptions.OutputNativeArchiveFileName));
-            var nativeToolchainBasePath = Utilities.SafeGetDirectoryName(
+            var nativeToolchainBasePath = IOAccessor.SafeGetDirectoryName(
                 toolchainOptions.NativeCompiler);
             var nativeToolchainBasePaths =
                 string.IsNullOrWhiteSpace(nativeToolchainBasePath) ?
@@ -184,10 +186,14 @@ namespace IL2C.Drivers
 
             logger.Information($"Preparing for compilation native binary: \"{sourceCodeDirFullPath}\" ...");
 
-            Utilities.SafeCreateDirectory(outputDirFullPath, outputDirFullPath != sourceCodeDirFullPath);
+            await IOAccessor.SafeCreateDirectoryAsync(
+                outputDirFullPath, outputDirFullPath != sourceCodeDirFullPath).
+                ConfigureAwait(false);
 
             var outputStagingBaseDirPath = Path.Combine(outputDirFullPath, "obj");
-            Utilities.SafeCreateDirectory(outputStagingBaseDirPath, true);
+            await IOAccessor.SafeCreateDirectoryAsync(
+                outputStagingBaseDirPath, true).
+                ConfigureAwait(false);
 
             var includeDir = Path.Combine(sourceCodeDirFullPath, "include");
             var sourceDir = Path.Combine(sourceCodeDirFullPath, "src");
@@ -288,14 +294,14 @@ namespace IL2C.Drivers
                     Path.GetFileNameWithoutExtension(outputNativeExecutableFullPath) + ".c");
 
                 var mainBody = new StringBuilder(
-                    await Utilities.ReadAllTextAsync(toolchainOptions.MainTemplatePath, new UTF8Encoding(false, true)).
+                    await IOAccessor.ReadAllTextAsync(toolchainOptions.MainTemplatePath, new UTF8Encoding(false, true)).
                         ConfigureAwait(false));
 
                 mainBody.Replace("{headerName}", mainEntryPoint.DeclaringModule.DeclaringAssembly.Name + ".h");
                 mainBody.Replace("{mainIsVoid}", mainEntryPoint.ReturnType.IsVoidType ? "1" : "0");
                 mainBody.Replace("{mainSymbol}", mainEntryPoint.CLanguageFunctionFullName);
 
-                await Utilities.WriteAllTextAsync(mainSourceCodePath, mainBody.ToString(), new UTF8Encoding(false, true)).
+                await IOAccessor.WriteAllTextAsync(mainSourceCodePath, mainBody.ToString(), new UTF8Encoding(false, true)).
                         ConfigureAwait(false);
 
                 var crf = await ExecuteCompilerAsync(

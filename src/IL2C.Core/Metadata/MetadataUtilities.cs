@@ -70,7 +70,7 @@ namespace IL2C.Metadata
             MemberReference member, bool onlyMemberName, MemberElementFormats memberFormat)
         {
             var memberName = memberFormat.IsMangledName ?
-                Utilities.GetMangledName(TrimGenericIdentifier(member.Name)) :
+                SymbolManipulator.GetMangledName(TrimGenericIdentifier(member.Name)) :
                 TrimGenericIdentifier(member.Name);
 
             if (onlyMemberName)
@@ -94,7 +94,7 @@ namespace IL2C.Metadata
                     (member as TypeReference)?.Namespace;
                 if (memberFormat.IsMangledName && (namespaceName != null))
                 {
-                    namespaceName = Utilities.GetMangledName(namespaceName);
+                    namespaceName = SymbolManipulator.GetMangledName(namespaceName);
                 }
 
                 return string.Join(

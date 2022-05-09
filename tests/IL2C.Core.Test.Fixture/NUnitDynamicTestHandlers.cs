@@ -123,7 +123,7 @@ namespace IL2C
             var name = string.Format(
                 "{0}({1})",
                 testCase.Name,
-                string.Join(",", testCase.Arguments.Select(Utilities.GetCSharpLanguageExpression)));
+                string.Join(",", testCase.Arguments.Select(SymbolManipulator.GetCSharpLanguageExpression)));
             testMethod.Name = name;
             testMethod.FullName = string.Format(
                 "{0}.{1}.{2}",

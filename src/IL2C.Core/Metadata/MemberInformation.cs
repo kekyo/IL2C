@@ -51,7 +51,7 @@ namespace IL2C.Metadata
         public override string MangledUniqueName =>
             this.Member.GetMangledUniqueName();
         public override string MangledName =>
-            Utilities.GetMangledName(this.Name);
+            SymbolManipulator.GetMangledName(this.Name);
         public override string FriendlyName =>
             this.UniqueName;
 

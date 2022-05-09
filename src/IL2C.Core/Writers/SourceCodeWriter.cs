@@ -47,7 +47,7 @@ namespace IL2C.Writers
 
             using (var twSource = storage.CreateSourceCodeWriter(assemblyName + "_internal"))
             {
-                var assemblyMangledName = Utilities.GetMangledName(assemblyName);
+                var assemblyMangledName = SymbolManipulator.GetMangledName(assemblyName);
 
                 twSource.WriteLine(
                     "// [15-1] This is {0} native code translated by IL2C, do not edit.",
@@ -76,7 +76,7 @@ namespace IL2C.Writers
                         twSource.WriteLine(
                             "IL2C_CONST_STRING({0}, {1});",
                             symbolName,
-                            Utilities.GetCLanguageExpression(value));
+                            SymbolManipulator.GetCLanguageExpression(value));
                     }
 
                     twSource.SplitLine();
@@ -106,7 +106,7 @@ namespace IL2C.Writers
                         Debug.Assert(targetType.IsArray);
 
                         var elementType = targetType.ElementType.ResolveToRuntimeType();
-                        var values = Utilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
+                        var values = TypeUtilities.ResourceDataToSpecificArray(information.ResourceData, elementType);
 
                         var lhs = targetType.GetCLanguageTypeName(information.SymbolName, true);
                         twSource.WriteLine(
@@ -116,7 +116,7 @@ namespace IL2C.Writers
                         {
                             twSource.WriteLine(
                                 "{0};",
-                                Utilities.GetCLanguageExpression(values));
+                                SymbolManipulator.GetCLanguageExpression(values));
                         }
                     }
 
@@ -476,7 +476,7 @@ namespace IL2C.Writers
         {
             using (var twSource = storage.CreateSourceCodeWriter(assemblyName + "_bundle"))
             {
-                var assemblyMangledName = Utilities.GetMangledName(assemblyName);
+                var assemblyMangledName = SymbolManipulator.GetMangledName(assemblyName);
 
                 twSource.WriteLine(
                     "// [15-3] This is {0} native code translated by IL2C, do not edit.",
@@ -499,7 +499,7 @@ namespace IL2C.Writers
                     twSource.WriteLine(
                         "#include \"{0}/{1}/{2}.c\"",
                         assemblyName,
-                        Utilities.GetCLanguageScopedPath(type.ScopeName),
+                        SymbolManipulator.GetCLanguageScopedPath(type.ScopeName),
                         type.Name);
                 }
 

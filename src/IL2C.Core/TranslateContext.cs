@@ -37,7 +37,7 @@ namespace IL2C
         private readonly Dictionary<string, string> constStrings =
             new Dictionary<string, string>();
         private readonly Dictionary<byte[], (string symbolName, HashSet<IFieldInformation> fields)> declaredValues =
-            new Dictionary<byte[], (string symbolName, HashSet<IFieldInformation> fields)>(Utilities.LooseTypeKindComparer);
+            new Dictionary<byte[], (string symbolName, HashSet<IFieldInformation> fields)>(TypeUtilities.LooseTypeKindComparer);
         private readonly Dictionary<string, HashSet<ITypeInformation>> declaredValueHintTypes =
             new Dictionary<string, HashSet<ITypeInformation>>();
         private Func<ILocalVariableInformation, string> prefixGenerator;

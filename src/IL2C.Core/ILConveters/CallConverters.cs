@@ -203,13 +203,13 @@ namespace IL2C.ILConverters
                 return (extractContext, _) =>
                 {
                     var parameters = pairParameters.Select(parameter =>
-                        new Utilities.RightExpressionGivenParameter(
+                        new SymbolManipulator.RightExpressionGivenParameter(
                             parameter.variable.TargetType,
                             parameter.variable,
                             string.Format(parameter.format, extractContext.GetSymbolName(parameter.variable)))).
                         ToArray();
 
-                    var parameterString = Utilities.GetGivenParameterDeclaration(
+                    var parameterString = SymbolManipulator.GetGivenParameterDeclaration(
                         parameters,
                         extractContext,
                         codeInformation);
@@ -257,13 +257,13 @@ namespace IL2C.ILConverters
                     string.Empty;
 
                 var parameters = pairParameters.Select(parameter =>
-                    new Utilities.RightExpressionGivenParameter(
+                    new SymbolManipulator.RightExpressionGivenParameter(
                         parameter.type,
                         parameter.variable,
                         string.Format(parameter.format, extractContext.GetSymbolName(parameter.variable)))).
                     ToArray();
 
-                var parameterString = Utilities.GetGivenParameterDeclaration(
+                var parameterString = SymbolManipulator.GetGivenParameterDeclaration(
                     parameters,
                     extractContext,
                     codeInformation);

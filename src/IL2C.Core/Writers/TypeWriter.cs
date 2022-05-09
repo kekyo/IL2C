@@ -150,7 +150,7 @@ namespace IL2C.Writers
                         declaredType.CLanguageTypeName,
                         declaredType.MangledUniqueName,
                         field.Name,
-                        Utilities.GetCLanguageExpression(field.DeclaredValue));
+                        SymbolManipulator.GetCLanguageExpression(field.DeclaredValue));
                 }
                 tw.SplitLine();
             }

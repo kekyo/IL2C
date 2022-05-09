@@ -49,7 +49,7 @@ namespace IL2C.Metadata
         public object HintInformation { get; }
 
         public string UnsafeCLanguageSymbolName =>
-            Utilities.GetMangledName(symbolName);
+            SymbolManipulator.GetMangledName(symbolName);
 
         public bool Equals(IVariableInformation rhs)
         {

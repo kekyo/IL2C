@@ -49,7 +49,7 @@ namespace IL2C
                 }
 
                 var code = decodeContext.CurrentCode;
-                if (Utilities.TryGetILConverter(code.OpCode, out var ilc) == false)
+                if (TypeUtilities.TryGetILConverter(code.OpCode, out var ilc) == false)
                 {
                     throw new InvalidProgramSequenceException(
                         "Invalid opcode: Method={0}, OpCode={1}, Offset={2}",

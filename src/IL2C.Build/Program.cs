@@ -9,14 +9,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Mono.Options;
 
+using IL2C.Drivers;
 using IL2C.Metadata;
-using System.Diagnostics;
 
 #pragma warning disable CS0219
 
@@ -119,7 +120,7 @@ namespace IL2C
                         var results = new List<IMethodInformation>();
                         foreach (var assemblyPath in inputPaths)
                         {
-                            var r = await SimpleDriver.TranslateAsync(
+                            var r = await SimpleTranslator.TranslateAsync(
                                 logger,
                                 outputBaseDirPath,
                                 produceCpp,
@@ -157,7 +158,7 @@ namespace IL2C
                         var artifactPathOptions = new ArtifactPathOptions(
                             outputNativeArchiveFileName!, outputNativeExecutableFileName);
 
-                        await SimpleDriver.CompileToNativeAsync(
+                        await NativeBinaryBuilder.CompileToNativeAsync(
                             logger,
                             toolchainOptions,
                             artifactPathOptions,

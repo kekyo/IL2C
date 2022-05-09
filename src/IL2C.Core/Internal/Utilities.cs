@@ -777,6 +777,44 @@ namespace IL2C.Internal
         public static readonly IEqualityComparer<object> LooseTypeKindComparer = new LooseTypeKindComparerImpl();
         #endregion
 
+        ////////////////////////////////////////////////////////////////////////////
+
+        public static string ToRelativePath(string baseDirPath, string path)
+        {
+            var length = baseDirPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
+                baseDirPath.Length : baseDirPath.Length + 1;
+            var candidate = path.StartsWith(baseDirPath) ?
+                path.Substring(length) : path;
+            return candidate.Length >= 1 ? candidate : ".";
+        }
+
+        public static string SafeGetDirectoryName(string path) =>
+            Path.GetDirectoryName(path) ?? ".";
+
+        public static void SafeCreateDirectory(string path, bool clean)
+        {
+            if (clean)
+            {
+                try
+                {
+                    Directory.Delete(path, true);
+                }
+                catch
+                {
+                }
+            }
+            if (!Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catch
+                {
+                }
+            }
+        }
+
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
         public static Task<string> ReadAllTextAsync(string path, Encoding encoding) =>
             File.ReadAllTextAsync(path, encoding);

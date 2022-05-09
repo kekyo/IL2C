@@ -19,28 +19,8 @@ using System.Threading.Tasks;
 using IL2C.Internal;
 using IL2C.Metadata;
 
-namespace IL2C
+namespace IL2C.Drivers
 {
-    public sealed class TranslationOptions
-    {
-        public readonly bool ReadSymbols;
-        public readonly bool EnableBundler;
-        public readonly TargetPlatforms TargetPlatform;
-        public readonly DebugInformationOptions DebugInformationOption;
-
-        public TranslationOptions(
-            bool readSymbols,
-            bool enableBundler,
-            TargetPlatforms targetPlatform,
-            DebugInformationOptions debugInformationOption)
-        {
-            this.ReadSymbols = readSymbols;
-            this.EnableBundler = enableBundler;
-            this.TargetPlatform = targetPlatform;
-            this.DebugInformationOption = debugInformationOption;
-        }
-    }
-
     public sealed class ToolchainOptions
     {
         public readonly string NativeCompiler;
@@ -84,97 +64,8 @@ namespace IL2C
         }
     }
 
-    public static class SimpleDriver
+    public static class NativeBinaryBuilder
     {
-        private static void SafeCreateDirectory(string path, bool clean)
-        {
-            if (clean)
-            {
-                try
-                {
-                    Directory.Delete(path, true);
-                }
-                catch
-                {
-                }
-            }
-            if (!Directory.Exists(path))
-            {
-                try
-                {
-                    Directory.CreateDirectory(path);
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        ////////////////////////////////////////////////////////////////////////////
-
-        public static Task<IMethodInformation> TranslateAsync(
-            ILogger logger,
-            CodeTextStorage storage,
-            TranslationOptions options,
-            string assemblyPath)
-        {
-            logger.Information($"Preparing assembly: \"{Path.GetFullPath(assemblyPath)}\" ...");
-
-            SafeCreateDirectory(storage.BasePath, true);
-
-            var translateContext = new TranslateContext(
-                assemblyPath, options.ReadSymbols, options.TargetPlatform);
-            var preparedFunctions = AssemblyPreparer.Prepare(
-                translateContext);
-
-            logger.Information($"Translating assembly: \"{Path.GetFullPath(assemblyPath)}\" ...");
-
-            using (var _ = storage.EnterScope("include"))
-            {
-                AssemblyWriter.WriteHeader(
-                    storage,
-                    translateContext,
-                    preparedFunctions);
-            }
-
-            using (var _ = storage.EnterScope("src"))
-            {
-                AssemblyWriter.WriteSourceCode(
-                    storage,
-                    translateContext,
-                    preparedFunctions,
-                    options.EnableBundler,
-                    options.DebugInformationOption);
-            }
-
-            logger.Information($"Translated assembly: Stored into \"{Path.GetFullPath(storage.BasePath)}\"");
-
-            // TODO: Makes asynchronously operation.
-            return Task.FromResult(translateContext.MetadataContext.EntryPoint);
-        }
-
-        public static Task<IMethodInformation> TranslateAsync(
-            ILogger logger,
-            string outputBaseDirPath,
-            bool produceCpp,
-            TranslationOptions options,
-            string assemblyPath)
-        {
-            var storage = new CodeTextStorage(
-                logger,
-                outputBaseDirPath,
-                produceCpp,
-                "    ");
-
-            return TranslateAsync(
-                logger,
-                storage,
-                options,
-                assemblyPath);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////
-
         private readonly struct CompilationResult
         {
             public readonly int ExitCode;
@@ -190,15 +81,6 @@ namespace IL2C
 
             public override string ToString() =>
                 $"{this.ExitCode}: {this.Logs}";
-        }
-
-        private static string ToRelativePath(string baseDirPath, string path)
-        {
-            var length = baseDirPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ?
-                baseDirPath.Length : baseDirPath.Length + 1;
-            var candidate = path.StartsWith(baseDirPath) ?
-                path.Substring(length) : path;
-            return candidate.Length >= 1 ? candidate : ".";
         }
 
         private static async Task<CompilationResult> ExecuteCompilerAsync(
@@ -218,7 +100,7 @@ namespace IL2C
             var sourceCodeFileName = Path.GetFileNameWithoutExtension(sourceCodePath);
             var outputBasePath = Path.Combine(
                 outputStagingDirPath,
-                Path.GetDirectoryName(sourceCodePath.Substring(sourceDir.Length + 1))!);
+                Utilities.SafeGetDirectoryName(sourceCodePath.Substring(sourceDir.Length + 1)));
             var outputPath = Path.Combine(
                 outputBasePath,
                 outputFileName);
@@ -226,7 +108,7 @@ namespace IL2C
                 outputBasePath,
                 $"build_{sourceCodeFileName}");
 
-            SafeCreateDirectory(outputBasePath, false);
+            Utilities.SafeCreateDirectory(outputBasePath, false);
 
             var result = await Utilities.ExecuteAsync(
                 outputBasePath,
@@ -237,17 +119,17 @@ namespace IL2C
                 {
                     nativeCompilerFlags,
                     isCompileOnly ? "-c" : "",
-                    $"-I{ToRelativePath(outputBasePath, includeDir)}",
-                    $"-I{ToRelativePath(outputBasePath, sourceDir)}",
+                    $"-I{Utilities.ToRelativePath(outputBasePath, includeDir)}",
+                    $"-I{Utilities.ToRelativePath(outputBasePath, sourceDir)}",
                 }.
-                Concat(additionalIncludeDirs.Select(p => $"-I{ToRelativePath(outputBasePath, p)}")).
+                Concat(additionalIncludeDirs.Select(p => $"-I{Utilities.ToRelativePath(outputBasePath, p)}")).
                 Concat(new[]
                 {
-                    "-o", ToRelativePath(outputBasePath, outputPath),
-                    ToRelativePath(outputBasePath, sourceCodePath),
+                    "-o", Utilities.ToRelativePath(outputBasePath, outputPath),
+                    Utilities.ToRelativePath(outputBasePath, sourceCodePath),
                 }).
-                Concat(libraryPath is { } lp ? new[] { ToRelativePath(outputBasePath, lp) } : new string[0]).
-                Concat(additionalLibraryPaths.Select(p => ToRelativePath(outputBasePath, p))).
+                Concat(libraryPath is { } lp ? new[] { Utilities.ToRelativePath(outputBasePath, lp) } : new string[0]).
+                Concat(additionalLibraryPaths.Select(p => Utilities.ToRelativePath(outputBasePath, p))).
                 ToArray()).
                 ConfigureAwait(false);
 
@@ -260,7 +142,7 @@ namespace IL2C
             string[] nativeCompilerBasePaths,
             string nativeArchiver)
         {
-            var outputBasePath = Path.GetDirectoryName(outputPath)!;
+            var outputBasePath = Utilities.SafeGetDirectoryName(outputPath);
             var buildScriptPath = Path.Combine(
                 outputBasePath,
                 $"build_{Path.GetFileNameWithoutExtension(outputPath)}");
@@ -273,9 +155,9 @@ namespace IL2C
                 new[]
                 {
                     "rcs",
-                    ToRelativePath(outputBasePath, outputPath),
+                    Utilities.ToRelativePath(outputBasePath, outputPath),
                 }.
-                Concat(objectPaths.Select(p => ToRelativePath(outputBasePath, p))).
+                Concat(objectPaths.Select(p => Utilities.ToRelativePath(outputBasePath, p))).
                 ToArray());
         }
 
@@ -293,7 +175,8 @@ namespace IL2C
                 Path.Combine(
                     outputDirFullPath,
                     artifactPathOptions.OutputNativeArchiveFileName));
-            var nativeToolchainBasePath = Path.GetDirectoryName(toolchainOptions.NativeCompiler);
+            var nativeToolchainBasePath = Utilities.SafeGetDirectoryName(
+                toolchainOptions.NativeCompiler);
             var nativeToolchainBasePaths =
                 string.IsNullOrWhiteSpace(nativeToolchainBasePath) ?
                     new string[0] :
@@ -301,10 +184,10 @@ namespace IL2C
 
             logger.Information($"Preparing for compilation native binary: \"{sourceCodeDirFullPath}\" ...");
 
-            SafeCreateDirectory(outputDirFullPath, outputDirFullPath != sourceCodeDirFullPath);
+            Utilities.SafeCreateDirectory(outputDirFullPath, outputDirFullPath != sourceCodeDirFullPath);
 
             var outputStagingBaseDirPath = Path.Combine(outputDirFullPath, "obj");
-            SafeCreateDirectory(outputStagingBaseDirPath, true);
+            Utilities.SafeCreateDirectory(outputStagingBaseDirPath, true);
 
             var includeDir = Path.Combine(sourceCodeDirFullPath, "include");
             var sourceDir = Path.Combine(sourceCodeDirFullPath, "src");

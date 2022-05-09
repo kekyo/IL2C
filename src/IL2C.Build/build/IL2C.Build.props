@@ -31,6 +31,7 @@
     <_IL2C_GCC_ReleaseFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native -fdata-sections -ffunction-sections -Wl,--gc-sections -DNDEBUG</_IL2C_GCC_ReleaseFlags>
     <_IL2C_GCC_Archiver Condition="'$(OS)' == 'Windows_NT'">ar.exe</_IL2C_GCC_Archiver>
     <_IL2C_GCC_Archiver Condition="'$(OS)' != 'Windows_NT'">ar</_IL2C_GCC_Archiver>
+    <_IL2C_GCC_PosixRequiredFlags>-pthread</_IL2C_GCC_PosixRequiredFlags>
   </PropertyGroup>
 
   <PropertyGroup>

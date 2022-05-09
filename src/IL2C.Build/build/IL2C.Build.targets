@@ -76,6 +76,7 @@
       <IL2CNativeCompilerDefaultFlags Condition="'$(IL2CNativeCompilerDefaultFlags)' == ''">$(_IL2C_GCC_DefaultFlags)</IL2CNativeCompilerDefaultFlags>
       <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
       <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerRequiredFlags Condition="'$(IL2CNativeCompilerRequiredFlags)' == ''">$(_IL2C_GCC_PosixRequiredFlags)</IL2CNativeCompilerRequiredFlags>
     </PropertyGroup>
     <PropertyGroup Condition="'$(IL2CNativeArchiver)' == ''">
       <IL2CNativeArchiver>$(_IL2C_GCC_Archiver)</IL2CNativeArchiver>

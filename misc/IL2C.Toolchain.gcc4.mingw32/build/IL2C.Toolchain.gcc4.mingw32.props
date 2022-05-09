@@ -21,7 +21,7 @@
     <IL2CNativeCompiler>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','gcc.exe'))</IL2CNativeCompiler>
     <IL2CNativeCompilerDefaultFlags>-pipe -ggdb -static-libgcc -Wall -Werror -Wstrict-prototypes -Wno-unused</IL2CNativeCompilerDefaultFlags>
     <IL2CNativeCompilerRequiredFlags>-D_WIN32 -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias</IL2CNativeCompilerRequiredFlags>
-    <IL2CNativeArciver>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','ar.exe'))</IL2CNativeArciver>
+    <IL2CNativeArchiver>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','ar.exe'))</IL2CNativeArchiver>
   </PropertyGroup>
     
 </Project>

@@ -113,7 +113,7 @@
       <_IL2C_NativeCompilerOption>--compiler=&quot;$(IL2CNativeCompiler)&quot;</_IL2C_NativeCompilerOption>
       <_IL2C_NativeCompilerFlagsOption>--compilerFlags=&quot;$(_IL2C_NativeCompilerAllFlags)&quot;</_IL2C_NativeCompilerFlagsOption>
       <_IL2C_NativeLinkingFlagsOption Condition="'$(IL2CNativeLinkingFlags)' != ''">--linkingFlags=&quot;$(IL2CNativeLinkingFlags)&quot;</_IL2C_NativeLinkingFlagsOption>
-      <_IL2C_NativeArchiverOption>--archiver=&quot;$(IL2CNativeArciver)&quot;</_IL2C_NativeArchiverOption>
+      <_IL2C_NativeArchiverOption>--archiver=&quot;$(IL2CNativeArchiver)&quot;</_IL2C_NativeArchiverOption>
       <_IL2C_NativeIncludeDirOption>--includeDirs=&quot;$(IL2CNativeIncludeDir)&quot;</_IL2C_NativeIncludeDirOption>
       <_IL2C_NativeLibPathOption>--libs=&quot;$(IL2CNativeLibPath)&quot;</_IL2C_NativeLibPathOption>
       <_IL2C_OutputNativeArchiveFileNameOption>--outputNativeArchive=&quot;$(_IL2C_OutputNativeArchiveFileName)&quot;</_IL2C_OutputNativeArchiveFileNameOption>

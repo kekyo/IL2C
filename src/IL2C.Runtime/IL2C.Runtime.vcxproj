@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\_main_template.c_" />
+    <ClCompile Include="src/**/*.c" />
     <ClInclude Include="include/**/*.h" />
     <ClInclude Include="src/**/*.h" />
     <None Remove="bin/**/*" />

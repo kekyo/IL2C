@@ -14,7 +14,8 @@
   <!-- Common -->
     
   <PropertyGroup>
-    <IL2CEnableNativeCompile Condition="'$(IL2CEnableNativeCompile)' == ''">true</IL2CEnableNativeCompile>
+    <IL2CEnableTranslation Condition="'$(IL2CEnableTranslation)' == ''">true</IL2CEnableTranslation>
+    <IL2CEnableNativeCompilation Condition="'$(IL2CEnableNativeCompilation)' == ''">true</IL2CEnableNativeCompilation>
     <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
     <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
     <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
@@ -109,7 +110,7 @@
     </PropertyGroup>
 
     <!-- Native compiler settings: -->
-    <PropertyGroup Condition="$(IL2CEnableNativeCompile)">
+    <PropertyGroup Condition="$(IL2CEnableNativeCompilation)">
       <_IL2C_DrivingMode>both</_IL2C_DrivingMode>
       <_IL2C_NativeCompilerOption>--compiler=&quot;$(IL2CNativeCompiler)&quot;</_IL2C_NativeCompilerOption>
       <_IL2C_NativeCompilerFlagsOption>--compilerFlags=&quot;$(_IL2C_NativeCompilerAllFlags)&quot;</_IL2C_NativeCompilerFlagsOption>
@@ -123,7 +124,7 @@
       <_IL2C_RaiseDebugBreakOption Condition="$(IL2CRaiseDebugBreak)">--debugBreak</_IL2C_RaiseDebugBreakOption>
       <_IL2C_NativeOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption) $(_IL2C_RaiseDebugBreakOption)</_IL2C_NativeOptions>
     </PropertyGroup>
-    <PropertyGroup Condition="!($(IL2CEnableNativeCompile))">
+    <PropertyGroup Condition="!($(IL2CEnableNativeCompilation))">
       <_IL2C_DrivingMode>translation</_IL2C_DrivingMode>
     </PropertyGroup>
 
@@ -139,7 +140,7 @@
   <!-- Build runtime library into cache -->
   <Target Name="IL2CBuildRuntimeLibrary"
     AfterTargets="IL2CBuildPrepare"
-    Condition="$(IL2CEnableNativeCompile) AND !Exists($(_IL2C_CandidateRuntimeLibraryPath))">
+    Condition="$(IL2CEnableNativeCompilation) AND !Exists($(_IL2C_CandidateRuntimeLibraryPath))">
 
     <PropertyGroup>
       <_IL2C_TemporaryDirPathForRuntimeLibrary>$([System.IO.Path]::Combine('$(_IL2C_RuntimeLibraryCacheBaseDirPath)','$([System.Guid]::NewGuid().ToString())'))</_IL2C_TemporaryDirPathForRuntimeLibrary>
@@ -160,7 +161,8 @@
 
   <!-- Build core -->
   <Target Name="IL2CBuildCore"
-    AfterTargets="IL2CBuildRuntimeLibrary">
+    AfterTargets="IL2CBuildRuntimeLibrary"
+    Condition="$(IL2CEnableTranslation)">
 
     <Exec WorkingDirectory="$(IL2CBuildToolingDir)"
       Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --mode=$(_IL2C_DrivingMode) $(_IL2C_BuildLogOption) --debug=&quot;$(IL2CDebugInformation)&quot; --produceCpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refDirs=&quot;$(_IL2C_CombinedReferenceDir)&quot; $(_IL2C_NativeOptions) &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />

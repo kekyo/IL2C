@@ -47,8 +47,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.100
-    - name: Initialize tools
-      run: bash ./init-tools.sh
+    #- name: Initialize tools
+    #  run: bash .github/workflows/init-tools-on-ga.sh
     - name: Install dependencies
       run: |
         dotnet restore il2c.sln

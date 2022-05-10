@@ -62,6 +62,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build-linux.yaml = .github\workflows\build-linux.yaml
 		.github\workflows\build-windows.yaml = .github\workflows\build-windows.yaml
+		.github\workflows\init-tools-on-ga.sh = .github\workflows\init-tools-on-ga.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{4BC9EFBC-600E-48BF-ADDC-3E573D8315F0}"

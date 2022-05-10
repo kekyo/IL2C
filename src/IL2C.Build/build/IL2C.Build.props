@@ -28,9 +28,9 @@
     <_IL2C_GCC_Compiler Condition="'$(OS)' != 'Windows_NT'">gcc</_IL2C_GCC_Compiler>
     <_IL2C_GCC_DefaultFlags>-pipe -g -Wall -Werror -Wstrict-prototypes -Wno-unused</_IL2C_GCC_DefaultFlags>
     <_IL2C_GCC_DebugFlags>-D_DEBUG</_IL2C_GCC_DebugFlags>
-    <_IL2C_GCC_ReleaseFlags>-march=native -mtune=native -fdata-sections -ffunction-sections -Wl,--gc-sections -DNDEBUG</_IL2C_GCC_ReleaseFlags>
+    <_IL2C_GCC_ReleaseFlags>-fdata-sections -ffunction-sections -Wl,--gc-sections -DNDEBUG</_IL2C_GCC_ReleaseFlags>
     <_IL2C_GCC_DisableOptimizingFlags>-O0</_IL2C_GCC_DisableOptimizingFlags>
-    <_IL2C_GCC_EnableOptimizingFlags>-Ofast -fomit-frame-pointer</_IL2C_GCC_EnableOptimizingFlags>
+    <_IL2C_GCC_EnableOptimizingFlags>-Ofast -fomit-frame-pointer -march=native -mtune=native</_IL2C_GCC_EnableOptimizingFlags>
     <_IL2C_GCC_Archiver Condition="'$(OS)' == 'Windows_NT'">ar.exe</_IL2C_GCC_Archiver>
     <_IL2C_GCC_Archiver Condition="'$(OS)' != 'Windows_NT'">ar</_IL2C_GCC_Archiver>
     <_IL2C_GCC_PosixRequiredFlags>-pthread</_IL2C_GCC_PosixRequiredFlags>

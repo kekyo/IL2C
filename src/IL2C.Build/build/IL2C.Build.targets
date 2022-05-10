@@ -77,6 +77,8 @@
       <IL2CNativeCompilerDefaultFlags Condition="'$(IL2CNativeCompilerDefaultFlags)' == ''">$(_IL2C_GCC_DefaultFlags)</IL2CNativeCompilerDefaultFlags>
       <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
       <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_DisableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_EnableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
       <IL2CNativeCompilerRequiredFlags Condition="'$(IL2CNativeCompilerRequiredFlags)' == ''">$(_IL2C_GCC_PosixRequiredFlags)</IL2CNativeCompilerRequiredFlags>
     </PropertyGroup>
     <PropertyGroup Condition="'$(IL2CNativeArchiver)' == ''">
@@ -90,7 +92,7 @@
 
     <!-- Get candidate runtime library path: -->
     <PropertyGroup>
-      <_IL2C_NativeCompilerAllFlags>$(IL2CNativeCompilerDefaultFlags) $(IL2CNativeCompilerRequiredFlags) $(IL2CNativeCompilerConditionalFlags) $(IL2CNativeCompilerFlags)</_IL2C_NativeCompilerAllFlags>
+      <_IL2C_NativeCompilerAllFlags>$(IL2CNativeCompilerDefaultFlags) $(IL2CNativeCompilerRequiredFlags) $(IL2CNativeCompilerConditionalFlags) $(IL2CNativeCompilerOptimizingFlags) $(IL2CNativeCompilerOptionalFlags)</_IL2C_NativeCompilerAllFlags>
     </PropertyGroup>
     <_IL2C_CalculateContentHash Content="$(IL2CNativeCompiler) $(_IL2C_NativeCompilerAllFlags) $(_IL2C_NativeArchiverOption)">
       <Output TaskParameter="HashValue" PropertyName="_IL2C_RuntimeLibraryBaseDirName" />

@@ -12,6 +12,8 @@
 
         <AssemblyName>Calculator</AssemblyName>
         <RootNamespace>Calculator</RootNamespace>
+        
+        <IL2CNativeCompilerOptimizingFlags>-Os</IL2CNativeCompilerOptimizingFlags>
 
         <!-- <IL2COutputPath>il2c</IL2COutputPath> -->
         <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
@@ -19,7 +21,7 @@
 
         <!-- <IL2CEnableNativeCompilation>False</IL2CEnableNativeCompilation> -->
         
-        <!-- <IL2CNativeCompilerFlags></IL2CNativeCompilerFlags> -->
+        <!-- <IL2CNativeCompilerOptionalFlags></IL2CNativeCompilerOptionalFlags> -->
         <!-- <IL2CNativeLinkingFlags>-s</IL2CNativeLinkingFlags> -->
     </PropertyGroup>
 

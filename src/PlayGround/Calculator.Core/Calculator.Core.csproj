@@ -18,7 +18,7 @@
 
         <!-- <IL2CEnableNativeCompilation>False</IL2CEnableNativeCompilation> -->
 
-        <!-- <IL2CNativeCompilerFlags></IL2CNativeCompilerFlags> -->
+        <!-- <IL2CNativeCompilerOptionalFlags></IL2CNativeCompilerOptionalFlags> -->
     </PropertyGroup>
 
     <!-- ====================================================== -->

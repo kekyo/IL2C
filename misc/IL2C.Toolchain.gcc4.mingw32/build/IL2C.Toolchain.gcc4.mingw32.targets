@@ -15,12 +15,14 @@
     Condition="'$(OS)' == 'Windows_NT'">
       
     <PropertyGroup>
-      <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Debug'">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
-      <IL2CNativeCompilerConditionalFlags Condition="'$(IL2CConfiguration)' == 'Release'">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_DisableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_EnableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
       <IL2CNativeMainTemplatePath Condition="'$(OutputType)' == 'WinExe'">$(_IL2C_WinExeMainTemplatePath)</IL2CNativeMainTemplatePath>
       <IL2CNativeCompilerRequiredFlags Condition="'$(OutputType)' == 'WinExe'">$(IL2CNativeCompilerRequiredFlags) -mwindows</IL2CNativeCompilerRequiredFlags>
     </PropertyGroup>
-  
+    
   </Target>
 
   <!-- Extract toolchain 7zip archive only once. -->

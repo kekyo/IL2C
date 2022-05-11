@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\..\..\src\IL2C.Build\build\IL2C.Build.props" />
+    <Import Project="..\..\..\src\IL2C.Runtime\build\IL2C.Runtime.props" />
+    <Import Project="..\..\..\misc\IL2C.Toolchain.gcc4.mingw32\build\IL2C.Toolchain.gcc4.mingw32.props" />
+
+    <!-- ====================================================== -->
+
+    <PropertyGroup>
+        <TargetFrameworks>net48;net6.0</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+
+        <AssemblyName>Calculator</AssemblyName>
+        <RootNamespace>Calculator</RootNamespace>
+        
+        <IL2CNativeCompilerOptimizingFlags>-Os</IL2CNativeCompilerOptimizingFlags>
+
+        <!-- <IL2COutputPath>il2c</IL2COutputPath> -->
+        <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
+        <!-- <IL2CBuildLogLevel>Trace</IL2CBuildLogLevel> -->
+
+        <!-- <IL2CEnableNativeCompilation>False</IL2CEnableNativeCompilation> -->
+        
+        <!-- <IL2CNativeCompilerOptionalFlags></IL2CNativeCompilerOptionalFlags> -->
+        <!-- <IL2CNativeLinkingFlags>-s</IL2CNativeLinkingFlags> -->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\Calculator.Core\*.cs" />
+    </ItemGroup>
+
+    <!-- ====================================================== -->
+
+    <Import Project="..\..\..\src\IL2C.Build\build\IL2C.Build.targets" />
+    <Import Project="..\..\..\src\IL2C.Runtime\build\IL2C.Runtime.targets" />
+    <Import Project="..\..\..\misc\IL2C.Toolchain.gcc4.mingw32\build\IL2C.Toolchain.gcc4.mingw32.targets" />
+    <PropertyGroup>
+        <IL2CBuildToolingDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\src\IL2C.Build\bin\$(Configuration)\$(_IL2C_PlatformName)'))</IL2CBuildToolingDir>
+    </PropertyGroup>
+
+</Project>

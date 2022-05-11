@@ -1,21 +1,11 @@
-﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //
 // IL2C - A translator for ECMA-335 CIL/MSIL to C language.
-// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
-//	http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
@@ -24,13 +14,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using NUnit.Framework;
-
-using IL2C.Metadata;
 using IL2C.Internal;
+using IL2C.Metadata;
+
+using NUnit.Framework;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Interfaces;
-using ILVerify;
 
 #pragma warning disable CS0436
 
@@ -61,6 +49,7 @@ namespace IL2C
                     "..",
                     "..",
                     "..",
+                    "src",
                     "IL2C.Runtime"));
 
         private static string GetCLangaugeSafeConversionExpression(
@@ -68,7 +57,7 @@ namespace IL2C
         {
             if (constantType != null)
             {
-                if (Utilities.GetCLanguageTypeName(constantType) == argumentType.CLanguageTypeName)
+                if (SymbolManipulator.GetCLanguageTypeName(constantType) == argumentType.CLanguageTypeName)
                 {
                     return constantExpression;
                 }
@@ -82,7 +71,7 @@ namespace IL2C
                 {
                     return string.Format("(System_Object*)il2c_box(&{0}, {1})",
                         constantExpression,
-                        Utilities.GetMangledName(constantType.FullName));
+                        SymbolManipulator.GetMangledName(constantType.FullName));
                 }
             }
 
@@ -245,8 +234,9 @@ namespace IL2C
                     caseInfo.Id,
                     caseInfo.UniqueName);
 
-            var logw = new StringWriter();
-            var storage = new CodeTextStorage(logw, translatedPath, false, "    ");
+            var tw = new StringWriter();
+            var logger = new TextWriterLogger(LogLevels.Debug, tw);
+            var storage = new CodeTextStorage(logger, translatedPath, false, "    ");
 
             AssemblyWriter.WriteHeader(
                 storage,
@@ -275,7 +265,7 @@ namespace IL2C
                     p.ParameterName,
                     p.TargetType,
                     arg?.GetType(),
-                    Utilities.GetCLanguageExpression(arg))
+                    SymbolManipulator.GetCLanguageExpression(arg))
                 ).
                 ToArray();
             var argumentList = constants.
@@ -293,7 +283,7 @@ namespace IL2C
                         argument.SymbolName,
                         argument.TargetType,
                         argument.ExpressionType,
-                        Utilities.GetCLanguageExpression(expectedType.InternalStaticEmptyValue))).
+                        SymbolManipulator.GetCLanguageExpression(expectedType.InternalStaticEmptyValue))).
                 ToArray();
 
             if (!(expectedType.IsVoidType || (caseInfo.Assert == TestCaseAsserts.CauseBreak)))
@@ -305,7 +295,7 @@ namespace IL2C
                             "expected",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.GetCLanguageExpression(caseInfo.Expected)),
+                            SymbolManipulator.GetCLanguageExpression(caseInfo.Expected)),
                     }).
                     ToArray();
                 arguments = constants.
@@ -321,14 +311,14 @@ namespace IL2C
                             argument.SymbolName,
                             argument.TargetType,
                             argument.ExpressionType,
-                            Utilities.GetCLanguageExpression(argument.TargetType.InternalStaticEmptyValue))).
+                            SymbolManipulator.GetCLanguageExpression(argument.TargetType.InternalStaticEmptyValue))).
                     Concat(new Constant[]
                     {
                         new Constant(
                             "_actual",
                             expectedType,
                             caseInfo.Expected?.GetType(),
-                            Utilities.GetCLanguageExpression(expectedType.InternalStaticEmptyValue)),
+                            SymbolManipulator.GetCLanguageExpression(expectedType.InternalStaticEmptyValue)),
                     }).
                     ToArray();
             }
@@ -349,7 +339,7 @@ namespace IL2C
                 { "type", targetMethod.ReturnType.CLanguageTypeName},
                 { "constants", string.Join(" ", constants.
                     Select(entry => string.Format("{0} {1} = {2};",
-                        (entry.ExpressionType != null) ? Utilities.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
+                        (entry.ExpressionType != null) ? SymbolManipulator.GetCLanguageTypeName(entry.ExpressionType) : entry.TargetType.CLanguageTypeName,
                         entry.SymbolName,
                         entry.Expression))) },
                 { "locals", string.Join(" ", locals.

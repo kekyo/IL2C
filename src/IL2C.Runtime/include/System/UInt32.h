@@ -1,0 +1,42 @@
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+
+#ifndef System_UInt32_H__
+#define System_UInt32_H__
+
+#pragma once
+
+#include <il2c.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/////////////////////////////////////////////////////////////
+// System.UInt32
+
+typedef uint32_t System_UInt32;
+
+typedef System_ValueType_VTABLE_DECL__ System_UInt32_VTABLE_DECL__;
+
+extern System_UInt32_VTABLE_DECL__ System_UInt32_VTABLE__;
+
+IL2C_DECLARE_RUNTIME_TYPE(System_UInt32);
+
+extern /* virtual */ System_String* System_UInt32_ToString(uint32_t* this__);
+extern /* virtual */ int32_t System_UInt32_GetHashCode(uint32_t* this__);
+extern bool System_UInt32_Equals__System_UInt32(uint32_t* this__, uint32_t obj);
+extern /* virtual */ bool System_UInt32_Equals__System_Object(uint32_t* this__, System_Object* obj);
+extern /* static */ bool System_UInt32_TryParse__System_String_System_UInt32_REF(System_String* s, uint32_t* result);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NuspecFile>IL2C.Toolchain.gcc4.mingw32.nuspec</NuspecFile>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RelaxVersioner" Version="2.6.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="7z\**\*" />
+    <None Remove="gcc4\**\*" />
+    <None Remove="IL2C.Toolchain.gcc4.mingw32.packed.exe" />
+    <Content Include="IL2C.Toolchain.gcc4.mingw32.packed.exe" />
+  </ItemGroup>
+</Project>

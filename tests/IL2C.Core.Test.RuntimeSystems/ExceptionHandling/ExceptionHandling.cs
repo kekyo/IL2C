@@ -1,21 +1,11 @@
-﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //
 // IL2C - A translator for ECMA-335 CIL/MSIL to C language.
-// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
-//	http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.ComponentModel;
@@ -28,11 +18,11 @@ namespace IL2C.RuntimeSystems
     [TestCase(123, "RaiseAndCaughtLocal", false)]
     [TestCase(456, "RaiseAndCaughtLocal", true)]
     [TestCase("ABC", "RaiseCaughtAndAccessLocal", "ABC")]
-    [TestCase(null, "RaiseCaughtAndAccessLocal", null)]
+    [TestCase(null, "RaiseCaughtAndAccessLocal", null!)]
     [TestCase("ABC", "RaiseCaughtNarrowingLocal", "ABC")]
-    [TestCase(null, "RaiseCaughtNarrowingLocal", null)]
+    [TestCase(null, "RaiseCaughtNarrowingLocal", null!)]
     [TestCase("ABC", "RaiseCaughtWildcardLocal", "ABC")]
-    [TestCase(null, "RaiseCaughtWildcardLocal", null)]
+    [TestCase(null, "RaiseCaughtWildcardLocal", null!)]
     [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
     [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
     [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
@@ -71,7 +61,7 @@ namespace IL2C.RuntimeSystems
             return 123;
         }
 
-        public static string RaiseCaughtAndAccessLocal(string value)
+        public static string? RaiseCaughtAndAccessLocal(string value)
         {
             try
             {
@@ -84,7 +74,7 @@ namespace IL2C.RuntimeSystems
             return null;
         }
 
-        public static string RaiseCaughtNarrowingLocal(string value)
+        public static string? RaiseCaughtNarrowingLocal(string value)
         {
             try
             {
@@ -97,7 +87,7 @@ namespace IL2C.RuntimeSystems
             return null;
         }
 
-        public static string RaiseCaughtWildcardLocal(string value)
+        public static string? RaiseCaughtWildcardLocal(string value)
         {
             try
             {
@@ -424,8 +414,8 @@ namespace IL2C.RuntimeSystems
         {
             var ex1 = new Exception();
             var ex2 = new Exception();
-            Exception exi1_ = null;
-            Exception exi2_ = null;
+            Exception? exi1_ = null;
+            Exception? exi2_ = null;
             try
             {
                 throw ex1;
@@ -462,8 +452,8 @@ namespace IL2C.RuntimeSystems
         {
             var ex1 = new Exception();
             var ex2 = new Exception();
-            Exception exi1_ = null;
-            Exception exi2_ = null;
+            Exception? exi1_ = null;
+            Exception? exi2_ = null;
             try
             {
                 throw ex1;

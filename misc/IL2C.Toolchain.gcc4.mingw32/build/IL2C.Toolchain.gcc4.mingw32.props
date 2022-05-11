@@ -1,0 +1,27 @@
+<!--
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <_IL2C_GCC4_MinGW32_NativeToolchainBasePath>$(MSBuildThisFileDirectory)..</_IL2C_GCC4_MinGW32_NativeToolchainBasePath>
+    <_IL2C_GCC4_MinGW32_NativeToolchainName>gcc4</_IL2C_GCC4_MinGW32_NativeToolchainName>
+    <_IL2C_GCC4_MinGW32_NativeToolchainPath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','$(_IL2C_GCC4_MinGW32_NativeToolchainName)'))</_IL2C_GCC4_MinGW32_NativeToolchainPath>
+
+    <_IL2C_GCC4_MinGW32_PackedNativeToolchainArchivePath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','IL2C.Toolchain.gcc4.mingw32.packed.exe'))</_IL2C_GCC4_MinGW32_PackedNativeToolchainArchivePath>
+    <_IL2C_WinExeMainTemplatePath>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','src','_main_winexe_template.c_'))</_IL2C_WinExeMainTemplatePath>
+
+    <IL2CNativeCompiler>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','gcc.exe'))</IL2CNativeCompiler>
+    <IL2CNativeCompilerDefaultFlags>-pipe -ggdb -static-libgcc -Wall -Werror -Wstrict-prototypes -Wno-unused</IL2CNativeCompilerDefaultFlags>
+    <IL2CNativeCompilerRequiredFlags>-D_WIN32 -Wl,--enable-stdcall-fixup -Wl,--add-stdcall-alias</IL2CNativeCompilerRequiredFlags>
+    <IL2CNativeArchiver>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainPath)','bin','ar.exe'))</IL2CNativeArchiver>
+  </PropertyGroup>
+    
+</Project>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>IL2C.Toolchain.gcc4.mingw32</id>
+    <version>$PackageVersion$</version>
+    <authors>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</authors>
+    <owners>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">Apache-2.0 AND GPL-2.0-only</license>
+    <icon>IL2C.100.png</icon>
+    <projectUrl>https://github.com/kekyo/IL2C.git</projectUrl>
+    <description>A translator implementation of .NET intermediate language to C language.</description>
+    <copyright>Copyright (c) Kouji Matsui</copyright>
+    <tags>il2c native cil msil translate transpile aot ecma335 c c++ win32 uefi wdm multi-platform systems-programming</tags>
+    <repository type="git" url="https://github.com/kekyo/IL2C.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
+    <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <dependency id="IL2C.Build" version="$PackageVersion$" />
+      <dependency id="IL2C.Runtime" version="$PackageVersion$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\Images\IL2C.100.png" target="/" />
+    <file src="build\*.*" target="build" />
+    <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
+    <file src="README.md" target="/" />
+    <file src="IL2C.Toolchain.gcc4.mingw32.packed.exe" target="/" />
+    <file src="src\_main_winexe_template.c_" target="src" />
+  </files>
+</package>

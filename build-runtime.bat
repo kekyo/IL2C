@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 set TOOLCHAINPATH=%~dp0toolchain\gcc4
-set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.17
+set CMAKE_ROOT=%TOOLCHAINPATH%\share\cmake-3.23
 
 if not exist %TOOLCHAINPATH% (
     echo Native toolchain not found.
@@ -17,7 +17,7 @@ if "%Configuration%" == "" (
     set Configuration=Debug
 )
 
-cd IL2C.Runtime
+cd src\IL2C.Runtime
 
 if exist build.cmake (
     move build.cmake build.cmake.old
@@ -50,7 +50,7 @@ echo.
 mkdir msvc-win-win32-rts-%Configuration%
 cd msvc-win-win32-rts-%Configuration%
 
-cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DRUNTIMELIB=rts -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DRUNTIMELIB=rts -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )
@@ -73,7 +73,7 @@ echo.
 mkdir msvc-win-x64-rts-%Configuration%
 cd msvc-win-x64-rts-%Configuration%
 
-cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DRUNTIMELIB=rts -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DRUNTIMELIB=rts -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )
@@ -96,7 +96,7 @@ echo.
 mkdir msvc-win-win32-rtd-%Configuration%
 cd msvc-win-win32-rtd-%Configuration%
 
-cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DRUNTIMELIB=rtd -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=Win32 -DRUNTIMELIB=rtd -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )
@@ -119,7 +119,7 @@ echo.
 mkdir msvc-win-x64-rtd-%Configuration%
 cd msvc-win-x64-rtd-%Configuration%
 
-cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DRUNTIMELIB=rtd -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-win.cmake -DPLATFORM=x64 -DRUNTIMELIB=rtd -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )
@@ -142,7 +142,7 @@ echo.
 mkdir msvc-uefi-win32-%Configuration%
 cd msvc-uefi-win32-%Configuration%
 
-cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=Win32 -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=Win32 -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )
@@ -165,7 +165,7 @@ echo.
 mkdir msvc-uefi-x64-%Configuration%
 cd msvc-uefi-x64-%Configuration%
 
-cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=x64 -DCONFIGURATION=%Configuration% ../..
+cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE=../../cmake/msvc-uefi.cmake -DPLATFORM=x64 -DCONFIGURATION=%Configuration% ../..
 if errorlevel 1 (
     exit /b %errorlevel%
 )

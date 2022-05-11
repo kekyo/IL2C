@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <OutputType>Exe</OutputType>
+
+    <AssemblyName>ArtifactCollector</AssemblyName>
+    <RootNamespace>IL2C.ArtifactCollector</RootNamespace>
+  </PropertyGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="RelaxVersioner" Version="2.6.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Arduino.properties" />
+    <EmbeddedResource Include="Arduino.properties" />
+  </ItemGroup>
+  
+  <Target Name="CopyArtifactCollector" AfterTargets="Build">
+    <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).exe" DestinationFolder="$(ProjectDir)" />
+  </Target>
+    
+</Project>

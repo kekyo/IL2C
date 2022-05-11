@@ -1,0 +1,22 @@
+<!--
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+-->
+<Project ToolVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="_IL2C_Runtime_TargetBody"
+    BeforeTargets="IL2CBuildPrepare">
+    <PropertyGroup>
+      <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' != ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'));$(IL2CNativeIncludeDir)</IL2CNativeIncludeDir>
+      <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' == ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'))</IL2CNativeIncludeDir>
+      <IL2CNativeMainTemplatePath Condition="'$(IL2CNativeMainTemplatePath)' == ''">$(_IL2C_StandardNativeMainTemplatePath)</IL2CNativeMainTemplatePath>
+    </PropertyGroup>
+  </Target>
+
+</Project>

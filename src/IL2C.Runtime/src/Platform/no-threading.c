@@ -1,0 +1,19 @@
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+
+#include <il2c_private.h>
+
+///////////////////////////////////////////////////
+// Lack for threading support
+
+#if defined(IL2C_NO_THREADING)
+
+intptr_t g_TLS0;
+
+#endif

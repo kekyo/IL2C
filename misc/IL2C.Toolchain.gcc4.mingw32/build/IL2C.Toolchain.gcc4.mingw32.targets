@@ -1,0 +1,48 @@
+<!--
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="_IL2C_GCC4_MinGW32_ToolChainTargetBody"
+    BeforeTargets="IL2CBuildPrepare"
+    Condition="'$(OS)' == 'Windows_NT'">
+      
+    <PropertyGroup>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_DisableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_EnableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
+      <IL2CNativeMainTemplatePath Condition="'$(OutputType)' == 'WinExe'">$(_IL2C_WinExeMainTemplatePath)</IL2CNativeMainTemplatePath>
+      <IL2CNativeCompilerRequiredFlags Condition="'$(OutputType)' == 'WinExe'">$(IL2CNativeCompilerRequiredFlags) -mwindows</IL2CNativeCompilerRequiredFlags>
+    </PropertyGroup>
+    
+  </Target>
+
+  <!-- Extract toolchain 7zip archive only once. -->
+  <Target Name="_IL2C_Extract_GCC4_MinGW32_PackedToolchainArchive"
+    AfterTargets="IL2CBuildPrepare"
+    BeforeTargets="IL2CBuildRuntimeLibrary"
+    Condition="('$(OS)' == 'Windows_NT') AND (!Exists($(_IL2C_GCC4_MinGW32_NativeToolchainPath)))">
+      
+    <PropertyGroup>
+      <_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive>$([System.IO.Path]::Combine('$(_IL2C_GCC4_MinGW32_NativeToolchainBasePath)','$([System.Guid]::NewGuid().ToString())'))</_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive>
+    </PropertyGroup>
+      
+    <MakeDir Directories="$(_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive)" />
+    <Exec WorkingDirectory="$(_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive)"
+      Command="&quot;$(_IL2C_GCC4_MinGW32_PackedNativeToolchainArchivePath)&quot;" />
+    <_IL2C_Build_MoveDirectory
+      From="$([System.IO.Path]::Combine('$(_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive)','$(_IL2C_GCC4_MinGW32_NativeToolchainName)'))"
+      To="$(_IL2C_GCC4_MinGW32_NativeToolchainPath)" />
+    <RemoveDir Directories="$(_IL2C_TemporaryDirPathForExtractionGCC4PackedToolchainArchive)" />
+  
+  </Target>
+    
+</Project>

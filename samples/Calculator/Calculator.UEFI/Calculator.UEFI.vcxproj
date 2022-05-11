@@ -23,15 +23,15 @@
     <ClCompile Include="efi_main.c" />
     <ClInclude Include="..\Generated\include\**\*.h" />
     <ClInclude Include="..\Generated\src\**\*.h" />
-    <ClInclude Include="..\..\..\IL2C.Runtime\include\**\*.h" />
+    <ClInclude Include="..\..\..\src\IL2C.Runtime\include\**\*.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
+    <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{B4BC66C2-9D98-40BC-BB24-94CA3D0E3DD5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Calculator</RootNamespace>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
@@ -74,7 +74,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BrowseInformation>true</BrowseInformation>
-      <AdditionalIncludeDirectories>.;../Generated/include;../Generated/src;../../../IL2C.Runtime/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../Generated/include;../Generated/src;../../../src/IL2C.Runtime/include</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Condition="'$(Configuration)'=='Debug'">
       <Optimization>Disabled</Optimization>
@@ -91,7 +91,7 @@
     <Link>
       <SubSystem>EFI Application</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../../../IL2C.Runtime/lib/$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../../src/IL2C.Runtime/lib/$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libil2c-msvc-uefi-$(Platform).lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <SetChecksum>true</SetChecksum>

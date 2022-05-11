@@ -1,0 +1,178 @@
+﻿<!--
+////////////////////////////////////////////////////////////////////////////
+//
+// IL2C - A translator for ECMA-335 CIL/MSIL to C language.
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+//
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+//
+////////////////////////////////////////////////////////////////////////////
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ============================================================================= -->
+  <!-- Common -->
+    
+  <PropertyGroup>
+    <IL2CEnableTranslation Condition="'$(IL2CEnableTranslation)' == ''">true</IL2CEnableTranslation>
+    <IL2CEnableNativeCompilation Condition="'$(IL2CEnableNativeCompilation)' == ''">true</IL2CEnableNativeCompilation>
+    <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
+    <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
+    <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
+    <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
+    <IL2CBuildLogLevel Condition="'$(IL2CBuildLogLevel)' == ''">Information</IL2CBuildLogLevel>
+    <IL2CBuildLaunchDebugger Condition="'$(IL2CBuildLaunchDebugger)' == ''">false</IL2CBuildLaunchDebugger>
+  </PropertyGroup>
+  
+  <!-- ============================================================================= -->
+  <!-- Common (internal) -->
+    
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' != '')">
+    <_IL2C_PlatformName>$(MicrosoftNETBuildTasksTFM)</_IL2C_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' != '')">
+    <_IL2C_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &gt;= 5.0">net$(BundledNETCoreAppTargetFrameworkVersion)</_IL2C_PlatformName>
+    <_IL2C_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_IL2C_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
+    <_IL2C_PlatformName>netcoreapp2.0</_IL2C_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+    <_IL2C_PlatformName>net462</_IL2C_PlatformName>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <_IL2C_ToolingDir>$([System.IO.Path]::Combine('$(IL2CBuildBaseDir)','tools','$(_IL2C_PlatformName)'))</_IL2C_ToolingDir>
+  </PropertyGroup>
+
+  <!-- ============================================================================= -->
+
+  <!-- Custom target after compile process -->
+  <Target Name="IL2CBuildPrepare"
+    AfterTargets="PostBuildEvent">
+
+    <!-- Produces default file paths: -->
+    <PropertyGroup>
+      <IL2CTargetAssemblyFileName Condition="'$(IL2CTargetAssemblyFileName)' == ''">$(TargetFileName)</IL2CTargetAssemblyFileName>
+      <IL2CTargetAssemblyPath Condition="'$(IL2CTargetAssemblyPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2CTargetAssemblyFileName)'))</IL2CTargetAssemblyPath>
+      <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' != ''">$([System.String]::Concat('$(IL2CAssemblyPaths)',';','$(IL2CTargetAssemblyPath)').split(';'))</IL2CAssemblyPaths>
+      <IL2CAssemblyPaths Condition="'$(IL2CAssemblyPaths)' == ''">$(IL2CTargetAssemblyPath)</IL2CAssemblyPaths>
+      <IL2COutputPath>$([System.IO.Path]::Combine('$(ProjectDir)','$(OutputPath)','$(IL2COutputPath)'))</IL2COutputPath>
+      <IL2COutputNativeName Condition="'$(IL2COutputNativeName)' == ''">$(TargetName)</IL2COutputNativeName>
+    </PropertyGroup>
+
+    <!-- Apply tooling variables: -->
+    <PropertyGroup>
+      <IL2CBuildToolingRuntimeName Condition="'$(IL2CBuildToolingRuntimeName)' == ''">$(_IL2C_RuntimeName)</IL2CBuildToolingRuntimeName>
+      <IL2CBuildToolingDir Condition="'$(IL2CBuildToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_IL2C_ToolingDir)'))</IL2CBuildToolingDir>
+      <IL2CBuildToolingPath Condition="'$(IL2CBuildToolingPath)' == ''">$([System.IO.Path]::Combine('$(IL2CBuildToolingDir)','$(_IL2C_ExecutableName)'))</IL2CBuildToolingPath>
+    </PropertyGroup>
+      
+    <!-- ======================================================== -->
+    <!-- Resolving final declarations -->
+
+    <!-- Apply defaults when native compiler information is not given: -->
+    <PropertyGroup Condition="'$(IL2CNativeCompiler)' == ''">
+      <IL2CNativeCompiler>$(_IL2C_GCC_Compiler)</IL2CNativeCompiler>
+      <IL2CNativeCompilerDefaultFlags Condition="'$(IL2CNativeCompilerDefaultFlags)' == ''">$(_IL2C_GCC_DefaultFlags)</IL2CNativeCompilerDefaultFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_DebugFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerConditionalFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerConditionalFlags)' == '')">$(_IL2C_GCC_ReleaseFlags)</IL2CNativeCompilerConditionalFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Debug') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_DisableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
+      <IL2CNativeCompilerOptimizingFlags Condition="('$(IL2CConfiguration)' == 'Release') AND ('$(IL2CNativeCompilerOptimizingFlags)' == '')">$(_IL2C_GCC_EnableOptimizingFlags)</IL2CNativeCompilerOptimizingFlags>
+      <IL2CNativeCompilerRequiredFlags Condition="'$(IL2CNativeCompilerRequiredFlags)' == ''">$(_IL2C_GCC_PosixRequiredFlags)</IL2CNativeCompilerRequiredFlags>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(IL2CNativeArchiver)' == ''">
+      <IL2CNativeArchiver>$(_IL2C_GCC_Archiver)</IL2CNativeArchiver>
+    </PropertyGroup>
+
+    <!-- Specified log settings: -->
+    <PropertyGroup>
+      <_IL2C_BuildLogOption>--logLevel=$(IL2CBuildLogLevel) --logtfm=&quot;$(TargetFramework)&quot;</_IL2C_BuildLogOption>
+    </PropertyGroup>
+
+    <!-- Get candidate runtime library path: -->
+    <PropertyGroup>
+      <_IL2C_NativeCompilerAllFlags>$(IL2CNativeCompilerDefaultFlags) $(IL2CNativeCompilerRequiredFlags) $(IL2CNativeCompilerConditionalFlags) $(IL2CNativeCompilerOptimizingFlags) $(IL2CNativeCompilerOptionalFlags)</_IL2C_NativeCompilerAllFlags>
+    </PropertyGroup>
+    <_IL2C_CalculateContentHash Content="$(IL2CNativeCompiler) $(_IL2C_NativeCompilerAllFlags) $(_IL2C_NativeArchiverOption)">
+      <Output TaskParameter="HashValue" PropertyName="_IL2C_RuntimeLibraryBaseDirName" />
+    </_IL2C_CalculateContentHash>
+    <PropertyGroup>
+      <_IL2C_CandidateRuntimeLibraryBasePath>$([System.IO.Path]::Combine('$(_IL2C_RuntimeLibraryCacheBaseDirPath)','$(_IL2C_RuntimeLibraryBaseDirName)'))</_IL2C_CandidateRuntimeLibraryBasePath>
+      <_IL2C_CandidateRuntimeLibraryPath>$([System.IO.Path]::Combine('$(_IL2C_CandidateRuntimeLibraryBasePath)','$(_IL2C_RuntimeLibraryCacheFileName)'))</_IL2C_CandidateRuntimeLibraryPath>
+      <IL2CNativeLibPath Condition="'$(IL2CNativeLibPath)' != ''">$(_IL2C_CandidateRuntimeLibraryPath);$(IL2CNativeLibPath)</IL2CNativeLibPath>
+      <IL2CNativeLibPath Condition="'$(IL2CNativeLibPath)' == ''">$(_IL2C_CandidateRuntimeLibraryPath)</IL2CNativeLibPath>
+    </PropertyGroup>
+
+    <!-- Native code files output path group: -->
+    <PropertyGroup>
+      <_IL2C_OutputNativeArchiveFileName>$(IL2COutputNativeName).a</_IL2C_OutputNativeArchiveFileName>
+      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' == 'Windows_NT')">$(IL2COutputNativeName).exe</_IL2C_OutputNativeExecutableFileName>
+      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' != 'Windows_NT')">$(IL2COutputNativeName)</_IL2C_OutputNativeExecutableFileName>
+    </PropertyGroup>
+
+    <!-- Native compiler settings: -->
+    <PropertyGroup Condition="$(IL2CEnableNativeCompilation)">
+      <_IL2C_DrivingMode>both</_IL2C_DrivingMode>
+      <_IL2C_NativeCompilerOption>--compiler=&quot;$(IL2CNativeCompiler)&quot;</_IL2C_NativeCompilerOption>
+      <_IL2C_NativeCompilerFlagsOption>--compilerFlags=&quot;$(_IL2C_NativeCompilerAllFlags)&quot;</_IL2C_NativeCompilerFlagsOption>
+      <_IL2C_NativeLinkingFlagsOption Condition="'$(IL2CNativeLinkingFlags)' != ''">--linkingFlags=&quot;$(IL2CNativeLinkingFlags)&quot;</_IL2C_NativeLinkingFlagsOption>
+      <_IL2C_NativeArchiverOption>--archiver=&quot;$(IL2CNativeArchiver)&quot;</_IL2C_NativeArchiverOption>
+      <_IL2C_NativeIncludeDirOption>--includeDirs=&quot;$(IL2CNativeIncludeDir)&quot;</_IL2C_NativeIncludeDirOption>
+      <_IL2C_NativeLibPathOption>--libs=&quot;$(IL2CNativeLibPath)&quot;</_IL2C_NativeLibPathOption>
+      <_IL2C_OutputNativeArchiveFileNameOption>--outputNativeArchive=&quot;$(_IL2C_OutputNativeArchiveFileName)&quot;</_IL2C_OutputNativeArchiveFileNameOption>
+      <_IL2C_OutputNativeExecutableFileNameOption Condition="'$(_IL2C_OutputNativeExecutableFileName)' != ''">--outputNativeExecutable=&quot;$(_IL2C_OutputNativeExecutableFileName)&quot;</_IL2C_OutputNativeExecutableFileNameOption>
+      <_IL2C_NativeMainTemplatePathOption Condition="'$(OutputType)' != 'Library'">--mainTemplate=&quot;$(IL2CNativeMainTemplatePath)&quot;</_IL2C_NativeMainTemplatePathOption>
+      <_IL2C_LaunchDebuggerOption Condition="$(IL2CBuildLaunchDebugger)">--launchDebugger</_IL2C_LaunchDebuggerOption>
+      <_IL2C_NativeOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption) $(_IL2C_LaunchDebuggerOption)</_IL2C_NativeOptions>
+    </PropertyGroup>
+    <PropertyGroup Condition="!($(IL2CEnableNativeCompilation))">
+      <_IL2C_DrivingMode>translation</_IL2C_DrivingMode>
+    </PropertyGroup>
+
+    <!-- Aggregates managed reference assembly base directories: -->
+    <_IL2C_GetCombinedReferencesBasePath References="@(ReferencePath)">
+      <Output TaskParameter="CombinedReferencesBasePath" PropertyName="_IL2C_CombinedReferenceDir" />
+    </_IL2C_GetCombinedReferencesBasePath>
+      
+  </Target>
+
+  <!-- ============================================================================= -->
+
+  <!-- Build runtime library into cache -->
+  <Target Name="IL2CBuildRuntimeLibrary"
+    AfterTargets="IL2CBuildPrepare"
+    Condition="$(IL2CEnableNativeCompilation) AND !Exists($(_IL2C_CandidateRuntimeLibraryPath))">
+
+    <PropertyGroup>
+      <_IL2C_TemporaryDirPathForRuntimeLibrary>$([System.IO.Path]::Combine('$(_IL2C_RuntimeLibraryCacheBaseDirPath)','$([System.Guid]::NewGuid().ToString())'))</_IL2C_TemporaryDirPathForRuntimeLibrary>
+      <_IL2C_BuildRuntimeLibraryOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_RaiseDebugBreakOption) --outputNativeArchive=&quot;$(_IL2C_RuntimeLibraryCacheFileName)&quot; --outputNativeDir=&quot;$(_IL2C_TemporaryDirPathForRuntimeLibrary)&quot;</_IL2C_BuildRuntimeLibraryOptions>
+    </PropertyGroup>
+      
+    <MakeDir Directories="$(_IL2C_TemporaryDirPathForRuntimeLibrary)" />
+    <Exec WorkingDirectory="$(IL2CBuildToolingDir)"
+      Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --mode=compilation $(_IL2C_BuildLogOption) $(_IL2C_BuildRuntimeLibraryOptions) &quot;$(_IL2C_TemporaryDirPathForRuntimeLibrary)&quot; &quot;$(IL2CRuntimeBasePath)&quot;" />
+    <_IL2C_Build_MoveDirectory
+      From="$(_IL2C_TemporaryDirPathForRuntimeLibrary)"
+      To="$(_IL2C_CandidateRuntimeLibraryBasePath)" />
+    <RemoveDir Directories="$(_IL2C_TemporaryDirPathForRuntimeLibrary)" />
+
+  </Target>
+
+  <!-- ============================================================================= -->
+
+  <!-- Build core -->
+  <Target Name="IL2CBuildCore"
+    AfterTargets="IL2CBuildRuntimeLibrary"
+    Condition="$(IL2CEnableTranslation)">
+
+    <Exec WorkingDirectory="$(IL2CBuildToolingDir)"
+      Command="$(IL2CBuildToolingRuntimeName)&quot;$(IL2CBuildToolingPath)&quot; --mode=$(_IL2C_DrivingMode) $(_IL2C_BuildLogOption) --debug=&quot;$(IL2CDebugInformation)&quot; --produceCpp=&quot;$(IL2CEnableCpp)&quot; --bundler=&quot;$(IL2CEnableBundler)&quot; --target=&quot;$(IL2CTargetPlatform)&quot; --refDirs=&quot;$(_IL2C_CombinedReferenceDir)&quot; $(_IL2C_NativeOptions) &quot;$(IL2COutputPath)&quot; &quot;$(IL2CAssemblyPaths)&quot;" />
+
+    <ItemGroup>
+      <FileWrites Include="$(IL2COutputPath)\**\*" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>

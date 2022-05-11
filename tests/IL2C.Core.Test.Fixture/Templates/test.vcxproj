@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup Label="ProjectConfigurations">
         <ProjectConfiguration Include="Debug|Win32">
             <Configuration>Debug</Configuration>
@@ -25,13 +25,13 @@
         <ClInclude Include="{assemblyName}/**/*.h" />
     </ItemGroup>
     <PropertyGroup Label="Globals">
-        <VCProjectVersion>15.0</VCProjectVersion>
+        <VCProjectVersion>17.0</VCProjectVersion>
         <ProjectGuid>{182A62A4-47AC-4290-8EA5-250AE8131613}</ProjectGuid>
         <Keyword>Win32Proj</Keyword>
         <RootNamespace>IL2CRuntime</RootNamespace>
         <WindowsTargetPlatformVersion>$(LatestTargetPlatformVersion)</WindowsTargetPlatformVersion>
         <ConfigurationType>Application</ConfigurationType>
-        <PlatformToolset>v142</PlatformToolset>
+        <PlatformToolset>v143</PlatformToolset>
         <LinkIncremental>false</LinkIncremental>
         <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
         <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
@@ -57,7 +57,7 @@
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <FunctionLevelLinking>true</FunctionLevelLinking>
             <CreateHotpatchableImage>false</CreateHotpatchableImage>
-            <AdditionalIncludeDirectories>.;..\..\..\..\..\..\IL2C.Runtime\include</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>.;..\..\..\..\..\..\src\IL2C.Runtime\include</AdditionalIncludeDirectories>
             <DisableSpecificWarnings>4100;4197;4206</DisableSpecificWarnings>
             <ExceptionHandling>false</ExceptionHandling>
             <AssemblerOutput>All</AssemblerOutput>
@@ -87,7 +87,7 @@
             <MapExports>true</MapExports>
             <OptimizeReferences>true</OptimizeReferences>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
-            <AdditionalDependencies>..\..\..\..\..\..\IL2C.Runtime\lib\$(Configuration)\libil2c-msvc-win-$(Platform)-rts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+            <AdditionalDependencies>..\..\..\..\..\..\src\IL2C.Runtime\lib\$(Configuration)\libil2c-msvc-win-$(Platform)-rts.lib;%(AdditionalDependencies)</AdditionalDependencies>
         </Link>
         <Link Condition="'$(Configuration)'=='Release'">
             <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>

@@ -1,21 +1,11 @@
-﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //
 // IL2C - A translator for ECMA-335 CIL/MSIL to C language.
-// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
-//	http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 
 using System;
 using System.Collections.Generic;
@@ -111,7 +101,7 @@ namespace IL2C.RuntimeSystems
 
     public class FinalzerImplementedWithResurrect
     {
-        public static FinalzerImplementedWithResurrect Instance;
+        public static FinalzerImplementedWithResurrect? Instance;
         public int Value;
 
         public FinalzerImplementedWithResurrect(int value)
@@ -156,7 +146,7 @@ namespace IL2C.RuntimeSystems
 
     public static class StaticFieldTracible
     {
-        public static StaticFieldInstanceType StaticFieldInstance;
+        public static StaticFieldInstanceType? StaticFieldInstance;
     }
 
     public sealed class DelegateMarkHandlerForObjRef
@@ -314,7 +304,7 @@ namespace IL2C.RuntimeSystems
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            return StaticFieldTracible.StaticFieldInstance.Value;
+            return StaticFieldTracible.StaticFieldInstance!.Value;
         }
 
         private static void RunCallFinalizer(FinalizerCalleeHolder holder)
@@ -373,7 +363,7 @@ namespace IL2C.RuntimeSystems
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            return FinalzerImplementedWithResurrect.Instance.Value;
+            return FinalzerImplementedWithResurrect.Instance!.Value;
         }
 
         private static void RunCallFinalizerWithReRegister(FinalizerCalleeHolder holder)

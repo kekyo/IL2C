@@ -57,7 +57,7 @@ namespace IL2C
                 var mainTemplatePath = default(string);
                 var logLevel = LogLevels.Information;
                 var logtfm = default(string);
-                var debugBreak = false;
+                var launchDebugger = false;
                 var help = false;
 
                 var options = new OptionSet()
@@ -78,9 +78,9 @@ namespace IL2C
                     { "outputNativeExecutable=", "Output native executable file name", v => outputNativeExecutableFileName = v },
                     { "outputNativeDir=", "Output native binary directory path", v => outputNativeDirPath = v },
                     { "mainTemplate=", "Native main template path", v => mainTemplatePath = v },
-                    { "logLevel", "Log level [debug|trace|information|warning|error|silent]", v => logLevel = Enum.TryParse<LogLevels>(v, true, out var ll) ? ll : LogLevels.Information },
+                    { "logLevel=", "Log level [debug|trace|information|warning|error|silent]", v => logLevel = Enum.TryParse<LogLevels>(v, true, out var ll) ? ll : LogLevels.Information },
                     { "logtfm=", "Log header tfm", v => logtfm = v },
-                    { "debugBreak", "Raise debug break", _ => debugBreak = true },
+                    { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                     { "h|help", "Print this help", _ => help = true },
                 };
 
@@ -99,11 +99,11 @@ namespace IL2C
                     var inputPaths = extra.Skip(1);
 
                     using var logger = new TextWriterLogger(
-                        LogLevels.Information, Console.Out, logtfm);
+                        logLevel, Console.Out, logtfm);
 
                     logger.Information($"Started.");
 
-                    if (debugBreak)
+                    if (launchDebugger)
                     {
                         Debugger.Launch();
                     }

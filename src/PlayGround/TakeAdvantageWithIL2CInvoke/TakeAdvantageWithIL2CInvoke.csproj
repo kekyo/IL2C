@@ -13,7 +13,7 @@
     <!-- Stripping any debug information on release build. -->
     <IL2CNativeLinkingFlags Condition="'$(IL2CConfiguration)' == 'Release'">-s</IL2CNativeLinkingFlags>
 
-    <!-- <IL2CRaiseDebugBreak>true</IL2CRaiseDebugBreak> -->
+    <!-- <IL2CBuildLaunchDebugger>true</IL2CBuildLaunchDebugger> -->
   </PropertyGroup>
     
   <ItemGroup>

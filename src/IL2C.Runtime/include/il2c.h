@@ -380,6 +380,7 @@ typedef void* untyped_ptr;
 #include "System/Enum.h"
 #include "System/Delegate.h"
 #include "System/MulticastDelegate.h"
+#include "System/Attribute.h"
 #include "System/RuntimeFieldHandle.h"
 #include "System/Runtime/CompilerServices/RuntimeHelpers.h"
 #include "System/Exception.h"

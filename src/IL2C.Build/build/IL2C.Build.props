@@ -49,19 +49,19 @@
   <Choose>
     <When Condition="'$(MSBuildVersion.Substring(0,2))' &gt;= 16 OR ('$(MSBuildVersion.Substring(0,2))' == 15 AND '$(MSBuildVersion.Substring(3,1))' &gt;= 8)">
       <PropertyGroup>
-        <TaskFactory>RoslynCodeTaskFactory</TaskFactory>
+        <_IL2C_TaskFactory>RoslynCodeTaskFactory</_IL2C_TaskFactory>
       </PropertyGroup>
     </When>
     <Otherwise>
       <PropertyGroup>
-        <TaskFactory>CodeTaskFactory</TaskFactory>
+        <_IL2C_TaskFactory>CodeTaskFactory</_IL2C_TaskFactory>
       </PropertyGroup>
     </Otherwise>
   </Choose>
     
   <UsingTask
     TaskName="_IL2C_Build_MoveDirectory"
-    TaskFactory="$(TaskFactory)"
+    TaskFactory="$(_IL2C_TaskFactory)"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
       <From ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
@@ -94,7 +94,7 @@
 
   <UsingTask
     TaskName="_IL2C_GetCombinedReferencesBasePath"
-    TaskFactory="$(TaskFactory)"
+    TaskFactory="$(_IL2C_TaskFactory)"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
       <References ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
@@ -128,7 +128,7 @@
     
   <UsingTask
     TaskName="_IL2C_CalculateContentHash"
-    TaskFactory="$(TaskFactory)"
+    TaskFactory="$(_IL2C_TaskFactory)"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
       <Content Required="true" />

@@ -4,13 +4,13 @@
     {
         .maxstack 3
         .locals init (
-            [0] class IL2C.RuntimeSystems.ObjRefInsideObjRefType
+            [0] class [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefType
     	)
 
         ldstr "ABC"
         ldstr "DEF"
         call string string::Concat(string, string)
-        newobj instance void IL2C.RuntimeSystems.ObjRefInsideObjRefType::.ctor(string)
+        newobj instance void [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefType::.ctor(string)
         stloc.0
 
         // Release concat string from the evaluation stack
@@ -23,7 +23,7 @@
         call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
-        ldfld string IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
+        ldfld string [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
         ret
     }
 
@@ -31,14 +31,14 @@
     {
         .maxstack 3
         .locals init (
-            [0] valuetype IL2C.RuntimeSystems.ObjRefInsideValueTypeType
+            [0] valuetype [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeType
     	)
 
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF"
         call string string::Concat(string, string)
-        call instance void IL2C.RuntimeSystems.ObjRefInsideValueTypeType::.ctor(string)
+        call instance void [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeType::.ctor(string)
 
         // Release concat string from the evaluation stack
         ldstr "dummy1"
@@ -50,7 +50,7 @@
         call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
-        ldfld string IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
+        ldfld string [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
         ret
     }
 
@@ -58,13 +58,13 @@
     {
         .maxstack 3
         .locals init (
-            [0] class IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType
+            [0] class [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType
     	)
 
         ldstr "ABC"
         ldstr "DEF"
         call string string::Concat(string, string)
-        newobj instance void IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::.ctor(string)
+        newobj instance void [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::.ctor(string)
         stloc.0
 
         // Release concat string from the evaluation stack
@@ -77,8 +77,8 @@
         call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloc.0
-        ldflda valuetype IL2C.RuntimeSystems.ObjRefInsideValueTypeType IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::Value
-        ldfld string IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
+        ldflda valuetype [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeType [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeInsideObjRefType::Value
+        ldfld string [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
         ret
     }
 
@@ -86,14 +86,14 @@
     {
         .maxstack 3
         .locals init (
-            [0] valuetype IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType
+            [0] valuetype [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType
     	)
 
         ldloca.s 0
         ldstr "ABC"
         ldstr "DEF"
         call string string::Concat(string, string)
-        call instance void IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::.ctor(string)
+        call instance void [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::.ctor(string)
 
         // Release concat string from the evaluation stack
         ldstr "dummy1"
@@ -105,8 +105,8 @@
         call void [netstandard]System.GC::WaitForPendingFinalizers()
 
         ldloca.s 0
-        ldfld class IL2C.RuntimeSystems.ObjRefInsideObjRefType IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::Value
-        ldfld string IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
+        ldfld class [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefType [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefInsideValueTypeType::Value
+        ldfld string [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
         ret
     }
 
@@ -114,7 +114,7 @@
     {
         .maxstack 5
         .locals init (
-            [0] valuetype IL2C.RuntimeSystems.MultipleInsideValueTypeType
+            [0] valuetype [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.MultipleInsideValueTypeType
     	)
 
         ldloca.s 0
@@ -127,7 +127,7 @@
         ldstr "ABC"
         ldstr "DEF3"
         call string string::Concat(string, string)
-        call instance void IL2C.RuntimeSystems.MultipleInsideValueTypeType::.ctor(string, string, string)
+        call instance void [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.MultipleInsideValueTypeType::.ctor(string, string, string)
 
         // Release concat string from the evaluation stack
         ldstr "dummy1"
@@ -147,7 +147,7 @@
         ceq
         brfalse.s L1
         ldloca.s 0
-        ldfld string IL2C.RuntimeSystems.MultipleInsideValueTypeType::Value1
+        ldfld string [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.MultipleInsideValueTypeType::Value1
         ret
 
     L1: ldarg.0
@@ -155,13 +155,13 @@
         ceq
         brfalse.s L2
         ldloca.s 0
-        ldflda valuetype IL2C.RuntimeSystems.ObjRefInsideValueTypeType IL2C.RuntimeSystems.MultipleInsideValueTypeType::Value2
-        ldfld string IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
+        ldflda valuetype [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeType [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.MultipleInsideValueTypeType::Value2
+        ldfld string [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideValueTypeType::Value
         ret
 
     L2: ldloca.s 0
-        ldfld class IL2C.RuntimeSystems.ObjRefInsideObjRefType IL2C.RuntimeSystems.MultipleInsideValueTypeType::Value3
-        ldfld string IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
+        ldfld class [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefType [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.MultipleInsideValueTypeType::Value3
+        ldfld string [IL2C.Core.Test.RuntimeSystems]IL2C.RuntimeSystems.ObjRefInsideObjRefType::Value
         ret
     }
 }

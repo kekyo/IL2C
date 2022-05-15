@@ -48,7 +48,7 @@
   <!-- ============================================================================= -->
 
   <!-- Custom target after compile process -->
-  <!-- HACK: ILComposeBuildAfterCompile is ICompose's custom target. -->
+  <!-- HACK: ILComposeBuildAfterCompile is ILCompose custom target. -->
   <Target Name="IL2CBuildAfterCompile" AfterTargets="Compile;ILComposeBuildAfterCompile"
     Condition="'$(IL2CEnableTranslation)' == 'True'">
     <CallTarget Targets="IL2CBuildPrepare; IL2CBuildRuntimeLibrary; IL2CBuildCore" />

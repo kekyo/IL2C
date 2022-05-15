@@ -12,18 +12,12 @@
 
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="ILCompose" Version="1.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\IL2C.Interop\IL2C.Interop.csproj" />
     <ProjectReference Include="..\IL2C.Core.Test.Common\IL2C.Core.Test.Common.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <IL Include="**/*.il" Exclude="obj/**/*.il;bin/**/*.il" />
-  </ItemGroup>
-
-  <!-- IL Support -->
-  <Import Project="..\IL2C.Core.Test.Common\ILSupport.Standard.targets" />
 
 </Project>

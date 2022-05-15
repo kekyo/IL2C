@@ -6,7 +6,7 @@
   <PropertyGroup>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <DebugType>portable</DebugType>
-    <Optimize>False</Optimize>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
 </Project>

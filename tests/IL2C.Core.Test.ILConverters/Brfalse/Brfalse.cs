@@ -32,5 +32,8 @@ namespace IL2C.ILConverters
 
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string IntPtrValue(IntPtr v);
+
+        [MethodImpl(MethodImplOptions.ForwardRef)]
+        public static extern string ObjectValue(object v);
     }
 }

@@ -44,21 +44,28 @@ namespace IL2C.Writers
                 if (objRefEntries.Length >= 1)
                 {
                     tw.WriteLine("//-------------------- objref");
-                    foreach (var objRefEntry in objRefEntries)
+                    var objrefNames = objRefEntries.
+                        Select(oe => extractContext.GetSymbolName(oe)).
+                        SymbolRenaming();
+                    foreach (var (objRefEntry, name) in
+                        objRefEntries.Zip(objrefNames, (oe, on) => (oe, on)))
                     {
                         tw.WriteLine(
                             "{0} {1};",
                             objRefEntry.TargetType.CLanguageTypeName,
-                            extractContext.GetSymbolName(objRefEntry));
+                            name);
                     }
                 }
 
                 if (valueEntries.Length >= 1)
                 {
                     tw.WriteLine("//-------------------- value type");
-                    foreach (var valueEntry in valueEntries)
+                    var valueNames = valueEntries.
+                        Select(ve => extractContext.GetSymbolName(ve)).
+                        SymbolRenaming();
+                    foreach (var (valueEntry, name) in
+                        valueEntries.Zip(valueNames, (ve, vn) => (ve, vn)))
                     {
-                        var name = extractContext.GetSymbolName(valueEntry);
                         tw.WriteLine(
                             "const IL2C_RUNTIME_TYPE {0}_type__;",
                             name);
@@ -274,10 +281,12 @@ namespace IL2C.Writers
                     tw.WriteLine("// [3-3] Local variables (!objref):");
                     tw.SplitLine();
 
-                    foreach (var local in localDefinitions)
+                    var localNames = localDefinitions.
+                        Select(local => extractContext.GetSymbolName(local)).
+                        SymbolRenaming();
+                    foreach (var (local, name) in localDefinitions.
+                        Zip(localNames, (local, name) => (local, name)))
                     {
-                        var name = extractContext.GetSymbolName(local);
-
                         // HACK: The local variables mark to "volatile."
                         //   Because the gcc misread these variables calculated statically (or maybe assigned to the registers)
                         //   at compile time with optimization.

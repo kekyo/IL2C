@@ -48,7 +48,7 @@ namespace IL2C.Internal
         public static string GetCLanguageScopedPath(params string[] scopeNames) =>
             GetCLanguageScopedPath((IEnumerable<string>)scopeNames);
 
-        public static IEnumerable<string> SymbolRenaming(this IEnumerable<string> names)
+        public static IEnumerable<string> RenameDuplicatingSymbols(this IEnumerable<string> names)
         {
             // symbol
             // symbol2

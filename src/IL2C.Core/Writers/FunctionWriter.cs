@@ -46,7 +46,7 @@ namespace IL2C.Writers
                     tw.WriteLine("//-------------------- objref");
                     var objrefNames = objRefEntries.
                         Select(oe => extractContext.GetSymbolName(oe)).
-                        SymbolRenaming();
+                        RenameDuplicatingSymbols();
                     foreach (var (objRefEntry, name) in
                         objRefEntries.Zip(objrefNames, (oe, on) => (oe, on)))
                     {
@@ -62,7 +62,7 @@ namespace IL2C.Writers
                     tw.WriteLine("//-------------------- value type");
                     var valueNames = valueEntries.
                         Select(ve => extractContext.GetSymbolName(ve)).
-                        SymbolRenaming();
+                        RenameDuplicatingSymbols();
                     foreach (var (valueEntry, name) in
                         valueEntries.Zip(valueNames, (ve, vn) => (ve, vn)))
                     {
@@ -283,7 +283,7 @@ namespace IL2C.Writers
 
                     var localNames = localDefinitions.
                         Select(local => extractContext.GetSymbolName(local)).
-                        SymbolRenaming();
+                        RenameDuplicatingSymbols();
                     foreach (var (local, name) in localDefinitions.
                         Zip(localNames, (local, name) => (local, name)))
                     {

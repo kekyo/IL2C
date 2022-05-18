@@ -93,7 +93,7 @@ namespace IL2C
                 name,
                 uniqueName,
                 description,
-                ConvertToArgumentType(caseAttribute.Expected, method.ReturnType),
+                ConvertToArgumentType(caseAttribute.ExpectedResult, method.ReturnType),
                 caseAttribute.Assert,
                 method,
                 (caseAttribute.IncludeBaseTypes ?

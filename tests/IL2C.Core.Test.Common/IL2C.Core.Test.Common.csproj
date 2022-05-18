@@ -8,4 +8,8 @@
     <AssemblyName>IL2C.Core.Test.Common</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.13.2" />
+  </ItemGroup>
+
 </Project>

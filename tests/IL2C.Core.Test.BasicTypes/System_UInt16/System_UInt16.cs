@@ -11,25 +11,25 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    [TestCase(true, "IsValueType")]
-    [TestCase(2, "SizeOf")]
-    [TestCase("65535", "ToString", ushort.MaxValue)]
-    [TestCase("0", "ToString", ushort.MinValue)]
-    [TestCase(ushort.MaxValue, "TryParse", "65535")]
-    [TestCase(ushort.MinValue, "TryParse", "0")]
     public sealed class System_UInt16
     {
+        [TestCase(true, "IsValueType")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
+        [TestCase(2, "SizeOf")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int SizeOf();
 
+        [TestCase("65535", "ToString", ushort.MaxValue)]
+        [TestCase("0", "ToString", ushort.MinValue)]
         public static string ToString(ushort value)
         {
             return value.ToString();
         }
 
+        [TestCase(ushort.MaxValue, "TryParse", "65535")]
+        [TestCase(ushort.MinValue, "TryParse", "0")]
         public static ushort TryParse(string str)
         {
             ushort.TryParse(str, out var value);

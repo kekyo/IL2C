@@ -12,36 +12,36 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    [TestCase(true, "IsValueType")]
-    [TestCase(4, "SizeOf", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]    // Unit test environment is unknown, gcc is 32bit
-    [TestCase("2147483647", "ToString", int.MaxValue)]
-    [TestCase("-2147483648", "ToString", int.MinValue)]
-    [TestCase(true, "Zero", 0)]
-    [TestCase(true, "Equality", 0)]
-    [TestCase(false, "NonEquality", 0)]
     public sealed class System_IntPtr
     {
+        [TestCase(true, "IsValueType")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
+        [TestCase(4, "SizeOf", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]    // Unit test environment is unknown, gcc is 32bit
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int SizeOf();
 
+        [TestCase("2147483647", "ToString", int.MaxValue)]
+        [TestCase("-2147483648", "ToString", int.MinValue)]
         public static string ToString(IntPtr value)
         {
             return value.ToString();
         }
 
+        [TestCase(true, "Zero", 0)]
         public static bool Zero(IntPtr v)
         {
             return v == IntPtr.Zero;
         }
 
+        [TestCase(true, "Equality", 0)]
         public static bool Equality(IntPtr v)
         {
             return v == IntPtr.Zero;
         }
 
+        [TestCase(false, "NonEquality", 0)]
         public static bool NonEquality(IntPtr v)
         {
             return v != IntPtr.Zero;

@@ -13,17 +13,6 @@ namespace IL2C.BasicTypes
 {
     public delegate void IntRefDelegate(ref int value);
 
-    [TestCase(10100, new[] { "Remove_DelegateInstance", "IntRefImpl1", "IntRefImpl2" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(10100, new[] { "Remove_DelegateTarget", "IntRefImpl1", "IntRefImpl2" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(5050, new[] { "Remove_DelegateMiddle", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(50000, new[] { "Remove_DelegateHead", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(50500, new[] { "Remove_NotContainsDelegate", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3", "IntRefImpl4" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(1000, new[] { "Remove_FromNullToDelegate", "IntRefImpl1" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(5000, new[] { "Remove_ToMulticastDelegate1", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(1010, new[] { "Remove_ToMulticastDelegate2", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(50500, new[] { "Remove_NotContainsMulticastDelegate", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(1000, new[] { "Remove_EntireMatchedMulticastDelegate", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
-    [TestCase(1000, new[] { "Remove_FromNullToMulticastDelegate", "IntRefImpl1", "IntRefImpl2" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
     public sealed class System_Delegate
     {
         private static void IntRefImpl1(ref int value)
@@ -46,6 +35,7 @@ namespace IL2C.BasicTypes
             value *= 3;
         }
 
+        [TestCase(10100, new[] { "Remove_DelegateInstance", "IntRefImpl1", "IntRefImpl2" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_DelegateInstance(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -64,6 +54,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(10100, new[] { "Remove_DelegateTarget", "IntRefImpl1", "IntRefImpl2" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_DelegateTarget(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -83,6 +74,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(5050, new[] { "Remove_DelegateMiddle", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_DelegateMiddle(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -101,6 +93,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(50000, new[] { "Remove_DelegateHead", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_DelegateHead(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -119,6 +112,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(50500, new[] { "Remove_NotContainsDelegate", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3", "IntRefImpl4" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_NotContainsDelegate(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -138,6 +132,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(1000, new[] { "Remove_FromNullToDelegate", "IntRefImpl1" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_FromNullToDelegate(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -151,6 +146,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(5000, new[] { "Remove_ToMulticastDelegate1", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_ToMulticastDelegate1(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -171,6 +167,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(1010, new[] { "Remove_ToMulticastDelegate2", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_ToMulticastDelegate2(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -191,6 +188,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(50500, new[] { "Remove_NotContainsMulticastDelegate", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_NotContainsMulticastDelegate(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -211,6 +209,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(1000, new[] { "Remove_EntireMatchedMulticastDelegate", "IntRefImpl1", "IntRefImpl2", "IntRefImpl3" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_EntireMatchedMulticastDelegate(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);
@@ -232,6 +231,7 @@ namespace IL2C.BasicTypes
             return v;
         }
 
+        [TestCase(1000, new[] { "Remove_FromNullToMulticastDelegate", "IntRefImpl1", "IntRefImpl2" }, 1000, IncludeTypes = new[] { typeof(IntRefDelegate) })]
         public static int Remove_FromNullToMulticastDelegate(int value)
         {
             var dlg1 = new IntRefDelegate(IntRefImpl1);

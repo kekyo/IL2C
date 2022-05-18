@@ -69,6 +69,8 @@ namespace IL2C
 
         public void BeforeTest(ITest test)
         {
+            // TRANSITIVE DEBUG CODE: Check whether method name is equal.
+            NUnit.Framework.Assert.AreEqual(test.Method?.Name, this.MethodName);
         }
 
         public void AfterTest(ITest test)

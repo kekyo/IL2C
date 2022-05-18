@@ -25,8 +25,6 @@ namespace IL2C.ILConverters
     }
 
     [TestId("Callvirt")]
-    [TestCase("CallvirtTest", new[] { "Derived2_ToString_System_Object", "ToString" }, IncludeBaseTypes = true)]
-    [TestCase("CallvirtTest", new[] { "Derived2_ToString_IL2C_ILConverters_Callvirt", "ToString" }, IncludeBaseTypes = true)]
     public sealed class Callvirt_Derived2 : Callvirt_Derived2_Base
     {
         public override string ToString()
@@ -34,9 +32,11 @@ namespace IL2C.ILConverters
             return "CallvirtTest";
         }
 
+        [TestCase("CallvirtTest", new[] { "Derived2_ToString_System_Object", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived2_ToString_System_Object();
 
+        [TestCase("CallvirtTest", new[] { "Derived2_ToString_IL2C_ILConverters_Callvirt", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived2_ToString_IL2C_ILConverters_Callvirt();
     }

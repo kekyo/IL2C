@@ -69,35 +69,14 @@ namespace IL2C.ILConverters
     }
 
     [TestId("Box")]
-    [TestCase(Box_Enum_Byte_Type.Min, new[] { "Enum_Byte", "Box_Enum_Byte" }, byte.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Byte_Type) })]
-    [TestCase(Box_Enum_Byte_Type.One, new[] { "Enum_Byte", "Box_Enum_Byte" }, 1, IncludeTypes = new[] { typeof(Box_Enum_Byte_Type) })]
-    [TestCase(Box_Enum_Byte_Type.Max, new[] { "Enum_Byte", "Box_Enum_Byte" }, byte.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Byte_Type) })]
-    [TestCase(Box_Enum_Int16_Type.Min, new[] { "Enum_Int16", "Box_Enum_Int16" }, short.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int16_Type) })]
-    [TestCase(Box_Enum_Int16_Type.Zero, new[] { "Enum_Int16", "Box_Enum_Int16" }, 0, IncludeTypes = new[] { typeof(Box_Enum_Int16_Type) })]
-    [TestCase(Box_Enum_Int16_Type.Max, new[] { "Enum_Int16", "Box_Enum_Int16" }, short.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int16_Type) })]
-    [TestCase(Box_Enum_Int32_Type.Min, new[] { "Enum_Int32", "Box_Enum_Int32" }, int.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-    [TestCase(Box_Enum_Int32_Type.Zero, new[] { "Enum_Int32", "Box_Enum_Int32" }, 0, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-    [TestCase(Box_Enum_Int32_Type.Max, new[] { "Enum_Int32", "Box_Enum_Int32" }, int.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-    [TestCase(Box_Enum_Int64_Type.Min, new[] { "Enum_Int64", "Box_Enum_Int64" }, long.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
-    [TestCase(Box_Enum_Int64_Type.Zero, new[] { "Enum_Int64", "Box_Enum_Int64" }, 0L, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
-    [TestCase(Box_Enum_Int64_Type.Max, new[] { "Enum_Int64", "Box_Enum_Int64" }, long.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
-    [TestCase(Box_Enum_SByte_Type.Min, new[] { "Enum_SByte", "Box_Enum_SByte" }, sbyte.MinValue, IncludeTypes = new[] { typeof(Box_Enum_SByte_Type) })]
-    [TestCase(Box_Enum_SByte_Type.Zero, new[] { "Enum_SByte", "Box_Enum_SByte" }, 0, IncludeTypes = new[] { typeof(Box_Enum_SByte_Type) })]
-    [TestCase(Box_Enum_SByte_Type.Max, new[] { "Enum_SByte", "Box_Enum_SByte" }, sbyte.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_SByte_Type) })]
-    [TestCase(Box_Enum_UInt16_Type.Min, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, ushort.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
-    [TestCase(Box_Enum_UInt16_Type.One, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, 1, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
-    [TestCase(Box_Enum_UInt16_Type.Max, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, ushort.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
-    [TestCase(Box_Enum_UInt32_Type.Min, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, uint.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
-    [TestCase(Box_Enum_UInt32_Type.One, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, 1, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
-    [TestCase(Box_Enum_UInt32_Type.Max, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, uint.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
-    [TestCase(Box_Enum_UInt64_Type.Min, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, ulong.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
-    [TestCase(Box_Enum_UInt64_Type.One, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, 1UL, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
-    [TestCase(Box_Enum_UInt64_Type.Max, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, ulong.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
     public sealed class Box_Enum
     {
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_Byte(byte value);
 
+        [TestCase(Box_Enum_Byte_Type.Min, new[] { "Enum_Byte", "Box_Enum_Byte" }, byte.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Byte_Type) })]
+        [TestCase(Box_Enum_Byte_Type.One, new[] { "Enum_Byte", "Box_Enum_Byte" }, 1, IncludeTypes = new[] { typeof(Box_Enum_Byte_Type) })]
+        [TestCase(Box_Enum_Byte_Type.Max, new[] { "Enum_Byte", "Box_Enum_Byte" }, byte.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Byte_Type) })]
         public static Box_Enum_Byte_Type Enum_Byte(byte value)
         {
             return (Box_Enum_Byte_Type)Box_Enum_Byte(value);
@@ -106,6 +85,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_Int16(short value);
 
+        [TestCase(Box_Enum_Int16_Type.Min, new[] { "Enum_Int16", "Box_Enum_Int16" }, short.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int16_Type) })]
+        [TestCase(Box_Enum_Int16_Type.Zero, new[] { "Enum_Int16", "Box_Enum_Int16" }, 0, IncludeTypes = new[] { typeof(Box_Enum_Int16_Type) })]
+        [TestCase(Box_Enum_Int16_Type.Max, new[] { "Enum_Int16", "Box_Enum_Int16" }, short.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int16_Type) })]
         public static Box_Enum_Int16_Type Enum_Int16(short value)
         {
             return (Box_Enum_Int16_Type)Box_Enum_Int16(value);
@@ -114,6 +96,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_Int32(int value);
 
+        [TestCase(Box_Enum_Int32_Type.Min, new[] { "Enum_Int32", "Box_Enum_Int32" }, int.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
+        [TestCase(Box_Enum_Int32_Type.Zero, new[] { "Enum_Int32", "Box_Enum_Int32" }, 0, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
+        [TestCase(Box_Enum_Int32_Type.Max, new[] { "Enum_Int32", "Box_Enum_Int32" }, int.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
         public static Box_Enum_Int32_Type Enum_Int32(int value)
         {
             return (Box_Enum_Int32_Type)Box_Enum_Int32(value);
@@ -122,6 +107,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_Int64(long value);
 
+        [TestCase(Box_Enum_Int64_Type.Min, new[] { "Enum_Int64", "Box_Enum_Int64" }, long.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
+        [TestCase(Box_Enum_Int64_Type.Zero, new[] { "Enum_Int64", "Box_Enum_Int64" }, 0L, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
+        [TestCase(Box_Enum_Int64_Type.Max, new[] { "Enum_Int64", "Box_Enum_Int64" }, long.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int64_Type) })]
         public static Box_Enum_Int64_Type Enum_Int64(long value)
         {
             return (Box_Enum_Int64_Type)Box_Enum_Int64(value);
@@ -130,6 +118,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_SByte(sbyte value);
 
+        [TestCase(Box_Enum_SByte_Type.Min, new[] { "Enum_SByte", "Box_Enum_SByte" }, sbyte.MinValue, IncludeTypes = new[] { typeof(Box_Enum_SByte_Type) })]
+        [TestCase(Box_Enum_SByte_Type.Zero, new[] { "Enum_SByte", "Box_Enum_SByte" }, 0, IncludeTypes = new[] { typeof(Box_Enum_SByte_Type) })]
+        [TestCase(Box_Enum_SByte_Type.Max, new[] { "Enum_SByte", "Box_Enum_SByte" }, sbyte.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_SByte_Type) })]
         public static Box_Enum_SByte_Type Enum_SByte(sbyte value)
         {
             return (Box_Enum_SByte_Type)Box_Enum_SByte(value);
@@ -138,6 +129,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_UInt16(ushort value);
 
+        [TestCase(Box_Enum_UInt16_Type.Min, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, ushort.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
+        [TestCase(Box_Enum_UInt16_Type.One, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, 1, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
+        [TestCase(Box_Enum_UInt16_Type.Max, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, ushort.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
         public static Box_Enum_UInt16_Type Enum_UInt16(ushort value)
         {
             return (Box_Enum_UInt16_Type)Box_Enum_UInt16(value);
@@ -146,6 +140,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_UInt32(uint value);
 
+        [TestCase(Box_Enum_UInt32_Type.Min, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, uint.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
+        [TestCase(Box_Enum_UInt32_Type.One, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, 1, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
+        [TestCase(Box_Enum_UInt32_Type.Max, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, uint.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
         public static Box_Enum_UInt32_Type Enum_UInt32(uint value)
         {
             return (Box_Enum_UInt32_Type)Box_Enum_UInt32(value);
@@ -154,6 +151,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_UInt64(ulong value);
 
+        [TestCase(Box_Enum_UInt64_Type.Min, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, ulong.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
+        [TestCase(Box_Enum_UInt64_Type.One, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, 1UL, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
+        [TestCase(Box_Enum_UInt64_Type.Max, new[] { "Enum_UInt64", "Box_Enum_UInt64" }, ulong.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt64_Type) })]
         public static Box_Enum_UInt64_Type Enum_UInt64(ulong value)
         {
             return (Box_Enum_UInt64_Type)Box_Enum_UInt64(value);

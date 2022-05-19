@@ -61,7 +61,7 @@ jobs:
       run: build-runtime.bat ${{env.buildConfiguration}}
       shell: cmd
     - name: Build il2c
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="Any CPU" -maxCpuCount il2c.sln
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -maxCpuCount il2c.sln
     - name: Build GettingStartedIL2C-x86
       run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
     - name: Build GettingStartedIL2C-x64

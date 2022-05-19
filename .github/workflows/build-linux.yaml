@@ -58,7 +58,7 @@ jobs:
     - name: Build runtime library
       run: bash build-runtime.sh ${{env.buildConfiguration}}
     - name: Build il2c
-      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="Any CPU" il2c.sln
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER il2c.sln
 #    - name: Build GettingStartedIL2C-x86
 #      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/GettingStartedIL2C/GettingStartedIL2C.sln
 #    - name: Build GettingStartedIL2C-x64

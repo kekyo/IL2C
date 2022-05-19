@@ -11,13 +11,13 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase(int.MaxValue, "MaxValue")]
-    [TestCase(int.MinValue, "MinValue")]
     public sealed class Ldc_i4
     {
+        [TestCase(int.MaxValue, "MaxValue")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int MaxValue();
 
+        [TestCase(int.MinValue, "MinValue")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int MinValue();
     }

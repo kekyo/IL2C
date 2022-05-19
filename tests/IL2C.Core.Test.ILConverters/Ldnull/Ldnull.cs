@@ -12,17 +12,17 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase(0, "IntPtrZero")]
-    [TestCase((uint)0, "UIntPtrZero")]
-    [TestCase(null, "NullReference")]
     public sealed class Ldnull
     {
+        [TestCase(0, "IntPtrZero")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern IntPtr IntPtrZero();
 
+        [TestCase((uint)0, "UIntPtrZero")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern UIntPtr UIntPtrZero();
 
+        [TestCase(null, "NullReference")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern object NullReference();
     }

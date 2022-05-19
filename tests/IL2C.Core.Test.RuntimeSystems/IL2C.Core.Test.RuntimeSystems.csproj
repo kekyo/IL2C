@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="ILCompose" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="ILCompose" Version="1.1.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

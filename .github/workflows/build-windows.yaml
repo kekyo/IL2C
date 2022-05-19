@@ -31,7 +31,7 @@ jobs:
     # https://stackoverflow.com/questions/61463578/github-actions-actions-checkoutv2-lfs-true-flag-not-converting-pointers-to-act
     - name: Checkout LFS objects
       run: git lfs checkout
-    - name: Setup .NET Core 2.1
+    - name: Setup .NET Core 2.2
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.818
@@ -61,7 +61,7 @@ jobs:
       run: build-runtime.bat ${{env.buildConfiguration}}
       shell: cmd
     - name: Build il2c
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="Any CPU" -maxCpuCount il2c.sln
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="Any CPU" -maxCpuCount il2c.sln
     - name: Build GettingStartedIL2C-x86
       run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
     - name: Build GettingStartedIL2C-x64

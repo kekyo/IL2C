@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <Optimize>False</Optimize>
     <Nullable>enable</Nullable>
@@ -13,11 +13,17 @@
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="ILCompose" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <packagereference Include="NUnit3TestAdapter" Version="4.2.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\IL2C.Interop\IL2C.Interop.csproj" />
-    <ProjectReference Include="..\IL2C.Core.Test.Common\IL2C.Core.Test.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\IL2C.Core.Test.Common\*.cs" />
   </ItemGroup>
 
 </Project>

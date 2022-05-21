@@ -12,29 +12,29 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase(123, "Int32Value")]
-    [TestCase("ABC", "StringValue")]
-    [TestCase(null, "NullValue")]
-    [TestCase(123, new[] { "RefIntValue", "Return_RefInt" }, true)]
-    [TestCase(456, new[] { "RefIntValue", "Return_RefInt" }, false)]
-    [TestCase(null, "Void")]
     public sealed class Ret
     {
+        [TestCase(123, "Int32Value")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int Int32Value();
 
+        [TestCase("ABC", "StringValue")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string StringValue();
 
+        [TestCase(null, "NullValue")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern object NullValue();
 
+        [TestCase(123, new[] { "RefIntValue", "Return_RefInt" }, true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         private static extern ref int Return_RefInt(ref int a, ref int b, bool select);
 
+        [TestCase(456, new[] { "RefIntValue", "Return_RefInt" }, false)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int RefIntValue(bool select);
 
+        [TestCase(null, "Void")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern void Void();
     }

@@ -250,7 +250,7 @@ namespace IL2C.RuntimeSystems
         {
             // implicitly boxed
             object v = new ValueTypeWithOverridedVirtual2(value);
-            return v.ToString();
+            return v.ToString()!;
         }
 
         public static string CallOverrideMethodBoxedInterface(int value)
@@ -263,7 +263,7 @@ namespace IL2C.RuntimeSystems
         public static string CallInheritedMethod()
         {
             var v = new ValueTypeInheritedMethod();
-            return v.ToString();
+            return v.ToString()!;
         }
 
         public static int ValueTypeUpdate1(int before, int update)

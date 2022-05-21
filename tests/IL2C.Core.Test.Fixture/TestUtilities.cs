@@ -75,6 +75,8 @@ namespace IL2C
         }
 
         public static IReadOnlyDictionary<string, IReadOnlyDictionary<Type, TestCaseInformation[]>> ExtractTestCasesFromCoreTestTarget() =>
+            new Dictionary<string, IReadOnlyDictionary<Type, TestCaseInformation[]>>();
+#if false
             typeof(BasicTypes.System_Boolean).Assembly.GetTypes().          // BasicTypes
             Concat(typeof(ILConverters.Add).Assembly.GetTypes()).           // ILConverters
             Concat(typeof(RuntimeSystems.ArrayTypes).Assembly.GetTypes()).  // RuntimeSystems
@@ -83,10 +85,11 @@ namespace IL2C
             ToDictionary(
                 g => g.Key,
                 g => (IReadOnlyDictionary<Type, TestCaseInformation[]>)g.ToDictionary(type => type, TestUtilities.GetTestCaseInformations));
+#endif
 
         public static TestCaseInformation CreateTestCaseInformation(
             string categoryName, string id, string name, string uniqueName, string description,
-            MethodInfo method, MethodBase[] additionalMethods, TestCaseAttribute caseAttribute) =>
+            MethodInfo method, MethodBase[] additionalMethods, TestCaseAttributeBase caseAttribute) =>
             new TestCaseInformation(
                 categoryName,
                 id,
@@ -120,7 +123,7 @@ namespace IL2C
                 targetType.Name;
 
             var caseInfos =
-                (from testCase in targetType.GetCustomAttributes<TestCaseAttribute>(true)
+                (from testCase in targetType.GetCustomAttributes<TestCaseAttributeBase>(true)
                  let method = targetType.GetMethod(
                      testCase.MethodName,
                      BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)    // Static method only for test entry
@@ -154,9 +157,9 @@ namespace IL2C
                  ToArray();
             return caseInfos;
         }
-        #endregion
+#endregion
 
-        #region IO related
+#region IO related
         public static readonly bool IsWindows =
             Environment.OSVersion.Platform == PlatformID.Win32NT;
 
@@ -402,6 +405,6 @@ namespace IL2C
                 return (exitCode, sb.ToString());
             }
         }
-        #endregion
+#endregion
     }
 }

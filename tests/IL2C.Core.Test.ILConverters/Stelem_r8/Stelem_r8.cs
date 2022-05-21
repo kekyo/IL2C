@@ -12,14 +12,11 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase(123.111, new[] { "Double", "DoubleInner" }, 0, 123.111)]
-    [TestCase(456.222, new[] { "Double", "DoubleInner" }, 1, 456.222)]
-    [TestCase(789.333, new[] { "Double", "DoubleInner" }, 2, 789.333)]
-    [TestCase(123.111, new[] { "DoubleIntPtrIndex", "DoubleIntPtrIndexInner" }, 0, 123.111)]
-    [TestCase(456.222, new[] { "DoubleIntPtrIndex", "DoubleIntPtrIndexInner" }, 1, 456.222)]
-    [TestCase(789.333, new[] { "DoubleIntPtrIndex", "DoubleIntPtrIndexInner" }, 2, 789.333)]
     public sealed class Stelem_r8
     {
+        [TestCase(123.111, new[] { "Double", "DoubleInner" }, 0, 123.111)]
+        [TestCase(456.222, new[] { "Double", "DoubleInner" }, 1, 456.222)]
+        [TestCase(789.333, new[] { "Double", "DoubleInner" }, 2, 789.333)]
         public static double Double(int index, double value)
         {
             var values = new double[] { 1, 2, 3 };
@@ -30,6 +27,9 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern void DoubleInner(double[] values, int index, double value);
 
+        [TestCase(123.111, new[] { "DoubleIntPtrIndex", "DoubleIntPtrIndexInner" }, 0, 123.111)]
+        [TestCase(456.222, new[] { "DoubleIntPtrIndex", "DoubleIntPtrIndexInner" }, 1, 456.222)]
+        [TestCase(789.333, new[] { "DoubleIntPtrIndex", "DoubleIntPtrIndexInner" }, 2, 789.333)]
         public static double DoubleIntPtrIndex(int index, double value)
         {
             var values = new double[] { 1, 2, 3 };

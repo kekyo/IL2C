@@ -94,7 +94,7 @@ namespace IL2C.RuntimeSystems
 
         ~FinalzerImplementedWithPinned()
         {
-            var holder = (FinalizerCalleeHolder)(handle.Target);
+            var holder = (FinalizerCalleeHolder)(handle.Target!);
             holder.Called = 1;
         }
     }

@@ -19,7 +19,7 @@ namespace IL2C.BasicTypes
 
     public sealed class Format42_CustomProducer : IFormattable
     {
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
             switch (format)
             {

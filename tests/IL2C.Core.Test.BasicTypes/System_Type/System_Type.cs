@@ -25,22 +25,22 @@ namespace IL2C.BasicTypes
         [TestCase("System.String", "FullName", "ABC")]
         public static string FullName(object value)
         {
-            return value.GetType().FullName;
+            return value.GetType().FullName!;
         }
 
         [TestCase("System.ValueType", "BaseType", 123)]
         [TestCase("System.Object", "BaseType", "ABC")]
         public static string BaseType(object value)
         {
-            return value.GetType().BaseType.FullName;
+            return value.GetType().BaseType!.FullName!;
         }
 
         [TestCase(null, "Object_BaseType")]
-        public static Type Object_BaseType()
+        public static Type? Object_BaseType()
         {
             // TODO: We have to handle GetTypeFromHandle.
             //return typeof(object).BaseType;
-            return 123.GetType().BaseType.BaseType.BaseType;
+            return 123.GetType().BaseType!.BaseType!.BaseType;
         }
     }
 }

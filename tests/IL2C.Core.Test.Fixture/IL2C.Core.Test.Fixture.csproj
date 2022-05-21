@@ -11,9 +11,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ILVerification" Version="5.0.0" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <packagereference Include="NUnit3TestAdapter" Version="3.17.0" PrivateAssets="All" />
+    <!--
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <packagereference Include="NUnit3TestAdapter" Version="4.2.1" PrivateAssets="All" />
+    -->
+    <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
@@ -24,9 +26,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\IL2C.Core\IL2C.Core.csproj" />
+    <!--
     <ProjectReference Include="..\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj" />
     <ProjectReference Include="..\IL2C.Core.Test.ILConverters\IL2C.Core.Test.ILConverters.csproj" />
     <ProjectReference Include="..\IL2C.Core.Test.RuntimeSystems\IL2C.Core.Test.RuntimeSystems.csproj" />
+    -->
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +47,14 @@
     <EmbeddedResource Include="Templates\test_void.c" />
     <EmbeddedResource Include="Templates\test.c" />
     <EmbeddedResource Include="Templates\test.vcxproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Internal\StatisticsDocumentGenerators.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Internal\StatisticsDocumentGenerators.cs" />
   </ItemGroup>
 
 </Project>

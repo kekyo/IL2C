@@ -31,66 +31,66 @@ namespace IL2C.ILConverters
         public static string? StringValue;
     }
 
-    [TestCase(true, "Boolean", true, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(false, "Boolean", false, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(byte.MaxValue, "Byte", byte.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(short.MaxValue, "Int16", short.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(int.MaxValue, "Int32", int.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(long.MaxValue, "Int64", long.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(sbyte.MaxValue, "SByte", sbyte.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(ushort.MaxValue, "UInt16", ushort.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(uint.MaxValue, "UInt32", uint.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(ulong.MaxValue, "UInt64", ulong.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(int.MaxValue, "IntPtr", int.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(uint.MaxValue, "UIntPtr", uint.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(3.14159274f, "Single", 3.14159274f, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase(3.1415926535897931, "Double", 3.1415926535897931, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase('A', "Char", 'A', IncludeTypes = new[] { typeof(Stsfld_Field) })]
-    [TestCase("ABC", "String", "ABC", IncludeTypes = new[] { typeof(Stsfld_Field) })]
     public sealed class Stsfld
     {
+        [TestCase(true, "Boolean", true, IncludeTypes = new[] { typeof(Stsfld_Field) })]
+        [TestCase(false, "Boolean", false, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool Boolean(bool value);
 
+        [TestCase(byte.MaxValue, "Byte", byte.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte Byte(byte value);
 
+        [TestCase(short.MaxValue, "Int16", short.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern short Int16(short value);
 
+        [TestCase(int.MaxValue, "Int32", int.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int Int32(int value);
 
+        [TestCase(long.MaxValue, "Int64", long.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64(long value);
 
+        [TestCase(sbyte.MaxValue, "SByte", sbyte.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern sbyte SByte(sbyte value);
 
+        [TestCase(ushort.MaxValue, "UInt16", ushort.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ushort UInt16(ushort value);
 
+        [TestCase(uint.MaxValue, "UInt32", uint.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern uint UInt32(uint value);
 
+        [TestCase(ulong.MaxValue, "UInt64", ulong.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong UInt64(ulong value);
 
+        [TestCase(int.MaxValue, "IntPtr", int.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern IntPtr IntPtr(IntPtr value);
 
+        [TestCase(uint.MaxValue, "UIntPtr", uint.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern UIntPtr UIntPtr(UIntPtr value);
 
+        [TestCase(3.14159274f, "Single", 3.14159274f, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single(float value);
 
+        [TestCase(3.1415926535897931, "Double", 3.1415926535897931, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern double Double(double value);
 
+        [TestCase('A', "Char", 'A', IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern char Char(char value);
 
+        [TestCase("ABC", "String", "ABC", IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string String(string value);
     }

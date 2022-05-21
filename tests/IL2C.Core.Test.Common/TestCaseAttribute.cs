@@ -7,6 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
+#nullable enable
+
 using System;
 using System.Linq;
 
@@ -21,7 +23,6 @@ namespace IL2C
         CauseBreak
     }
 
-    // It's test case attribute contains expected value, method name and argument values at overall.
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public sealed class TestCaseAttribute :
         NUnit.Framework.TestCaseAttribute, NUnit.Framework.ITestAction
@@ -65,7 +66,8 @@ namespace IL2C
         public Type[] IncludeTypes { get; set; }
         public string[] IgnoreILErrors { get; set; }
 
-        public NUnit.Framework.ActionTargets Targets => throw new NotImplementedException();
+        public NUnit.Framework.ActionTargets Targets =>
+            NUnit.Framework.ActionTargets.Default;
 
         public void BeforeTest(ITest test)
         {
@@ -77,5 +79,57 @@ namespace IL2C
         {
             // TODO: delegates to test native code.
         }
+#if false
+        private static object?[] ConvertToArgumentsType(object?[] args, Type[] argumentTypes) =>
+            args.Zip(argumentTypes, ConvertToArgumentType).ToArray();
+
+        private static object? ConvertToArgumentType(object? value, Type argumentType)
+        {
+            // This is helper function that convert between raw value type and argument type.
+            // Because .NET attribute can't have complex type arguments.
+            if (value == null)
+            {
+                return null;
+            }
+            else if (value.GetType() == argumentType)
+            {
+                return value;
+            }
+            else if (argumentType == typeof(IntPtr))
+            {
+                if (value is int)
+                {
+                    return new IntPtr((int)value);
+                }
+                else if (value is long)
+                {
+                    return new IntPtr((long)value);
+                }
+                else
+                {
+                    throw new InvalidCastException();
+                }
+            }
+            else if (argumentType == typeof(UIntPtr))
+            {
+                if (value is uint)
+                {
+                    return new UIntPtr((uint)value);
+                }
+                else if (value is ulong)
+                {
+                    return new UIntPtr((ulong)value);
+                }
+                else
+                {
+                    throw new InvalidCastException();
+                }
+            }
+            else
+            {
+                return Convert.ChangeType(value, argumentType);
+            }
+        }
+#endif
     }
 }

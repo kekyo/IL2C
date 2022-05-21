@@ -42,10 +42,10 @@ namespace IL2C.RuntimeSystems
             this.a = a;
         }
 
-        public void Run(object parameter)
+        public void Run(object? parameter)
         {
             Thread.Sleep(100);
-            var b = (int)parameter;
+            var b = (int)parameter!;
             this.Result = this.a + b;
         }
     }

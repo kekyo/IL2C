@@ -72,7 +72,7 @@ namespace IL2C.RuntimeSystems
         {
             var objRefHandle = ConcatAndToObjRefHandle(a, b);
             var handle = GCHandle.FromIntPtr(objRefHandle);
-            var result = (string)handle.Target;
+            var result = (string)handle.Target!;
             handle.Free();
             return result;
         }

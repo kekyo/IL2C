@@ -46,7 +46,7 @@ namespace IL2C.BasicTypes
 
             // Remove only a tail delegate.
             // (dlg1 + dlg2 + dlg1) - dlg1 = (dlg1 + dlg2)
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlg1);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlg1);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -66,7 +66,7 @@ namespace IL2C.BasicTypes
 
             // Remove only a tail delegate.
             // (dlg1 + dlg2 + dlg3[=dlg1]) - dlg1 = (dlg1 + dlg2)
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlg1);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlg1);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -85,7 +85,7 @@ namespace IL2C.BasicTypes
             dlgA += dlg3;
 
             // (dlg1 + dlg2 + dlg3) - dlg2 = (dlg1 + dlg3)
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlg2);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlg2);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -104,7 +104,7 @@ namespace IL2C.BasicTypes
             dlgA += dlg3;
 
             // (dlg1 + dlg2 + dlg3) - dlg1 = (dlg2 + dlg3)
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlg1);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlg1);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -124,7 +124,7 @@ namespace IL2C.BasicTypes
             dlgA += dlg3;
 
             // (dlg1 + dlg2 + dlg3) - dlg4 = (dlg1 + dlg2 + dlg3)
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlg4);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlg4);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -138,7 +138,7 @@ namespace IL2C.BasicTypes
             var dlg1 = new IntRefDelegate(IntRefImpl1);
 
             // null - dlg1 = null
-            var dlg = (IntRefDelegate)Delegate.Remove(null, dlg1);
+            var dlg = (IntRefDelegate?)Delegate.Remove(null, dlg1);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -159,7 +159,7 @@ namespace IL2C.BasicTypes
             var dlgB = dlg1 + dlg2;
 
             // (dlg1 + dlg2 + dlg3) - (dlg1 + dlg2) = dlg3
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlgB);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlgB);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -180,7 +180,7 @@ namespace IL2C.BasicTypes
             var dlgB = dlg2 + dlg3;
 
             // (dlg1 + dlg2 + dlg3) - (dlg2 + dlg3) = dlg1
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlgB);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlgB);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -201,7 +201,7 @@ namespace IL2C.BasicTypes
             var dlgB = dlg2 + dlg1;
 
             // (dlg1 + dlg2 + dlg3) - (dlg2 + dlg1) = (dlg1 + dlg2 + dlg3)
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlgB);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlgB);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -223,7 +223,7 @@ namespace IL2C.BasicTypes
             dlgB += dlg3;
 
             // (dlg1 + dlg2 + dlg3) - (dlg1 + dlg2 + dlg3) = null
-            var dlg = (IntRefDelegate)Delegate.Remove(dlgA, dlgB);
+            var dlg = (IntRefDelegate?)Delegate.Remove(dlgA, dlgB);
 
             var v = value;
             dlg?.Invoke(ref v);
@@ -240,7 +240,7 @@ namespace IL2C.BasicTypes
             var dlgA = dlg1 + dlg2;
 
             // null - (dlg1 + dlg2) = null
-            var dlg = (IntRefDelegate)Delegate.Remove(null, dlgA);
+            var dlg = (IntRefDelegate?)Delegate.Remove(null, dlgA);
 
             var v = value;
             dlg?.Invoke(ref v);

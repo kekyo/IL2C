@@ -12,11 +12,6 @@ namespace IL2C.RuntimeSystems
     public delegate string RefIntToStringDelegate(ref int value);
 
     [TestId("DelegateTypes")]
-    [TestCase(1333, new[] { "Static_Void_RefInt_Multicast", "Static_Void_RefIntImpl1", "Static_Void_RefIntImpl2" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
-    [TestCase("1222", new[] { "Static_RefIntToString_Multicast", "Static_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
-    [TestCase("1234ABC", new[] { "Combination_RefIntToString_Multicast1", "Static_RefIntToStringImpl", "Instance_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
-    [TestCase("1234", new[] { "Combination_RefIntToString_Multicast2", "Static_RefIntToStringImpl", "Instance_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
-    [TestCase("1357ABC", new[] { "Combination_RefIntToString_Multicast3", "Static_RefIntToStringImpl", "Instance_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
     public sealed class MulticastDelegateTypes
     {
         private static void Static_Void_RefIntImpl1(ref int value)
@@ -29,6 +24,7 @@ namespace IL2C.RuntimeSystems
             value += 222;
         }
 
+        [TestCase(1333, new[] { "Static_Void_RefInt_Multicast", "Static_Void_RefIntImpl1", "Static_Void_RefIntImpl2" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
         public static int Static_Void_RefInt_Multicast(int value)
         {
             var dlg1 = new RefIntDelegate(Static_Void_RefIntImpl1);
@@ -47,6 +43,7 @@ namespace IL2C.RuntimeSystems
             return value.ToString();
         }
 
+        [TestCase("1222", new[] { "Static_RefIntToString_Multicast", "Static_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
         public static string Static_RefIntToString_Multicast(int value)
         {
             var dlg1 = new RefIntToStringDelegate(Static_RefIntToStringImpl);
@@ -65,6 +62,7 @@ namespace IL2C.RuntimeSystems
             return value.ToString() + "ABC";
         }
 
+        [TestCase("1234ABC", new[] { "Combination_RefIntToString_Multicast1", "Static_RefIntToStringImpl", "Instance_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
         public static string Combination_RefIntToString_Multicast1(int value)
         {
             var inst = new MulticastDelegateTypes();
@@ -76,6 +74,7 @@ namespace IL2C.RuntimeSystems
             return dlg1(ref v);
         }
 
+        [TestCase("1234", new[] { "Combination_RefIntToString_Multicast2", "Static_RefIntToStringImpl", "Instance_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
         public static string Combination_RefIntToString_Multicast2(int value)
         {
             var inst = new MulticastDelegateTypes();
@@ -87,6 +86,7 @@ namespace IL2C.RuntimeSystems
             return dlg1(ref v);
         }
 
+        [TestCase("1357ABC", new[] { "Combination_RefIntToString_Multicast3", "Static_RefIntToStringImpl", "Instance_RefIntToStringImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntToStringDelegate) })]
         public static string Combination_RefIntToString_Multicast3(int value)
         {
             var inst = new MulticastDelegateTypes();

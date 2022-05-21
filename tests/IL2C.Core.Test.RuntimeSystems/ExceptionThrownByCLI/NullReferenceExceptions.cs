@@ -15,14 +15,10 @@ using System.Runtime.InteropServices;
 namespace IL2C.RuntimeSystems
 {
     [TestId("ExceptionThrownByCLI")]
-    [TestCase(false, "NullReference", "ABC")]
-    [TestCase(true, "NullReference", null!)]
-    [TestCase(false, "NullReferenceTwoTimes", "ABC")]   // Test for re-register signal handler
-    [TestCase(true, "NullReferenceTwoTimes", null!)]
-    [TestCase(false, "NullReferenceAtTheUnbox", (object)123)]
-    [TestCase(true, "NullReferenceAtTheUnbox", null!)]
     public sealed class NullReferenceExceptions
     {
+        [TestCase(false, "NullReference", "ABC")]
+        [TestCase(true, "NullReference", null!)]
         public static bool NullReference(object v)
         {
             try
@@ -36,6 +32,8 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(false, "NullReferenceTwoTimes", "ABC")]   // Test for re-register signal handler
+        [TestCase(true, "NullReferenceTwoTimes", null!)]
         public static bool NullReferenceTwoTimes(object v)
         {
             try
@@ -62,6 +60,8 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(false, "NullReferenceAtTheUnbox", (object)123)]
+        [TestCase(true, "NullReferenceAtTheUnbox", null!)]
         public static bool NullReferenceAtTheUnbox(object value)
         {
             try

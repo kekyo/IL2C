@@ -22,29 +22,11 @@ namespace IL2C.RuntimeSystems
 
     [Description("These tests are verified the IL2C throw some exceptions from the internal runtimes by ECMA-335 I.12.4.2.1.")]
     [TestId("ExceptionThrownByCLI")]
-    [TestCase(true, "InvalidCastExceptionFromStringToString", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToString", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, new[] { "InvalidCastExceptionFromDelegateToString", "TestTarget" }, IncludeTypes = new[] { typeof(ObjectModelInstructionsTestDelegate) }, Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromByteToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromByteToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromByteToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromByteToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt16ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt32ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(true, "InvalidCastExceptionFromInt64ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
     public sealed class InvalidCastExceptions
     {
         // These cases become from ECMA-335 I.12.4.2.1 - Exceptions thrown by the CLI - Object Model Instructions
 
+        [TestCase(true, "InvalidCastExceptionFromStringToString", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromStringToString()
         {
             object value = "ABC";
@@ -59,6 +41,7 @@ namespace IL2C.RuntimeSystems
             return true;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt32ToString", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt32ToString()
         {
             object value = 123;
@@ -82,6 +65,7 @@ namespace IL2C.RuntimeSystems
             return from;
         }
 
+        [TestCase(true, new[] { "InvalidCastExceptionFromDelegateToString", "TestTarget" }, IncludeTypes = new[] { typeof(ObjectModelInstructionsTestDelegate) }, Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromDelegateToString()
         {
             try
@@ -100,6 +84,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromByteToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromByteToByte()
         {
             object value = (byte)123;
@@ -114,6 +99,7 @@ namespace IL2C.RuntimeSystems
             return true;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromByteToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromByteToInt16()
         {
             object value = (byte)123;
@@ -132,6 +118,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromByteToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromByteToInt32()
         {
             object value = (byte)123;
@@ -150,6 +137,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromByteToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromByteToInt64()
         {
             object value = (byte)123;
@@ -168,6 +156,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt16ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt16ToByte()
         {
             object value = (short)123;
@@ -186,6 +175,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt16ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt16ToInt16()
         {
             object value = (short)123;
@@ -200,6 +190,7 @@ namespace IL2C.RuntimeSystems
             return true;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt16ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt16ToInt32()
         {
             object value = (short)123;
@@ -218,6 +209,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt16ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt16ToInt64()
         {
             object value = (short)123;
@@ -236,6 +228,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt32ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt32ToByte()
         {
             object value = 123;
@@ -254,6 +247,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt32ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt32ToInt16()
         {
             object value = 123;
@@ -272,6 +266,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt32ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt32ToInt32()
         {
             object value = 123;
@@ -286,6 +281,7 @@ namespace IL2C.RuntimeSystems
             return true;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt32ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt32ToInt64()
         {
             object value = 123;
@@ -304,6 +300,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt64ToByte", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt64ToByte()
         {
             object value = (long)123;
@@ -322,6 +319,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt64ToInt16", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt64ToInt16()
         {
             object value = (long)123;
@@ -340,6 +338,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt64ToInt32", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt64ToInt64()
         {
             object value = (long)123;
@@ -358,6 +357,7 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(true, "InvalidCastExceptionFromInt64ToInt64", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static bool InvalidCastExceptionFromInt64ToInt32()
         {
             object value = (long)123;

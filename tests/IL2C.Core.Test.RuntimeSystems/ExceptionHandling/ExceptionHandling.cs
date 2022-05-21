@@ -15,39 +15,10 @@ using System.Runtime.InteropServices;
 namespace IL2C.RuntimeSystems
 {
     [Description("These tests are verified the IL2C translates with simple and/or complext exception handling.")]
-    [TestCase(123, "RaiseAndCaughtLocal", false)]
-    [TestCase(456, "RaiseAndCaughtLocal", true)]
-    [TestCase("ABC", "RaiseCaughtAndAccessLocal", "ABC")]
-    [TestCase(null, "RaiseCaughtAndAccessLocal", null!)]
-    [TestCase("ABC", "RaiseCaughtNarrowingLocal", "ABC")]
-    [TestCase(null, "RaiseCaughtNarrowingLocal", null!)]
-    [TestCase("ABC", "RaiseCaughtWildcardLocal", "ABC")]
-    [TestCase(null, "RaiseCaughtWildcardLocal", null!)]
-    [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
-    [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
-    [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
-    [TestCase(29, "FinallyWithNonThrowingLocal", 123)]
-    [TestCase(129, "FinallyWithThrowingAndNestedLocal", 123)]
-    [TestCase(129, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, true)]
-    [TestCase(29, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, false)]
-    [TestCase(30, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, false, false)]
-    [TestCase(30, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, false, true)]
-    [TestCase(12, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, true, false)]
-    [TestCase(112, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, true, true)]
-    [TestCase(123, "RaiseAndNestedCaughtLocal", 123)]
-    [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
-    [TestCase(223, "RaiseCaughtAndRethrowLocal", 123)]
-    [TestCase(223, "RaiseCaughtAndThrowNewExceptionLocal", 123)]
-    [TestCase(223, "FinallyThrowNewExceptionLocal", 123)]
-    [TestCase(123, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, false)]
-    [TestCase(456, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, true)]
-    [TestCase(true, "RaiseCaughtAndNestedBlockLocal")]
-    [TestCase(true, "RaiseCaughtAndRethrowOnNestedBlockLocal")]
-    [TestCase(true, "RaiseCaughtAndRethrowOnMultipleNestedBlockLocal")]
-    [TestCase(true, "RaiseCaughtAndRethrowInsideLocal")]
-    [TestCase(true, "RaiseCaughtAndRethrowOutsideLocal")]
     public sealed class ExceptionHandling
     {
+        [TestCase(123, "RaiseAndCaughtLocal", false)]
+        [TestCase(456, "RaiseAndCaughtLocal", true)]
         public static int RaiseAndCaughtLocal(bool sw)
         {
             try
@@ -61,6 +32,8 @@ namespace IL2C.RuntimeSystems
             return 123;
         }
 
+        [TestCase("ABC", "RaiseCaughtAndAccessLocal", "ABC")]
+        [TestCase(null, "RaiseCaughtAndAccessLocal", null!)]
         public static string? RaiseCaughtAndAccessLocal(string value)
         {
             try
@@ -74,6 +47,8 @@ namespace IL2C.RuntimeSystems
             return null;
         }
 
+        [TestCase("ABC", "RaiseCaughtNarrowingLocal", "ABC")]
+        [TestCase(null, "RaiseCaughtNarrowingLocal", null!)]
         public static string? RaiseCaughtNarrowingLocal(string value)
         {
             try
@@ -87,6 +62,8 @@ namespace IL2C.RuntimeSystems
             return null;
         }
 
+        [TestCase("ABC", "RaiseCaughtWildcardLocal", "ABC")]
+        [TestCase(null, "RaiseCaughtWildcardLocal", null!)]
         public static string? RaiseCaughtWildcardLocal(string value)
         {
             try
@@ -100,6 +77,9 @@ namespace IL2C.RuntimeSystems
             return null;
         }
 
+        [TestCase(123, "RaiseAndCaughtMultipleHandlerLocal", 0)]
+        [TestCase(456, "RaiseAndCaughtMultipleHandlerLocal", 1)]
+        [TestCase(789, "RaiseAndCaughtMultipleHandlerLocal", 2)]
         public static int RaiseAndCaughtMultipleHandlerLocal(int sw)
         {
             try
@@ -118,6 +98,7 @@ namespace IL2C.RuntimeSystems
             return 123;
         }
 
+        [TestCase(29, "FinallyWithNonThrowingLocal", 123)]
         public static int FinallyWithNonThrowingLocal(int value)
         {
             int r = 0;
@@ -133,6 +114,7 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(129, "FinallyWithThrowingAndNestedLocal", 123)]
         public static int FinallyWithThrowingAndNestedLocal(int value)
         {
             int r = value;
@@ -155,6 +137,8 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(129, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, true)]
+        [TestCase(29, "FinallyAndCaughtWithThrowingAndNestedLocal", 123, false)]
         public static int FinallyAndCaughtWithThrowingAndNestedLocal(int value, bool rethrow)
         {
             int r = 0;
@@ -187,6 +171,10 @@ namespace IL2C.RuntimeSystems
             if (sw) throw new Exception();
         }
 
+        [TestCase(30, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, false, false)]
+        [TestCase(30, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, false, true)]
+        [TestCase(12, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, true, false)]
+        [TestCase(112, new[] { "FinallyAndCaughtWithThrowingAndNestedGlobal", "RaiseException" }, 123, true, true)]
         public static int FinallyAndCaughtWithThrowingAndNestedGlobal(int value, bool sw, bool rethrow)
         {
             int r = 500;
@@ -214,6 +202,7 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(123, "RaiseAndNestedCaughtLocal", 123)]
         public static int RaiseAndNestedCaughtLocal(int value)
         {
             int r = 0;
@@ -236,6 +225,7 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(123, "RaiseAndNestedCaughtOuterLocal", 123)]
         public static int RaiseAndNestedCaughtOuterLocal(int value)
         {
             int r = 0;
@@ -258,6 +248,7 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(223, "RaiseCaughtAndRethrowLocal", 123)]
         public static int RaiseCaughtAndRethrowLocal(int value)
         {
             int r = 0;
@@ -281,6 +272,7 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(223, "RaiseCaughtAndThrowNewExceptionLocal", 123)]
         public static int RaiseCaughtAndThrowNewExceptionLocal(int value)
         {
             int r = 0;
@@ -304,6 +296,7 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(223, "FinallyThrowNewExceptionLocal", 123)]
         public static int FinallyThrowNewExceptionLocal(int value)
         {
             int r = 0;
@@ -327,6 +320,8 @@ namespace IL2C.RuntimeSystems
             return r;
         }
 
+        [TestCase(123, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, false)]
+        [TestCase(456, new[] { "RaiseAndCaughtGlobal", "RaiseException" }, true)]
         public static int RaiseAndCaughtGlobal(bool sw)
         {
             try
@@ -340,6 +335,7 @@ namespace IL2C.RuntimeSystems
             return 123;
         }
 
+        [TestCase(true, "RaiseCaughtAndNestedBlockLocal")]
         public static bool RaiseCaughtAndNestedBlockLocal()
         {
             var ex1 = new Exception();
@@ -361,6 +357,7 @@ namespace IL2C.RuntimeSystems
             }
         }
 
+        [TestCase(true, "RaiseCaughtAndRethrowOnNestedBlockLocal")]
         public static bool RaiseCaughtAndRethrowOnNestedBlockLocal()
         {
             var ex1 = new Exception();
@@ -381,6 +378,7 @@ namespace IL2C.RuntimeSystems
             }
         }
 
+        [TestCase(true, "RaiseCaughtAndRethrowOnMultipleNestedBlockLocal")]
         public static bool RaiseCaughtAndRethrowOnMultipleNestedBlockLocal()
         {
             var ex1 = new Exception();
@@ -410,6 +408,7 @@ namespace IL2C.RuntimeSystems
             }
         }
 
+        [TestCase(true, "RaiseCaughtAndRethrowInsideLocal")]
         public static bool RaiseCaughtAndRethrowInsideLocal()
         {
             var ex1 = new Exception();
@@ -448,6 +447,7 @@ namespace IL2C.RuntimeSystems
             }
         }
 
+        [TestCase(true, "RaiseCaughtAndRethrowOutsideLocal")]
         public static bool RaiseCaughtAndRethrowOutsideLocal()
         {
             var ex1 = new Exception();

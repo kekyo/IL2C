@@ -22,17 +22,13 @@ namespace IL2C.RuntimeSystems
     }
 
     [Description("These tests are verified the IL2C manages interoperability with the P/Invoke adn IL2C/Invoke method and internalcall method.")]
-    [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString1" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(null, new[] { "DllImportWithUnicodeStringArgument", "OutputDebugString2" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-    [TestCase(12345678, "TransparencyForNativePointer", 12345678)]
-    [TestCase(12345678, "TransparencyForNativePointerInsideNativeType", 12345678, IncludeTypes = new[] { typeof(NativePointerInside) })]
-    [TestCase("ABCDEF", new[] { "BypassObjRefWithObjRefHandle", "ConcatAndToObjRefHandle" }, "ABC", "DEF")]
     public sealed class Interoperability
     {
         [NativeMethod("windows.h", SymbolName = "OutputDebugStringW", CharSet = NativeCharSet.Unicode)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern void OutputDebugString1(string message);
 
+        [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString1" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static void InternalCallWithUnicodeStringArgument(string message)
         {
             OutputDebugString1(message);
@@ -41,11 +37,13 @@ namespace IL2C.RuntimeSystems
         [DllImport("kernel32", EntryPoint = "OutputDebugStringW")]
         private static extern void OutputDebugString2(string message);
 
+        [TestCase(null, new[] { "DllImportWithUnicodeStringArgument", "OutputDebugString2" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
         public static void DllImportWithUnicodeStringArgument(string message)
         {
             OutputDebugString2(message);
         }
 
+        [TestCase(12345678, "TransparencyForNativePointer", 12345678)]
         public static IntPtr TransparencyForNativePointer(IntPtr value)
         {
             NativePointer np = value;
@@ -53,6 +51,7 @@ namespace IL2C.RuntimeSystems
             return ip;
         }
 
+        [TestCase(12345678, "TransparencyForNativePointerInsideNativeType", 12345678, IncludeTypes = new[] { typeof(NativePointerInside) })]
         public static IntPtr TransparencyForNativePointerInsideNativeType(IntPtr value)
         {
             NativePointerInside npi;
@@ -68,6 +67,7 @@ namespace IL2C.RuntimeSystems
             return GCHandle.ToIntPtr(handle);
         }
 
+        [TestCase("ABCDEF", new[] { "BypassObjRefWithObjRefHandle", "ConcatAndToObjRefHandle" }, "ABC", "DEF")]
         public static string BypassObjRefWithObjRefHandle(string a, string b)
         {
             var objRefHandle = ConcatAndToObjRefHandle(a, b);

@@ -10,7 +10,6 @@
 #nullable enable
 
 using System;
-using System.Linq;
 
 using NUnit.Framework.Interfaces;
 
@@ -23,7 +22,7 @@ namespace IL2C
         CauseBreak
     }
 
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public sealed class TestCaseAttribute :
         NUnit.Framework.TestCaseAttribute, NUnit.Framework.ITestAction
     {
@@ -39,7 +38,7 @@ namespace IL2C
             this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
             this.IncludeTypes = Type.EmptyTypes;
-            this.IgnoreILErrors = Array.Empty<string>();
+            this.IgnoreILErrors = new string[0];
         }
 
         // This overload contains additional methods, those are used from the test method (first methodName is target.)
@@ -50,12 +49,22 @@ namespace IL2C
             base.ExpectedResult = expected;
 
             this.MethodName = methodNames[0];   // test method
-            this.AdditionalMethodNames = methodNames.Skip(1).ToArray();   // additionals
+            this.AdditionalMethodNames = GetAdditionalMethodNames(methodNames);   // additionals
 
             this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
             this.IncludeTypes = Type.EmptyTypes;
-            this.IgnoreILErrors = Array.Empty<string>();
+            this.IgnoreILErrors = new string[0];
+        }
+
+        private static string[] GetAdditionalMethodNames(string[] methodNames)
+        {
+            var amns = new string[methodNames.Length - 1];
+            for (var index = 0; index < (methodNames.Length - 1); index++)
+            {
+                amns[index] = methodNames[index + 1];
+            }
+            return amns;
         }
 
         public string MethodName { get; }
@@ -79,6 +88,7 @@ namespace IL2C
         {
             // TODO: delegates to test native code.
         }
+
 #if false
         private static object?[] ConvertToArgumentsType(object?[] args, Type[] argumentTypes) =>
             args.Zip(argumentTypes, ConvertToArgumentType).ToArray();

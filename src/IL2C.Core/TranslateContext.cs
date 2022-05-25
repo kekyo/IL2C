@@ -29,6 +29,8 @@ namespace IL2C
         : IPrepareContext, IExtractContextHost
     {
         #region  Fields
+        private readonly ILogger logger;
+
         private readonly Dictionary<MemberScopes, HashSet<ITypeInformation>> registeredTypes =
             new Dictionary<MemberScopes, HashSet<ITypeInformation>>();
         private readonly Dictionary<ITypeInformation, HashSet<ITypeInformation>> registeredTypesByDeclaringType =
@@ -45,11 +47,16 @@ namespace IL2C
         #endregion
 
         public TranslateContext(
-            string assemblyPath, string[] referenceBasePath, bool readSymbols,
+            ILogger logger,
+            string assemblyPath,
+            string[] referenceBasePath,
             TargetPlatforms targetPlatform)
         {
+            this.logger = logger;
+
             var context = new MetadataContext(
-                assemblyPath, referenceBasePath, readSymbols);
+                this.logger, assemblyPath, referenceBasePath);
+
             this.MetadataContext = context;
             this.Assembly = context.MainAssembly;
             this.TargetPlatform = targetPlatform;

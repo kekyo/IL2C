@@ -7,20 +7,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Runtime.InteropServices;
-
-namespace IL2C
+namespace System.Runtime.InteropServices
 {
-    [IgnoreTranslation]
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class TestIdAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface | AttributeTargets.Enum | AttributeTargets.Delegate, AllowMultiple=false, Inherited=false)]
+    public sealed class IgnoreTranslationAttribute : Attribute
     {
-        public TestIdAttribute(string id)
+        public IgnoreTranslationAttribute()
         {
-            this.Id = id;
         }
-
-        public string Id { get; }
     }
 }

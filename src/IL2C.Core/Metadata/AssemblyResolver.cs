@@ -11,36 +11,47 @@
 
 using System.IO;
 using System.Linq;
+
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Pdb;
 
+using IL2C.Internal;
+
 namespace IL2C.Metadata
 {
-    internal sealed class IL2CAssemblyResolver : DefaultAssemblyResolver
+    internal sealed class AssemblyResolver : DefaultAssemblyResolver
     {
-        private sealed class IL2CSymbolReaderProvider : ISymbolReaderProvider
+        private sealed class SymbolReaderProvider : ISymbolReaderProvider
         {
             // HACK: cecil will lock symbol file when uses defaulted reading method.
             //   Makes safer around entire building process.
 
             private static readonly PdbReaderProvider parent = new();
 
+            private readonly ILogger logger;
+
+            public SymbolReaderProvider(ILogger logger) =>
+                this.logger = logger;
+
             public ISymbolReader? GetSymbolReader(ModuleDefinition module, string fileName)
             {
                 if (module.HasDebugHeader)
                 {
+                    var fullPath = Path.GetFullPath(fileName);
+
                     var header = module.GetDebugHeader();
                     if (header.Entries.
                         FirstOrDefault(e => e.Directory.Type == ImageDebugType.EmbeddedPortablePdb) is { } entry)
                     {
-                        return new EmbeddedPortablePdbReaderProvider().
+                        var sr = new EmbeddedPortablePdbReaderProvider().
                             GetSymbolReader(module, fileName);
+                        this.logger.Trace($"Symbol loaded from: {fullPath}");
+                        return sr;
                     }
 
-                    var fullPath = Path.GetFullPath(fileName);
                     var debuggingPath = Path.Combine(
-                        fullPath,
+                        IOAccessor.GetDirectoryPath(fullPath),
                         Path.GetFileNameWithoutExtension(fullPath) + ".pdb");
 
                     if (File.Exists(debuggingPath))
@@ -53,10 +64,13 @@ namespace IL2C.Metadata
                         }
                         ms.Position = 0;
 
-                        return parent.GetSymbolReader(module, ms);
+                        var sr = parent.GetSymbolReader(module, ms);
+                        this.logger.Trace($"Symbol loaded from: {debuggingPath}");
+                        return sr;
                     }
                 }
 
+                this.logger.Trace($"Symbol not found: {fileName}");
                 return null;
             }
 
@@ -72,14 +86,25 @@ namespace IL2C.Metadata
             }
         }
 
-        public IL2CAssemblyResolver(
-            string assemblyPath, string[] referenceBasePaths, bool readSymbols)
+        private readonly ILogger logger;
+
+        public AssemblyResolver(
+            ILogger logger, string targetBasePath, string[] referenceBasePaths)
         {
-            base.AddSearchDirectory(Path.GetDirectoryName(Path.GetFullPath(assemblyPath)));
+            this.logger = logger;
+
+            void Add(string path)
+            {
+                var fullPath = Path.GetFullPath(path);
+                base.AddSearchDirectory(fullPath);
+                this.logger.Trace($"Reference base path: {fullPath}");
+            }
+
+            Add(targetBasePath);
 
             foreach (var referenceBasePath in referenceBasePaths)
             {
-                base.AddSearchDirectory(Path.GetFullPath(referenceBasePath));
+                Add(referenceBasePath);
             }
         }
 
@@ -90,23 +115,42 @@ namespace IL2C.Metadata
                 ReadWrite = false,
                 InMemory = true,
                 AssemblyResolver = this,
-                SymbolReaderProvider = new IL2CSymbolReaderProvider(),
+                SymbolReaderProvider = new SymbolReaderProvider(this.logger),
                 ReadSymbols = true,
             };
-            return base.Resolve(name, parameters);
+            var ad = base.Resolve(name, parameters);
+            this.logger.Trace($"Assembly loaded: {ad.MainModule.FileName}");
+            return ad;
         }
 
-        public AssemblyDefinition ReadFrom(string assemblyPath)
+        public AssemblyDefinition ReadAssemblyFrom(string assemblyPath)
         {
             var parameters = new ReaderParameters()
             {
                 ReadWrite = false,
                 InMemory = true,
                 AssemblyResolver = this,
-                SymbolReaderProvider = new IL2CSymbolReaderProvider(),
+                SymbolReaderProvider = new SymbolReaderProvider(this.logger),
                 ReadSymbols = true,
             };
-            return AssemblyDefinition.ReadAssembly(assemblyPath, parameters);
+            var ad = AssemblyDefinition.ReadAssembly(assemblyPath, parameters);
+            this.logger.Trace($"Assembly loaded: {ad.MainModule.FileName}");
+            return ad;
+        }
+
+        public ModuleDefinition ReadModuleFrom(string modulePath)
+        {
+            var parameters = new ReaderParameters()
+            {
+                ReadWrite = false,
+                InMemory = true,
+                AssemblyResolver = this,
+                SymbolReaderProvider = new SymbolReaderProvider(this.logger),
+                ReadSymbols = true,
+            };
+            var md = ModuleDefinition.ReadModule(modulePath, parameters);
+            this.logger.Trace($"Module loaded: {md.FileName}");
+            return md;
         }
     }
 }

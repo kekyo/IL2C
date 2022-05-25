@@ -43,8 +43,22 @@ namespace IL2C.Internal
             return candidate.Length >= 1 ? candidate : ".";
         }
 
-        public static string SafeGetDirectoryName(string path) =>
-            Path.GetDirectoryName(path) ?? ".";
+        public static string GetDirectoryPath(string path)
+        {
+            var d = Path.GetDirectoryName(path);
+            if (d == null)
+            {
+                return Path.DirectorySeparatorChar.ToString();
+            }
+            else if (string.IsNullOrWhiteSpace(d))
+            {
+                return Path.GetFullPath(".");
+            }
+            else
+            {
+                return Path.GetFullPath(d);
+            }
+        }
 
         public static ValueTask SafeCreateDirectoryAsync(string path, bool clean) =>
             new ValueTask(Task.Run(() =>

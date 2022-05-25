@@ -12,4 +12,8 @@
     <PackageReference Include="NUnit" Version="3.13.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\IL2C.Interop\IL2C.Interop.csproj" />
+  </ItemGroup>
+
 </Project>

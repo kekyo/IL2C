@@ -31,6 +31,7 @@ namespace IL2C.Metadata.Specialized
         public string ScopeName => string.Empty;
 
         public bool IsValidDefinition => false;
+        public bool IsIgnoreTranslation => false;
 
         public bool IsPublic => false;
         public bool IsNotPublic => false;

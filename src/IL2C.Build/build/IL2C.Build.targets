@@ -14,8 +14,6 @@
   <!-- Common -->
     
   <PropertyGroup>
-    <IL2CEnableTranslation Condition="'$(IL2CEnableTranslation)' == ''">true</IL2CEnableTranslation>
-    <IL2CEnableNativeCompilation Condition="'$(IL2CEnableNativeCompilation)' == ''">true</IL2CEnableNativeCompilation>
     <IL2CDebugInformation Condition="'$(IL2CDebugInformation)' == ''">Full</IL2CDebugInformation>
     <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
     <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
@@ -48,8 +46,15 @@
   <!-- ============================================================================= -->
 
   <!-- Custom target after compile process -->
-  <!-- HACK: ILComposeBuildAfterCompile is ILCompose custom target. -->
-  <Target Name="IL2CBuildAfterCompile" AfterTargets="Compile;ILComposeBuildAfterCompile"
+  <!-- HACK: ILComposeBuildEnable is ILCompose custom target. -->
+
+  <PropertyGroup>
+    <!-- TODO: ILComposeBuildEnable -->
+    <_IL2C_BuildAfterTargets Condition="'$(ILComposeDependsOnTargets)' != ''">ILComposeBuildTarget</_IL2C_BuildAfterTargets>
+    <_IL2C_BuildAfterTargets Condition="'$(ILComposeDependsOnTargets)' == ''">Compile</_IL2C_BuildAfterTargets>
+  </PropertyGroup>
+    
+  <Target Name="IL2CBuildTarget" AfterTargets="$(_IL2C_BuildAfterTargets)"
     Condition="'$(IL2CEnableTranslation)' == 'True'">
     <CallTarget Targets="IL2CBuildPrepare; IL2CBuildRuntimeLibrary; IL2CBuildCore" />
   </Target>

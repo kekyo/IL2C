@@ -100,7 +100,7 @@ namespace IL2C.Drivers
             var sourceCodeFileName = Path.GetFileNameWithoutExtension(sourceCodePath);
             var outputBasePath = Path.Combine(
                 outputStagingDirPath,
-                IOAccessor.SafeGetDirectoryName(sourceCodePath.Substring(sourceDir.Length + 1)));
+                IOAccessor.GetDirectoryPath(sourceCodePath.Substring(sourceDir.Length + 1)));
             var outputPath = Path.Combine(
                 outputBasePath,
                 outputFileName);
@@ -144,7 +144,7 @@ namespace IL2C.Drivers
             string[] nativeCompilerBasePaths,
             string nativeArchiver)
         {
-            var outputBasePath = IOAccessor.SafeGetDirectoryName(outputPath);
+            var outputBasePath = IOAccessor.GetDirectoryPath(outputPath);
             var buildScriptPath = Path.Combine(
                 outputBasePath,
                 $"build_{Path.GetFileNameWithoutExtension(outputPath)}");
@@ -177,14 +177,14 @@ namespace IL2C.Drivers
                 Path.Combine(
                     outputDirFullPath,
                     artifactPathOptions.OutputNativeArchiveFileName));
-            var nativeToolchainBasePath = IOAccessor.SafeGetDirectoryName(
+            var nativeToolchainBasePath = IOAccessor.GetDirectoryPath(
                 toolchainOptions.NativeCompiler);
             var nativeToolchainBasePaths =
                 string.IsNullOrWhiteSpace(nativeToolchainBasePath) ?
                     new string[0] :
                     new[] { Path.GetFullPath(nativeToolchainBasePath) };
 
-            logger.Information($"Preparing for compilation native binary: \"{sourceCodeDirFullPath}\" ...");
+            logger.Information($"Preparing for compilation native binary: {sourceCodeDirFullPath}");
 
             await IOAccessor.SafeCreateDirectoryAsync(
                 outputDirFullPath, outputDirFullPath != sourceCodeDirFullPath).
@@ -209,7 +209,7 @@ namespace IL2C.Drivers
             /////////////////////////////////////////////////////////////
             // Compiling step:
 
-            logger.Information($"Compiling native binary into \"{outputNativeArchiveFullPath}\" ...");
+            logger.Information($"Compiling native binary into: {outputNativeArchiveFullPath}");
 
             // Compile in small pieces:
             //   Because LTO (LTCG) is not always enable, it is better to subdivide object files
@@ -218,7 +218,7 @@ namespace IL2C.Drivers
             var crs = new List<CompilationResult>();
             foreach (var sourceCodePath in sourceCodePaths)
             {
-                logger.Trace($"Compiling source code: \"{sourceCodePath}\" ...");
+                logger.Trace($"Compiling source code: {sourceCodePath}");
                 var r = await ExecuteCompilerAsync(
                     sourceCodePath,
                     outputStagingBaseDirPath,
@@ -287,7 +287,7 @@ namespace IL2C.Drivers
                         outputDirFullPath,
                         artifactPathOptions.OutputNativeExecutableFileName));
 
-                logger.Information($"Linking native binary \"{outputNativeExecutableFullPath}\"");
+                logger.Information($"Linking native binary: {outputNativeExecutableFullPath}");
 
                 var mainSourceCodePath = Path.Combine(
                     outputDirFullPath,
@@ -324,7 +324,7 @@ namespace IL2C.Drivers
                     throw new Exception($"{Path.GetFileName(toolchainOptions.NativeCompiler)}: {crf}");
                 }
 
-                logger.Information($"Built native binary: \"{outputNativeExecutableFullPath}\" ...");
+                logger.Information($"Built native binary: {outputNativeExecutableFullPath}");
             }
         }
     }

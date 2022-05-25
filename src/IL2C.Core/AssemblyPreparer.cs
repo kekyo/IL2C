@@ -67,8 +67,6 @@ namespace IL2C
             }
         }
 
-        private static readonly SequencePoint[] empty = new SequencePoint[0];
-
         private static PreparedMethodInformation PrepareMethodBody(
             IPrepareContext prepareContext,
             IMethodInformation method)
@@ -132,8 +130,8 @@ namespace IL2C
                         dc.UniqueCodeBlockIndex,
                         ilBody.Code,
                         dc.DecodingPathNumber)).
-                OrderBy(ilb => ilb.UniqueCodeBlockIndex).
-                ThenBy(ilb => ilb.Label.Offset).
+                OrderBy(ilb => ilb.UniqueCodeBlockIndex).   // TODO: Pointless?
+                ThenBy(ilb => ilb.Label.Offset).            // TODO: Pointless?
                 ToDictionary(ilb => ilb.Label.Offset, ilb => ilb.Emitter);
 
             //////////////////////////////////////////////////////////////////////////////
@@ -310,7 +308,7 @@ namespace IL2C
             return Prepare(
                 translateContext,
                 // All types
-                type => true,
+                type => !type.IsIgnoreTranslation,
                 // The methods except type initializer.
                 method => !(method.IsConstructor && method.IsStatic));
         }

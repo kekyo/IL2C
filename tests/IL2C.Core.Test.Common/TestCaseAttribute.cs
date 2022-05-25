@@ -10,11 +10,12 @@
 #nullable enable
 
 using System;
-
+using System.Runtime.InteropServices;
 using NUnit.Framework.Interfaces;
 
 namespace IL2C
 {
+    [IgnoreTranslation]
     public enum TestCaseAsserts
     {
         PerfectMatch,
@@ -22,6 +23,7 @@ namespace IL2C
         CauseBreak
     }
 
+    [IgnoreTranslation]
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public sealed class TestCaseAttribute :
         NUnit.Framework.TestCaseAttribute, NUnit.Framework.ITestAction

@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 
 using Mono.Cecil;
+using Mono.Cecil.Pdb;
 
 using IL2C.Metadata.Specialized;
 
@@ -81,18 +82,15 @@ namespace IL2C.Metadata
             new Dictionary<ModuleReference, AssemblyDefinition>(ModuleReferenceComparer.Instance);
         private readonly Dictionary<MemberReference, IMemberInformation> members =
             new Dictionary<MemberReference, IMemberInformation>(MemberReferenceComparer.Instance);
-        private readonly BasePathAssemblyResolver resolver;
+        private readonly IL2CAssemblyResolver resolver;
 
-        internal MetadataContext(string assemblyPath, bool readSymbols)
+        internal MetadataContext(
+            string assemblyPath, string[] referenceBasePaths, bool readSymbols)
         {
-            resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
-            var assemblyReaderParameter = new ReaderParameters
-            {
-                AssemblyResolver = resolver,
-                ReadSymbols = readSymbols
-            };
+            resolver = new IL2CAssemblyResolver(
+                assemblyPath, referenceBasePaths, readSymbols);
 
-            var mainAssembly = AssemblyDefinition.ReadAssembly(assemblyPath, assemblyReaderParameter);
+            var mainAssembly = resolver.ReadFrom(assemblyPath);
             var mainAssemblyInformation = new AssemblyInformation(mainAssembly, this);
 
             resolvedCoreModule = mainAssembly.MainModule.TypeSystem.Object.Resolve().Module;

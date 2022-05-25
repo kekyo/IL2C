@@ -20,17 +20,20 @@ namespace IL2C.Drivers
     public sealed class TranslationOptions
     {
         public readonly bool ReadSymbols;
+        public readonly string[] ReferenceBasePaths;
         public readonly bool EnableBundler;
         public readonly TargetPlatforms TargetPlatform;
         public readonly DebugInformationOptions DebugInformationOption;
 
         public TranslationOptions(
             bool readSymbols,
+            string[] referenceBasePaths,
             bool enableBundler,
             TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOption)
         {
             this.ReadSymbols = readSymbols;
+            this.ReferenceBasePaths = referenceBasePaths;
             this.EnableBundler = enableBundler;
             this.TargetPlatform = targetPlatform;
             this.DebugInformationOption = debugInformationOption;
@@ -52,7 +55,7 @@ namespace IL2C.Drivers
                 ConfigureAwait(false);
 
             var translateContext = new TranslateContext(
-                assemblyPath, options.ReadSymbols, options.TargetPlatform);
+                assemblyPath, options.ReferenceBasePaths, options.ReadSymbols, options.TargetPlatform);
             var preparedFunctions = AssemblyPreparer.Prepare(
                 translateContext);
 

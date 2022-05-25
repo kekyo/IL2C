@@ -115,7 +115,7 @@ namespace IL2C
                     if ((drivingMode & DrivingModes.Translation) == DrivingModes.Translation)
                     {
                         var translationOptions = new TranslationOptions(
-                            true, enableBundler, targetPlatform, debugInformationOptions);
+                            true, refDirs, enableBundler, targetPlatform, debugInformationOptions);
 #if DEBUG
                         var results = new List<IMethodInformation>();
                         foreach (var assemblyPath in inputPaths)

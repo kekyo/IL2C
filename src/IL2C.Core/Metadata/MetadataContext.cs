@@ -274,16 +274,46 @@ namespace IL2C.Metadata
                     }
 
                     var module = this.GetOrAddModule(typeReference);
-                    if (typeReference.Module.Equals(resolvedCoreModule) &&
-                        validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
+                    if (typeReference.Module.Equals(resolvedCoreModule))
                     {
-                        return new TypeInformation(typeReference, module, filterList);
+                        if (validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
+                        {
+                            return new TypeInformation(typeReference, module, filterList);
+                        }
+                    }
+
+                    // Excepts Corlib's COM interface (Such as _AppDomain, _Assembly, _Attribute ...)
+                    var typeDefinition = typeReference.Resolve();
+                    if (typeDefinition.Interfaces.
+                        Where(itr =>
+                            itr.InterfaceType.Resolve() is { } itd &&
+                            itd.Module.Equals(resolvedCoreModule) &&
+                            itd.Name.StartsWith("_") &&
+                            itd.CustomAttributes.Any(ca =>
+                                ca.AttributeType.FullName == "System.Runtime.InteropServices.ComVisibleAttribute" &&
+                                ca.ConstructorArguments.Count == 1 &&
+                                ca.ConstructorArguments[0].Value.Equals(true))).
+                        Select(it => it.InterfaceType).
+                        ToArray() is { } itfts &&
+                        itfts.Length >= 1)
+                    {
+                        return new TypeInformation(typeReference, module, m =>
+                        {
+                            if (m is TypeReference tr &&
+                                itfts.Any(itft => itft.FullName == tr.FullName))
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        });
                     }
 
                     // Special filter for the enum type.
                     if (typeReference.IsValueType && !typeReference.IsPrimitive && !typeReference.IsPointer)
                     {
-                        var typeDefinition = typeReference.Resolve();
                         if (typeDefinition.IsEnum)
                         {
                             return new TypeInformation(typeReference, module, m =>
@@ -306,17 +336,12 @@ namespace IL2C.Metadata
                     if (!typeReference.IsValueType && !typeReference.IsArray &&
                         !typeReference.IsByReference && !typeReference.IsPointer)
                     {
-                        var typeDefinition = typeReference.Resolve();
-                        // TODO: try to resolve typeDefinition from mscorelib
-                        if (typeDefinition == null)
-                        {
-                            throw new InvalidProgramSequenceException($"cannot resolve type {typeReference.FullName}");
-                        }
                         if (typeDefinition.IsClass && !typeDefinition.IsAbstract &&
                             MemberReferenceComparer.Instance.Equals(
                                 typeDefinition.BaseType, ((TypeInformation)MulticastDelegateType).Member))
                         {
-                            return new TypeInformation(typeReference, module, derivedFromMulticastDelegateValidTargetMethods);
+                            return new TypeInformation(
+                                typeReference, module, derivedFromMulticastDelegateValidTargetMethods);
                         }
                     }
 

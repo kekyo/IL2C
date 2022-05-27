@@ -19,7 +19,7 @@
     <RootNamespace>IL2C.BasicTypes</RootNamespace>
 
     <IL2CBuildLogLevel>Debug</IL2CBuildLogLevel>
-    <IL2CBuildLaunchDebugger>true</IL2CBuildLaunchDebugger>
+    <IL2CBuildLaunchDebugger>false</IL2CBuildLaunchDebugger>
   </PropertyGroup>
 
   <ItemGroup>

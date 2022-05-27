@@ -283,8 +283,6 @@ namespace IL2C.Metadata
                         }
                     }
 
-                    Debug.Assert(typeReference.FullName != "System.Attribute");
-
                     // Excepts Corlib's COM interface (Such as _AppDomain, _Assembly, _Attribute ...)
                     var typeDefinition = typeReference.Resolve();
                     if (typeDefinition.Interfaces.

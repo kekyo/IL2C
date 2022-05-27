@@ -129,13 +129,18 @@ namespace IL2C.Metadata
                 thisType.IsValueType ? thisType.MakeByReference() : thisType,
                 emptyCustomAttribute);
 
-        private IParameterInformation ToParameterInformation(ParameterReference parameter) =>
-            new ParameterInformation(
+        private IParameterInformation ToParameterInformation(ParameterReference parameter)
+        {
+            var index = this.HasThis ?
+                (parameter.Index + 1) :
+                parameter.Index;
+            return new ParameterInformation(
                 this,
-                this.HasThis ? (parameter.Index + 1) : parameter.Index,
-                parameter.Name,
+                index,
+                string.IsNullOrWhiteSpace(parameter.Name) ? $"arg{index}__" : parameter.Name,
                 this.MetadataContext.GetOrAddType(parameter.ParameterType),
                 parameter.Resolve().CustomAttributes.ToArray());
+        }
 
         public override string MetadataTypeName => "Method";
 
@@ -196,7 +201,7 @@ namespace IL2C.Metadata
                     Concat(this.Member.Parameters.Select(this.ToParameterInformation)).
                     ToArray() :
                 this.Member.Parameters.
-                    Select(ToParameterInformation).
+                    Select(this.ToParameterInformation).
                     ToArray();
         public ILocalVariableInformation[] LocalVariables =>
             this.Definition.Body.Variables.
@@ -437,10 +442,12 @@ namespace IL2C.Metadata
                 var parametersString = (this.Parameters.Length >= 1) ?
                     string.Join(
                         ", ",
-                        this.Parameters.Select(parameter => string.Format(
+                        this.Parameters.Select((parameter, index) => string.Format(
                             "{0} {1}",
                             parameter.TargetType.CLanguageTypeName,
-                            parameter.ParameterName))) :
+                            string.IsNullOrWhiteSpace(parameter.ParameterName) ?
+                                $"arg{(this.HasThis ? (index + 1) : index)}__" :
+                                parameter.ParameterName))) :
                     "void";
 
                 var returnTypeName =
@@ -462,10 +469,12 @@ namespace IL2C.Metadata
                 var parametersString = (this.Parameters.Length >= 1) ?
                     string.Join(
                         ", ",
-                        this.Parameters.Select(parameter => string.Format(
+                        this.Parameters.Select((parameter, index) => string.Format(
                             "{0} {1}",
-                            parameter.TargetType.CLanguageInteropTypeName,
-                            parameter.ParameterName))) :
+                            parameter.TargetType.CLanguageTypeName,
+                            string.IsNullOrWhiteSpace(parameter.ParameterName) ?
+                                $"arg{(this.HasThis ? (index + 1) : index)}__" :
+                                parameter.ParameterName))) :
                     "void";
 
                 var returnTypeName =
@@ -493,7 +502,7 @@ namespace IL2C.Metadata
 
         private string GetCLanguageFunctionType(CLanguageFunctionTypeFormats format)
         {
-            // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*."
+            // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*".
             //   non virtual : int32_t (*DoThat)(System_String* this__)
             //   virtual     : int32_t (*DoThat)(void* this__)
 
@@ -501,8 +510,13 @@ namespace IL2C.Metadata
                 string.Join(
                     ", ",
                     this.Parameters.Select((parameter, index) =>
-                        ((this.IsVirtual && (index == 0)) ? "void*" : parameter.TargetType.CLanguageTypeName) +
-                        ((format == CLanguageFunctionTypeFormats.Type) ? string.Empty : (" " + parameter.ParameterName)))) :
+                        ((this.IsVirtual && (index == 0)) ?
+                            "void*" : parameter.TargetType.CLanguageTypeName) +
+                        ((format == CLanguageFunctionTypeFormats.Type) ?
+                            string.Empty :
+                            string.IsNullOrWhiteSpace(parameter.ParameterName) ?
+                                $" arg{(this.HasThis ? (index + 1) : index)}__" :
+                                $" {parameter.ParameterName}"))) :
                 "void";
 
             var returnTypeName = this.ReturnType.CLanguageTypeName;

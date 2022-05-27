@@ -391,7 +391,6 @@ typedef void* untyped_ptr;
 #include "System/IFormattable.h"
 #include "System/FormatException.h"
 #include "System/GC.h"
-#include "System/Runtime/InteropServices/_Attribute.h"
 #include "System/Runtime/InteropServices/GCHandleType.h"
 #include "System/Runtime/InteropServices/GCHandle.h"
 #include "System/Runtime/InteropServices/NativePointer.h"

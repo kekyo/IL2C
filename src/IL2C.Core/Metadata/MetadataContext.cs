@@ -16,6 +16,7 @@ using Mono.Cecil;
 using Mono.Cecil.Pdb;
 
 using IL2C.Metadata.Specialized;
+using System.Diagnostics;
 
 namespace IL2C.Metadata
 {
@@ -274,7 +275,7 @@ namespace IL2C.Metadata
                     }
 
                     var module = this.GetOrAddModule(typeReference);
-                    if (typeReference.Module.Equals(resolvedCoreModule))
+                    if (typeReference.Module.Assembly.FullName.Equals(resolvedCoreModule.Assembly.FullName))
                     {
                         if (validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
                         {
@@ -282,13 +283,15 @@ namespace IL2C.Metadata
                         }
                     }
 
+                    Debug.Assert(typeReference.FullName != "System.Attribute");
+
                     // Excepts Corlib's COM interface (Such as _AppDomain, _Assembly, _Attribute ...)
                     var typeDefinition = typeReference.Resolve();
                     if (typeDefinition.Interfaces.
-                        Where(itr =>
-                            itr.InterfaceType.Resolve() is { } itd &&
-                            itd.Module.Equals(resolvedCoreModule) &&
-                            itd.Name.StartsWith("_") &&
+                        Where(ii =>
+                            ii.InterfaceType.Module.Assembly.FullName.Equals(resolvedCoreModule.Assembly.FullName) &&
+                            ii.InterfaceType.Name.StartsWith("_") &&
+                            ii.InterfaceType.Resolve() is { } itd &&
                             itd.CustomAttributes.Any(ca =>
                                 ca.AttributeType.FullName == "System.Runtime.InteropServices.ComVisibleAttribute" &&
                                 ca.ConstructorArguments.Count == 1 &&

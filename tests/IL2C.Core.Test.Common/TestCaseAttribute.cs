@@ -28,16 +28,35 @@ namespace IL2C
     public sealed class TestCaseAttribute :
         NUnit.Framework.TestCaseAttribute, NUnit.Framework.ITestAction
     {
+        // HACK: Modified the tests that were realized using non-public knowledge of NUnit to be tested in an official way.
+        //   In doing so, to minimize the amount of refactoring, a condition that is difficult to understand was required:
+        //   * If a valid value is specified for `expected`, store the value in `ExpectedResult` and let NUnit check it.
+        //   * If `expected` is null, we don't know if we want to compare with null or ignore the result.
+        //     * If we had access to `MethodInfo` at construction time, we could distinguish by looking at `ReturnType`, but we don't.
+        //     * The value of `TestCaseAsserts` is called separately at constructor completion, so it cannot be determined in the constructor.
+        //     * If you do not collate the result values, do not set any value to `ExpectedResult`.
+        private TestCaseAsserts assert;
+        private readonly bool isExpectedNull;
+        private bool isSetAssert;
+
         public TestCaseAttribute(
             object? expected, string methodName, params object?[] args) :
             base(args ?? new object?[] { null })  // HACK
         {
-            base.ExpectedResult = expected;
+            if (expected != null)
+            {
+                base.ExpectedResult = expected;
+                this.assert = TestCaseAsserts.PerfectMatch;
+            }
+            else
+            {
+                this.isExpectedNull = true;
+                this.assert = TestCaseAsserts.IgnoreValidateInvokeResult;
+            }
 
             this.MethodName = methodName;
             this.AdditionalMethodNames = new string[0];
 
-            this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
             this.IncludeTypes = Type.EmptyTypes;
             this.IgnoreILErrors = new string[0];
@@ -48,12 +67,20 @@ namespace IL2C
             object? expected, string[] methodNames, params object?[] args) :
             base(args ?? new object?[] { null })  // HACK
         {
-            base.ExpectedResult = expected;
+            if (expected != null)
+            {
+                base.ExpectedResult = expected;
+                this.assert = TestCaseAsserts.PerfectMatch;
+            }
+            else
+            {
+                this.isExpectedNull = true;
+                this.assert = TestCaseAsserts.IgnoreValidateInvokeResult;
+            }
 
             this.MethodName = methodNames[0];   // test method
             this.AdditionalMethodNames = GetAdditionalMethodNames(methodNames);   // additionals
 
-            this.Assert = TestCaseAsserts.PerfectMatch;
             this.IncludeBaseTypes = false;
             this.IncludeTypes = Type.EmptyTypes;
             this.IgnoreILErrors = new string[0];
@@ -72,7 +99,29 @@ namespace IL2C
         public string MethodName { get; }
         public string[] AdditionalMethodNames { get; }
 
-        public TestCaseAsserts Assert { get; set; }
+        public TestCaseAsserts Assert
+        {
+            get => this.assert;
+            set
+            {
+                if (!this.isSetAssert)
+                {
+                    this.isSetAssert = true;
+                    this.Assert = value;
+
+                    if (this.isExpectedNull &&
+                        value == TestCaseAsserts.PerfectMatch)
+                    {
+                        this.ExpectedResult = null;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
         public bool IncludeBaseTypes { get; set; }
         public Type[] IncludeTypes { get; set; }
         public string[] IgnoreILErrors { get; set; }

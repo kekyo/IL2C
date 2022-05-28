@@ -252,6 +252,10 @@ namespace IL2C.Writers
                                 twSource.SplitLine();
                             }
 
+                            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                            twSource.WriteLine("// [9-4] Static fields:");
+                            twSource.SplitLine();
+
                             // Generate static fileds
                             foreach (var field in otherStaticFields)
                             {
@@ -274,6 +278,10 @@ namespace IL2C.Writers
                             }
                             twSource.SplitLine();
 
+                            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                            twSource.WriteLine("// [9-5] Type initializer handler:");
+                            twSource.SplitLine();
+
                             // Generate type initializer function
                             var typeInitializerBodyName =
                                 type.MangledUniqueName + "__TryIntialize__";
@@ -292,6 +300,10 @@ namespace IL2C.Writers
                                     typeInitializer?.CLanguageFunctionFullName ?? "NULL");
                             }
                             twSource.WriteLine("}");
+                            twSource.SplitLine();
+
+                            twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
+                            twSource.WriteLine("// [9-6] Static field access handlers:");
                             twSource.SplitLine();
 
                             // Generate filed access handlers
@@ -339,7 +351,7 @@ namespace IL2C.Writers
                     }
 
                     twSource.WriteLine("//////////////////////////////////////////////////////////////////////////////////");
-                    twSource.WriteLine("// [9-4] Type: {0}", type.FriendlyName);
+                    twSource.WriteLine("// [9-7] Type: {0}", type.FriendlyName);
                     twSource.SplitLine();
 
                     // All methods and constructor exclude type initializer

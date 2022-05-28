@@ -55,6 +55,7 @@ namespace IL2C
                 var additionalIncludeDirs = new string[0];
                 var libraryPaths = new string[0];
                 var mainTemplatePath = default(string);
+                var enableParallelism = false;
                 var logLevel = LogLevels.Information;
                 var logtfm = default(string);
                 var launchDebugger = false;
@@ -64,8 +65,8 @@ namespace IL2C
                 {
                     { "mode=", "Driving mode [both|translation|compilation]", v => drivingMode = Enum.TryParse<DrivingModes>(v, true, out var dm) ? dm : DrivingModes.Both },
                     { "debug=", "Emit debug informations [none|commentonly|full]", v => debugInformationOptions = Enum.TryParse<DebugInformationOptions>(v, true, out var t) ? t : DebugInformationOptions.None },
-                    { "produceCpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => produceCpp = bool.TryParse(v, out var pc) ? pc : false },
-                    { "bundler=", "Produce bundler source file", v => enableBundler = bool.TryParse(v, out var eb) ? eb : false },
+                    { "produceCpp=", "Produce C++ extension files (apply extension *.cpp instead *.c, body will not change)", v => produceCpp = bool.TryParse(v, out var pc) && pc },
+                    { "bundler=", "Produce bundler source file", v => enableBundler = bool.TryParse(v, out var eb) && eb },
                     { "target=", "Target platform [generic|ue4]", v => targetPlatform = Enum.TryParse<TargetPlatforms>(v, true, out var tp) ? tp : TargetPlatforms.Generic },
                     { "refDirs=", "Reference assembly paths (semi-colon separated)", v => refDirs = v.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) },
                     { "compiler=", "Native compiler driver file", v => nativeCompiler = v },
@@ -78,6 +79,7 @@ namespace IL2C
                     { "outputNativeExecutable=", "Output native executable file name", v => outputNativeExecutableFileName = v },
                     { "outputNativeDir=", "Output native binary directory path", v => outputNativeDirPath = v },
                     { "mainTemplate=", "Native main template path", v => mainTemplatePath = v },
+                    { "enableParallel", "Enable parallelism", _ => enableParallelism = true },
                     { "logLevel=", "Log level [debug|trace|information|warning|error|silent]", v => logLevel = Enum.TryParse<LogLevels>(v, true, out var ll) ? ll : LogLevels.Information },
                     { "logtfm=", "Log header tfm", v => logtfm = v },
                     { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
@@ -115,31 +117,38 @@ namespace IL2C
                     if ((drivingMode & DrivingModes.Translation) == DrivingModes.Translation)
                     {
                         var translationOptions = new TranslationOptions(
-                            refDirs, enableBundler, targetPlatform, debugInformationOptions);
-#if DEBUG
-                        var results = new List<IMethodInformation>();
-                        foreach (var assemblyPath in inputPaths)
+                            refDirs, enableBundler,
+                            targetPlatform, debugInformationOptions);
+
+                        IList<IMethodInformation> entryPoints;
+                        if (enableParallelism)
                         {
-                            var r = await SimpleTranslator.TranslateAsync(
-                                logger,
-                                outputBaseDirPath,
-                                produceCpp,
-                                translationOptions,
-                                assemblyPath);
-                            results.Add(r);
+                            entryPoints = await Task.WhenAll(
+                                inputPaths.Select(assemblyPath =>
+                                    SimpleTranslator.TranslateAsync(
+                                        logger,
+                                        outputBaseDirPath,
+                                        produceCpp,
+                                        translationOptions,
+                                        assemblyPath).AsTask())).
+                                ConfigureAwait(false);
                         }
-#else
-                        var results = await Task.WhenAll(
-                            inputPaths.Select(assemblyPath =>
-                                SimpleTranslator.TranslateAsync(
+                        else
+                        {
+                            entryPoints = new List<IMethodInformation>();
+                            foreach (var assemblyPath in inputPaths)
+                            {
+                                var r = await SimpleTranslator.TranslateAsync(
                                     logger,
                                     outputBaseDirPath,
                                     produceCpp,
                                     translationOptions,
-                                    assemblyPath).AsTask())).
-                            ConfigureAwait(false);
-#endif
-                        mainEntryPoint = results.FirstOrDefault();
+                                    assemblyPath);
+                                entryPoints.Add(r);
+                            }
+                        }
+
+                        mainEntryPoint = entryPoints.FirstOrDefault();
                         inputCompilationDirPath = outputBaseDirPath;
                     }
                     else
@@ -154,7 +163,8 @@ namespace IL2C
                     {
                         var toolchainOptions = new ToolchainOptions(
                             nativeCompiler!, nativeCompilerFlags, nativeLinkingFlags, nativeArchiver!,
-                            additionalIncludeDirs, libraryPaths, mainTemplatePath);
+                            additionalIncludeDirs, libraryPaths, mainTemplatePath,
+                            enableParallelism);
                         var artifactPathOptions = new ArtifactPathOptions(
                             outputNativeArchiveFileName!, outputNativeExecutableFileName);
 

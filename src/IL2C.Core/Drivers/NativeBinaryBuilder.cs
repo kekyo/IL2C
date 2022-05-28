@@ -30,6 +30,7 @@ namespace IL2C.Drivers
         public readonly string[] AdditionalIncludeDirs;
         public readonly string[] LibraryPaths;
         public readonly string? MainTemplatePath;
+        public readonly bool EnableParallelism;
 
         public ToolchainOptions(
             string nativeCompiler,
@@ -38,7 +39,8 @@ namespace IL2C.Drivers
             string nativeArchiver,
             string[] additionalIncludeDirs,
             string[] libraryPaths,
-            string? mainTemplatePath)
+            string? mainTemplatePath,
+            bool enableParallelism)
         {
             this.NativeCompiler = nativeCompiler;
             this.NativeCompilerFlags = nativeCompilerFlags;
@@ -47,6 +49,7 @@ namespace IL2C.Drivers
             this.AdditionalIncludeDirs = additionalIncludeDirs;
             this.LibraryPaths = libraryPaths;
             this.MainTemplatePath = mainTemplatePath;
+            this.EnableParallelism = enableParallelism;
         }
     }
 
@@ -209,39 +212,44 @@ namespace IL2C.Drivers
             /////////////////////////////////////////////////////////////
             // Compiling step:
 
-            logger.Information($"Compiling native binary into: {outputNativeArchiveFullPath}");
-
             // Compile in small pieces:
             //   Because LTO (LTCG) is not always enable, it is better to subdivide object files
             //   to reduce the amount of code when linking.
-#if DEBUG
-            var crs = new List<CompilationResult>();
-            foreach (var sourceCodePath in sourceCodePaths)
+            IList<CompilationResult> crs;
+            if (toolchainOptions.EnableParallelism)
             {
-                logger.Trace($"Compiling source code: {sourceCodePath}");
-                var r = await ExecuteCompilerAsync(
-                    sourceCodePath,
-                    outputStagingBaseDirPath,
-                    Path.GetFileNameWithoutExtension(sourceCodePath) + ".o",
-                    nativeToolchainBasePaths,
-                    toolchainOptions.NativeCompiler,
-                    toolchainOptions.NativeCompilerFlags,
-                    includeDir,
-                    sourceDir,
-                    true,
-                    null,
-                    toolchainOptions.AdditionalIncludeDirs,
-                    new string[0]).
+                logger.Information($"Building native library (In parallelism): {outputNativeArchiveFullPath}");
+
+                crs = await Task.WhenAll(
+                    sourceCodePaths.
+                    Select(sourceCodePath =>
+                    {
+                        logger.Trace($"Compiling source code: \"{sourceCodePath}\" ...");
+                        return ExecuteCompilerAsync(
+                            sourceCodePath,
+                            outputStagingBaseDirPath,
+                            Path.GetFileNameWithoutExtension(sourceCodePath) + ".o",
+                            nativeToolchainBasePaths,
+                            toolchainOptions.NativeCompiler,
+                            toolchainOptions.NativeCompilerFlags,
+                            includeDir,
+                            sourceDir,
+                            true,
+                            null,
+                            toolchainOptions.AdditionalIncludeDirs,
+                            new string[0]);
+                    })).
                     ConfigureAwait(false);
-                crs.Add(r);
             }
-#else
-            var crs = await Task.WhenAll(
-                sourceCodePaths.
-                Select(sourceCodePath =>
+            else
+            {
+                logger.Information($"Building native library: {outputNativeArchiveFullPath}");
+
+                crs = new List<CompilationResult>();
+                foreach (var sourceCodePath in sourceCodePaths)
                 {
-                    logger.Trace($"Compiling source code: \"{sourceCodePath}\" ...");
-                    return ExecuteCompilerAsync(
+                    logger.Trace($"Compiling source code: {sourceCodePath}");
+                    var r = await ExecuteCompilerAsync(
                         sourceCodePath,
                         outputStagingBaseDirPath,
                         Path.GetFileNameWithoutExtension(sourceCodePath) + ".o",
@@ -253,10 +261,12 @@ namespace IL2C.Drivers
                         true,
                         null,
                         toolchainOptions.AdditionalIncludeDirs,
-                        new string[0]);
-                })).
-                ConfigureAwait(false);
-#endif
+                        new string[0]).
+                        ConfigureAwait(false);
+                    crs.Add(r);
+                }
+            }
+
             var cr = crs.FirstOrDefault(r => r.ExitCode != 0);
             if (cr.ExitCode != 0)
             {
@@ -325,6 +335,10 @@ namespace IL2C.Drivers
                 }
 
                 logger.Information($"Built native binary: {outputNativeExecutableFullPath}");
+            }
+            else
+            {
+                logger.Information($"Built native library: {outputNativeArchiveFullPath}");
             }
         }
     }

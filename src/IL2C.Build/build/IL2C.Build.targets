@@ -18,6 +18,7 @@
     <IL2CEnableCpp Condition="'$(IL2CEnableCpp)' == ''">false</IL2CEnableCpp>
     <IL2CEnableBundler Condition="'$(IL2CEnableBundler)' == ''">false</IL2CEnableBundler>
     <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
+    <IL2CEnableParallelism Condition="'$(IL2CEnableParallelism)' == ''">true</IL2CEnableParallelism>
     <IL2CBuildLogLevel Condition="'$(IL2CBuildLogLevel)' == ''">Information</IL2CBuildLogLevel>
     <IL2CBuildLaunchDebugger Condition="'$(IL2CBuildLaunchDebugger)' == ''">false</IL2CBuildLaunchDebugger>
 
@@ -139,8 +140,9 @@
       <_IL2C_OutputNativeArchiveFileNameOption>--outputNativeArchive=&quot;$(_IL2C_OutputNativeArchiveFileName)&quot;</_IL2C_OutputNativeArchiveFileNameOption>
       <_IL2C_OutputNativeExecutableFileNameOption Condition="'$(_IL2C_OutputNativeExecutableFileName)' != ''">--outputNativeExecutable=&quot;$(_IL2C_OutputNativeExecutableFileName)&quot;</_IL2C_OutputNativeExecutableFileNameOption>
       <_IL2C_NativeMainTemplatePathOption Condition="'$(IL2COutputType)' != 'Library'">--mainTemplate=&quot;$(IL2CNativeMainTemplatePath)&quot;</_IL2C_NativeMainTemplatePathOption>
+      <_IL2C_EnableParallelismOption Condition="$(IL2CEnableParallelism)">--enableParallel</_IL2C_EnableParallelismOption>
       <_IL2C_LaunchDebuggerOption Condition="$(IL2CBuildLaunchDebugger)">--launchDebugger</_IL2C_LaunchDebuggerOption>
-      <_IL2C_NativeOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption) $(_IL2C_LaunchDebuggerOption)</_IL2C_NativeOptions>
+      <_IL2C_NativeOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption) $(_IL2C_EnableParallelismOption) $(_IL2C_LaunchDebuggerOption)</_IL2C_NativeOptions>
     </PropertyGroup>
     <PropertyGroup Condition="!($(IL2CEnableNativeCompilation))">
       <_IL2C_DrivingMode>translation</_IL2C_DrivingMode>

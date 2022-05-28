@@ -15,6 +15,7 @@
     <AssemblyName>IL2C.Core.Test.BasicTypes</AssemblyName>
     <RootNamespace>IL2C.BasicTypes</RootNamespace>
 
+    <IL2CEnableParallelism>false</IL2CEnableParallelism>
     <IL2CBuildLogLevel>Debug</IL2CBuildLogLevel>
     <IL2CBuildLaunchDebugger>false</IL2CBuildLaunchDebugger>
   </PropertyGroup>

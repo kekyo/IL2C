@@ -20,6 +20,10 @@
     <IL2CTargetPlatform Condition="'$(IL2CTargetPlatform)' == ''">Generic</IL2CTargetPlatform>
     <IL2CBuildLogLevel Condition="'$(IL2CBuildLogLevel)' == ''">Information</IL2CBuildLogLevel>
     <IL2CBuildLaunchDebugger Condition="'$(IL2CBuildLaunchDebugger)' == ''">false</IL2CBuildLaunchDebugger>
+
+    <!-- HACK: Microsoft.NET.Test.Sdk dirty overwrite OutputType property... -->
+    <IL2COutputType Condition="('$(TestProject)' == 'true') OR ('$(IsTestProject)' == 'true')">Library</IL2COutputType>
+    <IL2COutputType Condition="'$(IL2COutputType)' == ''">$(OutputType)</IL2COutputType>
   </PropertyGroup>
   
   <!-- ============================================================================= -->
@@ -119,8 +123,8 @@
     <!-- Native code files output path group: -->
     <PropertyGroup>
       <_IL2C_OutputNativeArchiveFileName>$(IL2COutputNativeName).a</_IL2C_OutputNativeArchiveFileName>
-      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' == 'Windows_NT')">$(IL2COutputNativeName).exe</_IL2C_OutputNativeExecutableFileName>
-      <_IL2C_OutputNativeExecutableFileName Condition="('$(OutputType)' != 'Library') AND ('$(OS)' != 'Windows_NT')">$(IL2COutputNativeName)</_IL2C_OutputNativeExecutableFileName>
+      <_IL2C_OutputNativeExecutableFileName Condition="('$(IL2COutputType)' != 'Library') AND ('$(OS)' == 'Windows_NT')">$(IL2COutputNativeName).exe</_IL2C_OutputNativeExecutableFileName>
+      <_IL2C_OutputNativeExecutableFileName Condition="('$(IL2COutputType)' != 'Library') AND ('$(OS)' != 'Windows_NT')">$(IL2COutputNativeName)</_IL2C_OutputNativeExecutableFileName>
     </PropertyGroup>
 
     <!-- Native compiler settings: -->
@@ -134,7 +138,7 @@
       <_IL2C_NativeLibPathOption>--libs=&quot;$(IL2CNativeLibPath)&quot;</_IL2C_NativeLibPathOption>
       <_IL2C_OutputNativeArchiveFileNameOption>--outputNativeArchive=&quot;$(_IL2C_OutputNativeArchiveFileName)&quot;</_IL2C_OutputNativeArchiveFileNameOption>
       <_IL2C_OutputNativeExecutableFileNameOption Condition="'$(_IL2C_OutputNativeExecutableFileName)' != ''">--outputNativeExecutable=&quot;$(_IL2C_OutputNativeExecutableFileName)&quot;</_IL2C_OutputNativeExecutableFileNameOption>
-      <_IL2C_NativeMainTemplatePathOption Condition="'$(OutputType)' != 'Library'">--mainTemplate=&quot;$(IL2CNativeMainTemplatePath)&quot;</_IL2C_NativeMainTemplatePathOption>
+      <_IL2C_NativeMainTemplatePathOption Condition="'$(IL2COutputType)' != 'Library'">--mainTemplate=&quot;$(IL2CNativeMainTemplatePath)&quot;</_IL2C_NativeMainTemplatePathOption>
       <_IL2C_LaunchDebuggerOption Condition="$(IL2CBuildLaunchDebugger)">--launchDebugger</_IL2C_LaunchDebuggerOption>
       <_IL2C_NativeOptions>$(_IL2C_NativeCompilerOption) $(_IL2C_NativeCompilerFlagsOption) $(_IL2C_NativeLinkingFlagsOption) $(_IL2C_NativeArchiverOption) $(_IL2C_NativeIncludeDirOption) $(_IL2C_NativeLibPathOption) $(_IL2C_OutputNativeArchiveFileNameOption) $(_IL2C_OutputNativeExecutableFileNameOption) $(_IL2C_NativeMainTemplatePathOption) $(_IL2C_LaunchDebuggerOption)</_IL2C_NativeOptions>
     </PropertyGroup>

@@ -28,5 +28,19 @@ namespace IL2C.BasicTypes
         {
             return value.ToString();
         }
+
+        [TestCase(123, "ToUInt32", 123)]
+        public static int ToUInt32(int v)
+        {
+            var ip = (IntPtr)v;
+            return ip.ToInt32();
+        }
+
+        [TestCase(123UL, "ToUInt64", 123UL)]
+        public static ulong ToUInt64(ulong v)
+        {
+            var ip = (UIntPtr)v;
+            return ip.ToUInt64();
+        }
     }
 }

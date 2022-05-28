@@ -652,29 +652,22 @@ namespace IL2C.Writers
                 method.FriendlyName);
             tw.SplitLine();
 
-            // P/Invoke linkage doesn't verify the C header declarations.
-            // It will lookp up by the library symbol name.
-            if (method.PInvokeInformation != null)
-            {
-                tw.WriteLine(
-                    "extern {0};",
-                    method.CLanguagePInvokePrototype);
-                tw.SplitLine();
-            }
-
-            if (method.IsPrivate)
-            {
-                tw.WriteLine("static inline {0}", method.CLanguageFunctionPrototype);
-            }
-            else
-            {
-                tw.WriteLine(method.CLanguageFunctionPrototype);
-            }
+            tw.WriteLine(method.CLanguageFunctionPrototype);
 
             tw.WriteLine("{");
 
             using (var _ = tw.Shift())
             {
+                // P/Invoke linkage doesn't verify the C header declarations.
+                // It will lookp up by the library symbol name.
+                if (method.PInvokeInformation != null)
+                {
+                    tw.WriteLine(
+                        "extern {0};",
+                        method.CLanguagePInvokePrototype);
+                    tw.SplitLine();
+                }
+
                 var arguments = string.Join(
                     ", ",
                     method.Parameters.Select(GetMarshaledInExpression));

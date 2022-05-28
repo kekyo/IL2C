@@ -358,14 +358,6 @@ namespace IL2C.Writers
                                 "static {0};",
                                 method.CLanguageFunctionPrototype);
                         }
-                        // Make inlining private interop methods
-                        else if (method.IsExtern && method.IsPrivate)
-                        {
-                            tw.WriteLine(
-                                "static inline /* {0} */ {1};",
-                                method.AttributeDescription,
-                                method.CLanguageFunctionPrototype);
-                        }
                         else
                         {
                             tw.WriteLine(

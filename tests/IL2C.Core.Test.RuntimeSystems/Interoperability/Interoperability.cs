@@ -21,26 +21,53 @@ namespace IL2C.RuntimeSystems
         public NativePointer Pointer;
     }
 
-    [Description("These tests are verified the IL2C manages interoperability with the P/Invoke adn IL2C/Invoke method and internalcall method.")]
+    [Description("These tests are verified the IL2C manages interoperability with the P/Invoke and IL2C/Invoke method and internalcall method.")]
     public sealed class Interoperability
     {
-        [NativeMethod("windows.h", SymbolName = "OutputDebugStringW", CharSet = NativeCharSet.Unicode)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        private static extern void OutputDebugString1(string message);
-
-        [TestCase(null, new[] { "InternalCallWithUnicodeStringArgument", "OutputDebugString1" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-        public static void InternalCallWithUnicodeStringArgument(string message)
+        [NativeType("time.h", SymbolName = "struct tm")]
+        internal struct tm
         {
-            OutputDebugString1(message);
+            public int tm_sec;
+            public int tm_min;
+            public int tm_hour;
+            public int tm_mday;
+            public int tm_mon;
+            public int tm_year;
+            public int tm_wday;
+            public int tm_yday;
+            public int tm_isdst;
         }
 
-        [DllImport("kernel32", EntryPoint = "OutputDebugStringW")]
-        private static extern void OutputDebugString2(string message);
+        [NativeMethod("time.h")]
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private static extern long mktime(in tm tmValue);
 
-        [TestCase(null, new[] { "DllImportWithUnicodeStringArgument", "OutputDebugString2" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
-        public static void DllImportWithUnicodeStringArgument(string message)
+        [TestCase(1666496096L, new[] { "IL2CInvokeMkTime", "mktime" })]
+        public static long IL2CInvokeMkTime()
         {
-            OutputDebugString2(message);
+            // 2022/10/23 12:34:56
+            var tmValue = new tm
+            {
+                tm_year = 2022 - 1900,
+                tm_mon = 10 - 1,
+                tm_mday = 23,
+                tm_hour = 12,
+                tm_min = 34,
+                tm_sec = 56,
+                tm_wday = 0,
+                tm_yday = 0,
+                tm_isdst = 0,
+            };
+            return mktime(tmValue);
+        }
+
+        [DllImport("libc", EntryPoint = "wcslen")]
+        private static extern IntPtr wcslen(string message);
+
+        [TestCase(3, new[] { "PInvokeWcsLen", "wcslen" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+        public static int PInvokeWcsLen(string message)
+        {
+            return wcslen(message).ToInt32();
         }
 
         [TestCase(12345678, "TransparencyForNativePointer", 12345678)]

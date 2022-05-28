@@ -46,5 +46,19 @@ namespace IL2C.BasicTypes
         {
             return v != IntPtr.Zero;
         }
+
+        [TestCase(123, "ToInt32", 123)]
+        public static int ToInt32(int v)
+        {
+            var ip = (IntPtr)v;
+            return ip.ToInt32();
+        }
+
+        [TestCase(123L, "ToInt64", 123L)]
+        public static long ToInt64(long v)
+        {
+            var ip = (IntPtr)v;
+            return ip.ToInt64();
+        }
     }
 }

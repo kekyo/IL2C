@@ -172,6 +172,7 @@ namespace IL2C.RuntimeSystems
             while (!abort)
             {
                 GC.Collect();
+                Thread.Sleep(1);
             }
         }
     }
@@ -424,7 +425,7 @@ namespace IL2C.RuntimeSystems
             return holder.Called;
         }
 
-        [TestCase(200000, "ConcurrentCollect", 10, 100000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
+        [TestCase(80000000, "ConcurrentCollect", 10, 40000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
         public static int ConcurrentCollect(int count, int increments)
         {
             var target = new ConcurrentCollectClosure();

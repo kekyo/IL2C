@@ -51,15 +51,14 @@
   <!-- ============================================================================= -->
 
   <!-- Custom target after compile process -->
-  <!-- HACK: ILComposeBuildEnable is ILCompose custom target. -->
 
   <PropertyGroup>
-    <!-- TODO: ILComposeBuildEnable -->
-    <_IL2C_BuildAfterTargets Condition="'$(ILComposeDependsOnTargets)' != ''">ILComposeBuildTarget</_IL2C_BuildAfterTargets>
-    <_IL2C_BuildAfterTargets Condition="'$(ILComposeDependsOnTargets)' == ''">Compile</_IL2C_BuildAfterTargets>
+    <!-- HACK: _ILCompose_ScriptBaseDir is indicated using ILCompose. -->
+    <_IL2C_BuildDependsOnTargets Condition="'$(_ILCompose_ScriptBaseDir)' != ''">ILComposeBuildTarget</_IL2C_BuildDependsOnTargets>
+    <_IL2C_BuildDependsOnTargets Condition="'$(_ILCompose_ScriptBaseDir)' == ''">Compile</_IL2C_BuildDependsOnTargets>
   </PropertyGroup>
     
-  <Target Name="IL2CBuildTarget" BeforeTargets="CopyFilesToOutputDirectory"
+  <Target Name="IL2CBuildTarget" DependsOnTargets="$(_IL2C_BuildDependsOnTargets)" BeforeTargets="CopyFilesToOutputDirectory"
     Condition="'$(IL2CEnableTranslation)' == 'True'">
     <CallTarget Targets="IL2CBuildPrepare; IL2CBuildRuntimeLibrary; IL2CBuildCore" />
   </Target>

@@ -7,8 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef System_Threading_dll_H__
-#define System_Threading_dll_H__
+#ifndef System_Threading_Thread_dll_H__
+#define System_Threading_Thread_dll_H__
 
 #pragma once
 

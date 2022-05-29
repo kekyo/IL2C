@@ -107,7 +107,7 @@ namespace IL2C
                 if (!this.isSetAssert)
                 {
                     this.isSetAssert = true;
-                    this.Assert = value;
+                    this.assert = value;
 
                     if (this.isExpectedNull &&
                         value == TestCaseAsserts.PerfectMatch)
@@ -115,7 +115,7 @@ namespace IL2C
                         this.ExpectedResult = null;
                     }
                 }
-                else
+                else if (value != this.assert)
                 {
                     throw new InvalidOperationException();
                 }

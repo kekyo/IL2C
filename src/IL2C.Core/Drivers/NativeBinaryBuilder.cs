@@ -101,9 +101,9 @@ namespace IL2C.Drivers
             string[] additionalLibraryPaths)
         {
             var sourceCodeFileName = Path.GetFileNameWithoutExtension(sourceCodePath);
-            var outputBasePath = Path.Combine(
+            var outputBasePath = Path.GetFullPath(Path.Combine(
                 outputStagingDirPath,
-                IOAccessor.GetDirectoryPath(sourceCodePath.Substring(sourceDir.Length + 1)));
+                IOAccessor.GetDirectoryPath(sourceCodePath.Substring(sourceDir.Length + 1))));
             var outputPath = Path.Combine(
                 outputBasePath,
                 outputFileName);
@@ -147,7 +147,7 @@ namespace IL2C.Drivers
             string[] nativeCompilerBasePaths,
             string nativeArchiver)
         {
-            var outputBasePath = IOAccessor.GetDirectoryPath(outputPath);
+            var outputBasePath = Path.GetFullPath(IOAccessor.GetDirectoryPath(outputPath));
             var buildScriptPath = Path.Combine(
                 outputBasePath,
                 $"build_{Path.GetFileNameWithoutExtension(outputPath)}");

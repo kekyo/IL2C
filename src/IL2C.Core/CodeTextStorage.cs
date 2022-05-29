@@ -57,7 +57,7 @@ namespace IL2C
 
         protected virtual TextWriter OnCreateTextWriter(string path)
         {
-            var directoryPath = IOAccessor.GetDirectoryPath(path);
+            var directoryPath = Path.GetFullPath(IOAccessor.GetDirectoryPath(path));
             try
             {
                 if (!Directory.Exists(directoryPath))

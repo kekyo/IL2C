@@ -110,7 +110,7 @@ namespace IL2C
                         Debugger.Launch();
                     }
 
-                    // TODO: refs, trace
+                    // TODO: trace
 
                     IMethodInformation? mainEntryPoint = null;
                     string inputCompilationDirPath;

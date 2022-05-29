@@ -7,10 +7,7 @@
   <!-- ====================================================== -->
 
   <PropertyGroup>
-    <!--
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-    -->
-    <TargetFrameworks>net48</TargetFrameworks>
     <OutputType>Library</OutputType>
     <Optimize>False</Optimize>
     <Nullable>enable</Nullable>
@@ -20,7 +17,7 @@
     <RootNamespace>IL2C.RuntimeSystems</RootNamespace>
 
     <IL2CDebugInformation>CommentOnly</IL2CDebugInformation>
-    <IL2CEnableParallelism>false</IL2CEnableParallelism>
+    <IL2CEnableParallelism>true</IL2CEnableParallelism>
     <IL2CBuildLogLevel>Debug</IL2CBuildLogLevel>
     <IL2CBuildLaunchDebugger>false</IL2CBuildLaunchDebugger>
   </PropertyGroup>

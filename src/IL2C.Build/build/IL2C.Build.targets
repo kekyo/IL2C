@@ -38,7 +38,7 @@
     <_IL2C_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_IL2C_PlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
-    <_IL2C_PlatformName>netcoreapp2.0</_IL2C_PlatformName>
+    <_IL2C_PlatformName>netcoreapp2.2</_IL2C_PlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
     <_IL2C_PlatformName>net462</_IL2C_PlatformName>

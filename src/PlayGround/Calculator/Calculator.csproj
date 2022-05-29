@@ -13,15 +13,13 @@
         <AssemblyName>Calculator</AssemblyName>
         <RootNamespace>Calculator</RootNamespace>
         
-        <IL2CNativeCompilerOptimizingFlags>-Os</IL2CNativeCompilerOptimizingFlags>
-
-        <!-- <IL2COutputPath>il2c</IL2COutputPath> -->
-        <!-- <IL2CDebugInformation>CommentOnly</IL2CDebugInformation> -->
-        <!-- <IL2CBuildLogLevel>Trace</IL2CBuildLogLevel> -->
-
+        <IL2CDebugInformation>CommentOnly</IL2CDebugInformation>
+        <IL2CEnableParallelism>true</IL2CEnableParallelism>
+        <IL2CBuildLogLevel>Information</IL2CBuildLogLevel>
+        <IL2CBuildLaunchDebugger>false</IL2CBuildLaunchDebugger>
         <!-- <IL2CEnableNativeCompilation>False</IL2CEnableNativeCompilation> -->
-        
         <!-- <IL2CNativeCompilerOptionalFlags></IL2CNativeCompilerOptionalFlags> -->
+        <!-- <IL2CNativeCompilerOptimizingFlags>-Os</IL2CNativeCompilerOptimizingFlags> -->
         <!-- <IL2CNativeLinkingFlags>-s</IL2CNativeLinkingFlags> -->
     </PropertyGroup>
 

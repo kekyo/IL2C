@@ -626,19 +626,6 @@ namespace IL2C.Writers
             tw.SplitLine();
         }
 
-        private static string GetMarshaledInExpression(IParameterInformation parameter)
-        {
-            // TODO: UTF8 conversion
-            // TODO: Apply MarshalAsAttribute
-
-            if (parameter.TargetType.IsStringType)
-            {
-                return string.Format("{0}->string_body__", parameter.ParameterName);
-            }
-
-            return parameter.ParameterName;
-        }
-
         private static void InternalConvertFromInternalCallFunction(
             CodeTextWriter tw,
             IMethodInformation method)
@@ -658,33 +645,59 @@ namespace IL2C.Writers
 
             using (var _ = tw.Shift())
             {
-                // P/Invoke linkage doesn't verify the C header declarations.
-                // It will lookp up by the library symbol name.
-                if (method.PInvokeInformation != null)
+                static string GetMarshaledInExpression(IParameterInformation parameter)
                 {
-                    tw.WriteLine(
-                        "extern {0};",
-                        method.CLanguagePInvokePrototype);
-                    tw.SplitLine();
+                    // TODO: UTF8 conversion
+                    // TODO: Apply MarshalAsAttribute
+
+                    if (parameter.TargetType.IsStringType)
+                    {
+                        return string.Format("{0}->string_body__", parameter.ParameterName);
+                    }
+                    return parameter.ParameterName;
                 }
 
                 var arguments = string.Join(
                     ", ",
                     method.Parameters.Select(GetMarshaledInExpression));
 
-                if (method.ReturnType.IsVoidType)
+                if (method.PInvokeInformation != null)
                 {
+                    // TODO: caching
                     tw.WriteLine(
-                        "{0}({1});",
-                        method.CLanguageInteropName,
-                        arguments);
+                        "{0} = il2c_pinvoke_get_function__(L\"{1}\", \"{2}\");",
+                        method.GetCLanguageFunctionTypeWithVariableName("pFunc__", true),
+                        method.PInvokeInformation.Module.Name,
+                        method.CLanguageInteropName);
+                    if (method.ReturnType.IsVoidType)
+                    {
+                        tw.WriteLine(
+                            "(*pFunc__)({0});",
+                            arguments);
+                    }
+                    else
+                    {
+                        tw.WriteLine(
+                            "return (*pFunc__)({0});",
+                            arguments);
+                    }
                 }
                 else
                 {
-                    tw.WriteLine(
-                        "return {0}({1});",
-                        method.CLanguageInteropName,
-                        arguments);
+                    if (method.ReturnType.IsVoidType)
+                    {
+                        tw.WriteLine(
+                            "{0}({1});",
+                            method.CLanguageInteropName,
+                            arguments);
+                    }
+                    else
+                    {
+                        tw.WriteLine(
+                            "return {0}({1});",
+                            method.CLanguageInteropName,
+                            arguments);
+                    }
                 }
             }
 

@@ -61,14 +61,25 @@ namespace IL2C.RuntimeSystems
             return mktime(tmValue);
         }
 
-        [DllImport("libc", EntryPoint = "wcslen")]
+#if Windows_NT
+        [DllImport("kernel32", EntryPoint = "lstrlenW", CallingConvention = CallingConvention.Winapi)]
+        private static extern int lstrlenW(string message);
+
+        [TestCase(3, new[] { "PInvokeLStrLenW", "lstrlenW" }, "ABC")]
+        public static int PInvokeLStrLenW(string message)
+        {
+            return lstrlenW(message);
+        }
+#else
+        [DllImport("libc", EntryPoint = "wcslen", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr wcslen(string message);
 
-        [TestCase(3, new[] { "PInvokeWcsLen", "wcslen" }, "ABC", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]
+        [TestCase(3, new[] { "PInvokeWcsLen", "wcslen" }, "ABC")]
         public static int PInvokeWcsLen(string message)
         {
             return wcslen(message).ToInt32();
         }
+#endif
 
         [TestCase(12345678, "TransparencyForNativePointer", 12345678)]
         public static IntPtr TransparencyForNativePointer(IntPtr value)

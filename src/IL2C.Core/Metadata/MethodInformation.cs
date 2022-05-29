@@ -59,10 +59,11 @@ namespace IL2C.Metadata
         string CLanguageFunctionName { get; }
         string CLanguageInteropName { get; }
         string CLanguageFunctionPrototype { get; }
-        string CLanguagePInvokePrototype { get; }
         string CLanguageFunctionType { get; }
         string CLanguageFunctionNamedType { get; }
         string CLanguageFunctionFullNamedType { get; }
+
+        string GetCLanguageFunctionTypeWithVariableName(string name, bool isInterop);
     }
 
     internal sealed class MethodInformation
@@ -461,38 +462,6 @@ namespace IL2C.Metadata
             }
         }
 
-        public string CLanguagePInvokePrototype
-        {
-            // System.Int32 Foo.Bar.Baz.MooMethod(System.String name) --> int32_t MooMethod(const wchar_t* name)
-            get
-            {
-                var parametersString = (this.Parameters.Length >= 1) ?
-                    string.Join(
-                        ", ",
-                        this.Parameters.Select((parameter, index) => string.Format(
-                            "{0} {1}",
-                            parameter.TargetType.CLanguageTypeName,
-                            string.IsNullOrWhiteSpace(parameter.ParameterName) ?
-                                $"arg{(this.HasThis ? (index + 1) : index)}__" :
-                                parameter.ParameterName))) :
-                    "void";
-
-                var returnTypeName =
-                    this.ReturnType.CLanguageInteropTypeName;
-
-                var stdcallPostfix =
-                    (this.PInvokeInformation is PInvokeInfo pi && (pi.IsCallConvStdCall || pi.IsCallConvWinapi)) ?
-                        "IL2C_DLLIMPORT_STDCALL " : " ";
-
-                return string.Format(
-                    "IL2C_DLLIMPORT_PREFIX {0} {1}{2}({3})",
-                    returnTypeName,
-                    stdcallPostfix,
-                    this.Definition.PInvokeInfo.EntryPoint,
-                    parametersString);
-            }
-        }
-
         private enum CLanguageFunctionTypeFormats
         {
             Type,
@@ -500,18 +469,24 @@ namespace IL2C.Metadata
             FullNamedType
         }
 
-        private string GetCLanguageFunctionType(CLanguageFunctionTypeFormats format)
+        private string GetCLanguageFunctionType(
+            CLanguageFunctionTypeFormats format,
+            bool isInterop,
+            string name = default)
         {
             // The first argument (arg0) is switched type name by virtual attribute between strict type and "void*".
             //   non virtual : int32_t (*DoThat)(System_String* this__)
             //   virtual     : int32_t (*DoThat)(void* this__)
+
+            string GetCLanguageTypeName(ITypeInformation type) =>
+                isInterop ? type.CLanguageInteropTypeName : type.CLanguageTypeName;
 
             var parametersString = (this.Parameters.Length >= 1) ?
                 string.Join(
                     ", ",
                     this.Parameters.Select((parameter, index) =>
                         ((this.IsVirtual && (index == 0)) ?
-                            "void*" : parameter.TargetType.CLanguageTypeName) +
+                            "void*" : GetCLanguageTypeName(parameter.TargetType)) +
                         ((format == CLanguageFunctionTypeFormats.Type) ?
                             string.Empty :
                             string.IsNullOrWhiteSpace(parameter.ParameterName) ?
@@ -519,32 +494,49 @@ namespace IL2C.Metadata
                                 $" {parameter.ParameterName}"))) :
                 "void";
 
-            var returnTypeName = this.ReturnType.CLanguageTypeName;
+            var returnTypeName = GetCLanguageTypeName(this.ReturnType);
 
-            var name = (format == CLanguageFunctionTypeFormats.FullNamedType) ?
-                this.CLanguageFunctionFullName :
-                (format == CLanguageFunctionTypeFormats.NamedType) ?
-                this.CLanguageFunctionName :
+            var exactName = (name != null) ? name :
+                format switch
+                {
+                    CLanguageFunctionTypeFormats.FullNamedType => this.CLanguageFunctionFullName,
+                    CLanguageFunctionTypeFormats.NamedType => this.CLanguageFunctionName,
+                    _ => string.Empty,
+                };
+
+            var callingConvension = this.PInvokeInformation is PInvokeInfo pi ?
+                (pi.IsCallConvStdCall || pi.IsCallConvWinapi, pi.IsCallConvCdecl) switch
+                {
+                    (true, _) => "IL2C_DLLIMPORT_STDCALL ",
+                    (_, true) => "IL2C_DLLIMPORT_CDECL ",
+                    _ => string.Empty,
+                } :
                 string.Empty;
 
             return string.Format(
-                "{0} (*{1})({2})",
+                "{0} ({1}*{2})({3})",
                 returnTypeName,
-                name,
+                callingConvension,
+                exactName,
                 parametersString);
         }
 
+        public string GetCLanguageFunctionTypeWithVariableName(string name, bool isInterop) =>
+            // !isInterop : System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*name)(System_String*)
+            // isInterop  : System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*name)(const wchar_t*)
+            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.Type, isInterop, name);
+
         public string CLanguageFunctionType =>
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*)(System_String*)
-            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.Type);
+            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.Type, false);
 
         public string CLanguageFunctionNamedType =>
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*MooMethod__System_String)(System_String* this__)
-            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.NamedType);
+            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.NamedType, false);
 
         public string CLanguageFunctionFullNamedType =>
             // System.Int32 Foo.Bar.Baz.MooMethod(System.String) --> int32_t (*Foo_Bar_Baz_MooMethod__System_String)(System_String* this__)
-            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.FullNamedType);
+            this.GetCLanguageFunctionType(CLanguageFunctionTypeFormats.FullNamedType, false);
 
         protected override MethodDefinition OnResolve(MethodReference member) =>
             member.Resolve();

@@ -14,6 +14,7 @@
     <OutputType>Library</OutputType>
     <Optimize>False</Optimize>
     <Nullable>enable</Nullable>
+    <DefineConstants>$(DefineConstants);$(OS)</DefineConstants>
 
     <AssemblyName>IL2C.Core.Test.RuntimeSystems</AssemblyName>
     <RootNamespace>IL2C.RuntimeSystems</RootNamespace>

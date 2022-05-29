@@ -22,14 +22,19 @@ extern "C" {
 
 #if defined(_MSC_VER)
 
+#if defined(_WIN32)
+#define IL2C_DLLIMPORT_STDCALL __stdcall
+#define IL2C_DLLIMPORT_CDECL __cdecl
+#else
+#define IL2C_DLLIMPORT_STDCALL
+#define IL2C_DLLIMPORT_CDECL
+#endif
+
 #if defined(_WDM) || defined(UEFI)
 #undef _WIN32
 #endif
 
 #include <intrin.h>
-
-#define IL2C_DLLIMPORT_PREFIX __declspec(dllimport)
-#define IL2C_DLLIMPORT_STDCALL __stdcall
 
 #define il2c_assume__(expr) __assume(expr)
 #define il2c_likely__(expr) (expr)
@@ -37,6 +42,14 @@ extern "C" {
 #define il2c_noreturn__ __declspec(noreturn)
 
 #elif defined(__GNUC__)
+
+#if defined(_WIN32)
+#define IL2C_DLLIMPORT_STDCALL __stdcall
+#define IL2C_DLLIMPORT_CDECL __cdecl
+#else
+#define IL2C_DLLIMPORT_STDCALL
+#define IL2C_DLLIMPORT_CDECL
+#endif
 
 #if defined(__x86_64__) || defined(__i386__)
 #include <x86intrin.h>
@@ -46,14 +59,6 @@ extern "C" {
 #include <arm_neon.h>
 #endif
 
-#define IL2C_DLLIMPORT_PREFIX
-
-#if defined(_WIN32)
-#define IL2C_DLLIMPORT_STDCALL __stdcall
-#else
-#define IL2C_DLLIMPORT_STDCALL
-#endif
-
 #define il2c_assume__(expr) do { if (!(expr)) __builtin_unreachable(); } while (0)
 #define il2c_likely__(expr) __builtin_expect(!!(expr), 1)
 #define il2c_unlikely__(expr) __builtin_expect(!!(expr), 0)
@@ -61,8 +66,8 @@ extern "C" {
 
 #else
 
-#define IL2C_DLLIMPORT_PREFIX
 #define IL2C_DLLIMPORT_STDCALL
+#define IL2C_DLLIMPORT_CDECL
 
 #define il2c_assume__(expr) ((void)0)
 #define il2c_likely__(expr) (expr)
@@ -404,6 +409,10 @@ typedef void* untyped_ptr;
 #include "System/UnhandledExceptionEventArgs.h"
 #include "System/UnhandledExceptionEventHandler.h"
 #include "System/AppDomain.h"
+#include "System/SystemException.h"
+#include "System/NotImplementedException.h"
+#include "System/IO/IOException.h"
+#include "System/IO/FileNotFoundException.h"
 
 // Independent types for IL2C core.
 #include "System/Console.h"
@@ -571,6 +580,11 @@ const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
     0, \
     0 \
 }
+
+///////////////////////////////////////////////////////
+// P/Invoke runtime
+
+extern void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPointName);
 
 #ifdef __cplusplus
 }

@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 ////////////////////////////////////////////////////////////////////////////
 //
 // IL2C - A translator for ECMA-335 CIL/MSIL to C language.
@@ -59,7 +59,7 @@
     <_IL2C_BuildAfterTargets Condition="'$(ILComposeDependsOnTargets)' == ''">Compile</_IL2C_BuildAfterTargets>
   </PropertyGroup>
     
-  <Target Name="IL2CBuildTarget" AfterTargets="$(_IL2C_BuildAfterTargets)"
+  <Target Name="IL2CBuildTarget" BeforeTargets="CopyFilesToOutputDirectory"
     Condition="'$(IL2CEnableTranslation)' == 'True'">
     <CallTarget Targets="IL2CBuildPrepare; IL2CBuildRuntimeLibrary; IL2CBuildCore" />
   </Target>

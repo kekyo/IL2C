@@ -181,7 +181,7 @@ namespace IL2C.RuntimeSystems
             return TypeInitializer_None.Int32Value;
         }
 
-        [TestCase(null, "String_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
+        [TestCase(null, "String_None", IncludeTypes = new[] { typeof(TypeInitializer_None) }, Assert = TestCaseAsserts.PerfectMatch)]
         public static string? String_None()
         {
             return TypeInitializer_None.StringValue;

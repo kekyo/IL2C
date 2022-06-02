@@ -140,15 +140,15 @@ namespace IL2C.RuntimeSystems
         }
 
         [TestCase((int)1, "IntPtr", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-        public static IntPtr IntPtr()
+        public static int IntPtr()
         {
-            return TypeInitializer_Field.IntPtrValue;
+            return TypeInitializer_Field.IntPtrValue.ToInt32();
         }
 
         [TestCase((uint)1, "UIntPtr", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-        public static UIntPtr UIntPtr()
+        public static uint UIntPtr()
         {
-            return TypeInitializer_Field.UIntPtrValue;
+            return TypeInitializer_Field.UIntPtrValue.ToUInt32();
         }
 
         [TestCase((float)1, "Single", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]

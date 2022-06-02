@@ -10,7 +10,7 @@
     
   <ItemGroup>
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    <PackageReference Include="RelaxVersioner" Version="2.8.0" PrivateAssets="all" />
+    <PackageReference Include="RelaxVersioner" Version="2.10.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

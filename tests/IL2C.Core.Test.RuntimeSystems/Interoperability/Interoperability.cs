@@ -62,7 +62,7 @@ namespace IL2C.RuntimeSystems
         }
 
 #if Windows_NT
-        [DllImport("kernel32", EntryPoint = "lstrlenW", CallingConvention = CallingConvention.Winapi)]
+        [DllImport("kernel32", EntryPoint = "lstrlenW", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
         private static extern int lstrlenW(string message);
 
         [TestCase(3, new[] { "PInvokeLStrLenW", "lstrlenW" }, "ABC")]

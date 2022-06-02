@@ -22,8 +22,13 @@ namespace IL2C.BasicTypes
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int SizeOf();
 
-        [TestCase("1.797693134862316e+308", "ToString", double.MaxValue, Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]    // Real value is 1.7976931348623157E+308
-        [TestCase("-1.797693134862316e+308", "ToString", double.MinValue, Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]   // Real value is -1.7976931348623157E+308
+#if NET6_0_OR_GREATER
+        [TestCase("1.7976931348623157E+308", "ToString", double.MaxValue)]
+        [TestCase("-1.7976931348623157E+308", "ToString", double.MinValue)]
+#else
+        [TestCase("1.79769313486232E+308", "ToString", double.MaxValue)]
+        [TestCase("-1.79769313486232E+308", "ToString", double.MinValue)]
+#endif
         public static string ToString(double value)
         {
             return value.ToString();

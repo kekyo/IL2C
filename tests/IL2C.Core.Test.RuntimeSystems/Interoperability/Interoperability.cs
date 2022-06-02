@@ -82,20 +82,20 @@ namespace IL2C.RuntimeSystems
 #endif
 
         [TestCase(12345678, "TransparencyForNativePointer", 12345678)]
-        public static IntPtr TransparencyForNativePointer(IntPtr value)
+        public static int TransparencyForNativePointer(int value)
         {
-            NativePointer np = value;
+            NativePointer np = (IntPtr)value;
             IntPtr ip = np;
-            return ip;
+            return ip.ToInt32();
         }
 
         [TestCase(12345678, "TransparencyForNativePointerInsideNativeType", 12345678, IncludeTypes = new[] { typeof(NativePointerInside) })]
-        public static IntPtr TransparencyForNativePointerInsideNativeType(IntPtr value)
+        public static int TransparencyForNativePointerInsideNativeType(int value)
         {
             NativePointerInside npi;
-            npi.Pointer = value;
+            npi.Pointer = (IntPtr)value;
             IntPtr ip = npi.Pointer;
-            return ip;
+            return ip.ToInt32();
         }
 
         private static IntPtr ConcatAndToObjRefHandle(string a, string b)

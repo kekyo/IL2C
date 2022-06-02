@@ -35,7 +35,7 @@ namespace IL2C.BasicTypes
             return value.GetType().BaseType!.FullName!;
         }
 
-        [TestCase(null, "Object_BaseType")]
+        [TestCase(null, "Object_BaseType", Assert = TestCaseAsserts.PerfectMatch)]
         public static Type? Object_BaseType()
         {
             // TODO: We have to handle GetTypeFromHandle.

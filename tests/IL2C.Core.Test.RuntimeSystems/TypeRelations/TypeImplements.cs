@@ -387,7 +387,7 @@ namespace IL2C.RuntimeSystems
             return inst.GetStringFromInt32(value);
         }
 
-        [TestCase("223", "InstanceMultipleCombined2ImplementCombination1FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+        [TestCase("223", "InstanceMultipleCombined1ImplementCombination1FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined1ImplementCombination1FromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleCombinedImplementCombinationType1();
@@ -415,7 +415,7 @@ namespace IL2C.RuntimeSystems
             return inst.GetStringFromInt32(value);
         }
 
-        [TestCase("323", "InstanceMultipleCombined2ImplementCombination2FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
+        [TestCase("323", "InstanceMultipleCombined1ImplementCombination2FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined1ImplementCombination2FromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleCombinedImplementCombinationType2();

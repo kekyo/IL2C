@@ -18,33 +18,36 @@ namespace IL2C.BasicTypes
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
-        [TestCase(4, "SizeOf", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]    // Unit test environment is unknown, gcc is 32bit
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int SizeOf();
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            public static extern int SizeOfImpl();
+
+        [TestCase(true, "SizeOf")]
+        public static bool SizeOf() =>
+            IntPtr.Size == SizeOfImpl();
 
         [TestCase("2147483647", "ToString", int.MaxValue)]
         [TestCase("-2147483648", "ToString", int.MinValue)]
-        public static string ToString(IntPtr value)
+        public static string ToString(int value)
         {
-            return value.ToString();
+            return ((IntPtr)value).ToString();
         }
 
         [TestCase(true, "Zero", 0)]
-        public static bool Zero(IntPtr v)
+        public static bool Zero(int v)
         {
-            return v == IntPtr.Zero;
+            return ((IntPtr)v) == IntPtr.Zero;
         }
 
         [TestCase(true, "Equality", 0)]
-        public static bool Equality(IntPtr v)
+        public static bool Equality(int v)
         {
-            return v == IntPtr.Zero;
+            return ((IntPtr)v) == IntPtr.Zero;
         }
 
         [TestCase(false, "NonEquality", 0)]
-        public static bool NonEquality(IntPtr v)
+        public static bool NonEquality(int v)
         {
-            return v != IntPtr.Zero;
+            return ((IntPtr)v) != IntPtr.Zero;
         }
 
         [TestCase(123, "ToInt32", 123)]

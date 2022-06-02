@@ -15,7 +15,7 @@
         ret
     }
 
-    .method public static int32 SizeOf() cil managed
+    .method public static int32 SizeOfImpl() cil managed
     {
         .maxstack 1
         sizeof native uint

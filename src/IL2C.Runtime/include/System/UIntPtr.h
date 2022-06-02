@@ -37,6 +37,8 @@ extern /* virtual */ bool System_UIntPtr_Equals__System_Object(uintptr_t* this__
 #define System_UIntPtr_ToUInt32(this__) ((uint32_t)*(this__))
 #define System_UIntPtr_ToUInt64(this__) ((uint64_t)*(this__))
 
+#define System_UIntPtr_get_Size() (sizeof(uintptr_t))
+
 #define System_UIntPtr_op_Explicit__System_UInt32(value) ((uintptr_t)(value))
 #define System_UIntPtr_op_Explicit__System_UInt64(value) ((uintptr_t)(value))
 #define System_UIntPtr_op_Addition__System_UIntPtr_System_Int32(lhs, rhs) (((uintptr_t)(lhs)) + ((uintptr_t)(rhs)))

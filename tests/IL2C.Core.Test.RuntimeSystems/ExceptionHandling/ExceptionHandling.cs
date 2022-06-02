@@ -33,8 +33,8 @@ namespace IL2C.RuntimeSystems
         }
 
         [TestCase("ABC", "RaiseCaughtAndAccessLocal", "ABC")]
-        [TestCase(null, "RaiseCaughtAndAccessLocal", null!)]
-        public static string? RaiseCaughtAndAccessLocal(string value)
+        [TestCase(null, "RaiseCaughtAndAccessLocal", null!, Assert = TestCaseAsserts.PerfectMatch)]
+        public static string? RaiseCaughtAndAccessLocal(string? value)
         {
             try
             {
@@ -48,8 +48,8 @@ namespace IL2C.RuntimeSystems
         }
 
         [TestCase("ABC", "RaiseCaughtNarrowingLocal", "ABC")]
-        [TestCase(null, "RaiseCaughtNarrowingLocal", null!)]
-        public static string? RaiseCaughtNarrowingLocal(string value)
+        [TestCase(null, "RaiseCaughtNarrowingLocal", null!, Assert = TestCaseAsserts.PerfectMatch)]
+        public static string? RaiseCaughtNarrowingLocal(string? value)
         {
             try
             {
@@ -63,8 +63,8 @@ namespace IL2C.RuntimeSystems
         }
 
         [TestCase("ABC", "RaiseCaughtWildcardLocal", "ABC")]
-        [TestCase(null, "RaiseCaughtWildcardLocal", null!)]
-        public static string? RaiseCaughtWildcardLocal(string value)
+        [TestCase(null, "RaiseCaughtWildcardLocal", null!, Assert = TestCaseAsserts.PerfectMatch)]
+        public static string? RaiseCaughtWildcardLocal(string? value)
         {
             try
             {

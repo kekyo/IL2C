@@ -130,23 +130,19 @@ namespace IL2C.ILConverters
             private static extern object Box_Enum_UInt16(ushort value);
 
         [TestCase(Box_Enum_UInt16_Type.Min, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, ushort.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
-        [TestCase(Box_Enum_UInt16_Type.One, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, 1, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
+        [TestCase(Box_Enum_UInt16_Type.One, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, (ushort)1, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
         [TestCase(Box_Enum_UInt16_Type.Max, new[] { "Enum_UInt16", "Box_Enum_UInt16" }, ushort.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt16_Type) })]
-        public static Box_Enum_UInt16_Type Enum_UInt16(ushort value)
-        {
-            return (Box_Enum_UInt16_Type)Box_Enum_UInt16(value);
-        }
+        public static Box_Enum_UInt16_Type Enum_UInt16(ushort value) =>
+            (Box_Enum_UInt16_Type)Box_Enum_UInt16(value);
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_UInt32(uint value);
 
         [TestCase(Box_Enum_UInt32_Type.Min, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, uint.MinValue, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
-        [TestCase(Box_Enum_UInt32_Type.One, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, 1, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
+        [TestCase(Box_Enum_UInt32_Type.One, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, 1U, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
         [TestCase(Box_Enum_UInt32_Type.Max, new[] { "Enum_UInt32", "Box_Enum_UInt32" }, uint.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_UInt32_Type) })]
-        public static Box_Enum_UInt32_Type Enum_UInt32(uint value)
-        {
-            return (Box_Enum_UInt32_Type)Box_Enum_UInt32(value);
-        }
+        public static Box_Enum_UInt32_Type Enum_UInt32(uint value) =>
+            (Box_Enum_UInt32_Type)Box_Enum_UInt32(value);
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Enum_UInt64(ulong value);

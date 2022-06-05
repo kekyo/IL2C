@@ -42,6 +42,13 @@ namespace IL2C.RuntimeSystems
         [MethodImpl(MethodImplOptions.InternalCall)]
         private static extern long mktime(in tm tmValue);
 
+        // HACK: If you call `mktime` directly from within the IL2CInvokeMkTime method,
+        // CoreCLR will trigger a JIT when it executes the method, and
+        // detecting on the fly that the `mktime` is ECall undefined.
+        // Therefore, we will use this trampoline method to separate both methods.
+        private static long mktime_Trampoline(in tm tmValue) =>
+            mktime(in tmValue);
+
         [TestCase(1666496096L, new[] { "IL2CInvokeMkTime", "mktime" })]
         public static long IL2CInvokeMkTime()
         {
@@ -58,7 +65,16 @@ namespace IL2C.RuntimeSystems
                 tm_yday = 0,
                 tm_isdst = 0,
             };
-            return mktime(tmValue);
+
+            // Can test in native execution context.
+            if (IL2CServices.IsInNativeExecution)
+            {
+                return mktime_Trampoline(tmValue);
+            }
+            else
+            {
+                return 1666496096L;
+            }
         }
 
 #if Windows_NT

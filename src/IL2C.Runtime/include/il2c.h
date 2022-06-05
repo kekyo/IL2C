@@ -399,6 +399,7 @@ typedef void* untyped_ptr;
 #include "System/Runtime/InteropServices/GCHandleType.h"
 #include "System/Runtime/InteropServices/GCHandle.h"
 #include "System/Runtime/InteropServices/NativePointer.h"
+#include "System/Runtime/InteropServices/IL2CServices.h"
 #include "System/IDisposable.h"
 #include "System/Threading/Interlocked.h"
 #include "System/Threading/Monitor.h"

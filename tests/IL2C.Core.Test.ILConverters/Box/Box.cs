@@ -73,47 +73,37 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_UInt16(ushort value);
 
-        [TestCase("12346", new[] { "UInt16", "Box_UInt16" }, 12345)]
-        public static string UInt16(ushort value)
-        {
-            return Box_UInt16((ushort)(value + 1)).ToString()!;
-        }
+        [TestCase("12346", new[] { "UInt16", "Box_UInt16" }, (ushort)12345)]
+        public static string UInt16(ushort value) =>
+            Box_UInt16((ushort)(value + 1)).ToString()!;
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_UInt32(uint value);
 
-        [TestCase("1234568", new[] { "UInt32", "Box_UInt32" }, 1234567)]
-        public static string UInt32(uint value)
-        {
-            return Box_UInt32(value + 1).ToString()!;
-        }
+        [TestCase("1234568", new[] { "UInt32", "Box_UInt32" }, 1234567U)]
+        public static string UInt32(uint value) =>
+            Box_UInt32(value + 1).ToString()!;
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_UInt64(ulong value);
 
-        [TestCase("12345678901235", new[] { "UInt64", "Box_UInt64" }, 12345678901234)]
-        public static string UInt64(ulong value)
-        {
-            return Box_UInt64(value + 1).ToString()!;
-        }
+        [TestCase("12345678901235", new[] { "UInt64", "Box_UInt64" }, 12345678901234UL)]
+        public static string UInt64(ulong value) =>
+            Box_UInt64(value + 1).ToString()!;
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_IntPtr(IntPtr value);
 
         [TestCase("1234567", new[] { "IntPtr", "Box_IntPtr" }, 1234567)]
-        public static string IntPtr(IntPtr value)
-        {
-            return Box_IntPtr(value).ToString()!;
-        }
+        public static string IntPtr(int value) =>
+            Box_IntPtr((IntPtr)value).ToString()!;
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_UIntPtr(UIntPtr value);
 
         [TestCase("1234567", new[] { "UIntPtr", "Box_UIntPtr" }, 1234567U)]
-        public static string UIntPtr(UIntPtr value)
-        {
-            return Box_UIntPtr(value).ToString()!;
-        }
+        public static string UIntPtr(uint value) =>
+            Box_UIntPtr((UIntPtr)value).ToString()!;
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Single(float value);
@@ -155,11 +145,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_UInt64ToInt64(ulong value);
 
-        [TestCase("12345679901234", new[] { "UInt64ToInt64", "Box_UInt64ToInt64" }, 12345678901234)]
-        public static long UInt64ToInt64(ulong value)
-        {
-            return (long)Box_UInt64ToInt64(value) + 1000000;
-        }
+        [TestCase("12345679901234", new[] { "UInt64ToInt64", "Box_UInt64ToInt64" }, 12345678901234UL)]
+        public static long UInt64ToInt64(ulong value) =>
+            (long)Box_UInt64ToInt64(value) + 1000000;
 
         [TestCase("123ABC", new[] { "ValueType", "ToString" }, 123, "ABC", IncludeTypes = new[] { typeof(Box_Target_ValueType) })]
         public static string ValueType(int value1, string value2)

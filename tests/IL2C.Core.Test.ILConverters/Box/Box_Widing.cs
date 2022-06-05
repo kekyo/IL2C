@@ -45,11 +45,9 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_UInt16ToInt32(ushort value);
 
-        [TestCase(1012345, new[] { "UInt16ToInt32", "Box_UInt16ToInt32" }, 12345)]
-        public static int UInt16ToInt32(ushort value)
-        {
-            return (int)Box_UInt16ToInt32(value) + 1000000;
-        }
+        [TestCase(1012345, new[] { "UInt16ToInt32", "Box_UInt16ToInt32" }, (ushort)12345)]
+        public static int UInt16ToInt32(ushort value) =>
+            (int)Box_UInt16ToInt32(value) + 1000000;
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_BoolToInt32(bool value);

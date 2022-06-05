@@ -52,11 +52,9 @@ namespace IL2C.ILConverters
             private static extern object Box_Enum_Int32_From_UInt16(ushort value);
 
         [TestCase((Box_Enum_Int32_Type)ushort.MinValue, new[] { "Enum_Int32_From_UInt16", "Box_Enum_Int32_From_UInt16" }, ushort.MinValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-        [TestCase((Box_Enum_Int32_Type)1, new[] { "Enum_Int32_From_UInt16", "Box_Enum_Int32_From_UInt16" }, 1, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
+        [TestCase((Box_Enum_Int32_Type)1, new[] { "Enum_Int32_From_UInt16", "Box_Enum_Int32_From_UInt16" }, (ushort)1, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
         [TestCase((Box_Enum_Int32_Type)ushort.MaxValue, new[] { "Enum_Int32_From_UInt16", "Box_Enum_Int32_From_UInt16" }, ushort.MaxValue, IncludeTypes = new[] { typeof(Box_Enum_Int32_Type) })]
-        public static Box_Enum_Int32_Type Enum_Int32_From_UInt16(ushort value)
-        {
-            return (Box_Enum_Int32_Type)Box_Enum_Int32_From_UInt16(value);
-        }
+        public static Box_Enum_Int32_Type Enum_Int32_From_UInt16(ushort value) =>
+            (Box_Enum_Int32_Type)Box_Enum_Int32_From_UInt16(value);
     }
 }

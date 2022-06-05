@@ -9,13 +9,18 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace IL2C.ILConverters
 {
     public sealed class Break
     {
-        [TestCase(0, "CauseBreak", 100, 23, Assert = TestCaseAsserts.CauseBreak)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int CauseBreak(int v1, int v2);
+        private static extern int CauseBreakImpl(int v1, int v2);
+
+        [TestCase(0, "CauseBreak", 100, 23, Assert = TestCaseAsserts.CauseBreak)]
+        public static int CauseBreak(int v1, int v2) =>
+            // In CoreCLR, break opcode will be ignored.
+            IL2CServices.IsInNativeExecution ? CauseBreakImpl(v1, v2) : 0;
     }
 }

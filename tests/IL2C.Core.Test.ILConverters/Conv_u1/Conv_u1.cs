@@ -36,10 +36,13 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte Int64(long value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern byte IntPtrImpl(IntPtr value);
+
         [TestCase((byte)123, "IntPtr", 123)]
         [TestCase(unchecked((byte)456), "IntPtr", 456)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte IntPtr(IntPtr value);
+        public static byte IntPtr(int value) =>
+            IntPtrImpl((IntPtr)value);
 
         [TestCase((byte)123, "SByte", (sbyte)123)]
         [TestCase(unchecked((byte)-123), "SByte", (sbyte)-123)]
@@ -58,9 +61,12 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte UInt64(ulong value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern byte UIntPtrImpl(UIntPtr value);
+
         [TestCase((byte)123, "UIntPtr", (uint)123)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern byte UIntPtr(UIntPtr value);
+        public static byte UIntPtr(uint value) =>
+            UIntPtrImpl((UIntPtr)value);
 
         [TestCase((byte)123, "Single", 123.45f)]
         [TestCase(unchecked((byte)456), "Single", 456.78f)]

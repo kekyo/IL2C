@@ -33,10 +33,13 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong Int64(long value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern ulong IntPtrImpl(IntPtr value);
+
         [TestCase((ulong)12345, "IntPtr", 12345)]
         //[TestCase(unchecked((ulong)(uint)-45678), "IntPtr", -45678)]  // Different result on both 32/64bit test environment
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern ulong IntPtr(IntPtr value);
+        public static ulong IntPtr(int value) =>
+            IntPtrImpl((IntPtr)value);
 
         [TestCase((ulong)123, "SByte", (sbyte)123)]
         [TestCase(unchecked((ulong)(uint)-123), "SByte", (sbyte)-123)]
@@ -55,9 +58,12 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong UInt64(ulong value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern ulong UIntPtrImpl(UIntPtr value);
+
         [TestCase((ulong)12345, "UIntPtr", (uint)12345)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern ulong UIntPtr(UIntPtr value);
+        public static ulong UIntPtr(uint value) =>
+            UIntPtrImpl((UIntPtr)value);
 
         [TestCase((ulong)12345.67f, "Single", 12345.67f)]
         [TestCase(unchecked((ulong)(long)-45678.91f), "Single", -45678.91f)]

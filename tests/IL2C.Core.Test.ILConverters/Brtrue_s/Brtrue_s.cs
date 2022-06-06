@@ -25,11 +25,14 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Int32Value(int v);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern string IntPtrValueImpl(IntPtr v);
+
         [TestCase("ABC", "IntPtrValue", 100)]
         [TestCase("DEF", "IntPtrValue", 0)]
         [TestCase("ABC", "IntPtrValue", -100)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string IntPtrValue(IntPtr v);
+        public static string IntPtrValue(int v) =>
+            IntPtrValueImpl((IntPtr)v);
 
         [TestCase("ABC", "ObjectValue", "")]
         [TestCase("DEF", "ObjectValue", null!)]

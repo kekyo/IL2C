@@ -34,11 +34,14 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64(long value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern long IntPtrImpl(IntPtr value);
+
         [TestCase(456789012L, "IntPtr", 456789012)]
         //[TestCase(unchecked((int)4567890123L), "IntPtr", 4567890123L)]  // Will cause overflow on 32bit test environment (IntPtr.Size == 4)
         [TestCase(-456789012L, "IntPtr", -456789012)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern long IntPtr(IntPtr value);
+        public static long IntPtr(long value) =>
+            IntPtrImpl((IntPtr)value);
 
         [TestCase(123L, "Byte", (byte)123)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -57,9 +60,12 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long UInt64(ulong value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern long UIntPtrImpl(UIntPtr value);
+
         [TestCase(456789012L, "UIntPtr", (uint)456789012)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern long UIntPtr(UIntPtr value);
+        public static long UIntPtr(uint value) =>
+            UIntPtrImpl((UIntPtr)value);
 
         [TestCase((long)45678900000.56f, "Single", 45678900000.56f)]
         [TestCase((long)-45678900000.56f, "Single", -45678900000.56f)]

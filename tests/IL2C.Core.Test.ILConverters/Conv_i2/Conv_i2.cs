@@ -34,10 +34,13 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern short Int64(long value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern short IntPtrImpl(IntPtr value);
+
         [TestCase((short)12345, "IntPtr", 12345)]
         [TestCase(unchecked((short)45678), "IntPtr", 45678)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern short IntPtr(IntPtr value);
+        public static short IntPtr(int value) =>
+            IntPtrImpl((IntPtr)value);
 
         [TestCase((short)123, "Byte", (byte)123)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
@@ -58,9 +61,12 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern short UInt64(ulong value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern short UIntPtrImpl(UIntPtr value);
+
         [TestCase(unchecked((short)456789012), "UIntPtr", (uint)456789012)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern short UIntPtr(UIntPtr value);
+        public static short UIntPtr(uint value) =>
+            UIntPtrImpl((UIntPtr)value);
 
         [TestCase((short)12345, "Single", 12345.67f)]
         [TestCase(unchecked((short)45678), "Single", 45678.91f)]

@@ -60,15 +60,23 @@ namespace IL2C.ILConverters
         public static extern ulong UInt64_4(
             int arg0, int arg1, int arg2, int arg3, ulong num);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern IntPtr IntPtr_4Impl(
+                int arg0, int arg1, int arg2, int arg3, IntPtr num);
+
         [TestCase(int.MaxValue - 1, "IntPtr_4", 0, 1, 2, 3, int.MaxValue)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr IntPtr_4(
-            int arg0, int arg1, int arg2, int arg3, IntPtr num);
+        public static int IntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, int num) =>
+            IntPtr_4Impl(arg0, arg1, arg2, arg3, (IntPtr)num).ToInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UIntPtr_4Impl(
+                int arg0, int arg1, int arg2, int arg3, UIntPtr num);
 
         [TestCase(uint.MaxValue - 1, "UIntPtr_4", 0, 1, 2, 3, uint.MaxValue)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UIntPtr_4(
-            int arg0, int arg1, int arg2, int arg3, UIntPtr num);
+        public static uint UIntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, uint num) =>
+            UIntPtr_4Impl(arg0, arg1, arg2, arg3, (UIntPtr)num).ToUInt32();
 
         [TestCase((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
         [MethodImpl(MethodImplOptions.ForwardRef)]

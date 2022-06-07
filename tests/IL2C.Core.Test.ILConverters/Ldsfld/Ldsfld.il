@@ -70,14 +70,14 @@
         ret
     }
     
-    .method public static native int IntPtr() cil managed
+    .method private static native int IntPtrImpl() cil managed
     {
         .maxstack 1
         ldsfld native int [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::IntPtrValue
         ret
     }
     
-    .method public static native uint UIntPtr() cil managed
+    .method private static native uint UIntPtrImpl() cil managed
     {
         .maxstack 1
         ldsfld native uint [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::UIntPtrValue

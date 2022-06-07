@@ -22,14 +22,14 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string StringValue();
 
-        [TestCase(null, "NullValue")]
+        [TestCase(null, "NullValue", Assert = TestCaseAsserts.PerfectMatch)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern object NullValue();
+        public static extern object? NullValue();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern ref int Return_RefInt(ref int a, ref int b, bool select);
 
         [TestCase(123, new[] { "RefIntValue", "Return_RefInt" }, true)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        private static extern ref int Return_RefInt(ref int a, ref int b, bool select);
-
         [TestCase(456, new[] { "RefIntValue", "Return_RefInt" }, false)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int RefIntValue(bool select);

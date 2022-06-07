@@ -70,13 +70,19 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong UInt64(ulong value);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern IntPtr IntPtrImpl(IntPtr value);
+
         [TestCase(int.MaxValue, "IntPtr", int.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr IntPtr(IntPtr value);
+        public static int IntPtr(int value) =>
+            IntPtrImpl((IntPtr)value).ToInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UIntPtrImpl(UIntPtr value);
 
         [TestCase(uint.MaxValue, "UIntPtr", uint.MaxValue, IncludeTypes = new[] { typeof(Stsfld_Field) })]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UIntPtr(UIntPtr value);
+        public static uint UIntPtr(uint value) =>
+            UIntPtrImpl((UIntPtr)value).ToUInt32();
 
         [TestCase(3.14159274f, "Single", 3.14159274f, IncludeTypes = new[] { typeof(Stsfld_Field) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -14,15 +14,21 @@ namespace IL2C.ILConverters
 {
     public sealed class Ldnull
     {
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern IntPtr IntPtrZeroImpl();
+
         [TestCase(0, "IntPtrZero")]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr IntPtrZero();
+        public static int IntPtrZero() =>
+            IntPtrZeroImpl().ToInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            public static extern UIntPtr UIntPtrZeroImpl();
 
         [TestCase((uint)0, "UIntPtrZero")]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UIntPtrZero();
+        public static uint UIntPtrZero() =>
+            UIntPtrZeroImpl().ToUInt32();
 
-        [TestCase(null, "NullReference")]
+        [TestCase(null, "NullReference", Assert = TestCaseAsserts.PerfectMatch)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern object NullReference();
     }

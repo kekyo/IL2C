@@ -1,13 +1,13 @@
 ﻿.class public IL2C.ILConverters.Ldnull
 {
-	.method public static native int IntPtrZero() cil managed
+	.method private static native int IntPtrZeroImpl() cil managed
 	{
 		.maxstack 2
 		ldnull
 		ret
 	}
 
-	.method public static native unsigned int UIntPtrZero() cil managed
+	.method private static native unsigned int UIntPtrZeroImpl() cil managed
 	{
 		.maxstack 2
 		ldnull

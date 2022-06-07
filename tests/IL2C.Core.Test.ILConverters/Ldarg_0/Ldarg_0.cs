@@ -51,13 +51,19 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong UInt64(ulong num);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern IntPtr IntPtrImpl(IntPtr num);
+
         [TestCase(int.MaxValue - 1, "IntPtr", int.MaxValue)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr IntPtr(IntPtr num);
+        public static int IntPtr(int num) =>
+            IntPtrImpl((IntPtr)num).ToInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UIntPtrImpl(UIntPtr num);
 
         [TestCase(uint.MaxValue - 1, "UIntPtr", uint.MaxValue)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UIntPtr(UIntPtr num);
+        public static uint UIntPtr(uint num) =>
+            UIntPtrImpl((UIntPtr)num).ToUInt32();
 
         [TestCase((float)((double)123.45f + (double)3.14159274f), "Single", 123.45f)]
         [MethodImpl(MethodImplOptions.ForwardRef)]

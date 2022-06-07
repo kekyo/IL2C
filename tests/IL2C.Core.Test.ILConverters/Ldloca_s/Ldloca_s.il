@@ -160,7 +160,7 @@
         ret
     }
 
-    .method public static string Single() cil managed
+    .method private static string SingleImpl() cil managed
     {
         .maxstack 1
         .locals init (
@@ -173,7 +173,7 @@
         ret
     }
 
-    .method public static string Double() cil managed
+    .method private static string DoubleImpl() cil managed
     {
         .maxstack 1
         .locals init (

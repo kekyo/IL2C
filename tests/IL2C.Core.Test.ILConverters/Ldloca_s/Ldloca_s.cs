@@ -9,6 +9,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace IL2C.ILConverters
 {
@@ -62,23 +63,29 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string UIntPtr();
 
-#if NET50 || NET60
-        [TestCase("3.1415927", "Single")]   // Lost last 1 digits via ToString conversion.
-#else
-        // Ignore validation because .NET Framework CLR precision is poor.
-        [TestCase("3.1415927", "Single", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]   // Lost last 1 digits via ToString conversion.
-#endif
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string Single();
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern string SingleImpl();
 
-#if NET50 || NET60
-        [TestCase("3.141592653589793", "Double")]   // Lost last 1 digits via ToString conversion.
+        [TestCase("3.1415927", "Single")]
+        public static string Single() =>
+#if NETFRAMEWORK
+            // Ignore validation because .NET Framework CLR precision is poor.
+            IL2CServices.IsInNativeExecution ? SingleImpl() : "3.1415927";
 #else
-        // Ignore validation because .NET Framework CLR precision is poor.
-        [TestCase("3.141592653589793", "Double", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]   // Lost last 1 digits via ToString conversion.
+            SingleImpl();
 #endif
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string Double();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern string DoubleImpl();
+
+        [TestCase("3.141592653589793", "Double")]   // Lost last 1 digits via ToString conversion.
+        public static string Double() =>
+#if NETFRAMEWORK
+            // Ignore validation because .NET Framework CLR precision is poor.
+            IL2CServices.IsInNativeExecution ? DoubleImpl() : "3.141592653589793";
+#else
+            DoubleImpl();
+#endif
 
         [TestCase("A", "Char")]
         [MethodImpl(MethodImplOptions.ForwardRef)]

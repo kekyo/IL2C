@@ -60,15 +60,23 @@ namespace IL2C.ILConverters
         public static extern string UInt64_4(
             int arg0, int arg1, int arg2, int arg3, ulong num);
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern string IntPtr_4Impl(
+                int arg0, int arg1, int arg2, int arg3, IntPtr num);
+
         [TestCase("2147483647", "IntPtr_4", 0, 1, 2, 3, int.MaxValue)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string IntPtr_4(
-            int arg0, int arg1, int arg2, int arg3, IntPtr num);
+        public static string IntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, int num) =>
+            IntPtr_4Impl(arg0, arg1, arg2, arg3, (IntPtr)num);
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern string UIntPtr_4Impl(
+                int arg0, int arg1, int arg2, int arg3, UIntPtr num);
 
         [TestCase("4294967295", "UIntPtr_4", 0, 1, 2, 3, uint.MaxValue)]
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern string UIntPtr_4(
-            int arg0, int arg1, int arg2, int arg3, UIntPtr num);
+        public static string UIntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, uint num) =>
+            UIntPtr_4Impl(arg0, arg1, arg2, arg3, (UIntPtr)num);
 
         [TestCase("123.45", "Single_4", 0, 1, 2, 3, 123.45f)]
         [MethodImpl(MethodImplOptions.ForwardRef)]

@@ -23,7 +23,7 @@ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPoi
     HMODULE handle = LoadLibraryW(pDllName);
     if (handle != NULL)
     {
-        void* pFunc = GetProcAddress(handle, pEntryPointName);
+        void* pFunc = (void*)GetProcAddress(handle, pEntryPointName);
         if (pFunc != NULL)
         {
             return pFunc;
@@ -70,7 +70,7 @@ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPoi
     void* handle = dlopen(pDllName, RTLD_LAZY);
     if (handle != NULL)
     {
-        void* pFunc = dlsym(handle, pEntryPointName);
+        void* pFunc = (void*)dlsym(handle, pEntryPointName);
         if (pFunc != NULL)
         {
             return pFunc;

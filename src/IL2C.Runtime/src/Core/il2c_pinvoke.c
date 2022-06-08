@@ -84,6 +84,8 @@ il2c_noreturn__ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const
     il2c_assert(pDllName != NULL);
     il2c_assert(pEntryPointName != NULL);
 
+    if (0) return NULL;
+
     System_NotImplementedException* ex = il2c_get_uninitialized_object(System_NotImplementedException);
     System_NotImplementedException__ctor__System_String(ex, il2c_not_implemented_message);
     il2c_throw(ex);

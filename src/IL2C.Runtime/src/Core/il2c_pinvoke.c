@@ -34,8 +34,6 @@ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPoi
     System_IO_FileNotFoundException* ex = il2c_get_uninitialized_object(System_IO_FileNotFoundException);
     System_IO_FileNotFoundException__ctor__System_String(ex, il2c_dll_not_found_message);
     il2c_throw(ex);
-    il2c_assert(false);
-    return NULL;
 #else
     // https://github.com/dotnet/runtime/blob/6d0bcc4cc7cf98e661c91d4f2abace2c5bd282a5/src/coreclr/vm/nativelibrary.cpp
     switch (GetLastError())
@@ -48,14 +46,10 @@ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPoi
         System_IO_FileNotFoundException* ex = il2c_get_uninitialized_object(System_IO_FileNotFoundException);
         System_IO_FileNotFoundException__ctor__System_String(ex, il2c_dll_not_found_message);
         il2c_throw(ex);
-        il2c_assert(false);
-        return NULL;
     default:
         System_IO_FileNotFoundException* ex = il2c_get_uninitialized_object(System_IO_FileNotFoundException);
         System_IO_FileNotFoundException__ctor__System_String(ex, il2c_dll_not_found_message);
         il2c_throw(ex);
-        il2c_assert(false);
-        return NULL;
     }
 #endif
 }
@@ -81,8 +75,6 @@ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPoi
     System_IO_FileNotFoundException* ex = il2c_get_uninitialized_object(System_IO_FileNotFoundException);
     System_IO_FileNotFoundException__ctor__System_String(ex, il2c_dll_not_found_message);
     il2c_throw(ex);
-    il2c_assert(false);
-    return NULL;
 }
 #else
 IL2C_CONST_STRING(il2c_not_implemented_message, L"Not implemented.");
@@ -95,7 +87,5 @@ il2c_noreturn__ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const
     System_NotImplementedException* ex = il2c_get_uninitialized_object(System_NotImplementedException);
     System_NotImplementedException__ctor__System_String(ex, il2c_not_implemented_message);
     il2c_throw(ex);
-    il2c_assert(false);
-    return NULL;
 }
 #endif

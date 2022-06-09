@@ -7,6 +7,8 @@
 
     <AssemblyName>il2c</AssemblyName>
     <StartupObject>IL2C.Program</StartupObject>
+
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <NuspecFile>IL2C.Build.nuspec</NuspecFile>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>

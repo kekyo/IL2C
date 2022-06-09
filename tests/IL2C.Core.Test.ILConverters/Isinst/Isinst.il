@@ -6,7 +6,7 @@
         ldarg.0
         isinst string
         dup
-        brnull.s N1
+        brfalse.s N1
         ldstr "DEF"
         call string string::Concat(string, string)
     N1:
@@ -19,7 +19,7 @@
         ldarg.0
         isinst int32
         dup
-        brnull.s N1
+        brfalse.s N1
         callvirt instance string object::ToString()
     N1:
         ret

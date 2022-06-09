@@ -75,7 +75,7 @@ void HelloWorld_Main()
         .maxstack 2
         ldstr "ABC"
         isinst [mscorlib]System.ValueType
-        brnull.s F1
+        brfalse.s F1
         ldc.i4.1
         ret
     F1:

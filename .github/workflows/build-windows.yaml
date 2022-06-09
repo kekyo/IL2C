@@ -54,9 +54,12 @@ jobs:
       shell: cmd
     - name: Install dependencies
       run: |
-        dotnet restore il2c.sln
-        dotnet restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
-        dotnet restore samples\Calculator\Calculator.sln
+        msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore il2c.sln
+        msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
+        msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\Calculator\Calculator.sln
+    #   dotnet restore il2c.sln
+    #   dotnet restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
+    #   dotnet restore samples\Calculator\Calculator.sln
     - name: Build runtime library
       run: build-runtime.bat ${{env.buildConfiguration}}
       shell: cmd

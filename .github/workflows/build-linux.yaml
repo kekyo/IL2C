@@ -49,10 +49,10 @@ jobs:
         dotnet-version: 6.0.*
     #- name: Initialize tools
     #  run: bash .github/workflows/init-tools-on-ga.sh
-    - name: Install dependencies
-      run: |
-        dotnet restore il2c.sln
-        dotnet restore samples/Calculator/Calculator.Core/Calculator.Core.csproj
+    #- name: Install dependencies
+    #  run: |
+    #    dotnet restore il2c.sln
+    #    dotnet restore samples/Calculator/Calculator.Core/Calculator.Core.csproj
 #        dotnet restore samples/GettingStartedIL2C/GettingStartedIL2C.sln
 #        dotnet restore samples/Calculator/Calculator.sln
     - name: Build runtime library

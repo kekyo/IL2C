@@ -14,6 +14,8 @@
 #pragma warning(disable:4646)
 // function declared with 'noreturn' has a return statement
 #pragma warning(disable:4645)
+// unreachable code
+#pragma warning(disable:4702)
 #endif
 
 /////////////////////////////////////////////////////////////

@@ -4,13 +4,6 @@ on:
     branches:
     - master
     - devel
-    - feature/github-actions-2
-  pull_request:
-    branches:
-    - master
-    - devel
-  workflow_dispatch:
-    branches:
 permissions:
   contents: read
 jobs:
@@ -79,10 +72,16 @@ jobs:
 #      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
 #    - name: Build Calculator-x64
 #      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\Calculator\Calculator.sln
-#    - name: Build Calculator-CMake-mingw32
-#      run: build.bat ${{env.buildConfiguration}}
-#      shell: cmd
-#      working-directory: samples\Calculator\Calculator.CMake
-    - name: Test il2c
-      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.Fixture\IL2C.Core.Test.Fixture.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
+    - name: Build Calculator-CMake-mingw32
+      run: build.bat ${{env.buildConfiguration}}
+      shell: cmd
+      working-directory: samples\Calculator\Calculator.CMake
+    - name: Test il2c (BasicTypes)
+      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
+      timeout-minutes: 20
+    - name: Test il2c (ILConverters)
+      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.ILConverters\IL2C.Core.Test.ILConverters.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
+      timeout-minutes: 20
+    - name: Test il2c (RuntimeSystems)
+      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.RuntimeSystems\IL2C.Core.Test.RuntimeSystems.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
       timeout-minutes: 20

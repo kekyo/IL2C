@@ -1,9 +1,5 @@
 name: Linux
-on:
-  push:
-    branches:
-    - master
-    - devel
+on: [push]
 permissions:
   contents: read
 jobs:

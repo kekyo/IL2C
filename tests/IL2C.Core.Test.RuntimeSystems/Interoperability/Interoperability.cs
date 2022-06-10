@@ -87,7 +87,7 @@ namespace IL2C.RuntimeSystems
             return lstrlenW(message);
         }
 #else
-        [DllImport("libc", EntryPoint = "wcslen", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libc", EntryPoint = "wcslen", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         private static extern IntPtr wcslen(string message);
 
         [TestCase(3, new[] { "PInvokeWcsLen", "wcslen" }, "ABC")]

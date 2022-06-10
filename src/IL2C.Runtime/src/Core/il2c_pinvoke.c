@@ -24,12 +24,12 @@
 #if defined(_WIN32)
 IL2C_CONST_STRING(il2c_dll_not_found_message, L"Dll not found.");
 
-void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPointName)
+void* il2c_pinvoke_get_function__(const char* pDllName, const char* pEntryPointName)
 {
     il2c_assert(pDllName != NULL);
     il2c_assert(pEntryPointName != NULL);
 
-    HMODULE handle = LoadLibraryW(pDllName);
+    HMODULE handle = LoadLibraryA(pDllName);
     if (handle != NULL)
     {
         void* pFunc = (void*)GetProcAddress(handle, pEntryPointName);
@@ -71,7 +71,7 @@ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPoi
 #elif defined(__linux__)
 IL2C_CONST_STRING(il2c_dll_not_found_message, L"Dll not found.");
 
-void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPointName)
+void* il2c_pinvoke_get_function__(const char* pDllName, const char* pEntryPointName)
 {
     il2c_assert(pDllName != NULL);
     il2c_assert(pEntryPointName != NULL);
@@ -96,7 +96,7 @@ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPoi
 #else
 IL2C_CONST_STRING(il2c_not_implemented_message, L"Not implemented.");
 
-il2c_noreturn__ void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPointName)
+il2c_noreturn__ void* il2c_pinvoke_get_function__(const char* pDllName, const char* pEntryPointName)
 {
     il2c_assert(pDllName != NULL);
     il2c_assert(pEntryPointName != NULL);

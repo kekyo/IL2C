@@ -585,7 +585,7 @@ const uintptr_t typeName##_RUNTIME_TYPE__[] = { \
 ///////////////////////////////////////////////////////
 // P/Invoke runtime
 
-extern void* il2c_pinvoke_get_function__(const wchar_t* pDllName, const char* pEntryPointName);
+extern void* il2c_pinvoke_get_function__(const char* pDllName, const char* pEntryPointName);
 
 #ifdef __cplusplus
 }

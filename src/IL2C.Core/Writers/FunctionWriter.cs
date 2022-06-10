@@ -665,7 +665,7 @@ namespace IL2C.Writers
                 {
                     // TODO: caching
                     tw.WriteLine(
-                        "{0} = il2c_pinvoke_get_function__(L\"{1}\", \"{2}\");",
+                        "{0} = il2c_pinvoke_get_function__(\"{1}\", \"{2}\");",
                         method.GetCLanguageFunctionTypeWithVariableName("pFunc__", true),
                         method.PInvokeInformation.Module.Name,
                         method.CLanguageInteropName);

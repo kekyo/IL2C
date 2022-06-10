@@ -60,15 +60,17 @@ jobs:
     - name: Build il2c
       run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER il2c.sln
 #    - name: Build GettingStartedIL2C-x86
-#      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/GettingStartedIL2C/GettingStartedIL2C.sln
+#      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/GettingStartedIL2C/GettingStartedIL2C.sln
 #    - name: Build GettingStartedIL2C-x64
-#      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/GettingStartedIL2C/GettingStartedIL2C.sln
+#      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/GettingStartedIL2C/GettingStartedIL2C.sln
     - name: Build Calculator.Core
-      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="AnyCPU" samples/Calculator/Calculator.Core/Calculator.Core.csproj
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="AnyCPU" samples/Calculator/Calculator.Core/Calculator.Core.csproj
+    - name: Build Calculator
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="AnyCPU" samples/Calculator/Calculator/Calculator.csproj
 #    - name: Build Calculator-x86
-#      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/Calculator/Calculator.sln
+#      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/Calculator/Calculator.sln
 #    - name: Build Calculator-x64
-#      run: dotnet build --configuration ${{env.buildConfiguration}} --no-restore -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/Calculator/Calculator.sln
+#      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/Calculator/Calculator.sln
     - name: Build Calculator-CMake-mingw32
       run: bash build.sh ${{env.buildConfiguration}}
       working-directory: samples/Calculator/Calculator.CMake

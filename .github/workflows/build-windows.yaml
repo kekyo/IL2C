@@ -69,14 +69,20 @@ jobs:
       run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
     - name: Build GettingStartedIL2C-x64
       run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
-    - name: Build Calculator-x86
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
-    - name: Build Calculator-x64
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\Calculator\Calculator.sln
-    - name: Build Calculator-CMake-mingw32
-      run: build.bat ${{env.buildConfiguration}}
-      shell: cmd
-      working-directory: samples\Calculator\Calculator.CMake
+    - name: Build Calculator.Core
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -maxCpuCount samples\Calculator\Calculator.Core\Calculator.Core.csproj
+    - name: Build Calculator
+      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -maxCpuCount samples\Calculator\Calculator\Calculator.csproj
+#    - name: Build Calculator-x86
+#      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
+#    - name: Build Calculator-x86
+#      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
+#    - name: Build Calculator-x64
+#      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\Calculator\Calculator.sln
+#    - name: Build Calculator-CMake-mingw32
+#      run: build.bat ${{env.buildConfiguration}}
+#      shell: cmd
+#      working-directory: samples\Calculator\Calculator.CMake
     - name: Test il2c
       run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.Fixture\IL2C.Core.Test.Fixture.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
       timeout-minutes: 20

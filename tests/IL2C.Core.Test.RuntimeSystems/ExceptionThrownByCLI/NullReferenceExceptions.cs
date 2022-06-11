@@ -22,9 +22,9 @@ namespace IL2C.RuntimeSystems
             {
                 var r = v.ToString();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                return ex.Message == "Object reference not set to an instance of an object.";
+                return true;
             }
             return false;
         }
@@ -33,28 +33,27 @@ namespace IL2C.RuntimeSystems
         [TestCase(true, "NullReferenceTwoTimes", null!)]
         public static bool NullReferenceTwoTimes(object v)
         {
+            var s1 = false;
             try
             {
                 var r = v.ToString();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                if (ex.Message != "Object reference not set to an instance of an object.")
-                {
-                    return false;
-                }
+                s1 = true;
             }
 
+            var s2 = false;
             try
             {
                 var r = v.ToString();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                return ex.Message == "Object reference not set to an instance of an object.";
+                s2 = true;
             }
 
-            return false;
+            return s1 && s2;
         }
 
         [TestCase(false, "NullReferenceAtTheUnbox", (object)123)]
@@ -65,11 +64,10 @@ namespace IL2C.RuntimeSystems
             {
                 var v = (int)value;
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                return ex.Message == "Object reference not set to an instance of an object.";
+                return true;
             }
-
             return false;
         }
     }

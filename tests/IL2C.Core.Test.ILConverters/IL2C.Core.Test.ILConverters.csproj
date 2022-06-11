@@ -7,12 +7,12 @@
   <!-- ====================================================== -->
 
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net48;net6.0</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
 
     <OutputType>Library</OutputType>
     <Optimize>False</Optimize>
     <Nullable>enable</Nullable>
+    <DefineConstants>$(DefineConstants);$(OS)</DefineConstants>
 
     <AssemblyName>IL2C.Core.Test.ILConverters</AssemblyName>
     <RootNamespace>IL2C.ILConverters</RootNamespace>

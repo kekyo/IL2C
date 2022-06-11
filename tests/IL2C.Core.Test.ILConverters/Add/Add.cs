@@ -61,13 +61,13 @@ namespace IL2C.ILConverters
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single_Single(float lhs, float rhs);
 
-        [TestCase(0.45f + 123.0, "Single_Double", 0.45f, 123.0)]
+        [TestCase(0.45f + 123.0, "Add_Single_Double", 0.45f, 123.0)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern double Single_Double(float lhs, double rhs);
+        public static extern double Add_Single_Double(float lhs, double rhs);
 
-        [TestCase(0.45 + 123.0f, "Double_Single", 0.45, 123.0f)]
+        [TestCase(0.45 + 123.0f, "Add_Double_Single", 0.45, 123.0f)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern double Double_Single(double lhs, float rhs);
+        public static extern double Add_Double_Single(double lhs, float rhs);
 
         [TestCase(0.45 + 123.0, "Double_Double", 0.45, 123.0)]
         [MethodImpl(MethodImplOptions.ForwardRef)]

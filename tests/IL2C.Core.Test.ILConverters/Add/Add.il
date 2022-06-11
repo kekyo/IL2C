@@ -108,7 +108,7 @@
         ret
     }
         
-    .method public static float64 Single_Double(float32 lhs, float64 rhs) cil managed
+    .method public static float64 Add_Single_Double(float32 lhs, float64 rhs) cil managed
     {
         .maxstack 2
         ldarg.0
@@ -117,7 +117,7 @@
         ret
     }
         
-    .method public static float64 Double_Single(float64 lhs, float32 rhs) cil managed
+    .method public static float64 Add_Double_Single(float64 lhs, float32 rhs) cil managed
     {
         .maxstack 2
         ldarg.0

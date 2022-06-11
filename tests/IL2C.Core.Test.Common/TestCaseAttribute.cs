@@ -170,9 +170,12 @@ namespace IL2C
                         ignores.Add("NotPosix");
                     }
 
-                    this.Ignore = string.IsNullOrWhiteSpace(this.Ignore) ?
-                        string.Join(" | ", ignores) :
-                        string.Join(" | ", new[] { this.Ignore }.Concat(ignores));
+                    if (ignores.Count >= 1)
+                    {
+                        this.Ignore = string.IsNullOrWhiteSpace(this.Ignore) ?
+                            string.Join(" | ", ignores) :
+                            string.Join(" | ", new[] { this.Ignore }.Concat(ignores));
+                    }
                 }
                 else if (value != this.runOnOSs)
                 {
@@ -203,9 +206,12 @@ namespace IL2C
                         ignores.Add("NotMono");
                     }
 
-                    this.Ignore = string.IsNullOrWhiteSpace(this.Ignore) ?
-                        string.Join(" | ", ignores) :
-                        string.Join(" | ", new[] { this.Ignore }.Concat(ignores));
+                    if (ignores.Count >= 1)
+                    {
+                        this.Ignore = string.IsNullOrWhiteSpace(this.Ignore) ?
+                            string.Join(" | ", ignores) :
+                            string.Join(" | ", new[] { this.Ignore }.Concat(ignores));
+                    }
                 }
                 else if (value != this.runOnPlatforms)
                 {

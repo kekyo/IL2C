@@ -17,14 +17,20 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern IntPtr IntPtrZeroImpl();
 
-        [TestCase(0, "IntPtrZero")]
+        // TODO: Unknown failure on mono linux x64
+        //   System.InvalidProgramException : Invalid IL code in IL2C.ILConverters.Ldnull:IntPtrZeroImpl (): IL_0001: ret
+        [TestCase(0, "IntPtrZero",
+            RunOnPlatforms = RunOnPlatforms.DotNet)]
         public static int IntPtrZero() =>
             IntPtrZeroImpl().ToInt32();
 
             [MethodImpl(MethodImplOptions.ForwardRef)]
             public static extern UIntPtr UIntPtrZeroImpl();
 
-        [TestCase((uint)0, "UIntPtrZero")]
+        // TODO: Unknown failure on mono linux x64
+        //   System.InvalidProgramException : Invalid IL code in IL2C.ILConverters.Ldnull:UIntPtrZeroImpl (): IL_0001: ret
+        [TestCase((uint)0, "UIntPtrZero",
+            RunOnPlatforms = RunOnPlatforms.DotNet)]
         public static uint UIntPtrZero() =>
             UIntPtrZeroImpl().ToUInt32();
 

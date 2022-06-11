@@ -55,7 +55,10 @@ namespace IL2C.ILConverters
             [MethodImpl(MethodImplOptions.ForwardRef)]
             private static extern object Box_Int64ToUInt32(long value);
 
-        [TestCase(12345678U, new[] { "Int64ToUInt32", "Box_Int64ToUInt32" }, 12345678L)]
+        // TODO: Unknown failure on mono linux x64
+        //   System.InvalidProgramException : Invalid IL code in IL2C.ILConverters.Box_Narrowing:Box_Int64ToUInt32 (long): IL_0001: box       0x01000028
+        [TestCase(12345678U, new[] { "Int64ToUInt32", "Box_Int64ToUInt32" }, 12345678L,
+            RunOnPlatforms = RunOnPlatforms.DotNet)]
         public static uint Int64ToUInt32(long value)
         {
             return (uint)Box_Int64ToUInt32(value);

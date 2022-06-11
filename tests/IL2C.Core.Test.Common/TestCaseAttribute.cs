@@ -10,6 +10,8 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using NUnit.Framework.Interfaces;
 
@@ -21,6 +23,26 @@ namespace IL2C
         PerfectMatch,
         IgnoreValidateInvokeResult,
         CauseBreak
+    }
+
+    [IgnoreTranslation]
+    [Flags]
+    public enum RunOnOSs
+    {
+        None = 0x00,
+        Windows = 0x01,
+        Posix = 0x02,   // (Except Windows)
+        All = 0xff,
+    }
+
+    [IgnoreTranslation]
+    [Flags]
+    public enum RunOnPlatforms
+    {
+        None = 0x00,
+        DotNet = 0x04,  // .NET Framework / .NET Core / .NET 5 or upper
+        Mono = 0x08,
+        All = 0xff,
     }
 
     [IgnoreTranslation]
@@ -36,8 +58,12 @@ namespace IL2C
         //     * The value of `TestCaseAsserts` is called separately at constructor completion, so it cannot be determined in the constructor.
         //     * If you do not collate the result values, do not set any value to `ExpectedResult`.
         private TestCaseAsserts assert;
+        private RunOnOSs runOnOSs = RunOnOSs.All;
+        private RunOnPlatforms runOnPlatforms = RunOnPlatforms.All;
         private readonly bool isExpectedNull;
         private bool isSetAssert;
+        private bool isSetRunOnOSs;
+        private bool isSetRunOnPlatforms;
 
         public TestCaseAttribute(
             object? expected, string methodName, params object?[] args) :
@@ -116,6 +142,72 @@ namespace IL2C
                     }
                 }
                 else if (value != this.assert)
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+        public RunOnOSs RunOnOSs
+        {
+            get => this.runOnOSs;
+            set
+            {
+                if (!this.isSetRunOnOSs)
+                {
+                    this.isSetRunOnOSs = true;
+                    this.runOnOSs = value;
+
+                    var ignores = new List<string>();
+                    if (Utilities.IsRunningOnWindows &&
+                        !value.HasFlag(RunOnOSs.Windows))
+                    {
+                        ignores.Add("NotWindows");
+                    }
+                    if (!Utilities.IsRunningOnWindows &&
+                        !value.HasFlag(RunOnOSs.Posix))
+                    {
+                        ignores.Add("NotPosix");
+                    }
+
+                    this.Ignore = string.IsNullOrWhiteSpace(this.Ignore) ?
+                        string.Join(" | ", ignores) :
+                        string.Join(" | ", new[] { this.Ignore }.Concat(ignores));
+                }
+                else if (value != this.runOnOSs)
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
+
+        public RunOnPlatforms RunOnPlatforms
+        {
+            get => this.runOnPlatforms;
+            set
+            {
+                if (!this.isSetRunOnPlatforms)
+                {
+                    this.isSetRunOnPlatforms = true;
+                    this.runOnPlatforms = value;
+
+                    var ignores = new List<string>();
+                    if (!Utilities.IsRunningOnMono &&
+                        !value.HasFlag(RunOnPlatforms.DotNet))
+                    {
+                        ignores.Add("NotDotNet");
+                    }
+                    if (Utilities.IsRunningOnMono &&
+                        !value.HasFlag(RunOnPlatforms.Mono))
+                    {
+                        ignores.Add("NotMono");
+                    }
+
+                    this.Ignore = string.IsNullOrWhiteSpace(this.Ignore) ?
+                        string.Join(" | ", ignores) :
+                        string.Join(" | ", new[] { this.Ignore }.Concat(ignores));
+                }
+                else if (value != this.runOnPlatforms)
                 {
                     throw new InvalidOperationException();
                 }

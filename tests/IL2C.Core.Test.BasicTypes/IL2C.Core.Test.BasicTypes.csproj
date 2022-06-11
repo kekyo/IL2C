@@ -7,7 +7,12 @@
   <!-- ====================================================== -->
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net6.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net48;net6.0</TargetFrameworks>
+    <!--
+        On mono environment, it is supported only up to net47
+        https://www.mono-project.com/docs/about-mono/compatibility/
+    -->
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net47;net6.0</TargetFrameworks>
 
     <OutputType>Library</OutputType>
     <Optimize>False</Optimize>

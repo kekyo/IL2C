@@ -111,6 +111,7 @@ jobs:
         dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Interop/IL2C.Interop.csproj
         dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Core/IL2C.Core.csproj
         dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Build/IL2C.Build.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Runtime\IL2C.Runtime.csproj
         dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts misc/IL2C.Toolchain.gcc4.mingw32/IL2C.Toolchain.gcc4.mingw32.csproj
 
     #----------------------------------------------------------------------

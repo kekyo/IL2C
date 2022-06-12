@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>IL2C.Runtime</id>
-    <version>$version$</version>
+    <version>$PackageVersion$</version>
     <authors>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</authors>
     <owners>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

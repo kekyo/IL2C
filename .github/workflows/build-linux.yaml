@@ -71,7 +71,7 @@ jobs:
     #----------------------------------------------------------------------
 
     - name: Build il2c
-      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER il2c.sln
+      run: dotnet build -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER il2c.sln
 
     #----------------------------------------------------------------------
 
@@ -88,17 +88,17 @@ jobs:
     #----------------------------------------------------------------------
 
     - name: Build GettingStartedIL2C
-      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/GettingStartedIL2C/GettingStartedIL2C.sln
+      run: dotnet build -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/GettingStartedIL2C/GettingStartedIL2C.sln
 
     - name: Build Calculator.Core
-      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/Calculator/Calculator.Core/Calculator.Core.csproj
+      run: dotnet build -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/Calculator/Calculator.Core/Calculator.Core.csproj
     - name: Build Calculator
-      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/Calculator/Calculator/Calculator.csproj
+      run: dotnet build -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/Calculator/Calculator/Calculator.csproj
 
     #- name: Build Calculator-x86
-    #  run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/Calculator/Calculator.sln
+    #  run: dotnet build -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/Calculator/Calculator.sln
     #- name: Build Calculator-x64
-    #  run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/Calculator/Calculator.sln
+    #  run: dotnet build -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/Calculator/Calculator.sln
 
     - name: Build Calculator-CMake-mingw32
       run: bash build.sh ${{env.buildConfiguration}}
@@ -108,11 +108,11 @@ jobs:
 
     - name: Build packages
       run: |
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Interop/IL2C.Interop.csproj
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Core/IL2C.Core.csproj
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Build/IL2C.Build.csproj
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Runtime\IL2C.Runtime.csproj
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts misc/IL2C.Toolchain.gcc4.mingw32/IL2C.Toolchain.gcc4.mingw32.csproj
+        dotnet pack -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Interop/IL2C.Interop.csproj
+        dotnet pack -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Core/IL2C.Core.csproj
+        dotnet pack -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src/IL2C.Build/IL2C.Build.csproj
+        dotnet pack -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Runtime\IL2C.Runtime.csproj
+        dotnet pack -p:Configuration=${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts misc/IL2C.Toolchain.gcc4.mingw32/IL2C.Toolchain.gcc4.mingw32.csproj
 
     #----------------------------------------------------------------------
 

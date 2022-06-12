@@ -87,18 +87,19 @@ jobs:
 
     #----------------------------------------------------------------------
 
-    #- name: Build GettingStartedIL2C-x86
-    #  run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/GettingStartedIL2C/GettingStartedIL2C.sln
-    #- name: Build GettingStartedIL2C-x64
-    #  run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/GettingStartedIL2C/GettingStartedIL2C.sln
+    - name: Build GettingStartedIL2C
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/GettingStartedIL2C/GettingStartedIL2C.sln
+
     - name: Build Calculator.Core
-      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="AnyCPU" samples/Calculator/Calculator.Core/Calculator.Core.csproj
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/Calculator/Calculator.Core/Calculator.Core.csproj
     - name: Build Calculator
-      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="AnyCPU" samples/Calculator/Calculator/Calculator.csproj
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples/Calculator/Calculator/Calculator.csproj
+
     #- name: Build Calculator-x86
     #  run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 samples/Calculator/Calculator.sln
     #- name: Build Calculator-x64
     #  run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 samples/Calculator/Calculator.sln
+
     - name: Build Calculator-CMake-mingw32
       run: bash build.sh ${{env.buildConfiguration}}
       working-directory: samples/Calculator/Calculator.CMake
@@ -106,7 +107,11 @@ jobs:
     #----------------------------------------------------------------------
 
     - name: Build packages
-      run: dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts il2c.sln
+      run: |
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Interop/IL2C.Interop.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Core/IL2C.Core.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Build/IL2C.Build.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Toolchain.gcc4.mingw32/IL2C.Toolchain.gcc4.mingw32.csproj
 
     #----------------------------------------------------------------------
 

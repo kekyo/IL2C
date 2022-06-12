@@ -89,23 +89,19 @@ jobs:
 
     #----------------------------------------------------------------------
     
-    - name: Install dependencies on samples
-      run: |
-        msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
-        msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\Calculator\Calculator.sln
+    - name: Build GettingStartedIL2C
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples\GettingStartedIL2C\GettingStartedIL2C.sln
 
-    - name: Build GettingStartedIL2C-x86
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
-    - name: Build GettingStartedIL2C-x64
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
     - name: Build Calculator.Core
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="AnyCPU" -maxCpuCount samples\Calculator\Calculator.Core\Calculator.Core.csproj
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples\Calculator\Calculator.Core\Calculator.Core.csproj
     - name: Build Calculator
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="AnyCPU" -maxCpuCount samples\Calculator\Calculator\Calculator.csproj
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples\Calculator\Calculator\Calculator.csproj
+
     #- name: Build Calculator-x86
     #  run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
     #- name: Build Calculator-x64
     #  run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\Calculator\Calculator.sln
+
     - name: Build Calculator-CMake-mingw32
       run: build.bat ${{env.buildConfiguration}}
       shell: cmd
@@ -114,7 +110,11 @@ jobs:
     #----------------------------------------------------------------------
 
     - name: Build packages
-      run: dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts il2c.sln
+      run: |
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Interop\IL2C.Interop.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Core\IL2C.Core.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Build\IL2C.Build.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Toolchain.gcc4.mingw32\IL2C.Toolchain.gcc4.mingw32.csproj
 
     #----------------------------------------------------------------------
 

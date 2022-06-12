@@ -41,6 +41,8 @@
     <IL2CConfiguration>$(Configuration)</IL2CConfiguration>
     <IL2CLibConfiguration>$(IL2CConfiguration)</IL2CLibConfiguration>
     <IL2COutputPath>il2c</IL2COutputPath>
+    <IL2CEnableTranslation>true</IL2CEnableTranslation>
+    <IL2CEnableNativeCompilation>true</IL2CEnableNativeCompilation>
   </PropertyGroup>
 
   <!-- ============================================================================= -->

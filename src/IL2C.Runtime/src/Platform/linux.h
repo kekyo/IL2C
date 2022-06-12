@@ -41,6 +41,8 @@ extern "C" {
 #include <sys/types.h>
 #include <sys/syscall.h>
 
+#include <dlfcn.h>
+
 #include "gcc.h"
 #include "strings.h"
 #include "pthread.h"

@@ -4,7 +4,7 @@
     {
         .maxstack 1
         ldarg.0
-        box IL2C.ILConverters.Box_Enum_Int32_Type
+        box [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Box_Enum_Int32_Type
         ret
     }
     
@@ -12,7 +12,7 @@
     {
         .maxstack 1
         ldarg.0
-        box IL2C.ILConverters.Box_Enum_Int32_Type
+        box [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Box_Enum_Int32_Type
         ret
     }
     
@@ -20,7 +20,7 @@
     {
         .maxstack 1
         ldarg.0
-        box IL2C.ILConverters.Box_Enum_Int32_Type
+        box [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Box_Enum_Int32_Type
         ret
     }
     
@@ -28,7 +28,7 @@
     {
         .maxstack 1
         ldarg.0
-        box IL2C.ILConverters.Box_Enum_Int32_Type
+        box [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Box_Enum_Int32_Type
         ret
     }
 }

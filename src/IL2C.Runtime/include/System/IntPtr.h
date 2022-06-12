@@ -38,6 +38,11 @@ extern const intptr_t System_IntPtr_Zero;
 
 extern intptr_t* System_IntPtr_Zero_REF__;
 
+#define System_IntPtr_ToInt32(this__) ((int32_t)*(this__))
+#define System_IntPtr_ToInt64(this__) ((int64_t)*(this__))
+
+#define System_IntPtr_get_Size() ((int32_t)sizeof(intptr_t))
+
 #define System_IntPtr_op_Explicit__System_Int32(value) ((intptr_t)(value))
 #define System_IntPtr_op_Explicit__System_Int64(value) ((intptr_t)(value))
 #define System_IntPtr_op_Addition__System_IntPtr_System_Int32(lhs, rhs) (((intptr_t)(lhs)) + ((intptr_t)(rhs)))

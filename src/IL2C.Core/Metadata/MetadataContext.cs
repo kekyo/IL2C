@@ -13,8 +13,10 @@ using System.IO;
 using System.Linq;
 
 using Mono.Cecil;
+using Mono.Cecil.Pdb;
 
 using IL2C.Metadata.Specialized;
+using System.Diagnostics;
 
 namespace IL2C.Metadata
 {
@@ -70,6 +72,8 @@ namespace IL2C.Metadata
         private static readonly HashSet<string> derivedFromMulticastDelegateValidTargetMethods =
             new HashSet<string> { ".ctor", "Invoke" };
 
+        private readonly ILogger logger;
+
         private readonly AssemblyDefinition resolvedCoreAssembly;
         private readonly ModuleDefinition resolvedCoreModule;
 
@@ -81,66 +85,65 @@ namespace IL2C.Metadata
             new Dictionary<ModuleReference, AssemblyDefinition>(ModuleReferenceComparer.Instance);
         private readonly Dictionary<MemberReference, IMemberInformation> members =
             new Dictionary<MemberReference, IMemberInformation>(MemberReferenceComparer.Instance);
-        private readonly BasePathAssemblyResolver resolver;
+        private readonly AssemblyResolver resolver;
 
-        internal MetadataContext(string assemblyPath, bool readSymbols)
+        internal MetadataContext(
+            ILogger logger, string assemblyPath, string[] referenceBasePaths)
         {
-            resolver = new BasePathAssemblyResolver(Path.GetDirectoryName(assemblyPath));
-            var assemblyReaderParameter = new ReaderParameters
-            {
-                AssemblyResolver = resolver,
-                ReadSymbols = readSymbols
-            };
+            this.logger = logger;
 
-            var mainAssembly = AssemblyDefinition.ReadAssembly(assemblyPath, assemblyReaderParameter);
+            this.resolver = new AssemblyResolver(
+                this.logger, assemblyPath, referenceBasePaths);
+
+            var mainAssembly = this.resolver.ReadAssemblyFrom(assemblyPath);
             var mainAssemblyInformation = new AssemblyInformation(mainAssembly, this);
 
-            resolvedCoreModule = mainAssembly.MainModule.TypeSystem.Object.Resolve().Module;
-            resolvedCoreAssembly = resolvedCoreModule.Assembly;
+            this.resolvedCoreModule = mainAssembly.MainModule.TypeSystem.Object.Resolve().Module;
+            this.resolvedCoreAssembly = this.resolvedCoreModule.Assembly;
             var resolvedCoreAssemblyInformation = new AssemblyInformation(
-                resolvedCoreAssembly, this);
+                this.resolvedCoreAssembly, this);
             var resolvedCoreModuleInformation = new ModuleInformation(
-                resolvedCoreModule, resolvedCoreAssemblyInformation);
+                this.resolvedCoreModule, resolvedCoreAssemblyInformation);
 
             this.MainAssembly = mainAssemblyInformation;
-            assemblies.Add(mainAssembly, mainAssemblyInformation);
-            assemblies.Add(resolvedCoreAssembly, resolvedCoreAssemblyInformation);
-            modules.Add(resolvedCoreModule, resolvedCoreModuleInformation);
-            assemblyByModule.Add(resolvedCoreModule, resolvedCoreAssembly);
+            this.assemblies.Add(mainAssembly, mainAssemblyInformation);
+            this.assemblies.Add(this.resolvedCoreAssembly, resolvedCoreAssemblyInformation);
+            this.modules.Add(this.resolvedCoreModule, resolvedCoreModuleInformation);
+            this.assemblyByModule.Add(this.resolvedCoreModule, resolvedCoreAssembly);
 
-            this.VoidType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Void);
-            this.ObjectType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Object);
-            this.ValueTypeType = this.GetOrAddType(resolvedCoreModule.GetType("System.ValueType"));
-            this.EnumType = this.GetOrAddType(resolvedCoreModule.GetType("System.Enum"));
-            this.DelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.Delegate"));
-            this.MulticastDelegateType = this.GetOrAddType(resolvedCoreModule.GetType("System.MulticastDelegate"));
-            this.ArrayType = this.GetOrAddType(resolvedCoreModule.GetType("System.Array"));
-            this.ExceptionType = this.GetOrAddType(resolvedCoreModule.GetType("System.Exception"));
+            this.VoidType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Void);
+            this.ObjectType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Object);
+            this.ValueTypeType = this.GetOrAddType(this.resolvedCoreModule.GetType("System.ValueType"));
+            this.EnumType = this.GetOrAddType(this.resolvedCoreModule.GetType("System.Enum"));
+            this.DelegateType = this.GetOrAddType(this.resolvedCoreModule.GetType("System.Delegate"));
+            this.MulticastDelegateType = this.GetOrAddType(this.resolvedCoreModule.GetType("System.MulticastDelegate"));
+            this.ArrayType = this.GetOrAddType(this.resolvedCoreModule.GetType("System.Array"));
+            this.ExceptionType = this.GetOrAddType(this.resolvedCoreModule.GetType("System.Exception"));
 
-            this.ByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Byte);
-            this.SByteType = this.GetOrAddType(resolvedCoreModule.TypeSystem.SByte);
-            this.Int16Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.Int16);
-            this.UInt16Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.UInt16);
-            this.Int32Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.Int32);
-            this.UInt32Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.UInt32);
-            this.Int64Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.Int64);
-            this.UInt64Type = this.GetOrAddType(resolvedCoreModule.TypeSystem.UInt64);
-            this.SingleType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Single);
-            this.DoubleType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Double);
-            this.IntPtrType = this.GetOrAddType(resolvedCoreModule.TypeSystem.IntPtr);
-            this.UIntPtrType = this.GetOrAddType(resolvedCoreModule.TypeSystem.UIntPtr);
-            this.CharType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Char);
-            this.StringType = this.GetOrAddType(resolvedCoreModule.TypeSystem.String);
-            this.BooleanType = this.GetOrAddType(resolvedCoreModule.TypeSystem.Boolean);
+            this.ByteType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Byte);
+            this.SByteType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.SByte);
+            this.Int16Type = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Int16);
+            this.UInt16Type = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.UInt16);
+            this.Int32Type = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Int32);
+            this.UInt32Type = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.UInt32);
+            this.Int64Type = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Int64);
+            this.UInt64Type = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.UInt64);
+            this.SingleType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Single);
+            this.DoubleType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Double);
+            this.IntPtrType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.IntPtr);
+            this.UIntPtrType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.UIntPtr);
+            this.CharType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Char);
+            this.StringType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.String);
+            this.BooleanType = this.GetOrAddType(this.resolvedCoreModule.TypeSystem.Boolean);
 
-            this.RuntimeFieldHandle = this.GetOrAddType(resolvedCoreModule.GetType("System.RuntimeFieldHandle"));
+            this.RuntimeFieldHandle = this.GetOrAddType(this.resolvedCoreModule.GetType("System.RuntimeFieldHandle"));
 
             this.EntryPoint = mainAssembly.EntryPoint is { } entryPoint ?
                 this.GetOrAddMethod(entryPoint) : null;
         }
 
         public IAssemblyInformation MainAssembly { get; }
-        public IEnumerable<IAssemblyInformation> Assemblies => assemblies.Values;
+        public IEnumerable<IAssemblyInformation> Assemblies => this.assemblies.Values;
 
         public IMethodInformation EntryPoint { get; }
 
@@ -272,16 +275,46 @@ namespace IL2C.Metadata
                     }
 
                     var module = this.GetOrAddModule(typeReference);
-                    if (typeReference.Module.Equals(resolvedCoreModule) &&
-                        validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
+                    if (typeReference.Module.Assembly.FullName.Equals(resolvedCoreModule.Assembly.FullName))
                     {
-                        return new TypeInformation(typeReference, module, filterList);
+                        if (validTargetMembers.TryGetValue(typeReference.FullName, out var filterList))
+                        {
+                            return new TypeInformation(typeReference, module, filterList);
+                        }
+                    }
+
+                    // Excepts Corlib's COM interface (Such as _AppDomain, _Assembly, _Attribute ...)
+                    var typeDefinition = typeReference.Resolve();
+                    if (typeDefinition.Interfaces.
+                        Where(ii =>
+                            ii.InterfaceType.Module.Assembly.FullName.Equals(resolvedCoreModule.Assembly.FullName) &&
+                            ii.InterfaceType.Name.StartsWith("_") &&
+                            ii.InterfaceType.Resolve() is { } itd &&
+                            itd.CustomAttributes.Any(ca =>
+                                ca.AttributeType.FullName == "System.Runtime.InteropServices.ComVisibleAttribute" &&
+                                ca.ConstructorArguments.Count == 1 &&
+                                ca.ConstructorArguments[0].Value.Equals(true))).
+                        Select(it => it.InterfaceType).
+                        ToArray() is { } itfts &&
+                        itfts.Length >= 1)
+                    {
+                        return new TypeInformation(typeReference, module, m =>
+                        {
+                            if (m is TypeReference tr &&
+                                itfts.Any(itft => itft.FullName == tr.FullName))
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        });
                     }
 
                     // Special filter for the enum type.
                     if (typeReference.IsValueType && !typeReference.IsPrimitive && !typeReference.IsPointer)
                     {
-                        var typeDefinition = typeReference.Resolve();
                         if (typeDefinition.IsEnum)
                         {
                             return new TypeInformation(typeReference, module, m =>
@@ -304,17 +337,12 @@ namespace IL2C.Metadata
                     if (!typeReference.IsValueType && !typeReference.IsArray &&
                         !typeReference.IsByReference && !typeReference.IsPointer)
                     {
-                        var typeDefinition = typeReference.Resolve();
-                        // TODO: try to resolve typeDefinition from mscorelib
-                        if (typeDefinition == null)
-                        {
-                            throw new InvalidProgramSequenceException($"cannot resolve type {typeReference.FullName}");
-                        }
                         if (typeDefinition.IsClass && !typeDefinition.IsAbstract &&
                             MemberReferenceComparer.Instance.Equals(
                                 typeDefinition.BaseType, ((TypeInformation)MulticastDelegateType).Member))
                         {
-                            return new TypeInformation(typeReference, module, derivedFromMulticastDelegateValidTargetMethods);
+                            return new TypeInformation(
+                                typeReference, module, derivedFromMulticastDelegateValidTargetMethods);
                         }
                     }
 

@@ -29,6 +29,8 @@ namespace IL2C
         : IPrepareContext, IExtractContextHost
     {
         #region  Fields
+        private readonly ILogger logger;
+
         private readonly Dictionary<MemberScopes, HashSet<ITypeInformation>> registeredTypes =
             new Dictionary<MemberScopes, HashSet<ITypeInformation>>();
         private readonly Dictionary<ITypeInformation, HashSet<ITypeInformation>> registeredTypesByDeclaringType =
@@ -44,9 +46,17 @@ namespace IL2C
         private string currentExceptionNestedFrameIndexName;
         #endregion
 
-        public TranslateContext(string assemblyPath, bool readSymbols, TargetPlatforms targetPlatform)
+        public TranslateContext(
+            ILogger logger,
+            string assemblyPath,
+            string[] referenceBasePath,
+            TargetPlatforms targetPlatform)
         {
-            var context = new MetadataContext(assemblyPath, readSymbols);
+            this.logger = logger;
+
+            var context = new MetadataContext(
+                this.logger, assemblyPath, referenceBasePath);
+
             this.MetadataContext = context;
             this.Assembly = context.MainAssembly;
             this.TargetPlatform = targetPlatform;

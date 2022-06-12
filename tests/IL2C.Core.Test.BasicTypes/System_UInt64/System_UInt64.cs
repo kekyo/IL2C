@@ -11,25 +11,25 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    [TestCase(true, "IsValueType")]
-    [TestCase(8, "SizeOf")]
-    [TestCase("18446744073709551615", "ToString", ulong.MaxValue)]
-    [TestCase("0", "ToString", ulong.MinValue)]
-    [TestCase(ulong.MaxValue, "TryParse", "18446744073709551615")]
-    [TestCase(ulong.MinValue, "TryParse", "0")]
     public sealed class System_UInt64
     {
+        [TestCase(true, "IsValueType")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
+        [TestCase(8, "SizeOf")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int SizeOf();
 
+        [TestCase("18446744073709551615", "ToString", ulong.MaxValue)]
+        [TestCase("0", "ToString", ulong.MinValue)]
         public static string ToString(ulong value)
         {
             return value.ToString();
         }
 
+        [TestCase(ulong.MaxValue, "TryParse", "18446744073709551615")]
+        [TestCase(ulong.MinValue, "TryParse", "0")]
         public static ulong TryParse(string str)
         {
             ulong.TryParse(str, out var value);

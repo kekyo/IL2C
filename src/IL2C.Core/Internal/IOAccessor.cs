@@ -43,45 +43,72 @@ namespace IL2C.Internal
             return candidate.Length >= 1 ? candidate : ".";
         }
 
-        public static string SafeGetDirectoryName(string path) =>
-            Path.GetDirectoryName(path) ?? ".";
-
-        public static ValueTask SafeCreateDirectoryAsync(string path, bool clean) =>
-            new ValueTask(Task.Run(() =>
+        public static string GetDirectoryPath(string path) =>
+            Path.GetDirectoryName(path) switch
             {
-                if (clean)
+                null => Path.DirectorySeparatorChar.ToString(),
+                { Length: 0 } => ".",
+                { } d => d,
+            };
+
+        public static ValueTask SafeCreateDirectoryAsync(string path, bool clean)
+        {
+            if (clean)
+            {
+                return new ValueTask(Task.Run(() =>
                 {
                     try
                     {
                         Directory.Delete(path, true);
-                    }
-                    catch
-                    {
-                    }
-                }
-                if (!Directory.Exists(path))
-                {
-                    try
-                    {
                         Directory.CreateDirectory(path);
                     }
                     catch
                     {
                     }
+                }));
+            }
+            else
+            {
+                if (!Directory.Exists(path))
+                {
+                    return new ValueTask(Task.Run(() =>
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        catch
+                        {
+                        }
+                    }));
                 }
-            }));
+                else
+                {
+                    return default;
+                }
+            }
+        }
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-        public static ValueTask<string> ReadAllTextAsync(string path, Encoding encoding) =>
-            new ValueTask<string>(File.ReadAllTextAsync(path, encoding));
-        public static ValueTask WriteAllTextAsync(string path, string contents, Encoding encoding) =>
-            new ValueTask(File.WriteAllTextAsync(path, contents, encoding));
-#else
-        public static ValueTask<string> ReadAllTextAsync(string path, Encoding encoding) =>
-            new ValueTask<string>(Task.Run(() => File.ReadAllText(path, encoding)));
-        public static ValueTask WriteAllTextAsync(string path, string contents, Encoding encoding) =>
-            new ValueTask(Task.Run(() => File.WriteAllText(path, contents, encoding)));
-#endif
+        public static async ValueTask<string> ReadAllTextAsync(
+            string path, Encoding encoding)
+        {
+            using var fs = new FileStream(
+                path, FileMode.Open, FileAccess.Read, FileShare.Read, 65536, true);
+            var tr = new StreamReader(fs, encoding);
+
+            return await tr.ReadToEndAsync().ConfigureAwait(false);
+        }
+
+        public static async ValueTask WriteAllTextAsync(
+            string path, string contents, Encoding encoding)
+        {
+            using var fs = new FileStream(
+                path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 65536, true);
+            var tw = new StreamWriter(fs, encoding);
+
+            await tw.WriteAsync(contents).ConfigureAwait(false);
+            await tw.FlushAsync().ConfigureAwait(false);
+        }
 
         public static async ValueTask<ExecuteResult> ExecuteAsync(
             string workingPath, string scriptName, string[] searchPaths,

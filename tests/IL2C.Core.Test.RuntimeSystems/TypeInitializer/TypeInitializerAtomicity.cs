@@ -48,11 +48,9 @@ namespace IL2C.RuntimeSystems
         }
     }
 
-    [TestCase(1230, "MultipleExecution", 10, IncludeTypes = new[] { typeof(MultipleExecutionClosure), typeof(TypeInitializer_Atomicity) })]
-    [TestCase(0, "MultipleExecutionWithNoTypeInitializer", 40, IncludeTypes = new[] { typeof(MultipleExecutionClosure_NoTypeInitializer), typeof(TypeInitializer_Atomicity_NoTypeInitializer) })]
-    [TestCase(246, "AfterInitialized", IncludeTypes = new[] { typeof(TypeInitializer_Atomicity) })]
     partial class TypeInitializer
     {
+        [TestCase(1230, "MultipleExecution", 10, IncludeTypes = new[] { typeof(MultipleExecutionClosure), typeof(TypeInitializer_Atomicity) })]
         public static int MultipleExecution(int count)
         {
             var targets = new MultipleExecutionClosure[count];
@@ -84,6 +82,7 @@ namespace IL2C.RuntimeSystems
             return sum;
         }
 
+        [TestCase(0, "MultipleExecutionWithNoTypeInitializer", 40, IncludeTypes = new[] { typeof(MultipleExecutionClosure_NoTypeInitializer), typeof(TypeInitializer_Atomicity_NoTypeInitializer) })]
         public static int MultipleExecutionWithNoTypeInitializer(int count)
         {
             var targets = new MultipleExecutionClosure_NoTypeInitializer[count];
@@ -113,6 +112,7 @@ namespace IL2C.RuntimeSystems
             return sum;
         }
 
+        [TestCase(246, "AfterInitialized", IncludeTypes = new[] { typeof(TypeInitializer_Atomicity) })]
         public static int AfterInitialized()
         {
             var value0 = TypeInitializer_Atomicity.Int32Value;

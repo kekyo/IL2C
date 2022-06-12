@@ -5,7 +5,7 @@
         .maxstack 2
         ldstr "ABC"
         isinst [netstandard]System.ValueType
-        brnull.s F1
+        brfalse.s F1
         ldc.i4.1
         ret
     F1:

@@ -8,9 +8,11 @@
 ////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace IL2C
 {
+    [IgnoreTranslation]
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class TestIdAttribute : Attribute
     {

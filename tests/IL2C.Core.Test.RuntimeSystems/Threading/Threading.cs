@@ -42,10 +42,10 @@ namespace IL2C.RuntimeSystems
             this.a = a;
         }
 
-        public void Run(object parameter)
+        public void Run(object? parameter)
         {
             Thread.Sleep(100);
-            var b = (int)parameter;
+            var b = (int)parameter!;
             this.Result = this.a + b;
         }
     }
@@ -151,19 +151,9 @@ namespace IL2C.RuntimeSystems
     }
 
     [Description("These tests are verified the IL2C can handle threading features.")]
-    [TestCase(333, "RunAndFinishInstanceMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
-    [TestCase(333, "RunAndFinishInstanceWithParameterMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosureWithParameter) })]
-    [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 10, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
-    [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 100, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
-    [TestCase(true, "WillGetDifferentThreadId", IncludeTypes = new[] { typeof(WillGetDifferentThreadIdClosure) })]
-    [TestCase(100, "RaceFreeWithObjectMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLockClosure) })]
-    [TestCase(100, "RaceFreeWithConstStringMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLockClosure) })]
-    [TestCase(100, "RaceFreeWithObjectMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
-    [TestCase(100, "RaceFreeWithConstStringMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
-    [TestCase(100, "RaceFreeWithObjectMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
-    [TestCase(100, "RaceFreeWithConstStringMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
     public sealed class Threading
     {
+        [TestCase(333, "RunAndFinishInstanceMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
         public static int RunAndFinishInstanceMethod(int a, int b)
         {
             var target = new RunAndFinishClosure(a, b);
@@ -174,6 +164,7 @@ namespace IL2C.RuntimeSystems
             return target.Result;
         }
 
+        [TestCase(333, "RunAndFinishInstanceWithParameterMethod", 111, 222, IncludeTypes = new[] { typeof(RunAndFinishClosureWithParameter) })]
         public static int RunAndFinishInstanceWithParameterMethod(int a, int b)
         {
             var target = new RunAndFinishClosureWithParameter(a);
@@ -184,6 +175,8 @@ namespace IL2C.RuntimeSystems
             return target.Result;
         }
 
+        [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 10, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
+        [TestCase(true, "MultipleRunAndFinishInstanceMethod", 100, 100, IncludeTypes = new[] { typeof(RunAndFinishClosure) })]
         public static bool MultipleRunAndFinishInstanceMethod(int a, int count)
         {
             var targets = new RunAndFinishClosure[count];
@@ -215,6 +208,7 @@ namespace IL2C.RuntimeSystems
             return true;
         }
 
+        [TestCase(true, "WillGetDifferentThreadId", IncludeTypes = new[] { typeof(WillGetDifferentThreadIdClosure) })]
         public static bool WillGetDifferentThreadId()
         {
             var target = new WillGetDifferentThreadIdClosure();
@@ -225,6 +219,7 @@ namespace IL2C.RuntimeSystems
             return target.TestThreadId != target.RunThreadId;
         }
 
+        [TestCase(100, "RaceFreeWithObjectMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLockClosure) })]
         public static int RaceFreeWithObjectMonitorLock(int count)
         {
             var target = new RaceFreeMonitorLockClosure(new object());
@@ -246,6 +241,7 @@ namespace IL2C.RuntimeSystems
             return target.Value;
         }
 
+        [TestCase(100, "RaceFreeWithConstStringMonitorLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLockClosure) })]
         public static int RaceFreeWithConstStringMonitorLock(int count)
         {
             var target = new RaceFreeMonitorLockClosure("LOCK TARGET");
@@ -267,6 +263,7 @@ namespace IL2C.RuntimeSystems
             return target.Value;
         }
 
+        [TestCase(100, "RaceFreeWithObjectMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
         public static int RaceFreeWithObjectMonitorLock2(int count)
         {
             var target = new RaceFreeMonitorLock2Closure(new object());
@@ -288,6 +285,7 @@ namespace IL2C.RuntimeSystems
             return target.Value;
         }
 
+        [TestCase(100, "RaceFreeWithConstStringMonitorLock2", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorLock2Closure) })]
         public static int RaceFreeWithConstStringMonitorLock2(int count)
         {
             var target = new RaceFreeMonitorLock2Closure("LOCK TARGET");
@@ -309,6 +307,7 @@ namespace IL2C.RuntimeSystems
             return target.Value;
         }
 
+        [TestCase(100, "RaceFreeWithObjectMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
         public static int RaceFreeWithObjectMonitorTryLock(int count)
         {
             var target = new RaceFreeMonitorTryLockClosure(new object());
@@ -330,6 +329,7 @@ namespace IL2C.RuntimeSystems
             return target.Value;
         }
 
+        [TestCase(100, "RaceFreeWithConstStringMonitorTryLock", 10, IncludeTypes = new[] { typeof(RaceFreeMonitorTryLockClosure) })]
         public static int RaceFreeWithConstStringMonitorTryLock(int count)
         {
             var target = new RaceFreeMonitorTryLockClosure("LOCK TARGET");

@@ -12,39 +12,56 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    [TestCase(true, "IsValueType")]
-    [TestCase(4, "SizeOf", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]    // Unit test environment is unknown, gcc is 32bit
-    [TestCase("2147483647", "ToString", int.MaxValue)]
-    [TestCase("-2147483648", "ToString", int.MinValue)]
-    [TestCase(true, "Zero", 0)]
-    [TestCase(true, "Equality", 0)]
-    [TestCase(false, "NonEquality", 0)]
     public sealed class System_IntPtr
     {
+        [TestCase(true, "IsValueType")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int SizeOf();
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            public static extern int SizeOfImpl();
 
-        public static string ToString(IntPtr value)
+        [TestCase(true, "SizeOf")]
+        public static bool SizeOf() =>
+            IntPtr.Size == SizeOfImpl();
+
+        [TestCase("2147483647", "ToString", int.MaxValue)]
+        [TestCase("-2147483648", "ToString", int.MinValue)]
+        public static string ToString(int value)
         {
-            return value.ToString();
+            return ((IntPtr)value).ToString();
         }
 
-        public static bool Zero(IntPtr v)
+        [TestCase(true, "Zero", 0)]
+        public static bool Zero(int v)
         {
-            return v == IntPtr.Zero;
+            return ((IntPtr)v) == IntPtr.Zero;
         }
 
-        public static bool Equality(IntPtr v)
+        [TestCase(true, "Equality", 0)]
+        public static bool Equality(int v)
         {
-            return v == IntPtr.Zero;
+            return ((IntPtr)v) == IntPtr.Zero;
         }
 
-        public static bool NonEquality(IntPtr v)
+        [TestCase(false, "NonEquality", 0)]
+        public static bool NonEquality(int v)
         {
-            return v != IntPtr.Zero;
+            return ((IntPtr)v) != IntPtr.Zero;
+        }
+
+        [TestCase(123, "ToInt32", 123)]
+        public static int ToInt32(int v)
+        {
+            var ip = (IntPtr)v;
+            return ip.ToInt32();
+        }
+
+        [TestCase(123L, "ToInt64", 123L)]
+        public static long ToInt64(long v)
+        {
+            var ip = (IntPtr)v;
+            return ip.ToInt64();
         }
     }
 }

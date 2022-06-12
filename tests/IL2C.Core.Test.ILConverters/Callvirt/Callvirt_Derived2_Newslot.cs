@@ -25,9 +25,6 @@ namespace IL2C.ILConverters
     }
 
     [TestId("Callvirt")]
-    [TestCase("IL2C.ILConverters.Callvirt_Derived2_Newslot", new[] { "Derived2_Newslot_ToString_System_Object", "ToString" }, IncludeBaseTypes = true)]
-    [TestCase("Callvirt_Derived_Base", new[] { "Derived2_Newslot_ToString_IL2C_ILConverters_Callvirt_Base", "ToString" }, IncludeBaseTypes = true)]
-    [TestCase("CallvirtTest", new[] { "Derived2_Newslot_ToString_IL2C_ILConverters_Callvirt", "ToString" }, IncludeBaseTypes = true)]
     public sealed class Callvirt_Derived2_Newslot : Callvirt_Derived2_Newslot_Base
     {
         public new string ToString()
@@ -35,12 +32,15 @@ namespace IL2C.ILConverters
             return "CallvirtTest";
         }
 
+        [TestCase("IL2C.ILConverters.Callvirt_Derived2_Newslot", new[] { "Derived2_Newslot_ToString_System_Object", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived2_Newslot_ToString_System_Object();
 
+        [TestCase("Callvirt_Derived_Base", new[] { "Derived2_Newslot_ToString_IL2C_ILConverters_Callvirt_Base", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived2_Newslot_ToString_IL2C_ILConverters_Callvirt_Base();
 
+        [TestCase("CallvirtTest", new[] { "Derived2_Newslot_ToString_IL2C_ILConverters_Callvirt", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived2_Newslot_ToString_IL2C_ILConverters_Callvirt();
     }

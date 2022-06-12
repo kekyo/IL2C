@@ -67,8 +67,6 @@ namespace IL2C
             }
         }
 
-        private static readonly SequencePoint[] empty = new SequencePoint[0];
-
         private static PreparedMethodInformation PrepareMethodBody(
             IPrepareContext prepareContext,
             IMethodInformation method)
@@ -132,8 +130,8 @@ namespace IL2C
                         dc.UniqueCodeBlockIndex,
                         ilBody.Code,
                         dc.DecodingPathNumber)).
-                OrderBy(ilb => ilb.UniqueCodeBlockIndex).
-                ThenBy(ilb => ilb.Label.Offset).
+                OrderBy(ilb => ilb.UniqueCodeBlockIndex).   // TODO: Pointless?
+                ThenBy(ilb => ilb.Label.Offset).            // TODO: Pointless?
                 ToDictionary(ilb => ilb.Label.Offset, ilb => ilb.Emitter);
 
             //////////////////////////////////////////////////////////////////////////////
@@ -248,16 +246,15 @@ namespace IL2C
                 method);
         }
 
-        internal static PreparedInformations Prepare(
-            TranslateContext translateContext,
-            Func<ITypeInformation, bool> predictType,
-            Func<IMethodInformation, bool> predictMethod)
+        public static PreparedInformations Prepare(
+            TranslateContext translateContext)
         {
             IPrepareContext prepareContext = translateContext;
 
             var allTypes = translateContext.Assembly.Modules.
                 SelectMany(module => module.Types.Concat(module.Types.SelectMany(type => type.NestedTypes))).
-                Where(predictType).
+                // NOT marked IgnoreTranslation attribute
+                Where(type => !type.IsIgnoreTranslation).
                 Distinct().
                 ToArray();
 
@@ -296,23 +293,12 @@ namespace IL2C
                 allTypes,
                 (from type in allTypes
                  from method in type.DeclaredMethods
-                 where predictMethod(method)
                  let preparedMethod = PrepareMethod(prepareContext, method)
                  where preparedMethod != null
                  select preparedMethod).
                 ToDictionary(
                     preparedMethod => preparedMethod.Method,
                     preparedMethod => preparedMethod));
-        }
-
-        public static PreparedInformations Prepare(TranslateContext translateContext)
-        {
-            return Prepare(
-                translateContext,
-                // All types
-                type => true,
-                // The methods except type initializer.
-                method => !(method.IsConstructor && method.IsStatic));
         }
     }
 }

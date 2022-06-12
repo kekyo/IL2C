@@ -8,71 +8,66 @@
 ////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace IL2C.RuntimeSystems
 {
     [TestId("ExceptionThrownByCLI")]
-    [TestCase(false, "NullReference", "ABC")]
-    [TestCase(true, "NullReference", null!)]
-    [TestCase(false, "NullReferenceTwoTimes", "ABC")]   // Test for re-register signal handler
-    [TestCase(true, "NullReferenceTwoTimes", null!)]
-    [TestCase(false, "NullReferenceAtTheUnbox", (object)123)]
-    [TestCase(true, "NullReferenceAtTheUnbox", null!)]
     public sealed class NullReferenceExceptions
     {
+        [TestCase(false, "NullReference", "ABC")]
+        [TestCase(true, "NullReference", null!)]
         public static bool NullReference(object v)
         {
             try
             {
                 var r = v.ToString();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                return ex.Message == "Object reference not set to an instance of an object.";
+                return true;
             }
             return false;
         }
 
+        [TestCase(false, "NullReferenceTwoTimes", "ABC")]   // Test for re-register signal handler
+        [TestCase(true, "NullReferenceTwoTimes", null!)]
         public static bool NullReferenceTwoTimes(object v)
         {
+            var s1 = false;
             try
             {
                 var r = v.ToString();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                if (ex.Message != "Object reference not set to an instance of an object.")
-                {
-                    return false;
-                }
+                s1 = true;
             }
 
+            var s2 = false;
             try
             {
                 var r = v.ToString();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                return ex.Message == "Object reference not set to an instance of an object.";
+                s2 = true;
             }
 
-            return false;
+            return s1 && s2;
         }
 
+        [TestCase(false, "NullReferenceAtTheUnbox", (object)123)]
+        [TestCase(true, "NullReferenceAtTheUnbox", null!)]
         public static bool NullReferenceAtTheUnbox(object value)
         {
             try
             {
                 var v = (int)value;
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
-                return ex.Message == "Object reference not set to an instance of an object.";
+                return true;
             }
-
             return false;
         }
     }

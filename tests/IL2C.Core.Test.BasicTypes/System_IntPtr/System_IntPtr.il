@@ -7,7 +7,7 @@
         conv.i
         box native int
         isinst [netstandard]System.ValueType
-        brnull.s F1
+        brfalse.s F1
         ldc.i4.1
         ret
     F1:
@@ -15,7 +15,7 @@
         ret
     }
 
-    .method public static int32 SizeOf() cil managed
+    .method public static int32 SizeOfImpl() cil managed
     {
         .maxstack 1
         sizeof native int

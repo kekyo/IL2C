@@ -285,282 +285,285 @@ namespace IL2C.RuntimeSystems
     }
 
     [TestId("TypeRelations")]
-    [TestCase("223", "InstanceImplicitlyImplement", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("223", "InstanceImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "InstanceNewAndImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "InstanceNewAndImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "InstanceNewAndImplicitlyImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("223", "InstanceNewAndImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("423", "InstanceNewAndNewImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndNewImplementType), typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("423", "InstanceNewAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndNewImplementType), typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "InstanceNewAndImplicitlyAndNewImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyAndNewImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "InstanceNewAndImplicitlyAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyAndNewImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
-    [TestCase("223", "VirtualImplicitlyImplement", 123, IncludeTypes = new[] { typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("223", "VirtualImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualNewAndImplement", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualNewAndImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualNewAndImplicitlyImplement", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("223", "VirtualNewAndImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("423", "VirtualNewAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualNewAndNewImplementType), typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("423", "VirtualNewAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewAndNewImplementType), typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndImplicitlyImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("423", "VirtualOverrideAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("423", "VirtualOverrideAndImplicitlyAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyAndNewImplementType), typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndImplicitlyAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyAndNewImplementType), typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("423", "VirtualOverrideAndNewVirtualImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndNewVirtualImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("323", "VirtualOverrideAndNewVirtualAndOverrideImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideReImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideReImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideReImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideReImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("223AAABBBCCCDDD", "VirtualNewVirtualStacked", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("223AAABBBCCC", "VirtualNewVirtualStackedFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
-    [TestCase("523", "VirtualOverrideMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("523", "VirtualOverrideMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("523", "VirtualOverrideMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("523", "VirtualNewVirtualMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("323", "VirtualNewVirtualMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("423", "VirtualNewVirtualMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
     public sealed class TypeInheritanceAndImplements
     {
+        [TestCase("223", "InstanceImplicitlyImplement", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceImplicitlyImplement(int value)
         {
             var inst = new InstanceImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceImplicitlyImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new InstanceImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceNewAndImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndImplement(int value)
         {
             var inst = new InstanceNewAndImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceNewAndImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new InstanceNewAndImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceNewAndImplicitlyImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndImplicitlyImplement(int value)
         {
             var inst = new InstanceNewAndImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceNewAndImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndImplicitlyImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new InstanceNewAndImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "InstanceNewAndNewImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndNewImplementType), typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndNewImplement(int value)
         {
             var inst = new InstanceNewAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "InstanceNewAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndNewImplementType), typeof(InstanceNewAndImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndNewImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new InstanceNewAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceNewAndImplicitlyAndNewImplement", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyAndNewImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndImplicitlyAndNewImplement(int value)
         {
             var inst = new InstanceNewAndImplicitlyAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceNewAndImplicitlyAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceNewAndImplicitlyAndNewImplementType), typeof(InstanceImplicitlyImplementType), typeof(InstanceBaseType), typeof(IInterfaceType1) })]
         public static string InstanceNewAndImplicitlyAndNewImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new InstanceNewAndImplicitlyAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "VirtualImplicitlyImplement", 123, IncludeTypes = new[] { typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualImplicitlyImplement(int value)
         {
             var inst = new VirtualImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "VirtualImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualImplicitlyImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualNewAndImplement", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewAndImplement(int value)
         {
             var inst = new VirtualNewAndImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualNewAndImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewAndImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualNewAndImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualNewAndImplicitlyImplement", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewAndImplicitlyImplement(int value)
         {
             var inst = new VirtualNewAndImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "VirtualNewAndImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewAndImplicitlyImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualNewAndImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "VirtualNewAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualNewAndNewImplementType), typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewAndNewImplement(int value)
         {
             var inst = new VirtualNewAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "VirtualNewAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewAndNewImplementType), typeof(VirtualNewAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewAndNewImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualNewAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndImplement(int value)
         {
             var inst = new VirtualOverrideAndImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndImplicitlyImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndImplicitlyImplement(int value)
         {
             var inst = new VirtualOverrideAndImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndImplicitlyImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndImplicitlyImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndImplicitlyImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "VirtualOverrideAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndNewImplement(int value)
         {
             var inst = new VirtualOverrideAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndNewImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "VirtualOverrideAndImplicitlyAndNewImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyAndNewImplementType), typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndImplicitlyAndNewImplement(int value)
         {
             var inst = new VirtualOverrideAndImplicitlyAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndImplicitlyAndNewImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndImplicitlyAndNewImplementType), typeof(VirtualOverrideAndImplicitlyImplementType), typeof(VirtualImplicitlyImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndImplicitlyAndNewImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndImplicitlyAndNewImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "VirtualOverrideAndNewVirtualImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndNewVirtualImplement(int value)
         {
             var inst = new VirtualOverrideAndNewVirtualImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndNewVirtualImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndNewVirtualImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndNewVirtualImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndNewVirtualAndOverrideImplement(int value)
         {
             var inst = new VirtualOverrideAndNewVirtualAndOverrideImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualOverrideAndNewVirtualAndOverrideImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndNewVirtualAndOverrideImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndNewVirtualAndOverrideImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideReImplement", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideReImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualOverrideAndNewVirtualAndOverrideReImplement(int value)
         {
             var inst = new VirtualOverrideAndNewVirtualAndOverrideReImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        // TODO: Unknown failure on mono linux x64
+        //   Expected: "523" But was:  "323"
+        [TestCase("523", "VirtualOverrideAndNewVirtualAndOverrideReImplementFromInterface", 123, IncludeTypes = new[] { typeof(VirtualOverrideAndNewVirtualAndOverrideReImplementType), typeof(VirtualOverrideAndNewVirtualImplementType), typeof(VirtualOverrideAndImplementType), typeof(VirtualBaseType), typeof(IInterfaceType1) },
+            RunOnPlatforms = RunOnPlatforms.DotNet)]
         public static string VirtualOverrideAndNewVirtualAndOverrideReImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideAndNewVirtualAndOverrideReImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223AAABBBCCCDDD", "VirtualNewVirtualStacked", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewVirtualStacked(int value)
         {
             var inst = new VirtualNewVirtualStacked4Type();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223AAABBBCCC", "VirtualNewVirtualStackedFromInterface", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualStacked4Type), typeof(VirtualNewVirtualStacked3Type), typeof(VirtualNewVirtualStacked2Type), typeof(VirtualNewVirtualStacked1Type), typeof(VirtualBaseType), typeof(IInterfaceType1) })]
         public static string VirtualNewVirtualStackedFromInterface(int value)
         {
             IInterfaceType1 inst = new VirtualNewVirtualStacked4Type();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("523", "VirtualOverrideMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string VirtualOverrideMultipleImplementDepth(int value)
         {
             var inst = new VirtualOverrideMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("523", "VirtualOverrideMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string VirtualOverrideMultipleImplementDepthFromInterface1(int value)
         {
             IInterfaceType1 inst = new VirtualOverrideMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("523", "VirtualOverrideMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(VirtualOverrideMultipleImplement3DepthType), typeof(VirtualOverrideMultipleImplement2DepthType), typeof(VirtualOverrideMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string VirtualOverrideMultipleImplementDepthFromInterface3(int value)
         {
             IInterfaceType3 inst = new VirtualOverrideMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("523", "VirtualNewVirtualMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string VirtualNewVirtualMultipleImplementDepth(int value)
         {
             var inst = new VirtualNewVirtualMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "VirtualNewVirtualMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string VirtualNewVirtualMultipleImplementDepthFromInterface1(int value)
         {
             IInterfaceType1 inst = new VirtualNewVirtualMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "VirtualNewVirtualMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(VirtualNewVirtualMultipleImplement3DepthType), typeof(VirtualNewVirtualMultipleImplement2DepthType), typeof(VirtualNewVirtualMultipleImplement1DepthType), typeof(VirtualMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string VirtualNewVirtualMultipleImplementDepthFromInterface3(int value)
         {
             IInterfaceType3 inst = new VirtualNewVirtualMultipleImplement3DepthType();

@@ -12,102 +12,110 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase(true, "Boolean_4", 0, 1, 2, 3, false)]
-    [TestCase(false, "Boolean_4", 0, 1, 2, 3, true)]
-    [TestCase((byte)(byte.MaxValue - 1), "Byte_4", 0, 1, 2, 3, byte.MaxValue)]
-    [TestCase((short)(short.MaxValue - 1), "Int16_4", 0, 1, 2, 3, short.MaxValue)]
-    [TestCase(int.MaxValue - 1, "Int32_4", 0, 1, 2, 3, int.MaxValue)]
-    [TestCase(long.MaxValue - 1, "Int64_4", 0, 1, 2, 3, long.MaxValue)]
-    [TestCase((sbyte)(sbyte.MaxValue - 1), "SByte_4", 0, 1, 2, 3, sbyte.MaxValue)]
-    [TestCase((ushort)(ushort.MaxValue - 1), "UInt16_4", 0, 1, 2, 3, ushort.MaxValue)]
-    [TestCase(uint.MaxValue - 1, "UInt32_4", 0, 1, 2, 3, uint.MaxValue)]
-    [TestCase(ulong.MaxValue - 1, "UInt64_4", 0, 1, 2, 3, ulong.MaxValue)]
-    [TestCase(int.MaxValue - 1, "IntPtr_4", 0, 1, 2, 3, int.MaxValue)]
-    [TestCase(uint.MaxValue - 1, "UIntPtr_4", 0, 1, 2, 3, uint.MaxValue)]
-    [TestCase((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
-    [TestCase(123.45 + 3.1415926535897931, "Double_4", 0, 1, 2, 3, 123.45)]
-    [TestCase('B', "Char_4", 0, 1, 2, 3, 'A')]
-    [TestCase("ABCD", "String_4", 0, 1, 2, 3, "ABC")]
-    [TestCase("ABCD", "Argument_255",
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-        "ABC")]
     public sealed class Ldarg_s
     {
+        [TestCase(true, "Boolean_4", 0, 1, 2, 3, false)]
+        [TestCase(false, "Boolean_4", 0, 1, 2, 3, true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool Boolean_4(
             int arg0, int arg1, int arg2, int arg3, bool value);
 
+        [TestCase((byte)(byte.MaxValue - 1), "Byte_4", 0, 1, 2, 3, byte.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern byte Byte_4(
             int arg0, int arg1, int arg2, int arg3, byte num);
 
+        [TestCase((short)(short.MaxValue - 1), "Int16_4", 0, 1, 2, 3, short.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern short Int16_4(
             int arg0, int arg1, int arg2, int arg3, short num);
 
+        [TestCase(int.MaxValue - 1, "Int32_4", 0, 1, 2, 3, int.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int Int32_4(
             int arg0, int arg1, int arg2, int arg3, int num);
 
+        [TestCase(long.MaxValue - 1, "Int64_4", 0, 1, 2, 3, long.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern long Int64_4(
             int arg0, int arg1, int arg2, int arg3, long num);
 
+        [TestCase((sbyte)(sbyte.MaxValue - 1), "SByte_4", 0, 1, 2, 3, sbyte.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern sbyte SByte_4(
             int arg0, int arg1, int arg2, int arg3, sbyte num);
 
+        [TestCase((ushort)(ushort.MaxValue - 1), "UInt16_4", 0, 1, 2, 3, ushort.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ushort UInt16_4(
             int arg0, int arg1, int arg2, int arg3, ushort num);
 
+        [TestCase(uint.MaxValue - 1, "UInt32_4", 0, 1, 2, 3, uint.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern uint UInt32_4(
             int arg0, int arg1, int arg2, int arg3, uint num);
 
+        [TestCase(ulong.MaxValue - 1, "UInt64_4", 0, 1, 2, 3, ulong.MaxValue)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern ulong UInt64_4(
             int arg0, int arg1, int arg2, int arg3, ulong num);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern IntPtr IntPtr_4(
-            int arg0, int arg1, int arg2, int arg3, IntPtr num);
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern IntPtr IntPtr_4Impl(
+                int arg0, int arg1, int arg2, int arg3, IntPtr num);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UIntPtr_4(
-            int arg0, int arg1, int arg2, int arg3, UIntPtr num);
+        [TestCase(int.MaxValue - 1, "IntPtr_4", 0, 1, 2, 3, int.MaxValue)]
+        public static int IntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, int num) =>
+            IntPtr_4Impl(arg0, arg1, arg2, arg3, (IntPtr)num).ToInt32();
 
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UIntPtr_4Impl(
+                int arg0, int arg1, int arg2, int arg3, UIntPtr num);
+
+        [TestCase(uint.MaxValue - 1, "UIntPtr_4", 0, 1, 2, 3, uint.MaxValue)]
+        public static uint UIntPtr_4(
+            int arg0, int arg1, int arg2, int arg3, uint num) =>
+            UIntPtr_4Impl(arg0, arg1, arg2, arg3, (UIntPtr)num).ToUInt32();
+
+        [TestCase((float)((double)123.45f + (double)3.14159274f), "Single_4", 0, 1, 2, 3, 123.45f)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern float Single_4(
             int arg0, int arg1, int arg2, int arg3, float num);
 
+        [TestCase(123.45 + 3.1415926535897931, "Double_4", 0, 1, 2, 3, 123.45)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern double Double_4(
             int arg0, int arg1, int arg2, int arg3, double num);
 
+        [TestCase('B', "Char_4", 0, 1, 2, 3, 'A')]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern char Char_4(
             int arg0, int arg1, int arg2, int arg3, char ch);
 
+        [TestCase("ABCD", "String_4", 0, 1, 2, 3, "ABC")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string String_4(
             int arg0, int arg1, int arg2, int arg3, string v);
 
+        [TestCase("ABCD", "Argument_255",
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+            "ABC")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Argument_255(
             int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7,

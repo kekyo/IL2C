@@ -83,112 +83,112 @@ namespace IL2C.RuntimeSystems
 
     [TestId("TypeInitializer")]
     [Description("These tests are verified the IL2C can handle the type initializer special translation cases.")]
-    [TestCase(true, "Bool", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((byte)1, "Byte", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((short)1, "Int16", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((int)3, "Int32", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((long)1, "Int64", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((sbyte)1, "SByte", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((ushort)1, "UInt16", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((uint)1, "UInt32", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((ulong)1, "UInt64", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((int)1, "IntPtr", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((uint)1, "UIntPtr", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((float)1, "Single", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((double)1, "Double", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase((char)1, "Char", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase("ABC", "String", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
-    [TestCase(0, "Int32_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
-    [TestCase(null, "String_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
-    [TestCase(0, "NonTracked", IncludeTypes = new[] { typeof(TypeInitializer_NonTrackingGCs) })]
     public sealed partial class TypeInitializer
     {
+        [TestCase(true, "Bool", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static bool Bool()
         {
             return TypeInitializer_Field.BooleanValue;
         }
 
+        [TestCase((byte)1, "Byte", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static byte Byte()
         {
             return TypeInitializer_Field.ByteValue;
         }
 
+        [TestCase((short)1, "Int16", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static short Int16()
         {
             return TypeInitializer_Field.Int16Value;
         }
 
+        [TestCase((int)3, "Int32", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static int Int32()
         {
             return TypeInitializer_Field.Int32Value;
         }
 
+        [TestCase((long)1, "Int64", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static long Int64()
         {
             return TypeInitializer_Field.Int64Value;
         }
 
+        [TestCase((sbyte)1, "SByte", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static sbyte SByte()
         {
             return TypeInitializer_Field.SByteValue;
         }
 
+        [TestCase((ushort)1, "UInt16", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static ushort UInt16()
         {
             return TypeInitializer_Field.UInt16Value;
         }
 
+        [TestCase((uint)1, "UInt32", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static uint UInt32()
         {
             return TypeInitializer_Field.UInt32Value;
         }
 
+        [TestCase((ulong)1, "UInt64", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static ulong UInt64()
         {
             return TypeInitializer_Field.UInt64Value;
         }
 
-        public static IntPtr IntPtr()
+        [TestCase((int)1, "IntPtr", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
+        public static int IntPtr()
         {
-            return TypeInitializer_Field.IntPtrValue;
+            return TypeInitializer_Field.IntPtrValue.ToInt32();
         }
 
-        public static UIntPtr UIntPtr()
+        [TestCase((uint)1, "UIntPtr", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
+        public static uint UIntPtr()
         {
-            return TypeInitializer_Field.UIntPtrValue;
+            return TypeInitializer_Field.UIntPtrValue.ToUInt32();
         }
 
+        [TestCase((float)1, "Single", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static float Single()
         {
             return TypeInitializer_Field.SingleValue;
         }
 
+        [TestCase((double)1, "Double", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static double Double()
         {
             return TypeInitializer_Field.DoubleValue;
         }
 
+        [TestCase((char)1, "Char", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static char Char()
         {
             return TypeInitializer_Field.CharValue;
         }
 
+        [TestCase("ABC", "String", IncludeTypes = new[] { typeof(TypeInitializer_Field) })]
         public static string String()
         {
             return TypeInitializer_Field.StringValue;
         }
 
+        [TestCase(0, "Int32_None", IncludeTypes = new[] { typeof(TypeInitializer_None) })]
         public static int Int32_None()
         {
             return TypeInitializer_None.Int32Value;
         }
 
+        [TestCase(null, "String_None", IncludeTypes = new[] { typeof(TypeInitializer_None) }, Assert = TestCaseAsserts.PerfectMatch)]
         public static string? String_None()
         {
             return TypeInitializer_None.StringValue;
         }
 
         // Only manual revewing generated C source code.
+        [TestCase(0, "NonTracked", IncludeTypes = new[] { typeof(TypeInitializer_NonTrackingGCs) })]
         public static int NonTracked()
         {
             return TypeInitializer_NonTrackingGCs.Int32Value;

@@ -3,7 +3,7 @@
     .method public static bool True() cil managed
     {
         .maxstack 1
-        ldsflda bool IL2C.ILConverters.Ldsfld_Field::TrueValue
+        ldsflda bool [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::TrueValue
         ldind.u1
         ret
     }
@@ -11,7 +11,7 @@
     .method public static bool False() cil managed
     {
         .maxstack 1
-        ldsflda bool IL2C.ILConverters.Ldsfld_Field::FalseValue
+        ldsflda bool [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::FalseValue
         ldind.u1
         ret
     }
@@ -19,7 +19,7 @@
     .method public static uint8 Byte() cil managed
     {
         .maxstack 1
-        ldsflda uint8 IL2C.ILConverters.Ldsfld_Field::ByteValue
+        ldsflda uint8 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::ByteValue
         ldind.u1
         ret
     }
@@ -27,7 +27,7 @@
     .method public static int16 Int16() cil managed
     {
         .maxstack 1
-        ldsflda int16 IL2C.ILConverters.Ldsfld_Field::Int16Value
+        ldsflda int16 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::Int16Value
         ldind.i2
         ret
     }
@@ -35,7 +35,7 @@
     .method public static int32 Int32() cil managed
     {
         .maxstack 1
-        ldsflda int32 IL2C.ILConverters.Ldsfld_Field::Int32Value
+        ldsflda int32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::Int32Value
         ldind.i4
         ret
     }
@@ -43,7 +43,7 @@
     .method public static int64 Int64() cil managed
     {
         .maxstack 1
-        ldsflda int64 IL2C.ILConverters.Ldsfld_Field::Int64Value
+        ldsflda int64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::Int64Value
         ldind.i8
         ret
     }
@@ -51,7 +51,7 @@
     .method public static int8 SByte() cil managed
     {
         .maxstack 1
-        ldsflda int8 IL2C.ILConverters.Ldsfld_Field::SByteValue
+        ldsflda int8 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::SByteValue
         ldind.i1
         ret
     }
@@ -59,7 +59,7 @@
     .method public static uint16 UInt16() cil managed
     {
         .maxstack 1
-        ldsflda uint16 IL2C.ILConverters.Ldsfld_Field::UInt16Value
+        ldsflda uint16 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::UInt16Value
         ldind.u2
         ret
     }
@@ -67,7 +67,7 @@
     .method public static uint32 UInt32() cil managed
     {
         .maxstack 1
-        ldsflda uint32 IL2C.ILConverters.Ldsfld_Field::UInt32Value
+        ldsflda uint32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::UInt32Value
         ldind.u4
         ret
     }
@@ -75,23 +75,23 @@
     .method public static uint64 UInt64() cil managed
     {
         .maxstack 1
-        ldsflda uint64 IL2C.ILConverters.Ldsfld_Field::UInt64Value
+        ldsflda uint64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::UInt64Value
         ldind.i8
         ret
     }
     
-    .method public static native int IntPtr() cil managed
+    .method private static native int IntPtrImpl() cil managed
     {
         .maxstack 1
-        ldsflda native int IL2C.ILConverters.Ldsfld_Field::IntPtrValue
+        ldsflda native int [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::IntPtrValue
         ldind.i
         ret
     }
     
-    .method public static native uint UIntPtr() cil managed
+    .method private static native uint UIntPtrImpl() cil managed
     {
         .maxstack 1
-        ldsflda native uint IL2C.ILConverters.Ldsfld_Field::UIntPtrValue
+        ldsflda native uint [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::UIntPtrValue
         ldind.i
         ret
     }
@@ -99,7 +99,7 @@
     .method public static float32 Single() cil managed
     {
         .maxstack 1
-        ldsflda float32 IL2C.ILConverters.Ldsfld_Field::SingleValue
+        ldsflda float32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::SingleValue
         ldind.r4
         ret
     }
@@ -107,7 +107,7 @@
     .method public static float64 Double() cil managed
     {
         .maxstack 1
-        ldsflda float64 IL2C.ILConverters.Ldsfld_Field::DoubleValue
+        ldsflda float64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::DoubleValue
         ldind.r8
         ret
     }
@@ -115,7 +115,7 @@
     .method public static char Char() cil managed
     {
         .maxstack 1
-        ldsflda char IL2C.ILConverters.Ldsfld_Field::CharValue
+        ldsflda char [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::CharValue
         ldind.u2
         ret
     }
@@ -123,7 +123,7 @@
     .method public static string String() cil managed
     {
         .maxstack 1
-        ldsflda string IL2C.ILConverters.Ldsfld_Field::StringValue
+        ldsflda string [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Ldsfld_Field::StringValue
         ldind.ref
         ret
     }

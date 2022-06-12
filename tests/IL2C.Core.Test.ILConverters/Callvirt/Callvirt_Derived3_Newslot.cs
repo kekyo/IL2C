@@ -37,10 +37,6 @@ namespace IL2C.ILConverters
     }
 
     [TestId("Callvirt")]
-    [TestCase("Callvirt_Derived_Base1", new[] { "Derived3_Newslot_ToString_System_Object", "ToString" }, IncludeBaseTypes = true)]
-    [TestCase("Callvirt_Derived_Base1", new[] { "Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt_Base1", "ToString" }, IncludeBaseTypes = true)]
-    [TestCase("Callvirt_Derived_Base2", new[] { "Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt_Base2", "ToString" }, IncludeBaseTypes = true)]
-    [TestCase("CallvirtTest", new[] { "Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt", "ToString" }, IncludeBaseTypes = true)]
     public sealed class Callvirt_Derived3_Newslot : Callvirt_Derived3_Newslot_Base2
     {
         public new string ToString()
@@ -48,15 +44,19 @@ namespace IL2C.ILConverters
             return "CallvirtTest";
         }
 
+        [TestCase("Callvirt_Derived_Base1", new[] { "Derived3_Newslot_ToString_System_Object", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived3_Newslot_ToString_System_Object();
 
+        [TestCase("Callvirt_Derived_Base1", new[] { "Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt_Base1", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt_Base1();
 
+        [TestCase("Callvirt_Derived_Base2", new[] { "Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt_Base2", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt_Base2();
 
+        [TestCase("CallvirtTest", new[] { "Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt", "ToString" }, IncludeBaseTypes = true)]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string Derived3_Newslot_ToString_IL2C_ILConverters_Callvirt();
     }

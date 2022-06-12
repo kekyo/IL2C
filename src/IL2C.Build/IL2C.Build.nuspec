@@ -34,7 +34,6 @@
     <file src="build\*.*" target="build" />
     <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
     <file src="bin\$Configuration$\net462\*.*" target="tools/net462" />
-    <file src="bin\$Configuration$\netcoreapp2.1\*.*" target="tools/netcoreapp2.1" />
     <file src="bin\$Configuration$\netcoreapp2.2\*.*" target="tools/netcoreapp2.2" />
     <file src="bin\$Configuration$\netcoreapp3.1\*.*" target="tools/netcoreapp3.1" />
     <file src="bin\$Configuration$\net5.0\*.*" target="tools/net5.0" />

@@ -238,219 +238,219 @@ namespace IL2C.RuntimeSystems
     }
 
     [TestId("TypeRelations")]
-    [TestCase("223", "InstanceImplement", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
-    [TestCase("223", "InstanceImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
-    [TestCase("223", "InstanceMultipleImplement1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
-    [TestCase("223", "InstanceMultipleImplementFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
-    [TestCase("323", "InstanceMultipleImplement2", 123L, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
-    [TestCase("323", "InstanceMultipleImplementFromInterface2", 123L, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
-    [TestCase("223", "InstanceMultipleImplementUnified1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementUnifiedType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("223", "InstanceMultipleImplementUnifiedFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementUnifiedType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("223", "InstanceMultipleImplementUnifiedFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementUnifiedType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("223", "InstanceMultipleImplementCombination", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementCombinationType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("223", "InstanceMultipleImplementCombinationFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementCombinationType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("323", "InstanceMultipleImplementCombinationFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementCombinationType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("223", "InstanceMultipleImplementExplicitlyFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementExplicitlyType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("323", "InstanceMultipleImplementExplicitlyFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementExplicitlyType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("223", "InstanceMultipleCombinedImplement", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
-    [TestCase("223", "InstanceMultipleCombined1ImplementFromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
-    [TestCase("323", "InstanceMultipleCombined2ImplementFromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
-    [TestCase("223", "InstanceMultipleCombinedAndParallelImplement", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
-    [TestCase("323", "InstanceMultipleCombinedAndParallel1ImplementFromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
-    [TestCase("423", "InstanceMultipleCombinedAndParallel2ImplementFromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
-    [TestCase("223", "InstanceMultipleCombinedImplementCombination1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("223", "InstanceMultipleCombined2ImplementCombination1FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("323", "InstanceMultipleCombined1ImplementCombination1FromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("423", "InstanceMultipleCombined2ImplementCombination1FromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("223", "InstanceMultipleCombinedImplementCombination2", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("323", "InstanceMultipleCombined2ImplementCombination2FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("223", "InstanceMultipleCombined1ImplementCombination2FromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("423", "InstanceMultipleCombined2ImplementCombination2FromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
-    [TestCase("523", "InstanceMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("323", "InstanceMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
-    [TestCase("423", "InstanceMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
     public sealed class TypeImplements
     {
+        [TestCase("223", "InstanceImplement", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
         public static string InstanceImplement(int value)
         {
             var inst = new InstanceImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceImplementFromInterface", 123, IncludeTypes = new[] { typeof(InstanceImplementType), typeof(IInterfaceType1) })]
         public static string InstanceImplementFromInterface(int value)
         {
             IInterfaceType1 inst = new InstanceImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplement1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
         public static string InstanceMultipleImplement1(int value)
         {
             var inst = new InstanceMultipleImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplementFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
         public static string InstanceMultipleImplementFromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleImplement2", 123L, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
         public static string InstanceMultipleImplement2(long value)
         {
             var inst = new InstanceMultipleImplementType();
             return inst.GetStringFromInt64(value);
         }
 
+        [TestCase("323", "InstanceMultipleImplementFromInterface2", 123L, IncludeTypes = new[] { typeof(InstanceMultipleImplementType), typeof(IInterfaceType1), typeof(IInterfaceType2) })]
         public static string InstanceMultipleImplementFromInterface2(long value)
         {
             IInterfaceType2 inst = new InstanceMultipleImplementType();
             return inst.GetStringFromInt64(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplementUnified1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementUnifiedType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementUnified1(int value)
         {
             var inst = new InstanceMultipleImplementUnifiedType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplementUnifiedFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementUnifiedType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementUnifiedFromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleImplementUnifiedType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplementUnifiedFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementUnifiedType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementUnifiedFromInterface3(int value)
         {
             IInterfaceType3 inst = new InstanceMultipleImplementUnifiedType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplementCombination", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementCombinationType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementCombination(int value)
         {
             var inst = new InstanceMultipleImplementCombinationType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplementCombinationFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementCombinationType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementCombinationFromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleImplementCombinationType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleImplementCombinationFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementCombinationType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementCombinationFromInterface3(int value)
         {
             IInterfaceType3 inst = new InstanceMultipleImplementCombinationType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleImplementExplicitlyFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementExplicitlyType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementExplicitlyFromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleImplementExplicitlyType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleImplementExplicitlyFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplementExplicitlyType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementExplicitlyFromInterface3(int value)
         {
             IInterfaceType3 inst = new InstanceMultipleImplementExplicitlyType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleCombinedImplement", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombinedImplement(int value)
         {
             var inst = new InstanceMultipleCombinedImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleCombined1ImplementFromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined1ImplementFromInterface4(int value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleCombined2ImplementFromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementType), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined2ImplementFromInterface4(long value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementType();
             return inst.GetStringFromInt64(value);
         }
 
+        [TestCase("223", "InstanceMultipleCombinedAndParallelImplement", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombinedAndParallelImplement(int value)
         {
             var inst = new InstanceMultipleCombinedAndParallelImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleCombinedAndParallel1ImplementFromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombinedAndParallel1ImplementFromInterface4(int value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedAndParallelImplementType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "InstanceMultipleCombinedAndParallel2ImplementFromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedAndParallelImplementType), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombinedAndParallel2ImplementFromInterface4(long value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedAndParallelImplementType();
             return inst.GetStringFromInt64(value);
         }
 
+        [TestCase("223", "InstanceMultipleCombinedImplementCombination1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombinedImplementCombination1(int value)
         {
             var inst = new InstanceMultipleCombinedImplementCombinationType1();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleCombined1ImplementCombination1FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined1ImplementCombination1FromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleCombinedImplementCombinationType1();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleCombined1ImplementCombination1FromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined1ImplementCombination1FromInterface4(int value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType1();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "InstanceMultipleCombined2ImplementCombination1FromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType1), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined2ImplementCombination1FromInterface4(long value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType1();
             return inst.GetStringFromInt64(value);
         }
 
+        [TestCase("223", "InstanceMultipleCombinedImplementCombination2", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombinedImplementCombination2(int value)
         {
             var inst = new InstanceMultipleCombinedImplementCombinationType2();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleCombined1ImplementCombination2FromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined1ImplementCombination2FromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleCombinedImplementCombinationType2();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("223", "InstanceMultipleCombined1ImplementCombination2FromInterface4", 123, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined1ImplementCombination2FromInterface4(int value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType2();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "InstanceMultipleCombined2ImplementCombination2FromInterface4", 123L, IncludeTypes = new[] { typeof(InstanceMultipleCombinedImplementCombinationType2), typeof(IInterfaceType1), typeof(IInterfaceType4) })]
         public static string InstanceMultipleCombined2ImplementCombination2FromInterface4(long value)
         {
             IInterfaceType4 inst = new InstanceMultipleCombinedImplementCombinationType2();
             return inst.GetStringFromInt64(value);
         }
 
+        [TestCase("523", "InstanceMultipleImplementDepth", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementDepth(int value)
         {
             var inst = new InstanceMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("323", "InstanceMultipleImplementDepthFromInterface1", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementDepthFromInterface1(int value)
         {
             IInterfaceType1 inst = new InstanceMultipleImplement3DepthType();
             return inst.GetStringFromInt32(value);
         }
 
+        [TestCase("423", "InstanceMultipleImplementDepthFromInterface3", 123, IncludeTypes = new[] { typeof(InstanceMultipleImplement3DepthType), typeof(InstanceMultipleImplement2DepthType), typeof(InstanceMultipleImplement1DepthType), typeof(InstanceMultipleImplementDepthBaseType), typeof(IInterfaceType1), typeof(IInterfaceType3) })]
         public static string InstanceMultipleImplementDepthFromInterface3(int value)
         {
             IInterfaceType3 inst = new InstanceMultipleImplement3DepthType();

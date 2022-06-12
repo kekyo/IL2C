@@ -87,7 +87,7 @@
         ret
     }
         
-    .method public static native int IntPtr(native int num) cil managed
+    .method private static native int IntPtrImpl(native int num) cil managed
     {
         .maxstack 2
         ldarg.0
@@ -96,7 +96,7 @@
         ret
     }
         
-    .method public static native uint UIntPtr(native uint num) cil managed
+    .method private static native uint UIntPtrImpl(native uint num) cil managed
     {
         .maxstack 2
         ldarg.0

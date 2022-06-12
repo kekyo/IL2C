@@ -24,7 +24,7 @@
 		ret
 	}
 
-	.method public static string IntPtrValue(native int v) cil managed
+	.method private static string IntPtrValueImpl(native int v) cil managed
 	{
 		.maxstack 2
 		ldarg.0

@@ -1,16 +1,5 @@
 name: Windows
-on:
-  push:
-    branches:
-    - master
-    - devel
-    - feature/github-actions-2
-  pull_request:
-    branches:
-    - master
-    - devel
-  workflow_dispatch:
-    branches:
+on: [push]
 permissions:
   contents: read
 jobs:
@@ -23,57 +12,126 @@ jobs:
     env:
       buildConfiguration: ${{ matrix.buildConfiguration }}
     steps:
+
+    #----------------------------------------------------------------------
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
         lfs: true
-    # https://stackoverflow.com/questions/61463578/github-actions-actions-checkoutv2-lfs-true-flag-not-converting-pointers-to-act
+
     - name: Checkout LFS objects
       run: git lfs checkout
-    - name: Setup .NET Core 2.1
+
+    - name: Extract branch name
+      id: extract_branch_name
+      run: |
+        $branch_name=$(git name-rev --name-only --exclude=tags/* HEAD)
+        echo "Detected current branch: ${branch_name}"
+        echo "::set-output name=branch_name::${branch_name}"
+
+    #----------------------------------------------------------------------
+
+    - name: Setup .NET Core 2.2
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 2.1.818
+        dotnet-version: 2.2.*
     - name: Setup .NET Core 3.1
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.414
+        dotnet-version: 3.1.*
     - name: Setup .NET 5
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.402
+        dotnet-version: 5.0.*
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.100
+        dotnet-version: 6.0.*
+
+    #----------------------------------------------------------------------
+
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.3
+      
+    - name: Setup NuGet CLI
+      uses: nuget/setup-nuget@v1
+
+    #----------------------------------------------------------------------
+    
     - name: Initialize tools
       run: init-tools.bat
       shell: cmd
-    - name: Install dependencies
-      run: |
-        dotnet restore il2c.sln
-        dotnet restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
-        dotnet restore samples\Calculator\Calculator.sln
+
+    #----------------------------------------------------------------------
+
     - name: Build runtime library
       run: build-runtime.bat ${{env.buildConfiguration}}
       shell: cmd
+
+    #----------------------------------------------------------------------
+
     - name: Build il2c
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform="Any CPU" -maxCpuCount il2c.sln
-    - name: Build GettingStartedIL2C-x86
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
-    - name: Build GettingStartedIL2C-x64
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln
-    - name: Build Calculator-x86
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
-    - name: Build Calculator-x64
-      run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\Calculator\Calculator.sln
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER il2c.sln
+
+    #----------------------------------------------------------------------
+
+    - name: Test il2c (BasicTypes)
+      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
+      timeout-minutes: 20
+    - name: Test il2c (ILConverters)
+      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.ILConverters\IL2C.Core.Test.ILConverters.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
+      timeout-minutes: 20
+    - name: Test il2c (RuntimeSystems)
+      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.RuntimeSystems\IL2C.Core.Test.RuntimeSystems.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
+      timeout-minutes: 20
+
+    #----------------------------------------------------------------------
+    
+    - name: Build GettingStartedIL2C
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples\GettingStartedIL2C\GettingStartedIL2C.sln
+
+    - name: Build Calculator.Core
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples\Calculator\Calculator.Core\Calculator.Core.csproj
+    - name: Build Calculator
+      run: dotnet build --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER samples\Calculator\Calculator\Calculator.csproj
+
+    #- name: Build Calculator-x86
+    #  run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\Calculator\Calculator.sln
+    #- name: Build Calculator-x64
+    #  run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x64 -maxCpuCount samples\Calculator\Calculator.sln
+
     - name: Build Calculator-CMake-mingw32
       run: build.bat ${{env.buildConfiguration}}
       shell: cmd
       working-directory: samples\Calculator\Calculator.CMake
-    - name: Test il2c
-      run: dotnet test --no-build --verbosity normal --configuration ${{env.buildConfiguration}} tests\IL2C.Core.Test.Fixture\IL2C.Core.Test.Fixture.csproj -- BuildIdentifier=$GITHUB_RUN_NUMBER Platform=x64 CITest=True
-      timeout-minutes: 20
+
+    #----------------------------------------------------------------------
+
+    - name: Build packages
+      run: |
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Interop\IL2C.Interop.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Core\IL2C.Core.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Build\IL2C.Build.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts misc\IL2C.Toolchain.gcc4.mingw32\IL2C.Toolchain.gcc4.mingw32.csproj
+
+    #----------------------------------------------------------------------
+
+    - name: Deploy NuGet package (Release/devel/il2c-devel)
+      if: (env.buildConfiguration == 'Release') && (startsWith(github.ref, 'refs/tags/'))
+      run: |
+        dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
+        dotnet nuget push artifacts\IL2C.Core.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
+        dotnet nuget push artifacts\IL2C.Build.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
+        dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
+
+    #----------------------------------------------------------------------
+
+    #- name: Deploy NuGet package (Release/master/nuget.org)
+    #  if: (env.buildConfiguration == 'Release') && (startsWith(github.ref, 'refs/tags/')) && (endsWith(steps.extract_branch_name.outputs.branch_name, 'master'))
+    #  run: |
+    #    dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
+    #    dotnet nuget push artifacts\IL2C.Core.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
+    #    dotnet nuget push artifacts\IL2C.Build.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
+    #    dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}

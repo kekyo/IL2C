@@ -96,7 +96,7 @@
         ret
     }
             
-    .method public static native int IntPtr_4(
+    .method private static native int IntPtr_4Impl(
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, native int num) cil managed
     {
         .maxstack 2
@@ -106,7 +106,7 @@
         ret
     }
 
-    .method public static native uint UIntPtr_4(
+    .method private static native uint UIntPtr_4Impl(
         int32 arg0, int32 arg1, int32 arg2, int32 arg3, native uint num) cil managed
     {
         .maxstack 2

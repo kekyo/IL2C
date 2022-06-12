@@ -47,10 +47,9 @@ namespace IL2C.RuntimeSystems
     // So it handles the case with hacky code at IL2C.ILConverters.CallConverterUtilities.
     // This test case validates it.
     [TestId("DelegateTypes")]
-    [TestCase(6123, "AddCSharpEvent", 1000, IncludeTypes = new[] { typeof(CSharpEventImpl), typeof(CSharpEventDelegate), typeof(CSharpEventReceiver) })]
-    [TestCase(4123, "RemoveCSharpEvent", 1000, IncludeTypes = new[] { typeof(CSharpEventImpl), typeof(CSharpEventDelegate), typeof(CSharpEventReceiver) })]
     public sealed class CSharpEvent
     {
+        [TestCase(6123, "AddCSharpEvent", 1000, IncludeTypes = new[] { typeof(CSharpEventImpl), typeof(CSharpEventDelegate), typeof(CSharpEventReceiver) })]
         public static int AddCSharpEvent(int value)
         {
             var receiver = new CSharpEventReceiver();
@@ -66,6 +65,7 @@ namespace IL2C.RuntimeSystems
             return receiver.Value;
         }
 
+        [TestCase(4123, "RemoveCSharpEvent", 1000, IncludeTypes = new[] { typeof(CSharpEventImpl), typeof(CSharpEventDelegate), typeof(CSharpEventReceiver) })]
         public static int RemoveCSharpEvent(int value)
         {
             var receiver = new CSharpEventReceiver();

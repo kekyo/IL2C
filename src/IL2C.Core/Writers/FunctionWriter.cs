@@ -44,21 +44,28 @@ namespace IL2C.Writers
                 if (objRefEntries.Length >= 1)
                 {
                     tw.WriteLine("//-------------------- objref");
-                    foreach (var objRefEntry in objRefEntries)
+                    var objrefNames = objRefEntries.
+                        Select(oe => extractContext.GetSymbolName(oe)).
+                        RenameDuplicatingSymbols();
+                    foreach (var (objRefEntry, name) in
+                        objRefEntries.Zip(objrefNames, (oe, on) => (oe, on)))
                     {
                         tw.WriteLine(
                             "{0} {1};",
                             objRefEntry.TargetType.CLanguageTypeName,
-                            extractContext.GetSymbolName(objRefEntry));
+                            name);
                     }
                 }
 
                 if (valueEntries.Length >= 1)
                 {
                     tw.WriteLine("//-------------------- value type");
-                    foreach (var valueEntry in valueEntries)
+                    var valueNames = valueEntries.
+                        Select(ve => extractContext.GetSymbolName(ve)).
+                        RenameDuplicatingSymbols();
+                    foreach (var (valueEntry, name) in
+                        valueEntries.Zip(valueNames, (ve, vn) => (ve, vn)))
                     {
-                        var name = extractContext.GetSymbolName(valueEntry);
                         tw.WriteLine(
                             "const IL2C_RUNTIME_TYPE {0}_type__;",
                             name);
@@ -274,10 +281,12 @@ namespace IL2C.Writers
                     tw.WriteLine("// [3-3] Local variables (!objref):");
                     tw.SplitLine();
 
-                    foreach (var local in localDefinitions)
+                    var localNames = localDefinitions.
+                        Select(local => extractContext.GetSymbolName(local)).
+                        RenameDuplicatingSymbols();
+                    foreach (var (local, name) in localDefinitions.
+                        Zip(localNames, (local, name) => (local, name)))
                     {
-                        var name = extractContext.GetSymbolName(local);
-
                         // HACK: The local variables mark to "volatile."
                         //   Because the gcc misread these variables calculated statically (or maybe assigned to the registers)
                         //   at compile time with optimization.
@@ -617,19 +626,6 @@ namespace IL2C.Writers
             tw.SplitLine();
         }
 
-        private static string GetMarshaledInExpression(IParameterInformation parameter)
-        {
-            // TODO: UTF8 conversion
-            // TODO: Apply MarshalAsAttribute
-
-            if (parameter.TargetType.IsStringType)
-            {
-                return string.Format("{0}->string_body__", parameter.ParameterName);
-            }
-
-            return parameter.ParameterName;
-        }
-
         private static void InternalConvertFromInternalCallFunction(
             CodeTextWriter tw,
             IMethodInformation method)
@@ -643,46 +639,65 @@ namespace IL2C.Writers
                 method.FriendlyName);
             tw.SplitLine();
 
-            // P/Invoke linkage doesn't verify the C header declarations.
-            // It will lookp up by the library symbol name.
-            if (method.PInvokeInformation != null)
-            {
-                tw.WriteLine(
-                    "extern {0};",
-                    method.CLanguagePInvokePrototype);
-                tw.SplitLine();
-            }
-
-            if (method.IsPrivate)
-            {
-                tw.WriteLine("static inline {0}", method.CLanguageFunctionPrototype);
-            }
-            else
-            {
-                tw.WriteLine(method.CLanguageFunctionPrototype);
-            }
+            tw.WriteLine(method.CLanguageFunctionPrototype);
 
             tw.WriteLine("{");
 
             using (var _ = tw.Shift())
             {
+                static string GetMarshaledInExpression(IParameterInformation parameter)
+                {
+                    // TODO: UTF8 conversion
+                    // TODO: Apply MarshalAsAttribute
+
+                    if (parameter.TargetType.IsStringType)
+                    {
+                        return string.Format("{0}->string_body__", parameter.ParameterName);
+                    }
+                    return parameter.ParameterName;
+                }
+
                 var arguments = string.Join(
                     ", ",
                     method.Parameters.Select(GetMarshaledInExpression));
 
-                if (method.ReturnType.IsVoidType)
+                if (method.PInvokeInformation != null)
                 {
+                    // TODO: caching
                     tw.WriteLine(
-                        "{0}({1});",
-                        method.CLanguageInteropName,
-                        arguments);
+                        "{0} = il2c_pinvoke_get_function__(\"{1}\", \"{2}\");",
+                        method.GetCLanguageFunctionTypeWithVariableName("pFunc__", true),
+                        method.PInvokeInformation.Module.Name,
+                        method.CLanguageInteropName);
+                    if (method.ReturnType.IsVoidType)
+                    {
+                        tw.WriteLine(
+                            "(*pFunc__)({0});",
+                            arguments);
+                    }
+                    else
+                    {
+                        tw.WriteLine(
+                            "return (*pFunc__)({0});",
+                            arguments);
+                    }
                 }
                 else
                 {
-                    tw.WriteLine(
-                        "return {0}({1});",
-                        method.CLanguageInteropName,
-                        arguments);
+                    if (method.ReturnType.IsVoidType)
+                    {
+                        tw.WriteLine(
+                            "{0}({1});",
+                            method.CLanguageInteropName,
+                            arguments);
+                    }
+                    else
+                    {
+                        tw.WriteLine(
+                            "return {0}({1});",
+                            method.CLanguageInteropName,
+                            arguments);
+                    }
                 }
             }
 

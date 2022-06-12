@@ -12,54 +12,90 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.ILConverters
 {
-    [TestCase((uint)123, "SByte", (sbyte)123)]
-    [TestCase((uint)12345, "Int16", (short)12345)]
-    [TestCase((uint)12345, "Int32", 12345)]
-    [TestCase((uint)12345, "Int64", 12345L)]
-    [TestCase((uint)12345, "IntPtr", 12345)]
-    [TestCase((uint)123, "Byte", (byte)123)]
-    [TestCase((uint)12345, "UInt16", (ushort)12345)]
-    [TestCase((uint)12345, "UInt32", (uint)12345)]
-    [TestCase((uint)12345, "UInt64", 12345UL)]
-    [TestCase((uint)12345, "UIntPtr", (uint)12345)]
-    [TestCase((uint)12345, "Single", 12345.67f)]
-    [TestCase((uint)12345, "Double", 12345.67)]
     public sealed class Conv_u
     {
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr SByte(sbyte value);
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr SByteImpl(sbyte value);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr Int16(short value);
+        [TestCase((uint)123, "SByte", (sbyte)123)]
+        public static uint SByte(sbyte value) =>
+            SByteImpl(value).ToUInt32();
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr Int32(int value);
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr Int16Impl(short value);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr Int64(long value);
+        [TestCase((uint)12345, "Int16", (short)12345)]
+        public static uint Int16(short value) =>
+            Int16Impl(value).ToUInt32();
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr IntPtr(IntPtr value);
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr Int32Impl(int value);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr Byte(byte value);
+        [TestCase((uint)12345, "Int32", 12345)]
+        public static uint Int32(int value) =>
+            Int32Impl(value).ToUInt32();
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UInt16(ushort value);
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr Int64Impl(long value);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UInt32(uint value);
+        [TestCase((uint)12345, "Int64", 12345L)]
+        public static uint Int64(long value) =>
+            Int64Impl(value).ToUInt32();
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UInt64(ulong value);
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr IntPtrImpl(IntPtr value);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr UIntPtr(UIntPtr value);
+        [TestCase((uint)12345, "IntPtr", 12345)]
+        public static uint IntPtr(int value) =>
+            IntPtrImpl((IntPtr)value).ToUInt32();
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr Single(float value);
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr ByteImpl(byte value);
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern UIntPtr Double(double value);
+        [TestCase((uint)123, "Byte", (byte)123)]
+        public static uint Byte(byte value) =>
+            ByteImpl(value).ToUInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UInt16Impl(ushort value);
+
+        [TestCase((uint)12345, "UInt16", (ushort)12345)]
+        public static uint UInt16(ushort value) =>
+            UInt16Impl(value).ToUInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UInt32Impl(uint value);
+
+        [TestCase((uint)12345, "UInt32", (uint)12345)]
+        public static uint UInt32(uint value) =>
+            UInt32Impl(value).ToUInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UInt64Impl(ulong value);
+
+        [TestCase((uint)12345, "UInt64", 12345UL)]
+        public static uint UInt64(ulong value) =>
+            UInt64Impl(value).ToUInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr UIntPtrImpl(UIntPtr value);
+
+        [TestCase((uint)12345, "UIntPtr", (uint)12345)]
+        public static uint UIntPtr(uint value) =>
+            UIntPtrImpl((UIntPtr)value).ToUInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern UIntPtr SingleImpl(float value);
+
+        [TestCase((uint)12345, "Single", 12345.67f)]
+        public static uint Single(float value) =>
+            SingleImpl(value).ToUInt32();
+
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            public static extern UIntPtr DoubleImpl(double value);
+
+        [TestCase((uint)12345, "Double", 12345.67)]
+        public static uint Double(double value) =>
+            DoubleImpl(value).ToUInt32();
     }
 }

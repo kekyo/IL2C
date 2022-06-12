@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;netcoreapp2.1;netcoreapp2.2;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net462;netcoreapp2.2;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
 
     <AssemblyName>il2c</AssemblyName>
     <StartupObject>IL2C.Program</StartupObject>
+
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <NuspecFile>IL2C.Build.nuspec</NuspecFile>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>

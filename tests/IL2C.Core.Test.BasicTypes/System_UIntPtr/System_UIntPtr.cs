@@ -12,21 +12,38 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    [TestCase(true, "IsValueType")]
-    [TestCase(4, "SizeOf", Assert = TestCaseAsserts.IgnoreValidateInvokeResult)]    // Unit test environment is unknown, gcc is 32bit
-    [TestCase("4294967295", "ToString", uint.MaxValue)]
-    [TestCase("0", "ToString", uint.MinValue)]
     public sealed class System_UIntPtr
     {
+        [TestCase(true, "IsValueType")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
-        [MethodImpl(MethodImplOptions.ForwardRef)]
-        public static extern int SizeOf();
+            [MethodImpl(MethodImplOptions.ForwardRef)]
+            private static extern int SizeOfImpl();
 
-        public static string ToString(UIntPtr value)
+        [TestCase(true, "SizeOf")]
+        public static bool SizeOf() =>
+            UIntPtr.Size == SizeOfImpl();
+
+        [TestCase("4294967295", "ToString", uint.MaxValue)]
+        [TestCase("0", "ToString", uint.MinValue)]
+        public static string ToString(uint value)
         {
-            return value.ToString();
+            return ((UIntPtr)value).ToString();
+        }
+
+        [TestCase(123U, "ToUInt32", 123U)]
+        public static uint ToUInt32(uint v)
+        {
+            var ip = (UIntPtr)v;
+            return ip.ToUInt32();
+        }
+
+        [TestCase(123UL, "ToUInt64", 123UL)]
+        public static ulong ToUInt64(ulong v)
+        {
+            var ip = (UIntPtr)v;
+            return ip.ToUInt64();
         }
     }
 }

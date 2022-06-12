@@ -10,7 +10,6 @@
 namespace IL2C.RuntimeSystems
 {
     [TestId("DelegateTypes")]
-    [TestCase("87654321ABC123", new[] { "Virtual_Int32ToString", "Virtual_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
     public class DelegateTypesWithVirtual1
     {
         private int v1 = 123;
@@ -20,6 +19,7 @@ namespace IL2C.RuntimeSystems
             return value.ToString() + "ABC" + v1.ToString();
         }
 
+        [TestCase("87654321ABC123", new[] { "Virtual_Int32ToString", "Virtual_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
         public static string Virtual_Int32ToString(int value)
         {
             var inst = new DelegateTypesWithVirtual1();
@@ -39,8 +39,6 @@ namespace IL2C.RuntimeSystems
     }
 
     [TestId("DelegateTypes")]
-    [TestCase("87654321ABC123", new[] { "Override_Int32ToString", "Override_Int32ToStringImpl" }, 87654321, IncludeBaseTypes = true, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
-    [TestCase("87654321ABC123", new[] { "Base_Int32ToString", "Override_Int32ToStringImpl" }, 87654321, IncludeBaseTypes = true, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
     public class DelegateTypesWithVirtual2 : DelegateTypesWithVirtual_Base
     {
         private int v1 = 123;
@@ -50,6 +48,7 @@ namespace IL2C.RuntimeSystems
             return value.ToString() + "ABC" + v1.ToString();
         }
 
+        [TestCase("87654321ABC123", new[] { "Override_Int32ToString", "Override_Int32ToStringImpl" }, 87654321, IncludeBaseTypes = true, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
         public static string Override_Int32ToString(int value)
         {
             var inst = new DelegateTypesWithVirtual2();
@@ -57,6 +56,7 @@ namespace IL2C.RuntimeSystems
             return dlg(value);
         }
 
+        [TestCase("87654321ABC123", new[] { "Base_Int32ToString", "Override_Int32ToStringImpl" }, 87654321, IncludeBaseTypes = true, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
         public static string Base_Int32ToString(int value)
         {
             DelegateTypesWithVirtual_Base inst = new DelegateTypesWithVirtual2();

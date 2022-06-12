@@ -6,7 +6,7 @@
         ldc.i4.s 123
         box uint8
         isinst [netstandard]System.ValueType
-        brnull.s F1
+        brfalse.s F1
         ldc.i4.1
         ret
     F1:

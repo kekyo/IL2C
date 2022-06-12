@@ -4,8 +4,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld bool IL2C.ILConverters.Stsfld_Field::BooleanValue
-        ldsfld bool IL2C.ILConverters.Stsfld_Field::BooleanValue
+        stsfld bool [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::BooleanValue
+        ldsfld bool [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::BooleanValue
         ret
     }
 
@@ -13,8 +13,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld uint8 IL2C.ILConverters.Stsfld_Field::ByteValue
-        ldsfld uint8 IL2C.ILConverters.Stsfld_Field::ByteValue
+        stsfld uint8 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::ByteValue
+        ldsfld uint8 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::ByteValue
         ret
     }
 
@@ -22,8 +22,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld int16 IL2C.ILConverters.Stsfld_Field::Int16Value
-        ldsfld int16 IL2C.ILConverters.Stsfld_Field::Int16Value
+        stsfld int16 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::Int16Value
+        ldsfld int16 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::Int16Value
         ret
     }
 
@@ -31,8 +31,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld int32 IL2C.ILConverters.Stsfld_Field::Int32Value
-        ldsfld int32 IL2C.ILConverters.Stsfld_Field::Int32Value
+        stsfld int32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::Int32Value
+        ldsfld int32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::Int32Value
         ret
     }
 
@@ -40,8 +40,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld int64 IL2C.ILConverters.Stsfld_Field::Int64Value
-        ldsfld int64 IL2C.ILConverters.Stsfld_Field::Int64Value
+        stsfld int64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::Int64Value
+        ldsfld int64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::Int64Value
         ret
     }
 
@@ -49,8 +49,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld int8 IL2C.ILConverters.Stsfld_Field::SByteValue
-        ldsfld int8 IL2C.ILConverters.Stsfld_Field::SByteValue
+        stsfld int8 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::SByteValue
+        ldsfld int8 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::SByteValue
         ret
     }
 
@@ -58,8 +58,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld uint16 IL2C.ILConverters.Stsfld_Field::UInt16Value
-        ldsfld uint16 IL2C.ILConverters.Stsfld_Field::UInt16Value
+        stsfld uint16 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UInt16Value
+        ldsfld uint16 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UInt16Value
         ret
     }
 
@@ -67,8 +67,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld uint32 IL2C.ILConverters.Stsfld_Field::UInt32Value
-        ldsfld uint32 IL2C.ILConverters.Stsfld_Field::UInt32Value
+        stsfld uint32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UInt32Value
+        ldsfld uint32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UInt32Value
         ret
     }
 
@@ -76,26 +76,26 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld uint64 IL2C.ILConverters.Stsfld_Field::UInt64Value
-        ldsfld uint64 IL2C.ILConverters.Stsfld_Field::UInt64Value
+        stsfld uint64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UInt64Value
+        ldsfld uint64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UInt64Value
         ret
     }
     
-    .method public static native int IntPtr(native int v) cil managed
+    .method private static native int IntPtrImpl(native int v) cil managed
     {
         .maxstack 1
         ldarg.0
-        stsfld native int IL2C.ILConverters.Stsfld_Field::IntPtrValue
-        ldsfld native int IL2C.ILConverters.Stsfld_Field::IntPtrValue
+        stsfld native int [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::IntPtrValue
+        ldsfld native int [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::IntPtrValue
         ret
     }
     
-    .method public static native uint UIntPtr(native uint v) cil managed
+    .method private static native uint UIntPtrImpl(native uint v) cil managed
     {
         .maxstack 1
         ldarg.0
-        stsfld native uint IL2C.ILConverters.Stsfld_Field::UIntPtrValue
-        ldsfld native uint IL2C.ILConverters.Stsfld_Field::UIntPtrValue
+        stsfld native uint [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UIntPtrValue
+        ldsfld native uint [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::UIntPtrValue
         ret
     }
 
@@ -103,8 +103,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld float32 IL2C.ILConverters.Stsfld_Field::SingleValue
-        ldsfld float32 IL2C.ILConverters.Stsfld_Field::SingleValue
+        stsfld float32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::SingleValue
+        ldsfld float32 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::SingleValue
         ret
     }
 
@@ -112,8 +112,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld float64 IL2C.ILConverters.Stsfld_Field::DoubleValue
-        ldsfld float64 IL2C.ILConverters.Stsfld_Field::DoubleValue
+        stsfld float64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::DoubleValue
+        ldsfld float64 [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::DoubleValue
         ret
     }
 
@@ -121,8 +121,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld char IL2C.ILConverters.Stsfld_Field::CharValue
-        ldsfld char IL2C.ILConverters.Stsfld_Field::CharValue
+        stsfld char [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::CharValue
+        ldsfld char [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::CharValue
         ret
     }
 
@@ -130,8 +130,8 @@
     {
         .maxstack 1
         ldarg.0
-        stsfld string IL2C.ILConverters.Stsfld_Field::StringValue
-        ldsfld string IL2C.ILConverters.Stsfld_Field::StringValue
+        stsfld string [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::StringValue
+        ldsfld string [IL2C.Core.Test.ILConverters]IL2C.ILConverters.Stsfld_Field::StringValue
         ret
     }
 }

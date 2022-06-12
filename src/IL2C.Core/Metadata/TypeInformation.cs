@@ -24,6 +24,8 @@ namespace IL2C.Metadata
     {
         string ScopeName { get; }
 
+        bool IsIgnoreTranslation { get; }
+
         bool IsPublic { get; }
         bool IsNotPublic { get; }
         bool IsNestedPublic { get; }
@@ -219,6 +221,11 @@ namespace IL2C.Metadata
             }
         }
 
+        public bool IsIgnoreTranslation =>
+            this.Definition is TypeDefinition definition &&
+            definition.CustomAttributes.
+            Any(ca => ca.AttributeType.FullName == "System.Runtime.InteropServices.IgnoreTranslationAttribute");
+
         public bool IsPublic => (this.Definition as TypeDefinition)?.IsPublic ?? false;
         public bool IsNotPublic => (this.Definition as TypeDefinition)?.IsNotPublic ?? false;
         public bool IsNestedPublic => (this.Definition as TypeDefinition)?.IsNestedPublic ?? false;
@@ -353,7 +360,10 @@ namespace IL2C.Metadata
         public bool IsRequiredTraverse =>
             (this.Member.IsValueType &&
              !this.Member.IsPrimitive && !this.Member.IsPointer && !this.IsByReference && !this.IsEnum &&
-             this.Fields.Any(f => f.FieldType.IsRequiredTraverse)) ||
+             this.Fields.
+                // Recursive check stopping condition: #105
+                Where(f => f.FieldType.FriendlyName != this.FriendlyName).
+                Any(f => f.FieldType.IsRequiredTraverse)) ||
             this.IsReferenceType;
 
         private static int InternalGetStaticSizeOfValue(ITypeInformation type) =>
@@ -412,6 +422,7 @@ namespace IL2C.Metadata
                     null;
             }
         }
+
         public ITypeInformation[] InterfaceTypes
         {
             get

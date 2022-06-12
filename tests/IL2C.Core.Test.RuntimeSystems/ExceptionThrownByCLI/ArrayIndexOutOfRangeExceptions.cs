@@ -15,16 +15,12 @@ using System.Runtime.InteropServices;
 namespace IL2C.RuntimeSystems
 {
     [TestId("ExceptionThrownByCLI")]
-    [TestCase(false, "ArrayIndexOutOfRangeByLoad", 0)]
-    [TestCase(false, "ArrayIndexOutOfRangeByLoad", 6)]
-    [TestCase(true, "ArrayIndexOutOfRangeByLoad", -1)]
-    [TestCase(true, "ArrayIndexOutOfRangeByLoad", 7)]
-    [TestCase(false, "ArrayIndexOutOfRangeByStore", 0)]
-    [TestCase(false, "ArrayIndexOutOfRangeByStore", 6)]
-    [TestCase(true, "ArrayIndexOutOfRangeByStore", -1)]
-    [TestCase(true, "ArrayIndexOutOfRangeByStore", 7)]
     public sealed class ArrayIndexOutOfRangeExceptions
     {
+        [TestCase(false, "ArrayIndexOutOfRangeByLoad", 0)]
+        [TestCase(false, "ArrayIndexOutOfRangeByLoad", 6)]
+        [TestCase(true, "ArrayIndexOutOfRangeByLoad", -1)]
+        [TestCase(true, "ArrayIndexOutOfRangeByLoad", 7)]
         public static bool ArrayIndexOutOfRangeByLoad(int index)
         {
             try
@@ -39,6 +35,10 @@ namespace IL2C.RuntimeSystems
             return false;
         }
 
+        [TestCase(false, "ArrayIndexOutOfRangeByStore", 0)]
+        [TestCase(false, "ArrayIndexOutOfRangeByStore", 6)]
+        [TestCase(true, "ArrayIndexOutOfRangeByStore", -1)]
+        [TestCase(true, "ArrayIndexOutOfRangeByStore", 7)]
         public static bool ArrayIndexOutOfRangeByStore(int index)
         {
             try

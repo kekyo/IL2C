@@ -48,6 +48,30 @@ namespace IL2C.Internal
         public static string GetCLanguageScopedPath(params string[] scopeNames) =>
             GetCLanguageScopedPath((IEnumerable<string>)scopeNames);
 
+        public static IEnumerable<string> RenameDuplicatingSymbols(this IEnumerable<string> names)
+        {
+            // symbol
+            // symbol2
+            // symbol3
+            // ...
+
+            var nameIndex = new Dictionary<string, int>();
+            foreach (var name in names)
+            {
+                if (nameIndex.TryGetValue(name, out var index))
+                {
+                    index++;
+                    nameIndex[name] = index;
+                    yield return name + index;
+                }
+                else
+                {
+                    nameIndex[name] = 1;
+                    yield return name;
+                }
+            }
+        }
+
         public static string GetCLanguageTypeName(
             Type type, string? symbolName = null, bool cArrayExpression = false)
         {

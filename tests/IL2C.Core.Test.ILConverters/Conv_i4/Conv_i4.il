@@ -32,7 +32,7 @@
         ret
     }
 
-    .method public static int32 IntPtr(native int v) cil managed
+    .method private static int32 IntPtrImpl(native int v) cil managed
     {
         .maxstack 1
         ldarg.0
@@ -72,7 +72,7 @@
         ret
     }
 
-    .method public static int32 UIntPtr(native uint v) cil managed
+    .method private static int32 UIntPtrImpl(native uint v) cil managed
     {
         .maxstack 1
         ldarg.0

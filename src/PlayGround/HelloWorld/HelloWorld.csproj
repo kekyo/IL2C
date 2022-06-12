@@ -8,10 +8,16 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
 
-    <!-- Stripping any debug information on release build. -->
-    <IL2CNativeLinkingFlags Condition="'$(IL2CConfiguration)' == 'Release'">-s</IL2CNativeLinkingFlags>
+    <IL2CDebugInformation>CommentOnly</IL2CDebugInformation>
+    <IL2CEnableParallelism>true</IL2CEnableParallelism>
+    <IL2CBuildLogLevel>Information</IL2CBuildLogLevel>
+    <IL2CBuildLaunchDebugger>false</IL2CBuildLaunchDebugger>
+    <!-- <IL2CEnableNativeCompilation>False</IL2CEnableNativeCompilation> -->
+    <!-- <IL2CNativeCompilerOptionalFlags></IL2CNativeCompilerOptionalFlags> -->
+    <!-- <IL2CNativeCompilerOptimizingFlags>-Os</IL2CNativeCompilerOptimizingFlags> -->
+    <!-- <IL2CNativeLinkingFlags>-s</IL2CNativeLinkingFlags> -->
   </PropertyGroup>
 
   <!-- ====================================================== -->

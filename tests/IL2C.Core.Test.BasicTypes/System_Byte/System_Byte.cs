@@ -11,25 +11,25 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    [TestCase(true, "IsValueType")]
-    [TestCase(1, "SizeOf")]
-    [TestCase("255", "ToString", byte.MaxValue)]
-    [TestCase("0", "ToString", byte.MinValue)]
-    [TestCase(byte.MaxValue, "TryParse", "255")]
-    [TestCase(byte.MinValue, "TryParse", "0")]
     public sealed class System_Byte
     {
+        [TestCase(true, "IsValueType")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
+        [TestCase(1, "SizeOf")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int SizeOf();
 
+        [TestCase("255", "ToString", byte.MaxValue)]
+        [TestCase("0", "ToString", byte.MinValue)]
         public static string ToString(byte value)
         {
             return value.ToString();
         }
 
+        [TestCase(byte.MaxValue, "TryParse", "255")]
+        [TestCase(byte.MinValue, "TryParse", "0")]
         public static byte TryParse(string str)
         {
             byte.TryParse(str, out var value);

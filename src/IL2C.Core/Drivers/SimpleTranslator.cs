@@ -19,18 +19,18 @@ namespace IL2C.Drivers
 {
     public sealed class TranslationOptions
     {
-        public readonly bool ReadSymbols;
+        public readonly string[] ReferenceBasePaths;
         public readonly bool EnableBundler;
         public readonly TargetPlatforms TargetPlatform;
         public readonly DebugInformationOptions DebugInformationOption;
 
         public TranslationOptions(
-            bool readSymbols,
+            string[] referenceBasePaths,
             bool enableBundler,
             TargetPlatforms targetPlatform,
             DebugInformationOptions debugInformationOption)
         {
-            this.ReadSymbols = readSymbols;
+            this.ReferenceBasePaths = referenceBasePaths;
             this.EnableBundler = enableBundler;
             this.TargetPlatform = targetPlatform;
             this.DebugInformationOption = debugInformationOption;
@@ -45,18 +45,18 @@ namespace IL2C.Drivers
             TranslationOptions options,
             string assemblyPath)
         {
-            logger.Information($"Preparing assembly: \"{Path.GetFullPath(assemblyPath)}\" ...");
+            logger.Information($"Preparing assembly: {Path.GetFullPath(assemblyPath)}");
 
             await IOAccessor.SafeCreateDirectoryAsync(
                 storage.BasePath, true).
                 ConfigureAwait(false);
 
             var translateContext = new TranslateContext(
-                assemblyPath, options.ReadSymbols, options.TargetPlatform);
+                logger, assemblyPath, options.ReferenceBasePaths, options.TargetPlatform);
             var preparedFunctions = AssemblyPreparer.Prepare(
                 translateContext);
 
-            logger.Information($"Translating assembly: \"{Path.GetFullPath(assemblyPath)}\" ...");
+            logger.Information($"Translating assembly: {Path.GetFullPath(assemblyPath)}");
 
             // TODO: Makes asynchronously operation.
 
@@ -78,7 +78,7 @@ namespace IL2C.Drivers
                     options.DebugInformationOption);
             }
 
-            logger.Information($"Translated assembly: Stored into \"{Path.GetFullPath(storage.BasePath)}\"");
+            logger.Information($"Translated assembly: Stored into {Path.GetFullPath(storage.BasePath)}");
 
             return translateContext.MetadataContext.EntryPoint;
         }

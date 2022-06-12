@@ -11,25 +11,25 @@ using System.Runtime.CompilerServices;
 
 namespace IL2C.BasicTypes
 {
-    [TestCase(true, "IsValueType")]
-    [TestCase(1, "SizeOf")]
-    [TestCase("127", "ToString", sbyte.MaxValue)]
-    [TestCase("-128", "ToString", sbyte.MinValue)]
-    [TestCase(sbyte.MaxValue, "TryParse", "127")]
-    [TestCase(sbyte.MinValue, "TryParse", "-128")]
     public sealed class System_SByte
     {
+        [TestCase(true, "IsValueType")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern bool IsValueType();
 
+        [TestCase(1, "SizeOf")]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern int SizeOf();
 
+        [TestCase("127", "ToString", sbyte.MaxValue)]
+        [TestCase("-128", "ToString", sbyte.MinValue)]
         public static string ToString(sbyte value)
         {
             return value.ToString();
         }
 
+        [TestCase(sbyte.MaxValue, "TryParse", "127")]
+        [TestCase(sbyte.MinValue, "TryParse", "-128")]
         public static sbyte TryParse(string str)
         {
             sbyte.TryParse(str, out var value);

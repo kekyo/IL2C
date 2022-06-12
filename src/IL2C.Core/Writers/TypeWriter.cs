@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+
 using IL2C.Internal;
 using IL2C.Metadata;
 
@@ -356,14 +357,6 @@ namespace IL2C.Writers
                         {
                             tw.WriteLine(
                                 "static {0};",
-                                method.CLanguageFunctionPrototype);
-                        }
-                        // Make inlining private interop methods
-                        else if (method.IsExtern && method.IsPrivate)
-                        {
-                            tw.WriteLine(
-                                "static inline /* {0} */ {1};",
-                                method.AttributeDescription,
                                 method.CLanguageFunctionPrototype);
                         }
                         else

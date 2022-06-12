@@ -25,12 +25,6 @@ namespace IL2C.RuntimeSystems
     }
 
     [Description("The delegate types contain special member fields, the objref instance reference and the raw method pointer. These tests are verified the IL2C can invoke delegate types combination features between static, instance, virtual method and multicasting at the runtime.")]
-    [TestCase("12345678ABC", new[] { "Static_Int32ToString", "Static_Int32ToStringImpl" }, 12345678, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
-    [TestCase(1111, new[] { "Static_Void_RefInt", "Static_Void_RefIntImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
-    [TestCase("87654321ABC123", new[] { "Instance_Int32ToString", "Instance_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
-    [TestCase(1123, new[] { "Instance_Void_RefInt", "Instance_Void_RefIntImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
-    [TestCase("11223344DEF456", new[] { "AnotherInstance_Int32ToString", "AnotherInstance_Int32ToStringImpl" }, 11223344, IncludeTypes = new[] { typeof(Int32ToStringDelegate), typeof(AnotherDelegateTypes) })]
-    [TestCase("87654321ABC123", new[] { "Virtual_Int32ToString", "Virtual_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
     public sealed class DelegateTypes
     {
         #region Static
@@ -39,6 +33,7 @@ namespace IL2C.RuntimeSystems
             return value.ToString() + "ABC";
         }
 
+        [TestCase("12345678ABC", new[] { "Static_Int32ToString", "Static_Int32ToStringImpl" }, 12345678, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
         public static string Static_Int32ToString(int value)
         {
             var dlg = new Int32ToStringDelegate(Static_Int32ToStringImpl);
@@ -50,6 +45,7 @@ namespace IL2C.RuntimeSystems
             value += 111;
         }
 
+        [TestCase(1111, new[] { "Static_Void_RefInt", "Static_Void_RefIntImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
         public static int Static_Void_RefInt(int value)
         {
             var dlg = new RefIntDelegate(Static_Void_RefIntImpl);
@@ -67,6 +63,7 @@ namespace IL2C.RuntimeSystems
             return value.ToString() + "ABC" + v1.ToString();
         }
 
+        [TestCase("87654321ABC123", new[] { "Instance_Int32ToString", "Instance_Int32ToStringImpl" }, 87654321, IncludeTypes = new[] { typeof(Int32ToStringDelegate) })]
         public static string Instance_Int32ToString(int value)
         {
             var inst = new DelegateTypes();
@@ -79,6 +76,7 @@ namespace IL2C.RuntimeSystems
             value += v1;
         }
 
+        [TestCase(1123, new[] { "Instance_Void_RefInt", "Instance_Void_RefIntImpl" }, 1000, IncludeTypes = new[] { typeof(RefIntDelegate) })]
         public static int Instance_Void_RefInt(int value)
         {
             var inst = new DelegateTypes();
@@ -88,6 +86,7 @@ namespace IL2C.RuntimeSystems
             return v;
         }
 
+        [TestCase("11223344DEF456", new[] { "AnotherInstance_Int32ToString", "AnotherInstance_Int32ToStringImpl" }, 11223344, IncludeTypes = new[] { typeof(Int32ToStringDelegate), typeof(AnotherDelegateTypes) })]
         public static string AnotherInstance_Int32ToString(int value)
         {
             var inst = new AnotherDelegateTypes();

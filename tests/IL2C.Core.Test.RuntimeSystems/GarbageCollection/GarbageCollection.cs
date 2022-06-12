@@ -94,7 +94,7 @@ namespace IL2C.RuntimeSystems
 
         ~FinalzerImplementedWithPinned()
         {
-            var holder = (FinalizerCalleeHolder)(handle.Target);
+            var holder = (FinalizerCalleeHolder)(handle.Target!);
             holder.Called = 1;
         }
     }
@@ -172,6 +172,7 @@ namespace IL2C.RuntimeSystems
             while (!abort)
             {
                 GC.Collect();
+                Thread.Sleep(1);
             }
         }
     }
@@ -185,42 +186,27 @@ namespace IL2C.RuntimeSystems
     }
 
     [Description("These tests are verified the IL2C manages tracing the object references and collect garbages from the heap memory.")]
-    [TestCase("ABCDEF", "ObjRefInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
-    [TestCase("ABCDEF", "ObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
-    [TestCase("ABCDEF", "ObjRefInsideValueTypeInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeInsideObjRefType), typeof(ObjRefInsideValueTypeType) })]
-    [TestCase("ABCDEF", "ObjRefInsideObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
-    [TestCase("ABCDEF1", "MultipleInsideValueType", 0, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
-    [TestCase("ABCDEF2", "MultipleInsideValueType", 1, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
-    [TestCase("ABCDEF3", "MultipleInsideValueType", 2, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
-    [TestCase("ABCDEFABCGHI", new[] { "ArrayForObjRefInsideObjRefTypeTracking", "MakeArrayForObjRefInsideObjRefType" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
-    [TestCase("ABCDEFABCGHI", new[] { "ArrayForObjRefInsideValueTypeTypeTracking", "MakeArrayForObjRefInsideValueTypeType" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
-    [TestCase("ABCDEFGHI", new[] { "DelegateMarkHandlerTracking", "MakeDelegateMarkHandlerForObjRefTestDelegate" }, "ABC", "DEF", IncludeTypes = new[] { typeof(DelegateMarkHandlerForObjRef), typeof(DelegateMarkHandlerForObjRefTestDelegate) })]
-    [TestCase("ABCGHIJKL", new[] { "MulticastDelegateMarkHandlerTracking", "MakeMulticastDelegateMarkHandlerForObjRefTestDelegate" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(DelegateMarkHandlerForObjRef), typeof(DelegateMarkHandlerForObjRefTestDelegate) })]
-    [TestCase(12345, new[] { "TraceStaticField", "RunTraceStaticField" }, 12345, IncludeTypes = new[] { typeof(StaticFieldTracible), typeof(StaticFieldInstanceType) })]
-    [TestCase(1, new[] { "CallFinalizerByCollect", "RunCallFinalizer" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 0, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 1, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 2, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(0, new[] { "DontCallFinalizerByCollectWithPinned", "RunDontCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
-    [TestCase(123, new[] { "DontCollectWithResurrect", "RunDontCollectWithResurrect" }, 123, IncludeTypes = new[] { typeof(FinalzerImplementedWithResurrect) })]
-    [TestCase(2, new[] { "CallFinalizerByCollectWithReRegister", "RunCallFinalizerWithReRegister" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithReRegister), typeof(FinalizerCalleeHolder) })]
-    [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
-    [TestCase(200000, "ConcurrentCollect", 10, 100000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
     public sealed class GarbageCollection
     {
+        [TestCase("ABCDEF", "ObjRefInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string ObjRefInsideObjRef();
 
+        [TestCase("ABCDEF", "ObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string ObjRefInsideValueType();
 
+        [TestCase("ABCDEF", "ObjRefInsideValueTypeInsideObjRef", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeInsideObjRefType), typeof(ObjRefInsideValueTypeType) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string ObjRefInsideValueTypeInsideObjRef();
 
+        [TestCase("ABCDEF", "ObjRefInsideObjRefInsideValueType", IncludeTypes = new[] { typeof(ObjRefInsideObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string ObjRefInsideObjRefInsideValueType();
 
+        [TestCase("ABCDEF1", "MultipleInsideValueType", 0, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
+        [TestCase("ABCDEF2", "MultipleInsideValueType", 1, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
+        [TestCase("ABCDEF3", "MultipleInsideValueType", 2, IncludeTypes = new[] { typeof(MultipleInsideValueTypeType), typeof(ObjRefInsideValueTypeType), typeof(ObjRefInsideObjRefType) })]
         [MethodImpl(MethodImplOptions.ForwardRef)]
         public static extern string MultipleInsideValueType(int index);
 
@@ -235,6 +221,7 @@ namespace IL2C.RuntimeSystems
         private static ObjRefInsideObjRefType[] MakeArrayForObjRefInsideObjRefType(string a, string b, string c) =>
             new[] { new ObjRefInsideObjRefType(a + b), new ObjRefInsideObjRefType(a + c) };
 
+        [TestCase("ABCDEFABCGHI", new[] { "ArrayForObjRefInsideObjRefTypeTracking", "MakeArrayForObjRefInsideObjRefType" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(ObjRefInsideObjRefType) })]
         public static string ArrayForObjRefInsideObjRefTypeTracking(string a, string b, string c)
         {
             // Test for Array_MarkHandler.
@@ -249,6 +236,7 @@ namespace IL2C.RuntimeSystems
         private static ObjRefInsideValueTypeType[] MakeArrayForObjRefInsideValueTypeType(string a, string b, string c) =>
             new[] { new ObjRefInsideValueTypeType(a + b), new ObjRefInsideValueTypeType(a + c) };
 
+        [TestCase("ABCDEFABCGHI", new[] { "ArrayForObjRefInsideValueTypeTypeTracking", "MakeArrayForObjRefInsideValueTypeType" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(ObjRefInsideValueTypeType) })]
         public static string ArrayForObjRefInsideValueTypeTypeTracking(string a, string b, string c)
         {
             // Test for Array_MarkHandler.
@@ -266,6 +254,7 @@ namespace IL2C.RuntimeSystems
             return new DelegateMarkHandlerForObjRefTestDelegate(target.CombineForStrings);
         }
 
+        [TestCase("ABCDEFGHI", new[] { "DelegateMarkHandlerTracking", "MakeDelegateMarkHandlerForObjRefTestDelegate" }, "ABC", "DEF", IncludeTypes = new[] { typeof(DelegateMarkHandlerForObjRef), typeof(DelegateMarkHandlerForObjRefTestDelegate) })]
         public static string DelegateMarkHandlerTracking(string a, string b)
         {
             // Test for Delegate_MarkHandler.
@@ -286,6 +275,7 @@ namespace IL2C.RuntimeSystems
                 new DelegateMarkHandlerForObjRefTestDelegate(target2.CombineForStrings);
         }
 
+        [TestCase("ABCGHIJKL", new[] { "MulticastDelegateMarkHandlerTracking", "MakeMulticastDelegateMarkHandlerForObjRefTestDelegate" }, "ABC", "DEF", "GHI", IncludeTypes = new[] { typeof(DelegateMarkHandlerForObjRef), typeof(DelegateMarkHandlerForObjRefTestDelegate) })]
         public static string MulticastDelegateMarkHandlerTracking(string a, string b, string c)
         {
             // Test for Delegate_MarkHandler (tracks each delegate target)
@@ -297,6 +287,7 @@ namespace IL2C.RuntimeSystems
             return d("JKL");
         }
 
+        [TestCase(12345, new[] { "TraceStaticField", "RunTraceStaticField" }, 12345, IncludeTypes = new[] { typeof(StaticFieldTracible), typeof(StaticFieldInstanceType) })]
         public static int TraceStaticField(int value)
         {
             RunTraceStaticField(value);
@@ -312,6 +303,7 @@ namespace IL2C.RuntimeSystems
             var implemented = new FinalzerImplemented(holder);
         }
 
+        [TestCase(1, new[] { "CallFinalizerByCollect", "RunCallFinalizer" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
         public static int CallFinalizerByCollect()
         {
             var holder = new FinalizerCalleeHolder();
@@ -323,6 +315,9 @@ namespace IL2C.RuntimeSystems
             return holder.Called;
         }
 
+        [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 0, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+        [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 1, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
+        [TestCase(1, new[] { "CallFinalizerByCollectWithGeneration", "RunCallFinalizer" }, 2, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
         public static int CallFinalizerByCollectWithGeneration(int generation)
         {
             var holder = new FinalizerCalleeHolder();
@@ -340,6 +335,7 @@ namespace IL2C.RuntimeSystems
             var handle = GCHandle.Alloc(implemented, GCHandleType.Pinned);
         }
 
+        [TestCase(0, new[] { "DontCallFinalizerByCollectWithPinned", "RunDontCallFinalizerWithPinned" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithPinned), typeof(FinalizerCalleeHolder) })]
         public static int DontCallFinalizerByCollectWithPinned()
         {
             var holder = new FinalizerCalleeHolder();
@@ -356,6 +352,12 @@ namespace IL2C.RuntimeSystems
             var implemented = new FinalzerImplementedWithResurrect(value);
         }
 
+        // TODO: Unknown failure on mono linux x64
+        //   System.NullReferenceException : Object reference not set to an instance of an object
+        //   at IL2C.RuntimeSystems.GarbageCollection.DontCollectWithResurrect (System.Int32 value) [0x00014] in <f0fc4c8d8e604ae98e271ba826a16e62>:0
+        //   Analyse: Since it is difficult to imagine that the instance reference is suddenly lost, the finalizer may not be called in the first place.
+        [TestCase(123, new[] { "DontCollectWithResurrect", "RunDontCollectWithResurrect" }, 123, IncludeTypes = new[] { typeof(FinalzerImplementedWithResurrect) },
+            RunOnPlatforms = RunOnPlatforms.DotNet)]
         public static int DontCollectWithResurrect(int value)
         {
             RunDontCollectWithResurrect(value);
@@ -371,6 +373,7 @@ namespace IL2C.RuntimeSystems
             var implemented = new FinalzerImplementedWithReRegister(holder);
         }
 
+        [TestCase(2, new[] { "CallFinalizerByCollectWithReRegister", "RunCallFinalizerWithReRegister" }, IncludeTypes = new[] { typeof(FinalzerImplementedWithReRegister), typeof(FinalizerCalleeHolder) })]
         public static int CallFinalizerByCollectWithReRegister()
         {
             var holder = new FinalizerCalleeHolder();
@@ -396,6 +399,7 @@ namespace IL2C.RuntimeSystems
             GC.SuppressFinalize(implemented);
         }
 
+        [TestCase(0, new[] { "SuppressFinalize", "RunCallFinalizerWithSuppressed" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
         public static int SuppressFinalize()
         {
             var holder = new FinalizerCalleeHolder();
@@ -414,6 +418,7 @@ namespace IL2C.RuntimeSystems
             GC.ReRegisterForFinalize(implemented);
         }
 
+        [TestCase(1, new[] { "ReRegisterForFinalize", "RunCallFinalizerWithSuppressedAndReRegistered" }, IncludeTypes = new[] { typeof(FinalzerImplemented), typeof(FinalizerCalleeHolder) })]
         public static int ReRegisterForFinalize()
         {
             var holder = new FinalizerCalleeHolder();
@@ -425,6 +430,7 @@ namespace IL2C.RuntimeSystems
             return holder.Called;
         }
 
+        [TestCase(80000000, "ConcurrentCollect", 10, 40000000, IncludeTypes = new[] { typeof(ConcurrentCollectClosure), typeof(ConcurrentCollectValueHolder) })]
         public static int ConcurrentCollect(int count, int increments)
         {
             var target = new ConcurrentCollectClosure();

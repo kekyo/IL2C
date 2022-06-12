@@ -17,6 +17,7 @@
     <OutputType>Library</OutputType>
     <Optimize>False</Optimize>
     <Nullable>enable</Nullable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <DefineConstants>$(DefineConstants);$(OS)</DefineConstants>
 
     <AssemblyName>IL2C.Core.Test.RuntimeSystems</AssemblyName>
@@ -38,6 +39,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\IL2C.Interop\IL2C.Interop.csproj" />
+    <ProjectReference Include="..\..\src\IL2C.Core\IL2C.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

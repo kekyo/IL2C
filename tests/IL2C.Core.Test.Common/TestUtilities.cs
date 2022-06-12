@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 namespace IL2C
 {
     [IgnoreTranslation]
-    public static class Utilities
+    public static class TestUtilities
     {
         public static readonly bool IsRunningOnWindows =
             Environment.OSVersion.Platform == PlatformID.Win32NT;

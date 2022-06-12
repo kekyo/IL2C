@@ -159,12 +159,12 @@ namespace IL2C
                     this.runOnOSs = value;
 
                     var ignores = new List<string>();
-                    if (Utilities.IsRunningOnWindows &&
+                    if (TestUtilities.IsRunningOnWindows &&
                         !value.HasFlag(RunOnOSs.Windows))
                     {
                         ignores.Add("NotWindows");
                     }
-                    if (!Utilities.IsRunningOnWindows &&
+                    if (!TestUtilities.IsRunningOnWindows &&
                         !value.HasFlag(RunOnOSs.Posix))
                     {
                         ignores.Add("NotPosix");
@@ -195,12 +195,12 @@ namespace IL2C
                     this.runOnPlatforms = value;
 
                     var ignores = new List<string>();
-                    if (!Utilities.IsRunningOnMono &&
+                    if (!TestUtilities.IsRunningOnMono &&
                         !value.HasFlag(RunOnPlatforms.DotNet))
                     {
                         ignores.Add("NotDotNet");
                     }
-                    if (Utilities.IsRunningOnMono &&
+                    if (TestUtilities.IsRunningOnMono &&
                         !value.HasFlag(RunOnPlatforms.Mono))
                     {
                         ignores.Add("NotMono");
@@ -237,58 +237,5 @@ namespace IL2C
         {
             // TODO: delegates to test native code.
         }
-
-#if false
-        private static object?[] ConvertToArgumentsType(object?[] args, Type[] argumentTypes) =>
-            args.Zip(argumentTypes, ConvertToArgumentType).ToArray();
-
-        private static object? ConvertToArgumentType(object? value, Type argumentType)
-        {
-            // This is helper function that convert between raw value type and argument type.
-            // Because .NET attribute can't have complex type arguments.
-            if (value == null)
-            {
-                return null;
-            }
-            else if (value.GetType() == argumentType)
-            {
-                return value;
-            }
-            else if (argumentType == typeof(IntPtr))
-            {
-                if (value is int)
-                {
-                    return new IntPtr((int)value);
-                }
-                else if (value is long)
-                {
-                    return new IntPtr((long)value);
-                }
-                else
-                {
-                    throw new InvalidCastException();
-                }
-            }
-            else if (argumentType == typeof(UIntPtr))
-            {
-                if (value is uint)
-                {
-                    return new UIntPtr((uint)value);
-                }
-                else if (value is ulong)
-                {
-                    return new UIntPtr((ulong)value);
-                }
-                else
-                {
-                    throw new InvalidCastException();
-                }
-            }
-            else
-            {
-                return Convert.ChangeType(value, argumentType);
-            }
-        }
-#endif
     }
 }

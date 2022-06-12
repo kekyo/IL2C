@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\src\IL2C.Build\build\IL2C.Build.props" />
+  <Import Project="..\..\src\IL2C.Runtime\build\IL2C.Runtime.props" />
+  <Import Project="..\..\misc\IL2C.Toolchain.gcc4.mingw32\build\IL2C.Toolchain.gcc4.mingw32.props" />
+
+  <!-- ====================================================== -->
+
+  <PropertyGroup>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net48;net6.0</TargetFrameworks>
+    <!--
+        On mono environment, it is supported only up to net47
+        https://www.mono-project.com/docs/about-mono/compatibility/
+    -->
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net47;net6.0</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+
+    <AssemblyName>test</AssemblyName>
+    <RootNamespace>test</RootNamespace>
+
+    <IL2CDebugInformation>CommentOnly</IL2CDebugInformation>
+    <IL2CEnableParallelism>true</IL2CEnableParallelism>
+    <IL2CBuildLogLevel>Debug</IL2CBuildLogLevel>
+    <IL2CBuildLaunchDebugger>false</IL2CBuildLaunchDebugger>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IL2C.Core.Test.BasicTypes\IL2C.Core.Test.BasicTypes.csproj" />
+  </ItemGroup>
+
+  <!-- ====================================================== -->
+
+  <Import Project="..\..\src\IL2C.Build\build\IL2C.Build.targets" />
+  <Import Project="..\..\src\IL2C.Runtime\build\IL2C.Runtime.targets" />
+  <Import Project="..\..\misc\IL2C.Toolchain.gcc4.mingw32\build\IL2C.Toolchain.gcc4.mingw32.targets" />
+  <PropertyGroup>
+    <IL2CBuildToolingDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\src\IL2C.Build\bin\$(Configuration)\$(_IL2C_PlatformName)'))</IL2CBuildToolingDir>
+  </PropertyGroup>
+
+</Project>

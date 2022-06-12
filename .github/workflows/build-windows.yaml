@@ -111,10 +111,10 @@ jobs:
 
     - name: Build packages
       run: |
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Interop\IL2C.Interop.csproj
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Core\IL2C.Core.csproj
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Build\IL2C.Build.csproj
-        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts IL2C.Toolchain.gcc4.mingw32\IL2C.Toolchain.gcc4.mingw32.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Interop\IL2C.Interop.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Core\IL2C.Core.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Build\IL2C.Build.csproj
+        dotnet pack --configuration ${{env.buildConfiguration}} -p:BuildIdentifier=$GITHUB_RUN_NUMBER -o artifacts src\IL2C.Toolchain.gcc4.mingw32\IL2C.Toolchain.gcc4.mingw32.csproj
 
     #----------------------------------------------------------------------
 
@@ -128,8 +128,8 @@ jobs:
 
     #----------------------------------------------------------------------
 
-    #- name: Deploy NuGet package (main/nuget.org)
-    #  if: (startsWith( github.ref, 'refs/tags/' )) && (endsWith(steps.extract_branch_name.outputs.branch_name, 'main'))
+    #- name: Deploy NuGet package (master/nuget.org)
+    #  if: (startsWith( github.ref, 'refs/tags/' )) && (endsWith(steps.extract_branch_name.outputs.branch_name, 'master'))
     #  run: |
     #    dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
     #    dotnet nuget push artifacts\IL2C.Core.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}

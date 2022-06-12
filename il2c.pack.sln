@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Core", "src\IL2C.Core\IL2C.Core.csproj", "{678EFB0E-BC0A-4749-AD48-079F98D9468D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IL2C.Runtime", "src\IL2C.Runtime\IL2C.Runtime.vcxproj", "{182A62A4-47AC-4290-8EA5-250AE8131613}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Interop", "src\IL2C.Interop\IL2C.Interop.csproj", "{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{726D7AE4-C17F-4530-9D6B-53B517DCA037}"
@@ -23,6 +21,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtifactCollector", "misc\ArtifactCollector\ArtifactCollector.csproj", "{F0FAC02F-7F91-4ABB-8552-F037803523EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Toolchain.gcc4.mingw32", "misc\IL2C.Toolchain.gcc4.mingw32\IL2C.Toolchain.gcc4.mingw32.csproj", "{9F4783AA-5C0B-446D-952E-3062A380D00B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IL2C.Runtime", "src\IL2C.Runtime\IL2C.Runtime.csproj", "{8ABDE634-D3EF-4B43-8BDA-371C71CC3F4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,8 +38,6 @@ Global
 		{678EFB0E-BC0A-4749-AD48-079F98D9468D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{678EFB0E-BC0A-4749-AD48-079F98D9468D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{678EFB0E-BC0A-4749-AD48-079F98D9468D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{182A62A4-47AC-4290-8EA5-250AE8131613}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{182A62A4-47AC-4290-8EA5-250AE8131613}.Release|Any CPU.ActiveCfg = Release|x64
 		{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{854E1ABE-0873-4BDC-8ABF-7F9506DD66DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,6 +50,10 @@ Global
 		{9F4783AA-5C0B-446D-952E-3062A380D00B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F4783AA-5C0B-446D-952E-3062A380D00B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F4783AA-5C0B-446D-952E-3062A380D00B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ABDE634-D3EF-4B43-8BDA-371C71CC3F4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ABDE634-D3EF-4B43-8BDA-371C71CC3F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ABDE634-D3EF-4B43-8BDA-371C71CC3F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ABDE634-D3EF-4B43-8BDA-371C71CC3F4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

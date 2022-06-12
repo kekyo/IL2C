@@ -64,12 +64,6 @@ jobs:
       run: init-tools.bat
       shell: cmd
 
-    #- name: Install dependencies
-    #  run: |
-    #    msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore il2c.sln
-    #    msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
-    #    msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\Calculator\Calculator.sln
-
     #----------------------------------------------------------------------
 
     - name: Build runtime library
@@ -94,6 +88,11 @@ jobs:
       timeout-minutes: 20
 
     #----------------------------------------------------------------------
+    
+    - name: Install dependencies on samples
+      run: |
+        msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\GettingStartedIL2C\GettingStartedIL2C.sln
+        msbuild -p:Configuration=${{env.buildConfiguration}} -t:restore samples\Calculator\Calculator.sln
 
     - name: Build GettingStartedIL2C-x86
       run: msbuild -p:Configuration=${{env.buildConfiguration}} -r:false -p:BuildIdentifier=$GITHUB_RUN_NUMBER -p:Platform=x86 -maxCpuCount samples\GettingStartedIL2C\GettingStartedIL2C.sln

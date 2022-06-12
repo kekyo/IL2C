@@ -8,9 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -89,7 +87,8 @@ namespace IL2C.RuntimeSystems
         private static extern IntPtr wcslen(string message);
 
         [TestCase(3, new[] { "PInvokeWcsLen", "wcslen" }, "ABC",
-            RunOnOSs = RunOnOSs.Posix)]
+            RunOnOSs = RunOnOSs.None)]
+            //RunOnOSs = RunOnOSs.Posix)]      // TODO: #124
         public static int PInvokeWcsLen(string message) =>
             wcslen(message).ToInt32();
 

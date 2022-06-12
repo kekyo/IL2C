@@ -63,13 +63,6 @@ jobs:
     #- name: Initialize tools
     #  run: bash .github/workflows/init-tools-on-ga.sh
 
-    #- name: Install dependencies
-    #  run: |
-    #    dotnet restore il2c.sln
-    #    dotnet restore samples/Calculator/Calculator.Core/Calculator.Core.csproj
-#        dotnet restore samples/GettingStartedIL2C/GettingStartedIL2C.sln
-#        dotnet restore samples/Calculator/Calculator.sln
-
     #----------------------------------------------------------------------
 
     - name: Build runtime library
@@ -124,3 +117,13 @@ jobs:
     #    dotnet nuget push artifacts\IL2C.Core.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
     #    dotnet nuget push artifacts\IL2C.Build.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
     #    dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
+    
+    #----------------------------------------------------------------------
+
+    #- name: Deploy NuGet package (main/nuget.org)
+    #  if: (startsWith( github.ref, 'refs/tags/' )) && (endsWith(steps.extract_branch_name.outputs.branch_name, 'main'))
+    #  run: |
+    #    dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
+    #    dotnet nuget push artifacts\IL2C.Core.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
+    #    dotnet nuget push artifacts\IL2C.Build.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
+    #    dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}

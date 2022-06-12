@@ -27,9 +27,9 @@ jobs:
     - name: Extract branch name
       id: extract_branch_name
       run: |
-        $branch_name=$(git name-rev --name-only --exclude=tags/* HEAD)
-        echo "Detected current branch: ${branch_name}"
-        echo "::set-output name=branch_name::${branch_name}"
+        export branch_name=`git name-rev --name-only --exclude=tags/* HEAD`
+        echo "Detected current branch: $branch_name"
+        echo "::set-output name=branch_name::$branch_name"
 
     #----------------------------------------------------------------------
 

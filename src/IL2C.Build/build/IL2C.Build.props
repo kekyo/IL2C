@@ -95,12 +95,12 @@
   </UsingTask>
 
   <UsingTask
-    TaskName="_IL2C_GetCombinedReferencesBasePath"
+    TaskName="_IL2C_GetCombinedReferenceBasePaths"
     TaskFactory="$(_IL2C_TaskFactory)"
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
       <References ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
-      <CombinedReferencesBasePath Output="true" />
+        <CombinedReferenceBasePaths Output="true" />
     </ParameterGroup>
     <Task>
       <Using Namespace="System"/>
@@ -122,12 +122,72 @@
         }
         object[] pathList = new object[candidates.Keys.Count];
         candidates.Keys.CopyTo(pathList, 0);
-        CombinedReferencesBasePath = string.Join(";", pathList);
+        CombinedReferenceBasePaths = string.Join(";", pathList);
 ]]>
       </Code>
     </Task>
   </UsingTask>
     
+  <UsingTask
+    TaskName="_IL2C_GetCombinedReferenceNativePaths"
+    TaskFactory="$(_IL2C_TaskFactory)"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <References ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <CombinedReferenceNativeIncludeDir Output="true" />
+      <CombinedReferenceNativeLibraryPath Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <!-- HACK: Will cause compilation error by using `System.Collection.Generic` and/or `System.Linq` on MacOS
+           (Maybe related both mono environment and unreferenced core assembly on `RoslynCodeTaskFactory`) -->
+      <Using Namespace="System.Collections"/>
+      <Using Namespace="Microsoft.Build.Framework"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        Hashtable libraryCandidates = new Hashtable();
+        Hashtable includeCandidates = new Hashtable();
+        
+        foreach (ITaskItem item in References)
+        {
+            if (!string.IsNullOrEmpty(item.ItemSpec))
+            {
+                string fullPath = Path.GetFullPath(item.ItemSpec);
+                string basePath = Path.GetDirectoryName(fullPath);
+                if (basePath == null)
+                {
+                    basePath = Path.DirectorySeparatorChar.ToString();
+                }
+                basePath = Path.Combine(basePath, "il2c");  // TODO:
+                
+                string includePath = Path.Combine(basePath, "include");
+                if (Directory.Exists(includePath))
+                {
+                    includeCandidates[includePath] = includePath;
+                }
+
+                string fileName = Path.GetFileNameWithoutExtension(item.ItemSpec);
+                string libraryPath = Path.Combine(basePath, fileName + ".a");
+                if (File.Exists(libraryPath))
+                {
+                    libraryCandidates[libraryPath] = libraryPath;
+                }
+            }
+        }
+
+        object[] includePathList = new object[includeCandidates.Keys.Count];
+        includeCandidates.Keys.CopyTo(includePathList, 0);
+        CombinedReferenceNativeIncludeDir = string.Join(";", includePathList);
+        
+        object[] libraryPathList = new object[libraryCandidates.Keys.Count];
+        libraryCandidates.Keys.CopyTo(libraryPathList, 0);
+        CombinedReferenceNativeLibraryPath = string.Join(";", libraryPathList);
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
   <UsingTask
     TaskName="_IL2C_CalculateContentHash"
     TaskFactory="$(_IL2C_TaskFactory)"

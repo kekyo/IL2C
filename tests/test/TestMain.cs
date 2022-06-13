@@ -15,8 +15,8 @@ namespace test
     {
         public static int Main()
         {
-            try
-            {
+            //try
+            //{
 #if false
                 ////////////////////////
                 // Execute target function.
@@ -42,12 +42,12 @@ namespace test
                     return 1;
                 }
 #endif
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return 2;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.ToString());
+            //    return 2;
+            //}
 
             return 0;
         }

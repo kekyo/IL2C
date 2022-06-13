@@ -100,6 +100,17 @@
       <IL2CNativeArchiver>$(_IL2C_GCC_Archiver)</IL2CNativeArchiver>
     </PropertyGroup>
 
+    <!-- Aggregates managed reference assembly base directories: -->
+    <_IL2C_GetCombinedReferenceBasePaths References="@(ReferencePath)">
+      <Output TaskParameter="CombinedReferenceBasePaths" PropertyName="_IL2C_CombinedReferenceDir" />
+    </_IL2C_GetCombinedReferenceBasePaths>
+
+    <!-- Aggregates managed reference assembly base directories: -->
+    <_IL2C_GetCombinedReferenceNativePaths References="@(ReferencePath)">
+      <Output TaskParameter="CombinedReferenceNativeIncludeDir" PropertyName="_IL2C_CombinedReferenceNativeIncludeDir" />
+      <Output TaskParameter="CombinedReferenceNativeLibraryPath" PropertyName="_IL2C_CombinedReferenceNativeLibraryPath" />
+    </_IL2C_GetCombinedReferenceNativePaths>
+
     <!-- Specified log settings: -->
     <PropertyGroup>
       <_IL2C_BuildLogOption>--logLevel=$(IL2CBuildLogLevel) --logtfm=&quot;$(TargetFramework)&quot;</_IL2C_BuildLogOption>
@@ -116,8 +127,16 @@
     <PropertyGroup>
       <_IL2C_CandidateRuntimeLibraryBasePath>$([System.IO.Path]::Combine('$(_IL2C_RuntimeLibraryCacheBaseDirPath)','$(_IL2C_RuntimeLibraryBaseDirName)'))</_IL2C_CandidateRuntimeLibraryBasePath>
       <_IL2C_CandidateRuntimeLibraryPath>$([System.IO.Path]::Combine('$(_IL2C_CandidateRuntimeLibraryBasePath)','$(_IL2C_RuntimeLibraryCacheFileName)'))</_IL2C_CandidateRuntimeLibraryPath>
-      <IL2CNativeLibPath Condition="'$(IL2CNativeLibPath)' != ''">$(_IL2C_CandidateRuntimeLibraryPath);$(IL2CNativeLibPath)</IL2CNativeLibPath>
-      <IL2CNativeLibPath Condition="'$(IL2CNativeLibPath)' == ''">$(_IL2C_CandidateRuntimeLibraryPath)</IL2CNativeLibPath>
+    </PropertyGroup>
+
+    <!-- Resolved entire includes and libs -->
+    <PropertyGroup>
+      <_IL2C_NativeIncludeDir>$(_IL2C_RuntimeIncludeBaseDirPath)</_IL2C_NativeIncludeDir>
+      <_IL2C_NativeIncludeDir Condition="'$(_IL2C_CombinedReferenceNativeIncludeDir)' != ''">$(_IL2C_CombinedReferenceNativeIncludeDir);$(_IL2C_NativeIncludeDir)</_IL2C_NativeIncludeDir>
+      <_IL2C_NativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' != ''">$(IL2CNativeIncludeDir);$(_IL2C_NativeIncludeDir)</_IL2C_NativeIncludeDir>
+      <_IL2C_NativeLibPath>$(_IL2C_CandidateRuntimeLibraryPath)</_IL2C_NativeLibPath>
+      <_IL2C_NativeLibPath Condition="'$(_IL2C_CombinedReferenceNativeLibraryPath)' != ''">$(_IL2C_CombinedReferenceNativeLibraryPath);$(_IL2C_NativeLibPath)</_IL2C_NativeLibPath>
+      <_IL2C_NativeLibPath Condition="'$(IL2CNativeLibPath)' != ''">$(IL2CNativeLibPath);$(_IL2C_NativeLibPath)</_IL2C_NativeLibPath>
     </PropertyGroup>
 
     <!-- Native code files output path group: -->
@@ -134,8 +153,8 @@
       <_IL2C_NativeCompilerFlagsOption>--compilerFlags=&quot;$(_IL2C_NativeCompilerAllFlags)&quot;</_IL2C_NativeCompilerFlagsOption>
       <_IL2C_NativeLinkingFlagsOption Condition="'$(IL2CNativeLinkingFlags)' != ''">--linkingFlags=&quot;$(IL2CNativeLinkingFlags)&quot;</_IL2C_NativeLinkingFlagsOption>
       <_IL2C_NativeArchiverOption>--archiver=&quot;$(IL2CNativeArchiver)&quot;</_IL2C_NativeArchiverOption>
-      <_IL2C_NativeIncludeDirOption>--includeDirs=&quot;$(IL2CNativeIncludeDir)&quot;</_IL2C_NativeIncludeDirOption>
-      <_IL2C_NativeLibPathOption>--libs=&quot;$(IL2CNativeLibPath)&quot;</_IL2C_NativeLibPathOption>
+      <_IL2C_NativeIncludeDirOption>--includeDirs=&quot;$(_IL2C_NativeIncludeDir)&quot;</_IL2C_NativeIncludeDirOption>
+      <_IL2C_NativeLibPathOption>--libs=&quot;$(_IL2C_NativeLibPath)&quot;</_IL2C_NativeLibPathOption>
       <_IL2C_OutputNativeArchiveFileNameOption>--outputNativeArchive=&quot;$(_IL2C_OutputNativeArchiveFileName)&quot;</_IL2C_OutputNativeArchiveFileNameOption>
       <_IL2C_OutputNativeExecutableFileNameOption Condition="'$(_IL2C_OutputNativeExecutableFileName)' != ''">--outputNativeExecutable=&quot;$(_IL2C_OutputNativeExecutableFileName)&quot;</_IL2C_OutputNativeExecutableFileNameOption>
       <_IL2C_OutputNativeDirOption>--outputNativeDir=&quot;$(IL2COutputPath)&quot;</_IL2C_OutputNativeDirOption>
@@ -147,11 +166,6 @@
     <PropertyGroup Condition="!($(IL2CEnableNativeCompilation))">
       <_IL2C_DrivingMode>translation</_IL2C_DrivingMode>
     </PropertyGroup>
-
-    <!-- Aggregates managed reference assembly base directories: -->
-    <_IL2C_GetCombinedReferencesBasePath References="@(ReferencePath)">
-      <Output TaskParameter="CombinedReferencesBasePath" PropertyName="_IL2C_CombinedReferenceDir" />
-    </_IL2C_GetCombinedReferencesBasePath>
       
   </Target>
 

@@ -13,8 +13,6 @@
   <Target Name="_IL2C_Runtime_TargetBody"
     BeforeTargets="IL2CBuildPrepare">
     <PropertyGroup>
-      <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' != ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'));$(IL2CNativeIncludeDir)</IL2CNativeIncludeDir>
-      <IL2CNativeIncludeDir Condition="'$(IL2CNativeIncludeDir)' == ''">$([System.IO.Path]::Combine('$(IL2CRuntimeBasePath)','include'))</IL2CNativeIncludeDir>
       <IL2CNativeMainTemplatePath Condition="'$(IL2CNativeMainTemplatePath)' == ''">$(_IL2C_StandardNativeMainTemplatePath)</IL2CNativeMainTemplatePath>
     </PropertyGroup>
   </Target>

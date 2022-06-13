@@ -21,52 +21,6 @@ using IL2C.Metadata;
 
 namespace IL2C.Drivers
 {
-    public sealed class ToolchainOptions
-    {
-        public readonly string NativeCompiler;
-        public readonly string NativeCompilerFlags;
-        public readonly string NativeLinkingFlags;
-        public readonly string NativeArchiver;
-        public readonly string[] AdditionalIncludeDirs;
-        public readonly string[] LibraryPaths;
-        public readonly string? MainTemplatePath;
-        public readonly bool EnableParallelism;
-
-        public ToolchainOptions(
-            string nativeCompiler,
-            string nativeCompilerFlags,
-            string nativeLinkingFlags,
-            string nativeArchiver,
-            string[] additionalIncludeDirs,
-            string[] libraryPaths,
-            string? mainTemplatePath,
-            bool enableParallelism)
-        {
-            this.NativeCompiler = nativeCompiler;
-            this.NativeCompilerFlags = nativeCompilerFlags;
-            this.NativeLinkingFlags = nativeLinkingFlags;
-            this.NativeArchiver = nativeArchiver;
-            this.AdditionalIncludeDirs = additionalIncludeDirs;
-            this.LibraryPaths = libraryPaths;
-            this.MainTemplatePath = mainTemplatePath;
-            this.EnableParallelism = enableParallelism;
-        }
-    }
-
-    public sealed class ArtifactPathOptions
-    {
-        public readonly string OutputNativeArchiveFileName;
-        public readonly string? OutputNativeExecutableFileName;
-
-        public ArtifactPathOptions(
-            string outputNativeArchiveFileName,
-            string? outputNativeExecutableFileName)
-        {
-            this.OutputNativeExecutableFileName = outputNativeExecutableFileName;
-            this.OutputNativeArchiveFileName = outputNativeArchiveFileName;
-        }
-    }
-
     public static class NativeBinaryBuilder
     {
         private readonly struct CompilationResult
@@ -96,7 +50,7 @@ namespace IL2C.Drivers
             string includeDir,
             string sourceDir,
             bool isCompileOnly,
-            string? libraryPath,
+            string? primaryLibraryPath,
             string[] additionalIncludeDirs,
             string[] additionalLibraryPaths)
         {
@@ -133,7 +87,7 @@ namespace IL2C.Drivers
                     "-o", IOAccessor.ToRelativePath(outputBasePath, outputPath),
                     IOAccessor.ToRelativePath(outputBasePath, sourceCodePath),
                 }).
-                Concat(libraryPath is { } lp ? new[] { IOAccessor.ToRelativePath(outputBasePath, lp) } : new string[0]).
+                Concat(primaryLibraryPath is { } lp ? new[] { IOAccessor.ToRelativePath(outputBasePath, lp) } : new string[0]).
                 Concat(additionalLibraryPaths.Select(p => IOAccessor.ToRelativePath(outputBasePath, p))).
                 ToArray()).
                 ConfigureAwait(false);

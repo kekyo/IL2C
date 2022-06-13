@@ -17,26 +17,6 @@ using IL2C.Metadata;
 
 namespace IL2C.Drivers
 {
-    public sealed class TranslationOptions
-    {
-        public readonly string[] ReferenceBasePaths;
-        public readonly bool EnableBundler;
-        public readonly TargetPlatforms TargetPlatform;
-        public readonly DebugInformationOptions DebugInformationOption;
-
-        public TranslationOptions(
-            string[] referenceBasePaths,
-            bool enableBundler,
-            TargetPlatforms targetPlatform,
-            DebugInformationOptions debugInformationOption)
-        {
-            this.ReferenceBasePaths = referenceBasePaths;
-            this.EnableBundler = enableBundler;
-            this.TargetPlatform = targetPlatform;
-            this.DebugInformationOption = debugInformationOption;
-        }
-    }
-
     public static class SimpleTranslator
     {
         public static async ValueTask<IMethodInformation> TranslateAsync(

@@ -122,10 +122,10 @@ jobs:
     - name: Deploy NuGet package (Release/devel/il2c-devel)
       if: (env.buildConfiguration == 'Release') && (startsWith(github.ref, 'refs/tags/'))
       run: |
-        dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
-        dotnet nuget push artifacts\IL2C.Core.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
-        dotnet nuget push artifacts\IL2C.Build.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
-        dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_MYGET_KEY}}
+        dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
+        dotnet nuget push artifacts\IL2C.Core.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
+        dotnet nuget push artifacts\IL2C.Build.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
+        dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
 
     #----------------------------------------------------------------------
 

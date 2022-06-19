@@ -125,6 +125,7 @@ jobs:
         dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
         dotnet nuget push artifacts\IL2C.Core.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
         dotnet nuget push artifacts\IL2C.Build.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
+        dotnet nuget push artifacts\IL2C.Runtime.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
         dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source il2c-devel --api-key ${{secrets.GH_IL2C_NUGET_DEVEL_KEY}}
 
     #----------------------------------------------------------------------
@@ -135,4 +136,5 @@ jobs:
     #    dotnet nuget push artifacts\IL2C.Interop.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
     #    dotnet nuget push artifacts\IL2C.Core.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
     #    dotnet nuget push artifacts\IL2C.Build.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
+    #    dotnet nuget push artifacts\IL2C.Runtime.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
     #    dotnet nuget push artifacts\IL2C.Toolchain.gcc4.mingw32.*.nupkg --source nuget.org --api-key ${{secrets.GH_IL2C_NUGET_NUGET_KEY}}
